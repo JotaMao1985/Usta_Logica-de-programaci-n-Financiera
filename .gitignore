@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# Instrumentos de evaluación — NO van al repositorio público
+#
+# El banco de Moodle contiene las claves de los cuestionarios evaluables: los
+# .Rmd llevan la respuesta correcta y los .xml son bancos listos para importar.
+# El material HTML es otra cosa —es de estudio autónomo y revela sus soluciones
+# a propósito—, pero el banco no.
+#
+# Si en algún momento quiere versionarlo, hágalo en un repositorio PRIVADO
+# aparte. Los dos guiones (`compilar_banco.R`, `verificar_cloze.R`) no contienen
+# respuestas y podrían incluirse aquí quitando esta línea y añadiéndolos a mano.
+# ---------------------------------------------------------------------------
+Banco Moodle/
+
+# Documento institucional de la USTA, con datos de contacto y la rúbrica.
+# El material ya cita textualmente lo que necesita (RA1, contenidos, horas).
+Syllabus*.xlsx
+
+# ---------------------------------------------------------------------------
+# Generados y temporales
+# ---------------------------------------------------------------------------
+
+# Copia de seguridad que deja `migrar.py` antes de estampar. Es local: el
+# historial de git cumple esa función mucho mejor.
+*.bak
+
+# Artefacto del bug de rutas con espacios de Rscript: `--file=` codifica el
+# espacio como «~+~» y R crea el directorio con ese nombre literal.
+Banco~+~Moodle/
+
+__pycache__/
+*.pyc
+.DS_Store
+.Rhistory
+.RData
+
+# Configuración local del servidor de vista previa. Se versiona la plantilla
+# (`launch.json.example`) porque el archivo real suele llevar rutas absolutas
+# del equipo de cada quien — el suyo apunta además a otro curso.
+.claude/launch.json

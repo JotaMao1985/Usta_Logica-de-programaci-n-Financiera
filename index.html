@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de aprendizaje autónomo de Lógica de Programación Financiera. Universidad Santo Tomás, 2026-II.">
+    <title>Lógica de Programación Financiera — Universidad Santo Tomás</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3D008D;
+            --secondary: #ED1E79;
+            --navy: #001A4D;
+            --gold: #FDB913;
+            --teal: #0E7490;
+            --bg: #F8FAFC;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', -apple-system, sans-serif;
+            background: var(--bg);
+            color: #1E293B;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(180deg, var(--navy) 0%, #002868 100%);
+            color: white;
+            padding: 3.5rem 1.5rem 3rem;
+        }
+
+        .wrap { max-width: 60rem; margin: 0 auto; }
+
+        /* El gold solo aquí, sobre el navy de la cabecera. Sobre el fondo claro
+           daría 1,66:1 y sería ilegible. */
+        .kicker {
+            color: var(--gold);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            margin: 0 0 .6rem;
+        }
+
+        header h1 {
+            font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+            font-weight: 700;
+            margin: 0 0 .5rem;
+            letter-spacing: -.02em;
+        }
+
+        header p { color: rgba(255, 255, 255, .75); margin: 0; font-weight: 300; }
+
+        main { padding: 2.5rem 1.5rem 4rem; }
+
+        .intro {
+            border-left: 3px solid var(--secondary);
+            padding-left: 1.1rem;
+            margin: 0 0 2.5rem;
+            color: #475569;
+        }
+
+        h2 {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .lista { display: grid; gap: .7rem; }
+
+        .cap {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+        }
+
+        a.cap:hover {
+            box-shadow: 0 10px 28px rgba(61, 0, 141, .13);
+            transform: translateY(-2px);
+            border-color: rgba(61, 0, 141, .35);
+        }
+
+        .cap.pendiente { opacity: .62; background: transparent; border-style: dashed; }
+
+        .num {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .95rem;
+            background: linear-gradient(140deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .cap.pendiente .num { background: #CBD5E1; color: #475569; }
+
+        .cap-cuerpo { flex: 1; min-width: 0; }
+
+        .cap h3 { margin: 0 0 .15rem; font-size: 1rem; font-weight: 600; color: var(--navy); }
+
+        .cap p { margin: 0; font-size: .85rem; color: #64748B; }
+
+        .meta {
+            flex-shrink: 0;
+            font-size: .7rem;
+            font-weight: 600;
+            color: var(--teal);
+            white-space: nowrap;
+            padding-top: .2rem;
+        }
+
+        .cap.pendiente .meta { color: #94A3B8; }
+
+        footer {
+            border-top: 1px solid #E2E8F0;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            font-size: .78rem;
+            color: #64748B;
+        }
+
+        footer p { margin: .2rem 0; }
+
+        code {
+            font-family: 'Fira Code', ui-monospace, monospace;
+            background: rgba(61, 0, 141, .07);
+            padding: .1rem .35rem;
+            border-radius: 4px;
+            font-size: .85em;
+        }
+
+        @media (max-width: 34rem) {
+            .cap { flex-wrap: wrap; }
+            .meta { padding-top: 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="wrap">
+            <p class="kicker">Universidad Santo Tomás · 2026-II</p>
+            <h1>Lógica de Programación Financiera</h1>
+            <p>Material de aprendizaje autónomo · Javier Mauricio Sierra</p>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <p class="intro">
+            Cada capítulo es una página que se abre y se recorre a su ritmo: teoría breve, casos del
+            sector financiero colombiano y ejercicios que se corrigen solos. Todo el código va en
+            <strong>cuatro lenguajes a la vez</strong> —pseudocódigo, Python, R y VBA— porque la lógica
+            es la misma y solo cambia el acento.
+        </p>
+
+        <h2>Unidad 1 · Fundamentos</h2>
+        <div class="lista">
+            <a class="cap" href="Material%20html/01_LPF_Introduccion.html">
+                <span class="num">01</span>
+                <span class="cap-cuerpo">
+                    <h3>Introducción</h3>
+                    <p>Sistemas de numeración, estructura del computador, operadores y el error de redondeo en dinero</p>
+                </span>
+                <span class="meta">4 horas</span>
+            </a>
+
+            <div class="cap pendiente">
+                <span class="num">02</span>
+                <span class="cap-cuerpo">
+                    <h3>Introducción a algoritmos</h3>
+                    <p>Qué es y qué no es un algoritmo; precisión, finitud, entrada y salida</p>
+                </span>
+                <span class="meta">4 horas</span>
+            </div>
+        </div>
+
+        <h2>Unidad 2 · Estructuras de control</h2>
+        <div class="lista">
+            <div class="cap pendiente">
+                <span class="num">03</span>
+                <span class="cap-cuerpo">
+                    <h3>Control secuencial</h3>
+                    <p>Algoritmos, flujograma, pseudocódigo y codificación</p>
+                </span>
+                <span class="meta">6 horas</span>
+            </div>
+            <div class="cap pendiente">
+                <span class="num">04</span>
+                <span class="cap-cuerpo">
+                    <h3>Control selectivo</h3>
+                    <p>Decisiones simples, dobles y múltiples</p>
+                </span>
+                <span class="meta">8 horas</span>
+            </div>
+            <div class="cap pendiente">
+                <span class="num">05</span>
+                <span class="cap-cuerpo">
+                    <h3>Control repetitivo</h3>
+                    <p>Ciclos definidos e indefinidos; acumuladores y contadores</p>
+                </span>
+                <span class="meta">8 horas</span>
+            </div>
+        </div>
+
+        <h2>Unidad 3 · VBA aplicado</h2>
+        <div class="lista">
+            <div class="cap pendiente">
+                <span class="num">06</span>
+                <span class="cap-cuerpo">
+                    <h3>Entorno de programación VBA</h3>
+                    <p>El editor, los tipos de dato y por qué el dinero va en <code>Currency</code></p>
+                </span>
+                <span class="meta">12 horas</span>
+            </div>
+            <div class="cap pendiente">
+                <span class="num">07</span>
+                <span class="cap-cuerpo">
+                    <h3>Arrays</h3>
+                    <p>Unidimensionales y bidimensionales, codificación en VBA</p>
+                </span>
+                <span class="meta">12 horas</span>
+            </div>
+            <div class="cap pendiente">
+                <span class="num">08</span>
+                <span class="cap-cuerpo">
+                    <h3>Funciones</h3>
+                    <p>Tipos según argumentos y retorno; implementación</p>
+                </span>
+                <span class="meta">10 horas</span>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Los capítulos en gris todavía no están publicados.</strong> Se irán activando a
+                lo largo del semestre.</p>
+            <p>Hace falta conexión a internet la primera vez que se abre un capítulo: las librerías se
+                cargan desde CDN y después quedan en la caché del navegador.</p>
+            <p>Universidad Santo Tomás · Lógica de Programación Financiera · 2026-II</p>
+        </footer>
+    </main>
+</body>
+
+</html>
