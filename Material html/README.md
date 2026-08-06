@@ -1,7 +1,9 @@
 # Material HTML — Lógica de Programación Financiera
 
 Cada capítulo es **un archivo HTML autocontenido**: se abre con doble clic, sin
-servidor, sin `npm`, sin build. React, Tailwind, Plotly y MathJax se cargan desde
+servidor, sin `npm`, sin build. El portal que los enlaza es el `index.html` de la
+**raíz del repositorio**, y es lo que publica GitHub Pages; no vive en esta
+carpeta para que Pages lo sirva sin rutas con espacios. React, Tailwind, Plotly y MathJax se cargan desde
 CDN, de modo que **hace falta conexión a internet** la primera vez (después el
 navegador los cachea). Si se necesitara uso sin conexión, habría que descargar
 esas seis librerías al disco; hoy no está hecho.
@@ -10,7 +12,6 @@ esas seis librerías al disco; hoy no está hecho.
 
 ```
 Material html/
-├── index.html                    portal índice (pendiente — Tarea 14)
 ├── 01_LPF_Introduccion.html      … 08_LPF_Funciones.html
 └── _plantilla/
     ├── lp-base.html              PLANTILLA GENERADA — no se edita a mano

@@ -926,3 +926,31 @@ Ejecutada la Tarea 7 completa. El capítulo 1 pasa las once comprobaciones con l
 **Skill `lpf-capitulo`.** Escrita **al final** a propósito, para codificar el ciclo ya recorrido y no lo que se suponía antes de empezar. Remite al README y a este plan para las normas en lugar de copiarlas —duplicarlas crearía deriva y no habría forma de saber cuál manda—; lo que sí lleva es el procedimiento, las nueve trampas conocidas y las puertas que deben pasar.
 
 **Lo que sigue:** Tarea 6 (capítulo 3 piloto) y el resto de la Fase 2. El capítulo 1 se adelantó a la T6; si el piloto mueve el formato, `migrar.py` reestampa en un comando.
+
+### El material entra en control de versiones y se publica · 2026-08-06
+
+El proyecto pasa a git y a GitHub Pages:
+<https://jotamao1985.github.io/Usta_Logica-de-programaci-n-Financiera/>
+
+**Qué NO se subió, y por qué.** El repositorio es **público**, así que quedan
+fuera dos cosas: el **banco de Moodle** —los `.Rmd` llevan la clave y los `.xml`
+son bancos listos para importar; el material HTML revela sus soluciones a
+propósito, pero un instrumento de evaluación no— y el **syllabus institucional**
+en `.xlsx`, que es un formato interno de la USTA. La trazabilidad no se pierde:
+el `CONFIG` de cada capítulo cita textualmente el RA, los contenidos y las horas.
+También se excluyeron el `.bak` de `migrar.py`, los `.DS_Store`, el `__pycache__`
+y `Banco~+~Moodle/` —un directorio vacío que creó el propio bug de las rutas con
+espacios de Rscript—.
+
+`.claude/launch.json` se sustituyó por un `launch.json.example`: el archivo real
+lleva una ruta absoluta a otro curso del docente y es específico de su equipo.
+
+**Tarea 14, parcialmente.** El `index.html` de la raíz existe ya y es lo que
+sirve Pages: las ocho tarjetas de capítulo con sus horas, las publicadas
+enlazadas y las pendientes en gris. **Falta** lo que la Tarea 14 pedía además:
+el progreso global leído de `localStorage` y el `portal-nav.js` de navegación
+flotante entre archivos. Queda abierta.
+
+Vive en la **raíz** y no en `Material html/` a propósito: esa carpeta lleva un
+espacio en el nombre y una URL con `%20` es mala para dar a estudiantes. Desde la
+raíz, el enlace que se reparte es limpio y el espacio queda escondido detrás.
