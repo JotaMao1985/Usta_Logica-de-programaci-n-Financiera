@@ -70,6 +70,12 @@
            Prism trae gramáticas oficiales de R, Python y VBA (`visual-basic`,
            con alias `vba`). El pseudocódigo del curso no existe fuera de aquí,
            así que su gramática se registra abajo.
+
+           Toda clave de `GRAMATICA` necesita su componente cargado en el
+           `<head>`: el core de Prism solo trae markup, css, clike y javascript.
+           Si falta, `resaltar` cae a `escaparHtml` y el bloque sale en gris sin
+           avisar de nada. `ensamblar.py` lo comprueba para que ese fallo salte
+           al ensamblar y no en el aula.
         ============================================================ */
         if (window.Prism && !Prism.languages.pseudo) {
             Prism.languages.pseudo = {
@@ -85,7 +91,11 @@
             };
         }
 
-        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', text: null };
+        /* En una sola línea a propósito: partirla dejaría un `};` con ocho
+           espacios de sangría, que es el patrón con el que `ensamblar.py` y
+           `migrar.py` delimitan los componentes. `docker` y `dockerfile` son
+           las dos claves que registra `prism-docker`; se aceptan ambas. */
+        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', text: null };
 
         /* Prefijo de SALIDA por lenguaje: el marcador de comentario del propio
            lenguaje más `>`. Así la salida sigue siendo un comentario válido y
@@ -124,6 +134,11 @@
             r: { label: 'R', corto: 'R', icon: 'fas fa-chart-line', color: 'text-cyan-300' },
             vba: { label: 'VBA (Excel)', corto: 'VBA', icon: 'fas fa-file-excel', color: 'text-green-400' },
             shell: { label: 'Terminal', corto: 'Shell', icon: 'fas fa-terminal', color: 'text-green-400' },
+            docker: { label: 'Dockerfile', corto: 'Docker', icon: 'fab fa-docker', color: 'text-blue-400' },
+            dockerfile: { label: 'Dockerfile', corto: 'Docker', icon: 'fab fa-docker', color: 'text-blue-400' },
+            yaml: { label: 'YAML', corto: 'YAML', icon: 'fas fa-file-code', color: 'text-purple-300' },
+            sql: { label: 'SQL', corto: 'SQL', icon: 'fas fa-database', color: 'text-orange-300' },
+            toml: { label: 'TOML', corto: 'TOML', icon: 'fas fa-gears', color: 'text-gray-300' },
             text: { label: 'Salida', corto: 'Salida', icon: 'fas fa-file-alt', color: 'text-gray-300' },
         };
 

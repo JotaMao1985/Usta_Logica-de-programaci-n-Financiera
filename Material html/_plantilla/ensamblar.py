@@ -50,6 +50,10 @@ SENTINELA_FIN = "        /* === LP-CORE FIN === */"
 
 FA_MINIMA = (6, 5, 0)
 
+# Gramáticas que NO necesitan un componente de Prism en el `head`.
+GRAMATICAS_PROPIAS = {"pseudo"}  # se registra a mano en lp-core-extra.jsx
+GRAMATICAS_DEL_NUCLEO = {"markup", "css", "clike", "javascript"}  # las trae prism.min.js
+
 TITULO = "Lógica de Programación Financiera — Plantilla base"
 DESCRIPCION = (
     "Plantilla base y catálogo de componentes del material de Lógica de "
@@ -74,6 +78,46 @@ def cierre_de(lineas, desde):
         if lineas[i].rstrip() == CIERRE:
             return i
     raise SystemExit(f"ERROR: no se encontró el cierre del bloque en {FUENTE.name}.")
+
+
+def gramaticas_declaradas(extra_txt):
+    """Los nombres de gramática de Prism que declara `GRAMATICA`.
+
+    Son los VALORES del mapa, no las claves: `vba` se resalta con la gramática
+    `visual-basic`, y el componente que hay que cargar se llama por el valor.
+    """
+    m = re.search(r"const GRAMATICA = \{(.*?)\};", extra_txt, re.S)
+    if not m:
+        print(f"ERROR: no se encontró `const GRAMATICA` en {EXTRA.name}.", file=sys.stderr)
+        sys.exit(1)
+    return {v for v in re.findall(r":\s*'([\w-]+)'", m.group(1))}
+
+
+def comprobar_gramaticas(extra_txt, head_txt):
+    """Toda gramática declarada tiene que tener su componente en el `head`.
+
+    Es el fallo que se colaba antes: `shell: 'bash'` estaba declarado desde el
+    principio y `prism-bash` no se cargaba nunca, así que los bloques de
+    terminal salían sin resaltar. No hay error de consola ni nada roto —el
+    código se ve, solo que gris—, de modo que puede llegar al aula sin que
+    nadie lo note. Comprobarlo aquí lo convierte en un fallo de ensamblado.
+
+    Se deriva de `GRAMATICA` en vez de una lista escrita a mano para que
+    añadir una clave sin su componente sea imposible, no solo improbable.
+    """
+    faltan = sorted(
+        g for g in gramaticas_declaradas(extra_txt)
+        if g not in GRAMATICAS_PROPIAS
+        and g not in GRAMATICAS_DEL_NUCLEO
+        and f"prism-{g}." not in head_txt
+    )
+    if faltan:
+        print(f"ERROR: {EXTRA.name} declara gramáticas que el head no carga:", file=sys.stderr)
+        for g in faltan:
+            print(f"       · {g} — falta components/prism-{g}.min.js", file=sys.stderr)
+        print(f"       Añádalos al head de {FUENTE.name}, junto a los demás.\n"
+              f"       Sin el componente el bloque sale sin resaltar y no avisa.", file=sys.stderr)
+        sys.exit(1)
 
 
 def main():
@@ -122,13 +166,16 @@ def main():
               f"en esa versión.\n       Actualice el enlace en {FUENTE.name}.", file=sys.stderr)
         sys.exit(1)
 
+    extra_txt = EXTRA.read_text(encoding="utf-8").rstrip("\n")
+    comprobar_gramaticas(extra_txt, head_txt)
+
     partes = [
         head_txt,
         "",
         SENTINELA_INICIO,
         "\n".join(part_a),
         "\n".join(part_b),
-        EXTRA.read_text(encoding="utf-8").rstrip("\n"),
+        extra_txt,
         SENTINELA_FIN,
         "",
         DEMO.read_text(encoding="utf-8").rstrip("\n"),
