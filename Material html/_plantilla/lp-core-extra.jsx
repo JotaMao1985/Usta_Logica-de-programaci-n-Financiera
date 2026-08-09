@@ -95,7 +95,7 @@
            espacios de sangría, que es el patrón con el que `ensamblar.py` y
            `migrar.py` delimitan los componentes. `docker` y `dockerfile` son
            las dos claves que registra `prism-docker`; se aceptan ambas. */
-        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', text: null };
+        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', json: 'json', text: null };
 
         /* Prefijo de SALIDA por lenguaje: el marcador de comentario del propio
            lenguaje más `>`. Así la salida sigue siendo un comentario válido y
@@ -139,6 +139,7 @@
             yaml: { label: 'YAML', corto: 'YAML', icon: 'fas fa-file-code', color: 'text-purple-300' },
             sql: { label: 'SQL', corto: 'SQL', icon: 'fas fa-database', color: 'text-orange-300' },
             toml: { label: 'TOML', corto: 'TOML', icon: 'fas fa-gears', color: 'text-gray-300' },
+            json: { label: 'JSON', corto: 'JSON', icon: 'fas fa-code', color: 'text-amber-300' },
             text: { label: 'Salida', corto: 'Salida', icon: 'fas fa-file-alt', color: 'text-gray-300' },
         };
 

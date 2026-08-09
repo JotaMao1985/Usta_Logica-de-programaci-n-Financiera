@@ -43,6 +43,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 
     <script>
         window.MathJax = {
@@ -1002,7 +1003,7 @@
            espacios de sangría, que es el patrón con el que `ensamblar.py` y
            `migrar.py` delimitan los componentes. `docker` y `dockerfile` son
            las dos claves que registra `prism-docker`; se aceptan ambas. */
-        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', text: null };
+        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', json: 'json', text: null };
 
         /* Prefijo de SALIDA por lenguaje: el marcador de comentario del propio
            lenguaje más `>`. Así la salida sigue siendo un comentario válido y
@@ -1046,6 +1047,7 @@
             yaml: { label: 'YAML', corto: 'YAML', icon: 'fas fa-file-code', color: 'text-purple-300' },
             sql: { label: 'SQL', corto: 'SQL', icon: 'fas fa-database', color: 'text-orange-300' },
             toml: { label: 'TOML', corto: 'TOML', icon: 'fas fa-gears', color: 'text-gray-300' },
+            json: { label: 'JSON', corto: 'JSON', icon: 'fas fa-code', color: 'text-amber-300' },
             text: { label: 'Salida', corto: 'Salida', icon: 'fas fa-file-alt', color: 'text-gray-300' },
         };
 
@@ -1904,6 +1906,9 @@
         // computacional incorporando variables de tipo financiero cuya solución
         // lo pueda hacer una calculadora o una computadora».
         const CONFIG = {
+            asignatura: 'Lógica de Programación Financiera',
+            lema: 'La lógica es la misma; el lenguaje solo cambia de acento.',
+            notaPie: 'Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.',
             numero: '01',
             titulo: 'Introducción',
             subtitulo: 'Sistemas de numeración, estructura del computador, operadores y el error de redondeo en dinero',
@@ -4194,7 +4199,7 @@ End Sub`,
                             {/* contraste-ok: el gold va sobre el navy de `lp-header`, no sobre el fondo claro */}
                             <p className="text-[0.65rem] uppercase tracking-widest text-gold font-bold">Universidad Santo Tomás</p>
                             <h1 className="text-white font-bold text-lg tracking-tight mt-1">
-                                Lógica de Programación Financiera
+                                {CONFIG.asignatura}
                             </h1>
                             <p className="text-xs text-white/60 mt-1">
                                 Capítulo {CONFIG.numero} · <span className="text-secondary font-semibold">{CONFIG.titulo}</span>
@@ -4282,16 +4287,16 @@ End Sub`,
                                             <strong>Capítulo {CONFIG.numero} · {CONFIG.titulo}</strong>
                                         </p>
                                         <p className="text-xs mt-1 text-white/80 italic">
-                                            La lógica es la misma; el lenguaje solo cambia de acento.
+                                            {CONFIG.lema}
                                         </p>
                                         <p className="text-xs mt-2 text-white/70">
-                                            Universidad Santo Tomás · Lógica de Programación Financiera
+                                            Universidad Santo Tomás · {CONFIG.asignatura}
                                         </p>
                                         <p className="text-xs text-white/70">
                                             Docente y diseño del material: {CONFIG.docente}
                                         </p>
                                         <p className="text-[10px] mt-2 text-white/50">
-                                            Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.
+                                            {CONFIG.notaPie}
                                         </p>
                                     </div>
                                 </footer>
