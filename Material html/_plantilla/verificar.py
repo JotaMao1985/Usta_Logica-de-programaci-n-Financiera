@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba doce cosas sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y doce sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -33,6 +33,12 @@ Comprueba doce cosas sobre cada archivo HTML de capítulo:
      opción única —la segunda elección reemplaza a la primera— mientras la
      calificación sigue exigiendo el conjunto completo, así que la pregunta
      no se puede acertar. Se ve como un «incorrecto» que no explica nada.
+ 13. PLANTILLA AL DÍA — que `lp-base.html` sea lo que `ensamblar.py` produciría
+     ahora con sus fuentes. Es el eslabón que le faltaba a la regla 1: sin ella,
+     editar `lp-core-extra.jsx` y olvidar el ensamblado deja los capítulos
+     coincidiendo con una plantilla vieja, y las doce reglas en verde mientras
+     el material corre la librería anterior. Se comprueba una sola vez, antes
+     que las demás, y aborta si falla.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -51,9 +57,11 @@ from pathlib import Path
 
 try:
     import ejecutar_salidas
+    import ensamblar
 except ImportError:  # se ejecuta desde otro directorio
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import ejecutar_salidas
+    import ensamblar
 
 AQUI = Path(__file__).resolve().parent
 MATERIAL = AQUI.parent
@@ -230,8 +238,12 @@ def ejercicios_multilingues_mal(texto, cuerpo):
             if faltan_c:
                 fallos.append(f"DetectaError · {m_c.group(1)}: faltan {', '.join(faltan_c)}")
 
+    # `Trazador` no es un ejercicio y no entra en la cuota, pero su `codigo` se
+    # presenta en pestañas igual que el de `TablaTraza`: un mapa al que le falte
+    # un lenguaje deja la pestaña vacía sin avisar de nada.
     for comp, prop in (("TablaTraza", "codigo"), ("OrdenaPasos", "pasos"),
-                       ("Emparejamiento", "izquierda"), ("Comparador", "codigo")):
+                       ("Emparejamiento", "izquierda"), ("Comparador", "codigo"),
+                       ("Trazador", "codigo")):
         for bloque in bloques_de(cuerpo, comp):
             for nombre in re.findall(prop + r"\s*[:=]\s*\{?([A-Za-z0-9_]+)\}?", bloque):
                 idiomas = mapa_de_lenguajes(texto, nombre)
@@ -608,6 +620,31 @@ def etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
     return avisos
 
 
+# --------------------------------------------------- 13 · plantilla al día
+# La comprobación 1 mira capítulo contra `lp-base.html`, y esa cadena tiene un
+# eslabón antes: `lp-base.html` contra sus fuentes. Si alguien edita
+# `lp-core-extra.jsx` y no ensambla, los tres capítulos coinciden con una
+# plantilla vieja y las doce comprobaciones dan verde mientras el material
+# corre la librería anterior. Pasó al escribir el `Trazador`: el capítulo se
+# abrió en blanco con un error de React que no dice qué componente lo produjo.
+#
+# De paso cubre la trampa 1 del procedimiento —`ensamblar.py` lee el `head` del
+# capítulo 1, así que ese archivo es fuente y destino a la vez—: tocarlo también
+# deja la plantilla desactualizada, y hasta ahora eso no lo detectaba nada.
+def plantilla_desactualizada():
+    esperado = ensamblar.construir()
+    real = BASE.read_text(encoding="utf-8")
+    if esperado == real:
+        return None
+    a, b = esperado.splitlines(), real.splitlines()
+    for i, (x, y) in enumerate(zip(a, b)):
+        if x != y:
+            return (f"lp-base.html no coincide con sus fuentes (primera diferencia en la "
+                    f"línea {i + 1})\n        ejecute: python3 _plantilla/ensamblar.py")
+    return (f"lp-base.html no coincide con sus fuentes ({len(real)} líneas en disco, "
+            f"{len(esperado)} al ensamblar)\n        ejecute: python3 _plantilla/ensamblar.py")
+
+
 def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     texto = ruta.read_text(encoding="utf-8")
     cuerpo = cuerpo_capitulo(texto)
@@ -702,6 +739,15 @@ def main():
         print(f"{ROJO}ERROR{FIN}: {err}", file=sys.stderr)
         return 1
     hash_base = hashlib.sha256(core_base.encode("utf-8")).hexdigest()
+
+    # 13 · la plantilla está al día con sus fuentes. Se comprueba antes que
+    # nada: si falla, el hash de referencia es el de una librería vieja y todo
+    # lo que venga después mide contra el patrón equivocado.
+    desfase = plantilla_desactualizada()
+    if desfase:
+        print(f"{ROJO}FALLA{FIN} _plantilla/lp-base.html")
+        print(f"        {ROJO}✗{FIN} {desfase}")
+        return 1
 
     if args:
         rutas = []
