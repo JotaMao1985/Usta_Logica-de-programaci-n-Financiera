@@ -149,6 +149,27 @@ escriben reglas en la Fase 4, junto con las de los siete nuevos. Y se propone un
 comprobación estructural nueva: **todo `.Rmd` del banco debe tener entrada en
 `REGLAS`**, para que el hueco no se repita. → **Tarea 4.3.**
 
+### H7 · La cadena de comprobación tenía un eslabón menos *(hallado al ejecutar, 2026-08-10)*
+
+La comprobación 1 compara **capítulo ↔ `lp-base.html`**. Faltaba la de antes:
+**`lp-base.html` ↔ sus fuentes**. Editar `lp-core-extra.jsx` y olvidar
+`ensamblar.py` deja los tres capítulos coincidiendo con una plantilla vieja, y
+las doce reglas en verde mientras el material corre la librería anterior.
+
+Apareció al escribir el `Trazador`: el capítulo se abrió **en blanco**, con un
+`Minified React error #31` que no dice qué componente lo produjo. Nada estático
+lo veía, porque estructuralmente todo era coherente —con el archivo equivocado—.
+
+De ahí la **comprobación 13**, que corre antes que las demás y aborta si falla:
+si la plantilla está vieja, el hash de referencia es el de una librería vieja y
+todo lo que venga después mide contra el patrón equivocado. Cubre además la
+trampa 1 del procedimiento (`ensamblar.py` lee el `head` del capítulo 1, así que
+tocarlo también desactualiza la plantilla, y hasta ahora eso no lo veía nadie).
+
+**Prueba negativa registrada:** con una línea añadida a `lp-core-extra.jsx` y sin
+ensamblar, `verificar.py` devuelve 1 y señala la línea 2119 como primera
+diferencia; restaurada la fuente, vuelve a 0.
+
 ### H6 · Siete secciones, siete iconos, sin repetir
 
 Hay 15 iconos utilizables y el capítulo tiene 7 secciones: no hace falta repetir
@@ -207,9 +228,21 @@ capítulo.
 
 ---
 
-### Fase 1 — El `Trazador` y el andamio del capítulo
+### Fase 1 — El `Trazador` y el andamio del capítulo · ✅ COMPLETADA (2026-08-10)
 
-#### Tarea 1.1 · Componente `Trazador` en `lp-core-extra.jsx`
+> Decisiones del punto de control 0, aprobadas: el `Trazador` va a **LP-CORE**;
+> la portada declara el **taller** y no un cuestionario; **18 ejercicios**; y el
+> `Trazador` con **trazas fijas**, sin entradas editables.
+>
+> Añadido no previsto: la **comprobación 13** (H7) y el `Trazador` incorporado a
+> la regla 6, para que un `codigo` al que le falte un lenguaje no deje la
+> pestaña vacía en silencio. Corregido también un defecto de presentación
+> propio: el bloque de código llevaba `overflow-x` **por línea**, de modo que a
+> 375 px salía una barra de desplazamiento debajo de cada instrucción y cada
+> línea se desplazaba por su cuenta, rompiendo la sangría. Ahora el
+> desplazamiento es uno solo para todo el bloque.
+
+#### Tarea 1.1 · Componente `Trazador` en `lp-core-extra.jsx` · ✅
 **Descripción:** motor de traza paso a paso. Recibe el código en los cuatro
 lenguajes y una lista de pasos `{ linea, estado, nota }`; pinta el código con la
 línea activa resaltada y una tabla de variables que se va llenando. Controles:
@@ -217,40 +250,51 @@ anterior, siguiente, reiniciar, y salto directo a un paso. La preferencia de
 lenguaje es la compartida (`SelectorLenguaje`), como el resto de componentes.
 
 **Criterios de aceptación**
-- [ ] Los pasos van por lenguaje solo en `linea` (el número cambia); los
+- [x] Los pasos van por lenguaje en `linea` y en `salida` —el número cambia con
+      las declaraciones de VBA, y lo impreso no coincide entre Python y R—; los
       **valores de las variables no**, que es justo lo que hay que hacerle ver al
       estudiante (convención del README)
-- [ ] Navegación por teclado: `←` `→` mueven de paso, con `aria-live` en la tabla
-- [ ] Sin dependencias nuevas; sin estado global; no rompe la comprobación 1 en
+- [x] Navegación por teclado: `←` `→` mueven de paso, `Home`/`End` a los
+      extremos, con `role="status"` y `aria-live` en la nota del paso
+- [x] Sin dependencias nuevas; sin estado global; no rompe la comprobación 1 en
       ningún capítulo
 
-**Verificación**
-- [ ] `verificar.py` en verde sobre los 3 capítulos
-- [ ] Probado por DOM: avanzar hasta el final, retroceder, reiniciar, y cambiar
-      de lenguaje **a mitad de traza** sin perder el paso actual
-- [ ] Foco de teclado comprobado con `FocusEvent` sintético (trampa 12: en este
-      panel `document.hasFocus()` es falso y Chrome no despacha eventos de foco)
+**Verificación** — medida en el navegador, no de vista
+- [x] `verificar.py --con-salidas` en verde sobre los 3 capítulos
+- [x] Probado por DOM: siete pasos, valores acumulados correctos, la columna
+      Salida aparece en los pasos 6 y 7, y el octavo clic no pasa de 7
+- [x] Cambio de lenguaje **a mitad de traza**: el paso se mantiene en 7 y la
+      línea activa pasa de 12 (pseudo) a 11 (Python), 11 (R) y 15 (VBA), con la
+      salida cambiando a `Total: 22,160,000` solo en Python
+- [x] Teclado: `←` retrocede de 7 a 6 y `Home` vuelve a 0. Se despacharon
+      eventos `keydown` sintéticos porque en este panel no se puede medir el
+      foco (trampa 12)
+- [x] Salto directo por los números: el chip 4 lleva al paso 4
+- [x] A 375 px, las siete secciones con `scrollWidth` = 375; la tabla mide
+      631 px y se desplaza **dentro** de su propio contenedor
+- [x] Consola limpia en pestaña nueva (solo los dos avisos de CDN de siempre)
 
 **Dependencias:** ninguna · **Alcance:** M · **Archivos:** `lp-core-extra.jsx`
 
-#### Tarea 1.2 · Regenerar la plantilla
-`ensamblar.py`; anotar el SHA nuevo de `lp-base.html`.
+#### Tarea 1.2 · Regenerar la plantilla · ✅
+`ensamblar.py`. SHA de LP-CORE: `9cc19ee3e3e1ce33…` → `7adb03f7f11c0422…`.
 **Dependencias:** T1.1 · **Alcance:** XS
 
-#### Tarea 1.3 · Reestampar los capítulos 1 y 2
+#### Tarea 1.3 · Reestampar los capítulos 1 y 2 · ✅
 `migrar.py --dry-run` y luego real sobre `01` y `02`; `verificar.py` sobre ambos;
 **volver a ejecutar `ensamblar.py` y confirmar que el SHA de `lp-base.html` no se
 movió** (trampa 1). Commit aparte, solo con esto.
 
 **Criterios de aceptación**
-- [ ] El diff de `01` y `02` toca **únicamente** la región LP-CORE y el `App`
-- [ ] `verificar.py` en verde sobre los dos, con la misma cuenta de ejercicios de
+- [x] El diff de `01` y `02` toca **únicamente** la región LP-CORE: una
+      inserción pura de 216 líneas, sin una sola línea retirada
+- [x] `verificar.py` en verde sobre los dos, con la misma cuenta de ejercicios de
       antes (13 y 13)
-- [ ] SHA de `lp-base.html` idéntico antes y después de reestampar
+- [x] SHA de `lp-base.html` idéntico antes y después de reestampar
 
 **Dependencias:** T1.2 · **Alcance:** S
 
-#### Tarea 1.4 · Crear el capítulo 3 y purgar la demostración
+#### Tarea 1.4 · Crear el capítulo 3 y purgar la demostración · ✅
 `cp lp-base.html 03_LPF_Control_Secuencial.html`, `migrar.py`, y **de una sola
 vez** —al reemplazar la región entre `LP-CORE FIN` y `const App`— sustituir el
 capítulo de demostración por el andamio real: `CONFIG` con los datos de la fila
@@ -262,16 +306,22 @@ vacías salvo su `Motivacion`.
 `Bug` (4. prueba de escritorio) · `Grid` (5. casos financieros) · `Award` (evaluación).
 
 **Criterios de aceptación**
-- [ ] `grep` sin resultados para `Seccion1`, `EJ_INTERES`, `EJ_ACUMULADOR`,
+- [x] `grep` sin resultados para `Seccion1`, `EJ_INTERES`, `EJ_ACUMULADOR`,
       `TRAZA_CODIGO`, `ORDENA_PASOS`, `EMPAREJA_IZQ`, `chart-demo-saldo`,
-      `Plantilla base`
-- [ ] `CONFIG` cita la fila 33 textualmente en un comentario, como el capítulo 2
-      cita la 32
-- [ ] `verificar.py --sin-cuota` en verde (la cuota estará a cero: es correcto)
+      `Plantilla base` — este último aparecía en el `<title>` y en la
+      `<meta name="description">`, que `ensamblar.py` reescribe para la
+      plantilla y que hay que devolver al capítulo
+- [x] `CONFIG` cita la fila 33 textualmente en un comentario, como el capítulo 2
+      cita la 32, y deja anotado que aquí el entregable es una tarea
+- [x] `verificar.py --sin-cuota` en verde (la cuota estará a cero: es correcto)
 
-**Verificación:** un verde de `verificar.py` **con** cuota en este punto
-significaría que quedó contenido de la plantilla — la trampa que cazó el
-capítulo 2.
+**Verificación:** el informe dice **0 ejercicios · E1:0 … E8:0**, que es la
+prueba de que la demostración se fue entera: si hubiera quedado, aparecería
+exactamente uno de cada tipo y la cuota daría verde con contenido ajeno.
+
+Las siete secciones se entregan ya con su `Motivacion` definitiva —redactada
+según §4 bis— porque son las que fijan el arco del capítulo, y con el primer
+`Trazador` en la sección 4. El resto del contenido va en la Fase 2.
 
 **Dependencias:** T1.2 · **Alcance:** M
 
