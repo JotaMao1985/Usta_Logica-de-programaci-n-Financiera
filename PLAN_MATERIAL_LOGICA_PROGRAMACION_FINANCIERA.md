@@ -672,9 +672,10 @@ Cada capítulo produce: **1 archivo HTML** + **6–10 ejercicios cloze** + **1 s
 Migrar a la librería canónica, convertir Python → `CodeTabs`, añadir la sección de punto flotante y `FlotanteVisualizer`, rebalancear ejercicios, añadir 7 cloze.
 **Dependencias:** T6 (formato aprobado) · **Alcance:** M
 
-#### Tarea 8 · Capítulo 2 — Introducción a Algoritmos
+#### Tarea 8 · Capítulo 2 — Introducción a Algoritmos · ✅ COMPLETADA (2026-08-09)
 Incluye `CuatroRepresentaciones` con resaltado sincronizado, que es el artefacto de mayor dificultad técnica del capítulo.
 **Dependencias:** T6 · **Alcance:** M
+Detalle en `PLAN_TAREA8_CAPITULO_02.md`; bitácora en §11.
 
 ### ✅ Punto de control C — Fundamentos
 - [ ] Capítulos 1, 2 y 3 verificados y sin deriva de componentes
@@ -954,3 +955,60 @@ flotante entre archivos. Queda abierta.
 Vive en la **raíz** y no en `Material html/` a propósito: esa carpeta lleva un
 espacio en el nombre y una URL con `%20` es mala para dar a estudiantes. Desde la
 raíz, el enlace que se reparte es limpio y el espacio queda escondido detrás.
+
+---
+
+### Tarea 8 · Capítulo 2 escrito desde cero · 2026-08-09
+
+Primer capítulo construido **íntegramente con la skill `lpf-capitulo`** —el 1 se
+adaptó de material previo—, y por tanto su primera prueba real. El detalle está
+en `PLAN_TAREA8_CAPITULO_02.md`; aquí queda lo que cambia para el resto del
+proyecto.
+
+**Lo entregado.** `02_LPF_Algoritmos.html`, 3 899 líneas: siete secciones, tres
+artefactos propios del capítulo (`SimbologiaANSI`, `CuatroRepresentaciones`,
+`AsignacionPasoAPaso`), 13 ejercicios con la cuota exacta del §4
+(E1:3 E2:2 E3:2 E4:1 E5:1 E6:1 E7:2 E8:1) y un cuestionario de 10 preguntas.
+Más los 6 cloze del banco, que no se versionan.
+
+**Un defecto de la librería que nadie había visto: la pregunta inacertable.**
+`Quiz` y `MCQ` deciden con `toggle(qi, oi, q.multiple)` si la selección es única
+o múltiple. Una pregunta con dos `correcta: true` y **sin `multiple: true`** no
+se puede acertar: la segunda elección reemplaza a la primera mientras la
+calificación sigue exigiendo el conjunto completo. Se pinta bien y el veredicto
+dice «incorrecto» sin explicar nada.
+
+Apareció al **responder** el cuestionario con las diez respuestas buenas y sacar
+9. Es la tercera vez en este proyecto que un defecto solo aparece al conducir el
+material hasta el veredicto, y no al leerlo: se suma al `#> 600000` que
+contradecía su propia clave y al ejemplo de punto flotante que no fallaba.
+
+De ahí sale la **comprobación 12 de `verificar.py`**, con prueba negativa. Y de
+ella, un aviso sobre cómo se escriben las comprobaciones: la primera versión de
+la regla no encontraba nada, porque el comentario que explica la bandera
+contiene literalmente `multiple: true` y eso bastaba para darla por satisfecha.
+Lo cazó su propia prueba negativa. Toda regla que busque una cadena en el JSX
+debe retirar antes los comentarios —sustituyéndolos por espacios, para no
+falsear el número de línea—.
+
+**Sobre la skill, siete hallazgos.** Los cuatro primeros son huecos del
+procedimiento: le falta el paso 0 (crear el archivo copiando `lp-base.html`,
+porque `migrar.py` no genera, estampa); no advierte de que esa copia trae el
+capítulo de demostración entero, con un ejercicio de cada tipo, de modo que
+`verificar.py` puede dar **verde con contenido ajeno**; el `grep TODO` de su
+paso 3 no sirve en ese camino, porque `migrar.py` respeta el `CONFIG` que ya
+existe; y su trampa 6 dice que hay siete iconos cuando hay diecisiete. Los otros
+tres son de fondo: la pregunta inacertable, la puerta de los «~367 px» que no
+corresponde a ninguna medida real del capítulo 1 —lo que se sostiene es «sin
+desborde horizontal», y así se comprueba—, y que en este panel no se pueden
+medir eventos de foco, porque `document.hasFocus()` es falso y Chrome no los
+despacha para ningún elemento.
+
+**Decisión de contenido que se aparta del plan.** El §5 pedía `string ×3` para
+`entrada_proceso_salida`; se escribió en `schoice ×3`. En Moodle un `string` se
+califica por coincidencia exacta y «entrada», «Entrada» y «dato de entrada» son
+la misma respuesta para un humano y tres distintas para el motor: la dificultad
+estaría en teclear, no en clasificar. Aprobado por el docente.
+
+**Tarea 14, un paso más.** El `index.html` ya enlaza el capítulo 2. Siguen
+faltando el progreso global desde `localStorage` y el `portal-nav.js`.

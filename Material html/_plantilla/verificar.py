@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba once cosas sobre cada archivo HTML de capítulo:
+Comprueba doce cosas sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -28,6 +28,11 @@ Comprueba once cosas sobre cada archivo HTML de capítulo:
      fondo de la página se use como color de texto sin querer.
  11. ENUNCIADOS — que ningún ejercicio pida escribir un programa desde cero:
      está excluido por diseño de la taxonomía; eso es de los talleres.
+ 12. PREGUNTAS IMPOSIBLES — que ninguna pregunta con más de una respuesta
+     correcta olvide `multiple: true`. Sin esa bandera la selección es de
+     opción única —la segunda elección reemplaza a la primera— mientras la
+     calificación sigue exigiendo el conjunto completo, así que la pregunta
+     no se puede acertar. Se ve como un «incorrecto» que no explica nada.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -552,6 +557,57 @@ def pide_escribir_programa(texto, cuerpo, desplazamiento):
     return fallos
 
 
+def preguntas_imposibles(texto, cuerpo, desplazamiento):
+    """Ninguna pregunta con varias respuestas correctas sin `multiple: true`.
+
+    `Quiz` y `MCQ` deciden con esa bandera cómo se comporta la selección: sin
+    ella, elegir una segunda opción **reemplaza** a la primera, mientras que la
+    calificación sigue exigiendo el conjunto completo. Una pregunta con dos
+    `correcta: true` y sin la bandera es, por tanto, **imposible de acertar**.
+
+    No se ve en pantalla: la pregunta se pinta bien, se puede responder y el
+    veredicto es «incorrecto» sin decir por qué. Se descubrió respondiendo el
+    cuestionario del capítulo 2 con las diez respuestas buenas y obteniendo 9.
+
+    La etiqueta «(selección múltiple)» la pinta el componente a partir de la
+    bandera, así que escribirla a mano en el enunciado no arregla nada y además
+    la duplica; eso se avisa aparte.
+
+    Los comentarios `//` se retiran antes de mirar. No es un detalle: la primera
+    versión de esta regla no encontraba nada porque el comentario que explica la
+    bandera la escribe, y bastaba con eso para que la regla se diera por
+    satisfecha. Lo descubrió su propia prueba negativa, que es exactamente para
+    lo que sirve.
+    """
+    fallos = []
+    # Se sustituyen por espacios, no se borran: así las posiciones no se mueven
+    # y el número de línea que se informa sigue siendo el del archivo real.
+    sin_comentarios = re.sub(r"//[^\n]*", lambda c: " " * len(c.group(0)), cuerpo)
+    for m in re.finditer(r"\bpregunta:\s*", sin_comentarios):
+        # El objeto de la pregunta llega hasta su `justificacion`, que en `Quiz`
+        # va después de la lista de opciones.
+        fin = sin_comentarios.find("justificacion:", m.end())
+        trozo = sin_comentarios[m.end():fin if fin != -1 else len(sin_comentarios)]
+        correctas = len(re.findall(r"correcta:\s*true", trozo))
+        if correctas > 1 and not re.search(r"\bmultiple:\s*true", trozo):
+            fallos.append(
+                f"línea {linea_de(texto, desplazamiento + m.start())}: la pregunta "
+                f"tiene {correctas} opciones correctas y no declara `multiple: true`, "
+                f"así que es imposible de acertar")
+    return fallos
+
+
+def etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
+    """La etiqueta «(selección múltiple)» la pone el componente, no el autor."""
+    avisos = []
+    for m in re.finditer(r"pregunta:\s*['\"][^'\"]*\(selecci[óo]n m[úu]ltiple\)", cuerpo):
+        avisos.append(
+            f"línea {linea_de(texto, desplazamiento + m.start())}: «(selección "
+            f"múltiple)» escrito en el enunciado; el componente ya la pinta a "
+            f"partir de `multiple: true` y aquí saldría dos veces")
+    return avisos
+
+
 def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     texto = ruta.read_text(encoding="utf-8")
     cuerpo = cuerpo_capitulo(texto)
@@ -620,6 +676,12 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     # 11 · ningún enunciado pide escribir un programa desde cero
     for f in pide_escribir_programa(texto, cuerpo, desplazamiento):
         problemas.append(f"enunciado — {f}")
+
+    # 12 · ninguna pregunta con varias respuestas correctas es inacertable
+    for f in preguntas_imposibles(texto, cuerpo, desplazamiento):
+        problemas.append(f"pregunta imposible — {f}")
+    for f in etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
+        avisos.append(f"pregunta — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
