@@ -170,6 +170,51 @@ tocarlo también desactualiza la plantilla, y hasta ahora eso no lo veía nadie)
 ensamblar, `verificar.py` devuelve 1 y señala la línea 2119 como primera
 diferencia; restaurada la fuente, vuelve a 0.
 
+### H8 · Con el panel oculto, los temporizadores no sirven para conducir el DOM *(hallado al ejecutar, 2026-08-10)*
+
+Es hermano de la trampa 12 de la skill, que avisa de que aquí no se pueden medir
+eventos de foco. Va más allá: en este panel `document.hidden` es **`true`**, y
+con la pestaña oculta Chrome **estrangula `setTimeout`**. Una espera de 70 ms
+tarda segundos, de modo que cualquier prueba escrita como
+«clic · esperar · leer» se cuelga y la herramienta corta a los 30 s **con los
+clics a medio aplicar**, que es peor que fallar: deja el ejercicio en un estado
+intermedio y la siguiente prueba mide sobre él.
+
+El instrumento que sí funciona no usa temporizadores:
+
+```js
+const tick  = () => new Promise(r => { const c = new MessageChannel(); c.port1.onmessage = () => r(); c.port2.postMessage(0); });
+const flush = async (n = 25) => { for (let k = 0; k < n; k++) await tick(); };
+```
+
+`MessageChannel` no se estrangula —es lo que usa el planificador de React—, así
+que unos cuantos ticks bastan para que el render se vuelque. Con eso, los siete
+ejercicios se condujeron sin una sola espera por reloj.
+
+Dos avisos más sobre el instrumento, los dos cazados aquí:
+
+- **No localice un ejercicio por el texto de su botón.** `Comprobar` pasa a
+  decir `Reintentar` al comprobar, y la tarjeta deja de encontrarse a mitad de
+  prueba. Se localiza por la etiqueta del tipo (`E5 · Secuencia`), que no cambia.
+- **Tampoco por el icono.** La `Motivacion` de la sección 1 usaba
+  `fa-list-ol`, el mismo de la cabecera de `OrdenaPasos`, y el selector cogía la
+  motivación. Se cambió el icono de la motivación —dos usos del mismo icono en
+  una sección tampoco se ven bien— y el selector pasó a la etiqueta.
+
+### H9 · Un icono inexistente se puede comprobar desde el navegador
+
+El riesgo R9 del plan maestro dice que un icono que no existe en la Font Awesome
+cargada aparece como un hueco **sin ningún error de consola**. Se puede medir:
+
+```js
+const i = document.createElement('i'); i.className = 'fas ' + clase;
+document.body.appendChild(i);
+getComputedStyle(i, '::before').content;   // "none" si el icono no existe
+```
+
+Los ocho iconos del capítulo dan contenido y ancho no nulos; el control
+(`fa-inexistente-xyz`) da `none` y ancho 0, así que la prueba discrimina.
+
 ### H6 · Siete secciones, siete iconos, sin repetir
 
 Hay 15 iconos utilizables y el capítulo tiene 7 secciones: no hace falta repetir
@@ -343,35 +388,66 @@ Una tarea = una sección terminada: motivación + código en cuatro lenguajes +
 sus ejercicios. Todas las salidas declaradas se ejecutan **en el momento de
 escribirlas**, no al final.
 
-#### Tarea 2.1 · Portada + Sección 1 — «La secuencia: el orden importa»
-Portada con identificación (fila 33), qué se lleva, `Pipeline` de 5 pasos y la
-nota de los cuatro lenguajes. Sección 1: la secuencia como una de las tres
-estructuras básicas; por qué el orden no es negociable; `FlujogramaSecuencial`
-(SVG propio del capítulo) con el flujo lineal anotado.
-**Ejercicios:** E5 (ordenar una liquidación desordenada) · E2 (predecir la salida
-de una secuencia con dos líneas permutadas).
+#### Tarea 2.1 · Portada + Sección 1 — «La secuencia: el orden importa» · ✅
+Portada con identificación (fila 33), qué se lleva, `Pipeline` de 5 pasos, las
+tres estructuras de control y la nota de los cuatro lenguajes. Sección 1: qué es
+una secuencia; `FlujogramaSecuencial` (SVG propio del capítulo) con el estado
+anotado dentro de cada bloque; y la **regla de dependencia** —dos instrucciones
+se pueden intercambiar si ninguna usa lo que la otra modifica—.
+**Caso:** factura de proveedor de 8 000 000 con descuento fijo de 200 000 e IVA
+del 19 % sobre la base gravable → 9 282 000. Con el descuento aplicado después
+del impuesto → 9 320 000. La diferencia, 38 000 por factura, es el gancho.
+**Ejercicios:** E2 (¿qué imprime la versión con el orden cambiado?) · E5
+(reconstruir la liquidación).
 **Alcance:** M
 
-#### Tarea 2.2 · Sección 2 — «Leer, asignar, escribir»
-Las tres instrucciones elementales. Asignación destructiva: qué le pasa al valor
-anterior. Aquí va el **E3 del intercambio** (`a <- b; b <- a`), diagnosticado como
-*sobrescritura antes de lectura*, con su costo en pesos.
-**Ejercicios:** E3 (intercambio) · E1 (traza de 3 variables) · E2 (predecir salida).
+#### Tarea 2.2 · Sección 2 — «Leer, asignar, escribir» · ✅
+Las tres instrucciones elementales en una tabla; la asignación leída en dos
+tiempos —primero se evalúa la derecha, después se escribe la izquierda
+**borrando lo que hubiera**—; y por qué intercambiar dos valores necesita tres
+líneas y no dos.
+**Caso:** traslado de saldos entre dos cuentas de tesorería, 340 000 000 y
+85 000 000.
+**Ejercicios:** E2 (acumulador: 1 200 000 → 1 550 000 → 1 050 000) · E1 (traza
+del intercambio con variable temporal, 18 celdas ocultas) · E3 (el intercambio
+sin temporal, diagnosticado como *sobrescritura antes de lectura*).
 **Alcance:** M
 
-#### Tarea 2.3 · Sección 3 — «Expresiones y precedencia»
-Retoma el capítulo 1 **citándolo**, no repitiéndolo (H4). El caso propio: una
-fórmula de liquidación donde el paréntesis cambia el resultado en pesos.
-**Ejercicios:** E2 (precedencia) · E4 (dos expresiones, ¿equivalentes?).
+#### Tarea 2.3 · Sección 3 — «Expresiones y precedencia» · ✅
+Retoma el capítulo 1 **citándolo** —«el capítulo 1 estableció la tabla; aquí se
+usa»— y no repitiéndolo (H4). Tabla de prioridades con la asociatividad de la
+potencia por la derecha, y la observación de que la barra de fracción agrupa
+sola mientras que el código no tiene barra.
+**Caso:** comisión de manejo del 0,5 % sobre el saldo promedio del mes
+(10 000 000 y 6 000 000). Con paréntesis: promedio 8 000 000, comisión 40 000.
+Sin él: 13 000 000 y 65 000 — un 62 % de más, todos los meses y a cada cliente.
+**Ejercicios:** E2 (qué imprime la versión sin paréntesis) · E4 (`(a+b)/2`
+frente a `a/2 + b/2`: equivalentes, con la salvedad de la división entera).
 **Alcance:** M
 
 ---
 
 ### ⏸ Punto de control 2 — Tono, densidad y primer tercio
-- [ ] El usuario lee portada y secciones 1–3 y aprueba densidad, tono y
-      profundidad del caso financiero
-- [ ] Se confirma que la sección 3 **cita** el capítulo 1 sin repetirlo
-- [ ] 7 ejercicios escritos; `verificar.py --sin-cuota --con-salidas` en verde
+- [x] 7 ejercicios escritos, con la distribución prevista: E1:1 E2:3 E3:1 E4:1 E5:1
+- [x] La sección 3 **cita** el capítulo 1 sin repetirlo
+- [x] `verificar.py --sin-cuota --con-salidas` en verde sobre los tres capítulos;
+      8 bloques de Python y R ejecutados y comparados
+- [x] **Los siete ejercicios conducidos hasta el veredicto**, cada uno con una
+      respuesta mala primero:
+      · E2 ×3 → «Revisa la explicación» / «¡Correcto!»
+      · E5 → «1 de 7 pasos en la posición correcta» / «¡Secuencia correcta!»
+      · E1 → 17/18 (94 %) / 18/18 (100 %)
+      · E3 → conducido en **los cuatro lenguajes**, con la línea correcta en cada
+        uno (5, 4, 4 y 6) y la explicación citando esa misma línea y el nombre de
+        variable de ese lenguaje; señalando la línea siguiente responde «Clasificó
+        bien el tipo, pero el error está en otra línea»
+      · E4 → «Revisa la explicación» / «¡Correcto!»
+- [x] A 375 px, las siete secciones con `scrollWidth` = 375 y sin un solo
+      elemento desbordado fuera de su contenedor
+- [x] Los ocho iconos del capítulo existen en la Font Awesome cargada (H9)
+- [x] Consola limpia en pestaña nueva
+- [ ] **El usuario lee portada y secciones 1–3 y aprueba densidad, tono y
+      profundidad del caso financiero**
 
 ---
 

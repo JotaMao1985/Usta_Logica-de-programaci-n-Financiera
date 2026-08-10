@@ -2193,6 +2193,54 @@
                         </tbody>
                     </table>
                 </div>
+
+                <h3>Qué se lleva de aquí</h3>
+                <p>
+                    Este es el capítulo donde se aprende a <strong>leer un programa sin ejecutarlo</strong>.
+                    Al terminarlo debería poder decidir si dos instrucciones se pueden intercambiar sin
+                    cambiar el resultado; reconocer cuándo una asignación destruye un dato que todavía
+                    hace falta; leer una expresión aritmética en el mismo orden en que la lee la máquina;
+                    y, sobre todo, <strong>construir una tabla de traza</strong> y usarla para encontrar un
+                    fallo que no produce ningún mensaje de error.
+                </p>
+
+                <Pipeline steps={[
+                    { num: 1, title: 'El orden', desc: 'Cuándo dos instrucciones se pueden intercambiar y cuándo no' },
+                    { num: 2, title: 'Las tres básicas', desc: 'Leer, asignar y escribir — y qué se pierde al asignar' },
+                    { num: 3, title: 'Las expresiones', desc: 'En qué orden calcula la máquina lo que usted escribió' },
+                    { num: 4, title: 'La traza', desc: 'Ejecutar el programa a mano y dejar constancia' },
+                    { num: 5, title: 'El oficio', desc: 'Interés, descuento, tasas y nómina como secuencias' },
+                ]} />
+
+                <h3>Las tres estructuras, y por qué esta va primera</h3>
+                <p>
+                    Todo programa, por grande que sea, se arma con tres estructuras de control:
+                    <strong> secuencia</strong>, <strong>selección</strong> y <strong>repetición</strong>. Este capítulo
+                    agota la primera; el 4 se ocupa de la segunda y el 5 de la tercera. Va primera
+                    porque las otras dos la contienen: dentro de un <span className="inline-code">Si</span> y
+                    dentro de un <span className="inline-code">Mientras</span> lo que hay es, otra vez, una
+                    secuencia de instrucciones que se ejecutan en orden.
+                </p>
+
+                <h3>Los cuatro lenguajes</h3>
+                <p>
+                    Todo algoritmo aparece en cuatro versiones. Cada bloque <strong>tiene su propia
+                    pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos a la vez y
+                    compararlos; el material <strong>recuerda la última elección</strong> —también entre
+                    visitas— y con ella abre los bloques que aún no se han tocado. En este capítulo
+                    conviene mirar los cuatro al menos una vez: la traza de la sección 4 muestra que
+                    los números de línea cambian de un lenguaje a otro y <strong>los valores no</strong>.
+                </p>
+
+                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Dieciocho ejercicios y un cuestionario integrador" icon="fa-brain">
+                    Ninguno pide <strong>escribir un programa desde cero</strong>: eso corresponde al taller
+                    evaluable que el syllabus pide subir a Moodle. Aquí se ejercita otra cosa
+                    —<strong>leer</strong> un algoritmo ajeno, <strong>trazarlo</strong> a mano,
+                    <strong> diagnosticar</strong> por qué falla, <strong>compararlo</strong> con otro e
+                    <strong> interpretar</strong> qué significa el resultado para el cliente— que es más
+                    difícil y es lo que la rúbrica del syllabus llama <em>dominio de algoritmos y
+                    procedimientos</em>.
+                </CalloutPro>
             </div>
         );
 
@@ -2200,21 +2248,457 @@
            SECCIÓN 1 — LA SECUENCIA: EL ORDEN IMPORTA
         ============================================================ */
 
+        // Flujograma de una secuencia pura: una entrada, una salida y ninguna
+        // bifurcación. Los símbolos son los del capítulo 2 y no se repiten aquí;
+        // lo nuevo es la anotación del estado dentro de cada bloque de proceso,
+        // que es lo que la sección 4 convertirá en tabla.
+        const FlujogramaSecuencial = () => {
+            const proceso = (y, linea, valor) => (
+                <g key={y}>
+                    <rect x="30" y={y} width="360" height="48" rx="6" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.5" />
+                    <text x="210" y={y + 20} textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">{linea}</text>
+                    <text x="210" y={y + 37} textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">{valor}</text>
+                </g>
+            );
+            const flecha = (y) => <line key={'f' + y} x1="210" y1={y} x2="210" y2={y + 20} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha)" />;
+            return (
+                <figure className="my-6 not-prose">
+                    <svg viewBox="0 0 420 456" role="img" style={{ width: '100%', maxWidth: '440px', height: 'auto', display: 'block', margin: '0 auto' }}
+                        aria-label="Flujograma de una secuencia: Inicio, leer los datos de la factura, tres bloques de proceso que calculan base, IVA y total, escribir el total y Fin. No hay bifurcaciones ni ciclos.">
+                        <defs>
+                            <marker id="lp-flecha" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
+                            </marker>
+                        </defs>
+
+                        <ellipse cx="210" cy="26" rx="58" ry="20" fill="#3D008D" />
+                        <text x="210" y="31" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Inicio</text>
+                        {flecha(46)}
+
+                        <polygon points="44,66 390,66 376,114 30,114" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="210" y="86" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Leer valorFactura, descuento</text>
+                        <text x="210" y="103" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">8000000 · 200000</text>
+                        {flecha(114)}
+
+                        {proceso(134, 'base \u2190 valorFactura - descuento', 'base = 7800000')}
+                        {flecha(182)}
+                        {proceso(202, 'iva \u2190 base * tasaIva', 'iva = 1482000')}
+                        {flecha(250)}
+                        {proceso(270, 'total \u2190 base + iva', 'total = 9282000')}
+                        {flecha(318)}
+
+                        <polygon points="44,338 390,338 376,386 30,386" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="210" y="358" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Escribir total</text>
+                        <text x="210" y="375" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">9282000</text>
+                        {flecha(386)}
+
+                        <ellipse cx="210" cy="426" rx="58" ry="20" fill="#001A4D" />
+                        <text x="210" y="431" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Fin</text>
+                    </svg>
+                    <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                        Una secuencia pura: una sola entrada, una sola salida y ninguna flecha que vuelva
+                        hacia atrás o se bifurque. En azul, el estado después de cada instrucción.
+                    </figcaption>
+                </figure>
+            );
+        };
+
+        // Salidas comprobadas por ejecución (comprobación 9). Python imprime con
+        // separador de miles y R sin él: es la misma cifra en dos formatos, y no
+        // se normaliza a propósito.
+        const EJ_FACTURA = {
+            pseudo: `Inicio
+    // Liquidacion de una factura de proveedor
+    valorFactura <- 8000000
+    descuento    <- 200000        // por pronto pago
+    tasaIva      <- 0.19
+
+    base  <- valorFactura - descuento
+    iva   <- base * tasaIva
+    total <- base + iva
+
+    Escribir "Base gravable: ", base
+    //> Base gravable: 7800000
+    Escribir "IVA: ", iva
+    //> IVA: 1482000
+    Escribir "Total: ", total
+    //> Total: 9282000
+Fin`,
+            python: `# Liquidacion de una factura de proveedor
+valor_factura = 8_000_000
+descuento     = 200_000
+tasa_iva      = 0.19
+
+base  = valor_factura - descuento
+iva   = base * tasa_iva
+total = base + iva
+
+print(f"Base gravable: {base:,.0f}")
+#> Base gravable: 7,800,000
+print(f"IVA: {iva:,.0f}")
+#> IVA: 1,482,000
+print(f"Total: {total:,.0f}")
+#> Total: 9,282,000`,
+            r: `# Liquidacion de una factura de proveedor
+valor_factura <- 8000000
+descuento     <- 200000
+tasa_iva      <- 0.19
+
+base  <- valor_factura - descuento
+iva   <- base * tasa_iva
+total <- base + iva
+
+cat(sprintf("Base gravable: %.0f\\n", base))
+#> Base gravable: 7800000
+cat(sprintf("IVA: %.0f\\n", iva))
+#> IVA: 1482000
+cat(sprintf("Total: %.0f\\n", total))
+#> Total: 9282000`,
+            vba: `Sub LiquidarFactura()
+    ' Liquidacion de una factura de proveedor
+    Dim valorFactura As Currency, descuento As Currency
+    Dim tasaIva As Double, base As Currency, iva As Currency, total As Currency
+
+    valorFactura = 8000000
+    descuento = 200000            ' por pronto pago
+    tasaIva = 0.19
+
+    base = valorFactura - descuento
+    iva = base * tasaIva
+    total = base + iva
+
+    Debug.Print "Base gravable: " & base
+    '> Base gravable: 7800000
+    Debug.Print "IVA: " & iva
+    '> IVA: 1482000
+    Debug.Print "Total: " & total
+    '> Total: 9282000
+End Sub`,
+        };
+
+        // El MISMO cálculo con las instrucciones en otro orden. No lleva salida
+        // declarada a propósito: averiguarla es justamente el ejercicio E2.
+        const EJ_FACTURA_MAL = {
+            pseudo: `Inicio
+    valorFactura <- 8000000
+    descuento    <- 200000
+    tasaIva      <- 0.19
+
+    base  <- valorFactura
+    iva   <- base * tasaIva
+    base  <- base - descuento
+    total <- base + iva
+
+    Escribir "Total: ", total
+Fin`,
+            python: `valor_factura = 8_000_000
+descuento     = 200_000
+tasa_iva      = 0.19
+
+base  = valor_factura
+iva   = base * tasa_iva
+base  = base - descuento
+total = base + iva
+
+print(f"Total: {total:,.0f}")`,
+            r: `valor_factura <- 8000000
+descuento     <- 200000
+tasa_iva      <- 0.19
+
+base  <- valor_factura
+iva   <- base * tasa_iva
+base  <- base - descuento
+total <- base + iva
+
+cat(sprintf("Total: %.0f\\n", total))`,
+            vba: `Sub LiquidarFacturaOtroOrden()
+    Dim valorFactura As Currency, descuento As Currency
+    Dim tasaIva As Double, base As Currency, iva As Currency, total As Currency
+
+    valorFactura = 8000000
+    descuento = 200000
+    tasaIva = 0.19
+
+    base = valorFactura
+    iva = base * tasaIva
+    base = base - descuento
+    total = base + iva
+
+    Debug.Print "Total: " & total
+End Sub`,
+        };
+
+        const ORDENA_FACTURA = {
+            pseudo: ['Inicio', 'Leer valorFactura, descuento, tasaIva',
+                'base  <- valorFactura - descuento', 'iva   <- base * tasaIva',
+                'total <- base + iva', 'Escribir total', 'Fin'],
+            python: ['valor_factura = float(input("Valor: "))', 'descuento = float(input("Descuento: "))',
+                'tasa_iva = float(input("IVA: "))', 'base  = valor_factura - descuento',
+                'iva   = base * tasa_iva', 'total = base + iva', 'print(total)'],
+            r: ['valor_factura <- as.numeric(readline("Valor: "))', 'descuento <- as.numeric(readline("Descuento: "))',
+                'tasa_iva <- as.numeric(readline("IVA: "))', 'base  <- valor_factura - descuento',
+                'iva   <- base * tasa_iva', 'total <- base + iva', 'cat(total)'],
+            vba: ['Sub LiquidarFactura()', 'Dim base As Currency, iva As Currency, total As Currency',
+                'base = Range("B2").Value - Range("B3").Value', 'iva = base * Range("B4").Value',
+                'total = base + iva', 'MsgBox total', 'End Sub'],
+        };
+
         const Cap1Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-list-ol"
+                {/* No `fa-list-ol`: es el icono de la cabecera de `OrdenaPasos`,
+                    que aparece más abajo en esta misma sección. Comprobado que
+                    existe en la Font Awesome cargada — un icono inexistente no
+                    da error, pinta un hueco (riesgo R9 del plan maestro). */}
+                <Motivacion icon="fa-arrow-down-1-9"
                     gancho="Las mismas instrucciones en otro orden dan otra cifra. ¿Cuándo el orden es negociable y cuándo no?">
                     Una factura de 8 000 000 con un descuento fijo de 200 000 por pronto pago y 19 % de
                     IVA. Descontar antes del impuesto o después son las mismas dos líneas en distinto
                     orden: 9 282 000 contra 9 320 000. Treinta y ocho mil pesos de diferencia por
                     factura, en un proveedor que emite mil facturas al mes.
                 </Motivacion>
+
+                <h3>Qué es una secuencia</h3>
+                <p>
+                    Una <Termino def="Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas.">secuencia</Termino> es
+                    la estructura más simple que existe: las instrucciones se ejecutan <strong>una tras
+                    otra</strong>, <strong>cada una exactamente una vez</strong> y <strong>en el orden en que
+                    están escritas</strong>. No hay preguntas, no hay saltos, no hay vueltas atrás. Es la
+                    estructura que este capítulo agota; la selección llega en el capítulo 4 y la
+                    repetición en el 5.
+                </p>
+                <p>
+                    Que sea la más simple no la vuelve inofensiva. Es donde más dinero se pierde, porque
+                    un error de secuencia <strong>no produce ningún mensaje</strong>: el programa corre, la
+                    cifra sale, y lo único raro es que está mal.
+                </p>
+
+                <FlujogramaSecuencial />
+
+                <h3>El caso: liquidar una factura de proveedor</h3>
+                <p>
+                    Sobre el valor de la factura se aplica un descuento por pronto pago, y el IVA se
+                    calcula sobre lo que queda —la <strong>base gravable</strong>—, no sobre el valor
+                    original. Esa es una regla del negocio, no del lenguaje, y es la que fija el orden
+                    de las tres operaciones.
+                </p>
+
+                <Eq>{String.raw`$$\text{base} = \text{valorFactura} - \text{descuento} \qquad \text{IVA} = \text{base} \times 0{,}19$$`}</Eq>
+
+                <CodeTabs
+                    titulo="Liquidación de la factura — el orden correcto"
+                    bloques={EJ_FACTURA}
+                    nota="La salida va dentro del bloque, con el prefijo de cada lenguaje. Copiar el bloque entrega un guion ejecutable." />
+
+                <h3>Cuándo se pueden intercambiar dos instrucciones</h3>
+                <p>
+                    No siempre importa el orden. Las tres primeras líneas del ejemplo —las que fijan
+                    <span className="inline-code"> valorFactura</span>, <span className="inline-code">descuento</span> y
+                    <span className="inline-code"> tasaIva</span>— se pueden barajar como se quiera: ninguna
+                    lee lo que otra escribe. La regla es exactamente esa:
+                </p>
+                <Box type="info" label="Regla de dependencia">
+                    Dos instrucciones consecutivas <strong>se pueden intercambiar</strong> si ninguna de las
+                    dos usa una variable que la otra modifica. Si la segunda <em>lee</em> lo que la primera
+                    <em> escribe</em>, el orden es obligatorio y cambiarlo altera el resultado —sin avisar—.
+                </Box>
+                <p>
+                    <span className="inline-code">iva ← base * tasaIva</span> lee <span className="inline-code">base</span>,
+                    que la línea anterior acaba de escribir. Ahí el orden no se negocia. Y
+                    <span className="inline-code"> total ← base + iva</span> lee las dos, así que tiene que ir de últimas.
+                </p>
+
+                <Box type="warn" label="El orden equivocado no es un error de programación">
+                    Es un error de <strong>modelo del negocio</strong>. El código de más abajo compila,
+                    corre y no advierte nada: simplemente responde a otra pregunta —cuánto sería el IVA
+                    si no hubiera descuento— y la presenta como si fuera la respuesta a la que se hizo.
+                </Box>
+
+                <CodeTabs
+                    titulo="El mismo cálculo con las instrucciones en otro orden"
+                    bloques={EJ_FACTURA_MAL}
+                    nota="Este bloque no declara su salida: averiguarla es el ejercicio que sigue." />
+
+                <h3>Ejercicios</h3>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="En la versión de arriba, el descuento se resta después de calcular el IVA. ¿Qué imprime la última línea?"
+                    opciones={[
+                        { texto: '9 282 000, igual que la versión correcta: restar antes o después da lo mismo.', correcta: false },
+                        { texto: '9 320 000, porque el IVA se calculó sobre los 8 000 000 completos.', correcta: true, justificacion: 'El IVA se calcula sobre 8 000 000 y da 1 520 000 en vez de 1 482 000. La base sí termina en 7 800 000, porque el descuento se resta después, así que el total es 7 800 000 + 1 520 000 = 9 320 000. Son 38 000 de más por factura, y el programa no advierte nada: la cifra tiene el aspecto de siempre.' },
+                        { texto: '9 520 000, porque el descuento nunca llega a aplicarse.', correcta: false },
+                        { texto: 'Un error de ejecución: la variable base se asigna dos veces.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <OrdenaPasos
+                    enunciado="Reconstruya el algoritmo que liquida una factura de proveedor con descuento por pronto pago e IVA sobre la base gravable."
+                    pasos={ORDENA_FACTURA}
+                    pista="Ninguna variable puede leerse antes de que alguna instrucción le haya dado valor. Empiece por preguntarse qué necesita cada línea para poder ejecutarse."
+                />
             </div>
         );
 
         /* ============================================================
            SECCIÓN 2 — LEER, ASIGNAR, ESCRIBIR
         ============================================================ */
+
+        const EJ_INTERCAMBIO = {
+            pseudo: `Inicio
+    // Traslado de saldos entre dos cuentas de tesoreria
+    cuentaA <- 340000000
+    cuentaB <- 85000000
+
+    temporal <- cuentaA        // se guarda ANTES de sobrescribir
+    cuentaA  <- cuentaB
+    cuentaB  <- temporal
+
+    Escribir "Cuenta A: ", cuentaA
+    //> Cuenta A: 85000000
+    Escribir "Cuenta B: ", cuentaB
+    //> Cuenta B: 340000000
+Fin`,
+            python: `# Traslado de saldos entre dos cuentas de tesoreria
+cuenta_a = 340_000_000
+cuenta_b = 85_000_000
+
+temporal = cuenta_a        # se guarda ANTES de sobrescribir
+cuenta_a = cuenta_b
+cuenta_b = temporal
+
+print(f"Cuenta A: {cuenta_a:,.0f}")
+#> Cuenta A: 85,000,000
+print(f"Cuenta B: {cuenta_b:,.0f}")
+#> Cuenta B: 340,000,000`,
+            r: `# Traslado de saldos entre dos cuentas de tesoreria
+cuenta_a <- 340000000
+cuenta_b <- 85000000
+
+temporal <- cuenta_a       # se guarda ANTES de sobrescribir
+cuenta_a <- cuenta_b
+cuenta_b <- temporal
+
+cat(sprintf("Cuenta A: %.0f\\n", cuenta_a))
+#> Cuenta A: 85000000
+cat(sprintf("Cuenta B: %.0f\\n", cuenta_b))
+#> Cuenta B: 340000000`,
+            vba: `Sub TrasladarSaldos()
+    ' Traslado de saldos entre dos cuentas de tesoreria
+    Dim cuentaA As Currency, cuentaB As Currency, temporal As Currency
+
+    cuentaA = 340000000
+    cuentaB = 85000000
+
+    temporal = cuentaA        ' se guarda ANTES de sobrescribir
+    cuentaA = cuentaB
+    cuentaB = temporal
+
+    Debug.Print "Cuenta A: " & cuentaA
+    '> Cuenta A: 85000000
+    Debug.Print "Cuenta B: " & cuentaB
+    '> Cuenta B: 340000000
+End Sub`,
+        };
+
+        const EJ_ACUMULA = {
+            pseudo: `Inicio
+    saldo <- 1200000
+    saldo <- saldo + 350000
+    saldo <- saldo - 500000
+    Escribir saldo
+Fin`,
+            python: `saldo = 1_200_000
+saldo = saldo + 350_000
+saldo = saldo - 500_000
+print(saldo)`,
+            r: `saldo <- 1200000
+saldo <- saldo + 350000
+saldo <- saldo - 500000
+cat(saldo)`,
+            vba: `saldo = 1200000
+saldo = saldo + 350000
+saldo = saldo - 500000
+Debug.Print saldo`,
+        };
+
+        const ins = (pseudo, python, r, vba) => ({ pseudo, python, r, vba });
+
+        const TRAZA_INTERCAMBIO = {
+            pseudo: `1  cuentaA  <- 340000000
+2  cuentaB  <- 85000000
+3  temporal <- cuentaA
+4  cuentaA  <- cuentaB
+5  cuentaB  <- temporal
+6  Escribir cuentaA, cuentaB`,
+            python: `1  cuenta_a = 340000000
+2  cuenta_b = 85000000
+3  temporal = cuenta_a
+4  cuenta_a = cuenta_b
+5  cuenta_b = temporal
+6  print(cuenta_a, cuenta_b)`,
+            r: `1  cuenta_a <- 340000000
+2  cuenta_b <- 85000000
+3  temporal <- cuenta_a
+4  cuenta_a <- cuenta_b
+5  cuenta_b <- temporal
+6  cat(cuenta_a, cuenta_b)`,
+            vba: `1  cuentaA = 340000000
+2  cuentaB = 85000000
+3  temporal = cuentaA
+4  cuentaA = cuentaB
+5  cuentaB = temporal
+6  Debug.Print cuentaA, cuentaB`,
+        };
+
+        // El mismo intercambio SIN la variable temporal. El fallo no cae en la
+        // misma línea en los cuatro lenguajes —VBA declara con `Dim` y el
+        // pseudocódigo abre con `Inicio`—, así que `lineaCorrecta` es un objeto.
+        const ERROR_SWAP_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Traslado de saldos entre dos cuentas de tesoreria',
+                '    cuentaA <- 340000000',
+                '    cuentaB <- 85000000',
+                '    cuentaA <- cuentaB',
+                '    cuentaB <- cuentaA',
+                '    Escribir "Cuenta A: ", cuentaA, "  Cuenta B: ", cuentaB',
+                'Fin',
+            ],
+            python: [
+                '# Traslado de saldos entre dos cuentas de tesoreria',
+                'cuenta_a = 340_000_000',
+                'cuenta_b = 85_000_000',
+                'cuenta_a = cuenta_b',
+                'cuenta_b = cuenta_a',
+                'print("Cuenta A:", cuenta_a, " Cuenta B:", cuenta_b)',
+            ],
+            r: [
+                '# Traslado de saldos entre dos cuentas de tesoreria',
+                'cuenta_a <- 340000000',
+                'cuenta_b <- 85000000',
+                'cuenta_a <- cuenta_b',
+                'cuenta_b <- cuenta_a',
+                'cat("Cuenta A:", cuenta_a, " Cuenta B:", cuenta_b)',
+            ],
+            vba: [
+                'Sub TrasladarSaldos()',
+                "    ' Traslado de saldos entre dos cuentas de tesoreria",
+                '    Dim cuentaA As Currency, cuentaB As Currency',
+                '    cuentaA = 340000000',
+                '    cuentaB = 85000000',
+                '    cuentaA = cuentaB',
+                '    cuentaB = cuentaA',
+                '    Debug.Print "Cuenta A: " & cuentaA & "  Cuenta B: " & cuentaB',
+                'End Sub',
+            ],
+        };
+        const ERROR_SWAP_LINEA_OK = { pseudo: 5, python: 4, r: 4, vba: 6 };
+
+        const ERROR_SWAP_EXPLICACION = {
+            pseudo: <>La <strong>línea 5</strong> escribe en <span className="inline-code">cuentaA</span> sin que nadie haya guardado antes los 340 000 000 que tenía. Ese valor deja de existir en ese instante. La <strong>línea 6</strong> ya no falla por sí sola: hace lo que se le pide, copiar <span className="inline-code">cuentaA</span> —que ahora vale 85 000 000— en <span className="inline-code">cuentaB</span>. El arreglo es guardar primero: <span className="inline-code">temporal &lt;- cuentaA</span> antes de la línea 5.</>,
+            python: <>La <strong>línea 4</strong> escribe en <span className="inline-code">cuenta_a</span> sin que nadie haya guardado antes los 340 000 000 que tenía. Ese valor deja de existir en ese instante. La <strong>línea 5</strong> ya no falla por sí sola: hace lo que se le pide, copiar <span className="inline-code">cuenta_a</span> —que ahora vale 85 000 000— en <span className="inline-code">cuenta_b</span>. El arreglo es guardar primero: <span className="inline-code">temporal = cuenta_a</span> antes de la línea 4.</>,
+            r: <>La <strong>línea 4</strong> escribe en <span className="inline-code">cuenta_a</span> sin que nadie haya guardado antes los 340 000 000 que tenía. Ese valor deja de existir en ese instante. La <strong>línea 5</strong> ya no falla por sí sola: hace lo que se le pide, copiar <span className="inline-code">cuenta_a</span> —que ahora vale 85 000 000— en <span className="inline-code">cuenta_b</span>. El arreglo es guardar primero: <span className="inline-code">temporal &lt;- cuenta_a</span> antes de la línea 4.</>,
+            vba: <>La <strong>línea 6</strong> escribe en <span className="inline-code">cuentaA</span> sin que nadie haya guardado antes los 340 000 000 que tenía. Ese valor deja de existir en ese instante. La <strong>línea 7</strong> ya no falla por sí sola: hace lo que se le pide, copiar <span className="inline-code">cuentaA</span> —que ahora vale 85 000 000— en <span className="inline-code">cuentaB</span>. El arreglo es guardar primero: <span className="inline-code">temporal = cuentaA</span> antes de la línea 6.</>,
+        };
 
         const Cap2Section = () => (
             <div className="prose-lp">
@@ -2225,12 +2709,208 @@
                     escribir mal. Al terminar, las dos cuentas tienen el mismo saldo y 340 millones no
                     aparecen en el cierre. La instrucción que los borró es la más inocente del lenguaje.
                 </Motivacion>
+
+                <h3>Tres instrucciones, y ya está</h3>
+                <p>
+                    Toda secuencia se construye con tres instrucciones elementales. No hay una cuarta.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Instrucción</th><th>Qué hace</th><th>Pseudocódigo</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Lectura</strong></td><td>Trae un dato de fuera y lo guarda en una variable</td><td><span className="inline-code">Leer capital</span></td></tr>
+                            <tr><td><strong>Asignación</strong></td><td>Calcula un valor y lo guarda en una variable</td><td><span className="inline-code">interes ← capital * tasa</span></td></tr>
+                            <tr><td><strong>Escritura</strong></td><td>Muestra un valor. <em>No modifica ninguna variable</em></td><td><span className="inline-code">Escribir interes</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    De dónde viene el dato en la lectura cambia con el lenguaje —del teclado en Python y
+                    R, de una celda de la hoja en VBA— y eso es una diferencia de <em>acento</em>, no de
+                    lógica. Lo que no cambia es que después de leer, ese dato está dentro de una variable
+                    y el resto del programa no necesita saber de dónde salió.
+                </p>
+
+                <h3>La asignación no es una igualdad</h3>
+                <p>
+                    En matemáticas <span className="inline-code">x = x + 1</span> es una ecuación sin solución.
+                    En programación <span className="inline-code">x ← x + 1</span> es una instrucción perfectamente
+                    corriente, y se lee de derecha a izquierda y en dos tiempos: <strong>primero</strong> se
+                    calcula lo de la derecha con los valores que hay ahora, <strong>después</strong> el
+                    resultado se guarda en la variable de la izquierda, <strong>borrando lo que hubiera</strong>.
+                </p>
+                <Box type="info" label="La flecha señala hacia dónde va el valor">
+                    Por eso el pseudocódigo escribe <span className="inline-code">←</span> y no <span className="inline-code">=</span>:
+                    la flecha recuerda que hay un origen y un destino. Python, R y VBA usan
+                    <span className="inline-code"> =</span> o <span className="inline-code">&lt;-</span>, pero el
+                    comportamiento es el mismo en los cuatro.
+                </Box>
+
+                <CodeTabs
+                    titulo="Una variable que se lee a sí misma"
+                    bloques={EJ_ACUMULA}
+                    nota="Tres asignaciones sobre la misma variable. Este bloque tampoco declara su salida: es el ejercicio que viene." />
+
+                <h3>Lo que se pierde al asignar</h3>
+                <p>
+                    Si asignar borra, intercambiar dos valores no se puede hacer en dos líneas. Hace
+                    falta una <strong>variable temporal</strong> que guarde el primer valor antes de que la
+                    asignación lo destruya. Es el patrón más viejo de la programación y sigue apareciendo
+                    en cualquier rutina que mueva saldos, posiciones o cupos.
+                </p>
+
+                <CodeTabs
+                    titulo="Intercambio de saldos — con variable temporal"
+                    bloques={EJ_INTERCAMBIO}
+                    nota="Tres asignaciones, no dos. La primera no cambia nada visible: solo guarda." />
+
+                <h3>Ejercicios</h3>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="Las tres asignaciones sobre saldo se ejecutan en orden. ¿Qué imprime la última línea?"
+                    opciones={[
+                        { texto: '1 050 000.', correcta: true, justificacion: 'Cada asignación calcula primero la derecha con el valor que saldo tiene en ese momento y después lo reemplaza: 1 200 000 → 1 550 000 → 1 050 000. Es un acumulador, el patrón con el que se construyen todos los saldos del capítulo 5.' },
+                        { texto: '2 050 000, la suma de los tres números.', correcta: false },
+                        { texto: '1 200 000: las dos últimas líneas son ecuaciones imposibles y se ignoran.', correcta: false },
+                        { texto: 'Un error: una variable no puede aparecer a ambos lados de la asignación.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <TablaTraza
+                    titulo="Traza del intercambio con variable temporal"
+                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor. Fíjese en el paso 3: es el único que no cambia nada de lo que se ve, y sin él el algoritmo no funciona.</>}
+                    codigo={TRAZA_INTERCAMBIO}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'cuentaA', titulo: 'cuentaA' },
+                        { clave: 'cuentaB', titulo: 'cuentaB' },
+                        { clave: 'temporal', titulo: 'temporal' },
+                    ]}
+                    ocultas={['cuentaA', 'cuentaB', 'temporal']}
+                    filas={[
+                        { paso: 1, instruccion: ins('cuentaA <- 340000000', 'cuenta_a = 340000000', 'cuenta_a <- 340000000', 'cuentaA = 340000000'), cuentaA: '340000000', cuentaB: '—', temporal: '—' },
+                        { paso: 2, instruccion: ins('cuentaB <- 85000000', 'cuenta_b = 85000000', 'cuenta_b <- 85000000', 'cuentaB = 85000000'), cuentaA: '340000000', cuentaB: '85000000', temporal: '—' },
+                        { paso: 3, instruccion: ins('temporal <- cuentaA', 'temporal = cuenta_a', 'temporal <- cuenta_a', 'temporal = cuentaA'), cuentaA: '340000000', cuentaB: '85000000', temporal: '340000000' },
+                        { paso: 4, instruccion: ins('cuentaA <- cuentaB', 'cuenta_a = cuenta_b', 'cuenta_a <- cuenta_b', 'cuentaA = cuentaB'), cuentaA: '85000000', cuentaB: '85000000', temporal: '340000000' },
+                        { paso: 5, instruccion: ins('cuentaB <- temporal', 'cuenta_b = temporal', 'cuenta_b <- temporal', 'cuentaB = temporal'), cuentaA: '85000000', cuentaB: '340000000', temporal: '340000000' },
+                        { paso: 6, instruccion: ins('Escribir cuentaA, cuentaB', 'print(cuenta_a, cuenta_b)', 'cat(cuenta_a, cuenta_b)', 'Debug.Print cuentaA, cuentaB'), cuentaA: '85000000', cuentaB: '340000000', temporal: '340000000' },
+                    ]}
+                    pista="Escribir no modifica ninguna variable, así que la última fila repite los valores de la anterior. Y temporal conserva su valor hasta el final: nadie vuelve a escribir en ella."
+                />
+
+                <DetectaError
+                    enunciado={<>Esta versión del traslado de saldos <strong>no</strong> usa variable temporal. Al terminar, las dos cuentas muestran el mismo saldo. <strong>Señale la línea que destruye un dato que todavía se necesita.</strong></>}
+                    lineas={ERROR_SWAP_LINEAS}
+                    lineaCorrecta={ERROR_SWAP_LINEA_OK}
+                    tipos={[
+                        'Error de sintaxis: falta una palabra clave o un delimitador.',
+                        'Sobrescritura antes de lectura: se asigna sobre una variable cuyo valor todavía hace falta.',
+                        'Error de unidades: se opera con un porcentaje sin convertirlo a tasa decimal.',
+                        'Error de tipo: se asigna un valor de un tipo a una variable de otro.',
+                    ]}
+                    tipoCorrecto={1}
+                    explicacion={ERROR_SWAP_EXPLICACION}
+                    impacto={<>Las dos cuentas quedan con <strong>85 000 000</strong> y los <strong>340 000 000</strong> de la cuenta A desaparecen del cierre. Ningún lenguaje avisa: sobrescribir una variable es una operación legítima, y aquí simplemente se hizo un instante antes de tiempo. El descuadre no aparece en el archivo de log —no hubo error— sino en la conciliación bancaria del día siguiente.</>}
+                />
             </div>
         );
 
         /* ============================================================
            SECCIÓN 3 — EXPRESIONES Y PRECEDENCIA
         ============================================================ */
+
+        const EJ_PROMEDIO = {
+            pseudo: `Inicio
+    // Comision de manejo sobre el saldo promedio del mes
+    saldoInicial <- 10000000
+    saldoFinal   <- 6000000
+    tasaComision <- 0.005
+
+    promedio <- (saldoInicial + saldoFinal) / 2
+    comision <- promedio * tasaComision
+
+    Escribir "Saldo promedio: ", promedio
+    //> Saldo promedio: 8000000
+    Escribir "Comision: ", comision
+    //> Comision: 40000
+Fin`,
+            python: `# Comision de manejo sobre el saldo promedio del mes
+saldo_inicial = 10_000_000
+saldo_final   = 6_000_000
+tasa_comision = 0.005
+
+promedio = (saldo_inicial + saldo_final) / 2
+comision = promedio * tasa_comision
+
+print(f"Saldo promedio: {promedio:,.0f}")
+#> Saldo promedio: 8,000,000
+print(f"Comision: {comision:,.0f}")
+#> Comision: 40,000`,
+            r: `# Comision de manejo sobre el saldo promedio del mes
+saldo_inicial <- 10000000
+saldo_final   <- 6000000
+tasa_comision <- 0.005
+
+promedio <- (saldo_inicial + saldo_final) / 2
+comision <- promedio * tasa_comision
+
+cat(sprintf("Saldo promedio: %.0f\\n", promedio))
+#> Saldo promedio: 8000000
+cat(sprintf("Comision: %.0f\\n", comision))
+#> Comision: 40000`,
+            vba: `Sub ComisionDeManejo()
+    ' Comision de manejo sobre el saldo promedio del mes
+    Dim saldoInicial As Currency, saldoFinal As Currency
+    Dim tasaComision As Double, promedio As Currency, comision As Currency
+
+    saldoInicial = 10000000
+    saldoFinal = 6000000
+    tasaComision = 0.005
+
+    promedio = (saldoInicial + saldoFinal) / 2
+    comision = promedio * tasaComision
+
+    Debug.Print "Saldo promedio: " & promedio
+    '> Saldo promedio: 8000000
+    Debug.Print "Comision: " & comision
+    '> Comision: 40000
+End Sub`,
+        };
+
+        const EJ_PROMEDIO_MAL = {
+            pseudo: `1  saldoInicial <- 10000000
+2  saldoFinal   <- 6000000
+3  promedio     <- saldoInicial + saldoFinal / 2
+4  Escribir promedio`,
+            python: `1  saldo_inicial = 10000000
+2  saldo_final   = 6000000
+3  promedio      = saldo_inicial + saldo_final / 2
+4  print(promedio)`,
+            r: `1  saldo_inicial <- 10000000
+2  saldo_final   <- 6000000
+3  promedio      <- saldo_inicial + saldo_final / 2
+4  cat(promedio)`,
+            vba: `1  saldoInicial = 10000000
+2  saldoFinal = 6000000
+3  promedio = saldoInicial + saldoFinal / 2
+4  Debug.Print promedio`,
+        };
+
+        const CMP_PARENTESIS = {
+            pseudo: 'promedio <- (saldoInicial + saldoFinal) / 2',
+            python: 'promedio = (saldo_inicial + saldo_final) / 2',
+            r: 'promedio <- (saldo_inicial + saldo_final) / 2',
+            vba: 'promedio = (saldoInicial + saldoFinal) / 2',
+        };
+        const CMP_DOS_MITADES = {
+            pseudo: 'promedio <- saldoInicial / 2 + saldoFinal / 2',
+            python: 'promedio = saldo_inicial / 2 + saldo_final / 2',
+            r: 'promedio <- saldo_inicial / 2 + saldo_final / 2',
+            vba: 'promedio = saldoInicial / 2 + saldoFinal / 2',
+        };
 
         const Cap3Section = () => (
             <div className="prose-lp">
@@ -2241,6 +2921,84 @@
                     el sistema lo acepta sin objetar nada. La cláusula y la línea de código se leen
                     igual; una cobra el 3 % de todo y la otra, el 3 % solo de los intereses.
                 </Motivacion>
+
+                <h3>La máquina no lee de izquierda a derecha</h3>
+                <p>
+                    El capítulo 1 estableció la tabla de precedencia de los operadores; aquí se usa. Lo
+                    que interesa ahora no es memorizarla, sino una consecuencia práctica: una expresión
+                    con varios operadores <strong>no se evalúa en el orden en que está escrita</strong>, sino
+                    en el orden que fija la precedencia. Y ese orden es el mismo en los cuatro lenguajes
+                    del curso.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Prioridad</th><th>Operadores</th><th>Se evalúa</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1.ª</td><td><span className="inline-code">( )</span></td><td>Primero, siempre. De dentro hacia fuera</td></tr>
+                            <tr><td>2.ª</td><td><span className="inline-code">^</span> · <span className="inline-code">**</span> (potencia)</td><td><strong>De derecha a izquierda</strong></td></tr>
+                            <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha</td></tr>
+                            <tr><td>4.ª</td><td><span className="inline-code">+</span> <span className="inline-code">-</span></td><td>De izquierda a derecha</td></tr>
+                            <tr><td>5.ª</td><td>Relacionales y lógicos</td><td>Al final (capítulo 4)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>El caso: comisión de manejo sobre el saldo promedio</h3>
+                <p>
+                    Muchos productos cobran una comisión sobre el <strong>saldo promedio</strong> del mes, no
+                    sobre el saldo del último día. El promedio de dos saldos es una suma dividida entre
+                    dos, y ahí es donde el paréntesis deja de ser decorativo:
+                </p>
+
+                <Eq>{String.raw`$$\text{promedio} = \frac{\text{saldoInicial} + \text{saldoFinal}}{2}$$`}</Eq>
+
+                <p>
+                    La barra de fracción de la fórmula matemática <strong>agrupa por sí sola</strong> todo lo
+                    que tiene encima. El código no tiene barra: la agrupación hay que escribirla.
+                </p>
+
+                <CodeTabs
+                    titulo="Comisión de manejo — con el paréntesis en su sitio"
+                    bloques={EJ_PROMEDIO} />
+
+                <Box type="danger" label="Lo que pasa si falta el paréntesis">
+                    Sin él, la división se hace <strong>antes</strong> que la suma —tiene más prioridad—, así
+                    que se divide únicamente el saldo final. La cuenta deja de ser un promedio y pasa a
+                    ser «el saldo inicial más la mitad del final», que no significa nada. El resultado
+                    sale más alto y no se parece en nada a un error: es un número plausible.
+                </Box>
+
+                <CodeTabs
+                    titulo="La misma línea sin paréntesis"
+                    bloques={EJ_PROMEDIO_MAL}
+                    nota="Los números de línea van dentro del bloque a propósito: son los del ejercicio que sigue." />
+
+                <h3>Ejercicios</h3>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="En la versión sin paréntesis, ¿qué imprime la línea 4?"
+                    opciones={[
+                        { texto: '8 000 000, el promedio: los paréntesis solo sirven para leer mejor.', correcta: false },
+                        { texto: '13 000 000, porque primero se divide 6 000 000 entre 2 y después se suma.', correcta: true, justificacion: 'La división tiene más prioridad que la suma, así que la máquina calcula 6 000 000 / 2 = 3 000 000 y luego 10 000 000 + 3 000 000. Sobre ese valor, la comisión del 0,5 % sale en 65 000 en vez de 40 000: un 62 % de más, cobrado a cada cliente y todos los meses.' },
+                        { texto: '16 000 000, la suma de los dos saldos.', correcta: false },
+                        { texto: '5 000 000, porque la suma se evalúa primero y luego se divide.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Comparador
+                    enunciado="Dos formas de calcular el mismo saldo promedio. Ninguna de las dos tiene errores de sintaxis."
+                    a={{ etiqueta: 'Versión A · un paréntesis', codigo: CMP_PARENTESIS }}
+                    b={{ etiqueta: 'Versión B · dos mitades', codigo: CMP_DOS_MITADES }}
+                    pregunta="¿Las dos versiones calculan lo mismo?"
+                    opciones={[
+                        { texto: 'Sí: dividir la suma entre dos y sumar las dos mitades es la misma operación.', correcta: true, justificacion: 'Son equivalentes, y la B no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. La advertencia útil es otra: esto vale mientras la división sea decimal. Con división entera —el operador // de Python o el \\ de VBA— dejan de coincidir en cuanto uno de los dos saldos es impar, porque cada mitad se trunca por separado. Con dinero en centavos, eso es un descuadre.' },
+                        { texto: 'No: la versión B suma antes de dividir y da el doble.', correcta: false },
+                        { texto: 'No: la versión B necesita paréntesis o dividirá solo el segundo saldo.', correcta: false },
+                        { texto: 'Solo coinciden si los dos saldos son iguales.', correcta: false },
+                    ]}
+                />
             </div>
         );
 
