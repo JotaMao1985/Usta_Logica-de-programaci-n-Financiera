@@ -1,11 +1,16 @@
 # Plan · Tarea 8 — Capítulo 2, «Introducción a Algoritmos»
 
-**Rama:** `cap02/algoritmos` · **Alcance:** M · **Estado:** pendiente de aprobación
+**Alcance:** M · **Estado: ✅ COMPLETADA y fusionada en `main` el 2026-08-09**
+(PR #2, merge commit `6fe39d2`; la rama `cap02/algoritmos` ya se borró).
 
 Corresponde a la Tarea 8 del plan maestro (§6, Fase 2) y desarrolla su §5,
 «Capítulo 2 — Introducción a Algoritmos». Es el **primer capítulo escrito desde
 cero** con la skill `lpf-capitulo`: el capítulo 1 se adaptó de material previo y
 el 3 todavía no existe.
+
+Este documento se conserva como registro de cómo se construyó y de lo que se
+midió. Lo que hay que leer para **continuar** el proyecto es el plan maestro
+(§5, §6 y la bitácora §11), no esto.
 
 ---
 

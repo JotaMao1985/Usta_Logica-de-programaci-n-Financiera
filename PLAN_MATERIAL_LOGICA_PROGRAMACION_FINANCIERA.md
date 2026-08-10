@@ -632,6 +632,22 @@ Cada capítulo produce: **1 archivo HTML** + **6–10 ejercicios cloze** + **1 s
 
 ### Fase 1 — Piloto vertical
 
+> ⚠️ **El orden real de ejecución no fue este, y eso cambia lo que significa
+> esta fase.** Se hicieron primero el capítulo 1 (Tarea 7, 2026-08-05) y el
+> capítulo 2 (Tarea 8, 2026-08-09). Cuando se escriba el capítulo 3 ya no será
+> un *piloto*: el formato lleva dos capítulos validados, la librería está
+> estampada y verificada, y el punto de control B —«corregir el formato aquí
+> cuesta un capítulo»— ya se cobró en esos dos.
+>
+> Lo que **sí** sigue vigente de esta tarea: el capítulo 3 es el primero que
+> necesita el `Trazador` reutilizable —que los capítulos 4, 5 y 7 heredarán— y
+> es donde la prueba de escritorio pasa de ser un ejercicio a ser el método
+> central del capítulo. Sigue siendo la rebanada más pesada, pero por su
+> contenido, no por el riesgo de formato.
+>
+> El **punto de control B** se da por superado por los capítulos 1 y 2. El que
+> queda abierto es el **C**, a falta solo del capítulo 3.
+
 #### Tarea 6 · Capítulo 3 completo (Control secuencial) — rebanada vertical de referencia
 **Descripción:** Construir el capítulo 3 de punta a punta: HTML con las 5 secciones, el componente `Trazador`, los 14–18 ejercicios de la taxonomía, los 8 cloze de Moodle y la sección de guía docente.
 
