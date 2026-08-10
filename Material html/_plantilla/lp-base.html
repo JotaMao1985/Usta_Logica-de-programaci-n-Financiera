@@ -22,13 +22,28 @@
          `Prism.manual = true` DEBE ir antes de cargar el núcleo: si no, Prism
          recorre el documento al cargar y aquí el contenido lo pinta React
          después, de modo que ese recorrido solo gasta tiempo.
-         El pseudocódigo no tiene gramática oficial: se registra en LP-CORE. -->
+         El pseudocódigo no tiene gramática oficial: se registra en LP-CORE.
+
+         Cada componente corresponde a una clave de `GRAMATICA`, y el núcleo NO
+         trae ninguno de ellos: solo markup, css, clike y javascript. Una clave
+         sin su componente no da error, solo deja el bloque sin resaltar, así
+         que `ensamblar.py` compara ambas listas y falla si falta alguno.
+
+         Los cuatro lenguajes del curso son pseudocódigo, Python, R y VBA; los
+         demás los usa el material de Python para APIs, que comparte esta
+         librería. -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
     <script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-visual-basic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 
     <script>
         window.MathJax = {
@@ -341,6 +356,16 @@
             max-height: 30rem;
             overflow-y: auto;
             transition: max-height 0.3s ease;
+        }
+
+        /* Prism nombra sus tokens con palabras que Tailwind también usa como
+           utilidades, y gana la que tenga más peso. `table` es la que muerde:
+           la gramática de TOML marca `[pytest]` como `token table`, Tailwind
+           le aplica `display: table` y la cabecera de sección se parte en tres
+           líneas. Dentro de un bloque de código un token es siempre texto en
+           línea, así que se fija aquí y la colisión deja de importar. */
+        .lp-code-pre .token {
+            display: inline;
         }
 
         .lp-code-pre.plegado {
@@ -954,6 +979,12 @@
            Prism trae gramáticas oficiales de R, Python y VBA (`visual-basic`,
            con alias `vba`). El pseudocódigo del curso no existe fuera de aquí,
            así que su gramática se registra abajo.
+
+           Toda clave de `GRAMATICA` necesita su componente cargado en el
+           `<head>`: el core de Prism solo trae markup, css, clike y javascript.
+           Si falta, `resaltar` cae a `escaparHtml` y el bloque sale en gris sin
+           avisar de nada. `ensamblar.py` lo comprueba para que ese fallo salte
+           al ensamblar y no en el aula.
         ============================================================ */
         if (window.Prism && !Prism.languages.pseudo) {
             Prism.languages.pseudo = {
@@ -969,7 +1000,11 @@
             };
         }
 
-        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', text: null };
+        /* En una sola línea a propósito: partirla dejaría un `};` con ocho
+           espacios de sangría, que es el patrón con el que `ensamblar.py` y
+           `migrar.py` delimitan los componentes. `docker` y `dockerfile` son
+           las dos claves que registra `prism-docker`; se aceptan ambas. */
+        const GRAMATICA = { pseudo: 'pseudo', python: 'python', r: 'r', vba: 'visual-basic', shell: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', sql: 'sql', toml: 'toml', json: 'json', text: null };
 
         /* Prefijo de SALIDA por lenguaje: el marcador de comentario del propio
            lenguaje más `>`. Así la salida sigue siendo un comentario válido y
@@ -1008,6 +1043,12 @@
             r: { label: 'R', corto: 'R', icon: 'fas fa-chart-line', color: 'text-cyan-300' },
             vba: { label: 'VBA (Excel)', corto: 'VBA', icon: 'fas fa-file-excel', color: 'text-green-400' },
             shell: { label: 'Terminal', corto: 'Shell', icon: 'fas fa-terminal', color: 'text-green-400' },
+            docker: { label: 'Dockerfile', corto: 'Docker', icon: 'fab fa-docker', color: 'text-blue-400' },
+            dockerfile: { label: 'Dockerfile', corto: 'Docker', icon: 'fab fa-docker', color: 'text-blue-400' },
+            yaml: { label: 'YAML', corto: 'YAML', icon: 'fas fa-file-code', color: 'text-purple-300' },
+            sql: { label: 'SQL', corto: 'SQL', icon: 'fas fa-database', color: 'text-orange-300' },
+            toml: { label: 'TOML', corto: 'TOML', icon: 'fas fa-gears', color: 'text-gray-300' },
+            json: { label: 'JSON', corto: 'JSON', icon: 'fas fa-code', color: 'text-amber-300' },
             text: { label: 'Salida', corto: 'Salida', icon: 'fas fa-file-alt', color: 'text-gray-300' },
         };
 
@@ -1863,6 +1904,14 @@
            arriba; el contenido va en las secciones de más abajo.
         ============================================================ */
         const CONFIG = {
+            // El App lee de aquí el nombre del curso, que sale en la barra
+            // lateral y en el pie. Antes estaba escrito a fuego dentro del
+            // App, que migrar.py reestampa entero: un material de otra
+            // asignatura no podía corregirlo sin perderlo en la pasada
+            // siguiente.
+            asignatura: 'Lógica de Programación Financiera',
+            lema: 'La lógica es la misma; el lenguaje solo cambia de acento.',
+            notaPie: 'Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.',
             numero: '00',
             titulo: 'Plantilla base',
             subtitulo: 'Catálogo de componentes y guía de autoría del material',
@@ -2004,7 +2053,7 @@ End Sub`,
                 <div className="overflow-x-auto">
                     <table>
                         <tbody>
-                            <tr><th>Asignatura</th><td>Lógica de Programación Financiera</td></tr>
+                            <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
                             <tr><th>Capítulo</th><td>{CONFIG.numero} — {CONFIG.titulo}</td></tr>
                             <tr><th>Contenido del syllabus</th><td>{CONFIG.contenidoSyllabus}</td></tr>
                             <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra}</td></tr>
@@ -2647,7 +2696,7 @@ Debug.Print saldo`,
                             {/* contraste-ok: el gold va sobre el navy de `lp-header`, no sobre el fondo claro */}
                             <p className="text-[0.65rem] uppercase tracking-widest text-gold font-bold">Universidad Santo Tomás</p>
                             <h1 className="text-white font-bold text-lg tracking-tight mt-1">
-                                Lógica de Programación Financiera
+                                {CONFIG.asignatura}
                             </h1>
                             <p className="text-xs text-white/60 mt-1">
                                 Capítulo {CONFIG.numero} · <span className="text-secondary font-semibold">{CONFIG.titulo}</span>
@@ -2735,16 +2784,16 @@ Debug.Print saldo`,
                                             <strong>Capítulo {CONFIG.numero} · {CONFIG.titulo}</strong>
                                         </p>
                                         <p className="text-xs mt-1 text-white/80 italic">
-                                            La lógica es la misma; el lenguaje solo cambia de acento.
+                                            {CONFIG.lema}
                                         </p>
                                         <p className="text-xs mt-2 text-white/70">
-                                            Universidad Santo Tomás · Lógica de Programación Financiera
+                                            Universidad Santo Tomás · {CONFIG.asignatura}
                                         </p>
                                         <p className="text-xs text-white/70">
                                             Docente y diseño del material: {CONFIG.docente}
                                         </p>
                                         <p className="text-[10px] mt-2 text-white/50">
-                                            Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.
+                                            {CONFIG.notaPie}
                                         </p>
                                     </div>
                                 </footer>

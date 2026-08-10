@@ -4,6 +4,14 @@
            arriba; el contenido va en las secciones de más abajo.
         ============================================================ */
         const CONFIG = {
+            // El App lee de aquí el nombre del curso, que sale en la barra
+            // lateral y en el pie. Antes estaba escrito a fuego dentro del
+            // App, que migrar.py reestampa entero: un material de otra
+            // asignatura no podía corregirlo sin perderlo en la pasada
+            // siguiente.
+            asignatura: 'Lógica de Programación Financiera',
+            lema: 'La lógica es la misma; el lenguaje solo cambia de acento.',
+            notaPie: 'Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.',
             numero: '00',
             titulo: 'Plantilla base',
             subtitulo: 'Catálogo de componentes y guía de autoría del material',
@@ -145,7 +153,7 @@ End Sub`,
                 <div className="overflow-x-auto">
                     <table>
                         <tbody>
-                            <tr><th>Asignatura</th><td>Lógica de Programación Financiera</td></tr>
+                            <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
                             <tr><th>Capítulo</th><td>{CONFIG.numero} — {CONFIG.titulo}</td></tr>
                             <tr><th>Contenido del syllabus</th><td>{CONFIG.contenidoSyllabus}</td></tr>
                             <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra}</td></tr>
@@ -788,7 +796,7 @@ Debug.Print saldo`,
                             {/* contraste-ok: el gold va sobre el navy de `lp-header`, no sobre el fondo claro */}
                             <p className="text-[0.65rem] uppercase tracking-widest text-gold font-bold">Universidad Santo Tomás</p>
                             <h1 className="text-white font-bold text-lg tracking-tight mt-1">
-                                Lógica de Programación Financiera
+                                {CONFIG.asignatura}
                             </h1>
                             <p className="text-xs text-white/60 mt-1">
                                 Capítulo {CONFIG.numero} · <span className="text-secondary font-semibold">{CONFIG.titulo}</span>
@@ -876,16 +884,16 @@ Debug.Print saldo`,
                                             <strong>Capítulo {CONFIG.numero} · {CONFIG.titulo}</strong>
                                         </p>
                                         <p className="text-xs mt-1 text-white/80 italic">
-                                            La lógica es la misma; el lenguaje solo cambia de acento.
+                                            {CONFIG.lema}
                                         </p>
                                         <p className="text-xs mt-2 text-white/70">
-                                            Universidad Santo Tomás · Lógica de Programación Financiera
+                                            Universidad Santo Tomás · {CONFIG.asignatura}
                                         </p>
                                         <p className="text-xs text-white/70">
                                             Docente y diseño del material: {CONFIG.docente}
                                         </p>
                                         <p className="text-[10px] mt-2 text-white/50">
-                                            Material de aprendizaje autónomo. Casos contextualizados al sector financiero colombiano.
+                                            {CONFIG.notaPie}
                                         </p>
                                     </div>
                                 </footer>

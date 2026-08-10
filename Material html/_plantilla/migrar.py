@@ -134,6 +134,9 @@ def config_para(ruta):
            arriba; el contenido va en las secciones de más abajo.
         ============================================================ */
         const CONFIG = {{
+            asignatura: 'Lógica de Programación Financiera',   // TODO si es otro curso
+            lema: 'La lógica es la misma; el lenguaje solo cambia de acento.',   // TODO
+            notaPie: 'Material de aprendizaje autónomo.',       // TODO
             numero: '{numero}',
             titulo: '{nombre}',                    // TODO revisar acentos y redacción
             subtitulo: '',                         // TODO
