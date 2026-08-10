@@ -47,7 +47,7 @@ también, porque es plantilla: todo lo que varía de un capítulo a otro vive en
 centinelas y se migra; uno ya migrado se reestampa de centinela a centinela.
 Acepta `--dry-run` y deja `.bak`.
 
-`verificar.py` comprueba once cosas y devuelve ≠ 0 si algo falla:
+`verificar.py` comprueba doce cosas y devuelve ≠ 0 si algo falla:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte
    con el de `lp-base.html` (comparación SHA-256).
@@ -63,6 +63,9 @@ Acepta `--dry-run` y deja `.bak`.
 9. **Salidas ejecutadas** — la salida declarada tras `#>` es la que el código produce de verdad. Vive en `ejecutar_salidas.py`, que corre procesos y tarda; se pide con `--con-salidas`.
 10. **Contraste** — ningún color por debajo de 3,0:1 sobre el fondo de la página se usa como texto sin confirmar. Sale como **aviso**, no como falla, y a propósito: ver más abajo.
 11. **Enunciados** — ningún ejercicio pide escribir un programa desde cero.
+12. **Preguntas imposibles** — ninguna pregunta con más de una opción
+    `correcta: true` olvida `multiple: true`. Ver abajo: es un defecto que no se
+    ve en pantalla y que hace la pregunta inacertable.
 
 ```bash
 python3 "Material html/_plantilla/verificar.py" --con-salidas
@@ -255,6 +258,34 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   programa que…») y marcarla haría que el verificador mintiera.
 - E2, E7 y E8 se construyen con `MCQ` o `Reto` envueltos en
   `<Ejercicio tipo="E7">`, para que el tipo sea visible y contable.
+
+### Una pregunta con dos respuestas correctas necesita `multiple: true`
+
+⚠️ En `Quiz` y `MCQ`, la selección es de **opción única salvo que la pregunta
+declare `multiple: true`**. Sin esa bandera, elegir una segunda opción
+**reemplaza** a la primera, mientras que la calificación sigue exigiendo el
+conjunto completo de correctas. El resultado es una pregunta que **no se puede
+acertar**: se pinta bien, se responde, y el veredicto es «incorrecto» sin decir
+por qué.
+
+```jsx
+{
+    pregunta: '¿Cuáles de estas afirmaciones son ciertas?',
+    multiple: true,                       // ← sin esto, es inacertable
+    opciones: [
+        { texto: '…', correcta: true },
+        { texto: '…', correcta: true },
+        …
+    ],
+}
+```
+
+La etiqueta «(selección múltiple)» **la pinta el componente** a partir de la
+bandera. Escribirla a mano en el enunciado no arregla nada y la duplica.
+
+Lo comprueba la regla 12, que apareció al responder el cuestionario del capítulo
+2 con las diez respuestas buenas y obtener 9. Ninguna comprobación estructural lo
+veía, y a simple vista tampoco.
 
 ## Catálogo de componentes
 
