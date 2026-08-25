@@ -2927,8 +2927,10 @@ End Sub`,
                     El capítulo 1 estableció la tabla de precedencia de los operadores; aquí se usa. Lo
                     que interesa ahora no es memorizarla, sino una consecuencia práctica: una expresión
                     con varios operadores <strong>no se evalúa en el orden en que está escrita</strong>, sino
-                    en el orden que fija la precedencia. Y ese orden es el mismo en los cuatro lenguajes
-                    del curso.
+                    en el orden que fija la precedencia. Ese orden —qué operador va antes que cuál— es el
+                    mismo en los cuatro lenguajes del curso; lo que no coincide en los cuatro es el
+                    desempate entre dos potencias seguidas, y de eso se ocupa el aviso que sigue a la
+                    tabla.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -2937,13 +2939,24 @@ End Sub`,
                         </thead>
                         <tbody>
                             <tr><td>1.ª</td><td><span className="inline-code">( )</span></td><td>Primero, siempre. De dentro hacia fuera</td></tr>
-                            <tr><td>2.ª</td><td><span className="inline-code">^</span> · <span className="inline-code">**</span> (potencia)</td><td><strong>De derecha a izquierda</strong></td></tr>
+                            <tr><td>2.ª</td><td><span className="inline-code">^</span> · <span className="inline-code">**</span> (potencia)</td><td><strong>De derecha a izquierda</strong>, salvo en VBA (ver aviso)</td></tr>
                             <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha</td></tr>
                             <tr><td>4.ª</td><td><span className="inline-code">+</span> <span className="inline-code">-</span></td><td>De izquierda a derecha</td></tr>
                             <tr><td>5.ª</td><td>Relacionales y lógicos</td><td>Al final (capítulo 4)</td></tr>
                         </tbody>
                     </table>
                 </div>
+
+                <Box type="warn" label="Dos potencias seguidas: el único desempate que no es igual en los cuatro">
+                    <span className="inline-code">2 ^ 3 ^ 2</span> vale <strong>512</strong> en pseudocódigo,
+                    Python y R, que resuelven la potencia de derecha a izquierda —primero
+                    <span className="inline-code"> 3 ^ 2</span>, después <span className="inline-code">2 ^ 9</span>—, y
+                    vale <strong>64</strong> en VBA, que la resuelve de izquierda a derecha como a cualquier
+                    otro operador de su misma prioridad. Es la única discrepancia de evaluación entre los
+                    cuatro lenguajes en todo el curso, y el remedio es el mismo que para todo lo demás en
+                    esta sección: <strong>escribir el paréntesis</strong>. Una fórmula financiera con dos
+                    potencias encadenadas —una capitalización dentro de otra— es justo donde aparece.
+                </Box>
 
                 <h3>El caso: comisión de manejo sobre el saldo promedio</h3>
                 <p>
@@ -4210,30 +4223,30 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     b={{ etiqueta: 'Versión B · comparar las efectivas anuales', codigo: CMP_EFECTIVAS }}
                     pregunta="¿Las dos versiones llevan a la misma decisión?"
                     opciones={[
+                        { texto: 'Sí, y por eso la versión B sobra: convertir a efectiva nunca aporta información nueva.', correcta: false },
                         { texto: 'Sí, y las dos son válidas aquí: convertir a efectiva no cambia cuál de las dos tasas es mayor.', correcta: true, justificacion: 'Las dos dicen que la oferta B es más cara: 1,8 % contra 2 % mensual, y 23,87 % contra 26,82 % efectivo anual. La versión A vale porque las dos tasas quedan expresadas en el mismo período —el mensual—, y elevar a la misma potencia conserva el orden. Deja de valer en cuanto las capitalizaciones son distintas: 2 % mensual y 6 % trimestral no se pueden comparar de frente, y ahí la versión B es la única que responde. La versión B además da la cifra que el cliente necesita, que es cuánto cuesta el crédito en un año.' },
                         { texto: 'No: la versión A compara mal, porque dividir una tasa nominal entre 12 no es una conversión válida.', correcta: false },
                         { texto: 'No: la versión B da la vuelta al resultado, porque la composición castiga más a la tasa menor.', correcta: false },
-                        { texto: 'Sí, y por eso la versión B sobra: convertir a efectiva nunca aporta información nueva.', correcta: false },
                     ]}
                 />
 
                 <Ejercicio tipo="E7"><MCQ
                     pregunta="El cliente pide 20 000 000 a un año y las dos ofertas son las de arriba. Con las tasas efectivas ya calculadas —23,87 % y 26,82 %—, ¿qué se le dice?"
                     opciones={[
-                        { texto: 'Que le conviene la oferta A, y que la diferencia en un año sobre 20 000 000 es de unos 590 000 pesos.', correcta: true, justificacion: 'La diferencia entre las dos efectivas es de 2,95 puntos porcentuales, y sobre 20 000 000 a un año son 590 000 pesos —el equivalente a casi media cuota—. Decir «la A es mejor» es correcto pero no es asesorar: la cifra en pesos es la que permite al cliente decidir, y es la que convierte un cálculo en una recomendación.' },
                         { texto: 'Que le conviene la oferta B, porque el 24 % anual es una sola cifra al año mientras que el 1,8 % se cobra doce veces.', correcta: false },
                         { texto: 'Que las dos cuestan prácticamente lo mismo, porque 1,8 × 12 = 21,6 % y la diferencia con el 24 % es de redondeo.', correcta: false },
                         { texto: 'Que no se puede saber sin conocer el plazo, porque las tasas efectivas dependen del número de cuotas.', correcta: false },
+                        { texto: 'Que le conviene la oferta A, y que la diferencia en un año sobre 20 000 000 es de unos 590 000 pesos.', correcta: true, justificacion: 'La diferencia entre las dos efectivas es de 2,95 puntos porcentuales, y sobre 20 000 000 a un año son 590 000 pesos —el equivalente a casi media cuota—. Decir «la A es mejor» es correcto pero no es asesorar: la cifra en pesos es la que permite al cliente decidir, y es la que convierte un cálculo en una recomendación.' },
                     ]}
                 /></Ejercicio>
 
                 <Ejercicio tipo="E7"><MCQ
                     pregunta="El proveedor de la factura descontada pregunta si le convino la operación. Recibió 14 550 000 hoy en vez de 15 000 000 en dos meses. ¿Qué significa esa cifra para él?"
                     opciones={[
-                        { texto: 'Que el dinero le costó 1,55 % mensual, y que le convino solo si con esos 14 550 000 obtiene más de eso o evita un costo mayor.', correcta: true, justificacion: 'El costo se mide sobre lo que recibió: 450 000 sobre 14 550 000 son 3,09 % en dos meses, o 1,55 % mensual. La decisión no la resuelve el número solo: si el proveedor iba a pagar un sobregiro al 2,5 % mensual, la operación le ahorró plata; si el dinero se iba a quedar quieto, la perdió. Interpretar es poner el resultado al lado de la alternativa.' },
-                        { texto: 'Que perdió 450 000 pesos, y que ninguna operación de descuento conviene nunca.', correcta: false },
                         { texto: 'Que el costo fue exactamente el 1,5 % mensual que dice el contrato, porque esa es la tasa pactada.', correcta: false },
                         { texto: 'Que ganó 14 550 000, porque de otro modo no habría tenido nada hasta el vencimiento.', correcta: false },
+                        { texto: 'Que el dinero le costó 1,55 % mensual, y que le convino solo si con esos 14 550 000 obtiene más de eso o evita un costo mayor.', correcta: true, justificacion: 'El costo se mide sobre lo que recibió: 450 000 sobre 14 550 000 son 3,09 % en dos meses, o 1,55 % mensual. La decisión no la resuelve el número solo: si el proveedor iba a pagar un sobregiro al 2,5 % mensual, la operación le ahorró plata; si el dinero se iba a quedar quieto, la perdió. Interpretar es poner el resultado al lado de la alternativa.' },
+                        { texto: 'Que perdió 450 000 pesos, y que ninguna operación de descuento conviene nunca.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -4271,17 +4284,281 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
 
         /* ============================================================
            EVALUACIÓN Y GLOSARIO
+
+           El E6 vive aquí y no dentro de una sección porque es el único
+           ejercicio que puede cruzar las cinco: una línea de cada una, y el
+           estudiante tiene que reconocer de qué habla cada cual sin el contexto
+           que la sección le daba.
         ============================================================ */
+
+        // Una línea por sección, en los cuatro lenguajes. El lado derecho son
+        // significados y no cambia con el lenguaje (convención del README).
+        const EMPAREJA_CAP03 = {
+            pseudo: [
+                'base <- valorFactura - descuento',
+                'temporal <- cuentaA',
+                'promedio <- (saldoInicial + saldoFinal) / 2',
+                'saldo <- saldo + 12500000',
+                'efectiva <- (1 + periodica) ^ m - 1',
+            ],
+            python: [
+                'base = valor_factura - descuento',
+                'temporal = cuenta_a',
+                'promedio = (saldo_inicial + saldo_final) / 2',
+                'saldo = saldo + 12_500_000',
+                'efectiva = (1 + periodica) ** m - 1',
+            ],
+            r: [
+                'base <- valor_factura - descuento',
+                'temporal <- cuenta_a',
+                'promedio <- (saldo_inicial + saldo_final) / 2',
+                'saldo <- saldo + 12500000',
+                'efectiva <- (1 + periodica) ^ m - 1',
+            ],
+            vba: [
+                'base = valorFactura - descuento',
+                'temporal = cuentaA',
+                'promedio = (saldoInicial + saldoFinal) / 2',
+                'saldo = saldo + 12500000',
+                'efectiva = (1 + periodica) ^ m - 1',
+            ],
+        };
+
+        const GLOSARIO_CAP03 = [
+            ['Secuencia', 'Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas. No hay preguntas, saltos ni vueltas atrás.'],
+            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar si ninguna usa una variable que la otra modifica. Si la segunda lee lo que la primera escribe, el orden es obligatorio.'],
+            ['Asignación', 'Operación que evalúa la expresión de la derecha con los valores actuales y guarda el resultado en la variable de la izquierda, borrando lo que hubiera. No es una igualdad matemática.'],
+            ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. Es lo que hace falta para intercambiar dos valores sin perder ninguno: tres líneas, no dos.'],
+            ['Acumulador', 'Variable que se lee a sí misma para actualizarse —saldo <- saldo + movimiento—. Conserva un solo valor: la historia de los anteriores solo queda en la tabla de traza.'],
+            ['Sobrescritura antes de lectura', 'Error que consiste en asignar sobre una variable cuyo valor todavía se necesita. No produce ningún mensaje: asignar es una operación legítima que aquí se hizo un instante antes de tiempo.'],
+            ['Precedencia de operadores', 'Orden en que se evalúan los operadores de una expresión, independiente del orden en que están escritos. Los paréntesis primero, después la potencia, después producto y cociente, y al final suma y resta.'],
+            ['Asociatividad', 'Regla de desempate entre dos operadores de la misma prioridad. Producto y cociente se resuelven de izquierda a derecha; la potencia, de derecha a izquierda en pseudocódigo, Python y R, y de izquierda a derecha en VBA.'],
+            ['Expresión intermedia', 'Paso de un cálculo largo al que se le da nombre y variable propia. No cambia el resultado: cambia que el cálculo se pueda auditar línea por línea contra el contrato.'],
+            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, instrucción por instrucción, registrando en una tabla el valor de cada variable después de cada paso. También se le llama traza.'],
+            ['Fallo silencioso', 'Error que no interrumpe la ejecución ni produce ningún mensaje: el programa corre, entrega una cifra plausible y responde a una pregunta distinta de la que se le hizo.'],
+            ['Base gravable', 'Valor sobre el que se liquida un impuesto. En una factura con descuento por pronto pago es el valor de la factura menos el descuento, y esa resta fija el orden de las instrucciones.'],
+            ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje es siempre menor que el costo real de la operación.'],
+            ['Tasa nominal', 'Tasa anual de referencia que no incorpora el interés sobre interés. Sin declarar cada cuánto capitaliza no significa nada: el mismo 24 % nominal da 24 %, 26,82 % o 27,11 % efectivo.'],
+            ['Tasa periódica', 'Tasa que rige en cada período de capitalización. Se obtiene repartiendo la nominal entre el número de capitalizaciones del año: 24 % nominal con capitalización mensual son 2 % mensual.'],
+            ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es la unidad en la que dos ofertas se pueden comparar, y la que la regulación obliga a informar.'],
+        ];
 
         const EvaluacionSection = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-clipboard-question"
+                <Motivacion icon="fa-clipboard-question" etiqueta="Antes de responder"
                     gancho="¿Puede decir qué hace un algoritmo ajeno sin ejecutarlo?">
                     En una entrevista para un puesto de analista de riesgo le van a poner sobre la mesa
                     quince líneas de pseudocódigo escritas por otra persona y le van a preguntar qué
                     imprimen. No habrá computador. Lo que se mide en ese momento —leer, trazar,
                     anticipar— es exactamente lo que se mide aquí.
                 </Motivacion>
+
+                <Box type="info" label="Cómo aprovechar esta evaluación">
+                    El cuestionario integra las cinco secciones: <strong>dos preguntas de cada una</strong>.
+                    Tiene puntuación automática y admite reintentos, así que conviene responder
+                    <em> antes</em> de mirar las justificaciones. Y una advertencia sobre el modo de
+                    estudiar: reconocer la respuesta correcta al leerla no es lo mismo que haberla podido
+                    producir. Lo que este capítulo evalúa es lo segundo.
+                </Box>
+
+                <h3>Reconocer una instrucción fuera de su sección</h3>
+                <p>
+                    Cada una de estas cinco líneas viene de una sección distinta del capítulo, y aquí
+                    aparecen sin el caso que las rodeaba. Reconocer qué hace cada una sin ese contexto es
+                    lo que separa haber leído el capítulo de haberlo entendido.
+                </p>
+
+                <Emparejamiento
+                    enunciado="Relacione cada instrucción con el concepto del capítulo que la explica."
+                    etiquetaIzq="Instrucción"
+                    etiquetaDer="Concepto"
+                    izquierda={EMPAREJA_CAP03}
+                    derecha={[
+                        'Acumulador — la variable se lee a sí misma para actualizarse, y su valor anterior deja de existir.',
+                        'Conversión de tasa — lleva una tasa a la unidad en la que se puede comparar con otra.',
+                        'Regla de dependencia — la instrucción siguiente lee lo que ésta escribe, así que el orden no se negocia.',
+                        'Variable temporal — guarda un valor antes de que la asignación siguiente lo destruya.',
+                        'Paréntesis de agrupación — obliga a sumar antes de dividir, que es lo que la barra de fracción hace sola.',
+                    ]}
+                    solucion={[2, 3, 4, 0, 1]}
+                />
+
+                <h3>Justificar una decisión de diseño</h3>
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="Una línea o cuatro"
+                    solucion={<>
+                        <p style={{ marginTop: 0 }}>
+                            <strong>Porque la versión de una línea no se puede auditar, y la de cuatro
+                            sí.</strong> En la tabla de traza, la versión corta ocupa una fila: o está bien o
+                            está mal, y no hay dónde mirar. La versión con <span className="inline-code">base</span>,
+                            <span className="inline-code"> iva</span> y <span className="inline-code">retencion</span> ocupa
+                            cuatro, y cada una se contrasta por separado con lo que dice la factura —ésta es
+                            la base gravable, éste es el IVA, ésta es la retención—. Cuando el total sale
+                            mal, la diferencia entre las dos versiones es entre <em>saber que algo falló</em> y
+                            <em> saber qué instrucción lo hizo</em>.
+                        </p>
+                        <p>
+                            El argumento de la velocidad no aplica: son las mismas operaciones aritméticas
+                            en los dos casos, y las tres asignaciones de más no son medibles frente a
+                            cualquier otra cosa que haga el programa. Optimizar aquí es optimizar lo que no
+                            cuesta.
+                        </p>
+                        <p>
+                            Hay además un argumento que no es técnico. Los nombres
+                            <span className="inline-code"> base</span> y <span className="inline-code">retencion</span> son
+                            los términos del contrato y de la norma tributaria: la versión larga
+                            <strong> documenta la regla del negocio</strong> mientras la calcula, y quien la lea
+                            dentro de dos años —o quien tenga que explicársela a un auditor— no necesita
+                            reconstruir de dónde salió cada factor.
+                        </p>
+                        <p style={{ marginBottom: 0 }}>
+                            La regla práctica que deja este capítulo: <strong>una expresión con más de dos
+                            operadores y algún término repetido pide variables intermedias</strong>. El
+                            <span className="inline-code"> (subtotal - 1200000)</span> escrito dos veces es la señal:
+                            aparece dos veces porque tiene un nombre que nadie le puso.
+                        </p>
+                    </>}>
+                    En la sección 4 la liquidación de la factura aparece dos veces: en una línea, y
+                    repartida en cuatro con <span className="inline-code">base</span>,
+                    <span className="inline-code"> iva</span> y <span className="inline-code">retencion</span> como
+                    variables intermedias. Un compañero sostiene que la primera es mejor porque «hace lo
+                    mismo con menos código, y menos código es menos sitio donde equivocarse».
+                    <strong> Justifique cuál de las dos versiones debe ir a producción en un sistema de
+                    facturación</strong>, con un argumento que no sea de gusto personal.
+                </Reto></Ejercicio>
+
+                <h3>Cuestionario integrador</h3>
+                <Quiz titulo="Evaluación · Capítulo 03 — Control secuencial" preguntas={[
+                    {
+                        pregunta: 'Dos instrucciones consecutivas de una secuencia se pueden intercambiar sin que cambie el resultado cuando:',
+                        opciones: [
+                            { texto: 'Las dos son asignaciones, porque asignar nunca depende del orden.', correcta: false },
+                            { texto: 'Ninguna de las dos imprime nada.', correcta: false },
+                            { texto: 'Nunca: en una secuencia el orden de escritura siempre es obligatorio.', correcta: false },
+                            { texto: 'Ninguna de las dos usa una variable que la otra modifica.', correcta: true },
+                        ],
+                        justificacion: 'Es la regla de dependencia. Las tres líneas que fijan valores iniciales se pueden barajar como se quiera; en cambio iva <- base * tasaIva lee lo que la línea anterior escribió, y ahí el orden no se negocia. La opción que dice «nunca» es el error contrario: creer que todo orden es sagrado impide reconocer cuál sí lo es.',
+                    },
+                    {
+                        pregunta: 'Una rutina liquida una factura de 8 000 000 con descuento de 200 000 e IVA del 19 %, pero calcula el IVA antes de restar el descuento. ¿Qué ocurre al ejecutarla?',
+                        opciones: [
+                            { texto: 'Informa 9 520 000, porque el descuento nunca llega a aplicarse.', correcta: false },
+                            { texto: 'Corre sin ningún error e informa 9 320 000, es decir 38 000 de más por factura.', correcta: true },
+                            { texto: 'Se detiene con un error de ejecución porque base se asigna dos veces.', correcta: false },
+                            { texto: 'Informa lo mismo que la versión correcta: restar antes o después es indiferente.', correcta: false },
+                        ],
+                        justificacion: 'El IVA se calcula sobre 8 000 000 y da 1 520 000 en vez de 1 482 000; la base sí termina en 7 800 000. No es un error de programación sino de modelo del negocio: el programa responde correctamente a otra pregunta —cuánto sería el IVA si no hubiera descuento— y presenta esa cifra como si fuera la respuesta a la que se hizo.',
+                    },
+                    {
+                        pregunta: 'Sobre la instrucción saldo <- saldo - 500000, ¿cuál afirmación es correcta?',
+                        opciones: [
+                            { texto: 'Guarda los dos valores, el anterior y el nuevo, y el programa decide cuál usar.', correcta: false },
+                            { texto: 'Solo es válida si saldo se declaró como acumulador.', correcta: false },
+                            { texto: 'Primero se evalúa la derecha con el valor que saldo tiene ahora, y después el resultado se guarda en saldo borrando el anterior.', correcta: true },
+                            { texto: 'Es una ecuación sin solución: una variable no puede aparecer a ambos lados.', correcta: false },
+                        ],
+                        justificacion: 'La asignación se lee de derecha a izquierda y en dos tiempos. El valor anterior no queda en ninguna parte: por eso la tabla de traza es lo único que conserva la historia de una variable, y por eso intercambiar dos valores necesita una tercera variable.',
+                    },
+                    {
+                        pregunta: 'Una rutina intercambia los saldos de dos cuentas con cuentaA <- cuentaB seguido de cuentaB <- cuentaA, sin variable temporal. ¿Cuál es el resultado?',
+                        opciones: [
+                            { texto: 'El intercambio funciona: son dos asignaciones cruzadas.', correcta: false },
+                            { texto: 'Las dos cuentas quedan con el saldo de la A, que era el mayor.', correcta: false },
+                            { texto: 'El lenguaje avisa de la pérdida de datos antes de ejecutar la segunda línea.', correcta: false },
+                            { texto: 'Las dos cuentas quedan con el saldo de la B: el de la A se destruyó en la primera línea.', correcta: true },
+                        ],
+                        justificacion: 'La primera línea escribe sobre cuentaA sin que nadie haya guardado antes lo que tenía. La segunda no falla por sí sola: copia lo que encuentra, que ya es el saldo de B. Es una sobrescritura antes de lectura, y ningún lenguaje la reporta, porque asignar es legítimo.',
+                    },
+                    {
+                        pregunta: 'Un contrato dice que la comisión es el 3 % sobre el capital más los intereses. Se traduce como capital + interes * 0.03. ¿Qué cobra esa línea?',
+                        opciones: [
+                            { texto: 'El capital completo más el 3 % de los intereses: el 3 % se aplica solo al segundo término.', correcta: true },
+                            { texto: 'El 3 % de la suma de capital e intereses, que es lo que dice el contrato.', correcta: false },
+                            { texto: 'El 3 % del capital más los intereses completos.', correcta: false },
+                            { texto: 'Nada: la expresión es ambigua y el lenguaje se detiene con un error.', correcta: false },
+                        ],
+                        justificacion: 'El producto tiene más prioridad que la suma, así que se evalúa interes * 0.03 y a eso se le suma el capital entero. La cláusula y la línea de código se leen igual y calculan cosas distintas; escribirlo bien cuesta un paréntesis: (capital + interes) * 0.03.',
+                    },
+                    {
+                        pregunta: 'Las expresiones (a + b) / 2 y a / 2 + b / 2 calculan lo mismo. ¿Bajo qué condición dejan de coincidir?',
+                        opciones: [
+                            { texto: 'Cuando el lenguaje evalúa de derecha a izquierda.', correcta: false },
+                            { texto: 'Cuando la división es entera y alguno de los dos valores es impar, porque cada mitad se trunca por separado.', correcta: true },
+                            { texto: 'Nunca: son equivalentes en cualquier circunstancia.', correcta: false },
+                            { texto: 'Cuando a y b son muy grandes, porque la suma se desborda.', correcta: false },
+                        ],
+                        justificacion: 'Con división decimal son equivalentes, y la segunda no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. Con el operador de división entera —// en Python, \\ en VBA— se trunca dos veces en vez de una, y sobre dinero en centavos esa diferencia es un descuadre.',
+                    },
+                    {
+                        pregunta: 'En una tabla de traza, ¿cuándo se escribe una fila nueva?',
+                        opciones: [
+                            { texto: 'Solo cuando alguna variable cambia de valor.', correcta: false },
+                            { texto: 'Una por cada variable declarada en el algoritmo.', correcta: false },
+                            { texto: 'Una por cada instrucción ejecutada; los comentarios y las líneas en blanco no ocupan fila, y las de escritura sí.', correcta: true },
+                            { texto: 'Una por cada línea del archivo, sin excepciones.', correcta: false },
+                        ],
+                        justificacion: 'Escribir es una instrucción y ocupa fila aunque no cambie nada: saber que la salida se produjo en ese punto —y con qué estado— es justamente lo que se quiere ver. Anotar solo los cambios rompe la correspondencia entre la fila y la instrucción, que es lo que permite señalar dónde se torció la cifra.',
+                    },
+                    {
+                        pregunta: 'Sobre la prueba de escritorio, ¿cuáles de estas afirmaciones son ciertas?',
+                        // `multiple: true` no es decorativo: sin él, `toggle` trabaja en
+                        // modo de opción única y la segunda selección reemplaza a la
+                        // primera, de modo que una pregunta con dos respuestas correctas
+                        // se vuelve IMPOSIBLE de acertar. La etiqueta «(selección
+                        // múltiple)» la pinta el componente a partir de este campo.
+                        multiple: true,
+                        opciones: [
+                            { texto: 'Antes de ejecutar la primera instrucción, las variables valen cero.', correcta: false },
+                            { texto: 'Solo tiene sentido en algoritmos de menos de diez líneas.', correcta: false },
+                            { texto: 'Es la herramienta que sirve cuando el programa no falla, que es cuando un depurador no tiene dónde detenerse.', correcta: true },
+                            { texto: 'La tabla conserva valores que la variable ya no guarda.', correcta: true },
+                        ],
+                        justificacion: 'Las dos ciertas son las dos razones de ser del método. Que las variables «valgan cero» antes de empezar es justamente el error que previene la cuarta regla de la tabla: cero es un valor y «sin valor» no lo es, y confundirlos es el fallo que la traza busca. Y limitar el método a los algoritmos cortos invierte el argumento: cuanto más largo es, más difícil resulta sostener el estado de memoria y más falta hace la tabla.',
+                    },
+                    {
+                        pregunta: 'Un proveedor descuenta una factura de 15 000 000 a 60 días y recibe 14 550 000. ¿Cuál es el costo de la operación para él?',
+                        opciones: [
+                            { texto: 'Exactamente el 1,5 % mensual que dice el contrato.', correcta: false },
+                            { texto: '450 000 pesos, y no tiene sentido expresarlo como porcentaje.', correcta: false },
+                            { texto: '3,00 % en los dos meses, porque la tasa de descuento se aplica dos veces.', correcta: false },
+                            { texto: '3,09 % en los dos meses —450 000 medidos sobre los 14 550 000 que recibió—, es decir un 1,55 % mensual.', correcta: true },
+                        ],
+                        justificacion: 'La tasa de descuento se aplica sobre el valor nominal —el que se recibirá en el futuro— y el costo se mide sobre el valor recibido hoy. Es la misma operación leída desde los dos extremos, y la diferencia entre el 1,50 % y el 1,55 % crece con el plazo. Interpretar el resultado exige saber sobre qué base está calculado cada porcentaje.',
+                    },
+                    {
+                        pregunta: 'Una oferta dice «24 % anual» y no menciona nada más. ¿Qué se puede afirmar?',
+                        opciones: [
+                            { texto: 'Que es más cara que cualquier oferta expresada en tasa mensual.', correcta: false },
+                            { texto: 'Que falta un dato: sin saber cada cuánto capitaliza, ese 24 % puede ser 24 %, 26,82 % o 27,11 % efectivo anual.', correcta: true },
+                            { texto: 'Que la tasa efectiva anual es del 24 %, porque así está declarada.', correcta: false },
+                            { texto: 'Que equivale a 2 % mensual, porque toda tasa anual se divide entre 12.', correcta: false },
+                        ],
+                        justificacion: 'Una tasa nominal sin período de capitalización es media tasa. El mismo 24 % da 24 % efectivo si capitaliza una vez al año, 26,82 % si capitaliza mensualmente y 27,11 % si capitaliza a diario. Decir que la efectiva es del 24 % confunde las dos tasas; decir que equivale a 2 % mensual hace bien la división —24/12— pero se detiene justo antes del paso que faltaba, que es componer.',
+                    },
+                ]} />
+
+                <h3>Glosario</h3>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Término</th><th>Definición</th></tr></thead>
+                        <tbody>
+                            {GLOSARIO_CAP03.map(([t, d], i) => (
+                                <tr key={i}><td><strong className="text-navy">{t}</strong></td><td>{d}</td></tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="tip" label="Lo que viene">
+                    El capítulo 4 rompe la línea recta: aparece el <span className="inline-code">Si</span>, y con
+                    él la primera instrucción que puede <strong>no ejecutarse</strong>. Todo lo de aquí sigue
+                    valiendo dentro de cada rama —son secuencias—, pero la tabla de traza gana una columna:
+                    ya no basta con anotar qué valía cada variable, hay que anotar también <em>por dónde
+                    pasó el flujo</em>. El fallo silencioso de este capítulo tiene allí su versión con
+                    condiciones: un crédito aprobado que no debía aprobarse, con las condiciones «bien»
+                    escritas y en el orden equivocado.
+                </Box>
             </div>
         );
 
