@@ -648,26 +648,29 @@ Cada capítulo produce: **1 archivo HTML** + **6–10 ejercicios cloze** + **1 s
 > El **punto de control B** se da por superado por los capítulos 1 y 2. El que
 > queda abierto es el **C**, a falta solo del capítulo 3.
 
-#### Tarea 6 · Capítulo 3 completo (Control secuencial) — rebanada vertical de referencia
+#### Tarea 6 · Capítulo 3 completo (Control secuencial) · ✅ COMPLETADA (2026-08-25)
+
+> Detalle en `PLAN_TAREA6_CAPITULO_03.md`; bitácora en §11. El `Trazador` quedó en
+> LP-CORE y los capítulos 4, 5 y 7 lo heredan.
 **Descripción:** Construir el capítulo 3 de punta a punta: HTML con las 5 secciones, el componente `Trazador`, los 14–18 ejercicios de la taxonomía, los 8 cloze de Moodle y la sección de guía docente.
 
 **Por qué el capítulo 3 y no el 2:** es el primer capítulo que ejercita **todo** a la vez — los 4 lenguajes, flujogramas, el motor de traza (que luego se reutiliza en 4, 5 y 7) y los 8 tipos de ejercicio. Es la rebanada más riesgosa y representativa: si el formato falla, conviene que falle aquí y no en el capítulo 8.
 
 **Criterios de aceptación**
-- [ ] Las 5 secciones internas más portada y evaluación están completas
-- [ ] **Cada una de las 7 secciones abre con su `Motivacion`**, redactada según la receta de §4 bis
-- [ ] Todo bloque de código aparece en los 4 lenguajes y **cada versión produce el mismo resultado**
-- [ ] Cuota de ejercicios cumplida, con al menos un E1, E3 y E7
-- [ ] El `Trazador` funciona con al menos 3 algoritmos distintos
-- [ ] Los 8 cloze compilan a HTML y a Moodle XML
-- [ ] Portada declara: 6 horas, RA1, contenido del syllabus
+- [x] Las 5 secciones internas más portada y evaluación están completas
+- [x] **Cada una de las 7 secciones abre con su `Motivacion`**, redactada según la receta de §4 bis
+- [x] Todo bloque de código aparece en los 4 lenguajes y **cada versión produce el mismo resultado**
+- [x] Cuota de ejercicios cumplida, con al menos un E1, E3 y E7 — 18 ejercicios: E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2
+- [x] El `Trazador` funciona con al menos 3 algoritmos distintos — liquidación de un crédito, conciliación de una cuenta y abono extraordinario
+- [x] Los 8 cloze compilan a HTML y a Moodle XML
+- [x] Portada declara: 6 horas, RA1, contenido del syllabus
 
 **Verificación**
-- [ ] `python3 _plantilla/verificar.py Material\ html/03_LPF_Control_Secuencial.html`
-- [ ] Abrir en navegador; consola sin errores ni advertencias de React
-- [ ] Ejecutar los snippets de Python y R y confirmar que coinciden con la salida documentada
-- [ ] `Rscript Banco\ Moodle/compilar_banco.R --cap 03`
-- [ ] Responder manualmente los 18 ejercicios y contrastar con las claves
+- [x] `python3 _plantilla/verificar.py --con-salidas Material\ html/*.html` — en verde sobre los tres capítulos, cuota incluida
+- [x] Abrir en navegador; consola sin errores ni advertencias de React
+- [x] Ejecutar los snippets de Python y R y confirmar que coinciden con la salida documentada — 22 bloques ejecutados y comparados
+- [x] `Rscript Banco\ Moodle/compilar_banco.R --cap 03` — 8 ejercicios, 24 preguntas en `cap03.xml`
+- [x] Responder manualmente los 18 ejercicios y contrastar con las claves — incluido el cuestionario entero, 10/10
 
 **Dependencias:** T2–T5 · **Alcance:** L → **se subdivide en T6a (secciones 1–3 + `Trazador`), T6b (secciones 4–5 + ejercicios), T6c (cloze + guía docente)**
 
@@ -694,8 +697,12 @@ Incluye `CuatroRepresentaciones` con resaltado sincronizado, que es el artefacto
 Detalle en `PLAN_TAREA8_CAPITULO_02.md`; bitácora en §11.
 
 ### ✅ Punto de control C — Fundamentos
-- [ ] Capítulos 1, 2 y 3 verificados y sin deriva de componentes
-- [ ] La progresión conceptual entre los tres es coherente (sin saltos ni repeticiones)
+- [x] Capítulos 1, 2 y 3 verificados y sin deriva de componentes
+- [x] La progresión conceptual entre los tres es coherente (sin saltos ni repeticiones): el
+      capítulo 3 **cita** la tabla de precedencia del 1 en vez de repetirla, y retoma el
+      análisis Entrada–Proceso–Salida del 2 aplicándolo a las cuatro rutinas de su sección 5
+- [ ] **Revisión del docente:** leer el capítulo 3 completo y aprobar dificultad de los
+      ejercicios y utilidad real del `Trazador` en contexto ← **pendiente**
 
 ---
 
@@ -1028,3 +1035,70 @@ estaría en teclear, no en clasificar. Aprobado por el docente.
 
 **Tarea 14, un paso más.** El `index.html` ya enlaza el capítulo 2. Siguen
 faltando el progreso global desde `localStorage` y el `portal-nav.js`.
+
+### Tarea 6 · Capítulo 3, y un defecto que estaba en los tres · 2026-08-25
+
+Cierra la Fase 1 y con ella el punto de control C. El detalle está en
+`PLAN_TAREA6_CAPITULO_03.md`; aquí queda lo que cambia para el resto del
+proyecto.
+
+**Lo entregado.** `03_LPF_Control_Secuencial.html`, 4 746 líneas: siete
+secciones, el `Trazador` —que se fue a LP-CORE porque lo heredan los capítulos 4,
+5 y 7—, dos artefactos propios (`FlujogramaSecuencial` y `CalculadoraTasas`), 18
+ejercicios con la cuota exacta del §4 (E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2) y
+un cuestionario de 10. Más los 8 cloze del banco, que no se versionan.
+
+**El defecto de fondo: la clave estaba siempre en la misma letra.** Las diez
+respuestas correctas del cuestionario del capítulo 3 quedaron en la «a». Al medir
+los otros dos resultó que no era un descuido de un día sino el patrón de todo el
+material: el capítulo 1 tenía sus veintisiete preguntas —cuatro `Quiz`, ocho
+`MCQ` y un `Comparador`— con la clave en la «a», y el 2, nueve de diez en la «b».
+Se acertaban enteros sin leer un enunciado.
+
+Lo importante para el proyecto no es el defecto sino **cómo escapó**. La regla
+más fuerte que teníamos —«responda el cuestionario entero y acierte las diez»— se
+cumplía: yo lo respondí, dio 10/10, y estaba roto. Es la primera vez que aparece
+un defecto que **sobrevive a conducir el material hasta el veredicto**, porque no
+está en ninguna respuesta sino en la distribución de todas. Solo se ve contando.
+
+De ahí la **comprobación 14 de `verificar.py`**, con su prueba negativa —que no
+hubo que fabricar: la traían los capítulos 1 y 2— y con el umbral afinado por
+ellos: la primera versión exigía unanimidad y el capítulo 2 pasaba en verde,
+porque su décima pregunta es de selección múltiple y su primera correcta cae en
+otro sitio. Nueve de diez ya es un patrón.
+
+Y una regla de redacción que sale de la corrección: **una justificación nombra el
+contenido de la opción, nunca su letra**. Cuatro justificaciones citaban la
+posición del distractor y rotar las opciones las habría vuelto mentira.
+
+**La potencia no se asocia igual en los cuatro lenguajes.** La sección 3 daba la
+potencia como asociativa por la derecha y añadía que el orden de evaluación es el
+mismo en los cuatro. Es falso en VBA: `2 ^ 3 ^ 2` vale 512 en pseudocódigo,
+Python y R —los dos últimos ejecutados— y 64 en VBA. Es la única discrepancia de
+evaluación entre los cuatro lenguajes de todo el curso, y toca el riesgo R2: el
+valor de VBA queda pendiente de confirmar en Excel real.
+
+**Un ejercicio del banco puede no tener quien lo compruebe.** `verificar_cloze.R`
+solo miraba los `.Rmd` escritos en `REGLAS`, así que uno añadido y no apuntado
+quedaba con la estructura validada y el contenido sin comprobar, en verde. Le
+pasó al piloto `traza_interes_simple` desde la Fase 0. Ahora el guion compara los
+dos conjuntos y falla si sobra un archivo.
+
+**Sobre la skill, tres hallazgos.** El primero es el de arriba: su lista de
+«verificar de verdad» recoge cuatro defectos invisibles en pantalla, y todos se
+cazan **respondiendo**; falta el quinto, que solo se caza **contando**, y que la
+propia ritual de respuesta declara sano. El segundo es la regla de las
+justificaciones posicionales, que no está en ninguna parte. El tercero es menor:
+la trampa 2 dice que no se edite `lp-base.html` a mano, pero no advierte de que
+`verificar.py` **aborta antes de mirar un solo capítulo** si la plantilla no
+coincide con sus fuentes; durante una semana el verificador no verificó nada y el
+único síntoma fue una línea que parecía hablar solo de la plantilla.
+
+**Decisiones de contenido que se apartan del plan.** La sección 5 no vuelve a
+exponer el interés simple —lo cita como el algoritmo ya trazado en la sección
+4—, porque repetirlo a dos secciones de distancia es lo que el punto de control C
+prohíbe entre capítulos. Aprobado por el docente.
+
+**Tarea 14, un paso más.** El `index.html` ya enlaza el capítulo 3 y la Unidad 2
+deja de estar entera en gris. Siguen faltando el progreso global desde
+`localStorage` y el `portal-nav.js`.
