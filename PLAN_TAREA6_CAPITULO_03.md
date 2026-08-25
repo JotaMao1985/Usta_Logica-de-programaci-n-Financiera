@@ -451,21 +451,35 @@ frente a `a/2 + b/2`: equivalentes, con la salvedad de la división entera).
 
 ---
 
-#### Tarea 2.4 · Sección 4 — «La prueba de escritorio como método» ← núcleo
-El método formal: qué columnas tiene una tabla de traza, cuándo se escribe una
-fila, qué se hace con las expresiones intermedias. `Trazador` con **tres
-algoritmos distintos** (criterio de aceptación de la Tarea 6 del plan maestro).
-El fallo silencioso de H3: una liquidación que corre sin error y da mal.
-**Ejercicios:** E1 ×2 (la segunda con 5 variables y 12 instrucciones) · E3 (el
-fallo silencioso) · E5.
+#### Tarea 2.4 · Sección 4 — «La prueba de escritorio como método» ← núcleo · ✅
+El método formal: las cuatro reglas de la tabla —una columna por variable, una
+fila por instrucción **ejecutada**, cada fila arrastra la anterior, y antes de la
+primera no hay nada: `—` y no cero— más la regla de las expresiones intermedias.
+Los **tres algoritmos del `Trazador`** quedaron repartidos por lo que enseña cada
+uno: *liquidación de un crédito* (el método, una variable por fila),
+*conciliación de una cuenta* (una variable con cuatro valores: la tabla guarda la
+historia que la variable no guarda) y *abono extraordinario* (el orden que impone
+el contrato, no el lenguaje). El tercero es el fallo silencioso de H3, y es
+financiero como pedía ese hallazgo: 66 000 por obligación, 79 200 000 al mes en
+una cartera de 1 200 abonos.
+**Ejercicios entregados:** E1 ×2 —mora, 20 celdas; factura con IVA y retefuente,
+5 variables y 12 instrucciones— · E3 (el abono aplicado antes de causar) · E5
+(liquidación de un CDT).
 **Alcance:** M-L · **es la sección más pesada del capítulo**
 
-#### Tarea 2.5 · Sección 5 — «Casos financieros»
-Interés simple, descuento comercial, conversión nominal ↔ efectiva y liquidación
-de nómina, los cuatro como rutinas secuenciales. `CalculadoraTasas` (artefacto
-propio del capítulo) con la fórmula en MathJax actualizándose.
-**Ejercicios:** E1 (traza de nómina) · E4 (nominal vs. efectiva) · E7 ×2 (cuál
-crédito conviene; qué significa esa cifra para el cliente) · E8 (por qué se
+#### Tarea 2.5 · Sección 5 — «Casos financieros» · ✅
+Descuento comercial, conversión nominal ↔ efectiva y liquidación de nómina, las
+tres como rutinas secuenciales, abiertas por una tabla Entrada–Proceso–Salida que
+retoma el capítulo 2 (H4). **Desviación:** el interés simple no se vuelve a
+exponer —se **cita** como el algoritmo ya trazado en la sección 4— para no repetir
+lo mismo a dos secciones de distancia; la tabla lo incluye como cuarta fila.
+`CalculadoraTasas` reescribe las dos fórmulas en MathJax con los valores
+sustituidos, que es la segunda regla de la traza aplicada al artefacto. La nómina
+cierra el hilo de la portada: la rutina que produjo el reclamo del lunes se traza
+en el E1.
+**Ejercicios entregados:** E1 (la nómina que falló) · E4 (comparar las mensuales
+frente a comparar las efectivas) · E7 ×2 (cuál crédito conviene, con la cifra en
+pesos; qué le costó de verdad el descuento al proveedor) · E8 (por qué se
 convierte la tasa antes de comparar).
 **Alcance:** M-L
 
@@ -480,9 +494,24 @@ diseño), `Quiz` de 10 preguntas y glosario.
 
 ### ⏸ Punto de control 3 — Contenido completo
 - [ ] Las 7 secciones completas, 18 ejercicios, cuota cumplida
+      *(van 6 de 7 y 16 de 18: falta la evaluación, con su E6 y su segundo E8)*
+- [x] Los seis ejercicios que califican en las secciones 4 y 5, conducidos hasta
+      el veredicto con una respuesta mala primero: E1 mora 19/20 → 20/20 · E1
+      factura 24/24 · E1 nómina 24/24 · E3 «Clasificó bien el tipo, pero el error
+      está en otra línea» → correcto en los **cuatro** lenguajes, citando la línea
+      6, 5, 5 y 8 · E5 «3 de 7 pasos» → «¡Secuencia correcta!» · E4 y los dos E7
+- [x] El `Trazador` recorrido entero en sus **tres** algoritmos; el del abono en
+      los cuatro lenguajes, comprobando que cambian los números de línea y no los
+      valores
+- [x] `CalculadoraTasas` contrastada contra los bloques de código: 24 % con m=12
+      da 2,0000 % y 26,8242 %, la misma cifra que imprime el `CodeTabs`; 21,6 %
+      con m=12 da 1,8000 % y 23,8721 %, las del E4; con m=1 las dos coinciden
+- [x] A 375 px, las secciones 4 y 5 con `scrollWidth` = 375 y ningún elemento
+      fuera de su contenedor. Consola limpia
 - [ ] El usuario aprueba el capítulo completo: dificultad de los ejercicios y
       utilidad real del `Trazador` en contexto
 - [ ] `verificar.py --con-salidas` en verde **con** cuota
+      *(hoy pasa con un aviso: E6 en 0, que es de la Tarea 2.6)*
 
 ---
 
