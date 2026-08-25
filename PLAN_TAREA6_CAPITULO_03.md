@@ -624,7 +624,7 @@ escribir `contraste-ok` con la razón medida. Nada se indulta de vista.
 
 ### Fase 4 — Banco de Moodle y cierre
 
-#### Tarea 4.1 · Siete cloze nuevos
+#### Tarea 4.1 · Siete cloze nuevos · ✅
 Sobre el único existente (`traza_interes_simple`), hasta los 8 que pide §5:
 
 | # | Nombre | Tipos | Qué comprueba |
@@ -645,23 +645,23 @@ expresión es una liquidación con dinero, no una expresión abstracta.
 **Alcance:** L → se ejecuta en dos tandas de cuatro
 **Archivos:** `Banco Moodle/rmd/cap03/*.Rmd` *(no se versionan: `.gitignore`)*
 
-#### Tarea 4.2 · Reglas de contenido para los ocho
+#### Tarea 4.2 · Reglas de contenido para los ocho · ✅
 Una entrada en `REGLAS` de `verificar_cloze.R` por ejercicio, **incluida la del
 piloto que no la tiene** (H5). `--reps 1000`.
 **Alcance:** M
 
-#### Tarea 4.3 · Comprobación nueva: ningún `.Rmd` sin reglas
+#### Tarea 4.3 · Comprobación nueva: ningún `.Rmd` sin reglas · ✅
 Que `verificar_cloze.R` falle si encuentra un `.Rmd` en el banco sin entrada en
 `REGLAS`. **Con su prueba negativa registrada**: se comprueba renombrando
 temporalmente una entrada y viendo que falla.
 **Alcance:** S
 
-#### Tarea 4.4 · Compilar y verificar el banco
+#### Tarea 4.4 · Compilar y verificar el banco · ✅
 `compilar_banco.R --cap 03` y `verificar_cloze.R --reps 1000`. Inventario
 actualizado: 8 filas de `cap03`.
 **Alcance:** XS
 
-#### Tarea 4.5 · Cierre
+#### Tarea 4.5 · Cierre · ✅
 - Bitácora §11 del plan maestro: qué se entregó, qué defectos aparecieron, qué
   aprendió la skill
 - §6 del plan maestro: Tarea 6 y punto de control C marcados
@@ -674,10 +674,15 @@ actualizado: 8 filas de `cap03`.
 ---
 
 ### ⏸ Punto de control final
-- [ ] `verificar.py --con-salidas` en verde sobre los 3 capítulos
-- [ ] `compilar_banco.R` y `verificar_cloze.R --reps 1000` en verde, 8 cloze
-- [ ] Sin residuos de plantilla ni de andamio
-- [ ] Bitácora escrita y PR abierto
+- [x] `verificar.py --con-salidas` en verde sobre los 3 capítulos, cuota incluida
+- [x] `compilar_banco.R` (21 ejercicios válidos, `cap03.xml` con 24 preguntas) y
+      `verificar_cloze.R --reps 1000` (21 coherentes, 0 fallos) en verde, con los
+      8 cloze de cap03 y sus reglas de contenido
+- [x] Las dos comprobaciones nuevas con su prueba negativa: la 14 de
+      `verificar.py` (clave previsible) y la de huérfanos de `verificar_cloze.R`
+- [x] Sin residuos de plantilla ni de andamio
+- [x] Bitácora escrita y PR abierto
+- [ ] **El docente lee el capítulo completo y lo aprueba** ← lo único que queda
 
 ---
 
