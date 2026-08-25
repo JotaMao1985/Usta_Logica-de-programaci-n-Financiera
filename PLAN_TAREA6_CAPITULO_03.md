@@ -222,6 +222,61 @@ ninguno (el capítulo 1 repite `Binary`). Asignación propuesta en la Tarea 1.4.
 
 ---
 
+### H10 · La clave estaba siempre en la misma letra, y no solo aquí *(hallado al escribir la evaluación, 2026-08-25)*
+
+Las diez respuestas correctas del cuestionario del capítulo 3 quedaron en la
+«a». No es un descuido de un día: es lo que sale de redactar cada pregunta por
+separado, escribiendo primero la buena e inventando después los distractores.
+
+Al medir los otros dos capítulos resultó ser el patrón de **todo el material**:
+
+| Capítulo | Preguntas | Dónde está la clave |
+|---|---|---|
+| 1 | 4 + 8, en dos `Quiz` | **todas** en la «a» |
+| 2 | 10 | **9 de 10** en la «b» |
+| 3 | 10 | corregido: a, b×3, c×3, d×3 |
+
+Un estudiante saca 12 de 12 en el capítulo 1 sin leer un solo enunciado.
+
+De aquí sale la **comprobación 14 de `verificar.py`**: ningún `Quiz` puede tener
+todas sus claves en la misma posición desde cuatro preguntas, ni todas menos una
+desde seis. La prueba negativa no hubo que fabricarla —los capítulos 1 y 2 la
+traían puesta—, y fue el capítulo 2 el que afinó el umbral: con la primera
+versión, que exigía unanimidad, pasaba en verde, porque su décima pregunta es de
+selección múltiple y su primera correcta cae en otro sitio.
+
+Y con las opciones hubo que tocar las **justificaciones**: tres citaban la
+posición del distractor —«la tercera confunde nominal con efectiva»— y rotar las
+opciones las habría vuelto mentira. Regla que deja esto: **una justificación
+nombra el contenido de la opción, nunca su letra.**
+
+**Pendiente y no hecho:** los capítulos 1 y 2 **no se tocaron**. Están publicados
+en GitHub Pages y reordenar sus claves es una decisión del docente, no del
+verificador. Hoy `verificar.py` los deja en rojo, que es lo que corresponde.
+
+### H11 · La potencia no se asocia igual en los cuatro lenguajes *(hallado al escribir la evaluación, 2026-08-25)*
+
+La tabla de precedencia de la sección 3 daba la potencia como asociativa por la
+derecha y añadía que «ese orden es el mismo en los cuatro lenguajes del curso».
+Es falso en VBA:
+
+| | `2 ^ 3 ^ 2` | Por qué |
+|---|---|---|
+| Pseudocódigo · Python · R | **512** | la potencia se resuelve de derecha a izquierda |
+| VBA | **64** | la resuelve de izquierda a derecha, como a cualquier operador de su prioridad |
+
+Python y R se ejecutaron y dan 512. El 64 de VBA queda **pendiente de confirmar
+en Excel real**, como pide el riesgo R2 del plan maestro; hasta entonces se
+sostiene en la documentación del lenguaje.
+
+Corregido en la sección 3: la fila de la tabla, la frase del párrafo anterior y
+un aviso con el remedio, que es el mismo de toda la sección —escribir el
+paréntesis—. Es la única discrepancia de evaluación entre los cuatro lenguajes
+en todo el curso, y aparece justo donde importa: una capitalización dentro de
+otra.
+
+---
+
 ## 3. Grafo de dependencias
 
 ```
@@ -483,18 +538,24 @@ pesos; qué le costó de verdad el descuento al proveedor) · E8 (por qué se
 convierte la tasa antes de comparar).
 **Alcance:** M-L
 
-#### Tarea 2.6 · Evaluación y glosario
-E6 (emparejamiento que cruza las cinco secciones), E8 (justificar una decisión de
-diseño), `Quiz` de 10 preguntas y glosario.
+#### Tarea 2.6 · Evaluación y glosario · ✅
+E6 (emparejamiento de cinco líneas, una por sección, fuera de su contexto), E8
+(«una línea o cuatro»: la liquidación con variables intermedias frente a la de
+una sola línea), `Quiz` de 10 preguntas —dos por sección— y glosario de 16
+términos.
 **Criterio no negociable:** el cuestionario se **responde entero** y se sacan
-10/10 (trampa 11).
+10/10 (trampa 11). **Cumplido:** 10/10, 100 %, con la pregunta de selección
+múltiple entre ellas.
+De aquí salieron **H10** (la clave siempre en la misma letra, con la comprobación
+14 nueva) y **H11** (la potencia en VBA).
 **Alcance:** M
 
 ---
 
 ### ⏸ Punto de control 3 — Contenido completo
-- [ ] Las 7 secciones completas, 18 ejercicios, cuota cumplida
-      *(van 6 de 7 y 16 de 18: falta la evaluación, con su E6 y su segundo E8)*
+- [x] Las 7 secciones completas, **18 ejercicios**, cuota cumplida:
+      E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2
+- [x] Cuestionario respondido entero con las diez buenas: **10/10, 100 %**
 - [x] Los seis ejercicios que califican en las secciones 4 y 5, conducidos hasta
       el veredicto con una respuesta mala primero: E1 mora 19/20 → 20/20 · E1
       factura 24/24 · E1 nómina 24/24 · E3 «Clasificó bien el tipo, pero el error
@@ -510,8 +571,8 @@ diseño), `Quiz` de 10 preguntas y glosario.
       fuera de su contenedor. Consola limpia
 - [ ] El usuario aprueba el capítulo completo: dificultad de los ejercicios y
       utilidad real del `Trazador` en contexto
-- [ ] `verificar.py --con-salidas` en verde **con** cuota
-      *(hoy pasa con un aviso: E6 en 0, que es de la Tarea 2.6)*
+- [x] `verificar.py --con-salidas` en verde **con** cuota sobre el capítulo 3
+      *(los capítulos 1 y 2 quedan en rojo por la comprobación 14 nueva: ver H10)*
 
 ---
 

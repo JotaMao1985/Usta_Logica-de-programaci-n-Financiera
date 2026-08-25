@@ -620,6 +620,71 @@ def etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
     return avisos
 
 
+def clave_siempre_en_el_mismo_sitio(texto, cuerpo, desplazamiento):
+    """Ninguna tanda de preguntas pone la respuesta correcta siempre en la misma letra.
+
+    Un cuestionario cuyas diez claves son la «a» se responde entero sin leer una
+    sola pregunta, y califica 10 sobre 10. El defecto no se ve al escribirlo
+    —cada pregunta se redacta por separado, y lo natural es poner primero la
+    respuesta buena y después inventar los distractores— ni al responderlo, si
+    se responde de verdad; solo se ve contando.
+
+    Apareció al escribir el cuestionario del capítulo 3: sus diez claves habían
+    quedado en la «a». Al medir los otros dos capítulos resultó que no era un
+    descuido de ese día sino el patrón de todo el material.
+
+    La regla mira cada bloque `<Quiz>` por separado, porque es la tanda que el
+    estudiante responde de una sentada. Exige al menos cuatro preguntas: por
+    debajo de eso, que coincidan puede ser casualidad. De cada pregunta toma la
+    posición de la PRIMERA opción correcta —basta para el patrón, y así una
+    pregunta de selección múltiple no queda fuera de la cuenta—.
+
+    No hizo falta fabricarle una prueba negativa: los capítulos 1 y 2 la traían
+    puesta, y la regla los señaló en cuanto se ejecutó —doce claves en la «a»
+    repartidas en dos `Quiz`, y nueve de diez en la «b»—. Fueron ellos, además,
+    los que afinaron el umbral: con la primera versión, que exigía unanimidad, el
+    capítulo 2 pasaba en verde.
+    """
+    fallos = []
+    letras = "abcdefgh"
+    sin_comentarios = re.sub(r"//[^\n]*", lambda c: " " * len(c.group(0)), cuerpo)
+    for q in re.finditer(r"<Quiz\b", sin_comentarios):
+        # La tanda llega hasta el cierre del componente. Se corta en el `<Quiz`
+        # siguiente si lo hubiera, que es más barato que equilibrar llaves.
+        sig = sin_comentarios.find("<Quiz", q.end())
+        tanda = sin_comentarios[q.start():sig if sig != -1 else len(sin_comentarios)]
+        posiciones = []
+        for m in re.finditer(r"\bpregunta:\s*", tanda):
+            fin = tanda.find("justificacion:", m.end())
+            trozo = tanda[m.end():fin if fin != -1 else len(tanda)]
+            opciones = [o.start() for o in re.finditer(r"\{\s*texto:", trozo)]
+            if not opciones:
+                continue
+            for i, ini in enumerate(opciones):
+                hasta = opciones[i + 1] if i + 1 < len(opciones) else len(trozo)
+                if re.search(r"correcta:\s*true", trozo[ini:hasta]):
+                    posiciones.append(i)
+                    break
+        n = len(posiciones)
+        if n < 4:
+            continue
+        sitio = max(set(posiciones), key=posiciones.count)
+        repiten = posiciones.count(sitio)
+        # Todas iguales desde cuatro preguntas; o todas menos una desde seis. La
+        # segunda mitad de la regla existe porque el capítulo 2 tenía nueve de
+        # diez claves en la «b» y la primera versión, que exigía unanimidad, lo
+        # dejaba pasar: la décima pregunta es de selección múltiple y su primera
+        # correcta cae en otro sitio. Nueve de diez no es casualidad.
+        if repiten == n or (n >= 6 and n - repiten <= 1):
+            cuantas = "todas" if repiten == n else f"{repiten} de {n}"
+            fallos.append(
+                f"línea {linea_de(texto, desplazamiento + q.start())}: en este "
+                f"`Quiz` de {n} preguntas, {cuantas} tienen la respuesta correcta "
+                f"en la misma posición (la «{letras[sitio]}»), así que se acierta "
+                f"sin leerlas")
+    return fallos
+
+
 # --------------------------------------------------- 13 · plantilla al día
 # La comprobación 1 mira capítulo contra `lp-base.html`, y esa cadena tiene un
 # eslabón antes: `lp-base.html` contra sus fuentes. Si alguien edita
@@ -719,6 +784,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
         problemas.append(f"pregunta imposible — {f}")
     for f in etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
         avisos.append(f"pregunta — {f}")
+
+    # 14 · la clave no está siempre en la misma letra
+    for f in clave_siempre_en_el_mismo_sitio(texto, cuerpo, desplazamiento):
+        problemas.append(f"clave previsible — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
