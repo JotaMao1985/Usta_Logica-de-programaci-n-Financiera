@@ -2416,10 +2416,10 @@ End Sub`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="En el algoritmo del descuento, alguien cambia la línea de la tasa y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
                     opciones={[
-                        { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
                         { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. La entrada estaba mal declarada, no el proceso.' },
                         { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
                         { texto: 'El programa se detiene con un error: 0.03 no es un porcentaje válido.', correcta: false },
+                        { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
                     ]}
                 /></Ejercicio>
             </div>
@@ -3478,10 +3478,10 @@ End Sub`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Alguien intenta intercambiar los saldos sin usar la variable auxiliar y escribe solo dos instrucciones: primero a toma el valor de b, y después b toma el valor de a. Partiendo de a = 500 000 y b = 800 000, ¿con qué valores terminan?"
                     opciones={[
-                        { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
-                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
                         { texto: 'a = 500 000 y b = 500 000: se pierde el saldo de la cuenta B.', correcta: false },
                         { texto: 'a = 500 000 y b = 800 000: no cambia nada, las dos instrucciones se anulan.', correcta: false },
+                        { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
+                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
                     ]}
                 /></Ejercicio>
 
@@ -3760,10 +3760,10 @@ Debug.Print pasos`,
                     b={{ etiqueta: 'B · Partiendo por la mitad', codigo: CMP_BINARIA }}
                     pregunta="¿Las dos versiones encuentran siempre el mismo crédito?"
                     opciones={[
+                        { texto: 'Solo coinciden cuando el crédito buscado está en la primera mitad de la cartera.', correcta: false },
                         { texto: 'Sí, pero solo mientras la cartera esté ordenada: B deja de ser correcto sobre una lista desordenada.', correcta: true, justificacion: 'B no compara con todos: descarta media lista en cada paso, y esa decisión solo es válida si el orden garantiza que lo descartado no podía contener el dato. Sobre una lista desordenada B responde «no encontrado» cuando el crédito sí está. A no supone nada y por eso funciona siempre, aunque cueste más. Elegir entre los dos no es elegir el más rápido: es verificar primero si su suposición se cumple.' },
                         { texto: 'Sí, siempre y en cualquier caso: son equivalentes sin condiciones.', correcta: false },
                         { texto: 'No: B puede saltarse el registro incluso con la cartera ordenada.', correcta: false },
-                        { texto: 'Solo coinciden cuando el crédito buscado está en la primera mitad de la cartera.', correcta: false },
                     ]}
                 />
 
@@ -3817,10 +3817,10 @@ Debug.Print pasos`,
                 <Ejercicio tipo="E7"><MCQ
                     pregunta="El algoritmo de la sección 2 liquida un crédito de $12 000 000 a 24 meses y arroja una cuota de $730 400. El cliente pagará 24 cuotas iguales. ¿Qué se puede afirmar ante el cliente?"
                     opciones={[
-                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
-                        { texto: 'La tasa de interés del crédito es del 46,1 % anual.', correcta: false },
                         { texto: 'El seguro de vida deudor es el que explica la mayor parte del sobrecosto.', correcta: false },
                         { texto: 'No puede afirmarse nada sin conocer la inflación del periodo.', correcta: false },
+                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
+                        { texto: 'La tasa de interés del crédito es del 46,1 % anual.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3829,30 +3829,30 @@ Debug.Print pasos`,
                     {
                         pregunta: 'Un instructivo dice: «revise si el cliente lleva una mora considerable y, si es así, escale el caso». ¿Qué propiedad de un algoritmo viola?',
                         opciones: [
-                            { texto: 'La finitud: el procedimiento podría no terminar.', correcta: false },
                             { texto: 'La precisión: «considerable» deja la decisión al criterio de quien ejecuta.', correcta: true },
                             { texto: 'La entrada: no recibe ningún dato.', correcta: false },
                             { texto: 'Ninguna: está correctamente especificado.', correcta: false },
+                            { texto: 'La finitud: el procedimiento podría no terminar.', correcta: false },
                         ],
                         justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase: «mora superior a 90 días».',
                     },
                     {
                         pregunta: 'Un procedimiento de cálculo itera «hasta obtener un resultado razonable». ¿Qué propiedad está en riesgo?',
                         opciones: [
+                            { texto: 'La definición, pero no la finitud.', correcta: false },
                             { texto: 'La salida.', correcta: false },
                             { texto: 'La finitud: nada garantiza que la condición se cumpla alguna vez.', correcta: true },
                             { texto: 'La entrada.', correcta: false },
-                            { texto: 'La definición, pero no la finitud.', correcta: false },
                         ],
                         justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. En un cierre diario eso no se manifiesta como un error: se manifiesta como un proceso que sigue corriendo a medianoche.',
                     },
                     {
                         pregunta: 'En la liquidación de la cuota, el seguro de vida deudor del 0,12 % mensual lo fija la política del banco y es igual para todas las solicitudes. En el análisis EPS, ¿qué es?',
                         opciones: [
-                            { texto: 'Un dato de entrada: hay que pedírselo al usuario.', correcta: false },
-                            { texto: 'Una constante del negocio: va declarada con nombre dentro del algoritmo.', correcta: true },
                             { texto: 'Una salida, porque se informa al cliente.', correcta: false },
                             { texto: 'Un proceso, porque interviene en el cálculo.', correcta: false },
+                            { texto: 'Un dato de entrada: hay que pedírselo al usuario.', correcta: false },
+                            { texto: 'Una constante del negocio: va declarada con nombre dentro del algoritmo.', correcta: true },
                         ],
                         justificacion: 'Entrada es lo que cambia en cada ejecución y viene de fuera; constante es lo que fija la política y no cambia. Declararla arriba y con nombre hace que el día que la política cambie se corrija en un solo sitio.',
                     },
@@ -3874,10 +3874,10 @@ Debug.Print pasos`,
                     {
                         pregunta: 'En un flujograma correctamente dibujado, el rombo de decisión tiene:',
                         opciones: [
+                            { texto: 'Tantas salidas como condiciones se quieran evaluar.', correcta: false },
                             { texto: 'Una entrada y una salida.', correcta: false },
                             { texto: 'Una entrada y exactamente dos salidas rotuladas.', correcta: true },
                             { texto: 'Dos entradas y una salida.', correcta: false },
-                            { texto: 'Tantas salidas como condiciones se quieran evaluar.', correcta: false },
                         ],
                         justificacion: 'La condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. Un rombo con una sola salida es un error de dibujo, no una variante.',
                     },
@@ -3889,10 +3889,10 @@ Debug.Print pasos`,
                     {
                         pregunta: 'Un sistema guarda el número de cédula de los clientes en una variable de tipo entero. ¿Qué problema aparece?',
                         opciones: [
-                            { texto: 'Ninguno: una cédula es un número.', correcta: false },
                             { texto: 'Se pierden los ceros a la izquierda, y el identificador deja de coincidir con el documento real.', correcta: true },
                             { texto: 'Ocupa más memoria que un texto.', correcta: false },
                             { texto: 'No se pueden hacer sumas con ella.', correcta: false },
+                            { texto: 'Ninguno: una cédula es un número.', correcta: false },
                         ],
                         justificacion: 'Una cédula se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarla como entero borra los ceros iniciales y convierte a dos personas distintas en la misma. El criterio general: si no tiene sentido hacer aritmética con ello, es texto.',
                     },
@@ -3906,20 +3906,20 @@ Debug.Print pasos`,
                         // hay que escribirla en el enunciado.
                         multiple: true,
                         opciones: [
-                            { texto: 'Los dos pueden ser correctos y costar cantidades de operaciones muy distintas.', correcta: true },
-                            { texto: 'El número de operaciones depende del algoritmo, no de la máquina donde corra.', correcta: true },
                             { texto: 'El más rápido siempre es preferible, sin más consideraciones.', correcta: false },
                             { texto: 'Si uno es más rápido, el otro necesariamente tiene un error.', correcta: false },
+                            { texto: 'Los dos pueden ser correctos y costar cantidades de operaciones muy distintas.', correcta: true },
+                            { texto: 'El número de operaciones depende del algoritmo, no de la máquina donde corra.', correcta: true },
                         ],
-                        justificacion: 'Las dos primeras son el contenido de la sección 5. La tercera es falsa porque el algoritmo rápido suele suponer algo —que la cartera está ordenada, por ejemplo— y si esa suposición no se cumple deja de ser correcto. La cuarta confunde eficiencia con corrección: son dos propiedades independientes.',
+                        justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido suele suponer algo —que la cartera está ordenada, por ejemplo— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
                     },
                     {
                         pregunta: 'El algoritmo que busca partiendo la cartera por la mitad hace 12 comparaciones frente a 39 814 del que la recorre entera. ¿Bajo qué condición se puede usar?',
                         opciones: [
+                            { texto: 'Solo si el dato buscado está en la segunda mitad.', correcta: false },
                             { texto: 'Siempre: es más rápido en todos los casos.', correcta: false },
                             { texto: 'Solo si la cartera está ordenada; sobre una lista desordenada da respuestas falsas.', correcta: true },
                             { texto: 'Solo si la cartera tiene menos de 40 000 registros.', correcta: false },
-                            { texto: 'Solo si el dato buscado está en la segunda mitad.', correcta: false },
                         ],
                         justificacion: 'Descartar media lista en cada paso solo es válido si el orden garantiza que lo descartado no podía contener el dato. Sin orden, el algoritmo responde «no encontrado» cuando el crédito sí estaba: no es más lento, es incorrecto. Ante todo algoritmo rápido, la primera pregunta es qué está suponiendo.',
                     },

@@ -2802,10 +2802,10 @@ End Sub`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Alguien modifica la concatenación para que el residuo se añada al final en vez de al principio. ¿Qué imprime entonces el algoritmo para el número 22?"
                     opciones={[
-                        { texto: '01101 — los mismos bits, en orden inverso.', correcta: true, justificacion: 'Las divisiones sucesivas producen los bits del menos significativo al más significativo: primero el que vale 1, al final el que vale 16. Por eso cada residuo nuevo va DELANTE del acumulado. Al ponerlo detrás, el número sale leído al revés: 01101, que como binario vale 13 y no 22. El programa no falla, no avisa y entrega otro número.' },
                         { texto: '10110 — la concatenación da lo mismo en cualquier orden.', correcta: false },
                         { texto: '11010 — solo se invierten los bits centrales.', correcta: false },
                         { texto: 'Un error de ejecución: no se puede concatenar un número con una cadena.', correcta: false },
+                        { texto: '01101 — los mismos bits, en orden inverso.', correcta: true, justificacion: 'Las divisiones sucesivas producen los bits del menos significativo al más significativo: primero el que vale 1, al final el que vale 16. Por eso cada residuo nuevo va DELANTE del acumulado. Al ponerlo detrás, el número sale leído al revés: 01101, que como binario vale 13 y no 22. El programa no falla, no avisa y entrega otro número.' },
                     ]}
                 /></Ejercicio>
 
@@ -2837,19 +2837,19 @@ End Sub`,
                 <MCQ
                     pregunta="El número hexadecimal 2F equivale en decimal a:"
                     opciones={[
-                        { texto: '47', correcta: true, justificacion: '2F₁₆ = 2×16¹ + 15×16⁰ = 32 + 15 = 47.' },
-                        { texto: '25', correcta: false },
                         { texto: '215', correcta: false },
                         { texto: '42', correcta: false },
+                        { texto: '47', correcta: true, justificacion: '2F₁₆ = 2×16¹ + 15×16⁰ = 32 + 15 = 47.' },
+                        { texto: '25', correcta: false },
                     ]} />
 
                 <MCQ
                     pregunta="¿Cuántos valores distintos puede representar 1 byte (8 bits)?"
                     opciones={[
+                        { texto: 'Infinitos, depende de la base.', correcta: false },
                         { texto: '256 (de 0 a 255)', correcta: true, justificacion: 'Con n bits se representan 2ⁿ valores. Con 8 bits: 2⁸ = 256.' },
                         { texto: '128', correcta: false },
                         { texto: '8', correcta: false },
-                        { texto: 'Infinitos, depende de la base.', correcta: false },
                     ]} />
 
                 <Quiz titulo="Mini-cuestionario · Capítulo 1" preguntas={[
@@ -2865,18 +2865,18 @@ End Sub`,
                     {
                         pregunta: 'En hexadecimal, ¿qué valor tiene el dígito "F"?',
                         opciones: [
+                            { texto: '16', correcta: false },
                             { texto: '15', correcta: true },
                             { texto: '10', correcta: false },
-                            { texto: '16', correcta: false },
                         ],
                         justificacion: 'A=10, B=11, C=12, D=13, E=14, F=15. No existe el dígito para 16 en hexadecimal.'
                     },
                     {
                         pregunta: 'El sistema octal usa los dígitos del 0 al 7. ¿Cuál es su base?',
                         opciones: [
-                            { texto: '8', correcta: true },
                             { texto: '7', correcta: false },
                             { texto: '10', correcta: false },
+                            { texto: '8', correcta: true },
                         ],
                         justificacion: 'La base es igual al número de símbolos. Octal usa 8 símbolos (0-7), base 8.'
                     },
@@ -3180,10 +3180,10 @@ Debug.Print total`,
                     b={{ etiqueta: 'Versión B · lee una sola vez', codigo: CMP_LEE_UNA_VEZ }}
                     pregunta="¿Qué diferencia hay entre las dos?"
                     opciones={[
+                        { texto: 'Son idénticas: el compilador las convierte en el mismo programa.', correcta: false },
                         { texto: 'Dan el mismo total, pero la A cruza el bus de memoria doce veces más que la B.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es el número de accesos a memoria, y ahí está el cuello de botella de Von Neumann: la CPU calcula mucho más rápido de lo que el bus le trae los datos. Con doce cuotas la diferencia no se nota; recorriendo 40 000 filas de una hoja, es la diferencia entre segundos y minutos. De ahí viene la regla de sacar del ciclo todo lo que no cambia dentro de él.' },
                         { texto: 'La B da un total distinto porque lee la tasa antes de empezar.', correcta: false },
                         { texto: 'La A es más rápida porque no usa una variable adicional.', correcta: false },
-                        { texto: 'Son idénticas: el compilador las convierte en el mismo programa.', correcta: false },
                     ]}
                 />
 
@@ -3227,10 +3227,10 @@ Debug.Print total`,
                 <MCQ
                     pregunta="En la arquitectura de Von Neumann, ¿dónde se almacenan las instrucciones del programa mientras se ejecuta?"
                     opciones={[
-                        { texto: 'En la misma memoria RAM donde están los datos.', correcta: true, justificacion: 'La característica definitoria de Von Neumann es que datos e instrucciones comparten la misma memoria. Esto permite que el programa se modifique a sí mismo (aunque en la práctica moderna está desaconsejado).' },
-                        { texto: 'En una memoria ROM separada exclusiva para el programa.', correcta: false },
                         { texto: 'Directamente en los registros de la CPU.', correcta: false },
                         { texto: 'En el disco duro, cargándose instrucción por instrucción.', correcta: false },
+                        { texto: 'En la misma memoria RAM donde están los datos.', correcta: true, justificacion: 'La característica definitoria de Von Neumann es que datos e instrucciones comparten la misma memoria. Esto permite que el programa se modifique a sí mismo (aunque en la práctica moderna está desaconsejado).' },
+                        { texto: 'En una memoria ROM separada exclusiva para el programa.', correcta: false },
                     ]} />
 
                 <MCQ
@@ -3255,18 +3255,18 @@ Debug.Print total`,
                     {
                         pregunta: '¿Qué tipo de memoria es volátil (pierde su contenido al apagar el computador)?',
                         opciones: [
-                            { texto: 'RAM', correcta: true },
                             { texto: 'ROM', correcta: false },
                             { texto: 'SSD (disco de estado sólido)', correcta: false },
+                            { texto: 'RAM', correcta: true },
                         ],
                         justificacion: 'La RAM es volátil. ROM y SSD/HDD conservan los datos sin energía.'
                     },
                     {
                         pregunta: 'En el ciclo fetch-decode-execute, ¿qué hace el paso "decode"?',
                         opciones: [
+                            { texto: 'Se guarda el resultado en el disco duro.', correcta: false },
                             { texto: 'La Unidad de Control interpreta qué operación representa el código binario leído.', correcta: true },
                             { texto: 'La ALU ejecuta la suma.', correcta: false },
-                            { texto: 'Se guarda el resultado en el disco duro.', correcta: false },
                         ],
                         justificacion: 'Decode = decodificar el código de operación (opcode) para saber si es MOV, ADD, CMP, JMP, etc.'
                     },
@@ -3713,10 +3713,10 @@ End Sub`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="En ese mismo algoritmo, si la meta fuera $1 020 000 en lugar de $1 050 000, ¿qué imprimiría?"
                     opciones={[
+                        { texto: 'Nada: el ciclo no termina.', correcta: false },
                         { texto: '1 — entra una sola vez y sale.', correcta: true, justificacion: 'Con saldo inicial 1 000 000 la condición 1 000 000 < 1 020 000 se cumple, así que entra. Dentro, el saldo pasa a 1 020 000 exactos y mes a 1. Al volver a comprobar, 1 020 000 < 1 020 000 es Falso —el operador es «menor que», no «menor o igual»— y el ciclo termina. Alcanzar la meta exacta no da una vuelta más: ese detalle del signo es el que produce los errores de un mes de diferencia en las proyecciones.' },
                         { texto: '0 — la condición no se cumple nunca.', correcta: false },
                         { texto: '2 — hace falta superar la meta, no solo igualarla.', correcta: false },
-                        { texto: 'Nada: el ciclo no termina.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3784,9 +3784,9 @@ End Sub`,
                 <MCQ
                     pregunta="¿Qué imprime: print(10 + 5 * 2)?"
                     opciones={[
-                        { texto: '20 (la multiplicación tiene mayor precedencia: 5*2=10, luego 10+10=20).', correcta: true, justificacion: 'La multiplicación (*) tiene precedencia sobre la suma (+). Es equivalente a 10 + (5*2) = 20.' },
                         { texto: '30 (se suma primero y luego se multiplica).', correcta: false },
                         { texto: 'Error de sintaxis.', correcta: false },
+                        { texto: '20 (la multiplicación tiene mayor precedencia: 5*2=10, luego 10+10=20).', correcta: true, justificacion: 'La multiplicación (*) tiene precedencia sobre la suma (+). Es equivalente a 10 + (5*2) = 20.' },
                     ]} />
 
                 <MCQ
@@ -3801,18 +3801,18 @@ End Sub`,
                     {
                         pregunta: '¿Cuál es el resultado de 17 % 5?',
                         opciones: [
+                            { texto: '3.4', correcta: false },
                             { texto: '2 (17 dividido entre 5 da 3, sobra 2).', correcta: true },
                             { texto: '3', correcta: false },
-                            { texto: '3.4', correcta: false },
                         ],
                         justificacion: 'El módulo (%) devuelve el residuo de la división entera: 17 = 5×3 + 2.'
                     },
                     {
                         pregunta: 'El operador == significa:',
                         opciones: [
-                            { texto: 'Comparación: ¿son iguales estos dos valores?', correcta: true },
                             { texto: 'Asignación: guardar un valor en una variable.', correcta: false },
                             { texto: 'Igualdad aproximada.', correcta: false },
+                            { texto: 'Comparación: ¿son iguales estos dos valores?', correcta: true },
                         ],
                         justificacion: '== compara, = asigna. Es uno de los errores más comunes al empezar.'
                     },
@@ -3828,9 +3828,9 @@ End Sub`,
                     {
                         pregunta: 'En la expresión (1 + tasa) ** n, ¿qué hace **?',
                         opciones: [
+                            { texto: 'Es un comentario especial.', correcta: false },
                             { texto: 'Eleva a la potencia n. Es el operador de exponenciación.', correcta: true },
                             { texto: 'Multiplica por n.', correcta: false },
-                            { texto: 'Es un comentario especial.', correcta: false },
                         ],
                         justificacion: '** es el operador de potencia en Python. (1 + i) ** n calcula (1 + i)^n, base del interés compuesto.'
                     },
@@ -4257,9 +4257,9 @@ End Sub`,
                     {
                         pregunta: 'En la arquitectura de Von Neumann, el componente que coordina la lectura y ejecución de instrucciones es:',
                         opciones: [
-                            { texto: 'La Unidad de Control (UC).', correcta: true },
                             { texto: 'La ALU.', correcta: false },
                             { texto: 'La memoria RAM.', correcta: false },
+                            { texto: 'La Unidad de Control (UC).', correcta: true },
                         ],
                         justificacion: 'La UC es el "director de orquesta": lee la instrucción de memoria, la decodifica y coordina su ejecución.'
                     },
@@ -4275,18 +4275,18 @@ End Sub`,
                     {
                         pregunta: 'Un byte puede representar valores desde 0 hasta:',
                         opciones: [
+                            { texto: '1024', correcta: false },
                             { texto: '255 (2⁸ - 1).', correcta: true },
                             { texto: '128', correcta: false },
-                            { texto: '1024', correcta: false },
                         ],
                         justificacion: '8 bits → 2⁸ = 256 valores distintos, de 0 a 255.'
                     },
                     {
                         pregunta: 'La expresión: not (saldo > 0) and cuenta_activa, significa:',
                         opciones: [
-                            { texto: 'El saldo NO es positivo Y la cuenta está activa.', correcta: true },
                             { texto: 'El saldo es positivo Y la cuenta NO está activa.', correcta: false },
                             { texto: 'El saldo NO es positivo O la cuenta está activa.', correcta: false },
+                            { texto: 'El saldo NO es positivo Y la cuenta está activa.', correcta: true },
                         ],
                         justificacion: 'not (saldo > 0) significa saldo <= 0. Con AND, ambas condiciones deben cumplirse.'
                     },
@@ -4311,9 +4311,9 @@ End Sub`,
                     {
                         pregunta: 'En Python, ¿qué valor tiene la expresión: False or True and False?',
                         opciones: [
+                            { texto: 'Error de tipo.', correcta: false },
                             { texto: 'False (and primero: True and False → False; luego False or False → False).', correcta: true },
                             { texto: 'True', correcta: false },
-                            { texto: 'Error de tipo.', correcta: false },
                         ],
                         justificacion: 'and precede a or: True and False → False; False or False → False.'
                     },
