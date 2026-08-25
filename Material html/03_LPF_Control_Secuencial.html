@@ -3006,6 +3006,14 @@ End Sub`,
            SECCIÓN 4 — LA PRUEBA DE ESCRITORIO COMO MÉTODO
            Núcleo del capítulo. Aquí vive el `Trazador`: primero se MIRA una
            traza ejecutarse, y solo después se pide hacer una (E1).
+
+           Tres algoritmos pasan por el `Trazador`, y cada uno enseña algo que
+           los otros dos no enseñan:
+             1 · liquidación de un crédito  → el método, con una variable por fila
+             2 · conciliación de una cuenta → una variable que cambia cuatro veces
+             3 · abono extraordinario       → el orden que impone la regla del negocio
+           El tercero es el que sostiene el gancho del capítulo: corre sin error
+           y la cifra sale mal, y la traza es lo único que lo enseña.
         ============================================================ */
 
         // Salida comprobada por ejecución (comprobación 9). Python imprime con
@@ -3095,6 +3103,358 @@ End Sub`,
                 nota: 'Fin de la secuencia. Siete instrucciones, cada una ejecutada exactamente una vez y en orden.' },
         ];
 
+        /* --- Algoritmo 2 del Trazador: una sola variable, cuatro valores ---
+           Salida comprobada por ejecución. Aquí no hay ningún error: el ejemplo
+           existe para que se vea que la tabla guarda la historia que la variable
+           no guarda. */
+        const TZ_CONCILIACION = {
+            pseudo: `Inicio
+    // Conciliación diaria de la cuenta de recaudo
+    saldo <- 45000000
+    saldo <- saldo + 12500000     // consignación del día
+    saldo <- saldo - 8300000      // cheque girado al proveedor
+    saldo <- saldo - 45000        // comisión bancaria
+
+    Escribir "Saldo conciliado: ", saldo
+    //> Saldo conciliado: 49155000
+Fin`,
+            python: `# Conciliación diaria de la cuenta de recaudo
+saldo = 45_000_000
+saldo = saldo + 12_500_000     # consignación del día
+saldo = saldo - 8_300_000      # cheque girado al proveedor
+saldo = saldo - 45_000         # comisión bancaria
+
+print(f"Saldo conciliado: {saldo:,.0f}")
+#> Saldo conciliado: 49,155,000`,
+            r: `# Conciliación diaria de la cuenta de recaudo
+saldo <- 45000000
+saldo <- saldo + 12500000      # consignación del día
+saldo <- saldo - 8300000       # cheque girado al proveedor
+saldo <- saldo - 45000         # comisión bancaria
+
+cat(sprintf("Saldo conciliado: %.0f\\n", saldo))
+#> Saldo conciliado: 49155000`,
+            vba: `Sub ConciliarRecaudo()
+    ' Conciliación diaria de la cuenta de recaudo
+    Dim saldo As Currency
+
+    saldo = 45000000
+    saldo = saldo + 12500000      ' consignación del día
+    saldo = saldo - 8300000       ' cheque girado al proveedor
+    saldo = saldo - 45000         ' comisión bancaria
+
+    Debug.Print "Saldo conciliado: " & saldo
+    '> Saldo conciliado: 49155000
+End Sub`,
+        };
+
+        const TZ_SAL_CONCILIADO = { pseudo: 'Saldo conciliado: 49155000', python: 'Saldo conciliado: 49,155,000', r: 'Saldo conciliado: 49155000', vba: 'Saldo conciliado: 49155000' };
+
+        const TZ_CONCILIACION_PASOS = [
+            { linea: { pseudo: 3, python: 2, r: 2, vba: 5 }, estado: { saldo: '45000000' },
+                nota: 'Saldo con el que abre el día, tomado del extracto de ayer.' },
+            { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { saldo: '57500000' },
+                nota: 'Entra la consignación. El valor anterior —45 000 000— acaba de dejar de existir: la variable ya no lo tiene, y la única constancia que queda de él es esta tabla.' },
+            { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: { saldo: '49200000' },
+                nota: 'Sale el cheque. Tercer valor de la misma variable, y van tres filas: una por instrucción, aunque la columna sea siempre la misma.' },
+            { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { saldo: '49155000' },
+                nota: 'La comisión, que son 45 000 y es la que nadie mira. Si esta línea faltara, el saldo saldría redondo y plausible: 49 200 000. La traza es lo que permite señalar en qué instrucción se fue.' },
+            { linea: { pseudo: 8, python: 7, r: 7, vba: 10 }, estado: {}, salida: TZ_SAL_CONCILIADO,
+                nota: 'Cuatro asignaciones sobre una sola variable y un único valor sobreviviente. Eso es un acumulador, y es el patrón con el que el capítulo 5 construirá tablas de 240 filas.' },
+        ];
+
+        /* --- Algoritmo 3 del Trazador: el orden que impone el negocio ---
+           Versión CORRECTA. La versión con las dos líneas invertidas es el E3
+           que viene después: aquí se ve el estado bueno, allí se diagnostica el
+           malo. Salida comprobada por ejecución. */
+        const TZ_ABONO = {
+            pseudo: `Inicio
+    // Causación del mes y abono extraordinario
+    saldo <- 12000000
+    tasa  <- 0.022            // mensual
+    abono <- 3000000
+
+    interes <- saldo * tasa   // se causa sobre el saldo del periodo
+    saldo   <- saldo - abono  // el abono se aplica al vencimiento
+
+    Escribir "Interes causado: ", interes
+    //> Interes causado: 264000
+    Escribir "Nuevo saldo: ", saldo
+    //> Nuevo saldo: 9000000
+Fin`,
+            python: `# Causación del mes y abono extraordinario
+saldo = 12_000_000
+tasa  = 0.022             # mensual
+abono = 3_000_000
+
+interes = saldo * tasa    # se causa sobre el saldo del periodo
+saldo   = saldo - abono   # el abono se aplica al vencimiento
+
+print(f"Interes causado: {interes:,.0f}")
+#> Interes causado: 264,000
+print(f"Nuevo saldo: {saldo:,.0f}")
+#> Nuevo saldo: 9,000,000`,
+            r: `# Causación del mes y abono extraordinario
+saldo <- 12000000
+tasa  <- 0.022            # mensual
+abono <- 3000000
+
+interes <- saldo * tasa   # se causa sobre el saldo del periodo
+saldo   <- saldo - abono  # el abono se aplica al vencimiento
+
+cat(sprintf("Interes causado: %.0f\\n", interes))
+#> Interes causado: 264000
+cat(sprintf("Nuevo saldo: %.0f\\n", saldo))
+#> Nuevo saldo: 9000000`,
+            vba: `Sub CausarYAbonar()
+    ' Causación del mes y abono extraordinario
+    Dim saldo As Currency, tasa As Double, abono As Currency
+    Dim interes As Currency
+
+    saldo = 12000000
+    tasa = 0.022              ' mensual
+    abono = 3000000
+
+    interes = saldo * tasa    ' se causa sobre el saldo del periodo
+    saldo = saldo - abono     ' el abono se aplica al vencimiento
+
+    Debug.Print "Interes causado: " & interes
+    '> Interes causado: 264000
+    Debug.Print "Nuevo saldo: " & saldo
+    '> Nuevo saldo: 9000000
+End Sub`,
+        };
+
+        const TZ_SAL_INT_CAUSADO = { pseudo: 'Interes causado: 264000', python: 'Interes causado: 264,000', r: 'Interes causado: 264000', vba: 'Interes causado: 264000' };
+        const TZ_SAL_NUEVO_SALDO = { pseudo: 'Nuevo saldo: 9000000', python: 'Nuevo saldo: 9,000,000', r: 'Nuevo saldo: 9000000', vba: 'Nuevo saldo: 9000000' };
+
+        const TZ_ABONO_PASOS = [
+            { linea: { pseudo: 3, python: 2, r: 2, vba: 6 }, estado: { saldo: '12000000' },
+                nota: 'Saldo de la obligación al comenzar el mes. Es el que estuvo vigente durante todo el período, y por eso es el que causa intereses.' },
+            { linea: { pseudo: 4, python: 3, r: 3, vba: 7 }, estado: { tasa: '0.022' },
+                nota: 'Tasa mensual, en decimal.' },
+            { linea: { pseudo: 5, python: 4, r: 4, vba: 8 }, estado: { abono: '3000000' },
+                nota: 'El abono extraordinario que el cliente anuncia para el día del vencimiento. Todavía no se ha aplicado a nada.' },
+            { linea: { pseudo: 7, python: 6, r: 6, vba: 10 }, estado: { interes: '264000' },
+                nota: 'Aquí está el punto de la sección: el interés se calcula con saldo valiendo 12 000 000, que es el estado que corresponde al mes que se está liquidando.' },
+            { linea: { pseudo: 8, python: 7, r: 7, vba: 11 }, estado: { saldo: '9000000' },
+                nota: 'Ahora sí se aplica el abono. La variable saldo pasa a 9 000 000, y el interés ya está calculado y guardado: nada de lo que pase después lo cambia.' },
+            { linea: { pseudo: 10, python: 9, r: 9, vba: 13 }, estado: {}, salida: TZ_SAL_INT_CAUSADO,
+                nota: 'Se informa el interés del mes.' },
+            { linea: { pseudo: 12, python: 11, r: 11, vba: 15 }, estado: {}, salida: TZ_SAL_NUEVO_SALDO,
+                nota: 'Y el saldo con el que la obligación entra al mes siguiente. Invierta mentalmente los pasos 4 y 5 y vuelva a leer la tabla: el interés saldría 198 000 y ninguna de las dos cifras se vería rara.' },
+        ];
+
+        /* --- Expresiones intermedias: la misma cuenta en una línea y en cuatro.
+           No declara salida a propósito: los valores son los que el E1 de más
+           abajo pide trazar. */
+        const EJ_INTERMEDIAS = {
+            pseudo: `// Version A - todo en una linea
+total <- (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
+
+// Version B - con la base gravable como variable intermedia
+base      <- subtotal - 1200000
+iva       <- base * 0.19
+retencion <- base * 0.025
+total     <- base + iva - retencion`,
+            python: `# Version A - todo en una linea
+total = (subtotal - 1_200_000) * 1.19 - (subtotal - 1_200_000) * 0.025
+
+# Version B - con la base gravable como variable intermedia
+base      = subtotal - 1_200_000
+iva       = base * 0.19
+retencion = base * 0.025
+total     = base + iva - retencion`,
+            r: `# Version A - todo en una linea
+total <- (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
+
+# Version B - con la base gravable como variable intermedia
+base      <- subtotal - 1200000
+iva       <- base * 0.19
+retencion <- base * 0.025
+total     <- base + iva - retencion`,
+            vba: `' Version A - todo en una linea
+total = (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
+
+' Version B - con la base gravable como variable intermedia
+base = subtotal - 1200000
+iva = base * 0.19
+retencion = base * 0.025
+total = base + iva - retencion`,
+        };
+
+        /* --- E1 · traza corta: causación de intereses de mora --- */
+        const TRAZA_MORA = {
+            pseudo: `1  saldoVencido <- 8500000
+2  diasMora     <- 45
+3  interesMora  <- saldoVencido * 0.025 * (diasMora / 30)
+4  totalACobrar <- saldoVencido + interesMora
+5  Escribir totalACobrar`,
+            python: `1  saldo_vencido = 8500000
+2  dias_mora     = 45
+3  interes_mora  = saldo_vencido * 0.025 * (dias_mora / 30)
+4  total_cobrar  = saldo_vencido + interes_mora
+5  print(total_cobrar)`,
+            r: `1  saldo_vencido <- 8500000
+2  dias_mora     <- 45
+3  interes_mora  <- saldo_vencido * 0.025 * (dias_mora / 30)
+4  total_cobrar  <- saldo_vencido + interes_mora
+5  cat(total_cobrar)`,
+            vba: `1  saldoVencido = 8500000
+2  diasMora = 45
+3  interesMora = saldoVencido * 0.025 * (diasMora / 30)
+4  totalACobrar = saldoVencido + interesMora
+5  Debug.Print totalACobrar`,
+        };
+
+        /* --- E1 · traza larga: cinco variables, doce instrucciones ---
+           Es la del bloque de expresiones intermedias de más arriba, ya con el
+           subtotal puesto. `total` se construye en tres pasos a propósito: es la
+           columna que obliga a sostener el estado. */
+        const TRAZA_FACTURA = {
+            pseudo: `1   subtotal  <- 24000000
+2   Escribir "Subtotal: ", subtotal
+3   base      <- subtotal - 1200000
+4   iva       <- base * 0.19
+5   retencion <- base * 0.025
+6   total     <- base
+7   total     <- total + iva
+8   total     <- total - retencion
+9   Escribir "Base gravable: ", base
+10  Escribir "IVA: ", iva
+11  Escribir "Retencion: ", retencion
+12  Escribir "Total a pagar: ", total`,
+            python: `1   subtotal  = 24000000
+2   print("Subtotal:", subtotal)
+3   base      = subtotal - 1200000
+4   iva       = base * 0.19
+5   retencion = base * 0.025
+6   total     = base
+7   total     = total + iva
+8   total     = total - retencion
+9   print("Base gravable:", base)
+10  print("IVA:", iva)
+11  print("Retencion:", retencion)
+12  print("Total a pagar:", total)`,
+            r: `1   subtotal  <- 24000000
+2   cat("Subtotal:", subtotal)
+3   base      <- subtotal - 1200000
+4   iva       <- base * 0.19
+5   retencion <- base * 0.025
+6   total     <- base
+7   total     <- total + iva
+8   total     <- total - retencion
+9   cat("Base gravable:", base)
+10  cat("IVA:", iva)
+11  cat("Retencion:", retencion)
+12  cat("Total a pagar:", total)`,
+            vba: `1   subtotal = 24000000
+2   Debug.Print "Subtotal: " & subtotal
+3   base = subtotal - 1200000
+4   iva = base * 0.19
+5   retencion = base * 0.025
+6   total = base
+7   total = total + iva
+8   total = total - retencion
+9   Debug.Print "Base gravable: " & base
+10  Debug.Print "IVA: " & iva
+11  Debug.Print "Retencion: " & retencion
+12  Debug.Print "Total a pagar: " & total`,
+        };
+
+        /* --- E3 · el mismo abono con las dos líneas invertidas ---
+           El fallo no cae en la misma línea en los cuatro lenguajes: VBA declara
+           con `Dim` y el pseudocódigo abre con `Inicio`. De ahí que
+           `lineaCorrecta` y `explicacion` sean objetos (reglas 6 y 8). */
+        const ERROR_ABONO_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Causacion del mes y abono extraordinario',
+                '    saldo <- 12000000',
+                '    tasa  <- 0.022            // mensual',
+                '    abono <- 3000000',
+                '    saldo   <- saldo - abono',
+                '    interes <- saldo * tasa',
+                '    Escribir "Interes causado: ", interes',
+                '    Escribir "Nuevo saldo: ", saldo',
+                'Fin',
+            ],
+            python: [
+                '# Causacion del mes y abono extraordinario',
+                'saldo = 12_000_000',
+                'tasa  = 0.022             # mensual',
+                'abono = 3_000_000',
+                'saldo   = saldo - abono',
+                'interes = saldo * tasa',
+                'print(f"Interes causado: {interes:,.0f}")',
+                'print(f"Nuevo saldo: {saldo:,.0f}")',
+            ],
+            r: [
+                '# Causacion del mes y abono extraordinario',
+                'saldo <- 12000000',
+                'tasa  <- 0.022            # mensual',
+                'abono <- 3000000',
+                'saldo   <- saldo - abono',
+                'interes <- saldo * tasa',
+                'cat(sprintf("Interes causado: %.0f\\n", interes))',
+                'cat(sprintf("Nuevo saldo: %.0f\\n", saldo))',
+            ],
+            vba: [
+                'Sub CausarYAbonar()',
+                "    ' Causacion del mes y abono extraordinario",
+                '    Dim saldo As Currency, tasa As Double, abono As Currency',
+                '    Dim interes As Currency',
+                '    saldo = 12000000',
+                "    tasa = 0.022              ' mensual",
+                '    abono = 3000000',
+                '    saldo = saldo - abono',
+                '    interes = saldo * tasa',
+                '    Debug.Print "Interes causado: " & interes',
+                '    Debug.Print "Nuevo saldo: " & saldo',
+                'End Sub',
+            ],
+        };
+        const ERROR_ABONO_LINEA_OK = { pseudo: 6, python: 5, r: 5, vba: 8 };
+
+        const ERROR_ABONO_EXPLICACION = {
+            pseudo: <>La <strong>línea 6</strong> aplica el abono, y con eso <span className="inline-code">saldo</span> deja de ser el saldo del mes que se está liquidando y pasa a ser el del mes siguiente. La <strong>línea 7</strong> no tiene nada malo en sí misma: calcula el interés sobre el <span className="inline-code">saldo</span> que encuentra, que ya es otro. Basta con intercambiarlas —causar primero, abonar después— para que las dos digan la verdad.</>,
+            python: <>La <strong>línea 5</strong> aplica el abono, y con eso <span className="inline-code">saldo</span> deja de ser el saldo del mes que se está liquidando y pasa a ser el del mes siguiente. La <strong>línea 6</strong> no tiene nada malo en sí misma: calcula el interés sobre el <span className="inline-code">saldo</span> que encuentra, que ya es otro. Basta con intercambiarlas —causar primero, abonar después— para que las dos digan la verdad.</>,
+            r: <>La <strong>línea 5</strong> aplica el abono, y con eso <span className="inline-code">saldo</span> deja de ser el saldo del mes que se está liquidando y pasa a ser el del mes siguiente. La <strong>línea 6</strong> no tiene nada malo en sí misma: calcula el interés sobre el <span className="inline-code">saldo</span> que encuentra, que ya es otro. Basta con intercambiarlas —causar primero, abonar después— para que las dos digan la verdad.</>,
+            vba: <>La <strong>línea 8</strong> aplica el abono, y con eso <span className="inline-code">saldo</span> deja de ser el saldo del mes que se está liquidando y pasa a ser el del mes siguiente. La <strong>línea 9</strong> no tiene nada malo en sí misma: calcula el interés sobre el <span className="inline-code">saldo</span> que encuentra, que ya es otro. Basta con intercambiarlas —causar primero, abonar después— para que las dos digan la verdad.</>,
+        };
+
+        /* --- E5 · liquidación de un CDT al vencimiento --- */
+        const ORDENA_CDT = {
+            pseudo: ['Inicio',
+                'Leer capital, tasaMensual, meses',
+                'interesBruto <- capital * tasaMensual * meses',
+                'retencion    <- interesBruto * 0.07',
+                'interesNeto  <- interesBruto - retencion',
+                'Escribir "Interes neto: ", interesNeto',
+                'Fin'],
+            python: ['capital       = float(input("Capital: "))',
+                'tasa_mensual  = float(input("Tasa mensual: "))',
+                'meses         = int(input("Meses: "))',
+                'interes_bruto = capital * tasa_mensual * meses',
+                'retencion     = interes_bruto * 0.07',
+                'interes_neto  = interes_bruto - retencion',
+                'print(f"Interes neto: {interes_neto:,.0f}")'],
+            r: ['capital       <- as.numeric(readline("Capital: "))',
+                'tasa_mensual  <- as.numeric(readline("Tasa mensual: "))',
+                'meses         <- as.numeric(readline("Meses: "))',
+                'interes_bruto <- capital * tasa_mensual * meses',
+                'retencion     <- interes_bruto * 0.07',
+                'interes_neto  <- interes_bruto - retencion',
+                'cat(sprintf("Interes neto: %.0f", interes_neto))'],
+            vba: ['Sub LiquidarCDT()',
+                'Dim interesBruto As Currency, retencion As Currency, interesNeto As Currency',
+                'interesBruto = Range("B2").Value * Range("B3").Value * Range("B4").Value',
+                'retencion = interesBruto * 0.07',
+                'interesNeto = interesBruto - retencion',
+                'MsgBox interesNeto',
+                'End Sub'],
+        };
+
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-magnifying-glass-chart"
@@ -3106,8 +3466,67 @@ End Sub`,
                     ya venía deducido.
                 </Motivacion>
 
+                <h3>Qué es una prueba de escritorio</h3>
+                <p>
+                    Una <Termino def="Ejecución manual de un algoritmo, instrucción por instrucción, registrando en una tabla el valor de cada variable después de cada paso.">prueba
+                    de escritorio</Termino> —o <em>traza</em>— es ejecutar el programa con la cabeza y
+                    escribir lo que va pasando. No es una técnica de principiantes que después se
+                    reemplace por el depurador: es la única herramienta que sirve cuando el programa
+                    <strong> no falla</strong>. Un depurador ayuda a encontrar dónde revienta algo; aquí no
+                    revienta nada, y la pregunta es otra —en qué instrucción la cifra dejó de significar
+                    lo que debía—.
+                </p>
+                <p>
+                    También es lo que el syllabus llama <em>Formato Definición y Análisis</em>, y lo que
+                    el capítulo 2 planteó como Entrada–Proceso–Salida: la traza es ese análisis hecho
+                    valor por valor en lugar de en bloque.
+                </p>
+
+                <h3>Las cuatro reglas de la tabla</h3>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Regla</th><th>En la práctica</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Una columna por variable</strong></td>
+                                <td>Más la columna de la instrucción y, si el algoritmo imprime, una de salida. Las columnas se fijan <em>antes</em> de empezar, leyendo el código.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Una fila por instrucción ejecutada</strong></td>
+                                <td>Los comentarios y las líneas en blanco no son instrucciones y no ocupan fila. <span className="inline-code">Escribir</span> sí ocupa una: es una instrucción, aunque no cambie nada.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cada fila arrastra la anterior</strong></td>
+                                <td>Solo cambia lo que esa instrucción escribió. Copiar el resto no es relleno: es la forma de darse cuenta de que una variable lleva veinte líneas conservando un valor que ya no corresponde.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Antes de la primera fila no hay nada</strong></td>
+                                <td>Se escribe <span className="inline-code">—</span>, no <span className="inline-code">0</span>. Cero es un valor y «sin valor» no lo es; confundirlos es exactamente el error que la traza busca.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="tip" label="Qué se anota cuando la instrucción es una expresión">
+                    No el resultado a secas: primero la expresión <strong>con los valores sustituidos</strong>,
+                    después el resultado. Escribir <span className="inline-code">20000000 * 0.018 * 6 = 2160000</span> obliga
+                    a mirar las unidades de cada factor, y ahí es donde se ve que la tasa es mensual y el
+                    plazo también. Escribir solo <span className="inline-code">2160000</span> no obliga a mirar nada.
+                </Box>
+
+                <h3>Una traza, paso a paso</h3>
+                <p>
+                    El primer algoritmo es el más simple que puede tener este capítulo: cinco variables,
+                    cada una asignada exactamente una vez, y dos instrucciones de escritura al final.
+                    Conviene recorrerlo entero con el botón <em>Siguiente</em> antes de leer nada más, y
+                    cambiar de lenguaje a mitad de la traza: los números de línea cambian y
+                    <strong> los valores no</strong>.
+                </p>
+
                 <Trazador
-                    titulo="Traza guiada · liquidación de un crédito"
+                    titulo="Traza guiada 1 · liquidación de un crédito"
                     enunciado={<>Avance instrucción por instrucción. La <strong>línea activa</strong> se resalta en el
                         código y la tabla escribe una fila por cada instrucción ejecutada; la celda que esa
                         instrucción cambió aparece destacada. Cambie de lenguaje en cualquier momento: los
@@ -3122,12 +3541,520 @@ End Sub`,
                     ]}
                     pasos={TZ_LIQUIDACION_PASOS}
                     nota="Una prueba de escritorio no se hace para saber el resultado —para eso está el computador—, sino para saber por dónde pasó." />
+
+                <h3>Una variable solo recuerda su último valor</h3>
+                <p>
+                    En el algoritmo anterior cada variable se escribió una sola vez, y por eso la tabla se
+                    llenó en diagonal. Lo normal es lo contrario: una misma variable recibe valor muchas
+                    veces, y en cada asignación <strong>el valor anterior desaparece</strong>. Al terminar el
+                    programa la variable conserva uno solo, y si ese está mal no hay forma de saber en
+                    cuál de las cuatro asignaciones se torció.
+                </p>
+                <p>
+                    La tabla de traza es lo que guarda esa historia. Es su segunda razón de ser, y la que
+                    la vuelve indispensable en el capítulo 5, donde un ciclo asigna sobre la misma
+                    variable doscientas cuarenta veces.
+                </p>
+
+                <Trazador
+                    titulo="Traza guiada 2 · conciliación de la cuenta de recaudo"
+                    enunciado={<>Una sola variable y cuatro asignaciones seguidas. Fíjese en la columna
+                        <span className="inline-code"> saldo</span>: cada fila la reescribe, y el valor de la fila anterior
+                        ya no existe en ninguna parte del programa —solo en esta tabla—.</>}
+                    codigo={TZ_CONCILIACION}
+                    variables={[{ clave: 'saldo', titulo: 'saldo' }]}
+                    pasos={TZ_CONCILIACION_PASOS}
+                    nota="El patrón se llama acumulador: una variable que se lee a sí misma para actualizarse. Aparece en todo cierre, todo saldo y toda suma corrida." />
+
+                <h3>Cuando el orden lo impone el negocio</h3>
+                <p>
+                    Las dos secciones anteriores mostraron órdenes obligados por el <em>código</em>: no se
+                    puede usar una variable antes de darle valor. Hay un segundo tipo de orden, más
+                    difícil de ver, que no lo impone el lenguaje sino el <strong>contrato</strong>. El
+                    lenguaje acepta las dos versiones; solo una responde a la pregunta que se hizo.
+                </p>
+                <Box type="info" label="La regla del caso">
+                    Un cliente con un saldo de 12 000 000 al 2,2 % mensual anuncia un abono extraordinario
+                    de 3 000 000 <strong>para el día del vencimiento</strong>. El interés del mes se causa
+                    sobre el saldo que estuvo vigente <em>durante</em> el mes —los 12 000 000—, y el abono se
+                    aplica después, porque llega al final. Ese «después» es una cláusula, no una
+                    instrucción: hay que traducirlo a un orden.
+                </Box>
+
+                <Trazador
+                    titulo="Traza guiada 3 · causación del mes y abono extraordinario"
+                    enunciado={<>Dos instrucciones que se pueden escribir en cualquier orden sin que ningún
+                        lenguaje objete, y que dan cifras distintas. Mire el estado de <span className="inline-code">saldo</span> en
+                        el paso 4: es el valor con el que se calcula el interés, y es el que decide si la
+                        liquidación es correcta.</>}
+                    codigo={TZ_ABONO}
+                    variables={[
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'tasa', titulo: 'tasa' },
+                        { clave: 'abono', titulo: 'abono' },
+                        { clave: 'interes', titulo: 'interes' },
+                    ]}
+                    pasos={TZ_ABONO_PASOS}
+                    nota="El gancho del capítulo cabe en esta tabla: las dos versiones corren, ninguna avisa, y la diferencia son 66 000 pesos por obligación." />
+
+                <h3>Las expresiones intermedias</h3>
+                <p>
+                    Una cuenta larga se puede escribir en una línea o repartida en varias. Las dos calculan
+                    lo mismo y ninguna es más rápida que la otra de forma apreciable; la diferencia está en
+                    lo que ocurre cuando el resultado sale mal.
+                </p>
+
+                <CodeTabs
+                    titulo="La misma liquidación, en una línea y en cuatro"
+                    bloques={EJ_INTERMEDIAS}
+                    nota="Este bloque no declara su salida: los valores son los que el ejercicio de más abajo pide trazar." />
+
+                <p>
+                    La versión A ocupa <strong>una fila</strong> en la tabla de traza, y esa fila solo puede
+                    estar bien o mal: no hay dónde mirar. La versión B ocupa <strong>cuatro</strong>, y cada
+                    una se puede contrastar por separado con lo que dice el contrato —esta es la base
+                    gravable, este es el IVA, esta es la retención—. Nombrar los pasos intermedios no es
+                    cosmética: es lo que hace auditable un cálculo.
+                </p>
+
+                <h3>Ejercicios</h3>
+
+                <TablaTraza
+                    titulo="Traza 1 · causación de intereses de mora"
+                    enunciado={<>Una obligación de 8 500 000 lleva 45 días vencida y causa mora al 2,5 % mensual.
+                        Complete el estado de las cuatro variables después de cada instrucción. Escriba
+                        <span className="inline-code"> —</span> donde la variable todavía no tenga valor, y recuerde que la
+                        última fila no cambia nada: escribir no modifica variables.</>}
+                    codigo={TRAZA_MORA}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'saldoVencido', titulo: 'saldoVencido' },
+                        { clave: 'diasMora', titulo: 'diasMora' },
+                        { clave: 'interesMora', titulo: 'interesMora' },
+                        { clave: 'totalACobrar', titulo: 'totalACobrar' },
+                    ]}
+                    ocultas={['saldoVencido', 'diasMora', 'interesMora', 'totalACobrar']}
+                    filas={[
+                        { paso: 1, instruccion: ins('saldoVencido <- 8500000', 'saldo_vencido = 8500000', 'saldo_vencido <- 8500000', 'saldoVencido = 8500000'), saldoVencido: '8500000', diasMora: '—', interesMora: '—', totalACobrar: '—' },
+                        { paso: 2, instruccion: ins('diasMora <- 45', 'dias_mora = 45', 'dias_mora <- 45', 'diasMora = 45'), saldoVencido: '8500000', diasMora: '45', interesMora: '—', totalACobrar: '—' },
+                        { paso: 3, instruccion: ins('interesMora <- saldoVencido * 0.025 * (diasMora / 30)', 'interes_mora = saldo_vencido * 0.025 * (dias_mora / 30)', 'interes_mora <- saldo_vencido * 0.025 * (dias_mora / 30)', 'interesMora = saldoVencido * 0.025 * (diasMora / 30)'), saldoVencido: '8500000', diasMora: '45', interesMora: '318750', totalACobrar: '—' },
+                        { paso: 4, instruccion: ins('totalACobrar <- saldoVencido + interesMora', 'total_cobrar = saldo_vencido + interes_mora', 'total_cobrar <- saldo_vencido + interes_mora', 'totalACobrar = saldoVencido + interesMora'), saldoVencido: '8500000', diasMora: '45', interesMora: '318750', totalACobrar: '8818750' },
+                        { paso: 5, instruccion: ins('Escribir totalACobrar', 'print(total_cobrar)', 'cat(total_cobrar)', 'Debug.Print totalACobrar'), saldoVencido: '8500000', diasMora: '45', interesMora: '318750', totalACobrar: '8818750' },
+                    ]}
+                    pista="45 días son un mes y medio: el factor (diasMora / 30) vale 1,5. La tasa del 2,5 % mensual es mensual, así que el plazo tiene que expresarse en meses antes de multiplicar."
+                />
+
+                <TablaTraza
+                    titulo="Traza 2 · factura con IVA y retención en la fuente"
+                    enunciado={<>La versión B del bloque anterior, con el subtotal ya puesto y el total construido
+                        en tres pasos. Complete las columnas <span className="inline-code">retencion</span> y
+                        <span className="inline-code"> total</span> a lo largo de las doce instrucciones. Es la traza más
+                        larga del capítulo, y su dificultad no está en las cuentas: está en sostener el
+                        estado sin perderlo.</>}
+                    codigo={TRAZA_FACTURA}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'subtotal', titulo: 'subtotal' },
+                        { clave: 'base', titulo: 'base' },
+                        { clave: 'iva', titulo: 'iva' },
+                        { clave: 'retencion', titulo: 'retencion' },
+                        { clave: 'total', titulo: 'total' },
+                    ]}
+                    ocultas={['retencion', 'total']}
+                    filas={[
+                        { paso: 1, instruccion: ins('subtotal <- 24000000', 'subtotal = 24000000', 'subtotal <- 24000000', 'subtotal = 24000000'), subtotal: '24000000', base: '—', iva: '—', retencion: '—', total: '—' },
+                        { paso: 2, instruccion: ins('Escribir "Subtotal: ", subtotal', 'print("Subtotal:", subtotal)', 'cat("Subtotal:", subtotal)', 'Debug.Print "Subtotal: " & subtotal'), subtotal: '24000000', base: '—', iva: '—', retencion: '—', total: '—' },
+                        { paso: 3, instruccion: ins('base <- subtotal - 1200000', 'base = subtotal - 1200000', 'base <- subtotal - 1200000', 'base = subtotal - 1200000'), subtotal: '24000000', base: '22800000', iva: '—', retencion: '—', total: '—' },
+                        { paso: 4, instruccion: ins('iva <- base * 0.19', 'iva = base * 0.19', 'iva <- base * 0.19', 'iva = base * 0.19'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '—', total: '—' },
+                        { paso: 5, instruccion: ins('retencion <- base * 0.025', 'retencion = base * 0.025', 'retencion <- base * 0.025', 'retencion = base * 0.025'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '—' },
+                        { paso: 6, instruccion: ins('total <- base', 'total = base', 'total <- base', 'total = base'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '22800000' },
+                        { paso: 7, instruccion: ins('total <- total + iva', 'total = total + iva', 'total <- total + iva', 'total = total + iva'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '27132000' },
+                        { paso: 8, instruccion: ins('total <- total - retencion', 'total = total - retencion', 'total <- total - retencion', 'total = total - retencion'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 9, instruccion: ins('Escribir "Base gravable: ", base', 'print("Base gravable:", base)', 'cat("Base gravable:", base)', 'Debug.Print "Base gravable: " & base'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 10, instruccion: ins('Escribir "IVA: ", iva', 'print("IVA:", iva)', 'cat("IVA:", iva)', 'Debug.Print "IVA: " & iva'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 11, instruccion: ins('Escribir "Retencion: ", retencion', 'print("Retencion:", retencion)', 'cat("Retencion:", retencion)', 'Debug.Print "Retencion: " & retencion'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 12, instruccion: ins('Escribir "Total a pagar: ", total', 'print("Total a pagar:", total)', 'cat("Total a pagar:", total)', 'Debug.Print "Total a pagar: " & total'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                    ]}
+                    pista="El descuento por volumen es un literal, no una variable: la base son 24 000 000 menos 1 200 000. Y la retención se calcula sobre la base gravable, nunca sobre el total con IVA."
+                />
+
+                <DetectaError
+                    enunciado={<>Esta es la liquidación del abono extraordinario con las dos instrucciones del
+                        cálculo <strong>en el otro orden</strong>. No hay error de sintaxis: corre, imprime dos
+                        cifras y no advierte nada. <strong>Señale la instrucción que deja el dato en un estado
+                        que ya no corresponde al mes que se está liquidando.</strong></>}
+                    lineas={ERROR_ABONO_LINEAS}
+                    lineaCorrecta={ERROR_ABONO_LINEA_OK}
+                    tipos={[
+                        'Error de sintaxis: falta una palabra clave o un delimitador.',
+                        'Error de unidades: se aplica una tasa anual sobre un plazo expresado en meses.',
+                        'Cálculo sobre un estado que ya cambió: una instrucción anterior modificó el dato sobre el que este cálculo debía hacerse.',
+                        'Error de tipo: se asigna un valor decimal a una variable declarada como entera.',
+                    ]}
+                    tipoCorrecto={2}
+                    explicacion={ERROR_ABONO_EXPLICACION}
+                    impacto={<>El interés del mes se causa sobre 9 000 000 en vez de sobre 12 000 000:
+                        <strong> 198 000 en lugar de 264 000</strong>. Son 66 000 pesos que la entidad deja de
+                        causar en cada obligación con abono extraordinario; en una cartera con 1 200 abonos
+                        al mes, 79 200 000 que no aparecen en el ingreso por intereses y que ningún registro
+                        de errores reporta, porque no hubo ningún error. Es primo hermano de la
+                        sobrescritura de la sección 2, con una diferencia: allá el valor perdido no volvía;
+                        aquí sigue estando, solo que la instrucción que lo necesitaba llegó tarde.</>}
+                />
+
+                <OrdenaPasos
+                    enunciado="Reconstruya el algoritmo que liquida un CDT al vencimiento: sobre el interés bruto se practica una retención en la fuente del 7 % y se informa el interés neto que recibe el ahorrador."
+                    pasos={ORDENA_CDT}
+                    pista="Tres cálculos encadenados: cada uno necesita el resultado del anterior. Pregúntese, para cada línea, qué variables tienen que existir ya para que esa línea pueda ejecutarse."
+                />
             </div>
         );
 
         /* ============================================================
            SECCIÓN 5 — CASOS FINANCIEROS
+
+           Cuatro rutinas del oficio, todas secuenciales: interés simple —ya
+           trazado en la sección 4—, descuento comercial, conversión de tasas y
+           liquidación de nómina. La nómina cierra el hilo de la portada: es la
+           rutina que produjo el reclamo, y aquí se traza.
+
+           `CalculadoraTasas` es un artefacto DE ESTE CAPÍTULO y por eso vive
+           aquí y no en LP-CORE (trampa 5 de la skill): meterlo en la librería
+           obligaría a reestampar los ocho capítulos por algo que usa uno.
         ============================================================ */
+
+        // Salidas comprobadas por ejecución (comprobación 9).
+        const EJ_DESCUENTO = {
+            pseudo: `Inicio
+    // Descuento comercial de una factura a 60 dias
+    valorNominal <- 15000000
+    tasaDesc     <- 0.015        // mensual, sobre el valor nominal
+    meses        <- 2
+
+    descuento    <- valorNominal * tasaDesc * meses
+    valorRecibir <- valorNominal - descuento
+
+    Escribir "Descuento: ", descuento
+    //> Descuento: 450000
+    Escribir "Valor a recibir hoy: ", valorRecibir
+    //> Valor a recibir hoy: 14550000
+Fin`,
+            python: `# Descuento comercial de una factura a 60 dias
+valor_nominal = 15_000_000
+tasa_desc     = 0.015         # mensual, sobre el valor nominal
+meses         = 2
+
+descuento     = valor_nominal * tasa_desc * meses
+valor_recibir = valor_nominal - descuento
+
+print(f"Descuento: {descuento:,.0f}")
+#> Descuento: 450,000
+print(f"Valor a recibir hoy: {valor_recibir:,.0f}")
+#> Valor a recibir hoy: 14,550,000`,
+            r: `# Descuento comercial de una factura a 60 dias
+valor_nominal <- 15000000
+tasa_desc     <- 0.015        # mensual, sobre el valor nominal
+meses         <- 2
+
+descuento     <- valor_nominal * tasa_desc * meses
+valor_recibir <- valor_nominal - descuento
+
+cat(sprintf("Descuento: %.0f\\n", descuento))
+#> Descuento: 450000
+cat(sprintf("Valor a recibir hoy: %.0f\\n", valor_recibir))
+#> Valor a recibir hoy: 14550000`,
+            vba: `Sub DescontarFactura()
+    ' Descuento comercial de una factura a 60 dias
+    Dim valorNominal As Currency, tasaDesc As Double, meses As Integer
+    Dim descuento As Currency, valorRecibir As Currency
+
+    valorNominal = 15000000
+    tasaDesc = 0.015              ' mensual, sobre el valor nominal
+    meses = 2
+
+    descuento = valorNominal * tasaDesc * meses
+    valorRecibir = valorNominal - descuento
+
+    Debug.Print "Descuento: " & descuento
+    '> Descuento: 450000
+    Debug.Print "Valor a recibir hoy: " & valorRecibir
+    '> Valor a recibir hoy: 14550000
+End Sub`,
+        };
+
+        const EJ_TASAS = {
+            pseudo: `Inicio
+    // De nominal anual con capitalizacion mensual a efectiva anual
+    nominal   <- 0.24         // 24 % anual
+    m         <- 12           // capitalizaciones por anio
+
+    periodica <- nominal / m
+    efectiva  <- (1 + periodica) ^ m - 1
+
+    Escribir "Tasa periodica: ", periodica
+    //> Tasa periodica: 0.0200
+    Escribir "Tasa efectiva anual: ", efectiva
+    //> Tasa efectiva anual: 0.268242
+Fin`,
+            python: `# De nominal anual con capitalizacion mensual a efectiva anual
+nominal   = 0.24          # 24 % anual
+m         = 12            # capitalizaciones por anio
+
+periodica = nominal / m
+efectiva  = (1 + periodica) ** m - 1
+
+print(f"Tasa periodica: {periodica:.4f}")
+#> Tasa periodica: 0.0200
+print(f"Tasa efectiva anual: {efectiva:.6f}")
+#> Tasa efectiva anual: 0.268242`,
+            r: `# De nominal anual con capitalizacion mensual a efectiva anual
+nominal   <- 0.24         # 24 % anual
+m         <- 12           # capitalizaciones por anio
+
+periodica <- nominal / m
+efectiva  <- (1 + periodica) ^ m - 1
+
+cat(sprintf("Tasa periodica: %.4f\\n", periodica))
+#> Tasa periodica: 0.0200
+cat(sprintf("Tasa efectiva anual: %.6f\\n", efectiva))
+#> Tasa efectiva anual: 0.268242`,
+            vba: `Sub ConvertirTasa()
+    ' De nominal anual con capitalizacion mensual a efectiva anual
+    Dim nominal As Double, m As Integer
+    Dim periodica As Double, efectiva As Double
+
+    nominal = 0.24            ' 24 % anual
+    m = 12                    ' capitalizaciones por anio
+
+    periodica = nominal / m
+    efectiva = (1 + periodica) ^ m - 1
+
+    ' Format fija los decimales; el separador decimal que imprime depende
+    ' de la configuracion regional de Windows.
+    Debug.Print "Tasa periodica: " & Format(periodica, "0.0000")
+    '> Tasa periodica: 0.0200
+    Debug.Print "Tasa efectiva anual: " & Format(efectiva, "0.000000")
+    '> Tasa efectiva anual: 0.268242
+End Sub`,
+        };
+
+        const EJ_NOMINA = {
+            pseudo: `Inicio
+    // Liquidacion de nomina - deducciones de ley
+    salario <- 4200000
+    salud   <- salario * 0.04     // 4 % sobre el salario
+    pension <- salario * 0.04     // 4 % sobre el MISMO salario
+    neto    <- salario - salud - pension
+
+    Escribir "Salud: ", salud
+    //> Salud: 168000
+    Escribir "Pension: ", pension
+    //> Pension: 168000
+    Escribir "Neto a pagar: ", neto
+    //> Neto a pagar: 3864000
+Fin`,
+            python: `# Liquidacion de nomina - deducciones de ley
+salario = 4_200_000
+salud   = salario * 0.04      # 4 % sobre el salario
+pension = salario * 0.04      # 4 % sobre el MISMO salario
+neto    = salario - salud - pension
+
+print(f"Salud: {salud:,.0f}")
+#> Salud: 168,000
+print(f"Pension: {pension:,.0f}")
+#> Pension: 168,000
+print(f"Neto a pagar: {neto:,.0f}")
+#> Neto a pagar: 3,864,000`,
+            r: `# Liquidacion de nomina - deducciones de ley
+salario <- 4200000
+salud   <- salario * 0.04     # 4 % sobre el salario
+pension <- salario * 0.04     # 4 % sobre el MISMO salario
+neto    <- salario - salud - pension
+
+cat(sprintf("Salud: %.0f\\n", salud))
+#> Salud: 168000
+cat(sprintf("Pension: %.0f\\n", pension))
+#> Pension: 168000
+cat(sprintf("Neto a pagar: %.0f\\n", neto))
+#> Neto a pagar: 3864000`,
+            vba: `Sub LiquidarNomina()
+    ' Liquidacion de nomina - deducciones de ley
+    Dim salario As Currency, salud As Currency
+    Dim pension As Currency, neto As Currency
+
+    salario = 4200000
+    salud = salario * 0.04        ' 4 % sobre el salario
+    pension = salario * 0.04      ' 4 % sobre el MISMO salario
+    neto = salario - salud - pension
+
+    Debug.Print "Salud: " & salud
+    '> Salud: 168000
+    Debug.Print "Pension: " & pension
+    '> Pension: 168000
+    Debug.Print "Neto a pagar: " & neto
+    '> Neto a pagar: 3864000
+End Sub`,
+        };
+
+        /* --- E1 · la nómina que produjo el reclamo de la portada.
+           No declara salida: encontrarla es el ejercicio. --- */
+        const TRAZA_NOMINA = {
+            pseudo: `1  salario <- 4200000
+2  pension <- salario * 0.04
+3  salario <- salario - pension
+4  salud   <- salario * 0.04
+5  neto    <- salario - salud
+6  Escribir neto`,
+            python: `1  salario = 4200000
+2  pension = salario * 0.04
+3  salario = salario - pension
+4  salud   = salario * 0.04
+5  neto    = salario - salud
+6  print(neto)`,
+            r: `1  salario <- 4200000
+2  pension <- salario * 0.04
+3  salario <- salario - pension
+4  salud   <- salario * 0.04
+5  neto    <- salario - salud
+6  cat(neto)`,
+            vba: `1  salario = 4200000
+2  pension = salario * 0.04
+3  salario = salario - pension
+4  salud = salario * 0.04
+5  neto = salario - salud
+6  Debug.Print neto`,
+        };
+
+        /* --- E4 · dos maneras de comparar las mismas dos ofertas --- */
+        const CMP_MENSUALES = {
+            pseudo: `mensualA <- 0.018            // oferta A, ya mensual
+mensualB <- 0.24 / 12        // oferta B, nominal anual / 12
+Escribir mensualA, mensualB
+//> 0.018  0.02`,
+            python: `mensual_a = 0.018             # oferta A, ya mensual
+mensual_b = 0.24 / 12         # oferta B, nominal anual / 12
+print(mensual_a, mensual_b)
+#> 0.018 0.02`,
+            r: `mensual_a <- 0.018            # oferta A, ya mensual
+mensual_b <- 0.24 / 12        # oferta B, nominal anual / 12
+cat(mensual_a, mensual_b)
+#> 0.018 0.02`,
+            vba: `mensualA = 0.018              ' oferta A, ya mensual
+mensualB = 0.24 / 12          ' oferta B, nominal anual / 12
+Debug.Print mensualA, mensualB
+'> 0.018  0.02`,
+        };
+        const CMP_EFECTIVAS = {
+            pseudo: `efectivaA <- (1 + 0.018) ^ 12 - 1
+efectivaB <- (1 + 0.24 / 12) ^ 12 - 1
+Escribir efectivaA, efectivaB
+//> 0.238721  0.268242`,
+            python: `efectiva_a = (1 + 0.018) ** 12 - 1
+efectiva_b = (1 + 0.24 / 12) ** 12 - 1
+print(round(efectiva_a, 6), round(efectiva_b, 6))
+#> 0.238721 0.268242`,
+            r: `efectiva_a <- (1 + 0.018) ^ 12 - 1
+efectiva_b <- (1 + 0.24 / 12) ^ 12 - 1
+cat(round(efectiva_a, 6), round(efectiva_b, 6))
+#> 0.238721 0.268242`,
+            vba: `efectivaA = (1 + 0.018) ^ 12 - 1
+efectivaB = (1 + 0.24 / 12) ^ 12 - 1
+Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
+'> 0.238721  0.268242`,
+        };
+
+        /* --- Artefacto propio del capítulo: conversión de tasas en vivo.
+           La fórmula se rescribe con los valores sustituidos en cada cambio, que
+           es el punto: la conversión no es una caja negra sino tres operaciones
+           secuenciales que se pueden trazar. `useTypeset` vuelve a componer el
+           MathJax cuando cambia cualquiera de los dos controles. --- */
+        const PERIODOS_TASA = [
+            { m: 1, nombre: 'Anual' },
+            { m: 2, nombre: 'Semestral' },
+            { m: 4, nombre: 'Trimestral' },
+            { m: 6, nombre: 'Bimestral' },
+            { m: 12, nombre: 'Mensual' },
+            { m: 360, nombre: 'Diaria (base 360)' },
+        ];
+
+        const CalculadoraTasas = () => {
+            const [nominalPct, setNominalPct] = useState(24);
+            const [m, setM] = useState(12);
+            const ref = useRef(null);
+
+            const nominal = (Number(nominalPct) || 0) / 100;
+            const periodica = nominal / m;
+            const efectiva = Math.pow(1 + periodica, m) - 1;
+
+            // MathJax compone la coma decimal como signo de puntuación y le deja
+            // un espacio detrás; `{,}` la fuerza a tratarla como parte del número.
+            const tex = (x, d) => x.toFixed(d).replace('.', '{,}');
+            const pct = (x, d) => (x * 100).toFixed(d).replace('.', ',');
+
+            useTypeset(ref, [nominalPct, m]);
+
+            return (
+                <div ref={ref} className="my-6 rounded-2xl border-2 border-teal/30 bg-white p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-3">
+                        <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-percent"></i></span>
+                        <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>Conversión de tasas</h4>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal/80 rounded px-2 py-0.5">Artefacto</span>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label htmlFor="lp-tasa-nominal" className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+                                Tasa nominal anual (%)
+                            </label>
+                            <input id="lp-tasa-nominal" type="number" min="0" max="200" step="0.1" value={nominalPct}
+                                onChange={e => setNominalPct(e.target.value)}
+                                className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-[0.95rem] text-navy focus:outline-none focus:ring-2 focus:ring-secondary/60" />
+                        </div>
+                        <div>
+                            <label htmlFor="lp-tasa-periodo" className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+                                Capitalización
+                            </label>
+                            <select id="lp-tasa-periodo" value={m} onChange={e => setM(Number(e.target.value))}
+                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-[0.95rem] text-navy bg-white focus:outline-none focus:ring-2 focus:ring-secondary/60">
+                                {PERIODOS_TASA.map(p => (
+                                    <option key={p.m} value={p.m}>{p.nombre} — m = {p.m}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl bg-gray-50 border border-gray-200 px-3 py-2 overflow-x-auto">
+                        <div className="eq-block text-center">
+                            {String.raw`$$i_p=\frac{J}{m}=\frac{` + tex(nominal, 4) + String.raw`}{` + m + String.raw`}=` + tex(periodica, 6) + `$$`}
+                        </div>
+                        <div className="eq-block text-center">
+                            {String.raw`$$i_e=\left(1+i_p\right)^{m}-1=\left(1+` + tex(periodica, 6) + String.raw`\right)^{` + m + String.raw`}-1=` + tex(efectiva, 6) + `$$`}
+                        </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-3 mt-4">
+                        <div className="rounded-xl border border-gray-200 p-3 text-center">
+                            <div className="text-[0.7rem] uppercase tracking-wider font-bold text-gray-500">Tasa periódica</div>
+                            <div className="text-2xl font-bold text-teal" style={{ fontVariantNumeric: 'tabular-nums' }}>{pct(periodica, 4)} %</div>
+                            <div className="text-xs text-gray-500">por período de capitalización</div>
+                        </div>
+                        <div className="rounded-xl border-2 border-secondary/40 bg-secondary/5 p-3 text-center">
+                            <div className="text-[0.7rem] uppercase tracking-wider font-bold text-gray-500">Tasa efectiva anual</div>
+                            <div className="text-2xl font-bold text-secondary" style={{ fontVariantNumeric: 'tabular-nums' }}>{pct(efectiva, 4)} %</div>
+                            <div className="text-xs text-gray-500">la que se puede comparar</div>
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-gray-500 italic mt-3 mb-0">
+                        Ponga la capitalización en <strong>Anual</strong> y las dos cifras coinciden: con una sola
+                        capitalización al año no hay interés sobre interés, y por eso una tasa nominal sin
+                        período de capitalización declarado no dice nada.
+                    </p>
+                </div>
+            );
+        };
 
         const Cap5Section = () => (
             <div className="prose-lp">
@@ -3138,6 +4065,207 @@ End Sub`,
                     está: las dos tasas están escritas en unidades distintas, y compararlas de frente es
                     comparar metros con pies. El cálculo que falta cabe en tres líneas.
                 </Motivacion>
+
+                <h3>Cuatro rutinas, la misma forma</h3>
+                <p>
+                    Las cuatro operaciones que siguen son las que aparecen todos los días en un área
+                    financiera, y las cuatro son <strong>secuencias puras</strong>: no hay una sola decisión ni
+                    un solo ciclo. Lo que cambia entre ellas no es la estructura sino qué entra, qué se
+                    calcula y qué sale —el análisis de Entrada–Proceso–Salida del capítulo 2, aplicado
+                    cuatro veces—.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Rutina</th><th>Entrada</th><th>Proceso</th><th>Salida</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Interés simple</strong></td><td>capital, tasa, plazo</td><td>Una multiplicación y una suma</td><td>interés y total a pagar</td></tr>
+                            <tr><td><strong>Descuento comercial</strong></td><td>valor nominal, tasa de descuento, plazo</td><td>Descuento sobre el <em>valor nominal</em></td><td>valor a recibir hoy</td></tr>
+                            <tr><td><strong>Conversión de tasas</strong></td><td>tasa nominal, capitalizaciones</td><td>División y una potencia</td><td>tasa efectiva comparable</td></tr>
+                            <tr><td><strong>Liquidación de nómina</strong></td><td>salario y porcentajes de ley</td><td>Deducciones sobre la <em>misma</em> base</td><td>neto a pagar</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    La primera ya está trazada: es el algoritmo con el que abrió la sección 4. Las otras
+                    tres son las de esta sección, y cada una trae su trampa.
+                </p>
+
+                <h3>Descuento comercial: cobrar hoy una factura que vence en 60 días</h3>
+                <p>
+                    Un proveedor tiene una factura de 15 000 000 que su cliente pagará en dos meses y
+                    necesita el dinero ahora. Un banco se la compra: le entrega hoy el valor de la factura
+                    menos un <Termino def="Descuento calculado sobre el valor nominal del título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje no coincide con el costo real de la operación.">descuento
+                    comercial</Termino>, y cobra la factura completa al vencimiento.
+                </p>
+
+                <Eq>{String.raw`$$D = VN \times d \times n \qquad VR = VN - D$$`}</Eq>
+
+                <p>
+                    Donde <span className="inline-code">VN</span> es el valor nominal, <span className="inline-code">d</span> la
+                    tasa de descuento, <span className="inline-code">n</span> el plazo y <span className="inline-code">VR</span> el
+                    valor que el proveedor recibe hoy. Nótese dónde se aplica la tasa: sobre el valor
+                    <strong> nominal</strong>, que es el que se recibirá en el futuro, y no sobre el que se
+                    entrega hoy.
+                </p>
+
+                <CodeTabs
+                    titulo="Descuento comercial de una factura a 60 días"
+                    bloques={EJ_DESCUENTO}
+                    nota="Tres asignaciones y dos escrituras. La estructura es idéntica a la del interés simple; lo que cambia es sobre qué valor se aplica la tasa." />
+
+                <CalloutPro tema="warn" titulo="El 1,5 % no es el costo del dinero" subtitulo="Por qué el porcentaje de la operación y el que paga el cliente no coinciden" icon="fa-triangle-exclamation">
+                    El proveedor entrega una factura de 15 000 000 y recibe 14 550 000. Los 450 000 de
+                    diferencia, medidos <strong>sobre lo que efectivamente recibió</strong>, son el 3,09 % en
+                    dos meses, es decir un 1,55 % mensual y no un 1,50 %. La tasa de descuento se aplica
+                    sobre el valor nominal; el costo se mide sobre el valor recibido. Es la misma
+                    operación leída desde los dos extremos, y la diferencia crece con el plazo.
+                </CalloutPro>
+
+                <h3>Nominal, periódica y efectiva: tres nombres para la misma plata</h3>
+                <p>
+                    Una tasa <strong>nominal</strong> es una etiqueta: dice cuánto se cobraría al año si no
+                    hubiera interés sobre interés. Para saber qué se cobra de verdad hay que hacer dos
+                    cosas, y en este orden: repartir la nominal entre las capitalizaciones del año para
+                    obtener la tasa <strong>periódica</strong>, y componer esa periódica tantas veces como
+                    períodos tenga el año para obtener la tasa <strong>efectiva</strong>.
+                </p>
+
+                <Eq>{String.raw`$$i_p = \frac{J}{m} \qquad i_e = \left(1 + i_p\right)^{m} - 1$$`}</Eq>
+
+                <Box type="warn" label="Una tasa nominal sin su capitalización no significa nada">
+                    «24 % anual» no es una tasa: es media tasa. Falta decir <em>cada cuánto capitaliza</em>.
+                    El mismo 24 % nominal da 24 % efectivo si capitaliza una vez al año, 26,82 % si
+                    capitaliza mensualmente y 27,11 % si capitaliza a diario. Cuando una oferta dice solo
+                    «24 % anual», la primera pregunta no es de matemáticas sino de lectura del contrato.
+                </Box>
+
+                <CodeTabs
+                    titulo="De nominal anual a efectiva anual"
+                    bloques={EJ_TASAS}
+                    nota="La potencia es la única operación de este capítulo que no es una suma o un producto, y arrastra la regla de precedencia de la sección 3: se evalúa antes que la resta del final." />
+
+                <p>
+                    El artefacto de abajo hace esas dos operaciones en vivo y reescribe la fórmula con los
+                    valores sustituidos, que es exactamente lo que pide la segunda regla de la traza:
+                    anotar la expresión con los números puestos antes de anotar el resultado.
+                </p>
+
+                <CalculadoraTasas />
+
+                <h3>Liquidación de nómina, y el reclamo del lunes</h3>
+                <p>
+                    Las deducciones de ley de un empleado —4 % para salud y 4 % para pensión— se calculan
+                    <strong> las dos sobre el mismo salario base</strong>. No se aplican en cascada: la de
+                    pensión no reduce la base de la de salud. Esa frase es toda la regla, y traducirla mal
+                    es lo que produjo el reclamo de la portada.
+                </p>
+
+                <CodeTabs
+                    titulo="Liquidación de nómina — la versión correcta"
+                    bloques={EJ_NOMINA}
+                    nota="Las dos deducciones leen salario, y ninguna lo modifica. Por eso se pueden intercambiar sin que cambie nada: es la regla de dependencia de la sección 1." />
+
+                <Box type="danger" label="Lo que pasó de verdad el viernes">
+                    La rutina que corrió en producción <strong>reasignaba</strong> la variable
+                    <span className="inline-code"> salario</span> después de calcular la pensión, y calculaba la
+                    salud sobre lo que quedaba. La deducción de salud sale más baja, el empleado recibe
+                    unos pesos de más, y el aporte que se reporta a la EPS queda por debajo del que
+                    corresponde: lo que reclamaron los veintiséis del lunes no fue el neto, fue el
+                    <strong> ingreso base de cotización</strong> con el que quedó registrado su mes.
+                </Box>
+
+                <h3>Ejercicios</h3>
+
+                <TablaTraza
+                    titulo="Traza · la nómina que produjo el reclamo"
+                    enunciado={<>Esta es la rutina que corrió el viernes. Trace las cuatro variables paso a paso y
+                        localice la fila en la que <span className="inline-code">salario</span> deja de ser el salario base.
+                        Compare después el neto que sale aquí con los 3 864 000 de la versión correcta.</>}
+                    codigo={TRAZA_NOMINA}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'salario', titulo: 'salario' },
+                        { clave: 'pension', titulo: 'pension' },
+                        { clave: 'salud', titulo: 'salud' },
+                        { clave: 'neto', titulo: 'neto' },
+                    ]}
+                    ocultas={['salario', 'pension', 'salud', 'neto']}
+                    filas={[
+                        { paso: 1, instruccion: ins('salario <- 4200000', 'salario = 4200000', 'salario <- 4200000', 'salario = 4200000'), salario: '4200000', pension: '—', salud: '—', neto: '—' },
+                        { paso: 2, instruccion: ins('pension <- salario * 0.04', 'pension = salario * 0.04', 'pension <- salario * 0.04', 'pension = salario * 0.04'), salario: '4200000', pension: '168000', salud: '—', neto: '—' },
+                        { paso: 3, instruccion: ins('salario <- salario - pension', 'salario = salario - pension', 'salario <- salario - pension', 'salario = salario - pension'), salario: '4032000', pension: '168000', salud: '—', neto: '—' },
+                        { paso: 4, instruccion: ins('salud <- salario * 0.04', 'salud = salario * 0.04', 'salud <- salario * 0.04', 'salud = salario * 0.04'), salario: '4032000', pension: '168000', salud: '161280', neto: '—' },
+                        { paso: 5, instruccion: ins('neto <- salario - salud', 'neto = salario - salud', 'neto <- salario - salud', 'neto = salario - salud'), salario: '4032000', pension: '168000', salud: '161280', neto: '3870720' },
+                        { paso: 6, instruccion: ins('Escribir neto', 'print(neto)', 'cat(neto)', 'Debug.Print neto'), salario: '4032000', pension: '168000', salud: '161280', neto: '3870720' },
+                    ]}
+                    pista="El paso 3 es el que hay que mirar: la variable que guarda el salario base pasa a guardar otra cosa, y las líneas siguientes no tienen forma de saberlo. Después de ese paso, salario ya no significa lo que su nombre dice."
+                />
+
+                <Comparador
+                    enunciado="Dos maneras de decidir cuál de las dos ofertas —1,8 % mensual, o 24 % nominal anual con capitalización mensual— le cuesta menos al cliente."
+                    a={{ etiqueta: 'Versión A · comparar las mensuales', codigo: CMP_MENSUALES }}
+                    b={{ etiqueta: 'Versión B · comparar las efectivas anuales', codigo: CMP_EFECTIVAS }}
+                    pregunta="¿Las dos versiones llevan a la misma decisión?"
+                    opciones={[
+                        { texto: 'Sí, y las dos son válidas aquí: convertir a efectiva no cambia cuál de las dos tasas es mayor.', correcta: true, justificacion: 'Las dos dicen que la oferta B es más cara: 1,8 % contra 2 % mensual, y 23,87 % contra 26,82 % efectivo anual. La versión A vale porque las dos tasas quedan expresadas en el mismo período —el mensual—, y elevar a la misma potencia conserva el orden. Deja de valer en cuanto las capitalizaciones son distintas: 2 % mensual y 6 % trimestral no se pueden comparar de frente, y ahí la versión B es la única que responde. La versión B además da la cifra que el cliente necesita, que es cuánto cuesta el crédito en un año.' },
+                        { texto: 'No: la versión A compara mal, porque dividir una tasa nominal entre 12 no es una conversión válida.', correcta: false },
+                        { texto: 'No: la versión B da la vuelta al resultado, porque la composición castiga más a la tasa menor.', correcta: false },
+                        { texto: 'Sí, y por eso la versión B sobra: convertir a efectiva nunca aporta información nueva.', correcta: false },
+                    ]}
+                />
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="El cliente pide 20 000 000 a un año y las dos ofertas son las de arriba. Con las tasas efectivas ya calculadas —23,87 % y 26,82 %—, ¿qué se le dice?"
+                    opciones={[
+                        { texto: 'Que le conviene la oferta A, y que la diferencia en un año sobre 20 000 000 es de unos 590 000 pesos.', correcta: true, justificacion: 'La diferencia entre las dos efectivas es de 2,95 puntos porcentuales, y sobre 20 000 000 a un año son 590 000 pesos —el equivalente a casi media cuota—. Decir «la A es mejor» es correcto pero no es asesorar: la cifra en pesos es la que permite al cliente decidir, y es la que convierte un cálculo en una recomendación.' },
+                        { texto: 'Que le conviene la oferta B, porque el 24 % anual es una sola cifra al año mientras que el 1,8 % se cobra doce veces.', correcta: false },
+                        { texto: 'Que las dos cuestan prácticamente lo mismo, porque 1,8 × 12 = 21,6 % y la diferencia con el 24 % es de redondeo.', correcta: false },
+                        { texto: 'Que no se puede saber sin conocer el plazo, porque las tasas efectivas dependen del número de cuotas.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="El proveedor de la factura descontada pregunta si le convino la operación. Recibió 14 550 000 hoy en vez de 15 000 000 en dos meses. ¿Qué significa esa cifra para él?"
+                    opciones={[
+                        { texto: 'Que el dinero le costó 1,55 % mensual, y que le convino solo si con esos 14 550 000 obtiene más de eso o evita un costo mayor.', correcta: true, justificacion: 'El costo se mide sobre lo que recibió: 450 000 sobre 14 550 000 son 3,09 % en dos meses, o 1,55 % mensual. La decisión no la resuelve el número solo: si el proveedor iba a pagar un sobregiro al 2,5 % mensual, la operación le ahorró plata; si el dinero se iba a quedar quieto, la perdió. Interpretar es poner el resultado al lado de la alternativa.' },
+                        { texto: 'Que perdió 450 000 pesos, y que ninguna operación de descuento conviene nunca.', correcta: false },
+                        { texto: 'Que el costo fue exactamente el 1,5 % mensual que dice el contrato, porque esa es la tasa pactada.', correcta: false },
+                        { texto: 'Que ganó 14 550 000, porque de otro modo no habría tenido nada hasta el vencimiento.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="Justifique la decisión de diseño"
+                    solucion={<>
+                        <p style={{ marginTop: 0 }}>
+                            <strong>Porque una tasa solo se puede comparar con otra escrita en las mismas
+                            unidades, y la conversión es la que las iguala.</strong> Una nominal del 24 % con
+                            capitalización mensual y otra del 24 % con capitalización diaria son la misma
+                            etiqueta y dos precios distintos —26,82 % y 27,11 % efectivo—; sin convertir, el
+                            programa compararía las etiquetas y no los precios.
+                        </p>
+                        <p>
+                            En términos del capítulo: la conversión es una <strong>instrucción que otra
+                            instrucción necesita</strong>. Comparar antes de convertir no da un error, da una
+                            respuesta a otra pregunta, que es la definición de fallo silencioso con la que
+                            abrió este capítulo.
+                        </p>
+                        <p style={{ marginBottom: 0 }}>
+                            Y hay una razón de oficio: la tasa efectiva anual es la que la regulación
+                            colombiana obliga a informar al consumidor financiero. Convertir no es una
+                            preferencia de estilo del programador; es lo que hace que la cifra que sale del
+                            algoritmo sea la misma que el cliente ve en su contrato.
+                        </p>
+                    </>}>
+                    Un sistema de originación recibe dos ofertas de crédito con tasas escritas en unidades
+                    distintas y debe recomendar una. Un desarrollador propone comparar directamente los dos
+                    números tal como vienen y quedarse con el menor, sin convertir nada: «son dos tasas, y
+                    la menor es la menor». <strong>Explique por qué el algoritmo convierte las dos tasas a
+                    efectiva anual antes de compararlas</strong>, y qué produciría la versión sin conversión.
+                </Reto></Ejercicio>
             </div>
         );
 
