@@ -250,9 +250,20 @@ posición del distractor —«la tercera confunde nominal con efectiva»— y ro
 opciones las habría vuelto mentira. Regla que deja esto: **una justificación
 nombra el contenido de la opción, nunca su letra.**
 
-**Pendiente y no hecho:** los capítulos 1 y 2 **no se tocaron**. Están publicados
-en GitHub Pages y reordenar sus claves es una decisión del docente, no del
-verificador. Hoy `verificar.py` los deja en rojo, que es lo que corresponde.
+**Corregido en los tres** *(2026-08-25, aprobado por el docente)*. Las opciones
+se rotaron con giros fijos —escritos en el guion, no sorteados— y las preguntas
+de Verdadero/Falso se dejaron intactas: su orden es una convención de lectura, no
+una clave que esconder. El capítulo 2 tenía además una justificación que citaba
+la posición del distractor y hubo que reescribirla.
+
+La prueba de que no se rompió ninguna clave es contable: comparando las líneas de
+cada archivo contra las de antes, en el capítulo 1 no desaparece ni aparece
+ninguna —es una reordenación pura— y en el 2 solo la justificación reescrita. Más
+los cinco cuestionarios respondidos en el navegador: 3/3, 3/3, 4/4, 8/8 y 10/10.
+
+Y como el capítulo 1 es fuente y destino a la vez (trampa 1), se volvió a
+ensamblar: `lp-base.html` no se mueve, porque la edición se quedó por debajo del
+centinela `LP-CORE FIN`.
 
 ### H11 · La potencia no se asocia igual en los cuatro lenguajes *(hallado al escribir la evaluación, 2026-08-25)*
 
@@ -571,8 +582,8 @@ De aquí salieron **H10** (la clave siempre en la misma letra, con la comprobaci
       fuera de su contenedor. Consola limpia
 - [ ] El usuario aprueba el capítulo completo: dificultad de los ejercicios y
       utilidad real del `Trazador` en contexto
-- [x] `verificar.py --con-salidas` en verde **con** cuota sobre el capítulo 3
-      *(los capítulos 1 y 2 quedan en rojo por la comprobación 14 nueva: ver H10)*
+- [x] `verificar.py --con-salidas` en verde **con** cuota sobre los tres
+      capítulos, comprobación 14 incluida
 
 ---
 
