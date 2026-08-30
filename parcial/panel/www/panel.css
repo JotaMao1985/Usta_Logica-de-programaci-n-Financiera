@@ -1,0 +1,62 @@
+/* Panel docente · se mira de reojo mientras se vigila un salón, así que lo que
+   importa es el color de la fila y el tamaño de los números, no la elegancia. */
+:root { --morado:#3D008D; --rosa:#ED1E79; --tinta:#1f2430; --tenue:#6b7280; --borde:#e5e7eb; }
+body { background:#f7f6fa; color:var(--tinta); font-family:Montserrat,system-ui,sans-serif; }
+
+.pn-centro { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; }
+.pn-tarjeta { width:100%; max-width:400px; background:#fff; border-radius:18px; overflow:hidden;
+  box-shadow:0 10px 40px rgba(61,0,141,.13); }
+.pn-cabecera { background:linear-gradient(140deg,var(--morado) 0%,var(--rosa) 100%);
+  color:#fff; padding:1.5rem; text-shadow:0 1px 2px rgba(0,0,0,.3); }
+.pn-cabecera h1 { font-size:1.3rem; font-weight:800; margin:0 0 .2rem; }
+.pn-cabecera p { margin:0; font-size:.85rem; }
+.pn-cuerpo { padding:1.4rem; }
+.pn-error { color:#B91C1C; background:#FEF2F2; border:1px solid #FECACA; border-radius:10px;
+  padding:.5rem .8rem; font-size:.85rem; margin-bottom:.8rem; }
+.pn-nota { margin-top:1rem; font-size:.75rem; color:var(--tenue); line-height:1.5; }
+
+.pn-barra { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:.5rem;
+  flex-wrap:wrap; background:linear-gradient(140deg,var(--morado) 0%,var(--rosa) 100%);
+  color:#fff; padding:.7rem 1.2rem; text-shadow:0 1px 2px rgba(0,0,0,.3); }
+.pn-barra .pn-tenue { color:#fff; opacity:.9; }
+.pn-acciones { margin-left:auto; display:flex; gap:.5rem; }
+.pn-contenido { max-width:1100px; margin:0 auto; padding:1.2rem 1rem 4rem; }
+.pn-msg { background:#EFF6FF; border:1px solid #BFDBFE; color:#1E40AF; border-radius:10px;
+  padding:.5rem .8rem; font-size:.85rem; margin-bottom:1rem; }
+
+.pn-fichas { display:flex; flex-wrap:wrap; gap:.7rem; margin-bottom:1.2rem; }
+.pn-ficha { flex:1 1 130px; background:#fff; border:1px solid var(--borde); border-radius:14px;
+  padding:.7rem .9rem; border-top:4px solid var(--morado); }
+.pn-num { font-size:1.7rem; font-weight:800; line-height:1; }
+.pn-lab { font-size:.72rem; color:var(--tenue); text-transform:uppercase; letter-spacing:.03em;
+  font-weight:700; margin-top:.2rem; }
+.pn-gris{border-top-color:#9CA3AF} .pn-verde{border-top-color:#15803D}
+.pn-morado{border-top-color:var(--morado)} .pn-rojo{border-top-color:#B91C1C}
+.pn-ambar{border-top-color:#B45309}
+
+.pn-tabla-caja { background:#fff; border:1px solid var(--borde); border-radius:14px;
+  overflow-x:auto; }
+.pn-tabla { width:100%; border-collapse:collapse; font-size:.86rem; }
+.pn-tabla th { background:rgba(61,0,141,.07); color:var(--morado); text-align:left;
+  padding:.55rem .8rem; font-weight:700; white-space:nowrap; position:sticky; top:0; }
+.pn-tabla td { padding:.45rem .8rem; border-top:1px solid var(--borde); white-space:nowrap; }
+.pn-mono { font-family:"Fira Code",ui-monospace,monospace; font-size:.82rem; }
+.pn-f-gris td:first-child { border-left:4px solid #9CA3AF }
+.pn-f-verde td:first-child { border-left:4px solid #15803D }
+.pn-f-rojo { background:#FEF2F2 } .pn-f-rojo td:first-child { border-left:4px solid #B91C1C }
+.pn-f-morado td:first-child { border-left:4px solid var(--morado) }
+.pn-mas { border:1px solid var(--morado); background:#fff; color:var(--morado);
+  border-radius:999px; font-size:.72rem; font-weight:700; padding:.1rem .5rem; margin-right:.25rem; }
+.pn-mas:hover { background:var(--morado); color:#fff; }
+.pn-vacio { background:#fff; border:1px dashed var(--borde); border-radius:14px; padding:2rem;
+  text-align:center; color:var(--tenue); }
+
+.pn-manual { margin-top:2rem; background:#fff; border:1px solid var(--borde); border-radius:14px;
+  padding:1.2rem; }
+.pn-manual h3 { font-size:1.05rem; font-weight:700; color:var(--morado); margin:0 0 .3rem; }
+.pn-abierto { border-top:1px solid var(--borde); padding-top:1rem; margin-top:1rem; }
+.pn-rubrica { font-size:.82rem; color:var(--tenue); }
+.pn-rubrica ul { margin:.3rem 0 .8rem 1.1rem; }
+.pn-respuesta pre { background:#f8f8fb; border:1px solid var(--borde); border-radius:10px;
+  padding:.8rem; font-size:.84rem; white-space:pre-wrap; max-height:280px; overflow:auto; }
+.pn-tenue { color:var(--tenue); font-size:.82rem; }

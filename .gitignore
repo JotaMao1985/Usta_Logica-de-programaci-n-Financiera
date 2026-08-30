@@ -38,3 +38,24 @@ __pycache__/
 # (`launch.json.example`) porque el archivo real suele llevar rutas absolutas
 # del equipo de cada quien — el suyo apunta además a otro curso.
 .claude/launch.json
+
+# --- Parcial servido por app propia -----------------------------------------
+# Datos personales y claves de examen. NADA de esto se versiona.
+parcial/salida/
+roster.csv
+parcial/roster*.csv
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Assets vendorizados: se versiona SOLO lo que la página del examen carga, para
+# que un `git clone` en el servidor ya venga completo aunque nadie recuerde
+# ejecutar vendorizar.R. Lo que el examen no usa se puede volver a descargar.
+parcial/app/www/vendor/cdn.plot.ly_*
+parcial/app/www/vendor/*prism-bash*
+parcial/app/www/vendor/*prism-docker*
+parcial/app/www/vendor/*prism-json*
+parcial/app/www/vendor/*prism-sql*
+parcial/app/www/vendor/*prism-toml*
+parcial/app/www/vendor/*prism-yaml*
+parcial/app/datos/
