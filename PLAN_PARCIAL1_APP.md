@@ -4,6 +4,8 @@
 **Encargo:** desplegar el primer parcial fuera del LMS, con doble credencial
 (cédula + código del día), aprovechando lo que Brightspace y Moodle no dan.
 **Estado:** D1 a D7 ejecutados (2026-08-30). Compuertas G1 y G2 abiertas.
+**Para retomar en otra sesión:** `TRASPASO_PARCIAL_APP.md` — estado, trampas ya
+descubiertas, decisiones abiertas y lo que no hay que hacer.
 **Siguiente:** **D8, el simulacro** — el material está preparado
 (`parcial/SIMULACRO.md`); falta provisionar el VPS y ejecutarlo con el curso.
 **El parcial está construido**: aguanta un tropiezo, se opera desde el panel, y el
