@@ -4,8 +4,8 @@
 **Encargo:** desplegar el primer parcial fuera del LMS, con doble credencial
 (cédula + código del día), aprovechando lo que Brightspace y Moodle no dan.
 **Estado:** D1 a D7 ejecutados (2026-08-30). Compuertas G1 y G2 abiertas.
-**Siguiente:** **D8, el simulacro** — lo único que queda, y lo que decide si el
-parcial va por aquí o por Moodle. Antes hay que provisionar el VPS.
+**Siguiente:** **D8, el simulacro** — el material está preparado
+(`parcial/SIMULACRO.md`); falta provisionar el VPS y ejecutarlo con el curso.
 **El parcial está construido**: aguanta un tropiezo, se opera desde el panel, y el
 respaldo en papel sigue siendo el mismo examen, trazas incluidas.
 
@@ -442,6 +442,23 @@ falta hace. El generador inyecta ahora la traza en el `.tex` que deja R/exams y
 lo recompila; el PDF lleva el enunciado, el pseudocódigo y la tabla con las
 casillas en blanco.
 
+
+### H29 · Sin distinguir la edición, el simulacro le enseña el parcial
+
+Las semillas se derivan del `sid` y del nombre de la etiqueta —`ejercicio1`,
+`baraja2_1`—. Nada más. De modo que el mismo estudiante, en el mismo ejercicio y
+en la misma posición, recibe **exactamente las mismas cifras** en el simulacro y
+en el parcial. Comprobado: la semilla del primer ejercicio era idéntica en
+ambos.
+
+Un ensayo general que reparte las respuestas del examen no es un ensayo: es una
+filtración con buena intención, y no habría dado señal alguna.
+
+Cada blueprint declara ahora una `edicion` que entra en la derivación de todas
+las semillas, y `generar.R` **se niega a generar** si falta. Verificado: donde el
+mismo ejercicio le toca a la misma persona en las dos ediciones, las cifras
+difieren.
+
 ---
 
 ## 3. Arquitectura
@@ -631,8 +648,25 @@ en la cabecera de `app.R` para que nadie lo despliegue por error.
 
 ### D8 · Simulacro · **el día que decide**
 - [ ] Prueba de carga sintética con nº de estudiantes + 50 %.
-- [ ] **Simulacro en la sala real, con el curso completo**, quiz de peso bajo o nulo del
-      capítulo 1, misma hora y mismos equipos.
+- [x] **Quiz del simulacro preparado**: `parcial/blueprint_simulacro.yml`, 20 minutos,
+      50 puntos, sin peso en la nota. Los grupos son pequeños y elegidos para
+      **garantizar que aparezcan los cinco tipos de ítem** —numérico, opción única,
+      opción múltiple, traza y abierto—: un camino que no se ejercite en el ensayo
+      será el que falle en el parcial. Verificado en el navegador: 1 numérico,
+      2 grupos de radio, 2 de casillas, 6 celdas de traza y el área de texto.
+- [x] Traza propia del simulacro (`intercambio_variables`, capítulo 2, seis casillas)
+      para no gastar ninguna de las dos del parcial.
+- [x] El ítem abierto del simulacro pide **reportar incidentes**: es la información
+      que la app no puede ver y la que más vale ese día.
+- [x] `parcial/despliegue/simulacro.sh` — carpeta, base de datos, bitácora y código
+      del día **aparte**. Si el ensayo escribiera en la base del parcial, el día del
+      examen el curso entero aparecería como «ya entregó».
+- [x] `parcial/despliegue/informe_simulacro.R` — el veredicto sale de los datos y
+      devuelve código de salida 1 si supera el umbral. Probado contra un escenario
+      malo a propósito: 3 afectados de 4 → **NO APTO**.
+- [x] `parcial/SIMULACRO.md` — protocolo de 40 minutos, guion de sabotaje con
+      voluntarios, hoja de observación a mano y el criterio de aborto.
+- [ ] **Ejecutarlo en la sala real, con el curso completo.** Es lo que falta.
 - [ ] Guion de sabotaje deliberado. **Cuatro de los cinco casos ya pasaron en el D6**
       —recargar, entrar desde otro equipo, cortar la red y matar el servidor—; en el
       simulacro se repiten sobre el despliegue real y con el curso conectado, que es

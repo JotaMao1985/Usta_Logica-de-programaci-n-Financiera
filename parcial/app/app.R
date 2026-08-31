@@ -243,7 +243,11 @@ ui <- page_fluid(
         }, 60);
       });
     ")),
-    tags$title("Primer parcial · Lógica de Programación Financiera"),
+    ## El título de la pestaña se fija al cargar el examen, no aquí: la
+    ## cabecera se construye antes de saber qué edición se está sirviendo, y
+    ## un simulacro rotulado «Primer parcial» confunde justo a quien menos
+    ## conviene confundir.
+    tags$title("Lógica de Programación Financiera"),
     ## Aviso propio de desconexión. El de Shiny cubre la pantalla de gris con
     ## «Disconnected from the server» y un enlace para recargar: en un examen
     ## eso se lee como «perdió todo». Aquí se dice lo contrario, que es además
@@ -388,6 +392,9 @@ tabla_traza <- function(tz, respuestas) {
 
 pantalla_examen <- function(ex, respuestas = list(), reanudado = FALSE) {
   div(class = "lp-examen",
+    tags$script(HTML(sprintf("document.title = %s;",
+      jsonlite::toJSON(paste(ex$titulo, "· Lógica de Programación Financiera"),
+                       auto_unbox = TRUE)))),
     div(class = "lp-barra",
       div(strong(ex$titulo), span(class = "lp-tenue", " · ", ex$subtitulo)),
       div(class = "lp-barra-dcha",

@@ -136,6 +136,65 @@ Debug.Print neto", sueldo, dias, aux))
   },
 
   # ------------------------------------------------------------------------
+  # Para el SIMULACRO. Intercambio de dos variables con auxiliar: capítulo 2,
+  # puramente secuencial y de dificultad mínima a propósito. El ensayo general
+  # tiene que ejercitar la maquinaria de la traza, no medir a nadie; si además
+  # fuera difícil, un mal resultado no distinguiría entre «falló la app» y
+  # «no supieron», que es justo lo que hay que poder distinguir.
+  intercambio_variables = function(seed) {
+    set.seed(seed)
+    a0 <- sample(3:19, 1)
+    b0 <- sample(setdiff(20:40, a0), 1)
+
+    codigo <- list(
+      pseudo = sprintf(
+"Inicio
+    a   <- %d
+    b   <- %d
+
+    aux <- a
+    a   <- b
+    b   <- aux
+
+    Escribir a, b
+Fin", a0, b0),
+      python = sprintf("a = %d\nb = %d\n\naux = a\na = b\nb = aux\n\nprint(a, b)", a0, b0),
+      r = sprintf("a <- %d\nb <- %d\n\naux <- a\na <- b\nb <- aux\n\ncat(a, b)", a0, b0),
+      vba = sprintf("Dim a As Integer, b As Integer, aux As Integer\n\na = %d\nb = %d\n\naux = a\na = b\nb = aux\n\nDebug.Print a, b", a0, b0))
+
+    v <- "—"
+    list(
+      nombre = "intercambio_variables",
+      titulo = "Prueba de escritorio · intercambio de dos variables",
+      enunciado = paste0(
+        "<p>Esta rutina intercambia el contenido de dos variables usando una ",
+        "tercera como auxiliar. El orden de las tres últimas asignaciones es lo ",
+        "único que hace que funcione.</p>",
+        "<p>Complete la tabla con el valor de cada variable <em>después</em> de ",
+        "ejecutar la instrucción de esa fila. Escriba <code>—</code> si la ",
+        "variable todavía no tiene valor.</p>"),
+      codigo = codigo,
+      columnas = list(
+        list(clave = "paso",        titulo = "#"),
+        list(clave = "instruccion", titulo = "Instrucción"),
+        list(clave = "a",           titulo = "a"),
+        list(clave = "b",           titulo = "b"),
+        list(clave = "aux",         titulo = "aux")),
+      filas = list(
+        list(paso="1", instruccion="a <- ...",  a=as.character(a0), b=v, aux=v),
+        list(paso="2", instruccion="b <- ...",  a=as.character(a0), b=as.character(b0), aux=v),
+        list(paso="3", instruccion="aux <- a",  a=as.character(a0), b=as.character(b0),
+             aux=as.character(a0)),
+        list(paso="4", instruccion="a <- b",    a=as.character(b0), b=as.character(b0),
+             aux=as.character(a0)),
+        list(paso="5", instruccion="b <- aux",  a=as.character(b0), b=as.character(a0),
+             aux=as.character(a0))),
+      ## Seis casillas: las justas para probar el mecanismo en veinte minutos.
+      ocultas_desde = list(aux = 3L, a = 4L, b = 5L),
+      tolerancia = 0)
+  },
+
+  # ------------------------------------------------------------------------
   interes_simple = function(seed) {
     set.seed(seed)
     capital  <- sample(seq(5, 40, by = 5), 1) * 1000000

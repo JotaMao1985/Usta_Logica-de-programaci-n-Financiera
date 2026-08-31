@@ -101,8 +101,15 @@ sid_de <- function(cedula) {
 
 ## Semillas independientes por propósito, todas derivadas del sid: el mismo
 ## estudiante recibe siempre el mismo examen, y dos estudiantes nunca el mismo.
+##
+## La EDICIÓN entra en la semilla y no es un adorno. Sin ella, el simulacro y
+## el parcial —mismo estudiante, mismo ejercicio, misma posición— sortean los
+## mismos números, y el ensayo general le enseñaría a cada quien las cifras
+## exactas de su propio parcial. Cada blueprint declara la suya.
+EDICION <- "parcial"
 semilla <- function(sid, etiqueta) {
-  h <- digest::digest(paste0(sid, "|", etiqueta), algo = "sha256", serialize = FALSE)
+  h <- digest::digest(paste0(sid, "|", EDICION, "|", etiqueta),
+                      algo = "sha256", serialize = FALSE)
   strtoi(substr(h, 1L, 7L), 16L)   # < 2^28: cabe en integer sin desbordar
 }
 
@@ -111,6 +118,11 @@ muestra <- function(x, k) x[sample.int(length(x), k)]
 
 ## --- 4. Blueprint ---------------------------------------------------------
 bp <- yaml::read_yaml(BLUEPRINT)
+if (is.null(bp$edicion) || !nzchar(bp$edicion)) {
+  stop("el blueprint debe declarar `edicion:`. Es lo que impide que el simulacro\n",
+       "  y el parcial sorteen las mismas cifras para el mismo estudiante.", call. = FALSE)
+}
+EDICION <- as.character(bp$edicion)
 PUNTOS_TOTALES <- sum(vapply(bp$grupos, function(g) g$elegir * g$puntos, numeric(1))) +
   (if (length(bp$abiertos)) sum(vapply(bp$abiertos, function(a) a$puntos, numeric(1))) else 0) +
   (if (!is.null(bp$trazas)) bp$trazas$elegir * bp$trazas$puntos else 0)
@@ -270,8 +282,9 @@ trocear <- function(e) {
 
 ## --- 8. Generar ------------------------------------------------------------
 cat(sprintf("\n%s · %s\n", bp$titulo, bp$subtitulo))
-cat(gris(sprintf("banco: %s | estudiantes: %d | puntos: %g | salida: %s\n\n",
-                 DIR_RMD, nrow(roster), PUNTOS_TOTALES, DIR_OUT)))
+cat(gris(sprintf("edición: %s | estudiantes: %d | puntos: %g\n", EDICION,
+                 nrow(roster), PUNTOS_TOTALES)))
+cat(gris(sprintf("salida: %s\n\n", DIR_OUT)))
 
 manifiesto <- list()
 fallos <- character(0)
@@ -414,7 +427,8 @@ for (i in seq_len(nrow(roster))) {
   }
 
   write_json(list(
-    sid = sid, version = 1L, titulo = bp$titulo, subtitulo = bp$subtitulo,
+    sid = sid, version = 1L, edicion = EDICION,
+    titulo = bp$titulo, subtitulo = bp$subtitulo,
     periodo = bp$periodo, minutos = bp$minutos,
     gracia_segundos = if (is.null(bp$gracia_segundos)) 30L else bp$gracia_segundos,
     nota_maxima = bp$nota_maxima, puntos_totales = pts_acum,
@@ -423,7 +437,8 @@ for (i in seq_len(nrow(roster))) {
   auto_unbox = TRUE, pretty = TRUE, null = "null")
 
   write_json(list(
-    sid = sid, version = 1L, puntos_totales = pts_acum, nota_maxima = bp$nota_maxima,
+    sid = sid, version = 1L, edicion = EDICION,
+    puntos_totales = pts_acum, nota_maxima = bp$nota_maxima,
     ejercicios = clave_ej, trazas = clave_tr, abiertos = clave_ab
   ), file.path(DIR_OUT, "claves", paste0(sid, ".json")),
   auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)

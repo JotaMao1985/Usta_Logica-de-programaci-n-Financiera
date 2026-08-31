@@ -1,0 +1,88 @@
+# ============================================================================
+# Blueprint del SIMULACRO · Lógica de Programación Financiera
+#
+# Esto NO es una evaluación: es una prueba de carga con estudiantes de verdad.
+# Su único trabajo es hacer fallar la infraestructura una semana antes, en la
+# misma sala, a la misma hora y con los mismos equipos.
+#
+# De ahí las tres decisiones que lo separan del parcial:
+#
+#  1. `edicion` distinta. Entra en el sorteo de cada ejercicio, de modo que
+#     nadie ve en el simulacro las cifras que le tocarán en el parcial.
+#  2. Los grupos son pequeños y elegidos para GARANTIZAR que aparezcan los
+#     cuatro tipos de ítem —numérico, opción única, opción múltiple y traza—
+#     más el abierto. Un ensayo que no ejercite un camino no prueba ese camino,
+#     y el que no se pruebe será el que falle.
+#  3. Contenido de capítulos 1 y 2, y una traza propia: el parcial no gasta
+#     aquí ninguno de sus ejercicios de capítulo 3.
+#
+# Dificultad baja a propósito. Si además fuera difícil, un mal resultado no
+# distinguiría entre «falló la app» y «no supieron», que es exactamente lo que
+# hay que poder distinguir.
+# ============================================================================
+
+edicion: "simulacro-2026-09"
+
+titulo: "Simulacro"
+subtitulo: "Ensayo del parcial · no tiene peso en la nota"
+periodo: "2026-II"
+minutos: 20
+nota_maxima: 5.0
+gracia_segundos: 30
+
+grupos:
+  # Garantiza un ítem numérico y uno de opción múltiple.
+  - capitulo: cap01
+    titulo: "Bits y redondeo"
+    elegir: 1
+    puntos: 10
+    de:
+      - mascara_bits
+      - redondeo_acumulado
+
+  # Garantiza opción única.
+  - capitulo: cap01
+    titulo: "Opción única"
+    elegir: 1
+    puntos: 10
+    de:
+      - componente_von_neumann
+      - expresion_logica
+
+  # Garantiza opción múltiple del capítulo 2.
+  - capitulo: cap02
+    titulo: "Propiedades y variables"
+    elegir: 1
+    puntos: 10
+    de:
+      - propiedades_algoritmo
+      - variable_o_constante
+
+# Traza propia del simulacro: seis casillas, capítulo 2, trivial a propósito.
+trazas:
+  elegir: 1
+  puntos: 10
+  de:
+    - intercambio_variables
+
+# Ejercita el camino de la calificación manual sin dar trabajo de verdad.
+abiertos:
+  - id: comentario
+    puntos: 10
+    enunciado: |
+      **Esta pregunta no se califica por su contenido.** Sirve para probar que
+      el sistema guarda y recupera texto largo.
+
+      Escriba dos o tres frases sobre **cualquiera de estas dos cosas**:
+
+      - qué le pareció confuso de esta pantalla, o
+      - qué haría distinto la rutina del intercambio si se borrara la línea
+        `aux <- a`.
+
+      Si algo le falló durante el simulacro —se le cerró la sesión, perdió lo
+      escrito, no cargó una pregunta— **descríbalo aquí**. Es la información
+      más útil que puede darnos hoy.
+    rubrica:
+      - "Se guardó el texto completo"
+      - "Se recuperó al volver a entrar"
+      - "Reporta incidentes, si los hubo"
