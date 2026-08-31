@@ -72,6 +72,28 @@ N_DEMO   <- as.integer(opcion("--demo", "0"))
 SOLO     <- opcion("--solo")
 SIN_PDF  <- bandera("--sin-pdf")
 
+## --- Plantilla del roster --------------------------------------------------
+## Se escribe desde aquí y no en la documentación para que el formato no pueda
+## divergir de lo que el guion espera leer: el encabezado sale del mismo sitio
+## que la validación.
+if (bandera("--plantilla-roster")) {
+  destino <- opcion("--plantilla-roster", file.path(BASE, "roster.csv"))
+  if (file.exists(destino)) {
+    stop("ya existe ", destino, ": no se sobrescribe una lista de curso", call. = FALSE)
+  }
+  writeLines(c(
+    "cedula,nombre,grupo",
+    "1020304050,Pérez Gómez Ana María,A",
+    "1122334455,Rodríguez Díaz Juan Camilo,A"),
+    destino, useBytes = TRUE)
+  cat("  plantilla escrita en ", destino, "\n", sep = "")
+  cat("  - `cedula` admite puntos y espacios: se normaliza a solo dígitos.\n")
+  cat("  - `grupo` puede ir vacío; se usa solo para agrupar en el panel.\n")
+  cat("  - Guárdelo FUERA del repositorio o déjelo aquí: está en .gitignore.\n")
+  cat("  - Borre las dos filas de ejemplo antes de usarlo.\n")
+  quit(status = 0L)
+}
+
 if (!dir.exists(DIR_RMD)) stop("no encuentro el banco en ", DIR_RMD, call. = FALSE)
 
 ## --- 2. El pepper ---------------------------------------------------------
