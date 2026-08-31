@@ -48,7 +48,7 @@ grupos:
 
   - capitulo: cap03
     titulo: "Control secuencial"
-    elegir: 3
+    elegir: 2
     puntos: 15          # el capítulo del parcial pesa más
     de:
       - traza_interes_simple
@@ -59,6 +59,17 @@ grupos:
       - salida_secuencia
       - credito_conviene
       - intercambio_lineas
+
+# Prueba de escritorio. Es el método central del capítulo 3 y no cabe en un
+# cloze: exige reconstruir el estado de cada variable paso a paso, y una de las
+# celdas se acierta sabiendo que la variable TODAVÍA no tiene valor.
+# Sustituye a un ejercicio de cap03, que es justo lo que evalúa mejor.
+trazas:
+  elegir: 1
+  puntos: 15
+  de:
+    - liquidacion_nomina
+    - interes_simple
 
 # Ítem abierto: cubre las dimensiones de modelación y sustentación de la
 # rúbrica institucional, que ningún cloze produce (ver PLAN §H5).

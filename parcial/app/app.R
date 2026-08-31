@@ -190,6 +190,8 @@ catalogo <- function(ex) {
   filas <- list()
   for (e in ex$ejercicios) for (it in e$items)
     filas[[length(filas) + 1L]] <- list(id = it$id, tipo = it$tipo)
+  for (tz in ex$trazas) for (c in tz$celdas)
+    filas[[length(filas) + 1L]] <- list(id = c$id, tipo = "celda")
   for (a in ex$abiertos)
     filas[[length(filas) + 1L]] <- list(id = a$id, tipo = "abierto")
   filas
@@ -216,7 +218,31 @@ ui <- page_fluid(
     tags$link(rel = "stylesheet", href = "vendor/fonts.googleapis.com_css2_family_Montserrat_wght_300_400_500_600_700_800_display_swap.css"),
     tags$link(rel = "stylesheet", href = "vendor/fonts.googleapis.com_css2_family_Fira_Code_wght_400_500_display_swap.css"),
     tags$link(rel = "stylesheet", href = "vendor/cdnjs.cloudflare.com_ajax_libs_font-awesome_6.5.2_css_all.min.css"),
+    tags$link(rel = "stylesheet", href = "vendor/cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_themes_prism-tomorrow.min.css"),
     tags$link(rel = "stylesheet", href = "examen.css"),
+    tags$script(src = "vendor/cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_prism.min.js"),
+    tags$script(src = "vendor/cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-python.min.js"),
+    tags$script(src = "vendor/cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-r.min.js"),
+    tags$script(src = "vendor/cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-visual-basic.min.js"),
+    ## Pestañas de lenguaje. Sin React ni componentes: cambiar de pestaña es
+    ## mostrar un bloque y ocultar otro. Al cambiar en un ejercicio cambian
+    ## todos, como el selector del material: el estudiante elige su acento una
+    ## vez, no siete.
+    tags$script(HTML("
+      $(document).on('click', '.lp-tab', function(){
+        var lang = $(this).data('lang');
+        $('.lp-tab').removeClass('activa').filter('[data-lang=\"'+lang+'\"]').addClass('activa');
+        $('.lp-pre').addClass('oculto').filter('[data-lang=\"'+lang+'\"]').removeClass('oculto');
+        try { localStorage.setItem('lpf_lenguaje_parcial', lang); } catch(e) {}
+      });
+      $(document).on('shiny:value', function(){
+        setTimeout(function(){
+          if (window.Prism) Prism.highlightAll();
+          var l = null; try { l = localStorage.getItem('lpf_lenguaje_parcial'); } catch(e) {}
+          if (l && $('.lp-tab[data-lang=\"'+l+'\"]').length) $('.lp-tab[data-lang=\"'+l+'\"]').first().click();
+        }, 60);
+      });
+    ")),
     tags$title("Primer parcial · Lógica de Programación Financiera"),
     ## Aviso propio de desconexión. El de Shiny cubre la pantalla de gris con
     ## «Disconnected from the server» y un enlace para recargar: en un examen
@@ -291,6 +317,75 @@ control_item <- function(it, valor = NULL) {
       cuerpo)
 }
 
+LENGUAJES <- list(pseudo = "Pseudocódigo", python = "Python", r = "R", vba = "VBA")
+## El pseudocódigo no tiene gramática en Prism: se deja sin resaltar a
+## propósito, que es como aparece en el material.
+PRISM <- list(pseudo = "none", python = "python", r = "r", vba = "visual-basic")
+
+pestanas_codigo <- function(codigo) {
+  langs <- names(LENGUAJES)[names(LENGUAJES) %in% names(codigo)]
+  div(class = "lp-tabs",
+    div(class = "lp-tabs-bar",
+      lapply(seq_along(langs), function(k) {
+        tags$button(type = "button", `data-lang` = langs[k],
+                    class = paste("lp-tab", if (k == 1L) "activa" else ""),
+                    LENGUAJES[[langs[k]]])
+      })),
+    ## El bloque se arma como HTML crudo y no con `tags$pre(tags$code(...))`.
+    ## htmltools sangra las etiquetas hijas para dejar el HTML legible, y
+    ## dentro de un <pre> esa sangría ES CONTENIDO: el pseudocódigo salía con
+    ## `Inicio` desplazado y `Fin` pegado al margen.
+    lapply(seq_along(langs), function(k) {
+      HTML(sprintf('<pre class="lp-pre%s" data-lang="%s"><code class="language-%s">%s</code></pre>',
+                   if (k != 1L) " oculto" else "", langs[k], PRISM[[langs[k]]],
+                   htmltools::htmlEscape(as.character(codigo[[langs[k]]]))))
+    }))
+}
+
+## La tabla de la prueba de escritorio.
+##
+## Se arma en el servidor con campos de Shiny corrientes, no con el componente
+## de React del material. La razón está en la reanudación: con el estado en el
+## navegador habría que serializarlo, mandarlo y volver a inyectarlo, que es
+## justo la parte frágil; con campos de Shiny, el autoguardado, la reanudación
+## y la calificación funcionan sin escribir una línea más. De paso, la
+## respuesta nunca viaja al navegador (PLAN §H9).
+tabla_traza <- function(tz, respuestas) {
+  por_celda <- list()
+  for (c in tz$celdas) por_celda[[paste0(c$fila, "|", c$columna)]] <- c
+
+  filas <- lapply(seq_along(tz$filas), function(fi) {
+    fila <- tz$filas[[fi]]
+    tags$tr(lapply(tz$columnas, function(col) {
+      clave <- col$clave
+      valor <- fila[[clave]]
+      celda <- por_celda[[paste0(fi, "|", clave)]]
+      if (!is.null(celda)) {
+        prev <- respuestas[[celda$id]]
+        tags$td(class = "lp-celda-edit",
+          ## NO poner `shiny-bound-input`: esa clase la añade Shiny a lo que
+          ## YA enlazó. Ponerla a mano hace que se salte el campo, y las diez
+          ## celdas de la traza se guardaban vacías sin dar ningún error.
+          tags$input(type = "text", id = celda$id,
+                     class = "form-control lp-celda",
+                     value = if (is.null(prev)) "" else as.character(prev)[1],
+                     `aria-label` = sprintf("%s, paso %d", col$titulo, fi)))
+      } else {
+        tags$td(class = if (identical(clave, "instruccion")) "lp-instr" else "lp-dado",
+                as.character(valor %||% ""))
+      }
+    }))
+  })
+
+  div(class = "lp-traza-caja",
+    tags$table(class = "lp-traza-tabla",
+      tags$thead(tags$tr(lapply(tz$columnas, function(c) tags$th(c$titulo)))),
+      tags$tbody(filas)),
+    p(class = "lp-tenue lp-traza-pie",
+      "Escriba ", tags$code("—"), " si la variable todavía no tiene valor. ",
+      "Sin separadores de miles."))
+}
+
 pantalla_examen <- function(ex, respuestas = list(), reanudado = FALSE) {
   div(class = "lp-examen",
     div(class = "lp-barra",
@@ -311,6 +406,17 @@ pantalla_examen <- function(ex, respuestas = list(), reanudado = FALSE) {
           div(class = "lp-enunciado", HTML(e$enunciado)),
           div(class = "lp-items", lapply(e$items, function(it)
             control_item(it, respuestas[[it$id]]))))
+      }),
+      lapply(seq_along(ex$trazas), function(k) {
+        tz <- ex$trazas[[k]]
+        div(class = "lp-ejercicio lp-trazado",
+          div(class = "lp-ej-cabecera",
+            span(class = "lp-ej-num", icon("table-list")),
+            span(class = "lp-ej-tit", tz$titulo),
+            span(class = "lp-ej-pts", sprintf("%s puntos", format(tz$puntos)))),
+          div(class = "lp-enunciado", HTML(tz$enunciado)),
+          pestanas_codigo(tz$codigo),
+          tabla_traza(tz, respuestas))
       }),
       lapply(ex$abiertos, function(a) {
         div(class = "lp-ejercicio lp-abierto",

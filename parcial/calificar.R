@@ -100,7 +100,12 @@ interpretar_numero <- function(texto) {
 # Los índices van SIEMPRE en el orden barajado que vio el estudiante: la clave
 # guarda su solución ya permutada, así que aquí no hay que deshacer nada.
 # ---------------------------------------------------------------------------
-calificar_item <- function(respuesta, item) {
+## `respuestas` completo llega solo para poder aplicar el ERROR DE ARRASTRE en
+## las celdas de traza: una celda que hereda un valor de otra se da por buena
+## si es coherente con lo que el propio estudiante respondió antes, aunque
+## aquella estuviera mal. Es lo que hace un corrector humano, y sin ello una
+## sola equivocación en la primera celda costaría el ejercicio entero.
+calificar_item <- function(respuesta, item, respuestas = NULL) {
   max_pts <- as.numeric(item$puntos)
   vacio <- is.null(respuesta) || length(respuesta) == 0L ||
     (length(respuesta) == 1L && (is.na(respuesta[1]) || identical(trimws(as.character(respuesta[1])), "")))
@@ -155,6 +160,44 @@ calificar_item <- function(respuesta, item) {
     fin(frac, estado, sprintf("marcó %s de %d",
         if (length(idx)) paste(sort(idx), collapse = ",") else "ninguna", length(sol)))
 
+  } else if (identical(item$tipo, "celda")) {
+    ## Una celda de traza puede ser un número o el guion de «todavía sin valor».
+    norm <- function(z) {
+      z <- trimws(as.character(z)[1])
+      z <- gsub("[\u2014\u2013-]+", "-", z)      # — – - se unifican
+      tolower(z)
+    }
+    sol <- as.character(unlist(item$sol))[1]
+    tol <- as.numeric(item$tol); if (is.na(tol)) tol <- 0
+
+    ## `esperado` puede ser la clave (un número limpio) o —en el arrastre— lo
+    ## que el propio estudiante escribió, que bien puede venir como
+    ## «1.000.000». Por eso se interpreta con las mismas reglas de lectura que
+    ## el resto del calificador y no con `as.numeric()`, que ante un separador
+    ## de miles devuelve NA y mandaba la comparación a la rama de texto: el
+    ## arrastre fallaba justo cuando el estudiante escribía bien los miles.
+    coincide <- function(esperado) {
+      num_esp <- interpretar_numero(esperado)
+      if (length(num_esp)) {
+        lect <- interpretar_numero(respuesta)
+        length(lect) && any(outer(lect, num_esp, function(a, b) abs(a - b) <= tol + 1e-9))
+      } else identical(norm(respuesta), norm(esperado))
+    }
+
+    if (coincide(sol)) return(fin(1, "correcta"))
+
+    ## Segunda oportunidad: ¿es coherente con lo que él mismo puso antes?
+    if (!is.null(item$arrastre) && !is.null(respuestas)) {
+      previa <- respuestas[[unlist(item$arrastre)[1]]]
+      if (!is.null(previa) && length(previa) && nzchar(trimws(paste(previa, collapse = ""))) &&
+          coincide(previa)) {
+        return(fin(1, "correcta por arrastre",
+                   sprintf("coherente con su propia respuesta en %s", unlist(item$arrastre)[1])))
+      }
+    }
+    fin(0, "incorrecta", sprintf("respondió «%s», se esperaba «%s»",
+                                 trimws(as.character(respuesta)[1]), sol))
+
   } else if (identical(item$tipo, "string")) {
     norm <- function(z) tolower(trimws(gsub("[[:space:]]+", " ", as.character(z))))
     ok <- norm(respuesta[1]) %in% norm(sol)
@@ -175,9 +218,10 @@ calificar_item <- function(respuesta, item) {
 # ---------------------------------------------------------------------------
 calificar_examen <- function(respuestas, clave, manuales = list()) {
   filas <- list()
-  for (e in clave$ejercicios) {
+  bloques <- c(clave$ejercicios, clave$trazas)
+  for (e in bloques) {
     for (it in e$items) {
-      r <- calificar_item(respuestas[[it$id]], it)
+      r <- calificar_item(respuestas[[it$id]], it, respuestas)
       filas[[length(filas) + 1L]] <- data.frame(
         ejercicio = e$nombre, id = r$id, tipo = r$tipo, puntos_max = r$puntos_max,
         puntos = r$puntos, estado = r$estado, detalle = r$detalle,
@@ -267,6 +311,40 @@ pruebas <- function() {
   comprobar("marca todo → 0",          calificar_item(1:4,      mc)$puntos, 0)
   comprobar("estado parcial",          calificar_item(c(4L),    mc)$estado, "parcial")
   comprobar("nada marcado",            calificar_item(integer(0), mc)$estado, "sin responder")
+
+  cat("\n--- celdas de traza (correcta 1080000, tolerancia 1) ---\n")
+  cel <- list(id = "t1_4_devengado", tipo = "celda", sol = 1080000, tol = 1, puntos = 1.5)
+  comprobar("valor exacto",        calificar_item("1080000", cel)$puntos, 1.5)
+  comprobar("con separadores",     calificar_item("1.080.000", cel)$puntos, 1.5)
+  comprobar("valor equivocado",    calificar_item("999999", cel)$puntos, 0)
+  comprobar("sin responder",       calificar_item("", cel)$estado, "sin responder")
+
+  guion <- list(id = "t1_2_neto", tipo = "celda", sol = "—", tol = 1, puntos = 1.5)
+  comprobar("guion largo",         calificar_item("—", guion)$puntos, 1.5)
+  comprobar("guion corto vale",    calificar_item("-", guion)$puntos, 1.5)
+  comprobar("dos guiones valen",   calificar_item("--", guion)$puntos, 1.5)
+  comprobar("un número no vale",   calificar_item("0", guion)$puntos, 0)
+
+  cat("\n--- error de arrastre ---\n")
+  ## El estudiante se equivoca en la celda de origen y arrastra su propio valor.
+  origen   <- list(id = "t1_4_devengado", tipo = "celda", sol = 1080000, tol = 1, puntos = 1.5)
+  heredada <- list(id = "t1_5_devengado", tipo = "celda", sol = 1080000, tol = 1,
+                   puntos = 1.5, arrastre = "t1_4_devengado")
+  suyas <- list(t1_4_devengado = "999999", t1_5_devengado = "999999")
+  comprobar("el origen se marca mal",   calificar_item("999999", origen)$puntos, 0)
+  comprobar("la heredada se salva",     calificar_item("999999", heredada, suyas)$puntos, 1.5)
+  comprobar("y se dice por qué",        calificar_item("999999", heredada, suyas)$estado,
+            "correcta por arrastre")
+  comprobar("incoherente NO se salva",  calificar_item("123", heredada, suyas)$puntos, 0)
+  comprobar("sin origen respondido",    calificar_item("999999", heredada,
+            list(t1_4_devengado = ""))$puntos, 0)
+  comprobar("acertar de todos modos",   calificar_item("1080000", heredada, suyas)$puntos, 1.5)
+  ## El arrastre tiene que funcionar aunque el estudiante escriba los miles.
+  con_puntos <- list(t1_4_devengado = "1.000.000", t1_5_devengado = "1000000")
+  comprobar("origen con separadores",   calificar_item("1000000", heredada, con_puntos)$estado,
+            "correcta por arrastre")
+  comprobar("y al revés también",       calificar_item("1.000.000", heredada,
+            list(t1_4_devengado = "1000000"))$estado, "correcta por arrastre")
 
   cat("\n--- examen completo ---\n")
   clave <- list(sid = "prueba", nota_maxima = 5, puntos_totales = 100,

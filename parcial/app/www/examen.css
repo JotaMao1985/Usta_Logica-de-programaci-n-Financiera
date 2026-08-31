@@ -123,3 +123,46 @@ code, pre, .lp-enunciado code { font-family: "Fira Code", ui-monospace, monospac
   border-radius: 12px; padding: .75rem 1.1rem; font-size: .88rem;
   box-shadow: 0 8px 28px rgba(0,0,0,.28); }
 #shiny-disconnected-overlay { display: none !important; }
+
+/* ==========================================================================
+   D5 · Prueba de escritorio y pestañas de lenguaje
+   ========================================================================== */
+.lp-trazado { border-color: rgba(61,0,141,.35); }
+
+/* --- pestañas de los cuatro lenguajes --- */
+.lp-tabs { margin: .9rem 0; }
+.lp-tabs-bar { display: flex; flex-wrap: wrap; gap: .2rem; border-bottom: 2px solid var(--borde); }
+.lp-tab { border: none; background: none; font-family: inherit; font-size: .82rem;
+  font-weight: 600; color: var(--tenue); padding: .4rem .8rem; border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; }
+.lp-tab:hover { color: var(--morado); background: rgba(61,0,141,.05); }
+.lp-tab.activa { color: var(--morado); border-bottom-color: var(--rosa); background: #fff; }
+.lp-pre { background: #2d2b38; color: #f8f8f2; border-radius: 0 10px 10px 10px;
+  padding: .9rem 1rem; margin: 0; overflow-x: auto; font-size: .84rem; line-height: 1.5; }
+.lp-pre.oculto { display: none; }
+.lp-pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+/* --- la tabla de traza --- */
+.lp-traza-caja { margin-top: 1rem; }
+.lp-traza-tabla { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.lp-traza-tabla th { background: rgba(61,0,141,.09); color: var(--morado); text-align: left;
+  padding: .45rem .6rem; border: 1px solid var(--borde); font-weight: 700;
+  font-family: "Fira Code", monospace; font-size: .78rem; white-space: nowrap; }
+.lp-traza-tabla td { border: 1px solid var(--borde); padding: .3rem .6rem; vertical-align: middle; }
+.lp-instr { font-family: "Fira Code", monospace; font-size: .8rem; color: var(--tinta);
+  white-space: nowrap; }
+/* Lo que viene dado se ve dado: gris y sin caja. Lo editable, ámbar y con caja. */
+.lp-dado { font-family: "Fira Code", monospace; font-size: .82rem; color: var(--tenue);
+  text-align: right; background: #fafafa; }
+.lp-celda-edit { padding: .15rem !important; background: #FFFBEB; }
+.lp-celda { width: 100%; min-width: 96px; font-family: "Fira Code", monospace;
+  font-size: .82rem; text-align: right; padding: .25rem .4rem; border: 1px solid #FDE68A;
+  border-radius: 6px; background: #fff; }
+.lp-celda:focus { outline: none; border-color: var(--rosa); box-shadow: 0 0 0 2px rgba(237,30,121,.15); }
+.lp-traza-pie { margin-top: .5rem; }
+
+@media (max-width: 600px) {
+  .lp-traza-caja { overflow-x: auto; }
+  .lp-traza-tabla { min-width: 520px; }
+  .lp-tab { font-size: .76rem; padding: .35rem .6rem; }
+}

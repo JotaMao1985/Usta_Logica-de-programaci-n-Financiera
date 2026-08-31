@@ -63,6 +63,7 @@ BASE <- if (!is.na(ruta_script)) {
 } else getwd()
 
 DIR_RMD  <- file.path(BASE, "Banco Moodle", "rmd")
+source(file.path(BASE, "parcial", "trazas.R"))
 DIR_OUT  <- opcion("--out", file.path(BASE, "parcial", "salida"))
 BLUEPRINT<- opcion("--blueprint", file.path(BASE, "parcial", "blueprint.yml"))
 PLANTILLA<- opcion("--plantilla", file.path(BASE, "parcial", "plantilla_papel.tex"))
@@ -111,7 +112,16 @@ muestra <- function(x, k) x[sample.int(length(x), k)]
 ## --- 4. Blueprint ---------------------------------------------------------
 bp <- yaml::read_yaml(BLUEPRINT)
 PUNTOS_TOTALES <- sum(vapply(bp$grupos, function(g) g$elegir * g$puntos, numeric(1))) +
-  if (length(bp$abiertos)) sum(vapply(bp$abiertos, function(a) a$puntos, numeric(1))) else 0
+  (if (length(bp$abiertos)) sum(vapply(bp$abiertos, function(a) a$puntos, numeric(1))) else 0) +
+  (if (!is.null(bp$trazas)) bp$trazas$elegir * bp$trazas$puntos else 0)
+
+if (!is.null(bp$trazas)) {
+  faltan_t <- setdiff(bp$trazas$de, names(TRAZAS))
+  if (length(faltan_t)) {
+    stop("el blueprint pide trazas que no existen en parcial/trazas.R: ",
+         paste(faltan_t, collapse = ", "), call. = FALSE)
+  }
+}
 
 for (g in bp$grupos) {
   faltan <- setdiff(g$de, sub("\\.Rmd$", "", list.files(file.path(DIR_RMD, g$capitulo))))
@@ -123,6 +133,60 @@ for (g in bp$grupos) {
     stop("el grupo ", g$capitulo, " pide elegir ", g$elegir, " de ", length(g$de),
          " ejercicios", call. = FALSE)
   }
+}
+
+## --------------------------------------------------------------------------
+## La traza en LaTeX, para el examen en papel.
+##
+## R/exams solo sabe del banco `.Rmd`, así que el PDF que genera NO incluye las
+## trazas: el respaldo en papel se quedaría quince puntos corto y el plan B
+## dejaría de ser el mismo examen. Se inyecta a mano en el `.tex` que deja
+## `exams2pdf` y se recompila.
+## --------------------------------------------------------------------------
+html_a_latex <- function(html) {
+  tmp <- tempfile(fileext = ".html"); on.exit(unlink(tmp))
+  writeLines(html, tmp, useBytes = TRUE)
+  paste(system2("pandoc", c("-f", "html", "-t", "latex", shQuote(tmp)),
+                stdout = TRUE), collapse = "\n")
+}
+
+escapar_tex <- function(x) {
+  x <- as.character(x)
+  x <- gsub("\\", "\\textbackslash{}", x, fixed = TRUE)
+  for (c in c("&", "%", "$", "#", "_", "{", "}")) x <- gsub(c, paste0("\\", c), x, fixed = TRUE)
+  x <- gsub("~", "\\textasciitilde{}", x, fixed = TRUE)
+  x <- gsub("^", "\\textasciicircum{}", x, fixed = TRUE)
+  x
+}
+
+traza_a_latex <- function(tz) {
+  ocultas <- vapply(tz$celdas, function(c) paste0(c$fila, "|", c$columna), "")
+  cols <- vapply(tz$columnas, function(c) c$clave, "")
+  align <- paste(c("c", "l", rep("c", length(cols) - 2L)), collapse = "|")
+
+  cabecera <- paste(vapply(tz$columnas, function(c) paste0("\\textbf{", escapar_tex(c$titulo), "}"), ""),
+                    collapse = " & ")
+  filas <- vapply(seq_along(tz$filas), function(fi) {
+    fila <- tz$filas[[fi]]
+    celdas <- vapply(cols, function(cl) {
+      if (paste0(fi, "|", cl) %in% ocultas) return("\\rule{0pt}{2.6ex}\\rule{2.2cm}{0.4pt}")
+      v <- fila[[cl]]
+      v <- if (is.null(v) || is.na(v)) "" else as.character(v)
+      if (identical(cl, "instruccion")) paste0("\\texttt{\\small ", escapar_tex(v), "}")
+      else escapar_tex(v)
+    }, "")
+    paste(paste(celdas, collapse = " & "), "\\\\")
+  }, "")
+
+  paste0(
+    "\n\\begin{question}\n\\textbf{", escapar_tex(tz$titulo), "}\\newline\n",
+    html_a_latex(tz$enunciado), "\n\n",
+    "\\begin{verbatim}\n", tz$codigo$pseudo, "\n\\end{verbatim}\n\n",
+    "\\noindent\\begin{tabular}{|", align, "|}\n\\hline\n",
+    cabecera, " \\\\\n\\hline\n",
+    paste(filas, collapse = "\n"), "\n\\hline\n\\end{tabular}\n",
+    "\n\\vspace{0.4em}\n\\noindent{\\small Escriba --- si la variable todavía no tiene valor.}\n",
+    "\\end{question}\n")
 }
 
 ## Markdown → HTML para los ítems abiertos, con el mismo pandoc que usa R/exams.
@@ -285,6 +349,61 @@ for (i in seq_len(nrow(roster))) {
     pts_acum <- pts_acum + pts_ej
   }
 
+  ## --- Trazas (E1) ---------------------------------------------------------
+  ## Se generan aquí, no en R/exams: la prueba de escritorio necesita una tabla
+  ## estructurada —columnas, filas y qué celda se oculta— que el formato cloze
+  ## no sabe expresar.
+  trazas <- list(); clave_tr <- list()
+  if (!is.null(bp$trazas) && bp$trazas$elegir > 0) {
+    set.seed(semilla(sid, "seleccion_traza"))
+    elegidas <- muestra(bp$trazas$de, bp$trazas$elegir)
+    for (k in seq_along(elegidas)) {
+      tz <- TRAZAS[[elegidas[k]]](semilla(sid, paste0("traza", k)))
+      tid <- sprintf("t%d", k)
+      celdas <- list(); clave_celdas <- list()
+      ## Las filas que van al navegador llevan la celda oculta VACÍA: la
+      ## respuesta se queda aquí. Ver PLAN §H9.
+      filas_visibles <- tz$filas
+      ## De `ocultas_desde` salen todas las celdas de la columna a partir de
+      ## la fila indicada. La primera de cada columna es el ORIGEN; las
+      ## siguientes se marcan con `arrastre` apuntando a ella.
+      ##
+      ## `ic` y no `i`: `i` es la variable del bucle de ESTUDIANTES, unas
+      ## cuantas decenas de líneas más arriba. Reutilizarla hacía que todos
+      ## escribieran en la misma fila del manifiesto y solo sobreviviera el
+      ## último. No daba ningún error.
+      ic <- 0L
+      for (col in names(tz$ocultas_desde)) {
+        desde <- tz$ocultas_desde[[col]]
+        origen <- NULL
+        for (fi in seq(desde, length(tz$filas))) {
+          ic <- ic + 1L
+          iid <- sprintf("%s_%d_%s", tid, fi, col)
+          sol <- tz$filas[[fi]][[col]]
+          filas_visibles[[fi]][[col]] <- NA
+          celdas[[ic]] <- list(id = iid, fila = fi, columna = col)
+          clave_celdas[[ic]] <- list(id = iid, tipo = "celda", sol = I(sol),
+                                     tol = tz$tolerancia,
+                                     arrastre = if (is.null(origen)) NULL else origen)
+          if (is.null(origen)) origen <- iid
+        }
+      }
+      ## Los puntos se reparten al final, cuando ya se sabe cuántas celdas hay.
+      pts_celda <- round(bp$trazas$puntos / ic, 2)
+      for (n in seq_len(ic)) {
+        pts <- if (n == ic) round(bp$trazas$puntos - pts_celda * (ic - 1), 2) else pts_celda
+        celdas[[n]]$puntos <- pts
+        clave_celdas[[n]]$puntos <- pts
+      }
+      trazas[[k]] <- list(id = tid, nombre = tz$nombre, titulo = tz$titulo,
+                          enunciado = tz$enunciado, codigo = tz$codigo,
+                          columnas = tz$columnas, filas = filas_visibles,
+                          puntos = bp$trazas$puntos, celdas = celdas)
+      clave_tr[[k]] <- list(id = tid, nombre = tz$nombre, items = clave_celdas)
+      pts_acum <- pts_acum + bp$trazas$puntos
+    }
+  }
+
   ## Ítems abiertos: se recogen como texto y se califican a mano (PLAN §H5).
   abiertos <- list(); clave_ab <- list()
   if (length(bp$abiertos)) for (a in seq_along(bp$abiertos)) {
@@ -299,13 +418,13 @@ for (i in seq_len(nrow(roster))) {
     periodo = bp$periodo, minutos = bp$minutos,
     gracia_segundos = if (is.null(bp$gracia_segundos)) 30L else bp$gracia_segundos,
     nota_maxima = bp$nota_maxima, puntos_totales = pts_acum,
-    ejercicios = ejercicios, abiertos = abiertos
+    ejercicios = ejercicios, trazas = trazas, abiertos = abiertos
   ), file.path(DIR_OUT, "examenes", paste0(sid, ".json")),
   auto_unbox = TRUE, pretty = TRUE, null = "null")
 
   write_json(list(
     sid = sid, version = 1L, puntos_totales = pts_acum, nota_maxima = bp$nota_maxima,
-    ejercicios = clave_ej, abiertos = clave_ab
+    ejercicios = clave_ej, trazas = clave_tr, abiertos = clave_ab
   ), file.path(DIR_OUT, "claves", paste0(sid, ".json")),
   auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)
 
@@ -313,11 +432,37 @@ for (i in seq_len(nrow(roster))) {
   estado_pdf <- "—"
   if (!SIN_PDF) {
     pdf_ok <- tryCatch({
+      texdir <- tempfile("tex"); dir.create(texdir)
       ex_pdf <- exams2pdf(rutas, n = 1L, seed = seed_mat, dir = file.path(DIR_OUT, "papel"),
                           name = sid, template = PLANTILLA, encoding = "UTF-8",
                           header = list(Estudiante = nombre, Identificador = sid,
                                         Minutos = bp$minutos),
-                          quiet = TRUE, verbose = FALSE)
+                          texdir = texdir, quiet = TRUE, verbose = FALSE)
+
+      ## Se añaden las trazas al .tex ya generado y se recompila, para que el
+      ## papel lleve exactamente los mismos ejercicios que la pantalla.
+      if (length(trazas)) {
+        ftex <- file.path(texdir, paste0(sid, "1.tex"))
+        if (file.exists(ftex)) {
+          tex <- readLines(ftex, warn = FALSE, encoding = "UTF-8")
+          corte <- tail(grep("^\\\\end\\{enumerate\\}", tex), 1)
+          if (length(corte)) {
+            extra <- unlist(lapply(trazas, traza_a_latex))
+            tex <- append(tex, unlist(strsplit(paste(extra, collapse = "\n"), "\n")), after = corte - 1L)
+            writeLines(tex, ftex, useBytes = TRUE)
+            wd <- getwd(); setwd(texdir)
+            ok2 <- tryCatch({
+              system2("pdflatex", c("-interaction=nonstopmode", shQuote(basename(ftex))),
+                      stdout = FALSE, stderr = FALSE)
+              file.exists(sub("[.]tex$", ".pdf", basename(ftex)))
+            }, error = function(e) FALSE)
+            setwd(wd)
+            if (ok2) file.copy(file.path(texdir, paste0(sid, "1.pdf")),
+                               file.path(DIR_OUT, "papel", paste0(sid, "1.pdf")), overwrite = TRUE)
+            else fallos <<- c(fallos, sprintf("%s: la traza no compiló en el PDF", nombre))
+          }
+        }
+      }
       ## La comprobación que exige el plan: si el papel y la pantalla no traen
       ## los mismos números, el plan B es inservible.
       a <- unlist(lapply(ex[[1]],     function(z) as.character(unlist(z$metainfo$solution))))
@@ -334,7 +479,9 @@ for (i in seq_len(nrow(roster))) {
 
   manifiesto[[i]] <- data.frame(
     sid = sid, nombre = nombre, grupo = roster$grupo[i],
-    ejercicios = paste(elegidos$nombre, collapse = ";"),
+    ejercicios = paste(c(elegidos$nombre,
+                         vapply(trazas, function(z) paste0("traza:", z$nombre), "")),
+                       collapse = ";"),
     puntos = pts_acum, pdf = estado_pdf, stringsAsFactors = FALSE)
 
   marca <- if (identical(estado_pdf, "DIVERGE")) rojo("✗") else verde("✓")
@@ -345,6 +492,13 @@ for (i in seq_len(nrow(roster))) {
 ## --- 9. Manifiesto y resumen ---------------------------------------------
 if (length(manifiesto)) {
   man <- do.call(rbind, manifiesto)
+  ## Si el manifiesto no tiene una fila por estudiante generado, algo se
+  ## sobrescribió. Pasó —por reutilizar la variable de un bucle— y no dio
+  ## ningún error: simplemente faltaban estudiantes.
+  if (nrow(man) != length(manifiesto) || nrow(man) != nrow(roster) - length(fallos)) {
+    stop(sprintf("el manifiesto tiene %d filas y se generaron %d exámenes: algo se sobrescribió",
+                 nrow(man), nrow(roster) - length(fallos)), call. = FALSE)
+  }
   ## Contiene nombres: se queda en su máquina. No se sube al servidor ni al repo.
   write.csv(man, file.path(DIR_OUT, "manifiesto.csv"), row.names = FALSE, fileEncoding = "UTF-8")
 }

@@ -3,11 +3,11 @@
 **Rama:** `parcial/app-examen` · **Base:** `cap03/control-secuencial` (ver H15) · **Fecha:** 2026-08-28
 **Encargo:** desplegar el primer parcial fuera del LMS, con doble credencial
 (cédula + código del día), aprovechando lo que Brightspace y Moodle no dan.
-**Estado:** D1–D4, D6 y D7 ejecutados (2026-08-30). Compuertas G1 y G2 abiertas.
-**Siguiente:** D5 (`TablaTrazaExamen` y `CodeTabs`) y D8 (**el simulacro**, que es lo
-que decide si el parcial va por aquí o por Moodle).
-**El parcial ya se puede operar**: la app aguanta un tropiezo y el panel deja verlo,
-dar tiempo extra, calificar la sustentación y exportar. Falta probarlo en la sala real.
+**Estado:** D1 a D7 ejecutados (2026-08-30). Compuertas G1 y G2 abiertas.
+**Siguiente:** **D8, el simulacro** — lo único que queda, y lo que decide si el
+parcial va por aquí o por Moodle. Antes hay que provisionar el VPS.
+**El parcial está construido**: aguanta un tropiezo, se opera desde el panel, y el
+respaldo en papel sigue siendo el mismo examen, trazas incluidas.
 
 ---
 
@@ -369,6 +369,79 @@ nota que está escribiendo.
 tenía a los dos estudiantes. El defecto de fondo era real; el síntoma que creí
 ver, no.)*
 
+
+### H24 · El componente de React se descartó, y la razón es la reanudación
+
+El §H9 daba por hecho adaptar `TablaTraza` de LP-CORE y devolver el estado con
+`Shiny.setInputValue`. Al construirlo se impuso otra cosa: **la tabla se arma en
+el servidor con campos de Shiny corrientes**.
+
+El argumento decisivo no es el peso —aunque quitar React, ReactDOM y Babel son
+3,1 MB menos por estudiante en el peor momento— sino la **reanudación**. Con el
+estado dentro de un componente de React hay que serializarlo, mandarlo al
+servidor y volver a inyectarlo al montar; con campos de Shiny, el autoguardado,
+la reanudación y la calificación del D6 funcionan **sin escribir una línea más**,
+y son justamente la parte que no puede fallar.
+
+Lo que se pierde es tener dos implementaciones de «tabla de traza»: la del
+material y la del examen. Lo que se gana es que la del examen no tiene estado
+propio que se pueda perder.
+
+Las pestañas de los cuatro lenguajes tampoco necesitaron React: cambiar de
+pestaña es mostrar un bloque y ocultar otro, y son quince líneas de JavaScript
+que además recuerdan el lenguaje elegido para todo el examen.
+
+### H25 · El banco solo tiene un lenguaje
+
+Los 21 ejercicios cloze tienen bloques de código, pero **todos en pseudocódigo y
+sin declarar lenguaje**: no hay versión en Python, R ni VBA. Las pestañas de
+cuatro lenguajes no se pueden retroajustar al banco sin reescribir los 21
+ejercicios, y eso es trabajo de contenido, no de plomería.
+
+Por eso las pestañas viven en las trazas, donde las cuatro versiones se escriben
+a mano en `parcial/trazas.R`. Si se quiere el paralelo en todo el parcial, hay
+que presupuestar la reescritura del banco aparte.
+
+### H26 · Ocultar una celda no basta: hay que ocultar el arrastre
+
+La primera versión ocultaba una celda por variable. La fila siguiente mostraba
+ese mismo valor —una columna de traza arrastra el número hacia abajo—, así que el
+ejercicio se resolvía **copiando de la fila de abajo**, sin trazar nada.
+
+Ahora se oculta la columna entera desde la fila en que la variable recibe su
+primer valor. Eso trae el problema opuesto: un error en la primera celda se
+hereda y un solo desliz costaría los quince puntos. La clave marca cada celda
+heredada con el `id` de la que la origina, y el calificador **da por buena la
+celda coherente con la respuesta que el propio estudiante dio antes**. Es lo que
+hace un corrector humano.
+
+Medido sobre un caso real: un estudiante que se equivoca en `devengado` y arrastra
+su error con coherencia saca **9 de 15** en vez de 0. El arrastre rescata dentro de
+cada columna; no rescata entre columnas —quien deriva `salud` de un `devengado`
+equivocado pierde también el origen de `salud`—, y eso queda dicho a propósito.
+
+### H27 · Tres fallos propios que no daban ningún error
+
+- **`i` reutilizada.** El bucle de celdas ocultas usaba la misma variable que el
+  bucle de estudiantes. Todos escribían en la misma fila del manifiesto y solo
+  sobrevivía el último. El generador ahora comprueba que el manifiesto tenga una
+  fila por examen y aborta si no.
+- **`shiny-bound-input` puesta a mano.** Esa clase la añade Shiny a lo que *ya*
+  enlazó; ponerla hizo que se saltara las diez celdas de la traza, que se
+  guardaban vacías sin queja alguna.
+- **`as.numeric()` en la comparación del arrastre.** Devuelve `NA` ante
+  «1.000.000», de modo que el arrastre fallaba justo cuando el estudiante
+  escribía bien los miles. Se unificó con las reglas de lectura del resto del
+  calificador.
+
+### H28 · La traza no salía en el PDF de respaldo
+
+`exams2pdf` solo conoce el banco `.Rmd`, así que el papel se quedaba quince
+puntos corto: el plan B habría dejado de ser el mismo examen justo cuando más
+falta hace. El generador inyecta ahora la traza en el `.tex` que deja R/exams y
+lo recompila; el PDF lleva el enunciado, el pseudocódigo y la tabla con las
+casillas en blanco.
+
 ---
 
 ## 3. Arquitectura
@@ -493,11 +566,25 @@ nunca del simulacro.
 autoguardado, reanudación, cronómetro, sesión única y panel docente. Está escrito
 en la cabecera de `app.R` para que nadie lo despliegue por error.
 
-### D5 · Los componentes de LP-CORE
-- [ ] `TablaTrazaExamen` (H9): props sin clave, sin comprobar, sin pista, reporte por `Shiny.setInputValue`.
-- [ ] `CodeTabs` en los enunciados — es presentación, no captura: coste casi nulo.
-- [ ] Calificar las celdas de traza con la misma función del D3.
-- [ ] Ítem abierto: `textarea` guardada, sin autocalificar (H5).
+### D5 · Los componentes de LP-CORE · ✅ COMPLETADA (2026-08-30)
+- [x] `parcial/trazas.R` — dos pruebas de escritorio (liquidación de nómina e
+      interés simple), cada una función de una semilla, con las cifras elegidas
+      para que la traza dé números exactos: un desk-check con decimales
+      periódicos evalúa la calculadora, no el razonamiento.
+- [x] La tabla se arma **en el servidor**, no con el componente de React (H24).
+      La respuesta nunca viaja al navegador, y autoguardado, reanudación y
+      calificación funcionan sin plomería nueva. Verificado: diez celdas
+      recuperadas tras recargar, incluido el «—», con el reloj continuando.
+- [x] Pestañas de los cuatro lenguajes, con Prism resaltando y el lenguaje
+      elegido recordado para todo el examen.
+- [x] Calificación de celdas con el mismo calificador, tipo `celda`: acepta el
+      guion en sus tres escrituras, lee los miles a la colombiana y aplica
+      **error de arrastre** (H26). 57 pruebas en verde.
+- [x] La traza va también al **PDF de respaldo** (H28).
+- [x] El blueprint cambia: cap03 baja de 3 a 2 cloze y la traza ocupa su lugar
+      por 15 puntos. El total sigue en 100, y el capítulo del parcial se evalúa
+      ahora con su propio método.
+- [x] Ítem abierto: ya estaba desde el D4.
 
 > ### ⏸ Punto de control 2 — Un examen completo, un usuario · **segundo criterio de aborto**
 > Usted presenta el parcial entero en local, de principio a fin, y la nota de la app

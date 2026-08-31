@@ -157,7 +157,12 @@ res <- suppressWarnings(system2("Rscript", c(shQuote(file.path(BASE, "parcial", 
                                              "--pruebas"), stdout = TRUE, stderr = TRUE))
 if (!is.null(attr(res, "status")) && attr(res, "status") != 0) {
   mal("las pruebas del calificador pasan", "Rscript parcial/calificar.R --pruebas falla")
-} else ok("las 41 pruebas del calificador pasan")
+} else {
+  ## El número sale de la salida real, no escrito a mano: quedó en 41 cuando
+  ## ya eran 57, y un contador que miente es peor que no tenerlo.
+  n <- sub(".*?([0-9]+) pruebas.*", "\\1", paste(res, collapse = " "))
+  ok(sprintf("las %s pruebas del calificador pasan", if (grepl("^[0-9]+$", n)) n else "?"))
+}
 
 # --- 6. La base de datos debe estar LIMPIA ---------------------------------
 ## Arrancar el parcial con datos de prueba dentro significa estudiantes marcados
