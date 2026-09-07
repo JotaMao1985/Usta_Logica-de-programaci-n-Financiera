@@ -120,7 +120,15 @@ def comprobar_gramaticas(extra_txt, head_txt):
         sys.exit(1)
 
 
-def main():
+def construir():
+    """El texto que `lp-base.html` debería tener AHORA MISMO.
+
+    Separado de `main` para que `verificar.py` pueda pedirlo sin escribir nada:
+    su comprobación 13 compara este texto con el archivo en disco. Sin ella,
+    editar una fuente y olvidar el ensamblado deja todo en verde mientras el
+    material corre la librería vieja —pasó al escribir el `Trazador`, y el
+    síntoma fue una pantalla en blanco con un error de React sin traducir—.
+    """
     for f in (FUENTE, EXTRA, DEMO):
         if not f.exists():
             print(f"ERROR: no se encuentra {f}", file=sys.stderr)
@@ -186,7 +194,11 @@ def main():
         "",
     ]
 
-    SALIDA.write_text("\n".join(partes), encoding="utf-8")
+    return "\n".join(partes)
+
+
+def main():
+    SALIDA.write_text(construir(), encoding="utf-8")
 
     n_lineas = len(SALIDA.read_text(encoding="utf-8").splitlines())
     kb = SALIDA.stat().st_size / 1024

@@ -987,3 +987,234 @@
                 </div>
             );
         };
+
+        /* ============================================================
+           TRAZADOR — motor de traza paso a paso (exposición, no ejercicio)
+
+           Aquí el estudiante MIRA una traza ejecutarse; en `TablaTraza` le toca
+           hacerla. Por eso no califica nada y `verificar.py` no lo cuenta en la
+           cuota de ejercicios: enseña el método que el E1 después evalúa.
+
+           `pasos` lleva DELTAS, no el estado completo. Cada paso declara solo
+           las variables que su instrucción cambia, el componente acumula el
+           resto, y la celda que cambió se resalta. Escribir el estado entero en
+           cada fila sería más largo y, sobre todo, escondería lo único que hay
+           que ver: qué tocó esta instrucción y qué dejó igual.
+
+               { linea: 4,                        // o {pseudo, python, r, vba}
+                 estado: { interes: '2.160.000' },  // solo lo que cambia
+                 nota: 'Ya hay capital y tasa, así que el interés se puede calcular.',
+                 salida: SALIDA_INTERES }         // opcional, también por lenguaje
+
+           `linea` admite objeto por lenguaje porque el número cambia —VBA añade
+           `Sub` y `Dim`, Python no lleva declaraciones—, y `salida` también,
+           porque lo impreso no coincide: Python saca `2,160,000` y R `2160000`.
+           Los VALORES de las variables no: son los mismos en los cuatro, y
+           hacérselo ver al estudiante es parte del objetivo.
+
+           Lo ya ejecutado se calcula recorriendo los pasos dados, NO las líneas
+           anteriores a la activa. En este capítulo daría igual —la secuencia va
+           de arriba abajo—, pero los capítulos 4 y 5 heredan el componente y
+           allí el flujo salta y se repite: «ya ejecutado» dejaría de coincidir
+           con «todo lo que está más arriba».
+        ============================================================ */
+        const Trazador = ({ titulo = 'Traza paso a paso', enunciado, codigo, lang = 'pseudo', variables, pasos, nota }) => {
+            const idiomas = lenguajesDe(codigo);
+            const disponibles = idiomas.length ? idiomas : [lang];
+            const [langActivo, cambiarLang] = useLenguajeActivo(disponibles, lang);
+
+            // Cuántas instrucciones se han ejecutado, de 0 a n. El 0 no es un
+            // caso degenerado: «antes de empezar, ninguna variable tiene valor»
+            // es la primera fila de cualquier prueba de escritorio hecha a mano.
+            const [hechos, setHechos] = useState(0);
+            const ref = useRef(null);
+            useTypeset(ref, [hechos, langActivo]);
+
+            const total = pasos.length;
+            const lineasAct = String(porLenguaje(codigo, langActivo)).split('\n');
+
+            const lineaDe = (p) => {
+                const v = Number(porLenguaje(p.linea, langActivo));
+                return Number.isFinite(v) ? v : null;
+            };
+
+            // Estado acumulado tras cada paso, y qué claves cambió cada uno.
+            const acumulado = [];
+            const cambiadas = [];
+            let estado = {};
+            pasos.forEach(p => {
+                estado = { ...estado, ...(p.estado || {}) };
+                acumulado.push(estado);
+                cambiadas.push(Object.keys(p.estado || {}));
+            });
+
+            const actual = hechos > 0 ? pasos[hechos - 1] : null;
+            const lineaActiva = actual ? lineaDe(actual) : null;
+            const ejecutadas = new Set(pasos.slice(0, hechos).map(lineaDe).filter(n => n !== null));
+            const conSalida = pasos.some(p => p.salida !== undefined && p.salida !== null);
+
+            const ir = (n) => setHechos(Math.max(0, Math.min(total, n)));
+
+            // Sin tabla de teclas: un objeto indexado por `e.key` devolvería el
+            // `toString` heredado si alguien pulsa una tecla con ese nombre.
+            const teclado = (e) => {
+                if (e.key === 'ArrowRight') { e.preventDefault(); ir(hechos + 1); }
+                else if (e.key === 'ArrowLeft') { e.preventDefault(); ir(hechos - 1); }
+                else if (e.key === 'Home') { e.preventDefault(); ir(0); }
+                else if (e.key === 'End') { e.preventDefault(); ir(total); }
+            };
+
+            const instruccionDe = (p) => {
+                const n = lineaDe(p);
+                return n && lineasAct[n - 1] !== undefined ? lineasAct[n - 1].trim() : '—';
+            };
+
+            return (
+                <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-shoe-prints"></i></span>
+                        <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal/80 rounded px-2 py-0.5">Traza guiada</span>
+                    </div>
+                    {enunciado && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciado}</div>}
+
+                    <SelectorLenguaje disponibles={disponibles} activo={langActivo} onCambiar={cambiarLang} />
+
+                    {/* La región entera es un solo destino de tabulación: dentro
+                        hay hasta doce saltos directos, y hacer que el tabulador
+                        los recorra uno a uno para llegar al final del bloque
+                        convierte la navegación por teclado en un castigo. */}
+                    <div tabIndex={0} onKeyDown={teclado} role="group"
+                        aria-label={`${titulo}. Use las flechas izquierda y derecha para avanzar y retroceder.`}
+                        className="rounded-xl outline-none focus:ring-2 focus:ring-secondary/60">
+
+                    {/* Un solo desplazamiento horizontal para TODO el bloque, no
+                        uno por línea: con `overflow-x` en cada línea, un móvil
+                        de 375 px pinta una barra debajo de cada instrucción y
+                        además cada línea se desplaza por su cuenta, de modo que
+                        la sangría deja de alinear. El `min-w-max` interior le da
+                        a todas las filas el ancho de la más larga, para que la
+                        franja de la línea activa llegue hasta el final. */}
+                        <div className="rounded-xl overflow-hidden border border-gray-700 bg-gray-900">
+                            <div className="overflow-x-auto">
+                                <div className="min-w-max">
+                                    {lineasAct.map((l, i) => {
+                                        const n = i + 1;
+                                        const activa = n === lineaActiva;
+                                        const hecha = ejecutadas.has(n);
+                                        const cls = activa ? 'bg-amber-500/20 ring-1 ring-amber-400'
+                                            : hecha ? 'bg-white/[0.04]' : '';
+                                        return (
+                                            <div key={i} className={`flex items-start gap-3 px-3 py-1 font-mono text-[0.82rem] transition-colors ${cls}`}>
+                                                <span className="select-none w-6 text-right flex-shrink-0 text-gray-600">{n}</span>
+                                                <span className={`select-none w-3 flex-shrink-0 ${activa ? 'text-amber-400' : 'text-gray-700'}`}>
+                                                    {activa ? '▶' : hecha ? '·' : ' '}
+                                                </span>
+                                                <span className={`whitespace-pre ${activa ? 'text-white' : 'text-gray-100'}`}
+                                                    dangerouslySetInnerHTML={{ __html: resaltar(l, langActivo) }} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-3 flex items-center gap-2 flex-wrap">
+                            <button onClick={() => ir(hechos - 1)} disabled={hechos === 0}
+                                className="text-sm font-bold px-3.5 py-1.5 rounded-full border border-primary text-primary hover:bg-primary/5 disabled:opacity-40">
+                                <i className="fas fa-chevron-left mr-1"></i>Anterior
+                            </button>
+                            <button onClick={() => ir(hechos + 1)} disabled={hechos === total}
+                                className="text-sm font-bold px-4 py-1.5 rounded-full text-white lp-gradient hover:opacity-90 disabled:opacity-40">
+                                Siguiente<i className="fas fa-chevron-right ml-1"></i>
+                            </button>
+                            <button onClick={() => ir(0)} disabled={hechos === 0}
+                                className="text-xs font-semibold text-gray-500 hover:text-primary underline disabled:opacity-40 disabled:no-underline">
+                                <i className="fas fa-rotate-right mr-1"></i>Reiniciar
+                            </button>
+                            <span className="ml-auto text-xs text-gray-500">
+                                Paso <strong className="text-primary">{hechos}</strong> de {total}
+                                <span className="hidden sm:inline text-gray-400"> · flechas ← →</span>
+                            </span>
+                        </div>
+
+                        <div className="mt-2 h-1 rounded-full bg-gray-100 overflow-hidden">
+                            <div className="h-full lp-gradient transition-all duration-200"
+                                style={{ width: `${total ? (hechos / total) * 100 : 0}%` }}></div>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap gap-1">
+                            {pasos.map((p, i) => (
+                                <button key={i} onClick={() => ir(i + 1)} aria-label={`Ir al paso ${i + 1}`}
+                                    aria-current={hechos === i + 1 ? 'step' : undefined}
+                                    className={`w-6 h-6 rounded text-[0.68rem] font-bold border transition-colors ${hechos === i + 1
+                                        ? 'lp-gradient text-white border-transparent'
+                                        : i < hechos ? 'bg-primary/10 text-primary border-primary/20'
+                                            : 'bg-white text-gray-400 border-gray-200 hover:border-primary/40'}`}>
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+
+                        <p role="status" aria-live="polite" className="mt-3 mb-0 text-[0.9rem] text-gray-700 min-h-[2.6rem] rounded-lg px-3 py-2"
+                            style={{ background: 'rgba(14,116,144,0.06)', borderLeft: '3px solid #0E7490' }}>
+                            {actual
+                                ? <><strong className="text-teal">Paso {hechos}.</strong> {actual.nota}</>
+                                : <span className="text-gray-500">Aún no se ha ejecutado ninguna instrucción: ninguna variable tiene valor. Pulse <strong>Siguiente</strong>.</span>}
+                        </p>
+
+                        <div className="overflow-x-auto mt-3">
+                            <table className="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="bg-primary/10 text-primary text-left px-2 py-2 border border-gray-200 font-semibold w-8">#</th>
+                                        <th className="bg-primary/10 text-primary text-left px-3 py-2 border border-gray-200 font-semibold">Instrucción</th>
+                                        {variables.map(v => (
+                                            <th key={v.clave} className="bg-primary/10 text-primary text-left px-3 py-2 border border-gray-200 font-semibold whitespace-nowrap">
+                                                {v.titulo || v.clave}
+                                            </th>
+                                        ))}
+                                        {conSalida && <th className="bg-primary/10 text-primary text-left px-3 py-2 border border-gray-200 font-semibold">Salida</th>}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {hechos === 0 && (
+                                        <tr>
+                                            <td colSpan={2 + variables.length + (conSalida ? 1 : 0)}
+                                                className="px-3 py-3 border border-gray-200 text-gray-400 text-center italic">
+                                                La tabla se llena a medida que avanza la traza.
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {pasos.slice(0, hechos).map((p, i) => (
+                                        <tr key={i} className={i === hechos - 1 ? 'bg-amber-50' : i % 2 ? 'bg-gray-50/60' : ''}>
+                                            <td className="px-2 py-1.5 border border-gray-200 text-gray-500 text-center">{i + 1}</td>
+                                            <td className="px-3 py-1.5 border border-gray-200 text-gray-700 font-mono text-[0.8rem]">{instruccionDe(p)}</td>
+                                            {variables.map(v => {
+                                                const cambio = cambiadas[i].includes(v.clave);
+                                                const val = acumulado[i][v.clave];
+                                                return (
+                                                    <td key={v.clave}
+                                                        className={`px-3 py-1.5 border border-gray-200 font-mono text-[0.82rem] ${cambio ? 'font-bold text-secondary bg-secondary/5' : 'text-gray-700'}`}>
+                                                        {val === undefined ? <span className="text-gray-300">—</span> : val}
+                                                    </td>
+                                                );
+                                            })}
+                                            {conSalida && (
+                                                <td className="px-3 py-1.5 border border-gray-200 font-mono text-[0.8rem] text-teal">
+                                                    {p.salida !== undefined && p.salida !== null
+                                                        ? porLenguaje(p.salida, langActivo)
+                                                        : <span className="text-gray-300">—</span>}
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {nota && <p className="text-xs text-gray-500 italic mt-3 mb-0">{nota}</p>}
+                </div>
+            );
+        };
