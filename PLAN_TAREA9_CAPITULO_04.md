@@ -244,6 +244,36 @@ Dos trampas heredadas que aplican de lleno aquí:
   existe para mostrar la diferencia no la muestra. La regla de contenido tiene
   que exigir que el valor sorteado caiga en un tramo donde difieran.
 
+### H8 · El instrumento no activa los botones por teclado, y el capítulo no tiene la culpa *(hallado al ejecutar, 2026-09-19)*
+
+Al comprobar el camino de teclado de `EvaluadorLogico`: el botón recibe el foco,
+`document.activeElement` es el correcto, el `keydown` de `Enter` **llega al
+elemento** —se vio con un escucha propio— y sin embargo el botón no se activa y
+`aria-pressed` no cambia. La conclusión fácil era que el componente estaba mal.
+
+No lo estaba. Repetido el mismo camino sobre el botón **«Siguiente» de
+LP-CORE** —código que no es de este capítulo y que llevan usando tres capítulos
+publicados—, tampoco se activa. Un `<button>` nativo dispara su `click` con
+`Enter` por especificación; lo que no ocurre es que la herramienta de
+automatización sintetice la acción por defecto del navegador.
+
+Dos cosas más que aparecieron por el camino, y que hay que saber antes de
+volver a medir esto:
+
+- `document.hasFocus()` es `false` mientras el panel no tiene el foco, y con el
+  documento sin foco las teclas ni siquiera llegan. Hay que **hacer clic en la
+  página primero**. Es la trampa 12 de la skill, aplicada a las teclas y no
+  solo al foco.
+- El nombre de la tecla importa: enviada como `Return`, el `keydown` llega con
+  `key` **vacío** y no es ninguna tecla; hay que enviarla como `Enter`.
+
+**Qué queda comprobado y qué no.** Comprobado: los tres artefactos usan
+`<button>` y `<select>` **nativos** —no `div` con `onClick`—, reciben el foco,
+exponen `aria-pressed` correcto y reaccionan al ratón. Sin comprobar por esta
+vía: la activación por `Enter` y `barra espaciadora`. No es un pendiente del
+capítulo sino del instrumento, y la casilla del punto de control lo dice así en
+vez de darse por buena.
+
 ---
 
 ## 3. Grafo de dependencias
@@ -291,37 +321,66 @@ Estado medido, siete hallazgos, cuota repartida y las preguntas abiertas.
 
 ### Fase 1 — El archivo y los tres artefactos
 
-#### Tarea 1.1 · Crear el capítulo y purgar la demostración **de una vez**
+#### Tarea 1.1 · Crear el capítulo y purgar la demostración **de una vez** · ✅
 `cp` de `lp-base.html`, `migrar.py --dry-run` y luego en firme. La demostración
 —~2 800 líneas con un ejercicio de cada tipo E1–E8— se retira **en el mismo paso**
 en que se sustituye la región entre `LP-CORE FIN` y `const App`. Si no, la
 verificación da verde con contenido ajeno.
 **Cierre:** `grep` de `Seccion1`, `EJ_INTERES`, `TRAZA_CODIGO`, `ORDENA_PASOS`,
 `EMPAREJA_IZQ`, `chart-demo-saldo`, `Plantilla base` — cero apariciones.
+**Verificado:** los diez patrones dan cero, y `verificar.py` informa
+**0 ejercicios · E1:0 … E8:0**, que es la prueba de que la demostración se fue
+entera: si hubiera quedado, aparecería exactamente uno de cada tipo.
 
-#### Tarea 1.2 · `CONFIG` y `curriculum` contra la fila 34
+#### Tarea 1.2 · `CONFIG` y `curriculum` contra la fila 34 · ✅
 El `CONFIG` que llega con la plantilla **no tiene ningún `TODO`**: hay que
 reescribirlo a mano. Entregable = taller (S1). Los tres videos, cada uno en su
 sección.
 
-#### Tarea 1.3 · `EvaluadorLogico`
+#### Tarea 1.3 · `EvaluadorLogico` · ✅
 Tabla de verdad construible: se marcan los valores de tres variables y la
 expresión compuesta se evalúa a la vista, mostrando **qué se evaluó y qué no** por
 cortocircuito. Componente de capítulo.
 
-#### Tarea 1.4 · `ArbolRiesgo`
+#### Tarea 1.4 · `ArbolRiesgo` · ✅
 Árbol de decisión de riesgo crediticio navegable: al elegir ingreso, score y
 endeudamiento se ilumina la rama recorrida y la decisión final. Es el artefacto
 que da sentido a la sección 6 y el que sostiene el E7.
 
-#### Tarea 1.5 · `SelectivasComparadas`
+#### Tarea 1.5 · `SelectivasComparadas` · ✅
 El mismo problema con `Si` anidados y con `Segun`, lado a lado. Sostiene el E4
 —¿son equivalentes? ¿hay algún valor donde difieran?—.
 
 ### ⏸ Punto de control 1 — Los tres artefactos
-- [ ] Los tres funcionan en el navegador, con teclado y a 375 px
-- [ ] La comprobación 1 sigue en verde: **el bloque LP-CORE no se movió** (H4)
-- [ ] Ningún residuo de la demostración
+
+Medido el 2026-09-19 en el navegador, sobre `http://localhost:8777`:
+
+- [x] **Los tres funcionan.** `EvaluadorLogico`: al poner A verdadera, la
+      versión sin paréntesis tacha B y C —el `O` cortocircuita— y aprueba,
+      mientras la versión con paréntesis sí evalúa C y **niega**; es el caso que
+      el capítulo tiene que enseñar. `ArbolRiesgo`: con score 480 decide la
+      primera regla y las otras cuatro quedan marcadas «no se evalúa».
+      `SelectivasComparadas`: con 7.500.000 y con −50.000 las dos estructuras
+      difieren, y el aviso lo declara.
+- [x] **375 px, las ocho secciones.** `scrollWidth` = 375 en todas, y ningún
+      elemento fuera del viewport que no esté dentro de su propio contenedor con
+      `overflow-x`. Medido con el menú cerrado y tras recargar.
+- [x] **Los once iconos de Font Awesome pintan glifo** con ancho no nulo —el
+      riesgo R9 del plan maestro: un icono inexistente no da error, deja un
+      hueco—.
+- [x] **Consola limpia:** solo los dos avisos de siempre (Tailwind CDN y Babel
+      en el navegador).
+- [x] **La comprobación 1 sigue en verde:** el bloque LP-CORE no se movió (H4).
+      `verificar.py --con-salidas` pasa sobre los cuatro capítulos.
+- [x] **Ningún residuo de la demostración.**
+- [ ] **Teclado: comprobado a medias, y la culpa es del instrumento.** Los
+      controles son `<button>` y `<select>` nativos, toman el foco y exponen
+      `aria-pressed`; la activación con `Enter` no se pudo comprobar por esta
+      vía, y se descartó que sea del capítulo reproduciendo el mismo fallo en el
+      botón «Siguiente» de LP-CORE. Ver **H8**.
+- [ ] **Revisión del docente:** ver los tres artefactos y aprobar la
+      interacción antes de escribir las seis secciones — corregirlos después
+      cuesta el capítulo entero.
 
 ---
 
