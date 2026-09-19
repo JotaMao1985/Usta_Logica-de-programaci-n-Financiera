@@ -17,6 +17,28 @@
 #   Rscript parcial/calificar.R --pruebas    # batería de pruebas
 # ============================================================================
 
+## --- Locale (H12) ---------------------------------------------------------
+## Mismo arreglo que `generar.R`, y por la misma razón: R arranca en locale "C"
+## cuando LANG no está en el entorno —lo normal en systemd, en cron y en una
+## sesión ssh no interactiva— y ahí `gsub()` se niega a tocar cualquier cadena
+## con un carácter no ASCII.
+##
+## Aquí eso no es cosmético. La normalización de las celdas de traza unifica
+## los guiones «— – -» con los que el estudiante escribe que la variable
+## todavía no tiene valor, y la de texto pasa por `tolower()`. En locale "C" la
+## primera respuesta acentuada aborta la calificación con «input string 1 is
+## invalid»: no califica mal, deja de calificar. Con el salón entregando.
+if (!isTRUE(l10n_info()$`UTF-8`)) {
+  for (loc in c("es_CO.UTF-8", "es_ES.UTF-8", "en_US.UTF-8", "C.UTF-8")) {
+    if (suppressWarnings(Sys.setlocale("LC_CTYPE", loc)) != "") break
+  }
+}
+if (!isTRUE(l10n_info()$`UTF-8`)) {
+  stop("no hay un locale UTF-8 disponible: la calificación abortaría en la ",
+       "primera respuesta con un acento o un guión largo. ",
+       "Exporte LANG=es_ES.UTF-8 antes de ejecutar.", call. = FALSE)
+}
+
 suppressPackageStartupMessages(library(exams))
 
 EVAL <- exams_eval(partial = TRUE, negative = FALSE, rule = "false2")

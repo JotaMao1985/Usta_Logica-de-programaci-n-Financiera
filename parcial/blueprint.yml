@@ -55,15 +55,22 @@ grupos:
     titulo: "Control secuencial"
     elegir: 2
     puntos: 15          # el capítulo del parcial pesa más
+    # Solo ejercicios de TRES sub-ítems: 15 puntos repartidos en 5 + 5 + 5.
+    #
+    # Los otros cinco del banco —tasa_efectiva_anual, precedencia_liquidacion,
+    # salida_secuencia, credito_conviene, intercambio_lineas— tienen un solo
+    # sub-ítem, y aquí eso significaba 15 puntos jugados a un único número o a
+    # una única opción: el 15 % de la nota decidido por un dedazo en la
+    # calculadora. El capítulo no queda sin cubrir, porque además de estos dos
+    # ejercicios todo el mundo hace la prueba de escritorio (bloque `trazas`),
+    # que son otros 15 puntos del mismo capítulo.
+    #
+    # Siguen compilados y en el banco de Moodle: esto los saca del parcial,
+    # no del curso.
     de:
       - traza_interes_simple
       - traza_filas
       - liquidacion_nomina
-      - tasa_efectiva_anual
-      - precedencia_liquidacion
-      - salida_secuencia
-      - credito_conviene
-      - intercambio_lineas
 
 # Prueba de escritorio. Es el método central del capítulo 3 y no cabe en un
 # cloze: exige reconstruir el estado de cada variable paso a paso, y una de las

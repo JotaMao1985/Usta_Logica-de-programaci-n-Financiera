@@ -212,6 +212,18 @@ UTF-8 al arrancar y aborta con un mensaje explícito si no encuentra ninguno.
 Depender de cómo tenga configurada la terminal quien lo ejecute es exactamente
 el tipo de fallo que aparece la noche antes del parcial.
 
+**H12b · el arreglo estaba en un guion y faltaba en el otro** *(2026-08-30)*.
+`calificar.R` era el único guion de entrada sin ese bloque. No es cosmético
+allí: la normalización de las celdas de traza unifica los guiones «— – -» con
+los que el estudiante escribe que la variable todavía no tiene valor, y la de
+texto pasa por `tolower()`. En locale «C» la primera respuesta con una tilde o
+un guión largo **aborta la calificación** —«input string 1 is invalid»— en vez
+de calificarla mal: no califica mal, deja de calificar, y con el salón
+entregando. Corregido; las 57 pruebas pasan con `LANG` y sin él. Revisados los
+demás guiones de entrada: `generar.R`, `comprobar.R`, `informe_simulacro.R`,
+`vendorizar.R` y las dos apps lo tienen; `esquema.R` y `trazas.R` no lo
+necesitan porque solo se cargan desde un guion que ya lo fijó.
+
 ### H13 · Seis ejercicios del banco no compilan a PDF *(hallado al ejecutar, 2026-08-29)*
 
 Los seis que llevan tabla en Markdown —`mascara_bits`, `secuencia_asignaciones`,
@@ -266,7 +278,17 @@ Los nueve están concentrados donde más pesa: cinco de los ocho de capítulo 3 
 cuatro de los seis de capítulo 2. Un estudiante que se equivoca en una tecla
 pierde el 15 % del parcial; otro que se equivoca en un ejercicio con tres
 casillas pierde el 5 %. **No es un defecto del código: es una consecuencia del
-blueprint que solo se ve al calificar**, y la decisión es suya (§8 P7).
+blueprint que solo se ve al calificar**, y la decisión es suya (§8 P6).
+
+**Resuelto el 2026-08-30.** Los cinco de capítulo 3 con un solo sub-ítem
+—`tasa_efectiva_anual`, `precedencia_liquidacion`, `salida_secuencia`,
+`credito_conviene`, `intercambio_lineas`— salen del blueprint. El pool de cap03
+queda en tres, todos de tres sub-ítems: ningún dato suelto de ese capítulo pasa
+de 5 puntos. El capítulo no queda peor cubierto, porque además de sus dos
+ejercicios todo el mundo hace la prueba de escritorio, que son otros 15 puntos
+del mismo capítulo. Los cuatro de capítulo 2 con un solo sub-ítem **se
+quedaron**, a 10 puntos. Los cinco siguen compilados en el banco de Moodle:
+esto los saca del parcial, no del curso.
 
 
 ### H17 · `radioButtons` deja marcada la primera opción · **el fallo más caro que no se ve**
@@ -460,6 +482,31 @@ Cada blueprint declara ahora una `edicion` que entra en la derivación de todas
 las semillas, y `generar.R` **se niega a generar** si falta. Verificado: donde el
 mismo ejercicio le toca a la misma persona en las dos ediciones, las cifras
 difieren.
+
+### H30 · Arreglar el reparto de puntos concentró la evaluación en un solo caso *(2026-08-30)*
+
+Efecto de segundo orden del H16, y no se veía en el blueprint: con el pool de
+capítulo 3 reducido a tres ejercicios, el sorteo de la prueba de escritorio
+empezó a repetir el escenario del cloze. `liquidacion_nomina` y
+`traza_interes_simple` del banco plantean **la misma nómina y el mismo crédito**
+que las dos trazas.
+
+Que a alguien le toquen los dos no es media evaluación repetida —el cloze pide
+el valor final y la traza pide el estado paso a paso—, pero concentra **30 de
+sus 45 puntos de capítulo 3 en un único caso** y deja el otro sin evaluar.
+Medido sobre 40 estudiantes: pasó del 28 % al 70 % del curso.
+
+`generar.R` sortea ahora la traza **descartando la gemela** de lo que ya salió
+en los cloze (`GEMELO_TRAZA`, en `trazas.R`). El descarte es *best-effort* a
+propósito: cuando el sorteo de capítulo 3 se lleva las gemelas de todas las
+trazas disponibles, no hay ninguna que ofrecer y se sortea sobre el pool
+completo. Preferir eso a dejar a alguien sin prueba de escritorio.
+
+Queda en **30 %**, que es el suelo aritmético con este blueprint: es exactamente
+la probabilidad de que a alguien le toquen a la vez los cloze de nómina y de
+crédito, y entonces las dos trazas están vetadas. Bajarlo más no es cuestión de
+código: exige una tercera traza sobre un caso que el banco no cuente, o sacar
+del pool uno de los dos cloze gemelos.
 
 ---
 
@@ -762,3 +809,7 @@ Pendiente de escribir: la app (D4-D7) y `parcial/exportar.R` (cierre).
   rastreable una filtración.
 - **P5 · ¿Cuántos ítems de traza?** Uno es suficiente para probar el componente; dos o
   tres si es el corazón del parcial. Cada uno cuesta redacción, no programación.
+- **P6 · ¿Se reparten los puntos por ejercicio o por sub-ítem?** (§H16)
+  **Resuelta el 2026-08-30:** siguen repartiéndose por ejercicio, y en su lugar
+  se sacaron del blueprint los cinco ejercicios de capítulo 3 que tenían un solo
+  sub-ítem. Ver H16 y, por el efecto que trajo, H30.

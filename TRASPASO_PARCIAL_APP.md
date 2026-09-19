@@ -1,6 +1,6 @@
 # Traspaso · El parcial servido por app propia
 
-> **Para retomar en una sesión nueva.** El plan completo, con los 29 hallazgos y
+> **Para retomar en una sesión nueva.** El plan completo, con los 30 hallazgos y
 > las fases fechadas, está en `PLAN_PARCIAL1_APP.md`. Este documento es lo que
 > hay que leer **antes** de tocar nada.
 >
@@ -67,19 +67,36 @@ Dos cosas, y ninguna está en el repositorio.
 
 1. **El roster.** `Rscript parcial/generar.R --plantilla-roster` escribe el CSV
    con el encabezado correcto. La cédula admite puntos y espacios.
+   **Plantilla escrita el 2026-08-30 en `roster.csv`. Sigue con las dos filas
+   de ejemplo: hay que reemplazarlas por el curso real.** Es lo único que
+   falta para generar.
 2. **El pepper.** `source ./parcial/despliegue/pepper.sh` lo crea una vez fuera
    del repositorio. **Cópielo a un gestor de contraseñas el mismo día.**
+   **Creado el 2026-08-30** en `~/.config/lpf/pepper`, huella `e5b9084bb0b2037f…`.
+   Todavía no se ha generado nada con él, así que aún se puede borrar y rehacer;
+   una vez repartido el examen, ya no (§6).
 
 Con las dos: `Rscript parcial/generar.R --roster roster.csv`.
 
 ### Decisiones abiertas · hay que tomarlas ANTES de generar
 
-- **Reparto de puntos (§H16).** Hoy es por ejercicio, y nueve de los 21 tienen un
-  solo sub-ítem: cinco de capítulo 3 valen **15 puntos en un solo número**, y
-  cuatro de capítulo 2 valen 10. Un dato suelto vale entre 3,33 y 15 puntos.
-  Recomendación pendiente de su respuesta: **sacar del blueprint esos cinco de
-  cap03** —el capítulo ya se evalúa con la traza— y dejar los tres que tienen
-  tres sub-ítems.
+- ~~**Reparto de puntos (§H16).**~~ **RESUELTO el 2026-08-30.** Los cinco
+  ejercicios de cap03 de un solo sub-ítem —`tasa_efectiva_anual`,
+  `precedencia_liquidacion`, `salida_secuencia`, `credito_conviene`,
+  `intercambio_lineas`— salieron del blueprint. El pool de cap03 queda en tres,
+  todos de tres sub-ítems: ningún dato suelto de ese capítulo pasa de 5 puntos.
+  Siguen en el banco de Moodle; esto los saca del parcial, no del curso.
+  Los cuatro de cap02 con un solo sub-ítem **se quedaron**, a 10 puntos.
+
+  El cambio trajo un efecto de segundo orden que hubo que corregir aparte: con
+  el pool en tres, el sorteo de la traza empezó a repetir el escenario del
+  cloze —`liquidacion_nomina` y `traza_interes_simple` son la misma nómina y el
+  mismo crédito que las dos trazas—. Medido sobre 40 estudiantes, pasó del 28 %
+  al 70 % del curso con 30 de sus 45 puntos de cap03 en un único caso.
+  `generar.R` sortea ahora la traza descartando la gemela (`GEMELO_TRAZA` en
+  `trazas.R`): **queda en 30 %**, que es el suelo aritmético —cuando a alguien
+  le tocan los cloze de nómina y de crédito a la vez, las dos trazas están
+  vetadas y no hay ninguna que ofrecer—.
 - **El ítem abierto.** Está redactado (diagnóstico de un error de precedencia).
   Cámbielo si prefiere otro.
 - **Código del día y clave del panel.** Distintos entre sí; `comprobar.R` lo exige.
@@ -104,6 +121,8 @@ nadie lo vuelva a descubrir por su cuenta.
 | H27 | `shiny-bound-input` puesta a mano hace que Shiny **se salte** el campo. | `app.R` |
 | H29 | Sin `edicion` en la semilla, el simulacro reparte las cifras del parcial. | `generar.R` |
 | H18 | Bootstrap activa `scroll-behavior: smooth`; con el navegador en segundo plano las comprobaciones automáticas dicen que la página no baja. No es cierto. | `examen.css` |
+| H30 | Sacar del parcial los ejercicios de un solo sub-ítem hizo que el sorteo repitiera el caso: la traza y el cloze contaban la misma nómina. La traza se sortea descartando la gemela. | `generar.R`, `trazas.R` |
+| H12b | `calificar.R` era el único guion sin el arreglo de locale de H12. Sin `LANG`, la primera respuesta con acento o con guión largo abortaba la calificación —«input string 1 is invalid»— en vez de calificarla mal. Justo donde más duele: la celda de traza sin valor se escribe «—». Corregido el 2026-08-30; las 57 pruebas pasan ahora con y sin `LANG`. | `calificar.R` |
 
 ### Dos principios de diseño
 

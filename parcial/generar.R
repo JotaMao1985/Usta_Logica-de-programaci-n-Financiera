@@ -390,8 +390,23 @@ for (i in seq_len(nrow(roster))) {
   ## no sabe expresar.
   trazas <- list(); clave_tr <- list()
   if (!is.null(bp$trazas) && bp$trazas$elegir > 0) {
+    ## La traza se sortea DESCARTANDO la gemela de lo que ya salió en los
+    ## cloze (ver `GEMELO_TRAZA` en trazas.R): si a alguien le tocó el cloze de
+    ## nómina, su prueba de escritorio no vuelve a ser la de nómina.
+    ##
+    ## El descarte es best-effort a propósito. Cuando el sorteo de capítulo 3
+    ## se lleva las gemelas de TODAS las trazas disponibles, no hay ninguna
+    ## que ofrecer: se sortea entonces sobre el pool completo y ese estudiante
+    ## repite caso. Preferir eso a quedarse sin traza; los quince puntos de la
+    ## prueba de escritorio los hace todo el mundo.
     set.seed(semilla(sid, "seleccion_traza"))
-    elegidas <- muestra(bp$trazas$de, bp$trazas$elegir)
+    disponibles <- bp$trazas$de
+    if (exists("GEMELO_TRAZA")) {
+      gem <- GEMELO_TRAZA[disponibles]
+      libres <- disponibles[is.na(gem) | !(gem %in% elegidos$nombre)]
+      if (length(libres) >= bp$trazas$elegir) disponibles <- libres
+    }
+    elegidas <- muestra(disponibles, bp$trazas$elegir)
     for (k in seq_along(elegidas)) {
       tz <- TRAZAS[[elegidas[k]]](semilla(sid, paste0("traza", k)))
       tid <- sprintf("t%d", k)

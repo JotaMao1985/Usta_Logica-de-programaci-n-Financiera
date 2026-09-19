@@ -262,3 +262,25 @@ Fin", fmt(capital), format(tasa_pct, nsmall = 1), plazo),
       tolerancia = 1)
   }
 )
+
+
+# ============================================================================
+# Gemelos: qué ejercicio del banco cuenta el MISMO caso que cada traza.
+#
+# `liquidacion_nomina` y `traza_interes_simple` del banco de capítulo 3 plantean
+# la misma nómina y el mismo crédito que las trazas del mismo nombre. Que a un
+# estudiante le toquen los dos no es media evaluación repetida —el cloze pide el
+# valor final y la traza pide el estado paso a paso—, pero sí concentra 30 de
+# sus 45 puntos de capítulo 3 en un único caso, y deja sin evaluar el otro.
+#
+# Con el pool de capítulo 3 reducido a tres ejercicios de tres sub-ítems, el
+# choque pasó de tocarle al 28 % del curso a tocarle al 70 %. De ahí que
+# `generar.R` sortee la traza descartando la gemela de lo que ya salió.
+#
+# Un nombre que no esté aquí no tiene gemelo y nunca se descarta.
+# ============================================================================
+GEMELO_TRAZA <- c(
+  liquidacion_nomina    = "liquidacion_nomina",
+  interes_simple        = "traza_interes_simple",
+  intercambio_variables = "intercambio_lineas"
+)
