@@ -274,10 +274,16 @@ control C). Cuanto más tarde llegue, más caro sale aplicar aquí lo que corrij
 Estado medido, siete hallazgos, cuota repartida y las preguntas abiertas.
 
 ### ⏸ Punto de control 0 — El plan
-- [ ] **P1:** ¿el E3 de alto valor es la aprobación de crédito que anunció el
-      capítulo 3, o la escala tarifaria que pide el plan maestro? (H2)
-- [ ] **P2:** ¿se acepta `entonces`/`sino` como vocabulario de la columna de
-      rama, o se prefiere tocar LP-CORE para plegar tildes? (H3)
+- [x] **P1 · resuelta el 2026-09-19:** el E3 de alto valor es **la aprobación de
+      crédito** —la que el capítulo 3 dejó anunciada— en la sección 4. La escala
+      tarifaria se queda en la sección 5, **resuelta bien** con `Segun`: un caso
+      enseña el defecto, el otro enseña la forma correcta, y no se cuenta la
+      misma historia dos veces. (H2)
+- [x] **P2 · resuelta el 2026-09-19:** vocabulario **sin tildes** en la columna
+      de rama —`entonces` / `sino` / `—`—, declarado en el enunciado y probado
+      por DOM. No se toca LP-CORE ni se reestampa. El plegado de tildes en
+      `normalizarCelda` queda anotado como deuda, no como tarea de este
+      capítulo. (H3)
 - [ ] ¿Se aprueba el recorte de la sección 1? (H1)
 - [ ] ¿Se aprueba el reparto de iconos? (H5)
 
@@ -493,14 +499,16 @@ python3 -m http.server 8777 --directory "Material html"
 
 ## 9. Preguntas abiertas
 
-- **P1 · ¿Cuál es el caso del E3 de alto valor?** El capítulo 3 anunció «un
-  crédito aprobado que no debía aprobarse»; el plan maestro pide «una escala
-  tarifaria en cascada». Es el mismo defecto sobre dos casos. Propuesta: el
-  crédito en la sección 4 —porque ya está prometido— y la escala tarifaria en la
+- ~~**P1 · ¿Cuál es el caso del E3 de alto valor?**~~ **Resuelta el 2026-09-19:**
+  la aprobación de crédito en la sección 4, porque el capítulo 3 ya la prometió
+  por escrito y es el hilo financiero del curso; la escala tarifaria en la
   sección 5, resuelta bien con `Segun`. (H2)
-- **P2 · ¿Vocabulario sin tildes o LP-CORE con plegado de tildes?** Lo barato es
-  `entonces`/`sino`. Lo correcto a largo plazo es que `normalizarCelda` pliegue
-  tildes, pero obliga a reestampar los cuatro capítulos. (H3)
+- ~~**P2 · ¿Vocabulario sin tildes o plegado de tildes en LP-CORE?**~~
+  **Resuelta el 2026-09-19:** vocabulario sin tildes. El plegado en
+  `normalizarCelda` arreglaría la causa para todo el material, pero obliga a
+  reestampar los cuatro capítulos por algo que solo necesita este. Queda como
+  **deuda declarada**: si alguna vez hay que reestampar por otro motivo, es el
+  momento de hacerlo. (H3)
 - **P3 · ¿Cuánto VBA se adelanta en la sección 5?** `Select Case` con rangos es
   contenido del capítulo 6. Mostrarlo aquí funciona y el plan maestro lo prevé,
   pero hay que decidir si se explica o solo se enseña.
