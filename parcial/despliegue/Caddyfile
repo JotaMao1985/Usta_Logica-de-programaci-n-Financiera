@@ -1,0 +1,28 @@
+# ============================================================================
+# Caddy · HTTPS para la app del examen
+# NO PROBADO: no hay VPS donde probarlo. Verifíquelo en el simulacro (D8).
+#
+# Caddy pide y renueva el certificado solo. Cambie el dominio y nada más.
+#
+# El panel docente NO se publica: se llega por túnel SSH.
+# ============================================================================
+parcial.ejemplo.edu.co {
+    encode gzip
+
+    # Shiny habla por websocket; sin esto la app carga y se queda muda.
+    reverse_proxy 127.0.0.1:8080 {
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+
+    # Sin esto, un websocket inactivo se corta a los pocos minutos y el
+    # estudiante ve el aviso de caída en mitad de una pregunta larga.
+    timeouts {
+        read_body   10s
+        idle        30m
+    }
+
+    log {
+        output file /var/log/caddy/parcial.log
+    }
+}

@@ -4,8 +4,41 @@
     {
       "name": "material",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8777", "--directory", "Material html"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8777",
+        "--directory",
+        "Material html"
+      ],
       "port": 8777
+    },
+    {
+      "name": "parcial",
+      "runtimeExecutable": "R",
+      "runtimeArgs": [
+        "-e",
+        "shiny::runApp('parcial/app', port=8781, host='127.0.0.1', launch.browser=FALSE)"
+      ],
+      "port": 8781
+    },
+    {
+      "name": "panel",
+      "runtimeExecutable": "R",
+      "runtimeArgs": [
+        "-e",
+        "shiny::runApp('parcial/panel', port=8899, host='127.0.0.1', launch.browser=FALSE)"
+      ],
+      "port": 8899
+    },
+    {
+      "name": "simulacro",
+      "runtimeExecutable": "R",
+      "runtimeArgs": [
+        "-e",
+        "Sys.setenv(LPF_SALIDA=file.path(getwd(),'parcial/salida_simulacro'),LPF_BD=file.path(getwd(),'parcial/app/datos/simulacro.sqlite'),LPF_BITACORA=file.path(getwd(),'parcial/app/datos/eventos_simulacro.jsonl'),LPF_CODIGO='SIMULACRO'); shiny::runApp('parcial/app', port=8782, host='127.0.0.1', launch.browser=FALSE)"
+      ],
+      "port": 8782
     }
   ]
 }

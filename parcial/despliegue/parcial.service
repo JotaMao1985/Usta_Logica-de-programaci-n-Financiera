@@ -1,0 +1,28 @@
+# ============================================================================
+# systemd · app del examen
+# NO PROBADO: no hay VPS donde probarlo. Verifíquelo en el simulacro (D8).
+#
+#   sudo cp parcial.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now parcial
+#   journalctl -u parcial -f
+#
+# UN SOLO proceso a propósito: la reconexión tras una caída de red exige que
+# el navegador vuelva al mismo proceso (ver PLAN §H19).
+# ============================================================================
+[Unit]
+Description=Parcial · Logica de Programacion Financiera
+After=network.target
+
+[Service]
+Type=simple
+User=parcial
+WorkingDirectory=/opt/parcial
+Environment=LANG=es_ES.UTF-8
+EnvironmentFile=/etc/parcial.env
+ExecStartPre=/usr/bin/Rscript /opt/parcial/parcial/despliegue/comprobar.R
+ExecStart=/usr/bin/R -e "shiny::runApp('parcial/app', port=8080, host='127.0.0.1', launch.browser=FALSE)"
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

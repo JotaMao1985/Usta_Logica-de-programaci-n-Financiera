@@ -1,0 +1,142 @@
+[
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css",
+    "local": "cdnjs.cloudflare.com_ajax_libs_font-awesome_6.5.2_css_all.min.css",
+    "tipo": "css",
+    "kb": 100.6,
+    "examen": true
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_themes_prism-tomorrow.min.css",
+    "tipo": "css",
+    "kb": 1.3,
+    "examen": true
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap",
+    "local": "fonts.googleapis.com_css2_family_Montserrat_wght_300_400_500_600_700_800_display_swap.css",
+    "tipo": "css",
+    "kb": 11.2,
+    "examen": true
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap",
+    "local": "fonts.googleapis.com_css2_family_Fira_Code_wght_400_500_display_swap.css",
+    "tipo": "css",
+    "kb": 4.6,
+    "examen": true
+  },
+  {
+    "url": "https://unpkg.com/react@18/umd/react.production.min.js",
+    "local": "unpkg.com_react_18_umd_react.production.min.js",
+    "tipo": "js",
+    "kb": 10.5,
+    "examen": true
+  },
+  {
+    "url": "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
+    "local": "unpkg.com_react-dom_18_umd_react-dom.production.min.js",
+    "tipo": "js",
+    "kb": 128.7,
+    "examen": true
+  },
+  {
+    "url": "https://unpkg.com/@babel/standalone@7.26.4/babel.min.js",
+    "local": "unpkg.com__babel_standalone_7.26.4_babel.min.js",
+    "tipo": "js",
+    "kb": 2914,
+    "examen": true
+  },
+  {
+    "url": "https://cdn.tailwindcss.com",
+    "local": "cdn.tailwindcss.com.js",
+    "tipo": "js",
+    "kb": 397.7,
+    "examen": true
+  },
+  {
+    "url": "https://cdn.plot.ly/plotly-2.35.2.min.js",
+    "local": "cdn.plot.ly_plotly-2.35.2.min.js",
+    "tipo": "js",
+    "kb": 4451.9,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_prism.min.js",
+    "tipo": "js",
+    "kb": 18.6,
+    "examen": true
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-r.min.js",
+    "tipo": "js",
+    "kb": 0.5,
+    "examen": true
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-python.min.js",
+    "tipo": "js",
+    "kb": 2.1,
+    "examen": true
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-visual-basic.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-visual-basic.min.js",
+    "tipo": "js",
+    "kb": 1.9,
+    "examen": true
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-bash.min.js",
+    "tipo": "js",
+    "kb": 6,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-docker.min.js",
+    "tipo": "js",
+    "kb": 1.5,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-yaml.min.js",
+    "tipo": "js",
+    "kb": 1.9,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-sql.min.js",
+    "tipo": "js",
+    "kb": 3.2,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-toml.min.js",
+    "tipo": "js",
+    "kb": 0.9,
+    "examen": false
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js",
+    "local": "cdnjs.cloudflare.com_ajax_libs_prism_1.29.0_components_prism-json.min.js",
+    "tipo": "js",
+    "kb": 0.4,
+    "examen": false
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js",
+    "local": "cdn.jsdelivr.net_npm_mathjax_3_es5_tex-svg.js",
+    "tipo": "js",
+    "kb": 2059.2,
+    "examen": true
+  }
+]

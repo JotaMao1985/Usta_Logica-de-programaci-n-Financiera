@@ -1,0 +1,120 @@
+# ============================================================================
+# Blueprint del primer parcial · Lógica de Programación Financiera
+# Universidad Santo Tomás · 2026-II
+#
+# Este archivo es la ÚNICA fuente de verdad sobre qué entra en el parcial.
+# `generar.R` no decide nada: solo ejecuta lo que aquí se declara.
+#
+# Cada estudiante recibe `elegir` ejercicios sorteados de la lista `de`, en
+# orden de capítulo (1 → 3). El sorteo depende de su cédula, así que es
+# distinto por persona y siempre el mismo para la misma persona.
+# ============================================================================
+
+# La edición entra en el sorteo de cada ejercicio: dos blueprints con edición
+# distinta nunca le dan las mismas cifras al mismo estudiante. Cambiarla
+# equivale a regenerar el examen entero.
+edicion: "parcial-2026-09"
+
+titulo: "Primer parcial"
+subtitulo: "Lógica de Programación Financiera · Capítulos 1 a 3"
+periodo: "2026-II"
+minutos: 90
+nota_maxima: 5.0
+
+# Margen de gracia al vencer el tiempo, en segundos: lo que ya estaba escrito
+# se guarda igual. Evita reclamos por la respuesta que se perdió "por un segundo".
+gracia_segundos: 30
+
+grupos:
+  - capitulo: cap01
+    titulo: "Introducción"
+    elegir: 2
+    puntos: 10          # por ejercicio
+    de:
+      - valor_posicional
+      - conversion_bases
+      - precedencia_operadores
+      - componente_von_neumann
+      - expresion_logica
+      - mascara_bits
+      - redondeo_acumulado
+
+  - capitulo: cap02
+    titulo: "Algoritmos"
+    elegir: 2
+    puntos: 10
+    de:
+      - entrada_proceso_salida
+      - propiedades_algoritmo
+      - secuencia_asignaciones
+      - simbolo_ansi
+      - variable_o_constante
+      - contar_operaciones
+
+  - capitulo: cap03
+    titulo: "Control secuencial"
+    elegir: 2
+    puntos: 15          # el capítulo del parcial pesa más
+    # Solo ejercicios de TRES sub-ítems: 15 puntos repartidos en 5 + 5 + 5.
+    #
+    # Los otros cinco del banco —tasa_efectiva_anual, precedencia_liquidacion,
+    # salida_secuencia, credito_conviene, intercambio_lineas— tienen un solo
+    # sub-ítem, y aquí eso significaba 15 puntos jugados a un único número o a
+    # una única opción: el 15 % de la nota decidido por un dedazo en la
+    # calculadora. El capítulo no queda sin cubrir, porque además de estos dos
+    # ejercicios todo el mundo hace la prueba de escritorio (bloque `trazas`),
+    # que son otros 15 puntos del mismo capítulo.
+    #
+    # Siguen compilados y en el banco de Moodle: esto los saca del parcial,
+    # no del curso.
+    de:
+      - traza_interes_simple
+      - traza_filas
+      - liquidacion_nomina
+
+# Prueba de escritorio. Es el método central del capítulo 3 y no cabe en un
+# cloze: exige reconstruir el estado de cada variable paso a paso, y una de las
+# celdas se acierta sabiendo que la variable TODAVÍA no tiene valor.
+# Sustituye a un ejercicio de cap03, que es justo lo que evalúa mejor.
+trazas:
+  elegir: 1
+  puntos: 15
+  de:
+    - liquidacion_nomina
+    - interes_simple
+
+# Ítem abierto: cubre las dimensiones de modelación y sustentación de la
+# rúbrica institucional, que ningún cloze produce (ver PLAN §H5).
+# Se guarda como texto y se califica A MANO en el panel docente.
+abiertos:
+  - id: sustentacion
+    puntos: 15
+    enunciado: |
+      Un analista escribió esta rutina para liquidar el pago de una factura
+      con descuento por pronto pago:
+
+      ```
+      Inicio
+          valor     <- Leer("Valor de la factura")
+          descuento <- Leer("Descuento en porcentaje")
+          neto      <- valor - descuento / 100
+          Escribir neto
+      Fin
+      ```
+
+      La rutina corre sin errores y siempre devuelve un número. Aun así, el
+      resultado es incorrecto.
+
+      **a)** Señale la línea defectuosa y explique **por qué** el error no se
+      manifiesta como una falla de ejecución.
+
+      **b)** Reescriba la línea en pseudocódigo.
+
+      **c)** Un compañero propone comprobarla con `valor = 100` y
+      `descuento = 0`. Explique por qué ese caso de prueba **no** habría
+      detectado el error, y proponga uno que sí.
+    rubrica:
+      - "Ubica la línea y distingue error lógico de error de ejecución"
+      - "La corrección en pseudocódigo es correcta y respeta la precedencia"
+      - "Explica por qué el caso de prueba propuesto es ciego al defecto"
+      - "Propone un caso de prueba que discrimina"

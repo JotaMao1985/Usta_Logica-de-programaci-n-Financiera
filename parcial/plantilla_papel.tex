@@ -1,0 +1,95 @@
+%% ==========================================================================
+%% Plantilla del examen en PAPEL · Lógica de Programación Financiera
+%% Universidad Santo Tomás · 2026-II
+%%
+%% Derivada de `plain.tex` de R/exams, con tres cambios:
+%%
+%%   1. \newcounter{none}  — SIN ESTA LÍNEA no compila ningún ejercicio que
+%%      lleve una tabla. R/exams antepone `\def\LTcaptype{none}` a las tablas
+%%      sin título y longtable acaba llamando \addtocounter{none}, que en las
+%%      distribuciones de TeX actuales no existe. Seis de los 21 ejercicios
+%%      del banco caen ahí. Ver PLAN_PARCIAL1_APP.md §H13.
+%%   2. Encabezado institucional con el nombre y el identificador, para poder
+%%      repartir las hojas correctas si hay que pasar al plan B.
+%%   3. Los rótulos en español: «Pregunta», no «Problem» — a mano, sin babel.
+%% ==========================================================================
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%% NO añadir `babel` con la opción `spanish`. Redefine el espaciado del signo
+%% de porcentaje (\es@sppercent) y revienta con «Incompatible glue units» en
+%% cuanto un ejercicio escribe algo como `64.8\,\%` dentro de modo matemático
+%% —lo hacen tasa_efectiva_anual, traza_interes_simple y varios más—.
+%% La opción `es-noshorthands` NO lo evita: se probó. Lo único que se pierde
+%% sin babel son los patrones de partición de palabras en español, y eso no
+%% justifica un examen que no compila. Los rótulos ya están traducidos abajo.
+\usepackage{a4wide,graphicx,xcolor,verbatim,url,fancyvrb}
+\usepackage{amsmath,amssymb,booktabs,longtable,textcomp,eurosym,latexsym}
+\usepackage{fancyhdr}
+
+\newcounter{none}   %% <- la cura del punto 1. No quitar.
+
+\newenvironment{question}{\item \textbf{Pregunta}\newline}{\vspace{0.6em}}
+\newenvironment{solution}{\textbf{Solución}\newline}{}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontshape=sl}
+\newenvironment{Schunk}{}{}
+\setkeys{Gin}{width=0.8\textwidth}
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\setkeys{Gin}{keepaspectratio}
+
+%% Datos que inyecta `generar.R` a través del argumento `header` de exams2pdf.
+\newcommand{\LPFnombre}{\rule{6cm}{0.4pt}}
+\newcommand{\LPFsid}{---}
+\newcommand{\LPFminutos}{---}
+\newcommand{\Estudiante}[1]{\renewcommand{\LPFnombre}{#1}}
+\newcommand{\Identificador}[1]{\renewcommand{\LPFsid}{#1}}
+\newcommand{\Minutos}[1]{\renewcommand{\LPFminutos}{#1}}
+
+%% \exinput{header}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Primer parcial · Lógica de Programación Financiera}
+\rhead{\small\texttt{\LPFsid}}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+\begin{center}
+  {\large\bfseries Primer parcial}\\[2pt]
+  {\normalsize Lógica de Programación Financiera · Capítulos 1 a 3}\\[2pt]
+  {\small Universidad Santo Tomás · 2026-II}
+\end{center}
+
+\vspace{0.4em}
+\noindent\begin{tabular}{@{}p{0.62\textwidth}p{0.32\textwidth}@{}}
+\textbf{Estudiante:} \LPFnombre & \textbf{Tiempo:} \LPFminutos\ minutos \\[4pt]
+\textbf{Identificador:} \texttt{\LPFsid} & \textbf{Firma:} \rule{3.5cm}{0.4pt} \\
+\end{tabular}
+
+\vspace{0.6em}
+\noindent\rule{\textwidth}{0.4pt}
+
+\small\noindent
+Escriba las respuestas en el espacio de cada pregunta. En los valores numéricos
+no use separadores de miles. Este examen es \textbf{individual}: las cifras
+cambian de una hoja a otra, de modo que una respuesta copiada de otra hoja es
+incorrecta por construcción.
+
+\vspace{0.4em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.5em}
+
+\begin{enumerate}
+%% \exinput{exercises}
+\end{enumerate}
+
+\end{document}
