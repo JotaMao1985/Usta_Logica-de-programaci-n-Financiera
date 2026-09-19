@@ -171,8 +171,15 @@ Rscript parcial/vendorizar.R --verificar
 
 ## 7. Riesgo que sigue vivo
 
-`Banco Moodle/` completo vive **solo en la rama `cap03/control-secuencial`**, de
-la que sale esta. `main` no tiene ni un ejercicio. Mientras esas ramas no se
-fundan, el banco y el parcial cuelgan de trabajo sin integrar, con un único
-punto de fallo. Es el §H15 del plan y sigue sin resolverse porque fundir ramas
-es decisión del docente.
+**El banco no tiene copia.** `Banco Moodle/` —los 21 `.Rmd`, el compilador y los
+XML— existe solo como archivos **sin versionar** en esta máquina. No es un
+descuido: `.gitignore` lo excluye desde el primer commit porque los `.Rmd`
+llevan la respuesta correcta y este repositorio es público.
+
+Hasta el 2026-09-19 el §H15 del plan atribuía esto a una rama sin fundir. Era
+falso: `cap03/control-secuencial` ya estaba fundida en el PR #3, y el banco
+nunca estuvo en git. Fundir ramas no lo protegía y no lo protegió.
+
+Sigue abierto, y es el único punto de fallo que queda: sin el banco no se puede
+generar el parcial. Un repositorio privado aparte, o una copia cifrada fuera de
+la máquina. Es la §8 P7 del plan, y es decisión del docente.

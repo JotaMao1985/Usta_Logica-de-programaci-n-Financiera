@@ -260,6 +260,25 @@ ejercicio. La rama del parcial sale por tanto de `cap03/control-secuencial`, y
 **todo el parcial depende de trabajo sin integrar**: mientras esa rama no se
 funda con `main`, el banco tiene un solo punto de fallo.
 
+**Corrección del 2026-09-19: el diagnóstico estaba mal, por partida doble.**
+
+Primero, `cap03/control-secuencial` **ya estaba fundida** cuando se escribió
+esto: es el PR #3, commit `dc59c76`, que es `origin/main`. Lo que estaba once
+commits atrasado era el `main` **local**. Adelantarlo fue todo lo que hacía
+falta por ese lado.
+
+Segundo, y más importante: **el banco nunca estuvo en git, en ninguna rama.**
+`Banco Moodle/` está en `.gitignore` desde el primer commit —`37407a0`— y a
+propósito, porque los `.Rmd` llevan la respuesta correcta y el repositorio es
+público. Ningún merge lo habría protegido: no había nada que fundir.
+
+El riesgo es real, pero es otro, y **sigue abierto**: el banco existe solo como
+archivos sin versionar en la máquina del docente. Ni rama, ni remoto, ni copia.
+Un `git clean -xdf` mal apuntado, o el disco, y se van los 21 ejercicios y los
+XML compilados —y con ellos la capacidad de generar el parcial, que depende de
+ellos—. La salida no es fundir ramas: es un repositorio **privado** aparte, o
+una copia cifrada fuera de la máquina. Es §8 P7.
+
 
 ### H16 · Un solo número puede valer 15 de los 100 puntos *(hallado al calificar, 2026-08-30)*
 
@@ -813,3 +832,8 @@ Pendiente de escribir: la app (D4-D7) y `parcial/exportar.R` (cierre).
   **Resuelta el 2026-08-30:** siguen repartiéndose por ejercicio, y en su lugar
   se sacaron del blueprint los cinco ejercicios de capítulo 3 que tenían un solo
   sub-ítem. Ver H16 y, por el efecto que trajo, H30.
+- **P7 · ¿Dónde vive el banco de Moodle?** (§H15) Hoy, solo en el disco de la
+  máquina del docente: `.gitignore` lo excluye a propósito de este repositorio,
+  que es público. Sin versionar y sin respaldo, es el único punto de fallo que
+  queda en pie. Un repositorio privado aparte o una copia cifrada; **la decisión
+  es suya**, y no la resuelve ningún merge.
