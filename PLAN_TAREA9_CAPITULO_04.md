@@ -472,7 +472,9 @@ acertar. El E6 (`Emparejamiento`) cruza las seis secciones.
 
 ### ⏸ Punto de control 3 — Contenido completo
 - [x] Las seis secciones, la portada y la evaluación · 5 131 líneas
-- [x] **Cuota cumplida:** 18 ejercicios · E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2
+- [x] **Cuota cumplida:** 19 ejercicios · E1:4 E2:4 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2
+      (eran 18 con E2:3; la auditoría del 2026-09-21 subió el máximo de E2 a 4 en
+      el §4 del plan maestro y añadió un E2 de De Morgan a la sección 1)
       — el mismo reparto exacto que el capítulo 3
 - [x] **Las tres deudas del capítulo 3, saldadas** (H2): la fila 5.ª de la tabla
       de precedencia está desplegada en la sección 1; la tabla de traza tiene su
@@ -582,8 +584,11 @@ nueva en `verificar.py` o en `verificar_cloze.R`.
 
 ## 5. Cuota de ejercicios — distribución objetivo
 
-18 ejercicios, el máximo que permite la cuota. El capítulo 3 llegó a 18 con 6
-horas; este tiene 8.
+18 ejercicios, el máximo que permitía la cuota al planificarlo. El capítulo 3
+llegó a 18 con 6 horas; este tiene 8. **Quedaron en 19 tras la auditoría del
+2026-09-21:** con los ocho tipos en su máximo, la sección 1 —la más densa— se
+había quedado con un solo ejercicio y la 5 con cuatro, y De Morgan sin evaluar
+más que de pasada. Se subió el máximo de E2 a 4 y se añadió el que faltaba.
 
 | Sección | E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | Total |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -625,7 +630,8 @@ sobre una condición negada al revés, que es De Morgan aplicado.
   continuidad con los capítulos 1 a 3 y lo que el capítulo 3 anunció.
 - **S3 · Los tres videos del syllabus se enlazan en su sección**, no en la
   portada. Si se prefiere agruparlos, es un cambio de una línea.
-- **S4 · 18 ejercicios.** El máximo de la cuota, coherente con 8 horas.
+- **S4 · 19 ejercicios.** Se planificaron 18, el máximo de entonces; la auditoría
+  añadió un E2 en la sección 1 y subió el techo de ese tipo a 4.
 
 ---
 

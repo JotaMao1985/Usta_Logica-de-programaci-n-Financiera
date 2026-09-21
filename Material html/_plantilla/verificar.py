@@ -73,7 +73,7 @@ MARCA_FIN = "/* === LP-CORE FIN === */"
 # Cuota mínima y máxima por tipo de ejercicio (§4 del plan).
 CUOTA = {
     "E1": (3, 4),
-    "E2": (2, 3),
+    "E2": (2, 4),
     "E3": (2, 2),
     "E4": (1, 2),
     "E5": (1, 2),

@@ -2692,7 +2692,7 @@
                     la 3 y <strong>múltiple</strong> en la 5.
                 </Box>
 
-                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Dieciocho ejercicios y un cuestionario integrador" icon="fa-brain">
+                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Diecinueve ejercicios y un cuestionario integrador" icon="fa-brain">
                     Ninguno pide <strong>escribir un programa desde cero</strong>: eso corresponde al taller
                     evaluable que el syllabus pide subir a Moodle. Aquí se ejercita
                     <strong> leer</strong> una condición ajena, <strong>trazar</strong> por dónde pasó el
@@ -2932,6 +2932,17 @@ End Sub`,
                     los que fallan en <em>una</em> cosa: los que un analista habría detenido sin dudar.
                 </p>
 
+                <Ejercicio tipo="E2"><MCQ
+                    multiple={true}
+                    pregunta="La política de aprobación se guardó tal cual en una variable: aprobado <- score >= 680 Y endeudamiento < 40. Hace falta ahora la condición de rechazo. ¿Cuáles de estas la calculan bien?"
+                    opciones={[
+                        { texto: 'rechazado <- NO aprobado', correcta: true, justificacion: 'Las dos que funcionan son NO aprobado y score < 680 O endeudamiento >= 40, y son la misma cosa escrita de dos maneras. La primera niega la condición ENTERA, y puede hacerlo porque una condición es un valor: se guardó en una variable igual que se guarda un saldo, así que negar ese valor es negar la política completa sin tocar ningún operando. La segunda es esa misma negación ya distribuida con De Morgan: al negar una conjunción el conector cambia, y por eso donde había un Y aparece un O. Las dos que fallan son la misma equivocación escrita dos veces —dejar el Y en su sitio—, una con las comparaciones invertidas y otra con un NO delante de cada operando; en pseudocódigo NO liga más fuerte que Y, así que la segunda dice exactamente lo mismo que la primera. Las dos rechazan solo a quien falla en las dos cosas a la vez, y dejan pasar a dos de los tres perfiles que debían detenerse. Y hay una razón de oficio para preferir NO aprobado: si mañana el comité cambia la política de aprobación, esa línea sigue siendo su negación exacta sin que nadie tenga que volver a distribuir nada.' },
+                        { texto: 'rechazado <- score < 680 Y endeudamiento >= 40', correcta: false },
+                        { texto: 'rechazado <- score < 680 O endeudamiento >= 40', correcta: true },
+                        { texto: 'rechazado <- NO score >= 680 Y NO endeudamiento < 40', correcta: false },
+                    ]}
+                /></Ejercicio>
+
                 <h3>El cortocircuito, usado a propósito</h3>
                 <p>
                     Que un lenguaje deje de evaluar en cuanto sabe la respuesta no es una curiosidad: es
@@ -2956,8 +2967,8 @@ End Sub`,
                     pregunta="La regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
                     opciones={[
                         { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
-                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el segundo. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
+                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6.500.000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -3429,9 +3440,9 @@ Debug.Print tarifa`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
+                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
                         { texto: '1 600 — se le aplica la tarifa preferencial por error.', correcta: false },
                         { texto: '4 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
-                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
                         { texto: 'Un error de ejecución: tarifa nunca se asigna.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -3755,6 +3766,7 @@ End Sub`,
                 '    // Marcar para revision manual el expediente incompleto.',
                 '    // La politica dice: pasa automatico si tiene documentos',
                 '    // completos Y referencias verificadas.',
+                '    expedienteCompleto <- documentosCompletos Y referenciasVerificadas',
                 '    Si NO documentosCompletos Y NO referenciasVerificadas Entonces',
                 '        marcarRevisionManual <- Verdadero',
                 '    FinSi',
@@ -3764,6 +3776,7 @@ End Sub`,
                 '# Marcar para revision manual el expediente incompleto.',
                 '# La politica dice: pasa automatico si tiene documentos',
                 '# completos Y referencias verificadas.',
+                'expediente_completo = documentos_completos and referencias_verificadas',
                 'if not documentos_completos and not referencias_verificadas:',
                 '    marcar_revision_manual = True',
             ],
@@ -3771,6 +3784,7 @@ End Sub`,
                 '# Marcar para revision manual el expediente incompleto.',
                 '# La politica dice: pasa automatico si tiene documentos',
                 '# completos Y referencias verificadas.',
+                'expediente_completo <- documentos_completos && referencias_verificadas',
                 'if (!documentos_completos && !referencias_verificadas) {',
                 '  marcar_revision_manual <- TRUE',
                 '}',
@@ -3780,18 +3794,19 @@ End Sub`,
                 "    ' Marcar para revision manual el expediente incompleto.",
                 "    ' La politica dice: pasa automatico si tiene documentos",
                 "    ' completos Y referencias verificadas.",
+                '    expedienteCompleto = documentosCompletos And referenciasVerificadas',
                 '    If Not documentosCompletos And Not referenciasVerificadas Then',
                 '        marcarRevisionManual = True',
                 '    End If',
                 'End Sub',
             ],
         };
-        const ERROR_NEGACION_LINEA_OK = { pseudo: 5, python: 4, r: 4, vba: 5 };
+        const ERROR_NEGACION_LINEA_OK = { pseudo: 6, python: 5, r: 5, vba: 6 };
         const ERROR_NEGACION_EXPLICACION = {
-            pseudo: <>La política es «pasa automático si <span className="inline-code">documentosCompletos Y referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">NO (A Y B)</span> es <span className="inline-code">NO A <strong>O</strong> NO B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">Y</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
-            python: <>La política es «pasa automático si <span className="inline-code">documentos_completos and referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">not (A and B)</span> es <span className="inline-code">not A <strong>or</strong> not B</span>. La <strong>línea 4</strong> dejó el <span className="inline-code">and</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
-            r: <>La política es «pasa automático si <span className="inline-code">documentos_completos &amp;&amp; referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">!(A &amp;&amp; B)</span> es <span className="inline-code">!A <strong>||</strong> !B</span>. La <strong>línea 4</strong> dejó el <span className="inline-code">&amp;&amp;</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
-            vba: <>La política es «pasa automático si <span className="inline-code">documentosCompletos And referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">Not (A And B)</span> es <span className="inline-code">Not A <strong>Or</strong> Not B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">And</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
+            pseudo: <>La política es «pasa automático si <span className="inline-code">documentosCompletos Y referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">NO (A Y B)</span> es <span className="inline-code">NO A <strong>O</strong> NO B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">Y</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">NO expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
+            python: <>La política es «pasa automático si <span className="inline-code">documentos_completos and referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">not (A and B)</span> es <span className="inline-code">not A <strong>or</strong> not B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">and</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">not expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
+            r: <>La política es «pasa automático si <span className="inline-code">documentos_completos &amp;&amp; referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">!(A &amp;&amp; B)</span> es <span className="inline-code">!A <strong>||</strong> !B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">&amp;&amp;</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">!expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
+            vba: <>La política es «pasa automático si <span className="inline-code">documentosCompletos And referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">Not (A And B)</span> es <span className="inline-code">Not A <strong>Or</strong> Not B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">And</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">Not expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
         };
 
         const TRAZA_CASCADA = {
@@ -4018,10 +4033,10 @@ End If`,
                     tipos={[
                         'Error de sintaxis: falta una palabra clave o un delimitador.',
                         'Condición mal escrita: el operador de comparación está invertido.',
-                        'Orden de evaluación: una rama correcta impide que se evalúen las siguientes.',
                         'Error de unidades: se compara un porcentaje con una tasa decimal.',
+                        'Orden de evaluación: una rama correcta impide que se evalúen las siguientes.',
                     ]}
-                    tipoCorrecto={2}
+                    tipoCorrecto={3}
                     explicacion={ERROR_CASCADA_EXPLICACION}
                     impacto={<>Todo solicitante con ingreso de cinco millones o más entra como <strong>preferencial</strong>, incluidos los que tienen el score por debajo del mínimo y los que están por encima del 60 % de endeudamiento. Sobre una cartera de originación de mil solicitudes mensuales, con un 8 % de ingresos altos y un 12 % de esos con score insuficiente, son <strong>alrededor de diez desembolsos al mes</strong> a clientes que la política rechaza —y a tasa preferencial—. El motor no registra ningún error: registra diez aprobaciones perfectamente normales.</>}
                 /></Ejercicio>
@@ -4065,16 +4080,16 @@ End If`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La excepción que casi nunca se dispara"
-                    enunciado={<>La política dice que un expediente pasa a trámite automático solo si tiene <strong>documentos completos y referencias verificadas</strong>. Esta rutina debería marcar para revisión manual todo lo demás, y apenas marca nada. <strong>Señale la línea defectuosa</strong>.</>}
+                    enunciado={<>La política dice que un expediente pasa a trámite automático solo si tiene <strong>documentos completos y referencias verificadas</strong>. Esta rutina debería marcar para revisión manual todo lo demás, y apenas marca nada. Dos de sus líneas evalúan condiciones y solo una está mal: <strong>señale cuál</strong>.</>}
                     lineas={ERROR_NEGACION_LINEAS}
                     lineaCorrecta={ERROR_NEGACION_LINEA_OK}
                     tipos={[
                         'Orden de evaluación: la condición está en el lugar equivocado de la cascada.',
-                        'Negación mal distribuida: al negar una conjunción hay que cambiar el conector.',
                         'Error de sintaxis: falta un paréntesis de cierre.',
+                        'Negación mal distribuida: al negar una conjunción hay que cambiar el conector.',
                         'Error de tipo: se niega una variable que no es booleana.',
                     ]}
-                    tipoCorrecto={1}
+                    tipoCorrecto={2}
                     explicacion={ERROR_NEGACION_EXPLICACION}
                     impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
                 /></Ejercicio>
@@ -4094,9 +4109,9 @@ End If`,
                     pregunta="Las dos son correctas y equivalentes. ¿Cuál es la razón de peso para preferir la cascada en una política de crédito?"
                     opciones={[
                         { texto: 'Ocupa menos líneas, y el código corto tiene menos defectos.', correcta: false },
-                        { texto: 'Deja las cinco reglas al mismo nivel de sangría, en el orden en que se evalúan, de modo que el orden —que es parte de la política— se puede leer y auditar de un vistazo.', correcta: true, justificacion: 'En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —las dos ocupan prácticamente lo mismo— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
                         { texto: 'Es más rápida: evalúa menos condiciones que la versión anidada.', correcta: false },
                         { texto: 'Permite condiciones compuestas que la versión anidada no admite.', correcta: false },
+                        { texto: 'Pone las cinco reglas al mismo nivel y en el orden en que se evalúan.', correcta: true, justificacion: 'El orden es parte de la política, no del estilo, y en la cascada se puede leer y auditar de un vistazo. En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —las dos ocupan prácticamente lo mismo— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
                     ]}
                 /></Ejercicio>
             </div>
@@ -4418,8 +4433,8 @@ End If`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="En R, ¿qué vale cuota tras ejecutar switch(&quot;LEASING&quot;, AHORROS = 8500, CORRIENTE = 21000), es decir, sin caso por defecto y sin coincidencia?"
                     opciones={[
-                        { texto: 'Cero.', correcta: false },
-                        { texto: 'NULL, y además se devuelve de forma invisible: en la consola no se imprime nada.', correcta: true, justificacion: 'Comprobado en R 4.6.0: is.null(...) devuelve TRUE. Y switch lo devuelve invisiblemente, así que escribir la expresión en la consola no muestra absolutamente nada —ni un NULL—, que es lo que hace el defecto tan difícil de ver. La variable no vale cero: no vale nada, y en la primera operación aritmética que la use el resultado será numeric(0) o un error, lejos ya de la línea culpable. Tampoco se detiene el programa con un error en ese punto, ni R «se queda con el primer caso»: sin coincidencia y sin defecto, switch no elige ninguno.' },
+                        { texto: '0, porque switch devuelve cero cuando ningún caso coincide.', correcta: false },
+                        { texto: 'NULL, y de forma invisible: en la consola no se imprime nada.', correcta: true, justificacion: 'Comprobado en R 4.6.0: is.null(...) devuelve TRUE. Y switch lo devuelve invisiblemente, así que escribir la expresión en la consola no muestra absolutamente nada —ni un NULL—, que es lo que hace el defecto tan difícil de ver. La variable no vale cero: no vale nada, y en la primera operación aritmética que la use el resultado será numeric(0) o un error, lejos ya de la línea culpable. Tampoco se detiene el programa con un error en ese punto, ni R «se queda con el primer caso»: sin coincidencia y sin defecto, switch no elige ninguno.' },
                         { texto: 'Se detiene la ejecución con un error de valor no encontrado.', correcta: false },
                         { texto: 'El primer caso, 8500, porque R toma el primero si no hay coincidencia.', correcta: false },
                     ]}
@@ -4432,8 +4447,8 @@ End If`,
                     b={{ etiqueta: 'Versión B · cascada con Sino final', codigo: CMP_CASCADA_TRAMOS }}
                     pregunta="¿Dan las dos el mismo resultado para cualquier monto?"
                     opciones={[
+                        { texto: 'No: fuera de los tramos el Segun no asigna nada y la cascada sí.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el artefacto de arriba con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. En ninguno de los dos casos hay aviso: la transacción se cobra mal, o no se cobra. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. Tampoco se trata de un problema de tipo de dato: los dos bloques reciben el mismo número.' },
                         { texto: 'Sí: los tres tramos cubren todos los montos posibles.', correcta: false },
-                        { texto: 'No. Coinciden dentro de los tramos, pero fuera de ellos no: el Segun no asigna nada, mientras la cascada cobra 25 000 a un monto por encima del tope y 2 500 a una devolución en negativo.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el artefacto de arriba con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. En ninguno de los dos casos hay aviso: la transacción se cobra mal, o no se cobra. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. Tampoco se trata de un problema de tipo de dato: los dos bloques reciben el mismo número.' },
                         { texto: 'No, pero solo si el monto es negativo: para valores positivos son idénticas.', correcta: false },
                         { texto: 'Depende del lenguaje: en VBA sí y en Python no.', correcta: false },
                     ]}
@@ -4660,9 +4675,9 @@ neto = pago - retencion`,
                     pregunta="Un solicitante con ingreso de 6 500 000, score 480 y endeudamiento del 68 % recibe un rechazo. El cliente llama a preguntar qué tiene que mejorar. ¿Qué se le dice?"
                     opciones={[
                         { texto: 'Que mejore el score y baje el endeudamiento: falla en las dos cosas.', correcta: false },
-                        { texto: 'Que su score de 480 está por debajo del mínimo de 550, y que esa es la condición que decidió. El endeudamiento del 68 % también incumple, pero el sistema no llegó a evaluarlo.', correcta: true, justificacion: 'La cascada decide en la primera condición que se cumple, y aquí es score < 550. La del endeudamiento está más abajo y no se evaluó: es cierto que el 68 % también incumpliría, pero eso lo sabemos nosotros leyendo la política, no el sistema, que se detuvo antes. La diferencia importa en la práctica: si el cliente vuelve dentro de seis meses con el score arreglado y el endeudamiento igual, será rechazado otra vez —por la segunda condición esta vez—, y nadie se lo advirtió. Decirle solo «mejore el score» es exacto respecto de lo que el sistema hizo y engañoso respecto de lo que le conviene; por eso la respuesta completa nombra la condición que decidió y además advierte de la siguiente. Lo que no se puede hacer es darle la lista de las cinco reglas: cuatro no se evaluaron, y tres de ellas ni siquiera le aplican.' },
                         { texto: 'Que el ingreso no fue el problema, porque supera los cinco millones.', correcta: false },
                         { texto: 'Que incumple tres de las cinco reglas de la política.', correcta: false },
+                        { texto: 'Que su score de 480 no llega al mínimo de 550, y que esa fue la condición que decidió.', correcta: true, justificacion: 'La cascada decide en la primera condición que se cumple, y aquí es score < 550. La del endeudamiento está más abajo y no se evaluó: es cierto que el 68 % también incumpliría, pero eso lo sabemos nosotros leyendo la política, no el sistema, que se detuvo antes. La diferencia importa en la práctica: si el cliente vuelve dentro de seis meses con el score arreglado y el endeudamiento igual, será rechazado otra vez —por la segunda condición esta vez—, y nadie se lo advirtió. Decirle solo «mejore el score» es exacto respecto de lo que el sistema hizo y engañoso respecto de lo que le conviene; por eso la respuesta completa nombra la condición que decidió y además advierte de la siguiente. Lo que no se puede hacer es darle la lista de las cinco reglas: cuatro no se evaluaron, y tres de ellas ni siquiera le aplican.' },
                     ]}
                 /></Ejercicio>
 
@@ -4838,8 +4853,8 @@ neto = pago - retencion`,
                     {
                         pregunta: 'La expresión A O B Y C, sin paréntesis, se evalúa como:',
                         opciones: [
-                            { texto: '(A O B) Y C, porque se lee de izquierda a derecha.', correcta: false },
                             { texto: 'A O (B Y C), porque Y liga más fuerte que O.', correcta: true },
+                            { texto: '(A O B) Y C, porque se lee de izquierda a derecha.', correcta: false },
                             { texto: 'Depende del lenguaje: Python y R la agrupan distinto que VBA.', correcta: false },
                             { texto: 'Es ambigua y produce un error de sintaxis.', correcta: false },
                         ],
@@ -4849,92 +4864,92 @@ neto = pago - retencion`,
                         pregunta: 'La política dice que se aprueba si score >= 680 Y endeudamiento < 40. ¿Cuál es la condición de rechazo correcta?',
                         opciones: [
                             { texto: 'score < 680 Y endeudamiento >= 40', correcta: false },
-                            { texto: 'score < 680 O endeudamiento >= 40', correcta: true },
                             { texto: 'NO score >= 680 Y NO endeudamiento < 40', correcta: false },
                             { texto: 'score <= 680 O endeudamiento > 40', correcta: false },
+                            { texto: 'score < 680 O endeudamiento >= 40', correcta: true },
                         ],
-                        justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —que es la primera opción, y también la tercera escrita de otro modo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de los tres perfiles que debían detenerse. La última opción además mueve los dos límites, y en direcciones contrarias: con score <= 680 rechaza a quien tiene exactamente 680, que es a quien la política aprueba; y con endeudamiento > 40 deja pasar a quien está exactamente en el 40 %, que es a quien la política rechaza.',
+                        justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —escrito una vez con Y y otra con NO ... Y, que dicen lo mismo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de los tres perfiles que debían detenerse. La opción que escribe score <= 680 O endeudamiento > 40 además mueve los dos límites, y en direcciones contrarias: rechaza a quien tiene exactamente 680, que es a quien la política aprueba, y deja pasar a quien está exactamente en el 40 %, que es a quien la política rechaza.',
                     },
                     {
-                        pregunta: 'En una selectiva simple cuya condición resulta falsa, ¿qué queda en el registro de ejecución?',
+                        pregunta: 'Una rutina hace recargo <- 0; después Si diasMora > 30 Entonces recargo <- saldo * 0.05 FinSi; y termina con total <- saldo + recargo. Con saldo 4 800 000 y 30 días de mora, ¿cuánto vale total?',
                         opciones: [
-                            { texto: 'Una advertencia de rama no ejecutada.', correcta: false },
-                            { texto: 'Nada: el programa salta el bloque y sigue, sin error ni aviso.', correcta: true },
-                            { texto: 'Un valor nulo en la variable que el bloque habría asignado.', correcta: false },
-                            { texto: 'Depende del lenguaje.', correcta: false },
+                            { texto: '5 040 000: con 30 días la condición se cumple y se cobra el 5 %.', correcta: false },
+                            { texto: '4 800 000: la condición es falsa y recargo conserva el 0 que se le dio.', correcta: true },
+                            { texto: '4 800 000, y el programa deja constancia de que una rama no se ejecutó.', correcta: false },
+                            { texto: 'No se puede saber: depende de lo que valiera recargo antes del Si.', correcta: false },
                         ],
-                        justificacion: 'Es lo que hizo que el recargo por mora no se cobrara durante catorce meses. La variable no queda en nulo: queda como estaba antes, que es el motivo por el que conviene darle un valor por defecto fuera de la selectiva.',
+                        justificacion: 'Con 30 días exactos, 30 > 30 es falso: la condición pide MÁS de 30. El bloque se salta entero, recargo conserva el 0 que se le asignó antes y total sale igual al saldo. No hay aviso de ninguna clase —lo que no se ejecuta no deja rastro, y es lo que mantuvo el recargo sin cobrar catorce meses— y tampoco hay incertidumbre: el valor por defecto se asignó antes del Si, que es exactamente para lo que está.',
                     },
                     {
                         pregunta: '¿Qué garantiza Si…Sino que dos Si independientes no garantizan?',
                         opciones: [
                             { texto: 'Que se ejecute al menos uno de los dos bloques.', correcta: true },
-                            { texto: 'Que no se ejecuten los dos bloques.', correcta: true },
                             { texto: 'Que las dos condiciones se evalúen siempre.', correcta: false },
+                            { texto: 'Que no se ejecuten los dos bloques.', correcta: true },
                             { texto: 'Que la variable asignada quede en el mismo tipo de dato.', correcta: false },
                         ],
                         multiple: true,
                         justificacion: 'Las dos primeras, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia.',
                     },
                     {
-                        pregunta: 'En una cascada, las condiciones que están debajo de la que se cumplió:',
+                        pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTÁNDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
                         opciones: [
-                            { texto: 'Se evalúan y dan falso.', correcta: false },
-                            { texto: 'No se evalúan: nadie las mira.', correcta: true },
-                            { texto: 'Se evalúan solo si la rama ejecutada no asigna nada.', correcta: false },
-                            { texto: 'Se evalúan en orden inverso.', correcta: false },
+                            { texto: 'RECHAZADO, después de evaluar dos condiciones.', correcta: true },
+                            { texto: 'RECHAZADO, después de evaluar las tres condiciones.', correcta: false },
+                            { texto: 'APROBADO PREFERENCIAL, porque el ingreso supera los cinco millones.', correcta: false },
+                            { texto: 'RECHAZADO, y basta con evaluar la primera condición.', correcta: false },
                         ],
-                        justificacion: 'La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó. En el caso de la sección 6, el endeudamiento del 68 % también incumplía, pero el sistema nunca llegó a mirarlo.',
+                        justificacion: 'La primera, endeudamiento > 60, es falsa con un 25 %. La segunda, score < 550, es verdadera con 500, y ahí decide: RECHAZADO tras evaluar dos. La del ingreso queda debajo y no llega a mirarse, así que los ocho millones no entran en la decisión por mucho que superen el umbral. No se evalúan las tres —la cascada se detiene en la primera que se cumple— ni basta con la primera, que en este solicitante no se cumple. La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó.',
                     },
                     {
                         pregunta: 'Las cinco reglas de una política de originación son correctas, pero la del ingreso alto está de primera en la cascada. ¿Qué tipo de defecto es?',
                         opciones: [
-                            { texto: 'Error de sintaxis.', correcta: false },
-                            { texto: 'Condición mal escrita.', correcta: false },
-                            { texto: 'Orden de evaluación: una rama correcta impide que se evalúen las siguientes.', correcta: true },
-                            { texto: 'Error de unidades.', correcta: false },
+                            { texto: 'Un error de sintaxis: falta un delimitador en la cascada.', correcta: false },
+                            { texto: 'Un defecto de orden entre reglas que son todas correctas.', correcta: true },
+                            { texto: 'Una condición mal escrita, con el operador de comparación invertido.', correcta: false },
+                            { texto: 'Una comparación entre unidades distintas.', correcta: false },
                         ],
                         justificacion: 'No hay ninguna línea defectuosa, y por eso una revisión de código no lo encuentra: el defecto está en la relación entre dos reglas. El arreglo no toca ninguna condición, solo las mueve.',
                     },
                     {
-                        pregunta: 'En VBA, ¿por qué la condición compras <> 0 And total / compras > 500000 no protege de la división por cero?',
+                        pregunta: 'Un equipo traslada a VBA una línea que en Python funcionaba: if compras != 0 and total / compras > 500_000. Con compras en 0, el procedimiento se detiene con el error 11. ¿Cuál es el arreglo?',
                         opciones: [
-                            { texto: 'Porque <> no es el operador de desigualdad en VBA.', correcta: false },
-                            { texto: 'Porque And evalúa siempre los dos lados, aunque el primero ya sea falso.', correcta: true },
-                            { texto: 'Porque VBA evalúa las condiciones de derecha a izquierda.', correcta: false },
-                            { texto: 'Porque falta convertir compras a Double.', correcta: false },
+                            { texto: 'Cambiar And por AndAlso, que en VBA sí hace cortocircuito.', correcta: false },
+                            { texto: 'Invertir los operandos, para que la división se evalúe la primera.', correcta: false },
+                            { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
+                            { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'Es la única diferencia real entre los cuatro lenguajes en materia de condiciones, y ya venía anunciada desde el capítulo 1. La forma de conseguir el mismo efecto en VBA es anidar dos Si.',
+                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA es el error 11, no infinito. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         pregunta: '¿Cuál de estas situaciones pide una selectiva múltiple y no una cascada?',
                         opciones: [
-                            { texto: 'Clasificar una solicitud según score, endeudamiento e ingreso.', correcta: false },
+                            { texto: 'Clasificar una solicitud de crédito según su score, su endeudamiento y su ingreso.', correcta: false },
+                            { texto: 'Aplicar un recargo a la factura si la mora supera los 30 días.', correcta: false },
+                            { texto: 'Decidir entre la tarifa preferencial y la tarifa plena del cliente.', correcta: false },
                             { texto: 'Asignar la cuota de manejo según el tipo de cuenta: ahorros, corriente o nómina.', correcta: true },
-                            { texto: 'Aplicar un recargo si la mora supera los 30 días.', correcta: false },
-                            { texto: 'Decidir entre tarifa preferencial y tarifa plena.', correcta: false },
                         ],
                         justificacion: 'La selectiva múltiple sirve cuando todas las ramas preguntan por la MISMA variable y la comparan con valores concretos. La primera opción compara tres variables distintas, y las otras dos tienen una sola alternativa: son selectiva simple y doble.',
                     },
                     {
-                        pregunta: 'En R, switch("LEASING", AHORROS = 8500, CORRIENTE = 21000) devuelve:',
+                        pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
                         opciones: [
-                            { texto: '0', correcta: false },
-                            { texto: 'NULL, y de forma invisible.', correcta: true },
-                            { texto: 'Un error que detiene la ejecución.', correcta: false },
-                            { texto: '8500, el primer caso.', correcta: false },
+                            { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
+                            { texto: 'Nada: el pago no llega a la base mínima de 200 000.', correcta: true },
+                            { texto: 'Se le retienen 7 200, que es el 4 % del pago.', correcta: false },
+                            { texto: 'Nada, pero porque el proveedor no es declarante.', correcta: false },
                         ],
-                        justificacion: 'Sin coincidencia y sin caso por defecto, switch no elige ninguno. Y como lo devuelve invisiblemente, en la consola no se ve absolutamente nada: el problema aparece más tarde, en la primera operación que use esa variable.',
+                        justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
                     },
                     {
-                        pregunta: 'Una escala tarifaria con Segun cubre los tramos de 1 a 5 000 000 y no tiene caso por defecto. Llega una devolución de −50 000. ¿Qué pasa?',
+                        pregunta: 'Con la política de originación en su orden correcto, un solicitante con ingreso de 6 500 000, score 720 y endeudamiento del 68 % es rechazado. ¿Qué condición lo decidió, y qué pasó con la del ingreso?',
                         opciones: [
-                            { texto: 'Se aplica el primer tramo, 2 500.', correcta: false },
-                            { texto: 'No se ejecuta ninguna rama y la tarifa se queda sin asignar, sin error ni aviso.', correcta: true },
-                            { texto: 'Se aplica el último tramo, 12 000.', correcta: false },
-                            { texto: 'El programa se detiene con un error de rango.', correcta: false },
+                            { texto: 'El score, y la del ingreso se evaluó después y dio falso.', correcta: false },
+                            { texto: 'El ingreso, que al superar los cinco millones lo dejó en preferencial.', correcta: false },
+                            { texto: 'El endeudamiento del 68 %, y la del ingreso quedó debajo, sin evaluarse.', correcta: true },
+                            { texto: 'Las dos causales de rechazo a la vez, porque ambas se cumplen.', correcta: false },
                         ],
-                        justificacion: 'Ningún caso coincide y no hay dónde caer: la tarifa se queda como estuviera antes. La cascada equivalente tampoco acierta, pero falla de otra manera: mete el −50 000 en el primer tramo —monto <= 100 000 es cierto para un negativo— y le cobra 2 500 sin llegar nunca a su Sino final. Escribir el caso por defecto y ponerle piso al primer tramo son dos precauciones distintas, y esta escala no tiene ninguna de las dos.',
+                        justificacion: 'La cascada evalúa score < 550 —falso, tiene 720—, después endeudamiento > 60 —verdadero, 68— y ahí decide. La regla del ingreso está más abajo y no llega a mirarse: si estuviera de primera, este mismo solicitante saldría aprobado preferencial, que es el defecto de la sección 4 visto desde el otro lado. No lo rechazó el score, que pasa de sobra, y tampoco fallan las dos causales: la del score no se cumple.',
                     },
                 ]} />
 

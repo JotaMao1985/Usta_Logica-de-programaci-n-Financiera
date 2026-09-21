@@ -208,9 +208,19 @@ Este es el núcleo del encargo. Ocho tipos, cada uno con un componente asociado 
 
 | Tipo | E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | Quiz final |
 |---|---|---|---|---|---|---|---|---|---|
-| Cantidad | 3–4 | 2–3 | 2 | 1–2 | 1–2 | 1 | 2 | 1–2 | 10 preguntas |
+| Cantidad | 3–4 | 2–4 | 2 | 1–2 | 1–2 | 1 | 2 | 1–2 | 10 preguntas |
 
-Total: **14–18 ejercicios interactivos + 1 cuestionario integrador** por capítulo. Mínimo obligatorio: al menos un E1, un E3 y un E7 en cada capítulo (son los tres que más empujan hacia interpretación y apropiación).
+Total: **14–19 ejercicios interactivos + 1 cuestionario integrador** por capítulo. Mínimo obligatorio: al menos un E1, un E3 y un E7 en cada capítulo (son los tres que más empujan hacia interpretación y apropiación).
+
+El máximo de **E2 subió de 3 a 4 el 2026-09-21**, al auditar el capítulo 4. El
+motivo no es querer más preguntas: es que con los ocho tipos en su máximo el
+capítulo quedaba **saturado**, y un hueco de cobertura —De Morgan con un solo
+ejercicio, y la sección más densa del capítulo con uno solo mientras otra tenía
+cuatro— no se podía tapar sin quitar algo que sí valía. El E2 es el tipo más
+barato de añadir y el que mejor absorbe un concepto que se quedó sin evaluar,
+así que es donde tiene sentido el margen. Si un capítulo llega a 4 E2 conviene
+mirar por qué: suele significar que un concepto de exposición no tiene
+ejercicio propio en su sección.
 
 ### Mapeo con la rúbrica del syllabus
 
