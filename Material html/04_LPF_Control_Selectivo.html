@@ -2757,17 +2757,34 @@
         );
 
         const FlujogramaCascada = () => {
+            // Las cajas de resultado son PROCESO —asignan `decision`—, así que van
+            // con el rectángulo y la paleta de proceso, no con la de entrada/salida
+            // que usa el flujograma de la sección 3 para `Leer` y `Escribir`.
             const RAMAS = [
-                { y: 16, cond: 'score < 550', salida: 'RECHAZADO' },
-                { y: 112, cond: 'endeudamiento > 60', salida: 'RECHAZADO' },
-                { y: 208, cond: 'ingreso >= 5000000', salida: 'APROBADO PREFERENCIAL' },
-                { y: 304, cond: 'ingreso < 1500000', salida: 'APROBADO CON CODEUDOR' },
+                { y: 76, cond: 'score < 550', salida: 'RECHAZADO' },
+                { y: 172, cond: 'endeudamiento > 60', salida: 'RECHAZADO' },
+                { y: 268, cond: 'ingreso >= 5000000', salida: 'APROBADO PREFERENCIAL' },
+                { y: 364, cond: 'ingreso < 1500000', salida: 'APROBADO CON CODEUDOR' },
             ];
+            const RAIL = 472;       // la columna por la que vuelven las cinco ramas
+            const CONFLUYE = 556;   // la altura a la que se juntan todas
+            const caja = (x, y, w, valor, clave) => (
+                <g key={clave}>
+                    <rect x={x} y={y} width={w} height="46" rx="6" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.5" />
+                    <text x={x + w / 2} y={y + 19} textAnchor="middle" fontSize="11" fontFamily="ui-monospace, monospace" fill="#0E7490">decision &#8592;</text>
+                    <text x={x + w / 2} y={y + 36} textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#001A4D">"{valor}"</text>
+                </g>
+            );
             return (
                 <figure className="my-6 not-prose">
-                    <svg viewBox="0 0 460 462" role="img" style={{ width: '100%', maxWidth: '470px', height: 'auto', display: 'block', margin: '0 auto' }}
-                        aria-label="Flujograma de la política de originación en cascada. Cuatro rombos encadenados en una sola columna: score menor que 550, endeudamiento mayor que 60, ingreso mayor o igual que 5000000 e ingreso menor que 1500000. De cada rombo sale a la derecha la rama Sí con su decisión —rechazado, rechazado, aprobado preferencial y aprobado con codeudor—, y hacia abajo la rama No, que lleva al rombo siguiente. Si los cuatro dan No, se llega al caso por defecto: aprobado estándar.">
+                    <svg viewBox="0 0 486 716" role="img" style={{ width: '100%', maxWidth: '486px', height: 'auto', display: 'block', margin: '0 auto' }}
+                        aria-label="Flujograma de la política de originación en cascada. Desde Inicio se entra al primer rombo. Cuatro rombos encadenados en una sola columna: score menor que 550, endeudamiento mayor que 60, ingreso mayor o igual que 5000000 e ingreso menor que 1500000. De cada rombo sale a la derecha la rama Sí hacia un proceso que asigna decision —rechazado, rechazado, aprobado preferencial y aprobado con codeudor—, y hacia abajo la rama No, que lleva al rombo siguiente. Si los cuatro dan No, se llega al caso por defecto, que asigna aprobado estandar. Las cinco ramas vuelven a juntarse, se escribe decision y se llega a Fin.">
                         {FLECHA_DEFS}
+
+                        <ellipse cx="130" cy="26" rx="54" ry="19" fill="#3D008D" />
+                        <text x="130" y="31" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Inicio</text>
+                        <line x1="130" y1="45" x2="130" y2="74" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
                         {RAMAS.map(({ y, cond, salida }, i) => (
                             <g key={i}>
                                 <polygon points={`130,${y} 240,${y + 32} 130,${y + 64} 20,${y + 32}`}
@@ -2776,21 +2793,77 @@
 
                                 <line x1="240" y1={y + 32} x2="278" y2={y + 32} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
                                 <text x="259" y={y + 25} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#15803D">Sí</text>
-                                <rect x="282" y={y + 14} width="168" height="36" rx="6" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
-                                <text x="366" y={y + 37} textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#001A4D">{salida}</text>
+                                {caja(282, y + 9, 176, salida, 'c' + i)}
+                                <line x1="458" y1={y + 32} x2={RAIL} y2={y + 32} stroke="#3D008D" strokeWidth="1.5" />
+                                <circle cx={RAIL} cy={y + 32} r="3" fill="#3D008D" />
 
                                 <line x1="130" y1={y + 64} x2="130" y2={y + 96} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
                                 <text x="144" y={y + 82} textAnchor="start" fontSize="11.5" fontWeight="700" fill="#B91C1C">No</text>
                             </g>
                         ))}
-                        <rect x="34" y="400" width="192" height="40" rx="6" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
-                        <text x="130" y="425" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#001A4D">APROBADO ESTANDAR</text>
+
+                        {caja(34, 460, 192, 'APROBADO ESTANDAR', 'defecto')}
+                        <line x1="130" y1="506" x2="130" y2={CONFLUYE} stroke="#3D008D" strokeWidth="1.5" />
+
+                        <line x1={RAIL} y1="108" x2={RAIL} y2={CONFLUYE} stroke="#3D008D" strokeWidth="1.5" />
+                        <line x1="130" y1={CONFLUYE} x2={RAIL} y2={CONFLUYE} stroke="#3D008D" strokeWidth="1.5" />
+                        <circle cx="130" cy={CONFLUYE} r="3.5" fill="#3D008D" />
+                        <line x1="130" y1={CONFLUYE} x2="130" y2="578" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
+                        <polygon points="37,596 237,596 223,634 23,634" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="130" y="620" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Escribir decision</text>
+                        <line x1="130" y1="634" x2="130" y2="664" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+                        <ellipse cx="130" cy="685" rx="54" ry="19" fill="#001A4D" />
+                        <text x="130" y="690" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Fin</text>
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
-                        Una cascada es <strong>una sola columna de rombos</strong>. Cada «Sí» sale del dibujo con
-                        una decisión; cada «No» baja al rombo siguiente. Se ve de un vistazo lo que el código
-                        esconde: en cuanto un «Sí» sale, <strong>los rombos de abajo no se llegan a dibujar</strong>
-                        —ni a evaluar—. Mover un rombo de sitio cambia quién sale por dónde, sin tocar ninguna condición.
+                        Una cascada es <strong>una sola columna de rombos</strong>. Cada «Sí» se sale por un
+                        lado con su decisión; cada «No» baja al rombo siguiente. Se ve de un vistazo lo que el
+                        código esconde: en cuanto un «Sí» sale, <strong>los rombos de abajo no se llegan a
+                        recorrer</strong> —ni a evaluar—. Las cinco ramas vuelven a juntarse antes de escribir,
+                        igual que en la selectiva doble: se recorre exactamente una. Mover un rombo de sitio
+                        cambia quién sale por dónde, sin tocar ninguna condición.
+                    </figcaption>
+                </figure>
+            );
+        };
+
+        // El syllabus pide «flujograma» por su nombre y el capítulo dibuja cinco
+        // formas distintas. Antes solo nombraba una: el rombo.
+        const SimbologiaFlujograma = () => {
+            const FILAS = [
+                ['Inicio y fin', 'Uno de cada uno: el recorrido va de uno al otro.'],
+                ['Entrada y salida', 'Leer un dato o escribir un resultado.'],
+                ['Proceso', 'Calcular o asignar: la variable cambia de valor.'],
+                ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.'],
+                ['Flujo', 'El orden del recorrido. La punta dice hacia dónde.'],
+            ];
+            const forma = (i, y) => {
+                if (i === 0) return <ellipse cx="54" cy={y + 15} rx="42" ry="14" fill="#3D008D" />;
+                if (i === 1) return <polygon points={`22,${y + 1} 96,${y + 1} 86,${y + 29} 12,${y + 29}`} fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.4" />;
+                if (i === 2) return <rect x="12" y={y + 1} width="84" height="28" rx="5" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />;
+                if (i === 3) return <polygon points={`54,${y} 98,${y + 15} 54,${y + 30} 10,${y + 15}`} fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />;
+                return <line x1="16" y1={y + 15} x2="92" y2={y + 15} stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha4)" />;
+            };
+            return (
+                <figure className="my-5 not-prose">
+                    <svg viewBox="0 0 430 210" role="img" style={{ width: '100%', maxWidth: '430px', height: 'auto', display: 'block', margin: '0 auto' }}
+                        aria-label="Simbología del flujograma. Óvalo: inicio y fin. Paralelogramo: entrada y salida. Rectángulo: proceso. Rombo: decisión, con dos salidas rotuladas Sí y No. Flecha: el flujo.">
+                        {FLECHA_DEFS}
+                        {FILAS.map(([nombre, que], i) => {
+                            const y = 6 + i * 40;
+                            return (
+                                <g key={i}>
+                                    {forma(i, y)}
+                                    <text x="112" y={y + 13} fontSize="12.5" fontWeight="700" fill="#3D008D">{nombre}</text>
+                                    <text x="112" y={y + 27} fontSize="11.5" fill="#4B5563">{que}</text>
+                                </g>
+                            );
+                        })}
+                    </svg>
+                    <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                        Las cinco formas que usan los dos flujogramas de este capítulo. La forma dice
+                        <strong> qué clase de paso es</strong>; el texto de dentro dice cuál.
                     </figcaption>
                 </figure>
             );
@@ -3614,6 +3687,8 @@ Debug.Print tarifa`,
                     caminos asigna <span className="inline-code">tarifa</span>, así que no hay forma de
                     llegar al final sin ella—.
                 </p>
+
+                <SimbologiaFlujograma />
 
                 <FlujogramaSelectivaDoble />
 
