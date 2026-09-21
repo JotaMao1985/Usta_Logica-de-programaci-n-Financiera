@@ -2248,7 +2248,7 @@
             const operando = (k, mirados, val) => (
                 <span className={mirados[k]
                     ? (val ? 'font-bold text-[#15803D]' : 'font-bold text-[#B91C1C]')
-                    : 'text-gray-400 line-through'}>{k}</span>
+                    : 'text-gray-500 line-through'}>{k}</span>
             );
             const vf = (x) => x ? 'V' : 'F';
 
@@ -2257,7 +2257,7 @@
                     <div className="flex items-center gap-2 mb-3">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-toggle-on"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>Evaluador lógico</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal/80 rounded px-2 py-0.5">Interactivo</span>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Interactivo</span>
                     </div>
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
@@ -2381,13 +2381,14 @@
             const OPCIONES = {
                 // Cada lista incluye el valor que cae EXACTAMENTE sobre su umbral.
                 // Es el caso que ningún bloque de código estático deja probar y el
-                // que más defectos produce: dos de estas cuatro condiciones incluyen
-                // su frontera y dos la excluyen.
+                // que más defectos produce: de estas cuatro condiciones solo una
+                // incluye su frontera —ingreso >= 5000000— y las otras tres la excluyen.
                 ingreso: [
+                    { v: 0, t: '$ 0 — sin ingreso declarado' },
                     { v: 1200000, t: '$ 1.200.000' },
-                    { v: 1500000, t: '$ 1.500.000 — el umbral, exacto' },
+                    { v: 1500000, t: '$ 1.500.000 — el piso del codeudor, exacto' },
                     { v: 2800000, t: '$ 2.800.000' },
-                    { v: 5000000, t: '$ 5.000.000 — el umbral, exacto' },
+                    { v: 5000000, t: '$ 5.000.000 — el piso preferencial, exacto' },
                     { v: 6500000, t: '$ 6.500.000' },
                 ],
                 score: [
@@ -2444,7 +2445,7 @@
                 {
                     cond: 'en cualquier otro caso',
                     prueba: () => true,
-                    salida: 'APROBADO ESTÁNDAR',
+                    salida: 'APROBADO ESTANDAR',
                     tono: 'bueno',
                     porque: 'No cae en ninguna causal de rechazo ni alcanza el tramo preferencial.',
                 },
@@ -2484,13 +2485,17 @@
                     <div className="flex items-center gap-2 mb-3">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-code-branch"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>Árbol de riesgo crediticio</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal/80 rounded px-2 py-0.5">Interactivo</span>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Interactivo</span>
                     </div>
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
                         Arme un solicitante y mire la cascada: <strong>decide la primera condición que se
                         cumple</strong>, y las que vienen después no se evalúan nunca. Esa es la respuesta
                         que hay que darle a un cliente que pregunta por qué le dijeron que no.
+                    </p>
+                    <p className="text-[0.95rem] text-gray-700 mb-3">
+                        Pruebe también un solicitante <strong>sin ingreso declarado</strong>: la política no
+                        tiene piso por abajo, y eso se ve mejor aquí que leyéndola.
                     </p>
                     <p className="text-[0.95rem] text-gray-700 mb-3">
                         Y cambie después el <strong>orden</strong> de las reglas. Son las mismas cinco, sin
@@ -2535,10 +2540,12 @@
                                             {i === reglas.length - 1 ? 'Sino' : (i === 0 ? 'Si' : 'Sino Si')}
                                         </span>
                                         <div className="min-w-0">
-                                            <p className={'font-mono text-sm ' + (evaluada ? 'text-navy' : 'text-gray-400')}>{r.cond}</p>
-                                            <p className={'text-xs ' + (evaluada ? 'text-gray-600' : 'text-gray-400')}>
+                                            <p className={'font-mono text-sm ' + (evaluada ? 'text-navy' : 'text-gray-500')}>{r.cond}</p>
+                                            <p className={'text-xs ' + (evaluada ? 'text-gray-600' : 'text-gray-500')}>
                                                 {esLaQueDecide
-                                                    ? <span><strong>Se cumple — decide aquí.</strong> {r.porque}</span>
+                                                    ? <span><strong>{i === reglas.length - 1
+                                                        ? 'Nada de lo anterior se cumplió — decide el caso por defecto.'
+                                                        : 'Se cumple — decide aquí.'}</strong> {r.porque}</span>
                                                     : evaluada
                                                         ? 'Se evaluó y no se cumple. Se sigue bajando.'
                                                         : 'No se evalúa: la decisión ya se tomó más arriba.'}
@@ -2551,7 +2558,7 @@
                     </ol>
 
                     {ordenImporta && (
-                        <div className="rounded-xl border-2 border-[#B45309] bg-[#B45309]/15 p-3 text-sm mb-3">
+                        <div role="status" className="rounded-xl border-2 border-[#B45309] bg-[#B45309]/15 p-3 text-sm mb-3">
                             <strong>Con este solicitante, el orden decide.</strong> El del comité devuelve
                             <span className="font-mono"> {salidaComite}</span> y el que quedó en producción devuelve
                             <span className="font-mono"> {salidaProduccion}</span>. Las cinco reglas son las mismas y
@@ -2613,9 +2620,9 @@
             // `Segun` por tramos, SIN caso por defecto: lo que no encaja en
             // ningún caso sale sin tarifa asignada.
             const porSegun = (m) => {
-                if (m > 0 && m <= 100000) return { tarifa: 2500, rama: 'Caso 1..100.000' };
-                if (m > 100000 && m <= 500000) return { tarifa: 6000, rama: 'Caso 100.001..500.000' };
-                if (m > 500000 && m <= 5000000) return { tarifa: 12000, rama: 'Caso 500.001..5.000.000' };
+                if (m >= 1 && m <= 100000) return { tarifa: 2500, rama: 'Caso 1..100.000' };
+                if (m >= 100001 && m <= 500000) return { tarifa: 6000, rama: 'Caso 100.001..500.000' };
+                if (m >= 500001 && m <= 5000000) return { tarifa: 12000, rama: 'Caso 500.001..5.000.000' };
                 return { tarifa: null, rama: 'ningún caso coincide' };
             };
 
@@ -2640,7 +2647,7 @@
                     <div className="flex items-center gap-2 mb-3">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-table-columns"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>El mismo problema, dos estructuras</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal/80 rounded px-2 py-0.5">Interactivo</span>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Interactivo</span>
                     </div>
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
@@ -3277,8 +3284,8 @@ End Sub`,
     Escribir "Total a pagar: ", total
     //> Total a pagar: 4800000
 Fin`,
-            python: `dias_mora = 30
-saldo     = 4_800_000
+            python: `saldo     = 4_800_000
+dias_mora = 30
 recargo   = 0
 
 if dias_mora > 30:
@@ -3289,8 +3296,8 @@ print(f"Recargo aplicado: {recargo:,.0f}")
 #> Recargo aplicado: 0
 print(f"Total a pagar: {total:,.0f}")
 #> Total a pagar: 4,800,000`,
-            r: `dias_mora <- 30
-saldo     <- 4800000
+            r: `saldo     <- 4800000
+dias_mora <- 30
 recargo   <- 0
 
 if (dias_mora > 30) {
@@ -3308,8 +3315,8 @@ Sub LiquidarMora()
     Dim diasMora As Integer, saldo As Currency
     Dim recargo As Currency, total As Currency
 
-    diasMora = 30
     saldo = 4800000
+    diasMora = 30
     recargo = 0
 
     If diasMora > 30 Then
@@ -4517,7 +4524,7 @@ End Sub`,
             cuota <- 21000
         Caso "NOMINA":
             cuota <- 0
-        De Otro Modo:
+        DeOtroModo:
             cuota <- 12000
     FinSegun
 
@@ -4587,7 +4594,7 @@ End Sub`,
             tarifa <- 6000
         Caso 500001..5000000:
             tarifa <- 12000
-        De Otro Modo:
+        DeOtroModo:
             tarifa <- 25000
     FinSegun
 
@@ -4658,7 +4665,7 @@ End Sub`,
         const ORDENA_SEGUN = {
             pseudo: ['Inicio', 'Leer tipoCuenta', 'Segun tipoCuenta Hacer',
                 '    Caso "AHORROS":', '        cuota <- 8500', '    Caso "CORRIENTE":',
-                '        cuota <- 21000', '    De Otro Modo:', '        cuota <- 12000',
+                '        cuota <- 21000', '    DeOtroModo:', '        cuota <- 12000',
                 'FinSegun', 'Escribir cuota', 'Fin'],
             python: ['tipo_cuenta = input("Tipo de cuenta: ")', 'match tipo_cuenta:',
                 '    case "AHORROS":', '        cuota = 8500', '    case "CORRIENTE":',
@@ -4793,7 +4800,7 @@ End If`,
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
                     bloques={EJ_SEGUN_RANGOS}
-                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema." />
+                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante, así que un monto con centavos cae entre dos tramos y termina en el caso por defecto." />
 
                 <Box type="info" label="Por qué esto anticipa el capítulo 6">
                     <span className="inline-code">Select Case</span> con rangos es de las pocas cosas que VBA
@@ -5168,7 +5175,7 @@ neto = pago - retencion`,
                 'Si compras <> 0 Y total / compras > 500000',
                 'Si esPreferencial Entonces … Sino …',
                 'Si score < 550 Entonces … Sino Si endeudamiento > 60 Entonces …',
-                'Segun tipoCuenta Hacer … De Otro Modo:',
+                'Segun tipoCuenta Hacer … DeOtroModo:',
             ],
             python: [
                 'ingreso > 3_000_000 or score >= 680 and endeudamiento < 40',
