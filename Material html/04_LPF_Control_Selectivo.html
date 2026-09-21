@@ -4960,7 +4960,7 @@ neto = pago - retencion`,
                 <ArbolRiesgo />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="Un solicitante con ingreso de 6 500 000, score 480 y endeudamiento del 68 % recibe un rechazo. El cliente llama a preguntar qué tiene que mejorar. ¿Qué se le dice?"
+                    pregunta="Un solicitante con ingreso de 6 500 000, score 480 y endeudamiento del 68 % recibe un rechazo. El cliente llama a preguntar cuál de las condiciones lo rechazó. ¿Qué se le dice?"
                     opciones={[
                         { texto: 'Que mejore el score y baje el endeudamiento: falla en las dos cosas.', correcta: false },
                         { texto: 'Que el ingreso no fue el problema, porque supera los cinco millones.', correcta: false },
@@ -5128,11 +5128,11 @@ neto = pago - retencion`,
                     etiquetaDer="Idea"
                     izquierda={EMPAREJA_CAP04}
                     derecha={[
-                        'Caso por defecto — recoge los valores que no encajan en ningún caso enumerado; sin él, la variable se queda sin asignar.',
-                        'Precedencia de los lógicos — el Y liga más fuerte que el O, así que esto no dice lo que parece decir a simple vista.',
-                        'Cascada — decide la primera condición que se cumple, y las de abajo no llegan a evaluarse.',
-                        'Condición guardia — el primer operando protege al segundo, y solo funciona si el lenguaje evalúa en cortocircuito.',
-                        'Selectiva doble — garantiza que se ejecute uno de los dos bloques y nunca los dos.',
+                        'Caso por defecto — la rama que se escribe para lo que no enumeró ninguna de las anteriores.',
+                        'Precedencia de los lógicos — dos conectores distintos en una misma expresión, y uno se resuelve antes que el otro.',
+                        'Cascada — varias alternativas encadenadas una detrás de otra, no anidadas una dentro de otra.',
+                        'Condición guardia — dos comprobaciones en una, donde la primera está puesta para proteger a la segunda.',
+                        'Selectiva doble — dos bloques alternativos colgando de una sola condición.',
                     ]}
                     solucion={[1, 3, 4, 2, 0]}
                 /></Ejercicio>
