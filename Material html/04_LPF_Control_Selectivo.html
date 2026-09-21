@@ -2306,31 +2306,37 @@
                             </caption>
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="border border-gray-300 px-2 py-1">A</th>
-                                    <th className="border border-gray-300 px-2 py-1">B</th>
-                                    <th className="border border-gray-300 px-2 py-1">C</th>
-                                    <th className="border border-gray-300 px-2 py-1">A O B Y C</th>
-                                    <th className="border border-gray-300 px-2 py-1">(A O B) Y C</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1">A</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1">B</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1">C</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1">A O B Y C</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1">(A O B) Y C</th>
+                                    <th scope="col" className="border border-gray-300 px-2 py-1" title="¿Difieren las dos expresiones?">≠</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {/* Las dos marcas se COMPONEN. Con un ternario excluyente, la fila
+                                    activa borraba el ámbar de «aquí difieren» —y el estado inicial del
+                                    componente es justamente una de las dos que difieren, así que el pie
+                                    decía «2 de 8» y solo se veía una—. */}
                                 {filas.map((f, i) => (
-                                    <tr key={i} className={activa(f) ? 'bg-secondary/15 font-bold' : (f.sin !== f.con ? 'bg-[#B45309]/10' : '')}>
+                                    <tr key={i} className={(f.sin !== f.con ? 'bg-[#B45309]/10 ' : '') + (activa(f) ? 'font-bold ring-2 ring-inset ring-secondary' : '')}>
                                         <td className="border border-gray-300 px-2 py-1 text-center font-mono">{vf(f.a)}</td>
                                         <td className="border border-gray-300 px-2 py-1 text-center font-mono">{vf(f.b)}</td>
                                         <td className="border border-gray-300 px-2 py-1 text-center font-mono">{vf(f.c)}</td>
                                         <td className="border border-gray-300 px-2 py-1 text-center font-mono">{vf(f.sin)}</td>
                                         <td className="border border-gray-300 px-2 py-1 text-center font-mono">{vf(f.con)}</td>
+                                        <td className="border border-gray-300 px-2 py-1 text-center font-mono font-bold">{f.sin !== f.con ? '≠' : '='}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                     <p className="text-xs text-gray-500 mt-2">
-                        Las filas en ámbar son aquellas donde las dos expresiones difieren:
-                        <strong> {nDifieren} de 8</strong>. Las dos tienen algo en común —el
-                        solicitante gana bien y está muy endeudado—, que es exactamente el perfil
-                        que un banco no quiere aprobar por descuido de un paréntesis.
+                        Las filas marcadas con <span className="font-mono font-bold">≠</span> son aquellas
+                        donde las dos expresiones difieren: <strong>{nDifieren} de 8</strong>. Todas ellas
+                        tienen algo en común —el solicitante gana bien y está muy endeudado—, que es
+                        exactamente el perfil que un banco no quiere aprobar por descuido de un paréntesis.
                     </p>
                 </div>
             );
@@ -2356,24 +2362,35 @@
         ------------------------------------------------------------ */
         const ArbolRiesgo = () => {
             const OPCIONES = {
+                // Cada lista incluye el valor que cae EXACTAMENTE sobre su umbral.
+                // Es el caso que ningún bloque de código estático deja probar y el
+                // que más defectos produce: dos de estas cuatro condiciones incluyen
+                // su frontera y dos la excluyen.
                 ingreso: [
                     { v: 1200000, t: '$ 1.200.000' },
+                    { v: 1500000, t: '$ 1.500.000 — el umbral, exacto' },
                     { v: 2800000, t: '$ 2.800.000' },
+                    { v: 5000000, t: '$ 5.000.000 — el umbral, exacto' },
                     { v: 6500000, t: '$ 6.500.000' },
                 ],
                 score: [
                     { v: 480, t: '480 — bajo' },
+                    { v: 550, t: '550 — el mínimo, exacto' },
                     { v: 660, t: '660 — medio' },
                     { v: 745, t: '745 — alto' },
                 ],
                 endeud: [
                     { v: 22, t: '22 % — holgado' },
                     { v: 45, t: '45 % — ajustado' },
+                    { v: 60, t: '60 % — el tope, exacto' },
                     { v: 68, t: '68 % — comprometido' },
                 ],
             };
             const [sol, setSol] = useState({ ingreso: 2800000, score: 660, endeud: 45 });
             const fijar = (k, v) => setSol(p => ({ ...p, [k]: Number(v) }));
+            // Las MISMAS cinco reglas, en los dos órdenes. El de producción sube la
+            // del ingreso alto al primer lugar; no cambia ni una condición.
+            const [orden, setOrden] = useState('comite');
 
             // La cascada, en el mismo orden en que la evaluaría el programa.
             // `prueba` devuelve si esa condición se cumple; la primera que se
@@ -2416,12 +2433,23 @@
                 },
             ];
 
+            const ORDEN_PRODUCCION = [2, 0, 1, 3, 4];
+            const enProduccion = ORDEN_PRODUCCION.map(i => REGLAS[i]);
+            const reglas = orden === 'produccion' ? enProduccion : REGLAS;
+
             // Se recorre como lo haría la máquina: hasta la primera verdadera.
-            let decidio = -1;
-            for (let i = 0; i < REGLAS.length; i++) {
-                if (REGLAS[i].prueba(sol)) { decidio = i; break; }
-            }
-            const fallo = REGLAS[decidio];
+            const decideCon = (lista) => {
+                for (let i = 0; i < lista.length; i++) if (lista[i].prueba(sol)) return i;
+                return -1;
+            };
+            const decidio = decideCon(reglas);
+            const fallo = reglas[decidio];
+            // Se calculan los dos para poder decir, con este solicitante, si el
+            // orden cambia la decisión o si da igual. Con la mayoría da igual: ese
+            // es justo el motivo por el que el defecto sobrevive a una revisión.
+            const salidaComite = REGLAS[decideCon(REGLAS)].salida;
+            const salidaProduccion = enProduccion[decideCon(enProduccion)].salida;
+            const ordenImporta = salidaComite !== salidaProduccion;
             const colorTono = { bueno: '#15803D', medio: '#B45309', malo: '#B91C1C' };
 
             const selector = (clave, etiqueta, opciones) => (
@@ -2447,6 +2475,24 @@
                         cumple</strong>, y las que vienen después no se evalúan nunca. Esa es la respuesta
                         que hay que darle a un cliente que pregunta por qué le dijeron que no.
                     </p>
+                    <p className="text-[0.95rem] text-gray-700 mb-3">
+                        Y cambie después el <strong>orden</strong> de las reglas. Son las mismas cinco, sin
+                        tocar una condición: busque un solicitante al que los dos órdenes le den respuestas
+                        contrarias. Existe, y no es raro.
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Orden de las reglas">
+                        {[['comite', 'Orden del comité', 'Los dos filtros de rechazo van primero'],
+                          ['produccion', 'Orden que quedó en producción', 'La regla del ingreso alto va primera']].map(([clave, rotulo, pie]) => (
+                            <button key={clave} type="button" onClick={() => setOrden(clave)}
+                                aria-pressed={orden === clave}
+                                className={'text-left rounded-xl border-2 px-3 py-2 transition ' +
+                                    (orden === clave ? 'border-primary bg-primary/10' : 'border-gray-300 bg-gray-50')}>
+                                <span className="block text-sm font-bold text-navy">{rotulo}</span>
+                                <span className="block text-xs text-gray-600">{pie}</span>
+                            </button>
+                        ))}
+                    </div>
 
                     <div className="grid gap-3 sm:grid-cols-3 mb-4">
                         {selector('ingreso', 'Ingreso mensual', OPCIONES.ingreso)}
@@ -2455,7 +2501,7 @@
                     </div>
 
                     <ol className="space-y-2 mb-4" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                        {REGLAS.map((r, i) => {
+                        {reglas.map((r, i) => {
                             const evaluada = i <= decidio;
                             const esLaQueDecide = i === decidio;
                             return (
@@ -2469,7 +2515,7 @@
                                             (esLaQueDecide ? 'bg-primary text-white'
                                                 : evaluada ? 'bg-gray-300 text-gray-700'
                                                     : 'bg-white text-gray-400 border border-gray-300')}>
-                                            {i === REGLAS.length - 1 ? 'Sino' : (i === 0 ? 'Si' : 'Sino Si')}
+                                            {i === reglas.length - 1 ? 'Sino' : (i === 0 ? 'Si' : 'Sino Si')}
                                         </span>
                                         <div className="min-w-0">
                                             <p className={'font-mono text-sm ' + (evaluada ? 'text-navy' : 'text-gray-400')}>{r.cond}</p>
@@ -2487,8 +2533,17 @@
                         })}
                     </ol>
 
+                    {ordenImporta && (
+                        <div className="rounded-xl border-2 border-[#B45309] bg-[#B45309]/15 p-3 text-sm mb-3">
+                            <strong>Con este solicitante, el orden decide.</strong> El del comité devuelve
+                            <span className="font-mono"> {salidaComite}</span> y el que quedó en producción devuelve
+                            <span className="font-mono"> {salidaProduccion}</span>. Las cinco reglas son las mismas y
+                            ninguna está mal escrita: lo único distinto es cuál se mira primero.
+                        </div>
+                    )}
+
                     <div role="status" className="rounded-xl p-3 text-white" style={{ background: colorTono[fallo.tono] }}>
-                        <p className="text-xs uppercase tracking-wider font-bold" style={{ margin: 0, opacity: 0.85 }}>Decisión del sistema</p>
+                        <p className="text-xs uppercase tracking-wider font-bold" style={{ margin: 0 }}>Decisión del sistema</p>
                         <p className="text-lg font-bold" style={{ margin: 0 }}>{fallo.salida}</p>
                         <p className="text-sm" style={{ margin: 0 }}>
                             Condición que decidió: <span className="font-mono">{fallo.cond}</span>
@@ -2517,12 +2572,17 @@
            «Segun sin caso por defecto» del banco.
         ------------------------------------------------------------ */
         const SelectivasComparadas = () => {
+            // Con los bordes exactos de cada tramo, que es donde viven los
+            // defectos de una escala y lo que un bloque de código no deja probar.
             const EJEMPLOS = [
+                { v: -50000, t: '-$ 50.000 — una devolución' },
+                { v: 0, t: '$ 0 — una transacción anulada' },
                 { v: 80000, t: '$ 80.000 — tramo 1' },
+                { v: 100000, t: '$ 100.000 — el borde del tramo 1' },
                 { v: 350000, t: '$ 350.000 — tramo 2' },
+                { v: 500000, t: '$ 500.000 — el borde del tramo 2' },
                 { v: 1200000, t: '$ 1.200.000 — tramo 3' },
                 { v: 7500000, t: '$ 7.500.000 — por encima del tope' },
-                { v: -50000, t: '-$ 50.000 — una devolución' },
             ];
             const [monto, setMonto] = useState(350000);
 
@@ -2594,6 +2654,122 @@
                             : <span>Con este monto las dos coinciden. Pruebe uno que no esté en ningún tramo.</span>}
                     </div>
                 </div>
+            );
+        };
+
+        /* ------------------------------------------------------------
+           FLUJOGRAMAS — la simbología que el syllabus pide por nombre
+
+           Dos, y no uno, porque enseñan cosas distintas: el primero, que una
+           selectiva doble abre DOS caminos y vuelve a juntarlos; el segundo,
+           que una cascada es una sola columna de rombos y que cada «No» te
+           baja al siguiente. El rombo es el símbolo de este capítulo.
+
+           Van en SVG en línea y no como imagen: escalan, se leen con lector
+           de pantalla por su `aria-label`, y no añaden un archivo que se
+           pueda perder al mover el HTML.
+        ------------------------------------------------------------ */
+        const FLECHA_DEFS = (
+            <defs>
+                <marker id="lp-flecha4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
+                </marker>
+            </defs>
+        );
+
+        const FlujogramaSelectivaDoble = () => (
+            <figure className="my-6 not-prose">
+                <svg viewBox="0 0 420 472" role="img" style={{ width: '100%', maxWidth: '440px', height: 'auto', display: 'block', margin: '0 auto' }}
+                    aria-label="Flujograma de una selectiva doble. Inicio; se leen esPreferencial y monto; un rombo pregunta si esPreferencial; por la rama Sí se calcula tarifa igual a monto por 0,002, que da 4000; por la rama No se calcula tarifa igual a monto por 0,005, que da 10000; las dos ramas vuelven a juntarse; se escribe tarifa y Fin. Exactamente una de las dos ramas se recorre.">
+                    {FLECHA_DEFS}
+
+                    <ellipse cx="210" cy="26" rx="58" ry="20" fill="#3D008D" />
+                    <text x="210" y="31" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Inicio</text>
+                    <line x1="210" y1="46" x2="210" y2="66" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
+                    <polygon points="44,66 390,66 376,114 30,114" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                    <text x="210" y="86" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Leer esPreferencial, monto</text>
+                    <text x="210" y="103" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">Verdadero · 2000000</text>
+                    <line x1="210" y1="114" x2="210" y2="134" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
+                    <polygon points="210,134 300,176 210,218 120,176" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.8" />
+                    <text x="210" y="181" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">¿esPreferencial?</text>
+
+                    <line x1="120" y1="176" x2="95" y2="176" stroke="#3D008D" strokeWidth="1.5" />
+                    <line x1="95" y1="176" x2="95" y2="248" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+                    <text x="107" y="169" textAnchor="middle" fontSize="12" fontWeight="700" fill="#15803D">Sí</text>
+
+                    <line x1="300" y1="176" x2="325" y2="176" stroke="#3D008D" strokeWidth="1.5" />
+                    <line x1="325" y1="176" x2="325" y2="248" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+                    <text x="313" y="169" textAnchor="middle" fontSize="12" fontWeight="700" fill="#B91C1C">No</text>
+
+                    <rect x="5" y="248" width="180" height="52" rx="6" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.5" />
+                    <text x="95" y="270" textAnchor="middle" fontSize="12" fontFamily="ui-monospace, monospace" fill="#001A4D">{'tarifa ← monto * 0.002'}</text>
+                    <text x="95" y="288" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">tarifa = 4000</text>
+
+                    <rect x="235" y="248" width="180" height="52" rx="6" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.5" />
+                    <text x="325" y="270" textAnchor="middle" fontSize="12" fontFamily="ui-monospace, monospace" fill="#001A4D">{'tarifa ← monto * 0.005'}</text>
+                    <text x="325" y="288" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">tarifa = 10000</text>
+
+                    <line x1="95" y1="300" x2="95" y2="332" stroke="#3D008D" strokeWidth="1.5" />
+                    <line x1="325" y1="300" x2="325" y2="332" stroke="#3D008D" strokeWidth="1.5" />
+                    <line x1="95" y1="332" x2="325" y2="332" stroke="#3D008D" strokeWidth="1.5" />
+                    <circle cx="210" cy="332" r="3.5" fill="#3D008D" />
+                    <line x1="210" y1="332" x2="210" y2="354" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
+                    <polygon points="44,354 390,354 376,402 30,402" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                    <text x="210" y="382" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Escribir tarifa</text>
+                    <line x1="210" y1="402" x2="210" y2="422" stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+
+                    <ellipse cx="210" cy="442" rx="58" ry="20" fill="#001A4D" />
+                    <text x="210" y="447" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Fin</text>
+                </svg>
+                <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                    El rombo es el símbolo de la decisión, y de él salen <strong>dos</strong> flechas rotuladas.
+                    Las dos vuelven a juntarse antes de seguir: por eso se recorre exactamente una, nunca las
+                    dos ni ninguna. Con dos <span className="inline-code">Si</span> sueltos habría dos rombos
+                    seguidos, y esa garantía se perdería.
+                </figcaption>
+            </figure>
+        );
+
+        const FlujogramaCascada = () => {
+            const RAMAS = [
+                { y: 16, cond: 'score < 550', salida: 'RECHAZADO' },
+                { y: 112, cond: 'endeudamiento > 60', salida: 'RECHAZADO' },
+                { y: 208, cond: 'ingreso >= 5000000', salida: 'APROBADO PREFERENCIAL' },
+                { y: 304, cond: 'ingreso < 1500000', salida: 'APROBADO CON CODEUDOR' },
+            ];
+            return (
+                <figure className="my-6 not-prose">
+                    <svg viewBox="0 0 460 462" role="img" style={{ width: '100%', maxWidth: '470px', height: 'auto', display: 'block', margin: '0 auto' }}
+                        aria-label="Flujograma de la política de originación en cascada. Cuatro rombos encadenados en una sola columna: score menor que 550, endeudamiento mayor que 60, ingreso mayor o igual que 5000000 e ingreso menor que 1500000. De cada rombo sale a la derecha la rama Sí con su decisión —rechazado, rechazado, aprobado preferencial y aprobado con codeudor—, y hacia abajo la rama No, que lleva al rombo siguiente. Si los cuatro dan No, se llega al caso por defecto: aprobado estándar.">
+                        {FLECHA_DEFS}
+                        {RAMAS.map(({ y, cond, salida }, i) => (
+                            <g key={i}>
+                                <polygon points={`130,${y} 240,${y + 32} 130,${y + 64} 20,${y + 32}`}
+                                    fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.8" />
+                                <text x="130" y={y + 37} textAnchor="middle" fontSize="12.5" fontFamily="ui-monospace, monospace" fill="#001A4D">{cond}</text>
+
+                                <line x1="240" y1={y + 32} x2="278" y2={y + 32} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+                                <text x="259" y={y + 25} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#15803D">Sí</text>
+                                <rect x="282" y={y + 14} width="168" height="36" rx="6" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                                <text x="366" y={y + 37} textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#001A4D">{salida}</text>
+
+                                <line x1="130" y1={y + 64} x2="130" y2={y + 96} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha4)" />
+                                <text x="144" y={y + 82} textAnchor="start" fontSize="11.5" fontWeight="700" fill="#B91C1C">No</text>
+                            </g>
+                        ))}
+                        <rect x="34" y="400" width="192" height="40" rx="6" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="130" y="425" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#001A4D">APROBADO ESTANDAR</text>
+                    </svg>
+                    <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                        Una cascada es <strong>una sola columna de rombos</strong>. Cada «Sí» sale del dibujo con
+                        una decisión; cada «No» baja al rombo siguiente. Se ve de un vistazo lo que el código
+                        esconde: en cuanto un «Sí» sale, <strong>los rombos de abajo no se llegan a dibujar</strong>
+                        —ni a evaluar—. Mover un rombo de sitio cambia quién sale por dónde, sin tocar ninguna condición.
+                    </figcaption>
+                </figure>
             );
         };
 
@@ -2715,34 +2891,34 @@
             pseudo: `// Estudio de crédito: la misma regla, con y sin paréntesis
 ingreso       <- 6500000
 score         <- 480
-endeudamiento <- 0.68
+endeudamiento <- 68
 
 // Sin paréntesis. Y liga más fuerte que O, así que esto se lee
-// ingreso > 3000000  O  (score >= 680  Y  endeudamiento < 0.40)
-aprobadoA <- ingreso > 3000000 O score >= 680 Y endeudamiento < 0.40
+// ingreso > 3000000  O  (score >= 680  Y  endeudamiento < 40)
+aprobadoA <- ingreso > 3000000 O score >= 680 Y endeudamiento < 40
 
 // Con paréntesis se fuerza el otro árbol
-aprobadoB <- (ingreso > 3000000 O score >= 680) Y endeudamiento < 0.40`,
+aprobadoB <- (ingreso > 3000000 O score >= 680) Y endeudamiento < 40`,
             python: `ingreso       = 6_500_000
 score         = 480
-endeudamiento = 0.68
+endeudamiento = 68
 
 # Sin paréntesis. «and» liga más fuerte que «or», así que esto se lee
-# ingreso > 3_000_000 or (score >= 680 and endeudamiento < 0.40)
-aprobado_a = ingreso > 3_000_000 or score >= 680 and endeudamiento < 0.40
+# ingreso > 3_000_000 or (score >= 680 and endeudamiento < 40)
+aprobado_a = ingreso > 3_000_000 or score >= 680 and endeudamiento < 40
 
 # Con paréntesis se fuerza el otro árbol
-aprobado_b = (ingreso > 3_000_000 or score >= 680) and endeudamiento < 0.40`,
+aprobado_b = (ingreso > 3_000_000 or score >= 680) and endeudamiento < 40`,
             r: `ingreso       <- 6500000
 score         <- 480
-endeudamiento <- 0.68
+endeudamiento <- 68
 
 # Sin paréntesis. «&&» liga más fuerte que «||», así que esto se lee
-# ingreso > 3000000 || (score >= 680 && endeudamiento < 0.40)
-aprobado_a <- ingreso > 3000000 || score >= 680 && endeudamiento < 0.40
+# ingreso > 3000000 || (score >= 680 && endeudamiento < 40)
+aprobado_a <- ingreso > 3000000 || score >= 680 && endeudamiento < 40
 
 # Con paréntesis se fuerza el otro árbol
-aprobado_b <- (ingreso > 3000000 || score >= 680) && endeudamiento < 0.40`,
+aprobado_b <- (ingreso > 3000000 || score >= 680) && endeudamiento < 40`,
             vba: `Option Explicit
 
 Sub EstudioDeCredito()
@@ -2751,14 +2927,14 @@ Sub EstudioDeCredito()
 
     ingreso = 6500000
     score = 480
-    endeudamiento = 0.68
+    endeudamiento = 68
 
     ' Sin paréntesis. And liga más fuerte que Or, así que esto se lee
-    ' ingreso > 3000000 Or (score >= 680 And endeudamiento < 0.4)
-    aprobadoA = ingreso > 3000000 Or score >= 680 And endeudamiento < 0.4
+    ' ingreso > 3000000 Or (score >= 680 And endeudamiento < 40)
+    aprobadoA = ingreso > 3000000 Or score >= 680 And endeudamiento < 40
 
     ' Con paréntesis se fuerza el otro árbol
-    aprobadoB = (ingreso > 3000000 Or score >= 680) And endeudamiento < 0.4
+    aprobadoB = (ingreso > 3000000 Or score >= 680) And endeudamiento < 40
 End Sub`,
         };
 
@@ -3412,6 +3588,8 @@ Debug.Print tarifa`,
                     llegar al final sin ella—.
                 </p>
 
+                <FlujogramaSelectivaDoble />
+
                 <CodeTabs
                     titulo="La tarifa, resuelta con Si…Sino"
                     bloques={EJ_TARIFA_SINO}
@@ -3527,13 +3705,13 @@ Debug.Print tarifa`,
         ============================================================ */
         /* La política de originación del capítulo. Cinco reglas en cascada,
            las mismas que usa el ArbolRiesgo de la sección 6. Con el
-           solicitante de la portada —6 500 000, score 480, 35 %— el orden
+           solicitante de la portada —6 500 000, score 480, 68 %— el orden
            correcto rechaza. Salidas ejecutadas el 2026-09-20. */
         const EJ_CASCADA_OK = {
             pseudo: `Inicio
     ingreso       <- 6500000
     score         <- 480
-    endeudamiento <- 35
+    endeudamiento <- 68
 
     Si score < 550 Entonces
         decision <- "RECHAZADO"
@@ -3552,7 +3730,7 @@ Debug.Print tarifa`,
 Fin`,
             python: `ingreso       = 6_500_000
 score         = 480
-endeudamiento = 35
+endeudamiento = 68
 
 if score < 550:
     decision = "RECHAZADO"
@@ -3569,7 +3747,7 @@ print(decision)
 #> RECHAZADO`,
             r: `ingreso       <- 6500000
 score         <- 480
-endeudamiento <- 35
+endeudamiento <- 68
 
 if (score < 550) {
   decision <- "RECHAZADO"
@@ -3593,7 +3771,7 @@ Sub EstudiarSolicitud()
 
     ingreso = 6500000
     score = 480
-    endeudamiento = 35
+    endeudamiento = 68
 
     If score < 550 Then
         decision = "RECHAZADO"
@@ -3619,7 +3797,7 @@ End Sub`,
             pseudo: `Inicio
     ingreso       <- 6500000
     score         <- 480
-    endeudamiento <- 35
+    endeudamiento <- 68
 
     Si ingreso >= 5000000 Entonces
         decision <- "APROBADO PREFERENCIAL"
@@ -3638,7 +3816,7 @@ End Sub`,
 Fin`,
             python: `ingreso       = 6_500_000
 score         = 480
-endeudamiento = 35
+endeudamiento = 68
 
 if ingreso >= 5_000_000:
     decision = "APROBADO PREFERENCIAL"
@@ -3655,7 +3833,7 @@ print(decision)
 #> APROBADO PREFERENCIAL`,
             r: `ingreso       <- 6500000
 score         <- 480
-endeudamiento <- 35
+endeudamiento <- 68
 
 if (ingreso >= 5000000) {
   decision <- "APROBADO PREFERENCIAL"
@@ -3679,7 +3857,7 @@ Sub EstudiarSolicitudMal()
 
     ingreso = 6500000
     score = 480
-    endeudamiento = 35
+    endeudamiento = 68
 
     If ingreso >= 5000000 Then
         decision = "APROBADO PREFERENCIAL"
@@ -3971,6 +4149,87 @@ Else
 End If`,
         };
 
+        /* La cascada mal ordenada, para MIRARLA ejecutarse. El `TablaTraza` de
+           más abajo pide hacer una traza; esto enseña el método antes, que es
+           el reparto que el capítulo 3 dejó establecido. Aquí la traza muestra
+           algo que una tabla estática no puede: que el estado se carga entero
+           —los tres datos del solicitante— y que dos de ellos no llegan a
+           mirarse nunca. Salidas ejecutadas el 2026-09-21. */
+        const TZ_CASCADA_MAL = {
+            pseudo: `Inicio
+    ingreso       <- 6500000
+    score         <- 480
+    endeudamiento <- 68
+    Si ingreso >= 5000000 Entonces
+        decision <- "APROBADO PREFERENCIAL"
+    Sino Si score < 550 Entonces
+        decision <- "RECHAZADO"
+    Sino Si endeudamiento > 60 Entonces
+        decision <- "RECHAZADO"
+    Sino
+        decision <- "APROBADO ESTANDAR"
+    FinSi
+    Escribir decision
+Fin`,
+            python: `ingreso       = 6_500_000
+score         = 480
+endeudamiento = 68
+if ingreso >= 5_000_000:
+    decision = "APROBADO PREFERENCIAL"
+elif score < 550:
+    decision = "RECHAZADO"
+elif endeudamiento > 60:
+    decision = "RECHAZADO"
+else:
+    decision = "APROBADO ESTANDAR"
+print(decision)`,
+            r: `ingreso       <- 6500000
+score         <- 480
+endeudamiento <- 68
+if (ingreso >= 5000000) {
+  decision <- "APROBADO PREFERENCIAL"
+} else if (score < 550) {
+  decision <- "RECHAZADO"
+} else if (endeudamiento > 60) {
+  decision <- "RECHAZADO"
+} else {
+  decision <- "APROBADO ESTANDAR"
+}
+cat(decision, "\\n")`,
+            vba: `Sub EstudiarSolicitudMal()
+    Dim ingreso As Currency, score As Integer, endeudamiento As Double
+    Dim decision As String
+    ingreso = 6500000
+    score = 480
+    endeudamiento = 68
+    If ingreso >= 5000000 Then
+        decision = "APROBADO PREFERENCIAL"
+    ElseIf score < 550 Then
+        decision = "RECHAZADO"
+    ElseIf endeudamiento > 60 Then
+        decision = "RECHAZADO"
+    Else
+        decision = "APROBADO ESTANDAR"
+    End If
+    Debug.Print decision
+End Sub`,
+        };
+        const TZ_MAL_SALIDA = { pseudo: 'APROBADO PREFERENCIAL', python: 'APROBADO PREFERENCIAL', r: 'APROBADO PREFERENCIAL', vba: 'APROBADO PREFERENCIAL' };
+        const TZ_CASCADA_MAL_PASOS = [
+            { linea: { pseudo: 2, python: 1, r: 1, vba: 4 }, estado: { ingreso: '6500000' },
+                nota: 'Entra el ingreso. Es, aunque todavía no se note, el único de los tres datos que esta cascada va a llegar a mirar.' },
+            { linea: { pseudo: 3, python: 2, r: 2, vba: 5 }, estado: { score: '480' },
+                nota: 'El score, setenta puntos por debajo del mínimo de originación. Queda cargado y disponible: el dato está, y está bien.' },
+            { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { endeudamiento: '68' },
+                nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores el comité habría rechazado sin dudar.' },
+            { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: {},
+                nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las tres condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
+            { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { decision: 'APROBADO PREFERENCIAL' },
+                nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que un auditor encuentra seis meses después y no sabe explicar.' },
+            { linea: { pseudo: 14, python: 12, r: 13, vba: 16 }, estado: {}, salida: TZ_MAL_SALIDA,
+                nota: 'Fin. De las cuatro condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras tres en ningún sitio salvo en esta tabla.' },
+        ];
+
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
@@ -3999,6 +4258,8 @@ End If`,
                     de las ramas <strong>es parte de la lógica</strong>, no del estilo.
                 </Box>
 
+                <FlujogramaCascada />
+
                 <CodeTabs
                     titulo="La política de originación, en el orden correcto"
                     bloques={EJ_CASCADA_OK}
@@ -4008,7 +4269,7 @@ End If`,
                 <p>
                     Ahora la regla del ingreso alto sube al primer lugar. No se ha cambiado ni una
                     condición, ni una cifra, ni una decisión: solo el orden de las ramas. El mismo
-                    solicitante —6 500 000 de ingreso, score 480, endeudamiento del 35 %— recibe la
+                    solicitante —6 500 000 de ingreso, score 480, endeudamiento del 68 %— recibe la
                     respuesta contraria.
                 </p>
 
@@ -4024,6 +4285,23 @@ End If`,
                     <em> y</em> deberían caer en una de abajo. Con los demás, las dos versiones dan
                     exactamente lo mismo.
                 </Box>
+
+                <Trazador
+                    titulo="Traza guiada · la cascada que aprueba lo que no debía"
+                    enunciado={<>Avance instrucción por instrucción. La <strong>línea activa</strong> se resalta
+                        en el código y la tabla escribe una fila por cada instrucción ejecutada. Fíjese en dos
+                        cosas: cuántas filas tiene la tabla al final —y cuántas líneas tiene el programa—, y qué
+                        pasa con <span className="inline-code">score</span> y
+                        <span className="inline-code"> endeudamiento</span> después de cargarse.</>}
+                    codigo={TZ_CASCADA_MAL}
+                    variables={[
+                        { clave: 'ingreso', titulo: 'ingreso' },
+                        { clave: 'score', titulo: 'score' },
+                        { clave: 'endeudamiento', titulo: 'endeudamiento' },
+                        { clave: 'decision', titulo: 'decision' },
+                    ]}
+                    pasos={TZ_CASCADA_MAL_PASOS}
+                    nota="Seis instrucciones ejecutadas de quince escritas. La diferencia no es un error: es la estructura haciendo su trabajo. El error es el orden en que se le pidió que lo hiciera." />
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La cascada que aprueba lo que no debía"
