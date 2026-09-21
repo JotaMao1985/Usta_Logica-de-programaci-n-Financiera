@@ -449,59 +449,104 @@ Comprobado por DOM, no de vista:
       capítulo declara son las que el código produce.
 - [ ] **Revisión del docente:** tono, densidad y dificultad del primer tercio.
 
-#### Tarea 2.4 · Sección 4 — «Anidadas y en cascada» ← **núcleo**
+#### Tarea 2.4 · Sección 4 — «Anidadas y en cascada» ← **núcleo** · ✅
 El E3 de alto valor: la cascada con los rangos en el orden equivocado. El
 estudiante identifica el defecto, lo **nombra** y estima el impacto monetario. El
 `DetectaError` lleva `lineaCorrecta` y `explicacion` **por lenguaje** —el mismo
 fallo no cae en la misma línea en los cuatro— y el enunciado no cita ningún
 número (trampas 4 y 8 de la skill).
 
-#### Tarea 2.5 · Sección 5 — «Segun: la selectiva múltiple»
+#### Tarea 2.5 · Sección 5 — «Segun: la selectiva múltiple» · ✅
 Los cuatro lenguajes con sus diferencias reales (H6), y el `Box` que explica por
 qué en R hay que caer a `if / else if`.
 
-#### Tarea 2.6 · Sección 6 — «Casos financieros»
+#### Tarea 2.6 · Sección 6 — «Casos financieros» · ✅
 Clasificación de riesgo, escalas tarifarias, retención en la fuente, aprobación
 automática. `ArbolRiesgo` vive aquí. El E7: el sistema rechazó un crédito; dada la
 traza, explicarle al cliente **cuál** condición falló.
 
-#### Tarea 2.7 · Evaluación y glosario
+#### Tarea 2.7 · Evaluación y glosario · ✅
 Diez preguntas. **La bandera `multiple: true` en toda pregunta con dos respuestas
 correctas** — la trampa 11, que en el capítulo 2 produjo una pregunta imposible de
 acertar. El E6 (`Emparejamiento`) cruza las seis secciones.
 
 ### ⏸ Punto de control 3 — Contenido completo
-- [ ] Las seis secciones, la portada y la evaluación
-- [ ] Cuota cumplida (§5)
-- [ ] Las tres deudas del capítulo 3 saldadas (H2)
+- [x] Las seis secciones, la portada y la evaluación · 5 131 líneas
+- [x] **Cuota cumplida:** 18 ejercicios · E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2
+      — el mismo reparto exacto que el capítulo 3
+- [x] **Las tres deudas del capítulo 3, saldadas** (H2): la fila 5.ª de la tabla
+      de precedencia está desplegada en la sección 1; la tabla de traza tiene su
+      columna de rama desde la sección 2; y el ejercicio anunciado —el crédito
+      aprobado por el orden de las condiciones— es el E3 de alto valor de la
+      sección 4.
 
 ---
 
 ### Fase 3 — Auditoría
 
-#### Tarea 3.1 · `verificar.py --con-salidas`
+#### Tarea 3.1 · `verificar.py --con-salidas` · ✅
 Las doce comprobaciones, con las salidas de Python y R **ejecutadas**.
 
-#### Tarea 3.2 · Auditoría por DOM
+#### Tarea 3.2 · Auditoría por DOM · ✅
 Cada ejercicio que califica, conducido hasta el veredicto en los cuatro lenguajes,
 **incluida una respuesta mala**. El cuestionario final respondido entero, y
 acertadas las diez: es la única forma de descubrir una pregunta imposible.
 
-#### Tarea 3.3 · La prueba de la tilde
+#### Tarea 3.3 · La prueba de la tilde · ✅
 Específica de este capítulo (H3): en cada `TablaTraza` con columna de rama,
 comprobar por DOM que el vocabulario declarado se acepta y que ninguna respuesta
 razonable en español se marca mal por una tilde.
 
-#### Tarea 3.4 · 375 px, sección por sección
+#### Tarea 3.4 · 375 px, sección por sección · ✅
 Con la barra lateral **cerrada**. `scrollWidth` igual al viewport.
 
-#### Tarea 3.5 · Contraste
+#### Tarea 3.5 · Contraste · ✅
 El gold nunca es texto sobre fondo claro. Medido en el navegador, con la razón
 escrita en la línea; no indultado de vista.
 
 ### ⏸ Punto de control 4 — Auditoría
-- [ ] Las doce en verde · consola limpia · 375 px · contraste medido
-- [ ] Toda comprobación nueva con su **prueba negativa** registrada
+
+Ejecutado el 2026-09-20.
+
+- [x] **`verificar.py --con-salidas` en verde sobre los cuatro capítulos**, con
+      la cuota incluida. Las salidas de Python y R que el capítulo declara son
+      las que el código produce al ejecutarlo.
+- [x] **Consola limpia:** solo los dos avisos de siempre —Tailwind por CDN y
+      Babel en el navegador—.
+- [x] **375 px, las ocho secciones:** `scrollWidth` = 375 en todas y ningún
+      elemento fuera del viewport que no esté dentro de su propio contenedor con
+      `overflow-x`. Medido con el menú cerrado y tras recargar.
+- [x] **Contraste.** El contenido del capítulo **no usa gold ni una sola vez**
+      —comprobado por búsqueda sobre la región entre `LP-CORE FIN` y el `App`—,
+      de modo que la comprobación 10 no tiene nada que indultar y no lo indulta:
+      no avisa. Los tres colores de estado que sí introduje, medidos sobre
+      blanco con la fórmula WCAG: verde `#15803D` **5,02:1**, rojo `#B91C1C`
+      **6,47:1**, ámbar `#B45309` **5,02:1**. Los tres pasan AA para texto
+      normal (4,5:1). Para referencia, el gold está en 1,73:1, que es
+      exactamente por qué la regla existe.
+- [x] **Auditoría por DOM · los quince ejercicios que califican, conducidos
+      hasta el veredicto.** MCQ de las secciones 1, 3, 5 y 6; las cuatro
+      `TablaTraza` —18/18, 10/10, 12/12 y 21/21—; los dos `OrdenaPasos`; los dos
+      `DetectaError` —«¡Diagnóstico correcto!» los dos—; los dos `Comparador`;
+      el `Emparejamiento`, 5 de 5, y además en VBA. Los tres `Reto` no califican:
+      revelan solución.
+- [x] **Respuestas incorrectas probadas**, que es la otra mitad: el MCQ de la
+      sección 3 marca el fallo y explica; la traza de la sección 3 da 7/10 con
+      tres celdas mal; el `DetectaError` de la sección 4 responde «ni la línea ni
+      el tipo son correctos».
+- [x] **El cuestionario final respondido entero: 10/10 y 100 %**, incluida la
+      pregunta de selección múltiple. Es la prueba que existe porque el
+      cuestionario del capítulo 2 daba 9 sobre 10 con las diez respuestas buenas.
+- [x] **Los once iconos de Font Awesome** con glifo real y ancho no nulo (R9).
+- [ ] Toda comprobación nueva con su **prueba negativa** registrada — no se
+      añadió ninguna comprobación nueva a `verificar.py` en esta tarea; las que
+      había cazaron lo suyo (ver abajo).
+
+**Lo que las comprobaciones existentes cazaron, que es su razón de ser:** la
+número 12 detectó que había escrito «(selección múltiple)» en el enunciado de
+una pregunta cuando el componente ya pinta esa etiqueta a partir de
+`multiple: true`. Es literalmente el defecto del capítulo 2, evitado por una
+regla escrita después de sufrirlo.
 
 ---
 
