@@ -2415,7 +2415,7 @@
                     prueba: (s) => s.ingreso >= 5000000,
                     salida: 'APROBADO PREFERENCIAL',
                     tono: 'bueno',
-                    porque: 'Pasó los dos filtros de rechazo y su ingreso lo sitúa en el tramo preferencial. Accede a tasa preferencial.',
+                    porque: 'Su ingreso alcanza el tramo preferencial y accede a tasa preferencial. Lo que quede debajo de esta regla ya no se mira.',
                 },
                 {
                     cond: 'ingreso < 1500000',
@@ -2556,7 +2556,7 @@
         /* ------------------------------------------------------------
            SelectivasComparadas — el mismo problema, dos estructuras
 
-           Una escala de tarifas por monto, resuelta con `Si` anidados y con
+           Una escala de tarifas por monto, resuelta en cascada y con
            `Segun`, lado a lado. No están puestas para que se vean bonitas:
            están puestas porque NO son equivalentes, y el estudiante tiene que
            encontrar dónde.
@@ -2627,8 +2627,8 @@
                     </div>
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
-                        La misma escala de tarifas, escrita con <span className="inline-code">Si</span> anidados
-                        y con <span className="inline-code">Segun</span>. Pruebe los montos y busque uno
+                        La misma escala de tarifas, escrita <strong>en cascada</strong> y
+                        con <span className="inline-code">Segun</span>. Pruebe los montos y busque uno
                         donde <strong>no den lo mismo</strong>. Existe.
                     </p>
 
@@ -2648,9 +2648,15 @@
                     <div role="status" className={'rounded-xl p-3 text-sm ' +
                         (difieren ? 'bg-[#B45309]/15 border-2 border-[#B45309]' : 'bg-gray-100 border border-gray-300')}>
                         {difieren
-                            ? <span><strong>Aquí difieren.</strong> La cascada cobra una tarifa; el <span className="inline-code">Segun</span> no
-                                asigna ninguna y el programa sigue con la variable sin valor. No hay error, no hay mensaje:
-                                hay una transacción sin cobrar.</span>
+                            ? (monto <= 0
+                                ? <span><strong>Aquí difieren, y las dos están mal.</strong> La cascada cobra 2 500 sobre un monto
+                                    que no es una venta: <span className="inline-code">monto &lt;= 100.000</span> también es cierto
+                                    para un negativo y para el cero. El <span className="inline-code">Segun</span> no asigna
+                                    ninguna. Son dos defectos distintos: un tope sin piso de un lado, y un caso por
+                                    defecto que falta del otro.</span>
+                                : <span><strong>Aquí difieren.</strong> La cascada cobra la tarifa de su <span className="inline-code">Sino</span> final;
+                                    el <span className="inline-code">Segun</span> no asigna ninguna y el programa sigue con la
+                                    variable sin valor. No hay error, no hay mensaje: hay una transacción sin cobrar.</span>)
                             : <span>Con este monto las dos coinciden. Pruebe uno que no esté en ningún tramo.</span>}
                     </div>
                 </div>
@@ -2783,7 +2789,7 @@
                     Comité de cartera, martes. Un desembolso de 40 millones a un solicitante con score
                     480 —setenta puntos por debajo del mínimo de originación— aprobado por el motor de
                     decisión sin que nadie lo tocara. Revisan las reglas: las cinco están bien
-                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Tres de
+                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Cuatro de
                     las cinco no llegaron a mirarse nunca.
                 </Motivacion>
 
@@ -2854,10 +2860,11 @@
                     Todo algoritmo aparece en cuatro versiones y cada bloque <strong>tiene su propia
                     pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos y compararlos; el
                     material <strong>recuerda la última elección</strong>. En este capítulo mirar los cuatro
-                    no es opcional: es el primero donde <strong>los cuatro no se comportan igual</strong>. VBA
+                    no es opcional: es el primero donde <strong>esas diferencias deciden el resultado de un
+                    programa</strong>, y no solo el valor de una expresión. VBA
                     evalúa siempre los dos lados de un <span className="inline-code">And</span> y los otros
                     tres no; y la selectiva múltiple de la sección 5 admite rangos en VBA, exige una guarda
-                    en Python y sencillamente no existe en R.
+                    en Python y en R obliga a volver a la cascada.
                 </p>
 
                 <Box type="tip" label="Los videos del syllabus">
@@ -2957,7 +2964,9 @@ consumo_alto = compras != 0 and total / compras > 500_000`,
 total   <- 0
 
 # La guardia: con && R no evalúa el segundo operando si el primero es FALSE.
-# OJO: con & (un solo signo) sí lo evaluaría, y esto fallaría.
+# OJO: con & (un solo signo) sí lo evaluaría. Y no se detiene: 0/0 da NaN,
+# NaN > 500000 da NA, y FALSE & NA da FALSE. Ni un aviso. Es peor que el
+# error 11 de VBA: allí el fallo se ve; aquí se cuela sin dejar rastro.
 consumo_alto <- compras != 0 && total / compras > 500000`,
             vba: `Option Explicit
 
@@ -3627,8 +3636,9 @@ Debug.Print tarifa`,
 
                 <h3>La traza de las dos ramas</h3>
                 <p>
-                    Con una selectiva doble, la columna <strong>rama</strong> ya no puede quedar en blanco:
-                    alguno de los dos caminos se tomó. Es la diferencia con la sección anterior, donde
+                    Con una selectiva doble, en la fila de la condición la respuesta
+                    ya no puede ser <span className="inline-code">ninguna</span>: alguno de los dos
+                    caminos se tomó. Es la diferencia con la sección anterior, donde
                     «ninguna» era una respuesta posible.
                 </p>
 
@@ -4223,17 +4233,17 @@ End Sub`,
             { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { endeudamiento: '68' },
                 nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores el comité habría rechazado sin dudar.' },
             { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: {},
-                nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las tres condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
+                nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las dos condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
             { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { decision: 'APROBADO PREFERENCIAL' },
                 nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que un auditor encuentra seis meses después y no sabe explicar.' },
             { linea: { pseudo: 14, python: 12, r: 13, vba: 16 }, estado: {}, salida: TZ_MAL_SALIDA,
-                nota: 'Fin. De las cuatro condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras tres en ningún sitio salvo en esta tabla.' },
+                nota: 'Fin. De las tres condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras dos en ningún sitio salvo en esta tabla.' },
         ];
 
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
-                    gancho="Las cinco condiciones son correctas. Puestas en ese orden, tres no se evalúan nunca.">
+                    gancho="Las cinco reglas son correctas. Puestas en ese orden, tres condiciones no se evalúan nunca.">
                     Es el crédito de la portada. El motor de decisión preguntaba primero por el ingreso
                     —que el solicitante cumplía de sobra— y devolvía aprobado sin llegar a mirar el
                     score. La condición del score estaba escrita, probada y bien redactada, dos
@@ -4301,7 +4311,7 @@ End Sub`,
                         { clave: 'decision', titulo: 'decision' },
                     ]}
                     pasos={TZ_CASCADA_MAL_PASOS}
-                    nota="Seis instrucciones ejecutadas de quince escritas. La diferencia no es un error: es la estructura haciendo su trabajo. El error es el orden en que se le pidió que lo hiciera." />
+                    nota="Seis instrucciones ejecutadas; cuente las que tiene escritas el programa de la izquierda. La diferencia no es un error: es la estructura haciendo su trabajo. El error es el orden en que se le pidió que lo hiciera." />
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La cascada que aprueba lo que no debía"
@@ -4389,7 +4399,7 @@ End Sub`,
                         { texto: 'Ocupa menos líneas, y el código corto tiene menos defectos.', correcta: false },
                         { texto: 'Es más rápida: evalúa menos condiciones que la versión anidada.', correcta: false },
                         { texto: 'Permite condiciones compuestas que la versión anidada no admite.', correcta: false },
-                        { texto: 'Pone las cinco reglas al mismo nivel y en el orden en que se evalúan.', correcta: true, justificacion: 'El orden es parte de la política, no del estilo, y en la cascada se puede leer y auditar de un vistazo. En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —las dos ocupan prácticamente lo mismo— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
+                        { texto: 'Pone las cinco reglas al mismo nivel y en el orden en que se evalúan.', correcta: true, justificacion: 'El orden es parte de la política, no del estilo, y en la cascada se puede leer y auditar de un vistazo. En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —la cascada es más corta, pero esa no es la razón— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
                     ]}
                 /></Ejercicio>
             </div>
@@ -4679,7 +4689,7 @@ End If`,
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Segun … Caso</span></td><td>Sí, por convención de notación</td></tr>
                             <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí, de verdad:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
-                            <tr><td>Python</td><td><span className="inline-code">match … case</span></td><td>Con <strong>guarda</strong>: <span className="inline-code">case m if m &lt;= 100_000</span></td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">match … case</span></td><td>Con <strong>guarda</strong>: <span className="inline-code">case m if 1 &lt;= m &lt;= 100_000</span></td></tr>
                             <tr><td>R</td><td><span className="inline-code">switch</span></td><td><strong>No.</strong> Iguala valores; con tramos hay que volver a la cascada</td></tr>
                         </tbody>
                     </table>
@@ -5171,7 +5181,7 @@ neto = pago - retencion`,
                             { texto: 'Que la variable asignada quede en el mismo tipo de dato.', correcta: false },
                         ],
                         multiple: true,
-                        justificacion: 'Las dos primeras, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia.',
+                        justificacion: 'La primera y la tercera, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia.',
                     },
                     {
                         seccion: 'cap4',
