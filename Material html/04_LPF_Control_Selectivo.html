@@ -5129,6 +5129,7 @@ neto = pago - retencion`,
 
                 <Quiz titulo="Evaluación · Capítulo 04 — Control selectivo" preguntas={[
                     {
+                        seccion: 'cap1',
                         pregunta: 'La expresión A O B Y C, sin paréntesis, se evalúa como:',
                         opciones: [
                             { texto: 'A O (B Y C), porque Y liga más fuerte que O.', correcta: true },
@@ -5139,6 +5140,7 @@ neto = pago - retencion`,
                         justificacion: 'El orden es NO, luego Y, luego O, y es el mismo en los cuatro lenguajes. Las dos agrupaciones no son equivalentes: difieren en dos de las ocho combinaciones posibles, justamente en las del solicitante que gana bien y está muy endeudado.',
                     },
                     {
+                        seccion: 'cap1',
                         pregunta: 'La política dice que se aprueba si score >= 680 Y endeudamiento < 40. ¿Cuál es la condición de rechazo correcta?',
                         opciones: [
                             { texto: 'score < 680 Y endeudamiento >= 40', correcta: false },
@@ -5149,6 +5151,7 @@ neto = pago - retencion`,
                         justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —escrito una vez con Y y otra con NO ... Y, que dicen lo mismo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de los tres perfiles que debían detenerse. La opción que escribe score <= 680 O endeudamiento > 40 además mueve los dos límites, y en direcciones contrarias: rechaza a quien tiene exactamente 680, que es a quien la política aprueba, y deja pasar a quien está exactamente en el 40 %, que es a quien la política rechaza.',
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'Una rutina hace recargo <- 0; después Si diasMora > 30 Entonces recargo <- saldo * 0.05 FinSi; y termina con total <- saldo + recargo. Con saldo 4 800 000 y 30 días de mora, ¿cuánto vale total?',
                         opciones: [
                             { texto: '5 040 000: con 30 días la condición se cumple y se cobra el 5 %.', correcta: false },
@@ -5159,6 +5162,7 @@ neto = pago - retencion`,
                         justificacion: 'Con 30 días exactos, 30 > 30 es falso: la condición pide MÁS de 30. El bloque se salta entero, recargo conserva el 0 que se le asignó antes y total sale igual al saldo. No hay aviso de ninguna clase —lo que no se ejecuta no deja rastro, y es lo que mantuvo el recargo sin cobrar catorce meses— y tampoco hay incertidumbre: el valor por defecto se asignó antes del Si, que es exactamente para lo que está.',
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: '¿Qué garantiza Si…Sino que dos Si independientes no garantizan?',
                         opciones: [
                             { texto: 'Que se ejecute al menos uno de los dos bloques.', correcta: true },
@@ -5170,6 +5174,7 @@ neto = pago - retencion`,
                         justificacion: 'Las dos primeras, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTÁNDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
                         opciones: [
                             { texto: 'RECHAZADO, después de evaluar dos condiciones.', correcta: true },
@@ -5180,6 +5185,7 @@ neto = pago - retencion`,
                         justificacion: 'La primera, endeudamiento > 60, es falsa con un 25 %. La segunda, score < 550, es verdadera con 500, y ahí decide: RECHAZADO tras evaluar dos. La del ingreso queda debajo y no llega a mirarse, así que los ocho millones no entran en la decisión por mucho que superen el umbral. No se evalúan las tres —la cascada se detiene en la primera que se cumple— ni basta con la primera, que en este solicitante no se cumple. La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'Las cinco reglas de una política de originación son correctas, pero la del ingreso alto está de primera en la cascada. ¿Qué tipo de defecto es?',
                         opciones: [
                             { texto: 'Un error de sintaxis: falta un delimitador en la cascada.', correcta: false },
@@ -5190,6 +5196,7 @@ neto = pago - retencion`,
                         justificacion: 'No hay ninguna línea defectuosa, y por eso una revisión de código no lo encuentra: el defecto está en la relación entre dos reglas. El arreglo no toca ninguna condición, solo las mueve.',
                     },
                     {
+                        seccion: 'cap1',
                         pregunta: 'Un equipo traslada a VBA una línea que en Python funcionaba: if compras != 0 and total / compras > 500_000. Con compras en 0, el procedimiento se detiene con el error 11. ¿Cuál es el arreglo?',
                         opciones: [
                             { texto: 'Cambiar And por AndAlso, que en VBA sí hace cortocircuito.', correcta: false },
@@ -5200,6 +5207,7 @@ neto = pago - retencion`,
                         justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA es el error 11, no infinito. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
+                        seccion: 'cap5',
                         pregunta: '¿Cuál de estas situaciones pide una selectiva múltiple y no una cascada?',
                         opciones: [
                             { texto: 'Clasificar una solicitud de crédito según su score, su endeudamiento y su ingreso.', correcta: false },
@@ -5210,6 +5218,7 @@ neto = pago - retencion`,
                         justificacion: 'La selectiva múltiple sirve cuando todas las ramas preguntan por la MISMA variable y la comparan con valores concretos. La primera opción compara tres variables distintas, y las otras dos tienen una sola alternativa: son selectiva simple y doble.',
                     },
                     {
+                        seccion: 'cap6',
                         pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
                         opciones: [
                             { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
@@ -5220,6 +5229,7 @@ neto = pago - retencion`,
                         justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
                     },
                     {
+                        seccion: 'cap6',
                         pregunta: 'Con la política de originación en su orden correcto, un solicitante con ingreso de 6 500 000, score 720 y endeudamiento del 68 % es rechazado. ¿Qué condición lo decidió, y qué pasó con la del ingreso?',
                         opciones: [
                             { texto: 'El score, y la del ingreso se evaluó después y dio falso.', correcta: false },

@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y doce sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -39,6 +39,25 @@ Comprueba una cosa sobre la plantilla y doce sobre cada archivo HTML de capítul
      coincidiendo con una plantilla vieja, y las doce reglas en verde mientras
      el material corre la librería anterior. Se comprueba una sola vez, antes
      que las demás, y aborta si falla.
+ 14. CLAVE PREVISIBLE EN UN `Quiz` — que una tanda de preguntas no tenga todas
+     las claves en la misma letra.
+ 15. JSX COMPILA — que el bloque `text/babel` pase por Babel. Vive en
+     `comprobar_jsx.js`. Nació de romper el capítulo 4 dos veces seguidas con
+     las catorce reglas anteriores en verde: una comilla invertida dentro de un
+     `template literal` y un comentario JSX puesto como hermano de un elemento.
+     Las dos dejan el capítulo en blanco y ninguna se ve leyendo el archivo.
+ 16. CLAVE PREVISIBLE EN EL CAPÍTULO — que las claves de TODOS los ejercicios
+     —no solo las del `Quiz`— no se concentren en una letra ni formen rachas.
+     La regla 14 exige casi unanimidad y solo mira el `Quiz`; el capítulo 4
+     llegó a la auditoría con 14 de 18 claves en la «b» y pasaba en verde.
+ 17. CLAVE MÁS LARGA — que la opción correcta no se delate por medir el doble
+     que los distractores. Solo en ítems cuyas opciones son todas prosa.
+ 18. PREGUNTA REPETIDA — que ninguna opción del cuestionario final sea copia
+     literal de otra que el estudiante ya respondió en el capítulo.
+ 19. COBERTURA DEL CUESTIONARIO — que el `Quiz` toque todas las secciones del
+     `curriculum`. Se comprueba solo si las preguntas lo declaran con
+     `seccion: 'capN'`: a qué sección pertenece una pregunta no se puede
+     adivinar leyéndola, y adivinarlo mal sería peor que no comprobarlo.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -47,11 +66,16 @@ Uso:
                                                     # (útil en capítulos a medias)
     python3 _plantilla/verificar.py --con-salidas   # añade la regla 9 (lenta)
 
+La regla 15 necesita Node con @babel/core y @babel/preset-react instalados en
+global (`npm i -g @babel/core @babel/preset-react`). Si faltan, avisa en vez de
+fallar: no es lo mismo «está mal» que «no se pudo comprobar».
+
 Devuelve 0 si todo pasa, 1 si algo falla.
 """
 
 import hashlib
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -590,22 +614,34 @@ def preguntas_imposibles(texto, cuerpo, desplazamiento):
     bandera la escribe, y bastaba con eso para que la regla se diera por
     satisfecha. Lo descubrió su propia prueba negativa, que es exactamente para
     lo que sirve.
+
+    Desde la auditoría del capítulo 4 mira los ítems por su lista `opciones` y
+    no por la palabra `pregunta:`. Antes solo veía los objetos de `Quiz`, que la
+    escriben con dos puntos; un `<MCQ>` o un `<Comparador>` sueltos la escriben
+    como prop JSX, `pregunta=`, y quedaban fuera. Se comprobó quitándole la
+    bandera a un `<MCQ>` de dos respuestas correctas: la regla daba verde a un
+    ejercicio imposible de acertar. Y la bandera se acepta en sus dos formas,
+    `multiple: true` y `multiple={{true}}`, según dónde viva la pregunta.
     """
     fallos = []
-    # Se sustituyen por espacios, no se borran: así las posiciones no se mueven
-    # y el número de línea que se informa sigue siendo el del archivo real.
-    sin_comentarios = re.sub(r"//[^\n]*", lambda c: " " * len(c.group(0)), cuerpo)
-    for m in re.finditer(r"\bpregunta:\s*", sin_comentarios):
-        # El objeto de la pregunta llega hasta su `justificacion`, que en `Quiz`
-        # va después de la lista de opciones.
-        fin = sin_comentarios.find("justificacion:", m.end())
-        trozo = sin_comentarios[m.end():fin if fin != -1 else len(sin_comentarios)]
-        correctas = len(re.findall(r"correcta:\s*true", trozo))
-        if correctas > 1 and not re.search(r"\bmultiple:\s*true", trozo):
-            fallos.append(
-                f"línea {linea_de(texto, desplazamiento + m.start())}: la pregunta "
-                f"tiene {correctas} opciones correctas y no declara `multiple: true`, "
-                f"así que es imposible de acertar")
+    limpio = _sin_comentarios(cuerpo)
+    items = items_de_opciones(limpio)
+    for k, (ini, fin, opciones) in enumerate(items):
+        correctas = sum(1 for _t, ok in opciones if ok)
+        if correctas <= 1:
+            continue
+        # La bandera va cerca, pero a un lado distinto según la forma: en el
+        # objeto de `Quiz` va DESPUÉS de la lista y en un componente suelto
+        # ANTES, como prop JSX. Se mira todo lo que hay entre el ítem anterior
+        # y el siguiente: es exacto y no se cuela en el vecino.
+        desde = items[k - 1][1] if k else 0
+        hasta = items[k + 1][0] if k + 1 < len(items) else len(limpio)
+        if re.search(r"\bmultiple\s*(?::\s*true|=\s*\{\s*true\s*\})", limpio[desde:hasta]):
+            continue
+        fallos.append(
+            f"línea {linea_de(texto, desplazamiento + ini)}: la pregunta tiene "
+            f"{correctas} opciones correctas y no declara `multiple: true` ni "
+            f"`multiple={{true}}`, así que es imposible de acertar")
     return fallos
 
 
@@ -710,6 +746,248 @@ def plantilla_desactualizada():
             f"{len(esperado)} al ensamblar)\n        ejecute: python3 _plantilla/ensamblar.py")
 
 
+def _sin_comentarios(cuerpo):
+    """Los comentarios `//` sustituidos por espacios de la misma longitud.
+
+    No se borran: así las posiciones no se mueven y el número de línea que se
+    informa sigue siendo el del archivo. Y se retiran antes de mirar porque el
+    comentario que explica la bandera `multiple` la escribe literalmente, y con
+    eso la regla 12 se daba por satisfecha. Lo cazó su propia prueba negativa.
+    """
+    return re.sub(r"//[^\n]*", lambda c: " " * len(c.group(0)), cuerpo)
+
+
+def items_de_opciones(cuerpo):
+    """Cada lista `opciones` del capítulo, en orden de aparición.
+
+    Las hay de dos formas y hasta la auditoría del capítulo 4 solo se miraba
+    una: `opciones: [...]` dentro de un objeto de `Quiz`, y `opciones={[...]}`
+    como prop de un `<MCQ>` o un `<Comparador>` sueltos. La regla 12 buscaba
+    `pregunta:` con dos puntos, así que los sueltos —que son la mayoría de los
+    ejercicios— quedaban fuera de su radar. Se comprobó: un `<MCQ>` con dos
+    respuestas correctas y sin bandera pasaba en verde.
+
+    Devuelve (inicio, fin, [(texto, es_correcta), ...]) por ítem.
+    """
+    items = []
+    for m in re.finditer(r"opciones\s*(?:=\{|:)\s*\[", cuerpo):
+        ini = cuerpo.rindex("[", m.start(), m.end())
+        prof, i = 0, ini
+        while i < len(cuerpo):
+            if cuerpo[i] == "[":
+                prof += 1
+            elif cuerpo[i] == "]":
+                prof -= 1
+                if prof == 0:
+                    break
+            i += 1
+        bloque, opciones, prof2, desde = cuerpo[ini:i + 1], [], 0, None
+        for j, ch in enumerate(bloque):
+            if ch == "{":
+                if prof2 == 0:
+                    desde = j
+                prof2 += 1
+            elif ch == "}":
+                prof2 -= 1
+                if prof2 == 0 and desde is not None:
+                    trozo = bloque[desde:j + 1]
+                    t = re.search(r"texto:\s*'(.*?)'(?=\s*,\s*correcta)", trozo, re.S)
+                    opciones.append((t.group(1) if t else "",
+                                     bool(re.search(r"correcta:\s*true", trozo))))
+                    desde = None
+        if opciones:
+            items.append((ini, i + 1, opciones))
+    return items
+
+
+def claves_del_capitulo(cuerpo):
+    """Posición de la clave en TODOS los ítems, en orden de lectura.
+
+    Incluye los `tipoCorrecto` de los `DetectaError`, que también son una
+    pregunta de opción múltiple aunque no se escriban con `opciones`.
+    """
+    limpio = _sin_comentarios(cuerpo)
+    claves = []
+    for ini, _fin, opciones in items_de_opciones(limpio):
+        primera = next((k for k, (_t, ok) in enumerate(opciones) if ok), None)
+        if primera is not None:
+            claves.append((ini, primera, len(opciones)))
+    for m in re.finditer(r"tipoCorrecto=\{(\d+)\}", limpio):
+        claves.append((m.start(), int(m.group(1)), 4))
+    claves.sort()
+    return claves
+
+
+def clave_previsible_en_el_capitulo(texto, cuerpo, desplazamiento):
+    """La clave no se concentra en una letra ni encadena rachas largas.
+
+    La regla 14 mira cada `<Quiz>` por separado, que es la tanda que el
+    estudiante responde de una sentada, y exige casi unanimidad. Esta mira el
+    capítulo ENTERO —los MCQ de sección, los comparadores y los tipos de los
+    `DetectaError`, que son la mayoría de los ítems y que aquella no ve— y se
+    conforma con mucho menos.
+
+    Hizo falta porque el capítulo 4 llegó a la auditoría con **14 de 17 claves
+    en la «b»**, cinco de ellas seguidas, y la regla 14 lo dejaba pasar: su
+    `<Quiz>` tenía 8 de 10, y «todas menos una» son 9. Marcando siempre la «b»
+    se sacaba 8 sobre 10 y el componente felicitaba por el dominio del tema.
+
+    Umbrales medidos contra los cuatro capítulos ya escritos, que reparten como
+    mucho un 38 % en una posición y no encadenan más de dos seguidas.
+    """
+    letras = "abcdefgh"
+    claves = claves_del_capitulo(cuerpo)
+    if len(claves) < 8:
+        return []
+    fallos = []
+    posiciones = [p for _i, p, _n in claves]
+    sitio = max(set(posiciones), key=posiciones.count)
+    repiten = posiciones.count(sitio)
+    if repiten * 2 > len(posiciones):
+        fallos.append(
+            f"{repiten} de las {len(posiciones)} claves del capítulo están en la "
+            f"misma posición (la «{letras[sitio]}»): se acierta la mayoría sin leer")
+    racha = inicio = 1
+    for k in range(1, len(posiciones)):
+        if posiciones[k] == posiciones[k - 1]:
+            racha += 1
+            if racha >= 4:
+                fallos.append(
+                    f"línea {linea_de(texto, desplazamiento + claves[k][0])}: "
+                    f"{racha} ejercicios seguidos con la clave en la «{letras[posiciones[k]]}»")
+                break
+        else:
+            racha = 1
+    return fallos
+
+
+def clave_mas_larga(texto, cuerpo, desplazamiento):
+    """La respuesta correcta no se delata por ser mucho más larga que el resto.
+
+    Es el sesgo clásico, y nace del oficio: se redacta primero la buena —con
+    sus matices, sus «pero» y sus «de modo que»— y después se inventan tres
+    frases cortas. Quien no sabe el tema marca la larga y acierta.
+
+    Solo se mira cuando las cuatro opciones son prosa (20 caracteres o más).
+    En un ítem cuyas opciones son cifras o un «Cero», la longitud no dice nada
+    y avisar sería ruido.
+    """
+    avisos = []
+    limpio = _sin_comentarios(cuerpo)
+    for ini, _fin, opciones in items_de_opciones(limpio):
+        largos = [len(t) for t, _ok in opciones]
+        correctas = [k for k, (_t, ok) in enumerate(opciones) if ok]
+        if len(correctas) != 1 or len(opciones) < 3 or min(largos) < 20:
+            continue
+        c = largos[correctas[0]]
+        otros = [l for k, l in enumerate(largos) if k != correctas[0]]
+        if c >= 1.8 * max(otros):
+            avisos.append(
+                f"línea {linea_de(texto, desplazamiento + ini)}: la opción correcta "
+                f"mide {c} caracteres y el distractor más largo {max(otros)}; "
+                f"se acierta por el tamaño")
+    return avisos
+
+
+def _normaliza(t):
+    t = t.lower().replace("á", "a").replace("é", "e").replace("í", "i")
+    t = t.replace("ó", "o").replace("ú", "u").replace("ñ", "n")
+    return re.sub(r"[^a-z0-9]+", " ", t).strip()
+
+
+def opcion_repetida(texto, cuerpo, desplazamiento):
+    """Ninguna opción del cuestionario final es copia literal de una anterior.
+
+    Un cuestionario integrador que repite una opción ya vista mide memoria de
+    la respuesta, no transferencia. En el capítulo 4 la opción correcta de una
+    pregunta era **carácter por carácter** la misma que un `tipoCorrecto` del
+    `DetectaError` de la sección 4, que el estudiante acababa de responder.
+    """
+    avisos = []
+    limpio = _sin_comentarios(cuerpo)
+    q = limpio.find("<Quiz")
+    if q == -1:
+        return []
+    antes, despues = [], []
+    for ini, _fin, opciones in items_de_opciones(limpio):
+        destino = despues if ini > q else antes
+        for t, _ok in opciones:
+            if len(t) >= 25:
+                destino.append((ini, t))
+    for m in re.finditer(r"tipos=\{\[(.*?)\]\}", limpio, re.S):
+        for t in re.findall(r"'(.*?)'", m.group(1), re.S):
+            if len(t) >= 25:
+                antes.append((m.start(), t))
+    vistas = {_normaliza(t): i for i, t in antes}
+    for ini, t in despues:
+        n = _normaliza(t)
+        if n in vistas:
+            avisos.append(
+                f"línea {linea_de(texto, desplazamiento + ini)}: esta opción del "
+                f"cuestionario repite palabra por palabra una de la línea "
+                f"{linea_de(texto, desplazamiento + vistas[n])}")
+    return avisos
+
+
+def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
+    """El cuestionario final toca todas las secciones del `curriculum`.
+
+    Se comprueba solo si las preguntas lo declaran con `seccion: 'capN'`. No se
+    puede adivinar a qué sección pertenece una pregunta leyéndola, y adivinarlo
+    mal sería peor que no comprobarlo; declararlo cuesta una línea por pregunta
+    y deja escrita la intención.
+
+    Hizo falta porque el cuestionario del capítulo 4 no tenía **ni una** pregunta
+    de su sección 6 —la de los casos financieros, donde vive el resultado de
+    aprendizaje del syllabus— mientras la 5 se llevaba tres.
+    """
+    limpio = _sin_comentarios(cuerpo)
+    q = limpio.find("<Quiz")
+    if q == -1:
+        return []
+    declaradas = set(re.findall(r"seccion:\s*'([^']+)'", limpio[q:]))
+    if not declaradas:
+        return []
+    n_preguntas = len(re.findall(r"\bpregunta:\s*", limpio[q:]))
+    if len(re.findall(r"seccion:\s*'", limpio[q:])) != n_preguntas:
+        return [f"línea {linea_de(texto, desplazamiento + q)}: unas preguntas del "
+                f"`Quiz` declaran `seccion` y otras no; o todas o ninguna"]
+    secciones = [m for m in re.findall(r"id:\s*'([^']+)'", cuerpo)
+                 if m not in ("portada", "eval")]
+    faltan = [x for x in secciones if x not in declaradas]
+    if faltan:
+        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario no "
+                f"tiene ninguna pregunta de {', '.join(faltan)}"]
+    return []
+
+
+def jsx_compila(ruta):
+    """El bloque `text/babel` del capítulo compila de verdad.
+
+    Vive en `comprobar_jsx.js` porque necesita el mismo analizador que el
+    navegador —@babel/core con preset-react—, y ahí está explicado por qué
+    existe: dos veces en una sola auditoría un editor rompió la sintaxis y las
+    catorce reglas anteriores dieron verde mientras el capítulo salía en blanco.
+
+    Devuelve (problemas, avisos). Si falta Node o Babel avisa, no falla: no es
+    lo mismo «está mal» que «no se pudo comprobar».
+    """
+    guion = Path(__file__).resolve().parent / "comprobar_jsx.js"
+    if not guion.exists():
+        return [], ["jsx — falta _plantilla/comprobar_jsx.js, no se pudo comprobar"]
+    try:
+        r = subprocess.run(["node", str(guion), str(ruta)],
+                           capture_output=True, text=True, timeout=180)
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return [], ["jsx — no se pudo ejecutar Node, no se comprobó la sintaxis"]
+    salida = (r.stderr or r.stdout).strip()
+    if r.returncode == 0:
+        return [], []
+    if r.returncode == 2:
+        return [], [f"jsx — no se pudo comprobar: {salida}"]
+    return [f"jsx — {l}" for l in salida.splitlines() if l.strip()], []
+
+
 def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     texto = ruta.read_text(encoding="utf-8")
     cuerpo = cuerpo_capitulo(texto)
@@ -785,9 +1063,30 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     for f in etiqueta_multiple_a_mano(texto, cuerpo, desplazamiento):
         avisos.append(f"pregunta — {f}")
 
-    # 14 · la clave no está siempre en la misma letra
+    # 14 · la clave no está siempre en la misma letra dentro de un `Quiz`
     for f in clave_siempre_en_el_mismo_sitio(texto, cuerpo, desplazamiento):
         problemas.append(f"clave previsible — {f}")
+
+    # 15 · el bloque JSX compila de verdad
+    p15, a15 = jsx_compila(ruta)
+    problemas += p15
+    avisos += a15
+
+    # 16 · la clave tampoco se concentra en una letra en todo el capítulo
+    for f in clave_previsible_en_el_capitulo(texto, cuerpo, desplazamiento):
+        problemas.append(f"clave previsible — {f}")
+
+    # 17 · la clave no se delata por ser mucho más larga
+    for f in clave_mas_larga(texto, cuerpo, desplazamiento):
+        avisos.append(f"clave larga — {f}")
+
+    # 18 · el cuestionario no repite una opción ya vista en el capítulo
+    for f in opcion_repetida(texto, cuerpo, desplazamiento):
+        avisos.append(f"pregunta repetida — {f}")
+
+    # 19 · el cuestionario cubre todas las secciones (si lo declaran)
+    for f in cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
+        problemas.append(f"cobertura — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

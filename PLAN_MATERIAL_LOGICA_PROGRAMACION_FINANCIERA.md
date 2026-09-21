@@ -1112,3 +1112,81 @@ prohíbe entre capítulos. Aprobado por el docente.
 **Tarea 14, un paso más.** El `index.html` ya enlaza el capítulo 3 y la Unidad 2
 deja de estar entera en gris. Siguen faltando el progreso global desde
 `localStorage` y el `portal-nav.js`.
+
+### Auditoría del capítulo 4, y seis reglas que faltaban · 2026-09-21
+
+El capítulo 4 se auditó entero —redacción, coherencia, código en los cuatro
+lenguajes, artefactos y banco de preguntas— con `verificar.py` en verde de
+principio a fin. Esa es la primera conclusión: **el verificador daba OK a un
+capítulo con dos claves falsas, un cuestionario que se aprobaba sin leerlo y un
+hueco de cobertura entero**. Lo que sigue es lo que se arregló y lo que se
+aprendió, que no es lo mismo.
+
+**Lo que el capítulo tenía mal, por familias.**
+
+1. *Dos claves afirmaban un número que el código no da.* La escala por tramos
+   sin caso por defecto: el ejercicio y la pregunta 10 decían que con una
+   devolución de −50 000 «la cascada asigna 25 000». Asigna **2 500**, porque
+   `monto <= 100000` también es cierto para un negativo y decide la primera
+   rama. El artefacto interactivo del propio capítulo lo mostraba bien, y la
+   justificación remitía a él: el estudiante que obedeciera vería que la
+   respuesta marcada como correcta era falsa. **Un tope sin piso es un segundo
+   defecto, distinto del que la sección enseña**, y ahora se enseñan los dos.
+2. *Los cuatro lenguajes no eran equivalentes.* Pseudocódigo y VBA acotaban los
+   tramos por abajo (`Caso 1..100000`, `Case 1 To 100000`) y Python y R no. Con
+   un negativo, Python daba 6 000, R 2 500 y los otros dos nada. Se pusieron las
+   cotas: comprobado sobre catorce valores frontera, decimales incluidos.
+3. *El cuestionario era un instrumento inválido.* 14 de 18 claves en la «b»,
+   cinco seguidas; marcando siempre la «b» se sacaba 8 sobre 10 y el componente
+   felicitaba por «excelente dominio del tema». Además tres preguntas repetían
+   ejercicios ya respondidos, la sección 6 no tenía ninguna y el conjunto vivía
+   dos niveles de Bloom por debajo de los ejercicios que decía cerrar.
+4. *Faltaba lo que el syllabus nombra.* «CONTROL SELECTIVO: algoritmos,
+   **flujograma**, pseudocódigo y codificación» se imprime en la portada del
+   capítulo, y el capítulo no tenía un solo `<svg>`. Tampoco usaba el
+   `Trazador`, que este plan da por reutilizado aquí (§7).
+
+**Las seis comprobaciones nuevas.** Cada una nació de un defecto real de este
+capítulo, y cada una tiene su prueba negativa registrada:
+
+| # | Qué mira | Prueba negativa |
+|---|---|---|
+| 15 | El bloque JSX compila (Babel, en `comprobar_jsx.js`) | Las dos roturas reales de la auditoría: una comilla invertida en un `template literal` y un comentario JSX como hermano de un elemento |
+| 16 | Las claves del capítulo entero no se concentran ni forman rachas | El propio capítulo 4 antes de la auditoría: 14 de 18 en la «b» |
+| 17 | La clave no se delata por medir el doble | Salta hoy en los capítulos 1, 2 y 3, con cinco ítems reales |
+| 18 | El cuestionario no repite una opción ya vista | La pregunta 6 del capítulo 4, copia literal de un `tipoCorrecto` |
+| 19 | El cuestionario cubre todas las secciones | Cambiar una `seccion` y dejar la 6 sin preguntas |
+| 12 (ampliada) | También los `<MCQ>` y `<Comparador>` sueltos | Quitarle la bandera a un `<MCQ>` de dos respuestas correctas |
+
+**Lo que hay que aprender de aquí, que es lo que no se ve en la tabla.**
+
+- **La regla 12 llevaba meses sin mirar la mayoría de los ejercicios.** Buscaba
+  `pregunta:` con dos puntos, que es la sintaxis del objeto de `Quiz`; los
+  `<MCQ>` y `<Comparador>` sueltos la escriben como prop JSX, `pregunta=`. Una
+  regla que solo cubre una de las dos formas de escribir lo mismo es una regla
+  que no existe para la otra. **Al escribir una comprobación, enumerar las
+  formas sintácticas antes que los casos.**
+- **La regla 14 existía y no bastaba.** Exigía casi unanimidad, y 8 de 10 no lo
+  es. Un umbral puesto para que los capítulos de entonces pasaran es un umbral
+  calibrado contra el defecto, no contra la norma. La 16 se calibró al revés:
+  contra lo que los cuatro capítulos sanos reparten de verdad —como mucho un
+  38 % en una posición, y nunca más de dos seguidas—.
+- **Dos veces en una auditoría se rompió el archivo y las catorce reglas dieron
+  verde.** Las reglas de texto no ven sintaxis. Cualquier comprobación sobre un
+  archivo que se ejecuta tiene que empezar por ejecutarlo, o al menos
+  compilarlo; lo demás es opinar sobre un archivo que quizá ni arranca.
+- **El máximo de E2 subió de 3 a 4** (§4). No por querer más preguntas: con los
+  ocho tipos en su máximo el capítulo estaba saturado y un hueco de cobertura no
+  se podía tapar sin quitar algo que valía. Si un capítulo llega a 4 E2, mirar
+  por qué: suele significar que un concepto de la exposición se quedó sin
+  ejercicio en su sección.
+- **Una justificación no debe citar la posición de una opción.** «La primera
+  opción…», «la última opción…»: barajar las claves convierte esas frases en
+  mentiras, y barajarlas es exactamente lo que hubo que hacer. Ahora todas citan
+  el contenido. Conviene que la skill lo recoja.
+
+**Lo que queda pendiente.** La comprobación 10 de contraste sigue con
+`MINIMO_WCAG = 3.0` —el mínimo de *texto grande*—, no mira el CSS del `<style>`
+y no compone fondos con alfa, así que no ve los 26 `<h3>` del capítulo a 3,96:1
+ni los tintes `/10` de los artefactos. Medirlo bien pide un navegador; sería una
+regla 20 opcional, como la 9.
