@@ -2508,9 +2508,12 @@
 
            La versión con `Segun` no tiene caso por defecto. Para todo monto
            dentro de los tramos las dos dan lo mismo; para un monto fuera de
-           ellos —una devolución, un ajuste en negativo, un monto por encima
-           del tope— la cascada devuelve la tarifa del último tramo y el
-           `Segun` no devuelve nada. Ese es el E4 del capítulo, y el cloze
+           ellos el `Segun` no devuelve nada y la cascada sí, pero no siempre
+           lo mismo: por encima del tope cae en su `Sino` final y devuelve
+           25 000; con una devolución en negativo entra en el PRIMER tramo
+           —`monto <= 100000` también es cierto para un negativo— y devuelve
+           2 500. Son dos defectos distintos, no uno.
+           Ese es el E4 del capítulo, y el cloze
            «Segun sin caso por defecto» del banco.
         ------------------------------------------------------------ */
         const SelectivasComparadas = () => {
@@ -2799,11 +2802,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
                     gancho="¿En qué orden lee la máquina una condición con Y, O y NO? Porque no es de izquierda a derecha.">
-                    La regla decía: aprobar si el ingreso supera tres millones, o si el score llega a
-                    680 y el endeudamiento no pasa del 40 %. Se escribió tal cual, sin paréntesis. Y sin
-                    paréntesis esa frase no dice eso: aprueba a cualquiera que gane más de tres
-                    millones, tenga el score que tenga. Doscientos créditos después, alguien comparó la
-                    regla del documento con la del código.
+                    La regla decía: aprobar a quien supere tres millones de ingreso o llegue a 680 de
+                    score, siempre que el endeudamiento no pase del 40 %. Se escribió tal cual, sin
+                    paréntesis. Y sin paréntesis esa frase no dice eso: aprueba a cualquiera que gane
+                    más de tres millones, tenga el endeudamiento que tenga. Doscientos créditos
+                    después, alguien comparó la regla del documento con la del código.
                 </Motivacion>
 
                 <h3>Lo que ya sabe, y por qué esta sección no lo repite</h3>
@@ -2925,7 +2928,7 @@ End Sub`,
                     </table>
                 </div>
                 <p>
-                    Dos de los cuatro perfiles que debían rechazarse pasan el filtro, y son justamente
+                    Dos de los tres perfiles que debían rechazarse pasan el filtro, y son justamente
                     los que fallan en <em>una</em> cosa: los que un analista habría detenido sin dudar.
                 </p>
 
@@ -2953,7 +2956,7 @@ End Sub`,
                     pregunta="La regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
                     opciones={[
                         { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
-                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el segundo. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; el segundo termina aprobado también, pero después de mirar las tres condiciones. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
+                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el segundo. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
                         { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
                     ]}
@@ -3203,7 +3206,7 @@ Debug.Print total`,
                     nota="Ninguno imprime nada con compras = 0, que es justo lo que se busca. La diferencia está en el motivo: los tres primeros no llegan a dividir; VBA no dividiría tampoco, pero solo porque el Si exterior le impide entrar." />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Recuerde que hay una variable que necesita valor por defecto antes de la selectiva."
+                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Hay una variable que necesita valor por defecto: colóquela después de las lecturas y justo antes de la selectiva."
                     pasos={ORDENA_MORA}
                     pista="Pregúntese qué necesita cada línea para poder ejecutarse. Una de ellas suma una variable que, si la rama no entra, nadie habrá asignado."
                 />
@@ -3426,8 +3429,8 @@ Debug.Print tarifa`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
-                        { texto: '4 000 — se le aplica la tarifa preferencial por error.', correcta: false },
-                        { texto: '10 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
+                        { texto: '1 600 — se le aplica la tarifa preferencial por error.', correcta: false },
+                        { texto: '4 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
                         { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
                         { texto: 'Un error de ejecución: tarifa nunca se asigna.', correcta: false },
                     ]}
@@ -3687,7 +3690,7 @@ End Sub`,
         const ERROR_CASCADA_LINEAS = {
             pseudo: [
                 'Inicio',
-                '    // Politica de originacion — las cinco reglas del comite',
+                '    // Politica de originacion — extracto del bloque del comite',
                 '    Si ingreso >= 5000000 Entonces',
                 '        decision <- "APROBADO PREFERENCIAL"',
                 '    Sino Si score < 550 Entonces',
@@ -3700,7 +3703,7 @@ End Sub`,
                 'Fin',
             ],
             python: [
-                '# Politica de originacion — las cinco reglas del comite',
+                '# Politica de originacion — extracto del bloque del comite',
                 'if ingreso >= 5_000_000:',
                 '    decision = "APROBADO PREFERENCIAL"',
                 'elif score < 550:',
@@ -3711,7 +3714,7 @@ End Sub`,
                 '    decision = "APROBADO ESTANDAR"',
             ],
             r: [
-                '# Politica de originacion — las cinco reglas del comite',
+                '# Politica de originacion — extracto del bloque del comite',
                 'if (ingreso >= 5000000) {',
                 '  decision <- "APROBADO PREFERENCIAL"',
                 '} else if (score < 550) {',
@@ -3724,7 +3727,7 @@ End Sub`,
             ],
             vba: [
                 'Sub EstudiarSolicitud()',
-                "    ' Politica de originacion — las cinco reglas del comite",
+                "    ' Politica de originacion — extracto del bloque del comite",
                 '    Dim decision As String',
                 '    If ingreso >= 5000000 Then',
                 '        decision = "APROBADO PREFERENCIAL"',
@@ -3959,7 +3962,7 @@ End If`,
                     gancho="Las cinco condiciones son correctas. Puestas en ese orden, tres no se evalúan nunca.">
                     Es el crédito de la portada. El motor de decisión preguntaba primero por el ingreso
                     —que el solicitante cumplía de sobra— y devolvía aprobado sin llegar a mirar el
-                    score. La condición del score estaba escrita, probada y bien redactada, cuatro
+                    score. La condición del score estaba escrita, probada y bien redactada, dos
                     líneas más abajo. En una cascada, la primera condición que se cumple decide y el
                     resto del bloque no existe.
                 </Motivacion>
@@ -4009,7 +4012,7 @@ End If`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La cascada que aprueba lo que no debía"
-                    enunciado={<>Esta es la política de originación tal como quedó en producción. Las cuatro condiciones son correctas y ninguna sobra. Aun así, aprueba solicitantes que el comité habría rechazado. <strong>Señale la línea que hay que mover</strong>, y diga qué tipo de defecto es.</>}
+                    enunciado={<>Esta es la política de originación tal como quedó en producción. Las tres condiciones son correctas y el caso por defecto también. Aun así, aprueba solicitantes que el comité habría rechazado. <strong>Señale la línea que hay que mover</strong>, y diga qué tipo de defecto es.</>}
                     lineas={ERROR_CASCADA_LINEAS}
                     lineaCorrecta={ERROR_CASCADA_LINEA_OK}
                     tipos={[
@@ -4073,7 +4076,7 @@ End If`,
                     ]}
                     tipoCorrecto={1}
                     explicacion={ERROR_NEGACION_EXPLICACION}
-                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de cada cuatro perfiles que debían detenerse, <strong>dos pasan</strong>.</>}
+                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
                 /></Ejercicio>
 
                 <h3>¿Anidar o encadenar?</h3>
@@ -4196,12 +4199,14 @@ Fin`,
             python: `monto = 350_000
 
 # match compara patrones, no rangos: el rango va en una GUARDA (case ... if ...)
+# Y la guarda lleva las DOS cotas: con solo m <= 500_000, una devolución
+# en negativo entraría en el tramo, que no es lo que dice la escala.
 match monto:
-    case m if m <= 100_000:
+    case m if 1 <= m <= 100_000:
         tarifa = 2500
-    case m if m <= 500_000:
+    case m if 100_001 <= m <= 500_000:
         tarifa = 6000
-    case m if m <= 5_000_000:
+    case m if 500_001 <= m <= 5_000_000:
         tarifa = 12000
     case _:
         tarifa = 25000
@@ -4213,11 +4218,14 @@ print(f"Tarifa: {tarifa:,.0f}")
 # switch NO compara: iguala. Con rangos no sirve, y hay que volver
 # a la cascada de if / else if. No es una limitación que se pueda
 # rodear: es que switch resuelve otro problema.
-if (monto <= 100000) {
+# Cada rama repite su cota inferior porque la cascada no sabe decir
+# «entre a y b» de una pieza: sin ella, una devolución en negativo cae
+# en el primer tramo y se le cobran 2 500.
+if (monto >= 1 && monto <= 100000) {
   tarifa <- 2500
-} else if (monto <= 500000) {
+} else if (monto >= 100001 && monto <= 500000) {
   tarifa <- 6000
-} else if (monto <= 5000000) {
+} else if (monto >= 500001 && monto <= 5000000) {
   tarifa <- 12000
 } else {
   tarifa <- 25000
@@ -4277,17 +4285,18 @@ FinSegun`,
             python: `match monto:
     case m if 1 <= m <= 100_000:
         tarifa = 2500
-    case m if m <= 500_000:
+    case m if 100_001 <= m <= 500_000:
         tarifa = 6000
-    case m if m <= 5_000_000:
+    case m if 500_001 <= m <= 5_000_000:
         tarifa = 12000`,
             r: `# switch iguala valores, no compara rangos: en R esto ES
-# la cascada. Y aquí tampoco hay caso por defecto.
-if (monto <= 100000) {
+# la cascada. Y aquí tampoco hay caso por defecto. Cada rama lleva su
+# cota inferior: sin ella, un negativo caería en el primer tramo.
+if (monto >= 1 && monto <= 100000) {
   tarifa <- 2500
-} else if (monto <= 500000) {
+} else if (monto >= 100001 && monto <= 500000) {
   tarifa <- 6000
-} else if (monto <= 5000000) {
+} else if (monto >= 500001 && monto <= 5000000) {
   tarifa <- 12000
 }`,
             vba: `Select Case monto
@@ -4424,14 +4433,14 @@ End If`,
                     pregunta="¿Dan las dos el mismo resultado para cualquier monto?"
                     opciones={[
                         { texto: 'Sí: los tres tramos cubren todos los montos posibles.', correcta: false },
-                        { texto: 'No. Coinciden dentro de los tramos, pero para un monto por encima de 5 000 000 —o para una devolución en negativo— la cascada asigna 25 000 y el Segun no asigna nada.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más. Un ajuste de 7 500 000 o una devolución de −50 000 no encajan en ninguno: la versión A deja tarifa sin tocar y la B la pone en 25 000. No es un caso de laboratorio —el artefacto de arriba lo muestra con esos dos montos exactos— y no hay ningún aviso: la transacción simplemente se cobra mal, o no se cobra. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. Tampoco se trata de un problema de tipo de dato: los dos bloques reciben el mismo número.' },
+                        { texto: 'No. Coinciden dentro de los tramos, pero fuera de ellos no: el Segun no asigna nada, mientras la cascada cobra 25 000 a un monto por encima del tope y 2 500 a una devolución en negativo.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el artefacto de arriba con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. En ninguno de los dos casos hay aviso: la transacción se cobra mal, o no se cobra. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. Tampoco se trata de un problema de tipo de dato: los dos bloques reciben el mismo número.' },
                         { texto: 'No, pero solo si el monto es negativo: para valores positivos son idénticas.', correcta: false },
                         { texto: 'Depende del lenguaje: en VBA sí y en Python no.', correcta: false },
                     ]}
                 /></Ejercicio>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto."
+                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
                     pasos={ORDENA_SEGUN}
                     pista="En R la selectiva múltiple es una única expresión que devuelve un valor: se lee como una llamada a función, con el caso por defecto al final y sin nombre."
                 />
@@ -4719,9 +4728,11 @@ neto = pago - retencion`,
                         </p>
                         <p>
                             <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
-                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. No es que el
-                            sistema lo trate distinto: es que la condición del umbral se evalúa sobre el
-                            valor del pago, y ese lo pasa.
+                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
+                            tercera y no por la segunda porque este proveedor no es declarante; el de la
+                            prueba de escritorio de arriba sí lo era, y a él le habría correspondido el 4 %.
+                            No es que el sistema lo trate distinto: es que la condición del umbral se evalúa
+                            sobre el valor del pago, y ese lo pasa.
                         </p>
                         <p>
                             <strong>Y lo que hay que decirle al proveedor, que es lo difícil:</strong> fraccionar
@@ -4734,10 +4745,10 @@ neto = pago - retencion`,
                     </>}
                 >
                     <p>
-                        Un proveedor recibió cuatro pagos este mes: tres de <strong>150 000</strong> y uno de
-                        <strong> 450 000</strong>. A los tres primeros no se les retuvo nada y al cuarto sí. El
-                        proveedor llama convencido de que hubo un error, porque «en total facturé 900 000 y
-                        me retuvieron sobre 450 000».
+                        Un proveedor <strong>no declarante</strong> recibió cuatro pagos este mes: tres de
+                        <strong> 150 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
+                        retuvo nada y al cuarto sí. El proveedor llama convencido de que hubo un error,
+                        porque «en total facturé 900 000 y me retuvieron sobre 450 000».
                     </p>
                     <p>
                         <strong>Explíquele qué hizo el sistema y por qué</strong>, con la rutina de arriba a la
@@ -4842,7 +4853,7 @@ neto = pago - retencion`,
                             { texto: 'NO score >= 680 Y NO endeudamiento < 40', correcta: false },
                             { texto: 'score <= 680 O endeudamiento > 40', correcta: false },
                         ],
-                        justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —que es la primera opción, y también la tercera escrita de otro modo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de cada cuatro perfiles que debían detenerse. La última opción además mueve los límites: convierte en aprobado a quien tiene exactamente 680.',
+                        justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —que es la primera opción, y también la tercera escrita de otro modo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de los tres perfiles que debían detenerse. La última opción además mueve los dos límites, y en direcciones contrarias: con score <= 680 rechaza a quien tiene exactamente 680, que es a quien la política aprueba; y con endeudamiento > 40 deja pasar a quien está exactamente en el 40 %, que es a quien la política rechaza.',
                     },
                     {
                         pregunta: 'En una selectiva simple cuya condición resulta falsa, ¿qué queda en el registro de ejecución?',
@@ -4923,7 +4934,7 @@ neto = pago - retencion`,
                             { texto: 'Se aplica el último tramo, 12 000.', correcta: false },
                             { texto: 'El programa se detiene con un error de rango.', correcta: false },
                         ],
-                        justificacion: 'Ningún caso coincide y no hay dónde caer. La cascada equivalente, que sí tiene su Sino final, habría asignado la tarifa del último tramo: es exactamente el punto donde las dos estructuras dejan de ser equivalentes.',
+                        justificacion: 'Ningún caso coincide y no hay dónde caer: la tarifa se queda como estuviera antes. La cascada equivalente tampoco acierta, pero falla de otra manera: mete el −50 000 en el primer tramo —monto <= 100 000 es cierto para un negativo— y le cobra 2 500 sin llegar nunca a su Sino final. Escribir el caso por defecto y ponerle piso al primer tramo son dos precauciones distintas, y esta escala no tiene ninguna de las dos.',
                     },
                 ]} />
 
