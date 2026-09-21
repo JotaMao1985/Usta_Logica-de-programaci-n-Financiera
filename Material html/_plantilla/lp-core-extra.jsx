@@ -436,7 +436,7 @@
             return false;
         };
 
-        const TablaTraza = ({ titulo = 'Prueba de escritorio', enunciado, codigo, lang = 'pseudo', columnas, filas, ocultas = [], pista }) => {
+        const TablaTraza = ({ titulo = 'Prueba de escritorio', enunciado, codigo, lang = 'pseudo', columnas, filas, ocultas = [], pista, exigeRespuesta = false }) => {
             // `codigo` y la columna `instruccion` de cada fila admiten un objeto
             // {pseudo, python, r, vba}. Los VALORES de las variables no: son los
             // mismos en los cuatro lenguajes, que es justamente lo que el
@@ -455,7 +455,19 @@
             useTypeset(ref, [comprobado, revelado]);
 
             const escribir = (k, v) => { if (!comprobado) setValores(p => ({ ...p, [k]: v })); };
-            const esCorrecta = (i, clave) => celdasIguales(valores[`${i}|${clave}`], filas[i][clave]);
+            // `normalizarCelda` manda '' y '—' al mismo token, así que una celda sin
+            // tocar acierta sola siempre que la respuesta correcta sea «—». En una
+            // traza donde la mayoría de las celdas ocultas valen «—» —que es lo
+            // normal: las variables nacen sin valor— la tabla enviada en blanco
+            // aprueba. Con `exigeRespuesta` hay que escribir la raya para que cuente.
+            // Es opcional porque solo vale en los capítulos cuyo enunciado la pide.
+            const enBlanco = (k) => valores[k] === undefined || String(valores[k]).trim() === '';
+            const esCorrecta = (i, clave) => {
+                const k = `${i}|${clave}`;
+                if (exigeRespuesta && enBlanco(k)) return false;
+                return celdasIguales(valores[k], filas[i][clave]);
+            };
+            const sinResponder = editables.filter(enBlanco).length;
             const aciertos = editables.filter(k => { const [i, c] = k.split('|'); return esCorrecta(Number(i), c); }).length;
             const total = editables.length;
             const pct = total ? Math.round((aciertos / total) * 100) : 0;
@@ -538,6 +550,11 @@
                                 <span className="text-sm font-bold" style={{ color }}>
                                     {aciertos} / {total} celdas correctas ({pct} %)
                                 </span>
+                                {exigeRespuesta && sinResponder > 0 && (
+                                    <span className="text-xs font-semibold text-[#B45309]">
+                                        {sinResponder} sin responder — una celda en blanco no cuenta
+                                    </span>
+                                )}
                             </>}
                         {pista && !revelado && (
                             <button onClick={() => setRevelado(true)} className="text-xs font-semibold text-gray-500 hover:text-primary underline">
