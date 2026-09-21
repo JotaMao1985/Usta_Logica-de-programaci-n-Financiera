@@ -292,10 +292,12 @@ hay que decir, en ese mismo texto, por qué las otras no lo son, porque es el
 único texto que alguien va a leer. Los dos `MCQ` de las secciones 1 y 3 están
 reescritos así.
 
-**Y el `Quiz` final es más estricto todavía:** no rendera ninguna
-`justificacion`, ni la de la correcta. Solo marca en verde y rojo. Lo que haya
-que explicar del cuestionario integrador tiene que estar **antes**, en el
-cuerpo del capítulo.
+**Corrección del 2026-09-20 sobre el `Quiz`.** Escribí aquí que el `Quiz` final
+no renderaba ninguna justificación. Es falso, y lo delató el capítulo 3, que le
+pasa una. `Quiz` sí la muestra —al enviar, en cursiva bajo la pregunta—, solo
+que la toma **de la pregunta, no de la opción**: `{ pregunta, opciones,
+justificacion }`. Es una forma distinta de la de `MCQ`, no una carencia. Lo
+había dado por hecho mirando solo las primeras líneas del componente.
 
 Arreglarlo en LP-CORE —mostrar la justificación de la opción elegida— obligaría
 a reestampar los cuatro capítulos, que es lo que H4 dice que este capítulo no

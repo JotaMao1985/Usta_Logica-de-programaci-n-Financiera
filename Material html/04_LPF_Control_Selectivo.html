@@ -4102,6 +4102,242 @@ End If`,
         /* ============================================================
            SECCIÓN 5 — SEGUN: LA SELECTIVA MÚLTIPLE
         ============================================================ */
+        /* La selectiva múltiple sobre un valor categórico: es el caso donde
+           los cuatro lenguajes se parecen. Salidas ejecutadas el 2026-09-20
+           con Python 3.10.14 —`match` exige 3.10 o superior— y R 4.6.0. */
+        const EJ_SEGUN_CATEGORIA = {
+            pseudo: `Inicio
+    tipoCuenta <- "AHORROS"
+
+    Segun tipoCuenta Hacer
+        Caso "AHORROS":
+            cuota <- 8500
+        Caso "CORRIENTE":
+            cuota <- 21000
+        Caso "NOMINA":
+            cuota <- 0
+        De Otro Modo:
+            cuota <- 12000
+    FinSegun
+
+    Escribir "Cuota de manejo: ", cuota
+    //> Cuota de manejo: 8500
+Fin`,
+            python: `tipo_cuenta = "AHORROS"
+
+match tipo_cuenta:
+    case "AHORROS":
+        cuota = 8500
+    case "CORRIENTE":
+        cuota = 21000
+    case "NOMINA":
+        cuota = 0
+    case _:
+        cuota = 12000
+
+print(f"Cuota de manejo: {cuota:,.0f}")
+#> Cuota de manejo: 8,500`,
+            r: `tipo_cuenta <- "AHORROS"
+
+# En R la selectiva múltiple es una FUNCIÓN que devuelve un valor,
+# no un bloque. El último argumento sin nombre es el caso por defecto.
+cuota <- switch(tipo_cuenta,
+  AHORROS   = 8500,
+  CORRIENTE = 21000,
+  NOMINA    = 0,
+  12000)
+
+cat(sprintf("Cuota de manejo: %.0f\\n", cuota))
+#> Cuota de manejo: 8500`,
+            vba: `Option Explicit
+
+Sub CuotaDeManejo()
+    Dim tipoCuenta As String, cuota As Currency
+
+    tipoCuenta = "AHORROS"
+
+    Select Case tipoCuenta
+        Case "AHORROS"
+            cuota = 8500
+        Case "CORRIENTE"
+            cuota = 21000
+        Case "NOMINA"
+            cuota = 0
+        Case Else
+            cuota = 12000
+    End Select
+
+    Debug.Print "Cuota de manejo: " & cuota
+    '> Cuota de manejo: 8500
+End Sub`,
+        };
+
+        /* Rangos: aquí los cuatro dejan de parecerse. VBA los admite tal cual,
+           Python necesita una guarda y R no puede —switch iguala valores, no
+           compara— y hay que volver a la cascada. Salidas ejecutadas. */
+        const EJ_SEGUN_RANGOS = {
+            pseudo: `Inicio
+    monto <- 350000
+
+    Segun monto Hacer
+        Caso 1..100000:
+            tarifa <- 2500
+        Caso 100001..500000:
+            tarifa <- 6000
+        Caso 500001..5000000:
+            tarifa <- 12000
+        De Otro Modo:
+            tarifa <- 25000
+    FinSegun
+
+    Escribir "Tarifa: ", tarifa
+    //> Tarifa: 6000
+Fin`,
+            python: `monto = 350_000
+
+# match compara patrones, no rangos: el rango va en una GUARDA (case ... if ...)
+match monto:
+    case m if m <= 100_000:
+        tarifa = 2500
+    case m if m <= 500_000:
+        tarifa = 6000
+    case m if m <= 5_000_000:
+        tarifa = 12000
+    case _:
+        tarifa = 25000
+
+print(f"Tarifa: {tarifa:,.0f}")
+#> Tarifa: 6,000`,
+            r: `monto <- 350000
+
+# switch NO compara: iguala. Con rangos no sirve, y hay que volver
+# a la cascada de if / else if. No es una limitación que se pueda
+# rodear: es que switch resuelve otro problema.
+if (monto <= 100000) {
+  tarifa <- 2500
+} else if (monto <= 500000) {
+  tarifa <- 6000
+} else if (monto <= 5000000) {
+  tarifa <- 12000
+} else {
+  tarifa <- 25000
+}
+
+cat(sprintf("Tarifa: %.0f\\n", tarifa))
+#> Tarifa: 6000`,
+            vba: `Option Explicit
+
+Sub TarifaPorMonto()
+    Dim monto As Currency, tarifa As Currency
+
+    monto = 350000
+
+    ' Select Case admite rangos con To, y listas con comas.
+    Select Case monto
+        Case 1 To 100000
+            tarifa = 2500
+        Case 100001 To 500000
+            tarifa = 6000
+        Case 500001 To 5000000
+            tarifa = 12000
+        Case Else
+            tarifa = 25000
+    End Select
+
+    Debug.Print "Tarifa: " & tarifa
+    '> Tarifa: 6000
+End Sub`,
+        };
+
+        const ORDENA_SEGUN = {
+            pseudo: ['Inicio', 'Leer tipoCuenta', 'Segun tipoCuenta Hacer',
+                '    Caso "AHORROS":', '        cuota <- 8500', '    Caso "CORRIENTE":',
+                '        cuota <- 21000', '    De Otro Modo:', '        cuota <- 12000',
+                'FinSegun', 'Escribir cuota', 'Fin'],
+            python: ['tipo_cuenta = input("Tipo de cuenta: ")', 'match tipo_cuenta:',
+                '    case "AHORROS":', '        cuota = 8500', '    case "CORRIENTE":',
+                '        cuota = 21000', '    case _:', '        cuota = 12000', 'print(cuota)'],
+            r: ['tipo_cuenta <- readline("Tipo de cuenta: ")', 'cuota <- switch(tipo_cuenta,',
+                '  AHORROS   = 8500,', '  CORRIENTE = 21000,', '  12000)', 'cat(cuota)'],
+            vba: ['Sub CuotaDeManejo()', 'Dim cuota As Currency', 'Select Case Range("B2").Value',
+                '    Case "AHORROS"', '        cuota = 8500', '    Case "CORRIENTE"',
+                '        cuota = 21000', '    Case Else', '        cuota = 12000',
+                'End Select', 'MsgBox cuota', 'End Sub'],
+        };
+
+        const CMP_SEGUN_TRAMOS = {
+            pseudo: `Segun monto Hacer
+    Caso 1..100000:
+        tarifa <- 2500
+    Caso 100001..500000:
+        tarifa <- 6000
+    Caso 500001..5000000:
+        tarifa <- 12000
+FinSegun`,
+            python: `match monto:
+    case m if 1 <= m <= 100_000:
+        tarifa = 2500
+    case m if m <= 500_000:
+        tarifa = 6000
+    case m if m <= 5_000_000:
+        tarifa = 12000`,
+            r: `# switch iguala valores, no compara rangos: en R esto ES
+# la cascada. Y aquí tampoco hay caso por defecto.
+if (monto <= 100000) {
+  tarifa <- 2500
+} else if (monto <= 500000) {
+  tarifa <- 6000
+} else if (monto <= 5000000) {
+  tarifa <- 12000
+}`,
+            vba: `Select Case monto
+    Case 1 To 100000
+        tarifa = 2500
+    Case 100001 To 500000
+        tarifa = 6000
+    Case 500001 To 5000000
+        tarifa = 12000
+End Select`,
+        };
+
+        const CMP_CASCADA_TRAMOS = {
+            pseudo: `Si monto <= 100000 Entonces
+    tarifa <- 2500
+Sino Si monto <= 500000 Entonces
+    tarifa <- 6000
+Sino Si monto <= 5000000 Entonces
+    tarifa <- 12000
+Sino
+    tarifa <- 25000
+FinSi`,
+            python: `if monto <= 100_000:
+    tarifa = 2500
+elif monto <= 500_000:
+    tarifa = 6000
+elif monto <= 5_000_000:
+    tarifa = 12000
+else:
+    tarifa = 25000`,
+            r: `if (monto <= 100000) {
+  tarifa <- 2500
+} else if (monto <= 500000) {
+  tarifa <- 6000
+} else if (monto <= 5000000) {
+  tarifa <- 12000
+} else {
+  tarifa <- 25000
+}`,
+            vba: `If monto <= 100000 Then
+    tarifa = 2500
+ElseIf monto <= 500000 Then
+    tarifa = 6000
+ElseIf monto <= 5000000 Then
+    tarifa = 12000
+Else
+    tarifa = 25000
+End If`,
+        };
+
         const Cap5Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-list-check"
@@ -4113,7 +4349,131 @@ End If`,
                     a volver a la cascada.
                 </Motivacion>
 
+                <h3>Una sola variable, muchos valores</h3>
+                <p>
+                    La <Termino def="Estructura que evalúa una sola expresión y ejecuta el bloque correspondiente al valor que toma, con un caso por defecto para todo lo demás.">selectiva múltiple</Termino> resuelve
+                    un caso concreto: <strong>una sola variable</strong> que puede tomar varios valores
+                    conocidos, y una acción distinta para cada uno. Cuando el problema es ese, la
+                    cascada funciona pero cuenta la historia mal: repite el nombre de la variable en
+                    cada rama y deja al lector comprobando que siempre es la misma.
+                </p>
+
+                <CodeTabs
+                    titulo="Cuota de manejo según el tipo de cuenta"
+                    bloques={EJ_SEGUN_CATEGORIA}
+                    nota="Con un valor categórico los cuatro lenguajes se parecen mucho. Fíjese en R: su selectiva múltiple es una función que devuelve un valor, no un bloque que asigna, y el caso por defecto es el último argumento sin nombre." />
+
+                <h3>Rangos: donde los cuatro dejan de parecerse</h3>
+                <p>
+                    Una escala tarifaria no clasifica por valores sino por <strong>tramos</strong>, y ahí
+                    los cuatro lenguajes se separan. Es la primera vez en el curso que una misma
+                    estructura no se puede traducir línea por línea:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Lenguaje</th><th>Forma</th><th>¿Admite rangos?</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Pseudocódigo</td><td><span className="inline-code">Segun … Caso</span></td><td>Sí, por convención de notación</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí, de verdad:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">match … case</span></td><td>Con <strong>guarda</strong>: <span className="inline-code">case m if m &lt;= 100_000</span></td></tr>
+                            <tr><td>R</td><td><span className="inline-code">switch</span></td><td><strong>No.</strong> Iguala valores; con tramos hay que volver a la cascada</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <CodeTabs
+                    titulo="Tarifa por tramos de monto"
+                    bloques={EJ_SEGUN_RANGOS}
+                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema." />
+
+                <Box type="info" label="Por qué esto anticipa el capítulo 6">
+                    <span className="inline-code">Select Case</span> con rangos es de las pocas cosas que VBA
+                    hace <strong>mejor</strong> que los otros tres, y no es casualidad: VBA nació para hojas
+                    de cálculo, donde clasificar por tramos —de monto, de antigüedad, de saldo— es la
+                    operación de todos los días. El capítulo 6 vuelve sobre esto.
+                </Box>
+
                 <SelectivasComparadas />
+
+                <h3>El caso por defecto no es opcional</h3>
+                <p>
+                    Los tramos de arriba cubren de 1 a 5 000 000. ¿Y una devolución? ¿Y un ajuste por
+                    encima del tope? Sin caso por defecto, el valor que no encaja en ningún caso
+                    <strong> no ejecuta nada</strong>, y la variable se queda como estaba —o sin existir—.
+                    Lo que pasa a continuación depende del lenguaje, y ninguna de las cuatro respuestas
+                    es un error visible.
+                </p>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="En R, ¿qué vale cuota tras ejecutar switch(&quot;LEASING&quot;, AHORROS = 8500, CORRIENTE = 21000), es decir, sin caso por defecto y sin coincidencia?"
+                    opciones={[
+                        { texto: 'Cero.', correcta: false },
+                        { texto: 'NULL, y además se devuelve de forma invisible: en la consola no se imprime nada.', correcta: true, justificacion: 'Comprobado en R 4.6.0: is.null(...) devuelve TRUE. Y switch lo devuelve invisiblemente, así que escribir la expresión en la consola no muestra absolutamente nada —ni un NULL—, que es lo que hace el defecto tan difícil de ver. La variable no vale cero: no vale nada, y en la primera operación aritmética que la use el resultado será numeric(0) o un error, lejos ya de la línea culpable. Tampoco se detiene el programa con un error en ese punto, ni R «se queda con el primer caso»: sin coincidencia y sin defecto, switch no elige ninguno.' },
+                        { texto: 'Se detiene la ejecución con un error de valor no encontrado.', correcta: false },
+                        { texto: 'El primer caso, 8500, porque R toma el primero si no hay coincidencia.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="El Segun por tramos y la cascada"
+                    enunciado={<>Dos versiones de la misma escala tarifaria. La de la derecha tiene caso por defecto y la de la izquierda no. <strong>Decida si son equivalentes</strong>.</>}
+                    a={{ etiqueta: 'Versión A · Segun por tramos, sin caso por defecto', codigo: CMP_SEGUN_TRAMOS }}
+                    b={{ etiqueta: 'Versión B · cascada con Sino final', codigo: CMP_CASCADA_TRAMOS }}
+                    pregunta="¿Dan las dos el mismo resultado para cualquier monto?"
+                    opciones={[
+                        { texto: 'Sí: los tres tramos cubren todos los montos posibles.', correcta: false },
+                        { texto: 'No. Coinciden dentro de los tramos, pero para un monto por encima de 5 000 000 —o para una devolución en negativo— la cascada asigna 25 000 y el Segun no asigna nada.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más. Un ajuste de 7 500 000 o una devolución de −50 000 no encajan en ninguno: la versión A deja tarifa sin tocar y la B la pone en 25 000. No es un caso de laboratorio —el artefacto de arriba lo muestra con esos dos montos exactos— y no hay ningún aviso: la transacción simplemente se cobra mal, o no se cobra. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. Tampoco se trata de un problema de tipo de dato: los dos bloques reciben el mismo número.' },
+                        { texto: 'No, pero solo si el monto es negativo: para valores positivos son idénticas.', correcta: false },
+                        { texto: 'Depende del lenguaje: en VBA sí y en Python no.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <OrdenaPasos
+                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto."
+                    pasos={ORDENA_SEGUN}
+                    pista="En R la selectiva múltiple es una única expresión que devuelve un valor: se lee como una llamada a función, con el caso por defecto al final y sin nombre."
+                />
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="¿Segun o cascada?"
+                    solucion={<>
+                        <p>
+                            <strong>La pregunta que decide es qué se está comparando.</strong> Si todas las ramas
+                            preguntan por <em>la misma variable</em> y la comparan con <em>valores concretos</em>
+                            —un tipo de cuenta, un código de producto, un día de la semana—, el
+                            <span className="inline-code"> Segun</span> dice exactamente eso y la cascada lo disimula:
+                            hay que leer las doce condiciones para comprobar que las doce hablan de lo mismo.
+                        </p>
+                        <p>
+                            Si las ramas comparan <em>cosas distintas</em> —score en una, endeudamiento en otra,
+                            ingreso en la tercera, como la política de la sección 4—, el
+                            <span className="inline-code"> Segun</span> no aplica: no hay una sola variable que
+                            gobierne. Forzarlo obliga a inventar una variable intermedia que no significa nada.
+                        </p>
+                        <p>
+                            <strong>Y la restricción práctica:</strong> si los tramos son rangos y el equipo trabaja
+                            en R, la decisión ya está tomada por el lenguaje —<span className="inline-code">switch</span> iguala,
+                            no compara—. En VBA, en cambio, <span className="inline-code">Select Case … To</span> es la
+                            opción natural. Es el único punto del curso donde la estructura que conviene depende
+                            de en qué se va a escribir.
+                        </p>
+                        <p>
+                            <strong>En los dos casos, el caso por defecto se escribe siempre</strong>, aunque «no pueda
+                            pasar». Los doce tramos de la escala de comisiones cubrían todos los montos posibles
+                            hasta que apareció la primera devolución.
+                        </p>
+                    </>}
+                >
+                    <p>
+                        Le pasan una rutina de doce tramos escrita como doce <span className="inline-code">Si</span>
+                        anidados y le piden reescribirla. <strong>Enuncie el criterio</strong> que usaría para decidir
+                        entre <span className="inline-code">Segun</span> y cascada, aplíquelo a los dos ejemplos que
+                        ha visto en el capítulo —la cuota por tipo de cuenta y la política de originación de la
+                        sección 4— y diga qué cambia si el equipo trabaja en R.
+                    </p>
+                </Reto></Ejercicio>
 
                 <Box type="tip" label="Video del syllabus para esta sección">
                     «Estructura selectiva múltiple» — <a href="https://youtu.be/3w3Ue1LkPNI" target="_blank" rel="noopener noreferrer">youtu.be/3w3Ue1LkPNI</a>
@@ -4124,6 +4484,149 @@ End If`,
         /* ============================================================
            SECCIÓN 6 — CASOS FINANCIEROS
         ============================================================ */
+        /* Retención en la fuente por servicios, simplificada a propósito: la
+           UVT va redondeada a 50 000 y se declara como supuesto del ejercicio,
+           porque su valor real lo publica la DIAN cada año y el material no
+           debe envejecer con él. Salidas ejecutadas el 2026-09-20. */
+        const EJ_RETENCION = {
+            pseudo: `Inicio
+    // La UVT real se publica cada año. Aquí va redondeada
+    // a 50 000 para que las cuentas se sigan de cabeza.
+    uvt          <- 50000
+    pago         <- 3500000
+    esDeclarante <- Falso
+
+    baseMinima <- 4 * uvt
+
+    Si pago < baseMinima Entonces
+        retencion <- 0
+    Sino Si esDeclarante Entonces
+        retencion <- pago * 0.04
+    Sino
+        retencion <- pago * 0.06
+    FinSi
+
+    neto <- pago - retencion
+    Escribir "Retencion: ", retencion
+    //> Retencion: 210000
+    Escribir "Neto a pagar: ", neto
+    //> Neto a pagar: 3290000
+Fin`,
+            python: `uvt           = 50_000
+pago          = 3_500_000
+es_declarante = False
+
+base_minima = 4 * uvt
+
+if pago < base_minima:
+    retencion = 0
+elif es_declarante:
+    retencion = pago * 0.04
+else:
+    retencion = pago * 0.06
+
+neto = pago - retencion
+print(f"Retencion: {retencion:,.0f}")
+#> Retencion: 210,000
+print(f"Neto a pagar: {neto:,.0f}")
+#> Neto a pagar: 3,290,000`,
+            r: `uvt           <- 50000
+pago          <- 3500000
+es_declarante <- FALSE
+
+base_minima <- 4 * uvt
+
+if (pago < base_minima) {
+  retencion <- 0
+} else if (es_declarante) {
+  retencion <- pago * 0.04
+} else {
+  retencion <- pago * 0.06
+}
+
+neto <- pago - retencion
+cat(sprintf("Retencion: %.0f\\n", retencion))
+#> Retencion: 210000
+cat(sprintf("Neto a pagar: %.0f\\n", neto))
+#> Neto a pagar: 3290000`,
+            vba: `Option Explicit
+
+Sub RetencionServicios()
+    Dim uvt As Currency, pago As Currency, baseMinima As Currency
+    Dim esDeclarante As Boolean, retencion As Currency, neto As Currency
+
+    uvt = 50000
+    pago = 3500000
+    esDeclarante = False
+
+    baseMinima = 4 * uvt
+
+    If pago < baseMinima Then
+        retencion = 0
+    ElseIf esDeclarante Then
+        retencion = pago * 0.04
+    Else
+        retencion = pago * 0.06
+    End If
+
+    neto = pago - retencion
+    Debug.Print "Retencion: " & retencion
+    '> Retencion: 210000
+    Debug.Print "Neto a pagar: " & neto
+    '> Neto a pagar: 3290000
+End Sub`,
+        };
+
+        const TRAZA_RETENCION = {
+            pseudo: `uvt          <- 50000
+pago         <- 150000
+esDeclarante <- Verdadero
+baseMinima   <- 4 * uvt
+Si pago < baseMinima Entonces
+    retencion <- 0
+Sino Si esDeclarante Entonces
+    retencion <- pago * 0.04
+Sino
+    retencion <- pago * 0.06
+FinSi
+neto <- pago - retencion`,
+            python: `uvt           = 50_000
+pago          = 150_000
+es_declarante = True
+base_minima   = 4 * uvt
+if pago < base_minima:
+    retencion = 0
+elif es_declarante:
+    retencion = pago * 0.04
+else:
+    retencion = pago * 0.06
+neto = pago - retencion`,
+            r: `uvt           <- 50000
+pago          <- 150000
+es_declarante <- TRUE
+base_minima   <- 4 * uvt
+if (pago < base_minima) {
+  retencion <- 0
+} else if (es_declarante) {
+  retencion <- pago * 0.04
+} else {
+  retencion <- pago * 0.06
+}
+neto <- pago - retencion`,
+            vba: `uvt = 50000
+pago = 150000
+esDeclarante = True
+baseMinima = 4 * uvt
+If pago < baseMinima Then
+    retencion = 0
+ElseIf esDeclarante Then
+    retencion = pago * 0.04
+Else
+    retencion = pago * 0.06
+End If
+neto = pago - retencion`,
+        };
+
         const Cap6Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-percent"
@@ -4135,13 +4638,166 @@ End If`,
                     se va.
                 </Motivacion>
 
+                <h3>La política de originación, por dentro</h3>
+                <p>
+                    Es la cascada de la sección 4, ahora para recorrerla. Arme un solicitante y fíjese
+                    en dos cosas: <strong>cuál</strong> condición decide, y cuántas quedan sin evaluar
+                    debajo. La segunda es la que suele sorprender.
+                </p>
+
                 <ArbolRiesgo />
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="Un solicitante con ingreso de 6 500 000, score 480 y endeudamiento del 68 % recibe un rechazo. El cliente llama a preguntar qué tiene que mejorar. ¿Qué se le dice?"
+                    opciones={[
+                        { texto: 'Que mejore el score y baje el endeudamiento: falla en las dos cosas.', correcta: false },
+                        { texto: 'Que su score de 480 está por debajo del mínimo de 550, y que esa es la condición que decidió. El endeudamiento del 68 % también incumple, pero el sistema no llegó a evaluarlo.', correcta: true, justificacion: 'La cascada decide en la primera condición que se cumple, y aquí es score < 550. La del endeudamiento está más abajo y no se evaluó: es cierto que el 68 % también incumpliría, pero eso lo sabemos nosotros leyendo la política, no el sistema, que se detuvo antes. La diferencia importa en la práctica: si el cliente vuelve dentro de seis meses con el score arreglado y el endeudamiento igual, será rechazado otra vez —por la segunda condición esta vez—, y nadie se lo advirtió. Decirle solo «mejore el score» es exacto respecto de lo que el sistema hizo y engañoso respecto de lo que le conviene; por eso la respuesta completa nombra la condición que decidió y además advierte de la siguiente. Lo que no se puede hacer es darle la lista de las cinco reglas: cuatro no se evaluaron, y tres de ellas ni siquiera le aplican.' },
+                        { texto: 'Que el ingreso no fue el problema, porque supera los cinco millones.', correcta: false },
+                        { texto: 'Que incumple tres de las cinco reglas de la política.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Retención en la fuente: una cascada con un umbral</h3>
+                <p>
+                    El otro caso clásico de selectiva en un área financiera tiene tres ramas y un
+                    umbral que se calcula antes de preguntar nada: <strong>si el pago no llega a la base
+                    mínima no se retiene</strong>, y solo si la pasa importa la condición del proveedor.
+                </p>
+
+                <CodeTabs
+                    titulo="Retención por servicios"
+                    bloques={EJ_RETENCION}
+                    nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas no es negociable —preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral—." />
+
+                <Box type="warn" label="La UVT de este ejemplo está redondeada a propósito">
+                    50 000 no es el valor real de la UVT: es un número redondo para que las cuentas se
+                    puedan seguir de cabeza. El valor vigente lo publica la DIAN cada año, y en una
+                    rutina de producción <strong>nunca va escrito en el código</strong> —va en un parámetro—,
+                    justamente porque cambia todos los eneros.
+                </Box>
+
+                <TablaTraza
+                    titulo="Prueba de escritorio: un pago pequeño"
+                    enunciado={<>Un pago de <strong>150 000</strong> a un proveedor <strong>declarante</strong>. Complete el estado después de cada instrucción; use <span className="inline-code">—</span> si la variable todavía no tiene valor. Fíjese en cuál de las tres ramas se toma, y en cuáles ni se evalúan.</>}
+                    codigo={TRAZA_RETENCION}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'baseMinima', titulo: 'baseMinima' },
+                        { clave: 'retencion', titulo: 'retencion' },
+                        { clave: 'neto', titulo: 'neto' },
+                    ]}
+                    ocultas={['baseMinima', 'retencion', 'neto']}
+                    filas={[
+                        { paso: 1, instruccion: ins('uvt <- 50000', 'uvt = 50_000', 'uvt <- 50000', 'uvt = 50000'), baseMinima: '—', retencion: '—', neto: '—' },
+                        { paso: 2, instruccion: ins('pago <- 150000', 'pago = 150_000', 'pago <- 150000', 'pago = 150000'), baseMinima: '—', retencion: '—', neto: '—' },
+                        { paso: 3, instruccion: ins('esDeclarante <- Verdadero', 'es_declarante = True', 'es_declarante <- TRUE', 'esDeclarante = True'), baseMinima: '—', retencion: '—', neto: '—' },
+                        { paso: 4, instruccion: ins('baseMinima <- 4 * uvt', 'base_minima = 4 * uvt', 'base_minima <- 4 * uvt', 'baseMinima = 4 * uvt'), baseMinima: '200000', retencion: '—', neto: '—' },
+                        { paso: 5, instruccion: ins('Si pago < baseMinima Entonces', 'if pago < base_minima:', 'if (pago < base_minima)', 'If pago < baseMinima Then'), baseMinima: '200000', retencion: '—', neto: '—' },
+                        { paso: 6, instruccion: ins('retencion <- 0', 'retencion = 0', 'retencion <- 0', 'retencion = 0'), baseMinima: '200000', retencion: '0', neto: '—' },
+                        { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), baseMinima: '200000', retencion: '0', neto: '150000' },
+                    ]}
+                    pista="El proveedor es declarante, pero eso no llega a importar. La condición del umbral se cumple primero, y la cascada se detiene ahí: la rama del 4 % no se evalúa."
+                />
+
+                <Box type="info" label="Lo que la traza deja ver">
+                    <span className="inline-code">esDeclarante</span> vale <span className="inline-code">Verdadero</span> y
+                    <strong> no se usa</strong>. Es un dato correcto, cargado a tiempo, que en este pago no
+                    interviene en nada. En una auditoría eso confunde: aparece en el expediente y parece
+                    que debió influir. La traza es lo que permite decir que no, y por qué.
+                </Box>
+
+                <Ejercicio tipo="E7"><Reto
+                    titulo="Explíquele al proveedor"
+                    solucion={<>
+                        <p>
+                            <strong>Lo que pasó:</strong> los tres pagos de 150 000 quedaron cada uno por debajo
+                            de la base mínima de 200 000, así que a cada uno se le aplicó la primera rama
+                            —retención cero—. La base se compara <strong>contra cada pago</strong>, no contra el
+                            acumulado del mes, porque la rutina se ejecuta una vez por factura y no guarda
+                            memoria de las anteriores.
+                        </p>
+                        <p>
+                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
+                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. No es que el
+                            sistema lo trate distinto: es que la condición del umbral se evalúa sobre el
+                            valor del pago, y ese lo pasa.
+                        </p>
+                        <p>
+                            <strong>Y lo que hay que decirle al proveedor, que es lo difícil:</strong> fraccionar
+                            no es una estrategia; es exactamente lo que la norma llama fraccionamiento de pagos
+                            y lo que la base mínima existe para detectar cuando se acumula. Si el área de pagos
+                            decide agrupar por mes —que es lo razonable—, la rutina tiene que sumar antes de
+                            comparar, y entonces los tres pagos de 150 000 pasan a retener. El defecto no está
+                            en la cascada: está en <em>qué</em> se le da a comparar.
+                        </p>
+                    </>}
+                >
+                    <p>
+                        Un proveedor recibió cuatro pagos este mes: tres de <strong>150 000</strong> y uno de
+                        <strong> 450 000</strong>. A los tres primeros no se les retuvo nada y al cuarto sí. El
+                        proveedor llama convencido de que hubo un error, porque «en total facturé 900 000 y
+                        me retuvieron sobre 450 000».
+                    </p>
+                    <p>
+                        <strong>Explíquele qué hizo el sistema y por qué</strong>, con la rutina de arriba a la
+                        vista. Diga además qué habría que cambiar si el área de pagos decidiera aplicar la
+                        base mínima al acumulado del mes en vez de a cada pago, y si ese cambio afecta a la
+                        estructura selectiva o a otra cosa.
+                    </p>
+                </Reto></Ejercicio>
             </div>
         );
 
         /* ============================================================
            EVALUACIÓN Y GLOSARIO
         ============================================================ */
+        const EMPAREJA_CAP04 = {
+            pseudo: [
+                'Si ingreso > 3000000 O score >= 680 Y endeudamiento < 40',
+                'Si compras <> 0 Y total / compras > 500000',
+                'Si esPreferencial Entonces … Sino …',
+                'Si score < 550 Entonces … Sino Si endeudamiento > 60 Entonces …',
+                'Segun tipoCuenta Hacer … De Otro Modo:',
+            ],
+            python: [
+                'ingreso > 3_000_000 or score >= 680 and endeudamiento < 40',
+                'if compras != 0 and total / compras > 500_000:',
+                'if es_preferencial: … else: …',
+                'if score < 550: … elif endeudamiento > 60: …',
+                'match tipo_cuenta: … case _:',
+            ],
+            r: [
+                'ingreso > 3000000 || score >= 680 && endeudamiento < 40',
+                'if (compras != 0 && total / compras > 500000)',
+                'if (es_preferencial) { … } else { … }',
+                'if (score < 550) { … } else if (endeudamiento > 60) { … }',
+                'switch(tipo_cuenta, …, 12000)',
+            ],
+            vba: [
+                'ingreso > 3000000 Or score >= 680 And endeudamiento < 40',
+                'If compras <> 0 Then: If total / compras > 500000 Then',
+                'If esPreferencial Then … Else …',
+                'If score < 550 Then … ElseIf endeudamiento > 60 Then …',
+                'Select Case tipoCuenta … Case Else',
+            ],
+        };
+
+        const GLOSARIO_CAP04 = [
+            ['Condición', 'Expresión que se evalúa a verdadero o falso. Existe por sí sola: se puede guardar en una variable sin que haya ninguna decisión de por medio.'],
+            ['Selectiva simple', 'Estructura con una condición y un bloque que se ejecuta solo si es verdadera. Si es falsa no ocurre nada, y ese «nada» no deja rastro.'],
+            ['Selectiva doble', 'Estructura con dos bloques alternativos. Garantiza que se ejecute exactamente uno: ni ninguno ni los dos.'],
+            ['Cascada', 'Serie de alternativas evaluadas en orden con Sino Si. Decide la primera condición que se cumple; las siguientes no se evalúan.'],
+            ['Anidamiento', 'Una selectiva dentro de la rama de otra. La condición interior solo se plantea si la exterior se cumplió.'],
+            ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos: Segun, Select Case, match o switch según el lenguaje.'],
+            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. Escribirla siempre, aunque «no pueda pasar».'],
+            ['Cortocircuito', 'Dejar de evaluar una condición compuesta en cuanto el resultado ya está decidido. Lo hacen pseudocódigo, Python y R; VBA no.'],
+            ['Condición guardia', 'Operando que se pone delante para proteger al que viene detrás —comprobar que un divisor no es cero, por ejemplo—. Solo funciona si hay cortocircuito.'],
+            ['Leyes de De Morgan', 'Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. NO (A Y B) es NO A O NO B.'],
+            ['Valor por defecto', 'Asignación que se hace antes de una selectiva para que la variable tenga valor aunque la rama no se ejecute.'],
+            ['Rama', 'Cada uno de los caminos que puede tomar el flujo. En una prueba de escritorio se anota como una columna más.'],
+        ];
+
         const EvaluacionSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-graduation-cap"
@@ -4151,6 +4807,147 @@ End If`,
                     y por qué? Quien sabe responderla sobre el papel, sin ejecutar nada, es quien
                     encuentra el defecto antes de que salga a producción.
                 </Motivacion>
+
+                <Ejercicio tipo="E6"><Emparejamiento
+                    enunciado="Relacione cada fragmento con la idea del capítulo que lo explica. Los cinco vienen de secciones distintas."
+                    etiquetaIzq="Fragmento"
+                    etiquetaDer="Idea"
+                    izquierda={EMPAREJA_CAP04}
+                    derecha={[
+                        'Caso por defecto — recoge los valores que no encajan en ningún caso enumerado; sin él, la variable se queda sin asignar.',
+                        'Precedencia de los lógicos — el Y liga más fuerte que el O, así que esto no dice lo que parece decir a simple vista.',
+                        'Cascada — decide la primera condición que se cumple, y las de abajo no llegan a evaluarse.',
+                        'Condición guardia — el primer operando protege al segundo, y solo funciona si el lenguaje evalúa en cortocircuito.',
+                        'Selectiva doble — garantiza que se ejecute uno de los dos bloques y nunca los dos.',
+                    ]}
+                    solucion={[1, 3, 4, 2, 0]}
+                /></Ejercicio>
+
+                <Quiz titulo="Evaluación · Capítulo 04 — Control selectivo" preguntas={[
+                    {
+                        pregunta: 'La expresión A O B Y C, sin paréntesis, se evalúa como:',
+                        opciones: [
+                            { texto: '(A O B) Y C, porque se lee de izquierda a derecha.', correcta: false },
+                            { texto: 'A O (B Y C), porque Y liga más fuerte que O.', correcta: true },
+                            { texto: 'Depende del lenguaje: Python y R la agrupan distinto que VBA.', correcta: false },
+                            { texto: 'Es ambigua y produce un error de sintaxis.', correcta: false },
+                        ],
+                        justificacion: 'El orden es NO, luego Y, luego O, y es el mismo en los cuatro lenguajes. Las dos agrupaciones no son equivalentes: difieren en dos de las ocho combinaciones posibles, justamente en las del solicitante que gana bien y está muy endeudado.',
+                    },
+                    {
+                        pregunta: 'La política dice que se aprueba si score >= 680 Y endeudamiento < 40. ¿Cuál es la condición de rechazo correcta?',
+                        opciones: [
+                            { texto: 'score < 680 Y endeudamiento >= 40', correcta: false },
+                            { texto: 'score < 680 O endeudamiento >= 40', correcta: true },
+                            { texto: 'NO score >= 680 Y NO endeudamiento < 40', correcta: false },
+                            { texto: 'score <= 680 O endeudamiento > 40', correcta: false },
+                        ],
+                        justificacion: 'Al negar una conjunción, el conector cambia: NO (A Y B) es NO A O NO B. Dejar el Y —que es la primera opción, y también la tercera escrita de otro modo— rechaza solo a quien falla en las dos cosas a la vez, y deja pasar dos de cada cuatro perfiles que debían detenerse. La última opción además mueve los límites: convierte en aprobado a quien tiene exactamente 680.',
+                    },
+                    {
+                        pregunta: 'En una selectiva simple cuya condición resulta falsa, ¿qué queda en el registro de ejecución?',
+                        opciones: [
+                            { texto: 'Una advertencia de rama no ejecutada.', correcta: false },
+                            { texto: 'Nada: el programa salta el bloque y sigue, sin error ni aviso.', correcta: true },
+                            { texto: 'Un valor nulo en la variable que el bloque habría asignado.', correcta: false },
+                            { texto: 'Depende del lenguaje.', correcta: false },
+                        ],
+                        justificacion: 'Es lo que hizo que el recargo por mora no se cobrara durante catorce meses. La variable no queda en nulo: queda como estaba antes, que es el motivo por el que conviene darle un valor por defecto fuera de la selectiva.',
+                    },
+                    {
+                        pregunta: '¿Qué garantiza Si…Sino que dos Si independientes no garantizan?',
+                        opciones: [
+                            { texto: 'Que se ejecute al menos uno de los dos bloques.', correcta: true },
+                            { texto: 'Que no se ejecuten los dos bloques.', correcta: true },
+                            { texto: 'Que las dos condiciones se evalúen siempre.', correcta: false },
+                            { texto: 'Que la variable asignada quede en el mismo tipo de dato.', correcta: false },
+                        ],
+                        multiple: true,
+                        justificacion: 'Las dos primeras, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia.',
+                    },
+                    {
+                        pregunta: 'En una cascada, las condiciones que están debajo de la que se cumplió:',
+                        opciones: [
+                            { texto: 'Se evalúan y dan falso.', correcta: false },
+                            { texto: 'No se evalúan: nadie las mira.', correcta: true },
+                            { texto: 'Se evalúan solo si la rama ejecutada no asigna nada.', correcta: false },
+                            { texto: 'Se evalúan en orden inverso.', correcta: false },
+                        ],
+                        justificacion: 'La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó. En el caso de la sección 6, el endeudamiento del 68 % también incumplía, pero el sistema nunca llegó a mirarlo.',
+                    },
+                    {
+                        pregunta: 'Las cinco reglas de una política de originación son correctas, pero la del ingreso alto está de primera en la cascada. ¿Qué tipo de defecto es?',
+                        opciones: [
+                            { texto: 'Error de sintaxis.', correcta: false },
+                            { texto: 'Condición mal escrita.', correcta: false },
+                            { texto: 'Orden de evaluación: una rama correcta impide que se evalúen las siguientes.', correcta: true },
+                            { texto: 'Error de unidades.', correcta: false },
+                        ],
+                        justificacion: 'No hay ninguna línea defectuosa, y por eso una revisión de código no lo encuentra: el defecto está en la relación entre dos reglas. El arreglo no toca ninguna condición, solo las mueve.',
+                    },
+                    {
+                        pregunta: 'En VBA, ¿por qué la condición compras <> 0 And total / compras > 500000 no protege de la división por cero?',
+                        opciones: [
+                            { texto: 'Porque <> no es el operador de desigualdad en VBA.', correcta: false },
+                            { texto: 'Porque And evalúa siempre los dos lados, aunque el primero ya sea falso.', correcta: true },
+                            { texto: 'Porque VBA evalúa las condiciones de derecha a izquierda.', correcta: false },
+                            { texto: 'Porque falta convertir compras a Double.', correcta: false },
+                        ],
+                        justificacion: 'Es la única diferencia real entre los cuatro lenguajes en materia de condiciones, y ya venía anunciada desde el capítulo 1. La forma de conseguir el mismo efecto en VBA es anidar dos Si.',
+                    },
+                    {
+                        pregunta: '¿Cuál de estas situaciones pide una selectiva múltiple y no una cascada?',
+                        opciones: [
+                            { texto: 'Clasificar una solicitud según score, endeudamiento e ingreso.', correcta: false },
+                            { texto: 'Asignar la cuota de manejo según el tipo de cuenta: ahorros, corriente o nómina.', correcta: true },
+                            { texto: 'Aplicar un recargo si la mora supera los 30 días.', correcta: false },
+                            { texto: 'Decidir entre tarifa preferencial y tarifa plena.', correcta: false },
+                        ],
+                        justificacion: 'La selectiva múltiple sirve cuando todas las ramas preguntan por la MISMA variable y la comparan con valores concretos. La primera opción compara tres variables distintas, y las otras dos tienen una sola alternativa: son selectiva simple y doble.',
+                    },
+                    {
+                        pregunta: 'En R, switch("LEASING", AHORROS = 8500, CORRIENTE = 21000) devuelve:',
+                        opciones: [
+                            { texto: '0', correcta: false },
+                            { texto: 'NULL, y de forma invisible.', correcta: true },
+                            { texto: 'Un error que detiene la ejecución.', correcta: false },
+                            { texto: '8500, el primer caso.', correcta: false },
+                        ],
+                        justificacion: 'Sin coincidencia y sin caso por defecto, switch no elige ninguno. Y como lo devuelve invisiblemente, en la consola no se ve absolutamente nada: el problema aparece más tarde, en la primera operación que use esa variable.',
+                    },
+                    {
+                        pregunta: 'Una escala tarifaria con Segun cubre los tramos de 1 a 5 000 000 y no tiene caso por defecto. Llega una devolución de −50 000. ¿Qué pasa?',
+                        opciones: [
+                            { texto: 'Se aplica el primer tramo, 2 500.', correcta: false },
+                            { texto: 'No se ejecuta ninguna rama y la tarifa se queda sin asignar, sin error ni aviso.', correcta: true },
+                            { texto: 'Se aplica el último tramo, 12 000.', correcta: false },
+                            { texto: 'El programa se detiene con un error de rango.', correcta: false },
+                        ],
+                        justificacion: 'Ningún caso coincide y no hay dónde caer. La cascada equivalente, que sí tiene su Sino final, habría asignado la tarifa del último tramo: es exactamente el punto donde las dos estructuras dejan de ser equivalentes.',
+                    },
+                ]} />
+
+                <h3>Glosario del capítulo</h3>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Término</th><th>Definición</th></tr>
+                        </thead>
+                        <tbody>
+                            {GLOSARIO_CAP04.map(([t, d], i) => (
+                                <tr key={i}><th style={{ whiteSpace: 'nowrap' }}>{t}</th><td>{d}</td></tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="tip" label="Lo que viene">
+                    El capítulo 5 rompe la otra garantía que quedaba: hasta aquí, una instrucción se
+                    ejecutaba una vez o ninguna. Con la repetición puede ejecutarse cientos de veces, y
+                    la pregunta deja de ser <em>por dónde pasó</em> para volverse <em>cuántas veces, y
+                    cuándo para</em>. La tabla de amortización de un crédito a 240 meses tiene 240 filas
+                    y nadie las escribió.
+                </Box>
             </div>
         );
 
