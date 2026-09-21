@@ -2607,12 +2607,194 @@
                     redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Tres de
                     las cinco no llegaron a mirarse nunca.
                 </Motivacion>
+
+                <Box type="tip" label="Cómo estudiar este capítulo">
+                    Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
+                    <em> Anterior / Siguiente</em>, y el navegador <strong>recuerda la última lección</strong>,
+                    así que se puede pausar y retomar. Conviene intentar cada ejercicio <em>antes</em> de
+                    ver la retroalimentación: el capítulo revela sus soluciones a propósito, y leerlas
+                    primero convierte un ejercicio en una lectura.
+                </Box>
+
+                <h3>Identificación</h3>
+                <div className="overflow-x-auto">
+                    <table>
+                        <tbody>
+                            <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
+                            <tr><th>Capítulo</th><td>{CONFIG.numero} — {CONFIG.titulo}</td></tr>
+                            <tr><th>Contenido del syllabus</th><td>{CONFIG.contenidoSyllabus}</td></tr>
+                            <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra} — «Construye un algoritmo computacional incorporando variables de tipo financiero cuya solución lo pueda hacer una calculadora o una computadora»</td></tr>
+                            <tr><th>Tiempo estimado</th><td>{CONFIG.horas} horas</td></tr>
+                            <tr><th>Naturaleza</th><td>Teórico-práctico</td></tr>
+                            <tr><th>Evaluación asociada</th><td>Taller «Estructuras de Control Selectivo» y «Formato Definición y Análisis» — tarea subida a Moodle</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Qué se lleva de aquí</h3>
+                <p>
+                    Este es el capítulo donde el programa <strong>deja de ser una línea recta</strong>. Al
+                    terminarlo debería poder leer una condición compuesta en el mismo orden en que la lee
+                    la máquina; saber <strong>cuál</strong> de varias condiciones en cascada decidió, y cuáles
+                    ni se evaluaron; negar una condición sin invertir su sentido; decidir cuándo una
+                    cadena de <span className="inline-code">Si</span> debe ser un
+                    <span className="inline-code"> Segun</span>; y —sobre todo— reconocer el defecto más caro
+                    de esta estructura: <strong>condiciones correctas en el orden equivocado</strong>.
+                </p>
+
+                <Pipeline steps={[
+                    { num: 1, title: 'La condición', desc: 'En qué orden se leen Y, O y NO — y qué se evalúa y qué no' },
+                    { num: 2, title: 'Si…Entonces', desc: 'La primera instrucción que puede no ejecutarse' },
+                    { num: 3, title: 'Si…Sino', desc: 'Los dos caminos, y por qué dos Si no son lo mismo' },
+                    { num: 4, title: 'La cascada', desc: 'Anidar, encadenar, y el orden que aprueba lo que no debía' },
+                    { num: 5, title: 'Segun', desc: 'Cuándo la selectiva múltiple cabe, y cuándo no' },
+                    { num: 6, title: 'El oficio', desc: 'Riesgo, tarifas, retención y aprobación automática' },
+                ]} />
+
+                <h3>De dónde viene este capítulo</h3>
+                <p>
+                    El capítulo 3 agotó la <strong>secuencia</strong>: instrucciones que se ejecutan todas,
+                    una tras otra, en el orden escrito. Aquí se rompe esa garantía. Aparece la primera
+                    instrucción que <strong>puede no ejecutarse</strong>, y con ella una pregunta que la
+                    secuencia no podía plantear: <em>¿por dónde pasó el programa?</em>
+                </p>
+                <p>
+                    Todo lo del capítulo 3 sigue valiendo <strong>dentro de cada rama</strong> —lo que hay
+                    dentro de un <span className="inline-code">Si</span> es, otra vez, una secuencia—, y la
+                    prueba de escritorio sigue siendo el método. Solo que su tabla gana una columna: ya no
+                    basta con anotar cuánto valía cada variable, hay que anotar también qué rama se tomó.
+                </p>
+                <Box type="info" label="Una deuda del capítulo 3 que se salda aquí">
+                    La tabla de precedencia del capítulo 3 dejó su última fila —la de los operadores
+                    relacionales y lógicos— apuntando explícitamente «al capítulo 4». Es lo primero que
+                    hace la sección 1.
+                </Box>
+
+                <h3>Los cuatro lenguajes</h3>
+                <p>
+                    Todo algoritmo aparece en cuatro versiones y cada bloque <strong>tiene su propia
+                    pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos y compararlos; el
+                    material <strong>recuerda la última elección</strong>. En este capítulo mirar los cuatro
+                    no es opcional: es el primero donde <strong>los cuatro no se comportan igual</strong>. VBA
+                    evalúa siempre los dos lados de un <span className="inline-code">And</span> y los otros
+                    tres no; y la selectiva múltiple de la sección 5 admite rangos en VBA, exige una guarda
+                    en Python y sencillamente no existe en R.
+                </p>
+
+                <Box type="tip" label="Los videos del syllabus">
+                    La fila 34 del syllabus trae la charla tutorial «Estructuras de control»
+                    (<a href="https://youtu.be/Dw58xKJiUVc" target="_blank" rel="noopener noreferrer">youtu.be/Dw58xKJiUVc</a>)
+                    y tres videos propios, uno por cada forma selectiva. Cada uno está enlazado en la
+                    sección que le corresponde: <strong>simple</strong> en la 2, <strong>compuesta</strong> en
+                    la 3 y <strong>múltiple</strong> en la 5.
+                </Box>
+
+                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Dieciocho ejercicios y un cuestionario integrador" icon="fa-brain">
+                    Ninguno pide <strong>escribir un programa desde cero</strong>: eso corresponde al taller
+                    evaluable que el syllabus pide subir a Moodle. Aquí se ejercita
+                    <strong> leer</strong> una condición ajena, <strong>trazar</strong> por dónde pasó el
+                    flujo, <strong>diagnosticar</strong> por qué una cascada aprueba lo que no debía,
+                    <strong> comparar</strong> dos estructuras que parecen equivalentes e
+                    <strong> interpretar</strong> qué condición rechazó a un cliente. Es lo que la rúbrica
+                    del syllabus llama <em>dominio de algoritmos y procedimientos</em>.
+                </CalloutPro>
             </div>
         );
 
         /* ============================================================
            SECCIÓN 1 — CONDICIONES: LO QUE EL CAPÍTULO 1 DEJÓ A MEDIAS
         ============================================================ */
+        /* Cómo se escribe la MISMA regla en los cuatro lenguajes, con y sin
+           paréntesis. El bloque no imprime nada a propósito: lo que hay que
+           mirar es la sintaxis y el árbol que los paréntesis fuerzan; la
+           evaluación paso a paso la hace el `EvaluadorLogico` de arriba. */
+        const EJ_CONDICION = {
+            pseudo: `// Estudio de crédito: la misma regla, con y sin paréntesis
+ingreso       <- 6500000
+score         <- 480
+endeudamiento <- 0.68
+
+// Sin paréntesis. Y liga más fuerte que O, así que esto se lee
+// ingreso > 3000000  O  (score >= 680  Y  endeudamiento < 0.40)
+aprobadoA <- ingreso > 3000000 O score >= 680 Y endeudamiento < 0.40
+
+// Con paréntesis se fuerza el otro árbol
+aprobadoB <- (ingreso > 3000000 O score >= 680) Y endeudamiento < 0.40`,
+            python: `ingreso       = 6_500_000
+score         = 480
+endeudamiento = 0.68
+
+# Sin paréntesis. «and» liga más fuerte que «or», así que esto se lee
+# ingreso > 3_000_000 or (score >= 680 and endeudamiento < 0.40)
+aprobado_a = ingreso > 3_000_000 or score >= 680 and endeudamiento < 0.40
+
+# Con paréntesis se fuerza el otro árbol
+aprobado_b = (ingreso > 3_000_000 or score >= 680) and endeudamiento < 0.40`,
+            r: `ingreso       <- 6500000
+score         <- 480
+endeudamiento <- 0.68
+
+# Sin paréntesis. «&&» liga más fuerte que «||», así que esto se lee
+# ingreso > 3000000 || (score >= 680 && endeudamiento < 0.40)
+aprobado_a <- ingreso > 3000000 || score >= 680 && endeudamiento < 0.40
+
+# Con paréntesis se fuerza el otro árbol
+aprobado_b <- (ingreso > 3000000 || score >= 680) && endeudamiento < 0.40`,
+            vba: `Option Explicit
+
+Sub EstudioDeCredito()
+    Dim ingreso As Currency, score As Integer, endeudamiento As Double
+    Dim aprobadoA As Boolean, aprobadoB As Boolean
+
+    ingreso = 6500000
+    score = 480
+    endeudamiento = 0.68
+
+    ' Sin paréntesis. And liga más fuerte que Or, así que esto se lee
+    ' ingreso > 3000000 Or (score >= 680 And endeudamiento < 0.4)
+    aprobadoA = ingreso > 3000000 Or score >= 680 And endeudamiento < 0.4
+
+    ' Con paréntesis se fuerza el otro árbol
+    aprobadoB = (ingreso > 3000000 Or score >= 680) And endeudamiento < 0.4
+End Sub`,
+        };
+
+        /* La condición guardia. El primer operando protege al segundo, y solo
+           funciona si el lenguaje evalúa en cortocircuito. VBA no lo hace: es
+           el único de los cuatro donde este bloque revienta. */
+        const EJ_GUARDIA = {
+            pseudo: `// Consumo promedio de una tarjeta que este mes NO se usó
+compras <- 0
+total   <- 0
+
+// La guardia: si compras es 0, el segundo operando NO se evalúa
+consumoAlto <- compras <> 0 Y total / compras > 500000`,
+            python: `compras = 0
+total   = 0
+
+# La guardia: si compras es 0, Python no evalúa el segundo operando
+consumo_alto = compras != 0 and total / compras > 500_000`,
+            r: `compras <- 0
+total   <- 0
+
+# La guardia: con && R no evalúa el segundo operando si el primero es FALSE.
+# OJO: con & (un solo signo) sí lo evaluaría, y esto fallaría.
+consumo_alto <- compras != 0 && total / compras > 500000`,
+            vba: `Option Explicit
+
+Sub ConsumoPromedio()
+    Dim compras As Long, total As Currency
+    Dim consumoAlto As Boolean
+
+    compras = 0
+    total = 0
+
+    ' And evalúa SIEMPRE los dos lados: la guardia no protege nada.
+    ' Esta línea se detiene con el error 11, «División por cero».
+    consumoAlto = compras <> 0 And total / compras > 500000
+End Sub`,
+        };
+
         const Cap1Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
@@ -2624,13 +2806,310 @@
                     regla del documento con la del código.
                 </Motivacion>
 
+                <h3>Lo que ya sabe, y por qué esta sección no lo repite</h3>
+                <p>
+                    Los operadores de comparación y los lógicos son materia del <strong>capítulo 1</strong>,
+                    y allí están completos: qué hace cada uno, cómo se escriben en los cuatro lenguajes,
+                    las tablas de verdad del <span className="inline-code">Y</span> y del
+                    <span className="inline-code"> O</span>, y el aviso de que VBA evalúa siempre los dos
+                    lados de una condición mientras los otros tres no. Nada de eso se repite aquí.
+                </p>
+                <p>
+                    Lo que aquel capítulo no podía plantear todavía es lo que hace falta ahora, cuando
+                    de una condición depende que un desembolso salga o no salga:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>¿Qué hace <span className="inline-code">Y</span>, y cómo se escribe en cada lenguaje?</td><td>Capítulo 1, sección 3</td></tr>
+                            <tr><td>¿En qué <strong>orden</strong> se resuelven <span className="inline-code">NO</span>, <span className="inline-code">Y</span> y <span className="inline-code">O</span> dentro de una misma expresión?</td><td><strong>Aquí</strong></td></tr>
+                            <tr><td>¿Cómo se <strong>niega</strong> una condición compuesta sin invertir su sentido?</td><td><strong>Aquí</strong></td></tr>
+                            <tr><td>¿Qué operandos llega a <strong>mirar</strong> la máquina, y cuáles ni se evalúan?</td><td><strong>Aquí</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Una condición es un valor, no una pregunta</h3>
+                <p>
+                    Antes de que exista ningún <span className="inline-code">Si</span>, una condición ya es
+                    algo por sí sola: una expresión que <strong>vale verdadero o falso</strong> y que se
+                    puede guardar en una variable, igual que se guarda un saldo. Se mira así, sin
+                    decisión de por medio, porque es donde se cometen los errores: cuando el
+                    <span className="inline-code"> Si</span> aparece en la sección siguiente, la condición ya
+                    tiene que estar bien.
+                </p>
+
+                <CodeTabs
+                    titulo="La misma regla de aprobación, con y sin paréntesis"
+                    bloques={EJ_CONDICION}
+                    nota="Este bloque no imprime nada: lo que hay que mirar es dónde caen los paréntesis. Los dos valores que calcula no son iguales, y el evaluador de abajo permite comprobarlo combinación por combinación." />
+
                 <EvaluadorLogico />
+
+                <h3>La precedencia que faltaba</h3>
+                <p>
+                    El capítulo 3 cerró su tabla de precedencia con una fila que decía «relacionales y
+                    lógicos — al final <em>(capítulo 4)</em>». Esta es esa fila, desplegada. El orden
+                    completo, y es <strong>el mismo en los cuatro lenguajes</strong>:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Orden</th><th>Operadores</th><th>Observación</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1.ª</td><td><span className="inline-code">( )</span></td><td>Primero, siempre. De dentro hacia fuera</td></tr>
+                            <tr><td>2.ª a 4.ª</td><td>Los aritméticos</td><td>Tal como quedaron en el capítulo 1</td></tr>
+                            <tr><td>5.ª</td><td><span className="inline-code">=</span> <span className="inline-code">&lt;&gt;</span> <span className="inline-code">&lt;</span> <span className="inline-code">&lt;=</span> <span className="inline-code">&gt;</span> <span className="inline-code">&gt;=</span></td><td>Relacionales. <strong>Después</strong> de toda la aritmética: en <span className="inline-code">a + b &gt; c</span> la suma va primero</td></tr>
+                            <tr><td>6.ª</td><td><span className="inline-code">NO</span> · <span className="inline-code">not</span> · <span className="inline-code">!</span> · <span className="inline-code">Not</span></td><td>El más fuerte de los tres lógicos</td></tr>
+                            <tr><td>7.ª</td><td><span className="inline-code">Y</span> · <span className="inline-code">and</span> · <span className="inline-code">&amp;&amp;</span> · <span className="inline-code">And</span></td><td>Más fuerte que <span className="inline-code">O</span></td></tr>
+                            <tr><td>8.ª</td><td><span className="inline-code">O</span> · <span className="inline-code">or</span> · <span className="inline-code">||</span> · <span className="inline-code">Or</span></td><td>El último. Es el que se lleva las sorpresas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Box type="warn" label="La consecuencia práctica, en una línea">
+                    <span className="inline-code">A O B Y C</span> <strong>no</strong> es
+                    <span className="inline-code"> (A O B) Y C</span>: es
+                    <span className="inline-code"> A O (B Y C)</span>. Si la regla de negocio dice «tiene que
+                    cumplir la última condición <em>en todo caso</em>», los paréntesis no son estilo, son la
+                    regla. Escribirlos aunque sobren cuesta dos caracteres.
+                </Box>
+
+                <h3>Negar una condición compuesta</h3>
+                <p>
+                    Una regla de rechazo suele nacer como la negación de una de aprobación, y ahí aparece
+                    el error: se niegan los operandos y se deja el conector como estaba. No funciona así.
+                    Al negar, <strong>el conector también cambia</strong> —son las
+                    <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. Deben su nombre a Augustus De Morgan (1806-1871).">leyes de De Morgan</Termino>—:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error frecuente</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span className="inline-code">NO (A Y B)</span></td>
+                                <td><span className="inline-code">NO A <strong>O</strong> NO B</span></td>
+                                <td><span className="inline-code">NO A <strong>Y</strong> NO B</span> — deja el conector</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">NO (A O B)</span></td>
+                                <td><span className="inline-code">NO A <strong>Y</strong> NO B</span></td>
+                                <td><span className="inline-code">NO A <strong>O</strong> NO B</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Con cifras: la política de aprobación exige <span className="inline-code">score &gt;= 680
+                    Y endeudamiento &lt; 40</span>. La de rechazo es su negación, y bien escrita queda
+                    <span className="inline-code"> score &lt; 680 O endeudamiento &gt;= 40</span>. Quien deja el
+                    conector y escribe <span className="inline-code">score &lt; 680 Y endeudamiento &gt;= 40</span>
+                    solo rechaza a quien falla <strong>en las dos cosas a la vez</strong>:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Solicitante</th><th>La regla correcta</th><th>La regla con el conector sin cambiar</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>score 720 · endeudamiento 35 %</td><td>aprueba</td><td>aprueba</td></tr>
+                            <tr><td>score 720 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
+                            <tr><td>score 600 · endeudamiento 35 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
+                            <tr><td>score 600 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td>rechaza</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Dos de los cuatro perfiles que debían rechazarse pasan el filtro, y son justamente
+                    los que fallan en <em>una</em> cosa: los que un analista habría detenido sin dudar.
+                </p>
+
+                <h3>El cortocircuito, usado a propósito</h3>
+                <p>
+                    Que un lenguaje deje de evaluar en cuanto sabe la respuesta no es una curiosidad: es
+                    una herramienta. La <strong>condición guardia</strong> pone delante la comprobación que
+                    protege a la que viene detrás, y se apoya en que la segunda no llegue a evaluarse.
+                </p>
+
+                <CodeTabs
+                    titulo="Una condición que se protege a sí misma"
+                    bloques={EJ_GUARDIA}
+                    nota="En pseudocódigo, Python y R el segundo operando no se evalúa y no hay división por cero. En VBA sí se evalúa, y el procedimiento se detiene." />
+
+                <Box type="warn" label="El único de los cuatro que no perdona">
+                    <span className="inline-code">And</span> y <span className="inline-code">Or</span> de VBA
+                    evalúan <strong>siempre los dos lados</strong>. La guardia de arriba no protege nada allí:
+                    la división se ejecuta y el procedimiento se detiene con el error 11. La forma de
+                    conseguir el mismo efecto en VBA es <strong>anidar dos <span className="inline-code">Si</span></strong>,
+                    y eso es exactamente lo que hace la sección siguiente.
+                </Box>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="La regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
+                    opciones={[
+                        { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
+                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el segundo. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; el segundo termina aprobado también, pero después de mirar las tres condiciones. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
+                        { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
+                        { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
+                    ]}
+                /></Ejercicio>
             </div>
         );
 
         /* ============================================================
            SECCIÓN 2 — SI…ENTONCES: LA INSTRUCCIÓN QUE PUEDE NO EJECUTARSE
         ============================================================ */
+        /* Helper del capítulo: una instrucción que se escribe distinto en cada
+           lenguaje. Los VALORES de las variables no llevan versión —son los
+           mismos en los cuatro—, que es justo lo que la traza debe enseñar. */
+        const ins = (pseudo, python, r, vba) => ({ pseudo, python, r, vba });
+
+        /* El recargo por mora que no se cobró. La condición pide más de 30 días
+           y el corte cae el día 30: la rama no entra, y no hay nada en la
+           salida que lo delate. Salidas ejecutadas el 2026-09-20. */
+        const EJ_MORA = {
+            pseudo: `Inicio
+    saldo    <- 4800000
+    diasMora <- 30
+    recargo  <- 0
+
+    Si diasMora > 30 Entonces
+        recargo <- saldo * 0.05
+    FinSi
+
+    total <- saldo + recargo
+    Escribir "Recargo aplicado: ", recargo
+    //> Recargo aplicado: 0
+    Escribir "Total a pagar: ", total
+    //> Total a pagar: 4800000
+Fin`,
+            python: `dias_mora = 30
+saldo     = 4_800_000
+recargo   = 0
+
+if dias_mora > 30:
+    recargo = saldo * 0.05
+
+total = saldo + recargo
+print(f"Recargo aplicado: {recargo:,.0f}")
+#> Recargo aplicado: 0
+print(f"Total a pagar: {total:,.0f}")
+#> Total a pagar: 4,800,000`,
+            r: `dias_mora <- 30
+saldo     <- 4800000
+recargo   <- 0
+
+if (dias_mora > 30) {
+  recargo <- saldo * 0.05
+}
+
+total <- saldo + recargo
+cat(sprintf("Recargo aplicado: %.0f\\n", recargo))
+#> Recargo aplicado: 0
+cat(sprintf("Total a pagar: %.0f\\n", total))
+#> Total a pagar: 4800000`,
+            vba: `Option Explicit
+
+Sub LiquidarMora()
+    Dim diasMora As Integer, saldo As Currency
+    Dim recargo As Currency, total As Currency
+
+    diasMora = 30
+    saldo = 4800000
+    recargo = 0
+
+    If diasMora > 30 Then
+        recargo = saldo * 0.05
+    End If
+
+    total = saldo + recargo
+    Debug.Print "Recargo aplicado: " & recargo
+    '> Recargo aplicado: 0
+    Debug.Print "Total a pagar: " & total
+    '> Total a pagar: 4800000
+End Sub`,
+        };
+
+        /* La guardia del capítulo anterior, ahora con Si. Los tres primeros
+           lenguajes se apoyan en el cortocircuito; VBA necesita dos Si
+           anidados porque su And evalúa siempre los dos lados. */
+        const EJ_GUARDIA_SI = {
+            pseudo: `// compras vale 0: la tarjeta no se usó este mes
+Si compras <> 0 Y total / compras > 500000 Entonces
+    Escribir "Consumo promedio alto"
+FinSi`,
+            python: `# compras vale 0: la tarjeta no se usó este mes
+if compras != 0 and total / compras > 500_000:
+    print("Consumo promedio alto")`,
+            r: `# compras vale 0: la tarjeta no se usó este mes
+if (compras != 0 && total / compras > 500000) {
+  cat("Consumo promedio alto\\n")
+}`,
+            vba: `' And evalúa siempre los dos lados, así que la guardia
+' tiene que ser un Si aparte, por fuera
+If compras <> 0 Then
+    If total / compras > 500000 Then
+        Debug.Print "Consumo promedio alto"
+    End If
+End If`,
+        };
+
+        const TRAZA_MORA = {
+            pseudo: `Inicio
+    saldo    <- 4800000
+    diasMora <- 30
+    recargo  <- 0
+    Si diasMora > 30 Entonces
+        recargo <- saldo * 0.05
+    FinSi
+    total <- saldo + recargo
+    Escribir total
+Fin`,
+            python: `saldo     = 4_800_000
+dias_mora = 30
+recargo   = 0
+if dias_mora > 30:
+    recargo = saldo * 0.05
+total = saldo + recargo
+print(total)`,
+            r: `saldo     <- 4800000
+dias_mora <- 30
+recargo   <- 0
+if (dias_mora > 30) {
+  recargo <- saldo * 0.05
+}
+total <- saldo + recargo
+cat(total)`,
+            vba: `saldo = 4800000
+diasMora = 30
+recargo = 0
+If diasMora > 30 Then
+    recargo = saldo * 0.05
+End If
+total = saldo + recargo
+Debug.Print total`,
+        };
+
+        const ORDENA_MORA = {
+            pseudo: ['Inicio', 'Leer saldo, diasMora', 'recargo <- 0',
+                'Si diasMora > 30 Entonces', 'recargo <- saldo * 0.05', 'FinSi',
+                'total <- saldo + recargo', 'Escribir total', 'Fin'],
+            python: ['saldo = float(input("Saldo: "))', 'dias_mora = int(input("Dias de mora: "))',
+                'recargo = 0', 'if dias_mora > 30:', '    recargo = saldo * 0.05',
+                'total = saldo + recargo', 'print(total)'],
+            r: ['saldo <- as.numeric(readline("Saldo: "))', 'dias_mora <- as.integer(readline("Dias de mora: "))',
+                'recargo <- 0', 'if (dias_mora > 30) {', '  recargo <- saldo * 0.05', '}',
+                'total <- saldo + recargo', 'cat(total)'],
+            vba: ['Sub LiquidarMora()', 'Dim recargo As Currency, total As Currency',
+                'recargo = 0', 'If Range("B3").Value > 30 Then', '    recargo = Range("B2").Value * 0.05',
+                'End If', 'total = Range("B2").Value + recargo', 'MsgBox total', 'End Sub'],
+        };
+
         const Cap2Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-code-branch"
@@ -2642,6 +3121,93 @@
                     igual que las que sí estaban al día.
                 </Motivacion>
 
+                <h3>La estructura</h3>
+                <p>
+                    La selectiva simple tiene una sola forma y no admite variantes: una condición, y un
+                    bloque de instrucciones que se ejecuta <strong>solo si</strong> esa condición es
+                    verdadera. Si es falsa, el programa salta el bloque entero y sigue en la línea de
+                    después. No hay alternativa, no hay aviso y no queda rastro.
+                </p>
+                <Box type="info" label="Lo que cambia respecto del capítulo 3">
+                    Hasta aquí, cada instrucción escrita se ejecutaba <strong>exactamente una vez</strong>.
+                    Desde este punto eso deja de ser cierto: una instrucción puede ejecutarse
+                    <strong> una vez o ninguna</strong>, y cuál de las dos cosas pasó no se deduce leyendo el
+                    código —depende de los datos—.
+                </Box>
+
+                <CodeTabs
+                    titulo="El recargo que no se cobró"
+                    bloques={EJ_MORA}
+                    nota="Con 30 días exactos la condición es falsa: recargo se queda en el 0 que le dieron antes del Si, y el total sale como si la factura estuviera al día. Cambie el 30 por un 31 y la misma rutina cobra 240 000." />
+
+                <p>
+                    Fíjese en la línea <span className="inline-code">recargo &lt;- 0</span>, antes del
+                    <span className="inline-code"> Si</span>. No es decoración: es lo que hace que el programa
+                    funcione cuando la rama <em>no</em> entra. Sin ella,
+                    <span className="inline-code"> total &lt;- saldo + recargo</span> sumaría una variable sin
+                    valor. <strong>Toda variable que solo se asigna dentro de una rama necesita un valor
+                    por defecto fuera de ella.</strong>
+                </p>
+
+                <h3>La traza gana una columna</h3>
+                <p>
+                    El capítulo 3 lo anunció: con una selectiva, anotar el valor de cada variable ya no
+                    basta. Hay que anotar también <strong>por dónde pasó el flujo</strong>. Y hay una
+                    consecuencia que se ve mejor en la tabla que en el texto: la traza tiene
+                    <strong> menos filas que instrucciones el programa</strong>, porque las líneas de la rama
+                    que no entró sencillamente no aparecen.
+                </p>
+
+                <TablaTraza
+                    titulo="Prueba de escritorio con la rama anotada"
+                    enunciado={<>Complete el estado después de cada instrucción ejecutada. En la columna <strong>rama</strong> escriba <span className="inline-code">entonces</span> si el flujo entró en el bloque, <span className="inline-code">ninguna</span> si la condición resultó falsa, y <span className="inline-code">—</span> en las filas donde no se decidió nada. Use <span className="inline-code">—</span> también para una variable que todavía no tiene valor.</>}
+                    codigo={TRAZA_MORA}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'diasMora', titulo: 'diasMora' },
+                        { clave: 'recargo', titulo: 'recargo' },
+                        { clave: 'rama', titulo: 'rama' },
+                        { clave: 'total', titulo: 'total' },
+                    ]}
+                    ocultas={['recargo', 'rama', 'total']}
+                    filas={[
+                        { paso: 1, instruccion: ins('saldo <- 4800000', 'saldo = 4_800_000', 'saldo <- 4800000', 'saldo = 4800000'), diasMora: '—', recargo: '—', rama: '—', total: '—' },
+                        { paso: 2, instruccion: ins('diasMora <- 30', 'dias_mora = 30', 'dias_mora <- 30', 'diasMora = 30'), diasMora: '30', recargo: '—', rama: '—', total: '—' },
+                        { paso: 3, instruccion: ins('recargo <- 0', 'recargo = 0', 'recargo <- 0', 'recargo = 0'), diasMora: '30', recargo: '0', rama: '—', total: '—' },
+                        { paso: 4, instruccion: ins('Si diasMora > 30 Entonces', 'if dias_mora > 30:', 'if (dias_mora > 30) {', 'If diasMora > 30 Then'), diasMora: '30', recargo: '0', rama: 'ninguna', total: '—' },
+                        { paso: 5, instruccion: ins('total <- saldo + recargo', 'total = saldo + recargo', 'total <- saldo + recargo', 'total = saldo + recargo'), diasMora: '30', recargo: '0', rama: '—', total: '4800000' },
+                        { paso: 6, instruccion: ins('Escribir total', 'print(total)', 'cat(total)', 'Debug.Print total'), diasMora: '30', recargo: '0', rama: '—', total: '4800000' },
+                    ]}
+                    pista="El programa tiene una instrucción que la traza no recoge. Búsquela: es la que explica por qué el recargo vale lo mismo al final que al principio."
+                />
+
+                <Box type="warn" label="La fila que no está">
+                    <span className="inline-code">recargo &lt;- saldo * 0.05</span> no aparece en ninguna
+                    fila, y ese hueco <strong>es el hallazgo</strong>. En una traza de capítulo 3 todas las
+                    instrucciones aparecían; aquí, la ausencia de una línea es información. Cuando alguien
+                    reclama un cobro que no se hizo, esto es lo que hay que poder señalar.
+                </Box>
+
+                <h3>La guardia, ahora con Si</h3>
+                <p>
+                    La sección anterior dejó pendiente cómo se escribe en VBA una condición que se
+                    protege a sí misma. Aquí está: donde los otros tres lenguajes se apoyan en el
+                    cortocircuito y les basta una condición compuesta, VBA necesita
+                    <strong> dos <span className="inline-code">Si</span>, uno dentro del otro</strong>.
+                </p>
+
+                <CodeTabs
+                    titulo="La misma protección, cuatro veces"
+                    bloques={EJ_GUARDIA_SI}
+                    nota="Ninguno imprime nada con compras = 0, que es justo lo que se busca. La diferencia está en el motivo: los tres primeros no llegan a dividir; VBA no dividiría tampoco, pero solo porque el Si exterior le impide entrar." />
+
+                <OrdenaPasos
+                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Recuerde que hay una variable que necesita valor por defecto antes de la selectiva."
+                    pasos={ORDENA_MORA}
+                    pista="Pregúntese qué necesita cada línea para poder ejecutarse. Una de ellas suma una variable que, si la rama no entra, nadie habrá asignado."
+                />
+
                 <Box type="tip" label="Video del syllabus para esta sección">
                     «Estructura selectiva simple» — <a href="https://youtu.be/T9sg17TVgo4" target="_blank" rel="noopener noreferrer">youtu.be/T9sg17TVgo4</a>
                 </Box>
@@ -2651,6 +3217,167 @@
         /* ============================================================
            SECCIÓN 3 — SI…ENTONCES…SINO: LOS DOS CAMINOS
         ============================================================ */
+        /* La tarifa de la transacción, bien resuelta. Salidas ejecutadas el
+           2026-09-20: 2 000 000 × 0,2 % = 4 000. */
+        const EJ_TARIFA_SINO = {
+            pseudo: `Inicio
+    esPreferencial <- Verdadero
+    monto          <- 2000000
+
+    Si esPreferencial Entonces
+        tarifa <- monto * 0.002
+    Sino
+        tarifa <- monto * 0.005
+    FinSi
+
+    Escribir "Tarifa: ", tarifa
+    //> Tarifa: 4000
+Fin`,
+            python: `es_preferencial = True
+monto           = 2_000_000
+
+if es_preferencial:
+    tarifa = monto * 0.002
+else:
+    tarifa = monto * 0.005
+
+print(f"Tarifa: {tarifa:,.0f}")
+#> Tarifa: 4,000`,
+            r: `es_preferencial <- TRUE
+monto           <- 2000000
+
+if (es_preferencial) {
+  tarifa <- monto * 0.002
+} else {
+  tarifa <- monto * 0.005
+}
+
+cat(sprintf("Tarifa: %.0f\\n", tarifa))
+#> Tarifa: 4000`,
+            vba: `Option Explicit
+
+Sub CalcularTarifa()
+    Dim esPreferencial As Boolean, monto As Currency, tarifa As Currency
+
+    esPreferencial = True
+    monto = 2000000
+
+    If esPreferencial Then
+        tarifa = monto * 0.002
+    Else
+        tarifa = monto * 0.005
+    End If
+
+    Debug.Print "Tarifa: " & tarifa
+    '> Tarifa: 4000
+End Sub`,
+        };
+
+        /* La misma tarifa escrita con dos Si independientes. Para el cliente
+           preferencial de 2 000 000 las dos condiciones se cumplen, la segunda
+           asignación pisa a la primera y la tarifa sale 10 000 en vez de 4 000.
+           Salidas ejecutadas el 2026-09-20. */
+        const EJ_TARIFA_DOS_SI = {
+            pseudo: `Inicio
+    esPreferencial <- Verdadero
+    monto          <- 2000000
+    tarifa         <- 0
+
+    Si esPreferencial Entonces
+        tarifa <- monto * 0.002
+    FinSi
+
+    Si monto > 1000000 Entonces
+        tarifa <- monto * 0.005
+    FinSi
+
+    Escribir "Tarifa: ", tarifa
+    //> Tarifa: 10000
+Fin`,
+            python: `es_preferencial = True
+monto           = 2_000_000
+tarifa          = 0
+
+if es_preferencial:
+    tarifa = monto * 0.002
+
+if monto > 1_000_000:
+    tarifa = monto * 0.005
+
+print(f"Tarifa: {tarifa:,.0f}")
+#> Tarifa: 10,000`,
+            r: `es_preferencial <- TRUE
+monto           <- 2000000
+tarifa          <- 0
+
+if (es_preferencial) {
+  tarifa <- monto * 0.002
+}
+
+if (monto > 1000000) {
+  tarifa <- monto * 0.005
+}
+
+cat(sprintf("Tarifa: %.0f\\n", tarifa))
+#> Tarifa: 10000`,
+            vba: `Option Explicit
+
+Sub CalcularTarifaMal()
+    Dim esPreferencial As Boolean, monto As Currency, tarifa As Currency
+
+    esPreferencial = True
+    monto = 2000000
+    tarifa = 0
+
+    If esPreferencial Then
+        tarifa = monto * 0.002
+    End If
+
+    If monto > 1000000 Then
+        tarifa = monto * 0.005
+    End If
+
+    Debug.Print "Tarifa: " & tarifa
+    '> Tarifa: 10000
+End Sub`,
+        };
+
+        const TRAZA_SINO = {
+            pseudo: `Inicio
+    esPreferencial <- Falso
+    monto          <- 2000000
+    Si esPreferencial Entonces
+        tarifa <- monto * 0.002
+    Sino
+        tarifa <- monto * 0.005
+    FinSi
+    Escribir tarifa
+Fin`,
+            python: `es_preferencial = False
+monto           = 2_000_000
+if es_preferencial:
+    tarifa = monto * 0.002
+else:
+    tarifa = monto * 0.005
+print(tarifa)`,
+            r: `es_preferencial <- FALSE
+monto           <- 2000000
+if (es_preferencial) {
+  tarifa <- monto * 0.002
+} else {
+  tarifa <- monto * 0.005
+}
+cat(tarifa)`,
+            vba: `esPreferencial = False
+monto = 2000000
+If esPreferencial Then
+    tarifa = monto * 0.002
+Else
+    tarifa = monto * 0.005
+End If
+Debug.Print tarifa`,
+        };
+
         const Cap3Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-code-compare"
@@ -2661,6 +3388,119 @@
                     las dos, la segunda instrucción sobrescribía a la primera, y el cliente preferencial
                     terminó pagando la tarifa plena durante un trimestre.
                 </Motivacion>
+
+                <h3>Dos caminos, y exactamente uno se recorre</h3>
+                <p>
+                    La selectiva doble garantiza algo que la simple no puede: <strong>siempre se ejecuta
+                    uno de los dos bloques, y nunca los dos</strong>. Esa garantía es la que hace
+                    innecesario el valor por defecto de la sección anterior —cualquiera de los dos
+                    caminos asigna <span className="inline-code">tarifa</span>, así que no hay forma de
+                    llegar al final sin ella—.
+                </p>
+
+                <CodeTabs
+                    titulo="La tarifa, resuelta con Si…Sino"
+                    bloques={EJ_TARIFA_SINO}
+                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no existe para este dato. Cambie Verdadero por Falso y la tarifa pasa a 10 000." />
+
+                <h3>Por qué no da igual escribirlo con dos Si</h3>
+                <p>
+                    La tentación es escribir cada tarifa con su propia condición, una debajo de la otra.
+                    Parece lo mismo y se lee casi igual. La diferencia aparece en cuanto un dato cumple
+                    <strong> las dos condiciones a la vez</strong>: los dos bloques se ejecutan, y el segundo
+                    pisa lo que escribió el primero.
+                </p>
+
+                <CodeTabs
+                    titulo="La misma tarifa, con dos Si independientes"
+                    bloques={EJ_TARIFA_DOS_SI}
+                    nota="El mismo cliente preferencial, el mismo monto, y la tarifa sale 10 000 en vez de 4 000. No hay error ni advertencia: la segunda asignación es perfectamente válida." />
+
+                <Box type="warn" label="Seis mil pesos por transacción">
+                    El cliente preferencial de 2 000 000 paga <strong>10 000 en vez de 4 000</strong>. Sobre
+                    un corporativo con cuatrocientas transacciones al mes son 2 400 000 mensuales cobrados
+                    de más, en una cuenta que además es la que el banco menos quiere perder. Y el
+                    programa nunca dejó de funcionar.
+                </Box>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
+                    opciones={[
+                        { texto: '4 000 — se le aplica la tarifa preferencial por error.', correcta: false },
+                        { texto: '10 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
+                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
+                        { texto: 'Un error de ejecución: tarifa nunca se asigna.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>La traza de las dos ramas</h3>
+                <p>
+                    Con una selectiva doble, la columna <strong>rama</strong> ya no puede quedar en blanco:
+                    alguno de los dos caminos se tomó. Es la diferencia con la sección anterior, donde
+                    «ninguna» era una respuesta posible.
+                </p>
+
+                <TablaTraza
+                    titulo="Prueba de escritorio de un cliente no preferencial"
+                    enunciado={<>Complete el estado después de cada instrucción. En la columna <strong>rama</strong> use <span className="inline-code">entonces</span> o <span className="inline-code">sino</span> según el camino que tome el flujo, y <span className="inline-code">—</span> en las filas donde no se decide nada.</>}
+                    codigo={TRAZA_SINO}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Instrucción' },
+                        { clave: 'esPreferencial', titulo: 'esPreferencial' },
+                        { clave: 'rama', titulo: 'rama' },
+                        { clave: 'tarifa', titulo: 'tarifa' },
+                    ]}
+                    ocultas={['rama', 'tarifa']}
+                    filas={[
+                        { paso: 1, instruccion: ins('esPreferencial <- Falso', 'es_preferencial = False', 'es_preferencial <- FALSE', 'esPreferencial = False'), esPreferencial: 'Falso', rama: '—', tarifa: '—' },
+                        { paso: 2, instruccion: ins('monto <- 2000000', 'monto = 2_000_000', 'monto <- 2000000', 'monto = 2000000'), esPreferencial: 'Falso', rama: '—', tarifa: '—' },
+                        { paso: 3, instruccion: ins('Si esPreferencial Entonces', 'if es_preferencial:', 'if (es_preferencial) {', 'If esPreferencial Then'), esPreferencial: 'Falso', rama: 'sino', tarifa: '—' },
+                        { paso: 4, instruccion: ins('tarifa <- monto * 0.005', 'tarifa = monto * 0.005', 'tarifa <- monto * 0.005', 'tarifa = monto * 0.005'), esPreferencial: 'Falso', rama: '—', tarifa: '10000' },
+                        { paso: 5, instruccion: ins('Escribir tarifa', 'print(tarifa)', 'cat(tarifa)', 'Debug.Print tarifa'), esPreferencial: 'Falso', rama: '—', tarifa: '10000' },
+                    ]}
+                    pista="La instrucción de la rama que no se tomó no aparece en la traza. Y la columna rama solo se contesta en la fila donde hay una condición que evaluar."
+                />
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="Justifique la decisión de diseño"
+                    solucion={<>
+                        <p>
+                            Con <span className="inline-code">Si…Sino</span> la estructura <strong>garantiza</strong> dos
+                            cosas por construcción: que se ejecute una rama y que no se ejecuten las dos. Con dos
+                            <span className="inline-code"> Si</span> independientes ninguna de las dos cosas está
+                            garantizada, y hay que sostenerla a mano cuidando que las condiciones sean
+                            mutuamente excluyentes y cubran todos los casos.
+                        </p>
+                        <p>
+                            En este capítulo ya aparecieron los dos fallos posibles: el cliente preferencial de
+                            2 000 000 cumple las dos condiciones y la segunda pisa a la primera —cobro de más—;
+                            el cliente corriente de 800 000 no cumple ninguna y se queda con la tarifa por
+                            defecto —cobro de cero—. Los dos son datos perfectamente normales, no casos extremos.
+                        </p>
+                        <p>
+                            <strong>El criterio:</strong> si las alternativas son <em>excluyentes por naturaleza</em>
+                            —o es preferencial o no lo es—, la estructura debe decirlo. Dejarlo en manos de dos
+                            condiciones separadas convierte una garantía del lenguaje en una responsabilidad de
+                            quien escribe, y en una que nadie va a volver a revisar dentro de seis meses.
+                        </p>
+                        <p>
+                            Hay un caso donde dos <span className="inline-code">Si</span> sí son lo correcto: cuando
+                            las condiciones <strong>no</strong> son excluyentes y se quiere que puedan cumplirse a la
+                            vez —aplicar un descuento por antigüedad <em>y además</em> uno por volumen—. La pregunta
+                            que decide no es cuál se lee mejor, es si los dos bloques deben poder ejecutarse juntos.
+                        </p>
+                    </>}
+                >
+                    <p>
+                        Un compañero sostiene que <span className="inline-code">Si…Sino</span> y dos
+                        <span className="inline-code"> Si</span> seguidos son equivalentes, y que usar uno u otro es
+                        cuestión de gusto. <strong>Argumente por qué no lo es</strong>, apoyándose en los dos casos
+                        concretos que han aparecido en esta sección, y enuncie el criterio que usaría para
+                        decidir. Diga también en qué situación dos <span className="inline-code">Si</span>
+                        independientes serían la opción correcta.
+                    </p>
+                </Reto></Ejercicio>
 
                 <Box type="tip" label="Video del syllabus para esta sección">
                     «Estructura selectiva compuesta» — <a href="https://youtu.be/RNpDw9_JpVo" target="_blank" rel="noopener noreferrer">youtu.be/RNpDw9_JpVo</a>

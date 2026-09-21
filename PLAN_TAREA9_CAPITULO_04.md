@@ -274,6 +274,34 @@ vía: la activación por `Enter` y `barra espaciadora`. No es un pendiente del
 capítulo sino del instrumento, y la casilla del punto de control lo dice así en
 vez de darse por buena.
 
+### H9 · `MCQ` solo muestra la justificación de la opción correcta *(hallado al escribir la sección 1, 2026-09-20)*
+
+Escribí los cuatro distractores de un `MCQ` con su propia `justificacion`,
+pensando que quien eligiera mal leería por qué. No las muestra: el componente
+rendera **únicamente** `opciones.find(o => o.correcta)?.justificacion`, de modo
+que el estudiante que se equivoca ve «Revisa la explicación» seguido del
+razonamiento de la respuesta buena, y nada sobre la que eligió. El texto de los
+distractores era letra muerta y nadie lo habría notado.
+
+El capítulo 3 no cae en esto porque allí solo la opción correcta lleva
+justificación —que era la práctica, no una casualidad—.
+
+**Consecuencia para escribir:** la justificación de la opción correcta tiene que
+**absorber los distractores**. No basta con explicar por qué la buena es buena:
+hay que decir, en ese mismo texto, por qué las otras no lo son, porque es el
+único texto que alguien va a leer. Los dos `MCQ` de las secciones 1 y 3 están
+reescritos así.
+
+**Y el `Quiz` final es más estricto todavía:** no rendera ninguna
+`justificacion`, ni la de la correcta. Solo marca en verde y rojo. Lo que haya
+que explicar del cuestionario integrador tiene que estar **antes**, en el
+cuerpo del capítulo.
+
+Arreglarlo en LP-CORE —mostrar la justificación de la opción elegida— obligaría
+a reestampar los cuatro capítulos, que es lo que H4 dice que este capítulo no
+hace. Queda anotado junto al plegado de tildes de la P2: dos deudas pequeñas
+para el día que haya que reestampar por otro motivo.
+
 ---
 
 ## 3. Grafo de dependencias
@@ -389,17 +417,35 @@ Medido el 2026-09-19 en el navegador, sobre `http://localhost:8777`:
 Una tarea = una sección terminada: motivación + código en los cuatro lenguajes +
 sus ejercicios. No se recorre el capítulo tres veces.
 
-#### Tarea 2.1 · Portada + Sección 1 — «Condiciones: lo que el capítulo 1 dejó a medias»
+#### Tarea 2.1 · Portada + Sección 1 — «Condiciones: lo que el capítulo 1 dejó a medias» · ✅
 Los cuatro puntos de H1. Cierra la fila 5.ª de la tabla de precedencia (H2.1).
 
-#### Tarea 2.2 · Sección 2 — «Si…Entonces: la instrucción que puede no ejecutarse»
+#### Tarea 2.2 · Sección 2 — «Si…Entonces: la instrucción que puede no ejecutarse» · ✅
 Aquí entra el E1 con la columna de rama (H2.2, H3).
 
-#### Tarea 2.3 · Sección 3 — «Si…Entonces…Sino: los dos caminos»
+#### Tarea 2.3 · Sección 3 — «Si…Entonces…Sino: los dos caminos» · ✅
 
 ### ⏸ Punto de control 2 — Tono, densidad y primer tercio
 Es el punto donde se corrige el rumbo barato. Se lee el capítulo hasta aquí y se
 juzga: ¿las motivaciones son ganchos o índices? ¿la densidad es la del capítulo 3?
+
+Estado al 2026-09-20: **seis ejercicios** —E1:2 · E2:2 · E5:1 · E8:1—, que es lo
+que la §5 preveía para las tres primeras secciones.
+
+Comprobado por DOM, no de vista:
+
+- [x] Los dos `MCQ` califican bien y mal, y su explicación cubre los distractores
+      (H9).
+- [x] Las dos `TablaTraza` con columna de rama: **18/18** y **10/10** con la
+      respuesta correcta, y 7/10 con una equivocada a propósito.
+- [x] **La prueba de la tilde, adelantada** (Tarea 3.3): la traza de la sección 3
+      acepta `SINO` en mayúsculas, ` - ` con espacios y guión corriente en vez del
+      largo, y `10.000` con separador de miles. Ninguna grafía razonable se
+      marca mal.
+- [x] `OrdenaPasos` de la sección 2: «¡Secuencia correcta!» con el orden bueno.
+- [x] `verificar.py --con-salidas` en verde: las salidas de Python y R que el
+      capítulo declara son las que el código produce.
+- [ ] **Revisión del docente:** tono, densidad y dificultad del primer tercio.
 
 #### Tarea 2.4 · Sección 4 — «Anidadas y en cascada» ← **núcleo**
 El E3 de alto valor: la cascada con los rangos en el orden equivocado. El
