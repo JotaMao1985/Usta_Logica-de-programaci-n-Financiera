@@ -1242,9 +1242,14 @@ cambió.
   de ancho de `viewBox`.** En una columna de 319 px la escala es 319 dividido
   por el ancho del `viewBox`; con 486 unidades, un `font-size` de 12,5 se
   renderiza a 8,2 px CSS, la mitad del cuerpo del texto. No se arregla bajando
-  el `viewBox` si el contenido necesita ese ancho. Queda por decidir entre
-  desplazamiento lateral —que el capítulo descarta por escrito— y una segunda
-  versión apilada para móvil.
+  el `viewBox` si el contenido necesita ese ancho, y el desplazamiento lateral
+  lo descarta el propio capítulo. Se resolvió con **dos versiones del mismo
+  diagrama**, alternadas con `hidden sm:block` / `sm:hidden`: la estrecha pone
+  el resultado debajo de su rombo en vez de al costado y lleva las ramas por dos
+  carriles laterales, con lo que cabe en 248 unidades y la letra sube a
+  14-17 px. Y una leyenda de simbología no necesitaba dos versiones: necesitaba
+  dejar de ser SVG. Un `<text>` no fluye; la forma va en SVG y el texto en HTML,
+  que se queda a 14,4 px a cualquier ancho.
 - **JSX descarta el espacio en blanco cuando el salto de línea separa texto de
   un elemento**, aunque lo conserve entre dos textos. Dos correcciones salieron
   pegadas en pantalla —«ya no puede ser*ninguna*»— y no lo vio ni Babel ni
