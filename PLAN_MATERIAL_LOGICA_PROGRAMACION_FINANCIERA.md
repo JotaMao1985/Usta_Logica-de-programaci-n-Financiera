@@ -1190,3 +1190,76 @@ capítulo, y cada una tiene su prueba negativa registrada:
 y no compone fondos con alfa, así que no ve los 26 `<h3>` del capítulo a 3,96:1
 ni los tintes `/10` de los artefactos. Medirlo bien pide un navegador; sería una
 regla 20 opcional, como la 9.
+
+### Segunda lectura del capítulo 4, con el verificador ya arreglado · 2026-09-21
+
+El capítulo se volvió a auditar entero **después** de la auditoría anterior y de
+las seis reglas nuevas. Salieron treinta y siete correcciones más. Esa es la
+primera lección, y no es cómoda: **una revisión no encuentra lo que no fue a
+buscar**. La primera pasada arregló el barajado de las claves y añadió reglas
+para vigilarlo; esta encontró que el instrumento entero se podía aprobar sin
+leer el capítulo, por dos vías que ninguna regla mira.
+
+**Las dos que más valían.**
+
+1. *Una tabla de traza enviada en blanco aprobaba.* `normalizarCelda` manda la
+   cadena vacía y «—» al mismo token, así que no responder vale como responder
+   siempre que la respuesta correcta sea «—» —y eso es lo normal, no la
+   excepción: las variables nacen sin valor—. Medido: 61 %, 70 %, 58 % y 67 %
+   en las cuatro tablas del capítulo. La de la sección 3 devolvía «70 %» y
+   color ámbar a quien no había escrito nada. Se arregló en LP-CORE con una
+   bandera opcional, `exigeRespuesta`, porque solo 4 de las 14 tablas del
+   material piden explícitamente escribir la raya y las cuatro son de este
+   capítulo (en los capítulos 1 a 3 son 0 de 3, 2 de 3 y 1 de 4).
+
+2. *El cuestionario compartía pantalla con sus respuestas.* La sección de
+   evaluación es una página con scroll: el `Emparejamiento` arriba y el glosario
+   abajo. La columna «Idea» escribía con casi las mismas palabras las claves de
+   cuatro preguntas. Mover el glosario habría roto el formato de los cuatro
+   capítulos —todos tienen la misma estructura—, así que lo que se quitó fue la
+   coincidencia literal, no el mueble.
+
+**Lo que un arreglo rompe.** Tres de las falsedades de esta pasada las dejó la
+pasada anterior, y las tres son de la misma clase: *el arreglo de A invalidó un
+texto que hablaba de A*. Permutar las opciones de una pregunta dejó su
+justificación señalando «las dos primeras» cuando las claves pasaron a ser la
+primera y la tercera. Añadir una nota a un `Trazador` metió un número —«de
+quince escritas»— que solo es cierto en pseudocódigo (12 en Python, 13 en R, 17
+en VBA). Y corregir las cotas de los cuatro bloques de código dejó intacta la
+tabla que, dos pantallas más abajo, seguía mostrando la forma incorrecta. Antes
+de dar por cerrado un arreglo conviene buscar quién más hablaba de lo que se
+cambió.
+
+**Lo que solo se ve midiendo.**
+
+- **El contraste, componiendo alfa y leyendo el `<style>`.** Las condiciones que
+  la cascada no llega a evaluar se pintaban a 2,54:1 —y son justamente el «no se
+  evaluó» que el capítulo enseña—. Lo grave está en LP-CORE y sigue abierto: las
+  fichas sin emparejar a **1,48:1** (blanco sobre `#CBD5E1`) y **los números de
+  línea del código a 2,35:1**, que duelen porque hay dos ejercicios que piden
+  señalar una línea.
+- **El tamaño de la letra dentro de un SVG no es un problema de `font-size`, es
+  de ancho de `viewBox`.** En una columna de 319 px la escala es 319 dividido
+  por el ancho del `viewBox`; con 486 unidades, un `font-size` de 12,5 se
+  renderiza a 8,2 px CSS, la mitad del cuerpo del texto. No se arregla bajando
+  el `viewBox` si el contenido necesita ese ancho. Queda por decidir entre
+  desplazamiento lateral —que el capítulo descarta por escrito— y una segunda
+  versión apilada para móvil.
+- **JSX descarta el espacio en blanco cuando el salto de línea separa texto de
+  un elemento**, aunque lo conserve entre dos textos. Dos correcciones salieron
+  pegadas en pantalla —«ya no puede ser*ninguna*»— y no lo vio ni Babel ni
+  `verificar.py`: solo el DOM.
+
+**Huecos del verificador, para cuando toque la regla 20 y siguientes.** Ninguna
+comprobación mira: un numeral en prosa fija junto a un bloque multilingüe fuera
+de `DetectaError` (la regla 8 solo cubre ese componente); una justificación que
+cita posiciones de opción; el solapamiento entre el glosario o un
+`Emparejamiento` y el cuestionario de la misma sección; una `TablaTraza` donde
+«—» sea mayoría de las celdas ocultas; el `font-size` de un SVG contra el ancho
+de su `viewBox`; el contraste de un `fill` dentro de un `<text>`; y una
+afirmación de un capítulo que otro capítulo contradice —«es el primero donde los
+cuatro no se comportan igual» lo desmiente el capítulo 1, y «la única
+discrepancia» del capítulo 3 lo desmiente el 4—.
+
+Cinco commits, uno por frente: falsedades, instrumento, la bandera de LP-CORE,
+flujogramas y fronteras. Los cuatro capítulos pasan `verificar.py --con-salidas`.
