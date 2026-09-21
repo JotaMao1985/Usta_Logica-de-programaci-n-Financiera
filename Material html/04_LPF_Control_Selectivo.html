@@ -2394,18 +2394,18 @@
                     porque: 'La capacidad de pago ya está comprometida. Un crédito más empeora la cartera del cliente y la del banco.',
                 },
                 {
+                    cond: 'ingreso >= 5000000',
+                    prueba: (s) => s.ingreso >= 5000000,
+                    salida: 'APROBADO PREFERENCIAL',
+                    tono: 'bueno',
+                    porque: 'Pasó los dos filtros de rechazo y su ingreso lo sitúa en el tramo preferencial. Accede a tasa preferencial.',
+                },
+                {
                     cond: 'ingreso < 1500000',
                     prueba: (s) => s.ingreso < 1500000,
                     salida: 'APROBADO CON CODEUDOR',
                     tono: 'medio',
                     porque: 'El perfil de riesgo es aceptable, pero el ingreso no sostiene la cuota por sí solo.',
-                },
-                {
-                    cond: 'score >= 720 Y endeudamiento < 30',
-                    prueba: (s) => s.score >= 720 && s.endeud < 30,
-                    salida: 'APROBADO PREFERENCIAL',
-                    tono: 'bueno',
-                    porque: 'Buen comportamiento de pago y holgura. Accede a tasa preferencial.',
                 },
                 {
                     cond: 'en cualquier otro caso',
@@ -2602,7 +2602,7 @@
                 <Motivacion icon="fa-file-invoice-dollar"
                     gancho="El sistema aprobó un crédito que no debía aprobar, y las condiciones estaban «bien» escritas. El problema era el orden.">
                     Comité de cartera, martes. Un desembolso de 40 millones a un solicitante con score
-                    480 —treinta puntos por debajo del mínimo de originación— aprobado por el motor de
+                    480 —setenta puntos por debajo del mínimo de originación— aprobado por el motor de
                     decisión sin que nadie lo tocara. Revisan las reglas: las cinco están bien
                     redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Tres de
                     las cinco no llegaron a mirarse nunca.
@@ -3511,6 +3511,448 @@ Debug.Print tarifa`,
         /* ============================================================
            SECCIÓN 4 — ANIDADAS Y EN CASCADA  ← núcleo del capítulo
         ============================================================ */
+        /* La política de originación del capítulo. Cinco reglas en cascada,
+           las mismas que usa el ArbolRiesgo de la sección 6. Con el
+           solicitante de la portada —6 500 000, score 480, 35 %— el orden
+           correcto rechaza. Salidas ejecutadas el 2026-09-20. */
+        const EJ_CASCADA_OK = {
+            pseudo: `Inicio
+    ingreso       <- 6500000
+    score         <- 480
+    endeudamiento <- 35
+
+    Si score < 550 Entonces
+        decision <- "RECHAZADO"
+    Sino Si endeudamiento > 60 Entonces
+        decision <- "RECHAZADO"
+    Sino Si ingreso >= 5000000 Entonces
+        decision <- "APROBADO PREFERENCIAL"
+    Sino Si ingreso < 1500000 Entonces
+        decision <- "APROBADO CON CODEUDOR"
+    Sino
+        decision <- "APROBADO ESTANDAR"
+    FinSi
+
+    Escribir decision
+    //> RECHAZADO
+Fin`,
+            python: `ingreso       = 6_500_000
+score         = 480
+endeudamiento = 35
+
+if score < 550:
+    decision = "RECHAZADO"
+elif endeudamiento > 60:
+    decision = "RECHAZADO"
+elif ingreso >= 5_000_000:
+    decision = "APROBADO PREFERENCIAL"
+elif ingreso < 1_500_000:
+    decision = "APROBADO CON CODEUDOR"
+else:
+    decision = "APROBADO ESTANDAR"
+
+print(decision)
+#> RECHAZADO`,
+            r: `ingreso       <- 6500000
+score         <- 480
+endeudamiento <- 35
+
+if (score < 550) {
+  decision <- "RECHAZADO"
+} else if (endeudamiento > 60) {
+  decision <- "RECHAZADO"
+} else if (ingreso >= 5000000) {
+  decision <- "APROBADO PREFERENCIAL"
+} else if (ingreso < 1500000) {
+  decision <- "APROBADO CON CODEUDOR"
+} else {
+  decision <- "APROBADO ESTANDAR"
+}
+
+cat(decision, "\\n")
+#> RECHAZADO`,
+            vba: `Option Explicit
+
+Sub EstudiarSolicitud()
+    Dim ingreso As Currency, score As Integer, endeudamiento As Double
+    Dim decision As String
+
+    ingreso = 6500000
+    score = 480
+    endeudamiento = 35
+
+    If score < 550 Then
+        decision = "RECHAZADO"
+    ElseIf endeudamiento > 60 Then
+        decision = "RECHAZADO"
+    ElseIf ingreso >= 5000000 Then
+        decision = "APROBADO PREFERENCIAL"
+    ElseIf ingreso < 1500000 Then
+        decision = "APROBADO CON CODEUDOR"
+    Else
+        decision = "APROBADO ESTANDAR"
+    End If
+
+    Debug.Print decision
+    '> RECHAZADO
+End Sub`,
+        };
+
+        /* Las MISMAS cinco reglas, reordenadas. La de ingreso alto pasa a ser
+           la primera y decide antes de que nadie mire el score.
+           Salidas ejecutadas el 2026-09-20. */
+        const EJ_CASCADA_MAL = {
+            pseudo: `Inicio
+    ingreso       <- 6500000
+    score         <- 480
+    endeudamiento <- 35
+
+    Si ingreso >= 5000000 Entonces
+        decision <- "APROBADO PREFERENCIAL"
+    Sino Si score < 550 Entonces
+        decision <- "RECHAZADO"
+    Sino Si endeudamiento > 60 Entonces
+        decision <- "RECHAZADO"
+    Sino Si ingreso < 1500000 Entonces
+        decision <- "APROBADO CON CODEUDOR"
+    Sino
+        decision <- "APROBADO ESTANDAR"
+    FinSi
+
+    Escribir decision
+    //> APROBADO PREFERENCIAL
+Fin`,
+            python: `ingreso       = 6_500_000
+score         = 480
+endeudamiento = 35
+
+if ingreso >= 5_000_000:
+    decision = "APROBADO PREFERENCIAL"
+elif score < 550:
+    decision = "RECHAZADO"
+elif endeudamiento > 60:
+    decision = "RECHAZADO"
+elif ingreso < 1_500_000:
+    decision = "APROBADO CON CODEUDOR"
+else:
+    decision = "APROBADO ESTANDAR"
+
+print(decision)
+#> APROBADO PREFERENCIAL`,
+            r: `ingreso       <- 6500000
+score         <- 480
+endeudamiento <- 35
+
+if (ingreso >= 5000000) {
+  decision <- "APROBADO PREFERENCIAL"
+} else if (score < 550) {
+  decision <- "RECHAZADO"
+} else if (endeudamiento > 60) {
+  decision <- "RECHAZADO"
+} else if (ingreso < 1500000) {
+  decision <- "APROBADO CON CODEUDOR"
+} else {
+  decision <- "APROBADO ESTANDAR"
+}
+
+cat(decision, "\\n")
+#> APROBADO PREFERENCIAL`,
+            vba: `Option Explicit
+
+Sub EstudiarSolicitudMal()
+    Dim ingreso As Currency, score As Integer, endeudamiento As Double
+    Dim decision As String
+
+    ingreso = 6500000
+    score = 480
+    endeudamiento = 35
+
+    If ingreso >= 5000000 Then
+        decision = "APROBADO PREFERENCIAL"
+    ElseIf score < 550 Then
+        decision = "RECHAZADO"
+    ElseIf endeudamiento > 60 Then
+        decision = "RECHAZADO"
+    ElseIf ingreso < 1500000 Then
+        decision = "APROBADO CON CODEUDOR"
+    Else
+        decision = "APROBADO ESTANDAR"
+    End If
+
+    Debug.Print decision
+    '> APROBADO PREFERENCIAL
+End Sub`,
+        };
+
+        const ERROR_CASCADA_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Politica de originacion — las cinco reglas del comite',
+                '    Si ingreso >= 5000000 Entonces',
+                '        decision <- "APROBADO PREFERENCIAL"',
+                '    Sino Si score < 550 Entonces',
+                '        decision <- "RECHAZADO"',
+                '    Sino Si endeudamiento > 60 Entonces',
+                '        decision <- "RECHAZADO"',
+                '    Sino',
+                '        decision <- "APROBADO ESTANDAR"',
+                '    FinSi',
+                'Fin',
+            ],
+            python: [
+                '# Politica de originacion — las cinco reglas del comite',
+                'if ingreso >= 5_000_000:',
+                '    decision = "APROBADO PREFERENCIAL"',
+                'elif score < 550:',
+                '    decision = "RECHAZADO"',
+                'elif endeudamiento > 60:',
+                '    decision = "RECHAZADO"',
+                'else:',
+                '    decision = "APROBADO ESTANDAR"',
+            ],
+            r: [
+                '# Politica de originacion — las cinco reglas del comite',
+                'if (ingreso >= 5000000) {',
+                '  decision <- "APROBADO PREFERENCIAL"',
+                '} else if (score < 550) {',
+                '  decision <- "RECHAZADO"',
+                '} else if (endeudamiento > 60) {',
+                '  decision <- "RECHAZADO"',
+                '} else {',
+                '  decision <- "APROBADO ESTANDAR"',
+                '}',
+            ],
+            vba: [
+                'Sub EstudiarSolicitud()',
+                "    ' Politica de originacion — las cinco reglas del comite",
+                '    Dim decision As String',
+                '    If ingreso >= 5000000 Then',
+                '        decision = "APROBADO PREFERENCIAL"',
+                '    ElseIf score < 550 Then',
+                '        decision = "RECHAZADO"',
+                '    ElseIf endeudamiento > 60 Then',
+                '        decision = "RECHAZADO"',
+                '    Else',
+                '        decision = "APROBADO ESTANDAR"',
+                '    End If',
+                'End Sub',
+            ],
+        };
+        const ERROR_CASCADA_LINEA_OK = { pseudo: 3, python: 2, r: 2, vba: 4 };
+        const ERROR_CASCADA_EXPLICACION = {
+            pseudo: <>La <strong>línea 3</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 5 y 7 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 3 por debajo de los dos filtros de rechazo.</>,
+            python: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            r: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            vba: <>La <strong>línea 4</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 6 y 8 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 4 por debajo de los dos filtros de rechazo.</>,
+        };
+
+        const ERROR_NEGACION_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Marcar para revision manual el expediente incompleto.',
+                '    // La politica dice: pasa automatico si tiene documentos',
+                '    // completos Y referencias verificadas.',
+                '    Si NO documentosCompletos Y NO referenciasVerificadas Entonces',
+                '        marcarRevisionManual <- Verdadero',
+                '    FinSi',
+                'Fin',
+            ],
+            python: [
+                '# Marcar para revision manual el expediente incompleto.',
+                '# La politica dice: pasa automatico si tiene documentos',
+                '# completos Y referencias verificadas.',
+                'if not documentos_completos and not referencias_verificadas:',
+                '    marcar_revision_manual = True',
+            ],
+            r: [
+                '# Marcar para revision manual el expediente incompleto.',
+                '# La politica dice: pasa automatico si tiene documentos',
+                '# completos Y referencias verificadas.',
+                'if (!documentos_completos && !referencias_verificadas) {',
+                '  marcar_revision_manual <- TRUE',
+                '}',
+            ],
+            vba: [
+                'Sub RevisarExpediente()',
+                "    ' Marcar para revision manual el expediente incompleto.",
+                "    ' La politica dice: pasa automatico si tiene documentos",
+                "    ' completos Y referencias verificadas.",
+                '    If Not documentosCompletos And Not referenciasVerificadas Then',
+                '        marcarRevisionManual = True',
+                '    End If',
+                'End Sub',
+            ],
+        };
+        const ERROR_NEGACION_LINEA_OK = { pseudo: 5, python: 4, r: 4, vba: 5 };
+        const ERROR_NEGACION_EXPLICACION = {
+            pseudo: <>La política es «pasa automático si <span className="inline-code">documentosCompletos Y referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">NO (A Y B)</span> es <span className="inline-code">NO A <strong>O</strong> NO B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">Y</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
+            python: <>La política es «pasa automático si <span className="inline-code">documentos_completos and referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">not (A and B)</span> es <span className="inline-code">not A <strong>or</strong> not B</span>. La <strong>línea 4</strong> dejó el <span className="inline-code">and</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
+            r: <>La política es «pasa automático si <span className="inline-code">documentos_completos &amp;&amp; referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">!(A &amp;&amp; B)</span> es <span className="inline-code">!A <strong>||</strong> !B</span>. La <strong>línea 4</strong> dejó el <span className="inline-code">&amp;&amp;</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
+            vba: <>La política es «pasa automático si <span className="inline-code">documentosCompletos And referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">Not (A And B)</span> es <span className="inline-code">Not A <strong>Or</strong> Not B</span>. La <strong>línea 5</strong> dejó el <span className="inline-code">And</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire.</>,
+        };
+
+        const TRAZA_CASCADA = {
+            pseudo: `Si score < 550 Entonces
+    decision <- "RECHAZADO"
+Sino Si endeudamiento > 60 Entonces
+    decision <- "RECHAZADO"
+Sino Si ingreso >= 5000000 Entonces
+    decision <- "APROBADO PREFERENCIAL"
+Sino Si ingreso < 1500000 Entonces
+    decision <- "APROBADO CON CODEUDOR"
+Sino
+    decision <- "APROBADO ESTANDAR"
+FinSi`,
+            python: `if score < 550:
+    decision = "RECHAZADO"
+elif endeudamiento > 60:
+    decision = "RECHAZADO"
+elif ingreso >= 5_000_000:
+    decision = "APROBADO PREFERENCIAL"
+elif ingreso < 1_500_000:
+    decision = "APROBADO CON CODEUDOR"
+else:
+    decision = "APROBADO ESTANDAR"`,
+            r: `if (score < 550) {
+  decision <- "RECHAZADO"
+} else if (endeudamiento > 60) {
+  decision <- "RECHAZADO"
+} else if (ingreso >= 5000000) {
+  decision <- "APROBADO PREFERENCIAL"
+} else if (ingreso < 1500000) {
+  decision <- "APROBADO CON CODEUDOR"
+} else {
+  decision <- "APROBADO ESTANDAR"
+}`,
+            vba: `If score < 550 Then
+    decision = "RECHAZADO"
+ElseIf endeudamiento > 60 Then
+    decision = "RECHAZADO"
+ElseIf ingreso >= 5000000 Then
+    decision = "APROBADO PREFERENCIAL"
+ElseIf ingreso < 1500000 Then
+    decision = "APROBADO CON CODEUDOR"
+Else
+    decision = "APROBADO ESTANDAR"
+End If`,
+        };
+
+        /* Las dos formas de escribir la MISMA política. Comprobada su
+           equivalencia sobre 36 456 combinaciones de ingreso, score y
+           endeudamiento el 2026-09-20: cero diferencias. */
+        const CMP_CASCADA = {
+            pseudo: `Si score < 550 Entonces
+    decision <- "RECHAZADO"
+Sino Si endeudamiento > 60 Entonces
+    decision <- "RECHAZADO"
+Sino Si ingreso >= 5000000 Entonces
+    decision <- "APROBADO PREFERENCIAL"
+Sino Si ingreso < 1500000 Entonces
+    decision <- "APROBADO CON CODEUDOR"
+Sino
+    decision <- "APROBADO ESTANDAR"
+FinSi`,
+            python: `if score < 550:
+    decision = "RECHAZADO"
+elif endeudamiento > 60:
+    decision = "RECHAZADO"
+elif ingreso >= 5_000_000:
+    decision = "APROBADO PREFERENCIAL"
+elif ingreso < 1_500_000:
+    decision = "APROBADO CON CODEUDOR"
+else:
+    decision = "APROBADO ESTANDAR"`,
+            r: `if (score < 550) {
+  decision <- "RECHAZADO"
+} else if (endeudamiento > 60) {
+  decision <- "RECHAZADO"
+} else if (ingreso >= 5000000) {
+  decision <- "APROBADO PREFERENCIAL"
+} else if (ingreso < 1500000) {
+  decision <- "APROBADO CON CODEUDOR"
+} else {
+  decision <- "APROBADO ESTANDAR"
+}`,
+            vba: `If score < 550 Then
+    decision = "RECHAZADO"
+ElseIf endeudamiento > 60 Then
+    decision = "RECHAZADO"
+ElseIf ingreso >= 5000000 Then
+    decision = "APROBADO PREFERENCIAL"
+ElseIf ingreso < 1500000 Then
+    decision = "APROBADO CON CODEUDOR"
+Else
+    decision = "APROBADO ESTANDAR"
+End If`,
+        };
+
+        const CMP_ANIDADA = {
+            pseudo: `Si score >= 550 Entonces
+    Si endeudamiento <= 60 Entonces
+        Si ingreso >= 5000000 Entonces
+            decision <- "APROBADO PREFERENCIAL"
+        Sino
+            Si ingreso < 1500000 Entonces
+                decision <- "APROBADO CON CODEUDOR"
+            Sino
+                decision <- "APROBADO ESTANDAR"
+            FinSi
+        FinSi
+    Sino
+        decision <- "RECHAZADO"
+    FinSi
+Sino
+    decision <- "RECHAZADO"
+FinSi`,
+            python: `if score >= 550:
+    if endeudamiento <= 60:
+        if ingreso >= 5_000_000:
+            decision = "APROBADO PREFERENCIAL"
+        else:
+            if ingreso < 1_500_000:
+                decision = "APROBADO CON CODEUDOR"
+            else:
+                decision = "APROBADO ESTANDAR"
+    else:
+        decision = "RECHAZADO"
+else:
+    decision = "RECHAZADO"`,
+            r: `if (score >= 550) {
+  if (endeudamiento <= 60) {
+    if (ingreso >= 5000000) {
+      decision <- "APROBADO PREFERENCIAL"
+    } else {
+      if (ingreso < 1500000) {
+        decision <- "APROBADO CON CODEUDOR"
+      } else {
+        decision <- "APROBADO ESTANDAR"
+      }
+    }
+  } else {
+    decision <- "RECHAZADO"
+  }
+} else {
+  decision <- "RECHAZADO"
+}`,
+            vba: `If score >= 550 Then
+    If endeudamiento <= 60 Then
+        If ingreso >= 5000000 Then
+            decision = "APROBADO PREFERENCIAL"
+        Else
+            If ingreso < 1500000 Then
+                decision = "APROBADO CON CODEUDOR"
+            Else
+                decision = "APROBADO ESTANDAR"
+            End If
+        End If
+    Else
+        decision = "RECHAZADO"
+    End If
+Else
+    decision = "RECHAZADO"
+End If`,
+        };
+
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
@@ -3521,6 +3963,139 @@ Debug.Print tarifa`,
                     líneas más abajo. En una cascada, la primera condición que se cumple decide y el
                     resto del bloque no existe.
                 </Motivacion>
+
+                <h3>Anidar y encadenar</h3>
+                <p>
+                    Hay dos formas de combinar selectivas y conviene no confundirlas.
+                    <strong> Anidar</strong> es meter un <span className="inline-code">Si</span> dentro de la rama
+                    de otro: la condición interior solo se plantea si la exterior se cumplió —así se
+                    escribió la guardia de VBA en la sección 2—. <strong>Encadenar</strong> —la
+                    <Termino def="Serie de condiciones alternativas evaluadas en orden: la primera que resulta verdadera ejecuta su bloque, y ninguna de las siguientes se evalúa.">cascada</Termino>—
+                    es poner una alternativa detrás de otra con
+                    <span className="inline-code"> Sino Si</span>, de modo que se evalúan por turnos hasta que
+                    una se cumple.
+                </p>
+                <Box type="info" label="La regla que gobierna toda la sección">
+                    En una cascada, <strong>decide la primera condición que se cumple</strong>. Las que vienen
+                    después no se evalúan: no es que den falso, es que nadie las mira. Por eso el orden
+                    de las ramas <strong>es parte de la lógica</strong>, no del estilo.
+                </Box>
+
+                <CodeTabs
+                    titulo="La política de originación, en el orden correcto"
+                    bloques={EJ_CASCADA_OK}
+                    nota="Cinco reglas: dos causales de rechazo, dos de aprobación con condiciones y un caso por defecto. Los filtros de rechazo van primero, que es lo que hace que el resto pueda confiar en que quien llega ya los pasó." />
+
+                <h3>Las mismas cinco reglas, en otro orden</h3>
+                <p>
+                    Ahora la regla del ingreso alto sube al primer lugar. No se ha cambiado ni una
+                    condición, ni una cifra, ni una decisión: solo el orden de las ramas. El mismo
+                    solicitante —6 500 000 de ingreso, score 480, endeudamiento del 35 %— recibe la
+                    respuesta contraria.
+                </p>
+
+                <CodeTabs
+                    titulo="La misma política, con la regla de ingreso de primera"
+                    bloques={EJ_CASCADA_MAL}
+                    nota="Aprobado preferencial, con un score setenta puntos por debajo del mínimo de originación. Las tres condiciones que quedaban —las dos de rechazo y la del codeudor— no se evaluaron: la cascada ya había decidido." />
+
+                <Box type="warn" label="Por qué esto no lo encuentra una revisión de código">
+                    Quien revisa lee cinco reglas y las encuentra todas correctas, porque lo son. El
+                    defecto no está en ninguna línea: está en la <strong>relación</strong> entre dos de
+                    ellas, y solo se manifiesta con los solicitantes que cumplen la regla de arriba
+                    <em> y</em> deberían caer en una de abajo. Con los demás, las dos versiones dan
+                    exactamente lo mismo.
+                </Box>
+
+                <Ejercicio tipo="E3"><DetectaError
+                    titulo="La cascada que aprueba lo que no debía"
+                    enunciado={<>Esta es la política de originación tal como quedó en producción. Las cuatro condiciones son correctas y ninguna sobra. Aun así, aprueba solicitantes que el comité habría rechazado. <strong>Señale la línea que hay que mover</strong>, y diga qué tipo de defecto es.</>}
+                    lineas={ERROR_CASCADA_LINEAS}
+                    lineaCorrecta={ERROR_CASCADA_LINEA_OK}
+                    tipos={[
+                        'Error de sintaxis: falta una palabra clave o un delimitador.',
+                        'Condición mal escrita: el operador de comparación está invertido.',
+                        'Orden de evaluación: una rama correcta impide que se evalúen las siguientes.',
+                        'Error de unidades: se compara un porcentaje con una tasa decimal.',
+                    ]}
+                    tipoCorrecto={2}
+                    explicacion={ERROR_CASCADA_EXPLICACION}
+                    impacto={<>Todo solicitante con ingreso de cinco millones o más entra como <strong>preferencial</strong>, incluidos los que tienen el score por debajo del mínimo y los que están por encima del 60 % de endeudamiento. Sobre una cartera de originación de mil solicitudes mensuales, con un 8 % de ingresos altos y un 12 % de esos con score insuficiente, son <strong>alrededor de diez desembolsos al mes</strong> a clientes que la política rechaza —y a tasa preferencial—. El motor no registra ningún error: registra diez aprobaciones perfectamente normales.</>}
+                /></Ejercicio>
+
+                <h3>La traza de una cascada</h3>
+                <p>
+                    Trazar una cascada es anotar, condición por condición, si se cumplió o no, hasta
+                    llegar a la que decide. Es la forma de contestar la pregunta que llega desde el
+                    servicio al cliente: <em>¿cuál de todas lo rechazó?</em>
+                </p>
+
+                <TablaTraza
+                    titulo="Prueba de escritorio de la cascada completa"
+                    enunciado={<>Un solicitante con ingreso <strong>2 800 000</strong>, score <strong>660</strong> y endeudamiento del <strong>45 %</strong>. Anote en <strong>condición</strong> si cada una resultó <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span>, y <span className="inline-code">—</span> en la fila del <span className="inline-code">Sino</span>, que no tiene condición que evaluar. En <strong>decision</strong>, <span className="inline-code">—</span> mientras la variable no tenga valor.</>}
+                    codigo={TRAZA_CASCADA}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Paso' },
+                        { clave: 'instruccion', titulo: 'Condición evaluada' },
+                        { clave: 'condicion', titulo: 'condición' },
+                        { clave: 'decision', titulo: 'decision' },
+                    ]}
+                    ocultas={['condicion', 'decision']}
+                    filas={[
+                        { paso: 1, instruccion: ins('Si score < 550', 'if score < 550:', 'if (score < 550)', 'If score < 550 Then'), condicion: 'falso', decision: '—' },
+                        { paso: 2, instruccion: ins('Sino Si endeudamiento > 60', 'elif endeudamiento > 60:', 'else if (endeudamiento > 60)', 'ElseIf endeudamiento > 60 Then'), condicion: 'falso', decision: '—' },
+                        { paso: 3, instruccion: ins('Sino Si ingreso >= 5000000', 'elif ingreso >= 5_000_000:', 'else if (ingreso >= 5000000)', 'ElseIf ingreso >= 5000000 Then'), condicion: 'falso', decision: '—' },
+                        { paso: 4, instruccion: ins('Sino Si ingreso < 1500000', 'elif ingreso < 1_500_000:', 'else if (ingreso < 1500000)', 'ElseIf ingreso < 1500000 Then'), condicion: 'falso', decision: '—' },
+                        { paso: 5, instruccion: ins('Sino', 'else:', '} else {', 'Else'), condicion: '—', decision: '—' },
+                        { paso: 6, instruccion: ins('decision <- "APROBADO ESTANDAR"', 'decision = "APROBADO ESTANDAR"', 'decision <- "APROBADO ESTANDAR"', 'decision = "APROBADO ESTANDAR"'), condicion: '—', decision: 'APROBADO ESTANDAR' },
+                    ]}
+                    pista="Este solicitante no dispara ninguna de las cuatro condiciones: no tiene el score bajo, no está sobreendeudado, no llega a los cinco millones y tampoco baja del millón y medio. Recorre la cascada entera."
+                />
+
+                <h3>Negar una condición dentro de una cascada</h3>
+                <p>
+                    El otro defecto frecuente de esta estructura no es de orden sino de
+                    <strong> negación</strong>, y es el que la sección 1 anticipó con De Morgan. Aparece
+                    siempre igual: una regla de aprobación se convierte en una de excepción negando los
+                    operandos y dejando el conector como estaba.
+                </p>
+
+                <Ejercicio tipo="E3"><DetectaError
+                    titulo="La excepción que casi nunca se dispara"
+                    enunciado={<>La política dice que un expediente pasa a trámite automático solo si tiene <strong>documentos completos y referencias verificadas</strong>. Esta rutina debería marcar para revisión manual todo lo demás, y apenas marca nada. <strong>Señale la línea defectuosa</strong>.</>}
+                    lineas={ERROR_NEGACION_LINEAS}
+                    lineaCorrecta={ERROR_NEGACION_LINEA_OK}
+                    tipos={[
+                        'Orden de evaluación: la condición está en el lugar equivocado de la cascada.',
+                        'Negación mal distribuida: al negar una conjunción hay que cambiar el conector.',
+                        'Error de sintaxis: falta un paréntesis de cierre.',
+                        'Error de tipo: se niega una variable que no es booleana.',
+                    ]}
+                    tipoCorrecto={1}
+                    explicacion={ERROR_NEGACION_EXPLICACION}
+                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de cada cuatro perfiles que debían detenerse, <strong>dos pasan</strong>.</>}
+                /></Ejercicio>
+
+                <h3>¿Anidar o encadenar?</h3>
+                <p>
+                    Las dos formas resuelven el mismo problema y se leen distinto. La pregunta no es
+                    cuál es más elegante: es cuál de las dos <strong>hace visible</strong> lo que hay que
+                    revisar.
+                </p>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="La misma política, anidada y encadenada"
+                    enunciado={<>Las dos versiones implementan la misma política de originación y, para todo solicitante, devuelven la misma decisión. <strong>Compárelas y responda.</strong></>}
+                    a={{ etiqueta: 'Versión A · Si anidados', codigo: CMP_ANIDADA }}
+                    b={{ etiqueta: 'Versión B · cascada con Sino Si', codigo: CMP_CASCADA }}
+                    pregunta="Las dos son correctas y equivalentes. ¿Cuál es la razón de peso para preferir la cascada en una política de crédito?"
+                    opciones={[
+                        { texto: 'Ocupa menos líneas, y el código corto tiene menos defectos.', correcta: false },
+                        { texto: 'Deja las cinco reglas al mismo nivel de sangría, en el orden en que se evalúan, de modo que el orden —que es parte de la política— se puede leer y auditar de un vistazo.', correcta: true, justificacion: 'En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —las dos ocupan prácticamente lo mismo— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
+                        { texto: 'Es más rápida: evalúa menos condiciones que la versión anidada.', correcta: false },
+                        { texto: 'Permite condiciones compuestas que la versión anidada no admite.', correcta: false },
+                    ]}
+                /></Ejercicio>
             </div>
         );
 
