@@ -23,10 +23,19 @@ Siguen en disco y todo lo que los lee —`generar.R`, `app/app.R`,
 tendrá**, y `generar.R` se detiene sin ellos. Hay que traerlos aparte, desde la
 copia del docente.
 
-> Lo que se publicó entre el 2026-09-22 y ese cambio sigue en la historia de
-> git: quitarlo de la punta impide encontrarlo, no lo borra. Si eso importa,
-> la salida es cambiar `edicion:` —que equivale a regenerar el examen— o
-> reescribir la historia del repositorio.
+> Lo que estuvo publicado sigue en la historia de git: quitarlo de la punta
+> impide encontrarlo, no lo borra.
+
+**Por eso se cambió la edición.** `edicion:` pasó de `parcial-2026-09` a
+`parcial-2026-09b` el mismo 2026-09-22. La edición entra en el sorteo, así que
+con ella cambia qué ejercicios y qué cifras le tocan a cada estudiante: lo que
+alguien hubiera podido leer del blueprint publicado ya no corresponde a ningún
+examen. La contrapartida es que **hay que regenerar**: los tres exámenes de
+prueba del 2026-08-30 en `parcial/salida/`, y las sesiones de prueba de
+`parcial/app/datos/*.sqlite`, quedaron con la edición vieja.
+
+El `blueprint_simulacro.yml` conserva su `simulacro-2026-09`: su sorteo no
+afecta al del parcial, y su contenido es una prueba de ensayo.
 
 ---
 
