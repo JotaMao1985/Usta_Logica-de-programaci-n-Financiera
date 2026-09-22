@@ -26,11 +26,11 @@ copia del docente.
 > Lo que estuvo publicado sigue en la historia de git: quitarlo de la punta
 > impide encontrarlo, no lo borra.
 
-**Por eso se cambió la edición.** `edicion:` pasó de `parcial-2026-09` a
-`parcial-2026-09b` el mismo 2026-09-22. La edición entra en el sorteo, así que
-con ella cambia qué ejercicios y qué cifras le tocan a cada estudiante: lo que
-alguien hubiera podido leer del blueprint publicado ya no corresponde a ningún
-examen. La contrapartida es que **hay que regenerar**: los tres exámenes de
+**Por eso se cambió la edición.** El 2026-09-22 se le puso a `edicion:` un
+valor nuevo —el que esté en el blueprint, que ya no se versiona—. La edición
+entra en el sorteo, así que con ella cambia qué ejercicios y qué cifras le tocan
+a cada estudiante: lo que alguien hubiera podido leer del blueprint publicado ya
+no corresponde a ningún examen. La contrapartida es que **hay que regenerar**: los tres exámenes de
 prueba del 2026-08-30 en `parcial/salida/`, y las sesiones de prueba de
 `parcial/app/datos/*.sqlite`, quedaron con la edición vieja.
 
