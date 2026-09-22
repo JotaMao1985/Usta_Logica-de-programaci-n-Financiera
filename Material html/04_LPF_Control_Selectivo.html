@@ -71,6 +71,13 @@
                     colors: {
                         primary: '#3D008D',
                         secondary: '#ED1E79',
+                        // El rosa institucional como TEXTO no llega a 4,5:1: da
+                        // 3,96 sobre el fondo de página y 3,37 sobre el degradado
+                        // de la barra. Estos dos tonos son el mismo rosa movido
+                        // lo justo para pasar, y no tocan la marca: `secondary`
+                        // sigue mandando en degradados, bordes e iconos.
+                        'secondary-texto': '#D81B6A',
+                        'secondary-claro': '#F871A4',
                         navy: '#001A4D',
                         gold: '#FDB913',
                         teal: '#0E7490',
@@ -195,7 +202,7 @@
         }
 
         .prose-lp h3 {
-            color: #ED1E79;
+            color: #D81B6A;
             font-weight: 600;
             font-size: 1.2rem;
             margin: 1.8rem 0 0.6rem;
@@ -548,7 +555,7 @@
                         </span>
                         <div>
                             <div className="text-white font-bold text-base leading-tight">{titulo}</div>
-                            {subtitulo && <div className="text-white/80 text-xs">{subtitulo}</div>}
+                            {subtitulo && <div className="text-white text-xs">{subtitulo}</div>}
                         </div>
                     </div>
                     <div className="px-5 py-4 text-[0.95rem] text-gray-700 leading-relaxed" style={{ background: t.bg }}>
@@ -1266,7 +1273,7 @@
                                 <i className={`fas ${icon} text-sm`}></i>
                             </span>
                             <div className="flex-1 min-w-0">
-                                <div className="text-[0.65rem] uppercase tracking-widest font-bold mb-1.5" style={{ color: 'rgba(61,0,141,0.62)' }}>
+                                <div className="text-[0.65rem] uppercase tracking-widest font-bold mb-1.5" style={{ color: '#3D008D' }}>
                                     {etiqueta}
                                 </div>
                                 <div className="text-[0.96rem] text-gray-700 leading-relaxed">{children}</div>
@@ -1648,7 +1655,7 @@
                     <SelectorLenguaje disponibles={disponibles} activo={langActivo} onCambiar={cambiarLang} />
                     <div className="flex flex-wrap gap-4">
                         {panel(a, '#3D008D')}
-                        {panel(b, '#ED1E79')}
+                        {panel(b, '#D81B6A')}
                     </div>
                     {pregunta && <MCQ pregunta={pregunta} opciones={opciones} multiple={multiple} />}
                 </div>
@@ -2121,7 +2128,7 @@
                                                 const val = acumulado[i][v.clave];
                                                 return (
                                                     <td key={v.clave}
-                                                        className={`px-3 py-1.5 border border-gray-200 font-mono text-[0.82rem] ${cambio ? 'font-bold text-secondary bg-secondary/5' : 'text-gray-700'}`}>
+                                                        className={`px-3 py-1.5 border border-gray-200 font-mono text-[0.82rem] ${cambio ? 'font-bold text-secondary-texto bg-secondary/5' : 'text-gray-700'}`}>
                                                         {val === undefined ? <span className="text-gray-300">—</span> : val}
                                                     </td>
                                                 );
@@ -5545,7 +5552,7 @@ neto = pago - retencion`,
                                 {CONFIG.asignatura}
                             </h1>
                             <p className="text-xs text-white/60 mt-1">
-                                Capítulo {CONFIG.numero} · <span className="text-secondary font-semibold">{CONFIG.titulo}</span>
+                                Capítulo {CONFIG.numero} · <span className="text-secondary-claro font-semibold">{CONFIG.titulo}</span>
                             </p>
                         </div>
 
@@ -5559,7 +5566,7 @@ neto = pago - retencion`,
                             ))}
                         </nav>
 
-                        <div className="p-4 text-[10px] text-white/40 border-t border-white/10">
+                        <div className="p-4 text-[10px] text-white/70 border-t border-white/10">
                             <p>{CONFIG.ra} · {CONFIG.horas} horas</p>
                             <p>Pseudocódigo · Python · R · VBA</p>
                         </div>
@@ -5573,7 +5580,7 @@ neto = pago - retencion`,
                         <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
-                                    <span className="text-xs font-bold tracking-wider text-secondary uppercase">
+                                    <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
                                         Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
@@ -5592,7 +5599,7 @@ neto = pago - retencion`,
 
                                 {safeIndex === 0 && (
                                     <div className="mb-8 text-center bg-white p-7 rounded-2xl shadow-sm border border-gray-100">
-                                        <p className="text-xs uppercase tracking-widest text-secondary font-bold mb-2">
+                                        <p className="text-xs uppercase tracking-widest text-secondary-texto font-bold mb-2">
                                             Capítulo {CONFIG.numero} · {CONFIG.horas} horas · {CONFIG.ra}
                                         </p>
                                         <h1 className="text-2xl font-bold text-primary mb-2">{CONFIG.titulo}</h1>
@@ -5629,7 +5636,7 @@ neto = pago - retencion`,
                                         <p className="text-white font-medium text-sm">
                                             <strong>Capítulo {CONFIG.numero} · {CONFIG.titulo}</strong>
                                         </p>
-                                        <p className="text-xs mt-1 text-white/80 italic">
+                                        <p className="text-xs mt-1 text-white italic">
                                             {CONFIG.lema}
                                         </p>
                                         <p className="text-xs mt-2 text-white/70">

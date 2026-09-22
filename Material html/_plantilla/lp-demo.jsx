@@ -614,7 +614,7 @@ Debug.Print saldo`,
                 <div className="my-4">
                     <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-2">
                         <label className="block text-sm font-semibold text-navy mb-1">
-                            Cuota mensual: <span className="text-secondary font-mono">${cuota.toLocaleString('es-CO')}</span>
+                            Cuota mensual: <span className="text-secondary-texto font-mono">${cuota.toLocaleString('es-CO')}</span>
                         </label>
                         <input type="range" min="500000" max="1500000" step="50000" value={cuota}
                             onChange={e => setCuota(Number(e.target.value))} className="lp-range"
@@ -809,7 +809,7 @@ Debug.Print saldo`,
                                 {CONFIG.asignatura}
                             </h1>
                             <p className="text-xs text-white/60 mt-1">
-                                Capítulo {CONFIG.numero} · <span className="text-secondary font-semibold">{CONFIG.titulo}</span>
+                                Capítulo {CONFIG.numero} · <span className="text-secondary-claro font-semibold">{CONFIG.titulo}</span>
                             </p>
                         </div>
 
@@ -823,7 +823,7 @@ Debug.Print saldo`,
                             ))}
                         </nav>
 
-                        <div className="p-4 text-[10px] text-white/40 border-t border-white/10">
+                        <div className="p-4 text-[10px] text-white/70 border-t border-white/10">
                             <p>{CONFIG.ra} · {CONFIG.horas} horas</p>
                             <p>Pseudocódigo · Python · R · VBA</p>
                         </div>
@@ -837,7 +837,7 @@ Debug.Print saldo`,
                         <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
-                                    <span className="text-xs font-bold tracking-wider text-secondary uppercase">
+                                    <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
                                         Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
@@ -856,7 +856,7 @@ Debug.Print saldo`,
 
                                 {safeIndex === 0 && (
                                     <div className="mb-8 text-center bg-white p-7 rounded-2xl shadow-sm border border-gray-100">
-                                        <p className="text-xs uppercase tracking-widest text-secondary font-bold mb-2">
+                                        <p className="text-xs uppercase tracking-widest text-secondary-texto font-bold mb-2">
                                             Capítulo {CONFIG.numero} · {CONFIG.horas} horas · {CONFIG.ra}
                                         </p>
                                         <h1 className="text-2xl font-bold text-primary mb-2">{CONFIG.titulo}</h1>
@@ -893,7 +893,7 @@ Debug.Print saldo`,
                                         <p className="text-white font-medium text-sm">
                                             <strong>Capítulo {CONFIG.numero} · {CONFIG.titulo}</strong>
                                         </p>
-                                        <p className="text-xs mt-1 text-white/80 italic">
+                                        <p className="text-xs mt-1 text-white italic">
                                             {CONFIG.lema}
                                         </p>
                                         <p className="text-xs mt-2 text-white/70">

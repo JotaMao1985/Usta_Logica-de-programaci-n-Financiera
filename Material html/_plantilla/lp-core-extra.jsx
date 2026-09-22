@@ -357,7 +357,7 @@
                                 <i className={`fas ${icon} text-sm`}></i>
                             </span>
                             <div className="flex-1 min-w-0">
-                                <div className="text-[0.65rem] uppercase tracking-widest font-bold mb-1.5" style={{ color: 'rgba(61,0,141,0.62)' }}>
+                                <div className="text-[0.65rem] uppercase tracking-widest font-bold mb-1.5" style={{ color: '#3D008D' }}>
                                     {etiqueta}
                                 </div>
                                 <div className="text-[0.96rem] text-gray-700 leading-relaxed">{children}</div>
@@ -739,7 +739,7 @@
                     <SelectorLenguaje disponibles={disponibles} activo={langActivo} onCambiar={cambiarLang} />
                     <div className="flex flex-wrap gap-4">
                         {panel(a, '#3D008D')}
-                        {panel(b, '#ED1E79')}
+                        {panel(b, '#D81B6A')}
                     </div>
                     {pregunta && <MCQ pregunta={pregunta} opciones={opciones} multiple={multiple} />}
                 </div>
@@ -1212,7 +1212,7 @@
                                                 const val = acumulado[i][v.clave];
                                                 return (
                                                     <td key={v.clave}
-                                                        className={`px-3 py-1.5 border border-gray-200 font-mono text-[0.82rem] ${cambio ? 'font-bold text-secondary bg-secondary/5' : 'text-gray-700'}`}>
+                                                        className={`px-3 py-1.5 border border-gray-200 font-mono text-[0.82rem] ${cambio ? 'font-bold text-secondary-texto bg-secondary/5' : 'text-gray-700'}`}>
                                                         {val === undefined ? <span className="text-gray-300">—</span> : val}
                                                     </td>
                                                 );
