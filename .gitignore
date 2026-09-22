@@ -50,6 +50,20 @@ parcial/calificar.R
 parcial/trazas.R
 
 # ---------------------------------------------------------------------------
+# Y los dos documentos del parcial. No llevan el código, pero reconstruyen
+# buena parte del blueprint: el reparto de puntos por ejercicio, cuántos entran
+# por capítulo, cuánto vale la prueba de escritorio y cuáles se sacaron del
+# sorteo y por qué. Cambiar la `edicion` no protege nada de eso: la edición
+# mueve las cifras de cada estudiante, no el reparto.
+#
+# Los cuatro planes del MATERIAL —el maestro y los de las tareas 6, 7 y 8— sí
+# se quedan. Nombran ejercicios del banco de paso, que es mucho más débil: los
+# nombres sin el banco y sin el reparto no dicen qué entra en el examen.
+# ---------------------------------------------------------------------------
+PLAN_PARCIAL1_APP.md
+TRASPASO_PARCIAL_APP.md
+
+# ---------------------------------------------------------------------------
 # Generados y temporales
 # ---------------------------------------------------------------------------
 
