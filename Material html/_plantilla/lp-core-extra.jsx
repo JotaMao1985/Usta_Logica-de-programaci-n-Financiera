@@ -865,7 +865,7 @@
            E6 · EMPAREJAMIENTO ENTRE REPRESENTACIONES
            solucion[i] = índice en `derecha` que corresponde a izquierda[i]
         ============================================================ */
-        const PALETA_PARES = ['#3D008D', '#ED1E79', '#0E7490', '#B91C1C', '#15803D', '#B45309', '#001A4D', '#7C3AED'];
+        const PALETA_PARES = ['#3D008D', '#D81B6A', '#0E7490', '#B91C1C', '#15803D', '#B45309', '#001A4D', '#7C3AED'];
 
         const Emparejamiento = ({ titulo = 'Empareje cada elemento con su correspondencia', enunciado, izquierda, derecha, solucion, lang = 'pseudo', etiquetaIzq = 'Concepto', etiquetaDer = 'Corresponde a' }) => {
             // El lado izquierdo suele ser codigo y por tanto cambia con el
