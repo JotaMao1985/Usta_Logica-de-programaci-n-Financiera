@@ -31,6 +31,25 @@ parcial/blueprint.yml
 parcial/blueprint_simulacro.yml
 
 # ---------------------------------------------------------------------------
+# Y el motor del parcial, por el mismo motivo. El blueprint decía QUÉ entra;
+# estos tres dicen CÓMO se sortea y CÓMO se califica:
+#
+#   generar.R    roster → examen; el sorteo por estudiante y la clave aparte
+#   calificar.R  el único calificador, con sus 57 pruebas
+#   trazas.R     las tres pruebas de escritorio como función de una semilla
+#
+# `esquema.R` y `vendorizar.R` se quedan: el esquema de la base y el copiado
+# de dependencias no revelan nada del instrumento.
+#
+# Siguen en disco y todo funciona igual. En un clon recién hecho, en cambio,
+# `app/app.R` y `panel/app.R` no arrancan —hacen `source()` de calificar.R— y
+# `generar.R` no está. Hay que traerlos aparte, con los blueprints.
+# ---------------------------------------------------------------------------
+parcial/generar.R
+parcial/calificar.R
+parcial/trazas.R
+
+# ---------------------------------------------------------------------------
 # Generados y temporales
 # ---------------------------------------------------------------------------
 

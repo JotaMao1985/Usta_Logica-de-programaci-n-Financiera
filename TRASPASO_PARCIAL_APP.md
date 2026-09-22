@@ -18,10 +18,15 @@ ejercicios entran en el sorteo de cada capítulo, cuántos se eligen, cuánto va
 y cuánto dura la prueba. Es el mismo criterio por el que nunca subió el banco de
 Moodle.
 
-Siguen en disco y todo lo que los lee —`generar.R`, `app/app.R`,
-`despliegue/simulacro.sh`— funciona igual. Pero **un clon recién hecho no los
-tendrá**, y `generar.R` se detiene sin ellos. Hay que traerlos aparte, desde la
-copia del docente.
+Desde el mismo día tampoco se versionan **`generar.R`, `calificar.R` y
+`trazas.R`**. El blueprint decía *qué* entra; estos tres dicen *cómo* se sortea
+y *cómo* se califica, que es la otra mitad del instrumento. Se quedan
+`esquema.R` y `vendorizar.R`, que no revelan nada de él.
+
+Todo sigue en disco y funciona igual. Lo que cambia es el clon: **un clon
+recién hecho no tiene ninguno de los cinco**, así que `generar.R` no está y
+`app/app.R` y `panel/app.R` no arrancan —hacen `source()` de `calificar.R`—.
+Hay que traerlos aparte, desde la copia del docente.
 
 > Lo que estuvo publicado sigue en la historia de git: quitarlo de la punta
 > impide encontrarlo, no lo borra.
