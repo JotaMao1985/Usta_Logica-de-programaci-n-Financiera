@@ -17,6 +17,20 @@ Banco Moodle/
 Syllabus*.xlsx
 
 # ---------------------------------------------------------------------------
+# El blueprint del parcial. Es, en palabras del propio archivo, «la ÚNICA
+# fuente de verdad sobre qué entra en el parcial»: qué ejercicios entran en el
+# sorteo de cada capítulo, cuántos se eligen, cuánto valen y cuánto dura la
+# prueba. En un repositorio público eso es el mapa del examen, y por el mismo
+# motivo por el que no sube el banco de Moodle, tampoco sube esto.
+#
+# Los dos archivos siguen en su sitio en disco; `generar.R`, `app/app.R` y
+# `despliegue/simulacro.sh` los leen de ahí y no se enteran del cambio. Un
+# clon recién hecho NO los tendrá: hay que traerlos aparte antes de generar.
+# ---------------------------------------------------------------------------
+parcial/blueprint.yml
+parcial/blueprint_simulacro.yml
+
+# ---------------------------------------------------------------------------
 # Generados y temporales
 # ---------------------------------------------------------------------------
 

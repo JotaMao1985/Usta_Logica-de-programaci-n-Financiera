@@ -9,6 +9,27 @@
 
 ---
 
+## 0. El blueprint no está en el repositorio
+
+`parcial/blueprint.yml` y `parcial/blueprint_simulacro.yml` **no se versionan**
+desde 2026-09-22. El repositorio es público y el blueprint es, en sus propias
+palabras, «la ÚNICA fuente de verdad sobre qué entra en el parcial»: declara qué
+ejercicios entran en el sorteo de cada capítulo, cuántos se eligen, cuánto valen
+y cuánto dura la prueba. Es el mismo criterio por el que nunca subió el banco de
+Moodle.
+
+Siguen en disco y todo lo que los lee —`generar.R`, `app/app.R`,
+`despliegue/simulacro.sh`— funciona igual. Pero **un clon recién hecho no los
+tendrá**, y `generar.R` se detiene sin ellos. Hay que traerlos aparte, desde la
+copia del docente.
+
+> Lo que se publicó entre el 2026-09-22 y ese cambio sigue en la historia de
+> git: quitarlo de la punta impide encontrarlo, no lo borra. Si eso importa,
+> la salida es cambiar `edicion:` —que equivale a regenerar el examen— o
+> reescribir la historia del repositorio.
+
+---
+
 ## 1. Dónde está el proyecto
 
 **Construido y probado: D1 a D7.** La app sirve el examen, autoguarda, reanuda,
