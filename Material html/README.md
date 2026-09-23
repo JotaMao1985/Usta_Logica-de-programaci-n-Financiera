@@ -111,6 +111,29 @@ viene**: da una razón para seguir leyendo. Receta, en un máximo de ~80 palabra
 Lo que hay que evitar: abrir con «En esta sección estudiaremos…». Eso es un
 índice, no una motivación, y el estudiante ya lo tiene en la barra lateral.
 
+### El nombre del capítulo se escribe igual en cinco sitios
+
+El mismo capítulo aparecía con cuatro nombres distintos —«Capítulo 4: Control
+selectivo» en la pestaña, «Control selectivo» en la barra lateral, «Evaluación
+final · Unidad 1» en el cuestionario del 1— porque cada uno se escribió por
+separado y nada los comparaba. Se unificaron el 2026-09-22.
+
+El nombre va en **minúscula de oración**: mayúscula solo en la primera palabra
+y en los nombres propios. «Introducción a algoritmos», no «a Algoritmos»; las
+siglas se respetan, «Entorno de programación VBA».
+
+| Sitio | Forma |
+|---|---|
+| `<title>` del capítulo | `Lógica de Programación Financiera — NN · Nombre` |
+| `<meta name="description">` | `Capítulo N del material de Lógica de Programación Financiera: …. Universidad Santo Tomás.` |
+| `CONFIG.titulo` | `Nombre` a secas — el `App` le antepone `Capítulo NN · ` |
+| Título del `Quiz` final | `Evaluación · Capítulo NN — Nombre` |
+| `<h3>` de la tarjeta en `index.html` | `Nombre` a secas |
+
+Las cuatro primeras filas viven en el capítulo; la quinta, en el portal. Al
+publicar un capítulo hay que tocar las cinco, y `verificar.py` **no** lo
+comprueba: no lee `index.html`.
+
 ### Paleta institucional USTA
 
 Idéntica a la del material de referencia. **No se inventan colores de marca.**

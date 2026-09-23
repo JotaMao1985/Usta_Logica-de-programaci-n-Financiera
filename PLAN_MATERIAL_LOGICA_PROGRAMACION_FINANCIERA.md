@@ -303,7 +303,7 @@ Cada capítulo produce: **1 archivo HTML** + **6–10 ejercicios cloze** + **1 s
 
 ---
 
-### Capítulo 2 — Introducción a Algoritmos
+### Capítulo 2 — Introducción a algoritmos
 **Syllabus:** fila 2 · **4 horas** · RA1
 
 **Secciones internas**
@@ -1268,3 +1268,35 @@ discrepancia» del capítulo 3 lo desmiente el 4—.
 
 Cinco commits, uno por frente: falsedades, instrumento, la bandera de LP-CORE,
 flujogramas y fronteras. Los cuatro capítulos pasan `verificar.py --con-salidas`.
+
+
+### Un mismo capítulo con cuatro nombres · 2026-09-22
+
+Al enlazar el capítulo 4 en el índice se vio que el portal lo llamaba de una
+forma y el capítulo de otra. Mirando los cuatro juntos, el desacuerdo era mayor
+de lo que parecía: el nombre de un capítulo se escribe **en cinco sitios
+distintos** —`<title>`, `<meta description>`, `CONFIG.titulo`, el título del
+`Quiz` final y la tarjeta de `index.html`— y ninguno de los cinco se comparaba
+con los demás. Salieron tres formatos de `<title>` para cuatro capítulos; una
+mayúscula de más en «Introducción a Algoritmos», el único de los ocho nombres
+del índice que no iba en minúscula de oración; y un cuestionario que se
+anunciaba como «Evaluación final · Unidad 1» siendo el del capítulo 1, cuando
+el capítulo 2 es de esa misma unidad y trae su propia evaluación.
+
+Ninguno rompe nada, y por eso duraron un año: son **defectos que solo se ven
+poniendo los cuatro capítulos en la misma pantalla**, y nada del flujo de
+trabajo obliga a hacerlo. La convención quedó escrita en
+`Material html/README.md`, con la tabla de los cinco sitios. `verificar.py`
+tampoco lo comprueba, y no puede: audita capítulo a capítulo y no lee
+`index.html`. Queda anotado como candidato a regla —haría falta una
+comprobación de repositorio, no de capítulo—.
+
+**Y un hueco de herramienta.** `ensamblar.py` sustituye el título y la
+descripción del capítulo 1 por los de la plantilla. El título lo anclaba en la
+etiqueta `<title>`; la descripción, en las primeras palabras del texto del
+capítulo 1 —`content="Material de aprendizaje`—. Al reescribir esa frase, el
+`if` dejó de entrar y la plantilla se llevó la descripción del capítulo 1, **sin
+una línea de aviso**: el patrón «busca una cadena, y si no está no hagas nada»
+convierte un cambio de contenido en un fallo silencioso. Ahora se ancla en
+`<meta name="description"` y aborta si no la encuentra, como ya hacía el título.
+Probado en negativo: quitando la etiqueta, sale por 1.
