@@ -155,10 +155,22 @@ def construir():
         sys.exit(1)
     head_txt = head_txt[:ini] + f"<title>{TITULO}</title>" + head_txt[fin + len("</title>"):]
 
-    ini = head_txt.find('content="Material de aprendizaje')
-    if ini != -1:
-        fin = head_txt.find('"', ini + len('content="'))
-        head_txt = head_txt[:ini] + f'content="{DESCRIPCION}"' + head_txt[fin + 1:]
+    # La descripción se ancla en la ETIQUETA, no en su texto. Anclarla en las
+    # primeras palabras del capítulo 1 —«content="Material de aprendizaje»—
+    # parecía funcionar y fallaba en silencio: al reescribir esa frase, el
+    # `if` no entraba y la plantilla se quedaba con la descripción del
+    # capítulo 1 en vez de la suya, sin una línea de aviso. Se vio el
+    # 2026-09-22, al uniformar los títulos de los cuatro capítulos.
+    ini_meta = head_txt.find('<meta name="description"')
+    if ini_meta == -1:
+        print('ERROR: no se encontró <meta name="description"> en el head.', file=sys.stderr)
+        sys.exit(1)
+    ini = head_txt.find('content="', ini_meta)
+    fin = head_txt.find('"', ini + len('content="')) if ini != -1 else -1
+    if ini == -1 or fin == -1:
+        print('ERROR: la <meta name="description"> del head no trae content="…".', file=sys.stderr)
+        sys.exit(1)
+    head_txt = head_txt[:ini] + f'content="{DESCRIPCION}"' + head_txt[fin + 1:]
 
     # Font Awesome < 6.5 no trae fa-clipboard-question, fa-money-bill-trend-up
     # ni fa-magnifying-glass-chart: los iconos salen como huecos en blanco,
