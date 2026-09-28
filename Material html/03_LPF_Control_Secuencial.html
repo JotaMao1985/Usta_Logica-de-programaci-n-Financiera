@@ -4465,14 +4465,14 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Es la regla de dependencia. Las tres líneas que fijan valores iniciales se pueden barajar como se quiera; en cambio iva <- base * tasaIva lee lo que la línea anterior escribió, y ahí el orden no se negocia. La opción que dice «nunca» es el error contrario: creer que todo orden es sagrado impide reconocer cuál sí lo es.',
                     },
                     {
-                        pregunta: 'Una rutina liquida una factura de 8 000 000 con descuento de 200 000 e IVA del 19 %, pero calcula el IVA antes de restar el descuento. ¿Qué ocurre al ejecutarla?',
+                        pregunta: 'La rutina de la factura quedó con el IVA calculado antes de restar el descuento. Sobre una factura de 12 000 000 con 300 000 de descuento informa 13 980 000, cuando lo correcto son 13 923 000. No hubo ningún error ni ningún aviso. ¿Qué es exactamente lo que calculó el programa?',
                         opciones: [
-                            { texto: 'Informa 9 520 000, porque el descuento nunca llega a aplicarse.', correcta: false },
-                            { texto: 'Corre sin ningún error e informa 9 320 000, es decir 38 000 de más por factura.', correcta: true },
-                            { texto: 'Se detiene con un error de ejecución porque base se asigna dos veces.', correcta: false },
-                            { texto: 'Informa lo mismo que la versión correcta: restar antes o después es indiferente.', correcta: false },
+                            { texto: 'El IVA de una factura sin descuento, sumado a la base que sí lo tiene.', correcta: true },
+                            { texto: 'El total correcto: la diferencia de 57 000 es el redondeo del IVA.', correcta: false },
+                            { texto: 'El total con el descuento aplicado dos veces, una a la base y otra al IVA.', correcta: false },
+                            { texto: 'Nada coherente: mezclar los dos órdenes no responde ninguna pregunta.', correcta: false },
                         ],
-                        justificacion: 'El IVA se calcula sobre 8 000 000 y da 1 520 000 en vez de 1 482 000; la base sí termina en 7 800 000. No es un error de programación sino de modelo del negocio: el programa responde correctamente a otra pregunta —cuánto sería el IVA si no hubiera descuento— y presenta esa cifra como si fuera la respuesta a la que se hizo.',
+                        justificacion: 'Los 57 000 son exactamente el 19 % de los 300 000 del descuento: el IVA se calculó sobre los 12 000 000 completos, y la base, que se calcula después, sí quedó en 11 700 000. De ahí que el total mezcle las dos cosas. Lo importante es que el programa no está roto: contesta impecablemente una pregunta que nadie hizo —cuánto sería el IVA si no hubiera descuento— y presenta el resultado como si fuera el total de esta factura. Por eso no hay mensaje que buscar; un defecto de secuencia no rompe el programa, le cambia el significado a la cifra. Y no es redondeo: 57 000 se repiten idénticos en cada factura.',
                     },
                     {
                         pregunta: 'Sobre la instrucción saldo <- saldo - 500000, ¿cuál afirmación es correcta?',
@@ -4543,7 +4543,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     {
                         pregunta: 'Un proveedor descuenta una factura de 15 000 000 a 60 días y recibe 14 550 000. ¿Cuál es el costo de la operación para él?',
                         opciones: [
-                            { texto: 'Exactamente el 1,5 % mensual que dice el contrato.', correcta: false },
+                            { texto: '3,00 %, porque los 450 000 de costo se miden sobre los 15 000 000 que dice la factura.', correcta: false },
                             { texto: '450 000 pesos, y no tiene sentido expresarlo como porcentaje.', correcta: false },
                             { texto: '3,00 % en los dos meses, porque la tasa de descuento se aplica dos veces.', correcta: false },
                             { texto: '3,09 % en los dos meses —450 000 medidos sobre los 14 550 000 que recibió—, es decir un 1,55 % mensual.', correcta: true },

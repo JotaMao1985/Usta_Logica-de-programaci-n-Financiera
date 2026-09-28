@@ -1358,3 +1358,24 @@ nadie había visto: la pregunta del cuestionario sobre la factura de 8 000 000
 es la del ejercicio E2 de la sección, con los mismos números y tres de sus
 cuatro opciones reescritas. Queda anotada; el capítulo 3 no se tocó.
 
+**Post scriptum del 2026-09-28.** Arreglada también la duplicación del capítulo
+3 que las reglas nuevas encontraron. La pregunta 2 del cuestionario era el
+ejercicio E2 de la sección 1 —misma factura, mismos números, tres de sus cuatro
+opciones reescritas—. En su lugar va lo único de esa sección que ninguna
+pregunta tocaba: que el programa mal ordenado **no está roto**, sino que
+contesta otra pregunta y presenta la respuesta como si fuera la que se hizo.
+Ahora se da el resultado equivocado y se pregunta qué es exactamente esa cifra.
+
+Y el distractor reciclado de la pregunta 9 —el 1,5 % del contrato, que ya se
+descartaba en el E7 de la sección 5— pasa a ser el error de base: medir los
+450 000 sobre los 15 000 000 de la factura en vez de sobre los 14 550 000 que
+el proveedor recibió. Al darle cuerpo, esa pregunta dejó además de disparar la
+regla 17 —la clave medía 103 contra 61 de media—, que es el arreglo que la
+propia regla recomienda: alargar los distractores, no acortar la clave.
+
+Queda anotado un hueco más: **el cuestionario del capítulo 3 no declara
+`seccion:` en ninguna pregunta**, así que la regla 19 —cobertura de las
+secciones— se salta en silencio. La regla está escrita para no adivinar, y hace
+bien; pero entonces un capítulo que no declara nada pasa sin que nadie note que
+no se comprobó.
+
