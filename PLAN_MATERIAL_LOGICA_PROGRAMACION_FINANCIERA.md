@@ -1456,3 +1456,46 @@ Y la regla 19 ya no calla: un cuestionario final sin ninguna etiqueta da un
 recién copiado de la plantilla, cuya demostración no trae etiquetas: el aviso
 sale hasta que se declaren. Prueba negativa: el 1 sin etiquetas avisa y pasa;
 con etiquetas a medias, o sin `cap5`, sigue fallando; sin `Quiz`, no dice nada.
+
+### Las claves largas del capítulo 2 · 2026-09-28
+
+Los siete avisos de la regla 17 en el 2, más uno que la regla no ve: la
+pregunta 2 del cuestionario —clave de 65 caracteres contra «La salida.» y «La
+entrada.»— es el peor caso del capítulo (3,5 veces la media de los
+distractores), y la regla lo salta porque solo mide ítems con todas las opciones
+de 20 caracteres o más. El filtro existe para no medir opciones como «Cero» o
+una cifra; aquí deja fuera justo los distractores más pobres, que son los que
+más regalan la clave.
+
+El arreglo es el de siempre, **alargar los distractores**: cada uno recibe una
+razón, como la clave ya tenía, y la razón es la creencia equivocada —«ocupa
+menos memoria: carga 12 registros en vez de 39 814», «una cédula está hecha
+solo de dígitos, así que el tipo entero es el que le corresponde»—. Tres cosas
+que salieron al hacerlo:
+
+- **Un distractor alargado puede volverse defendible.** «Una salida: se le
+  informa al cliente junto con la cuota» era verdad a medias, porque el
+  algoritmo de la sección 2 sí imprime el seguro total. Se reescribió con una
+  razón inequívocamente falsa. Lo mismo con la inflación («no se sabe cuánto
+  cuesta de verdad» es cierto; «cualquier cifra depende de la inflación» no, las
+  24 cuotas son fijas) y con «ninguna de las dos cifras se nota», que en tiempo
+  de reloj puede ser cierto.
+- **Pasarse de largo crea la pista contraria.** Al primer intento la clave quedó
+  la más corta en las preguntas 1, 2 y 3 seguidas. Se acortó un distractor en
+  cada una: ahora la clave queda en medio en seis de ocho, y en las otras dos a
+  menos de 1,1 veces la media.
+- **Las cifras de los distractores se ejecutan.** El seguro de 0,12 % son
+  345 600, el 6 % del sobrecosto, así que atribuirle «la mayor parte» sigue
+  siendo falso. Y la justificación de la pregunta 10 dice ahora que partir por
+  la mitad cuesta como mucho 16 comparaciones con 40 000 registros y 22 con
+  4 000 000: corrido con el contador del propio capítulo, exhaustivo en 40 000.
+
+El 2 queda sin ningún aviso, el primero de los cuatro. Navegador: 10/10, y 6/10
+fallando las preguntas 1, 2, 3 y 10; los dos E7 dan «Revisa la explicación» con
+un distractor y «¡Correcto!» con la clave; a 375 px, sin desborde.
+
+Queda anotada una repetición que la regla 18 no ve: la pregunta 10 del
+cuestionario —¿bajo qué condición se puede usar la búsqueda por mitades?— es el
+comparador de la sección 5 con otras palabras, y las dos claves dicen lo mismo:
+solo si la cartera está ordenada. La regla pide dos opciones calcadas y aquí
+solo lo está la clave.
