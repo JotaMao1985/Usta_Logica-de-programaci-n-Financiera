@@ -1450,3 +1450,9 @@ De paso la regla 17 pasa de 4 avisos a 3 en el 1: el que se fue era la clave de
 la vieja pregunta 8, de 76 caracteres contra «True». Comprobado en el navegador:
 8/8 bien respondido, 6/8 fallando solo las dos nuevas con sus justificaciones a
 la vista, y a 375 px sin desborde.
+
+Y la regla 19 ya no calla: un cuestionario final sin ninguna etiqueta da un
+**aviso** —no un fallo: no está mal, no se miró—. Es el caso del capítulo 5
+recién copiado de la plantilla, cuya demostración no trae etiquetas: el aviso
+sale hasta que se declaren. Prueba negativa: el 1 sin etiquetas avisa y pasa;
+con etiquetas a medias, o sin `cap5`, sigue fallando; sin `Quiz`, no dice nada.

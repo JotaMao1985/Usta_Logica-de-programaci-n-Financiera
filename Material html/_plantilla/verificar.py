@@ -61,7 +61,8 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      toque todas las secciones del `curriculum`, y solo esas. Se comprueba
      solo si las preguntas lo declaran con `seccion: 'capN'`: a qué sección
      pertenece una pregunta no se puede adivinar leyéndola, y adivinarlo mal
-     sería peor que no comprobarlo.
+     sería peor que no comprobarlo. Si no declara ninguna, avisa de que no
+     se comprobó.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -1065,35 +1066,44 @@ def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
     preguntas de «terminal», «entrada» o «decision», que son los símbolos del
     diagrama de flujo. En los capítulos 3 y 4 no había otro `id:` y funcionaba
     por casualidad.
+
+    Devuelve (problemas, avisos), como `jsx_compila`. Un cuestionario sin
+    ninguna etiqueta es un aviso y no un fallo: no es que esté mal, es que no
+    se pudo comprobar. Antes callaba, y así estuvieron los capítulos 1, 2 y 3
+    hasta el 2026-09-28 sin que nada lo dijera; al declararlo, el 1 resultó no
+    tener ninguna pregunta de su sección 4.
     """
     limpio = _sin_comentarios(cuerpo)
     final = _cuestionario_final(limpio)
     if final is None:
-        return []
+        return [], []
     q, fin_q = final
+    linea = linea_de(texto, desplazamiento + q)
     zona = limpio[q:fin_q]
     declaradas = set(re.findall(r"seccion:\s*'([^']+)'", zona))
     if not declaradas:
-        return []
+        return [], [f"línea {linea}: ninguna pregunta del cuestionario final "
+                    f"declara `seccion`, así que no se comprobó que cubra todas "
+                    f"las secciones"]
     n_preguntas = len(re.findall(r"\bpregunta:\s*", zona))
     if len(re.findall(r"seccion:\s*'", zona)) != n_preguntas:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: unas preguntas del "
-                f"`Quiz` declaran `seccion` y otras no; o todas o ninguna"]
+        return [f"línea {linea}: unas preguntas del `Quiz` declaran `seccion` y "
+                f"otras no; o todas o ninguna"], []
     cur = re.search(r"const\s+curriculum\s*=\s*\[(.*?)\n\s*\];", limpio, re.S)
     if not cur:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: no se encontró el "
-                f"arreglo `curriculum`, no se puede comprobar la cobertura"]
+        return [f"línea {linea}: no se encontró el arreglo `curriculum`, no se "
+                f"puede comprobar la cobertura"], []
     secciones = [m for m in re.findall(r"\bid:\s*'([^']+)'", cur.group(1))
                  if m not in ("portada", "eval")]
     ajenas = sorted(declaradas - set(secciones))
     if ajenas:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario "
-                f"declara secciones que no están en el `curriculum`: {', '.join(ajenas)}"]
+        return [f"línea {linea}: el cuestionario declara secciones que no están "
+                f"en el `curriculum`: {', '.join(ajenas)}"], []
     faltan = [x for x in secciones if x not in declaradas]
     if faltan:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario no "
-                f"tiene ninguna pregunta de {', '.join(faltan)}"]
-    return []
+        return [f"línea {linea}: el cuestionario no tiene ninguna pregunta de "
+                f"{', '.join(faltan)}"], []
+    return [], []
 
 
 def jsx_compila(ruta):
@@ -1219,9 +1229,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     for f in opcion_repetida(texto, cuerpo, desplazamiento):
         avisos.append(f"pregunta repetida — {f}")
 
-    # 19 · el cuestionario cubre todas las secciones (si lo declaran)
-    for f in cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
-        problemas.append(f"cobertura — {f}")
+    # 19 · el cuestionario cubre todas las secciones (avisa si no lo declara)
+    p19, a19 = cobertura_del_cuestionario(texto, cuerpo, desplazamiento)
+    problemas += [f"cobertura — {f}" for f in p19]
+    avisos += [f"cobertura — {f}" for f in a19]
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
