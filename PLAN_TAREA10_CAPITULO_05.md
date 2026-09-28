@@ -1,9 +1,9 @@
 # Plan · Tarea 10 — Capítulo 5, «Control repetitivo»
 
-**Rama:** `cap05/control-repetitivo` *(se crea al aprobar el PC0)* · **Base:** `main` (02a3b9b) · **Fecha:** 2026-09-28
+**Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** borrador para el punto de control 0. No hay rama ni una línea de contenido.
+**Estado:** PC0 aprobado el 2026-09-28 (§9). En curso: Fase 1.
 
 ---
 
@@ -26,8 +26,8 @@ Hay tres cosas del contexto que cambian este plan:
    pero el PC D no se puede cerrar sin él. → **H12.**
 3. **Hay otra sesión trabajando en esta misma carpeta** («Revisión capítulo 4»).
    Cambiar de rama aquí le movería el árbol de trabajo. La rama del capítulo 5 se
-   crea en un *worktree* si esa sesión sigue abierta cuando se apruebe el PC0.
-   → **R9.**
+   creó en un *worktree* (`.claude/worktrees/cap05`), porque esa sesión seguía
+   abierta al aprobarse el PC0. → **R9.**
 
 ### Datos del syllabus, textuales
 
@@ -52,17 +52,21 @@ docente. → **S1.**
   fila 35 solo trae la charla general de estructuras de control, así que el
   syllabus no dicta el corte en secciones: el que se propone es nuestro.
 - **Aparece un juego**, el «Millonario». Es la primera fila del RA1 con una
-  actividad así, y puede condicionar el banco. → **H11.**
+  actividad así. El docente lo tiene montado con preguntas **cloze**, así que se
+  alimenta del mismo banco. → **H11.**
 
 ---
 
 ## 1. Estado medido
 
-Ejecutado sobre `main` en 02a3b9b, antes de tocar nada:
+Ejecutado sobre `main` en 02a3b9b, antes de tocar nada. Vuelto a medir en b4712a2
+al crear la rama: solo cambian los cuestionarios de los capítulos 1 y 2 (el 1 baja
+de 4 avisos de la regla 17 a 3), y las líneas citadas en H1 siguen apuntando a lo
+mismo.
 
 ```
 LP-CORE de referencia: 03dba46fa0fae198…
-AVISO 01_LPF_Introduccion.html       13 ejercicios · E1:3 E2:2 E3:2 E4:1 E5:1 E6:1 E7:2 E8:1   (4 avisos de la regla 17)
+AVISO 01_LPF_Introduccion.html       13 ejercicios · E1:3 E2:2 E3:2 E4:1 E5:1 E6:1 E7:2 E8:1   (3 avisos de la regla 17)
 AVISO 02_LPF_Algoritmos.html         13 ejercicios · E1:3 E2:2 E3:2 E4:1 E5:1 E6:1 E7:2 E8:1   (7)
 AVISO 03_LPF_Control_Secuencial.html 18 ejercicios · E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2   (4)
 AVISO 04_LPF_Control_Selectivo.html  19 ejercicios · E1:4 E2:4 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2   (1)
@@ -72,7 +76,7 @@ Los 4 capítulos pasan la verificación.
 | Cosa | Medida |
 |---|---|
 | `lp-base.html` | 3 077 líneas |
-| Capítulos 1 · 2 · 3 · 4 | 4 569 · 4 154 · 4 780 · 5 665 líneas |
+| Capítulos 1 · 2 · 3 · 4 | 4 579 · 4 164 · 4 780 · 5 665 líneas (en b4712a2) |
 | `05_LPF_Control_Repetitivo.html` | **no existe** |
 | `Trazador` en LP-CORE | **sí** — `lp-base.html:1954`. Se usa cuatro veces entre los capítulos 3 y 4, y ya calcula lo ejecutado **por pasos, no por líneas**. Su comentario prevé los ciclos del capítulo 5 (H9) |
 | `TablaTraza` con `exigeRespuesta` | **sí** — `lp-base.html:1355` |
@@ -299,13 +303,14 @@ Quedan 13 iconos, sin contar `BookOpen` (portada) ni `Award` (evaluación).
 
 `FunctionSquare` queda libre para el capítulo 8.
 
-### H11 · El juego «Millonario» no se alimenta de cloze
+### H11 · El juego «Millonario» se alimenta de cloze *(corregido en el PC0)*
 
-La fila 35 pide un juego «Millonario» en Moodle. Hasta donde sé, el módulo
-*Game* de Moodle arma ese juego con preguntas de **opción múltiple** del banco,
-no con cloze. Hay que confirmarlo en la versión de la USTA, que es además la
-pregunta abierta 5 del plan maestro. Si es así, los diez cloze de esta tarea no
-sirven para el juego tal como salen. → **P4.**
+La fila 35 pide un juego «Millonario» en Moodle. El borrador suponía que el
+módulo *Game* solo acepta preguntas de **opción múltiple**, y que por tanto los
+cloze no servirían. **Era falso para este curso:** el docente tiene el juego
+montado con preguntas cloze (respuesta a P4). Los diez cloze de la Fase 4 son,
+por tanto, a la vez banco del docente y preguntas del juego, y no hace falta
+exportar nada más. Cierra también la pregunta abierta 5 del plan maestro.
 
 ### H12 · El banco del capítulo 4 no existe, y el punto de control D lo necesita
 
@@ -324,7 +329,7 @@ científica intermitente a partir de 10⁴).
 En el capítulo 4 todo esto se arregló después de escribir. Aquí entra antes:
 
 - **Regla 17:** los distractores se escriben con la longitud de la clave desde el
-  primer borrador. Hoy hay 16 avisos en los capítulos 1 a 4.
+  primer borrador. Hoy hay 15 avisos en los capítulos 1 a 4.
 - **Regla 18:** el cuestionario no repite ejercicios de sección. Si una pregunta
   está repetida, se cambia la pregunta; no se reescribe.
 - **Regla 19:** cada pregunta del `Quiz` declara `seccion:`. El capítulo 3 no lo
@@ -371,18 +376,25 @@ capítulos 3 y 4** (R1). Y en paralelo, sin bloquear: **el banco del capítulo 4
 #### Tarea 0.1 · Este documento · ✅
 Estado medido, trece hallazgos, cuota repartida y preguntas abiertas.
 
-#### Tarea 0.2 · Rama nueva
-`cap05/control-repetitivo`, desde `main`. **Solo después del PC0**, y en un
-*worktree* si la sesión «Revisión capítulo 4» sigue trabajando en la carpeta
-(R9). El plan se lleva a la rama en su primer commit.
+#### Tarea 0.2 · Rama nueva · ✅
+`cap05/control-repetitivo`, desde `main` en b4712a2, en el *worktree*
+`.claude/worktrees/cap05`: la sesión «Revisión capítulo 4» seguía trabajando en
+la carpeta (R9).
 
-### ⏸ Punto de control 0 — El plan
-- [ ] ¿Se aprueba el corte en siete secciones y el orden de §4, Fase 2?
-- [ ] **P1:** ¿`AmortizacionPasoAPaso` va en la sección 4?
-- [ ] **P2:** ¿el ciclo anidado acumula en vez de llenar una matriz? (H7)
-- [ ] **P3:** ¿las tres deudas de LP-CORE esperan, o se reestampa ahora? (H6)
-- [ ] **P4:** ¿qué hace falta para el juego «Millonario»? (H11)
-- [ ] ¿Se aprueba el reparto de iconos? (H10)
+El borrador de este plan **ya estaba en `main`**: el commit b4712a2 de esa
+sesión lo incluyó sin querer junto a sus cambios del capítulo 1. No se reescribe
+un historial ajeno. La versión aprobada entra con el primer commit de la rama.
+
+### ⏸ Punto de control 0 — El plan · ✅ 2026-09-28
+- [x] **P1:** `AmortizacionPasoAPaso` va en la sección 4. *Aprobado.*
+- [x] **P2:** el ciclo anidado acumula en vez de llenar una matriz (H7).
+      *Aprobado.*
+- [x] **P3:** las tres deudas de LP-CORE esperan a una tarea corta propia antes
+      del capítulo 6. *Aprobado.*
+- [x] **P4:** el «Millonario» usa preguntas cloze (H11, corregido). *Respondido.*
+- [ ] El corte en siete secciones y el reparto de iconos (H10) **no recibieron
+      objeción**. Se confirman en el PC1, antes de escribir contenido: hasta
+      entonces solo tocan el `curriculum`.
 
 ---
 
@@ -684,19 +696,19 @@ python3 -m http.server 8777 --directory "Material html"
   plan maestro la pone entre los casos financieros. Pero la tabla de
   amortización es *el* ejemplo de ciclo con número de vueltas conocido, y es
   donde tiene que aparecer para responder «cuántas veces». La sección 7 la
-  reutiliza para el saldo insoluto y los intereses totales. **Propuesta: sí.**
+  reutiliza para el saldo insoluto y los intereses totales. **Aprobada en el
+  PC0: sí.**
 - **P2 · ¿El ciclo anidado acumula en lugar de llenar una matriz?** (H7)
-  **Propuesta: sí**, para no adelantar el capítulo 7.
+  **Aprobada en el PC0: sí**, para no adelantar el capítulo 7.
 - **P3 · ¿Se reestampa LP-CORE ahora, con las tres deudas juntas?** Son el
   plegado de tildes, la justificación de `MCQ` y `Salir` (H6). Cada una sola no
   justificaba reestampar cuatro capítulos, pero ya van tres, y a partir de aquí
-  cada capítulo sube el costo. **Propuesta:** no en esta tarea; hacerlo como
-  tarea corta propia antes del capítulo 6, cuando LP-CORE ya no tenga a nadie
-  editándolo.
-- **P4 · ¿El juego «Millonario» necesita preguntas del banco?** (H11) Si toma
-  opción múltiple, hay tres caminos: exportar algunas `schoice` del capítulo
-  también como `exams2moodle` de opción múltiple, que el docente use las
-  preguntas que ya tiene, o dejarlo fuera del alcance de esta tarea. Depende de
-  cómo esté montado hoy el juego.
+  cada capítulo sube el costo. **Aprobada en el PC0:** no en esta tarea; se
+  hace como tarea corta propia antes del capítulo 6, cuando LP-CORE ya no tenga
+  a nadie editándolo.
+- **P4 · ¿El juego «Millonario» necesita preguntas del banco?** (H11)
+  **Respondida en el PC0:** el juego está montado con cloze, así que toma los
+  del banco tal como salen.
 - **P5 · ¿Las revisiones de los capítulos 3 y 4, antes o después del PC1?** Antes
-  abarata el R1; después no bloquea el arranque.
+  abarata el R1; después no bloquea el arranque. *Sigue abierta; no bloquea la
+  Fase 1.*
