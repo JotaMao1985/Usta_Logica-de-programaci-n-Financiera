@@ -4455,6 +4455,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 <h3>Cuestionario integrador</h3>
                 <Quiz titulo="Evaluación · Capítulo 03 — Control secuencial" preguntas={[
                     {
+                        seccion: 'cap1',
                         pregunta: 'Dos instrucciones consecutivas de una secuencia se pueden intercambiar sin que cambie el resultado cuando:',
                         opciones: [
                             { texto: 'Las dos son asignaciones, porque asignar nunca depende del orden.', correcta: false },
@@ -4465,6 +4466,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Es la regla de dependencia. Las tres líneas que fijan valores iniciales se pueden barajar como se quiera; en cambio iva <- base * tasaIva lee lo que la línea anterior escribió, y ahí el orden no se negocia. La opción que dice «nunca» es el error contrario: creer que todo orden es sagrado impide reconocer cuál sí lo es.',
                     },
                     {
+                        seccion: 'cap1',
                         pregunta: 'La rutina de la factura quedó con el IVA calculado antes de restar el descuento. Sobre una factura de 12 000 000 con 300 000 de descuento informa 13 980 000, cuando lo correcto son 13 923 000. No hubo ningún error ni ningún aviso. ¿Qué es exactamente lo que calculó el programa?',
                         opciones: [
                             { texto: 'El IVA de una factura sin descuento, sumado a la base que sí lo tiene.', correcta: true },
@@ -4475,6 +4477,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Los 57 000 son exactamente el 19 % de los 300 000 del descuento: el IVA se calculó sobre los 12 000 000 completos, y la base, que se calcula después, sí quedó en 11 700 000. De ahí que el total mezcle las dos cosas. Lo importante es que el programa no está roto: contesta impecablemente una pregunta que nadie hizo —cuánto sería el IVA si no hubiera descuento— y presenta el resultado como si fuera el total de esta factura. Por eso no hay mensaje que buscar; un defecto de secuencia no rompe el programa, le cambia el significado a la cifra. Y no es redondeo: 57 000 se repiten idénticos en cada factura.',
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'Sobre la instrucción saldo <- saldo - 500000, ¿cuál afirmación es correcta?',
                         opciones: [
                             { texto: 'Guarda los dos valores, el anterior y el nuevo, y el programa decide cuál usar.', correcta: false },
@@ -4485,6 +4488,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'La asignación se lee de derecha a izquierda y en dos tiempos. El valor anterior no queda en ninguna parte: por eso la tabla de traza es lo único que conserva la historia de una variable, y por eso intercambiar dos valores necesita una tercera variable.',
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'Una rutina intercambia los saldos de dos cuentas con cuentaA <- cuentaB seguido de cuentaB <- cuentaA, sin variable temporal. ¿Cuál es el resultado?',
                         opciones: [
                             { texto: 'El intercambio funciona: son dos asignaciones cruzadas.', correcta: false },
@@ -4495,6 +4499,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'La primera línea escribe sobre cuentaA sin que nadie haya guardado antes lo que tenía. La segunda no falla por sí sola: copia lo que encuentra, que ya es el saldo de B. Es una sobrescritura antes de lectura, y ningún lenguaje la reporta, porque asignar es legítimo.',
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'Un contrato dice que la comisión es el 3 % sobre el capital más los intereses. Se traduce como capital + interes * 0.03. ¿Qué cobra esa línea?',
                         opciones: [
                             { texto: 'El capital completo más el 3 % de los intereses: el 3 % se aplica solo al segundo término.', correcta: true },
@@ -4505,6 +4510,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'El producto tiene más prioridad que la suma, así que se evalúa interes * 0.03 y a eso se le suma el capital entero. La cláusula y la línea de código se leen igual y calculan cosas distintas; escribirlo bien cuesta un paréntesis: (capital + interes) * 0.03.',
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'Las expresiones (a + b) / 2 y a / 2 + b / 2 calculan lo mismo. ¿Bajo qué condición dejan de coincidir?',
                         opciones: [
                             { texto: 'Cuando el lenguaje evalúa de derecha a izquierda.', correcta: false },
@@ -4515,6 +4521,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Con división decimal son equivalentes, y la segunda no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. Con el operador de división entera —// en Python, \\ en VBA— se trunca dos veces en vez de una, y sobre dinero en centavos esa diferencia es un descuadre.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'En una tabla de traza, ¿cuándo se escribe una fila nueva?',
                         opciones: [
                             { texto: 'Solo cuando alguna variable cambia de valor.', correcta: false },
@@ -4525,6 +4532,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Escribir es una instrucción y ocupa fila aunque no cambie nada: saber que la salida se produjo en ese punto —y con qué estado— es justamente lo que se quiere ver. Anotar solo los cambios rompe la correspondencia entre la fila y la instrucción, que es lo que permite señalar dónde se torció la cifra.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'Sobre la prueba de escritorio, ¿cuáles de estas afirmaciones son ciertas?',
                         // `multiple: true` no es decorativo: sin él, `toggle` trabaja en
                         // modo de opción única y la segunda selección reemplaza a la
@@ -4541,6 +4549,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'Las dos ciertas son las dos razones de ser del método. Que las variables «valgan cero» antes de empezar es justamente el error que previene la cuarta regla de la tabla: cero es un valor y «sin valor» no lo es, y confundirlos es el fallo que la traza busca. Y limitar el método a los algoritmos cortos invierte el argumento: cuanto más largo es, más difícil resulta sostener el estado de memoria y más falta hace la tabla.',
                     },
                     {
+                        seccion: 'cap5',
                         pregunta: 'Un proveedor descuenta una factura de 15 000 000 a 60 días y recibe 14 550 000. ¿Cuál es el costo de la operación para él?',
                         opciones: [
                             { texto: '3,00 %, porque los 450 000 de costo se miden sobre los 15 000 000 que dice la factura.', correcta: false },
@@ -4551,6 +4560,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         justificacion: 'La tasa de descuento se aplica sobre el valor nominal —el que se recibirá en el futuro— y el costo se mide sobre el valor recibido hoy. Es la misma operación leída desde los dos extremos, y la diferencia entre el 1,50 % y el 1,55 % crece con el plazo. Interpretar el resultado exige saber sobre qué base está calculado cada porcentaje.',
                     },
                     {
+                        seccion: 'cap5',
                         pregunta: 'Una oferta dice «24 % anual» y no menciona nada más. ¿Qué se puede afirmar?',
                         opciones: [
                             { texto: 'Que es más cara que cualquier oferta expresada en tasa mensual.', correcta: false },

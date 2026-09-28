@@ -1379,3 +1379,14 @@ secciones— se salta en silencio. La regla está escrita para no adivinar, y ha
 bien; pero entonces un capítulo que no declara nada pasa sin que nadie note que
 no se comprobó.
 
+
+Cerrado ese hueco: las diez preguntas del 3 declaran su sección, dos por cada
+una. No hubo que decidir nada —cada pregunta se enseña en un solo sitio, y la
+portada de la evaluación ya prometía por escrito «dos preguntas de cada una»—;
+la etiqueta convierte esa promesa en algo que la regla 19 puede romper. Se
+comprobó que la rompe: con las dos de `cap5` movidas a `cap4` avisa que falta
+`cap5`, y con una etiqueta de menos avisa que declaran unas sí y otras no.
+
+Y al contar apareció que el hueco era mayor de lo anotado: **los capítulos 1 y
+2 tampoco declaran ninguna**. Hasta hoy la regla 19 solo trabajaba en el 4.
+Queda pendiente.
