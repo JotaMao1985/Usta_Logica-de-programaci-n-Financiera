@@ -1390,3 +1390,39 @@ comprobó que la rompe: con las dos de `cap5` movidas a `cap4` avisa que falta
 Y al contar apareció que el hueco era mayor de lo anotado: **los capítulos 1 y
 2 tampoco declaran ninguna**. Hasta hoy la regla 19 solo trabajaba en el 4.
 Queda pendiente.
+
+### La regla 19 miraba el cuestionario equivocado · 2026-09-28
+
+Al declarar las secciones del 1 y del 2, la regla 19 falló en los dos, y en
+ninguno de los dos por culpa del capítulo:
+
+- En el **1** tomó por cuestionario final el minicuestionario de la sección 1.
+  Buscaba el *primer* `<Quiz>`, que da igual mientras haya uno solo, y el 1
+  tiene cuatro. Contaba como del final las preguntas de todos, y como solo el
+  final las declaraba, avisaba que «unas sí y otras no».
+- En el **2** sacaba la lista de secciones de cualquier `id:` del capítulo, y
+  exigía preguntas de «terminal», «entrada» o «decision»: los símbolos del
+  diagrama de flujo. En el 3 y el 4 no había otro `id:` y funcionaba por suerte.
+
+La regla 18 tenía el mismo primer defecto: en el 1 comparaba el cuestionario
+final solo contra lo anterior a la sección 1. Las dos leen ahora el último
+`<Quiz>` —con un auxiliar común, `_cuestionario_final`— y la 19 lee las
+secciones del `curriculum`. De paso avisa si una etiqueta nombra una sección
+que no existe: un `'cap6'` mal tecleado pasaba en silencio si esa pregunta no
+era la única de su sección. Pruebas negativas: sin `cap5` en el 2 y en el 3
+avisa que falta; con un `'cap6'` avisa de la sección ajena; y una opción de un
+ejercicio de la sección 3 del 1 copiada en el cuestionario final la ve la regla
+18 nueva y no la vieja. Las reglas 1 a 18 dan salida idéntica antes y después
+en los cuatro capítulos.
+
+Con la regla ya mirando lo que debe, el **2** reparte dos preguntas por sección.
+El **1 no**: sus ocho preguntas son 2 de numeración, 2 de estructura, **4 de
+operadores y ninguna de la sección 4**, reales y error de redondeo. Es la sección
+que más importa para un curso de finanzas y la única que el cuestionario no
+evalúa. Queda en rojo a propósito: la etiqueta dice la verdad, y lo que falta
+es una pregunta.
+
+Y una que no vigila nadie: la pregunta 8 del final del 1, `False or True and
+False`, es la de `True and False or True` del minicuestionario de la sección 3
+con los términos cambiados de sitio. La regla 18 no la ve porque solo compara
+opciones de 25 caracteres o más, y las de ese ítem son `True` y `False`.

@@ -57,10 +57,11 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      ejercicio ya respondido, ni copiando una opción —también con un prefijo
      delante— ni reescribiéndola: si dos o más opciones dicen lo que decía un
      ejercicio anterior, lo repetido es la pregunta.
- 19. COBERTURA DEL CUESTIONARIO — que el `Quiz` toque todas las secciones del
-     `curriculum`. Se comprueba solo si las preguntas lo declaran con
-     `seccion: 'capN'`: a qué sección pertenece una pregunta no se puede
-     adivinar leyéndola, y adivinarlo mal sería peor que no comprobarlo.
+ 19. COBERTURA DEL CUESTIONARIO — que el `Quiz` final —el último del capítulo—
+     toque todas las secciones del `curriculum`, y solo esas. Se comprueba
+     solo si las preguntas lo declaran con `seccion: 'capN'`: a qué sección
+     pertenece una pregunta no se puede adivinar leyéndola, y adivinarlo mal
+     sería peor que no comprobarlo.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -760,6 +761,25 @@ def _sin_comentarios(cuerpo):
     return re.sub(r"//[^\n]*", lambda c: " " * len(c.group(0)), cuerpo)
 
 
+def _cuestionario_final(limpio):
+    """Dónde empieza y dónde acaba el cuestionario final: (inicio, fin), o None.
+
+    Es el ÚLTIMO `<Quiz>` del capítulo, no el primero. Las reglas 18 y 19 lo
+    buscaban con `find`, que da igual mientras haya uno solo; pero el capítulo
+    1 tiene además un minicuestionario en cada una de sus tres primeras
+    secciones, y ahí las dos miraban el de la sección 1. La 19 contaba como
+    del cuestionario final las preguntas de los cuatro, y al declararlas en el
+    final avisaba que «unas sí y otras no»; la 18 comparaba el final solo
+    contra lo anterior a la sección 1 y tomaba por preguntas del cuestionario
+    los ejercicios de las secciones 2 a 4.
+    """
+    q = limpio.rfind("<Quiz")
+    if q == -1:
+        return None
+    cierre = re.search(r"\]\}\s*/>", limpio[q:])
+    return q, (q + cierre.end() if cierre else len(limpio))
+
+
 def items_de_opciones(cuerpo):
     """Cada lista `opciones` del capítulo, en orden de aparición.
 
@@ -994,11 +1014,14 @@ def opcion_repetida(texto, cuerpo, desplazamiento):
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
-    q = limpio.find("<Quiz")
-    if q == -1:
+    final = _cuestionario_final(limpio)
+    if final is None:
         return []
+    q, fin_q = final
     antes, despues = [], []
     for ini, _fin, opciones in items_de_opciones(limpio):
+        if ini >= fin_q:
+            continue
         destino = despues if ini > q else antes
         destino.append((ini, [t for t, _ok in opciones if len(t) >= 25]))
     for m in re.finditer(r"tipos=\{\[(.*?)\]\}", limpio, re.S):
@@ -1036,20 +1059,36 @@ def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
     Hizo falta porque el cuestionario del capítulo 4 no tenía **ni una** pregunta
     de su sección 6 —la de los casos financieros, donde vive el resultado de
     aprendizaje del syllabus— mientras la 5 se llevaba tres.
+
+    Las secciones se leen del arreglo `curriculum`, no de cualquier `id:` del
+    capítulo: la primera versión los recogía todos y en el capítulo 2 exigía
+    preguntas de «terminal», «entrada» o «decision», que son los símbolos del
+    diagrama de flujo. En los capítulos 3 y 4 no había otro `id:` y funcionaba
+    por casualidad.
     """
     limpio = _sin_comentarios(cuerpo)
-    q = limpio.find("<Quiz")
-    if q == -1:
+    final = _cuestionario_final(limpio)
+    if final is None:
         return []
-    declaradas = set(re.findall(r"seccion:\s*'([^']+)'", limpio[q:]))
+    q, fin_q = final
+    zona = limpio[q:fin_q]
+    declaradas = set(re.findall(r"seccion:\s*'([^']+)'", zona))
     if not declaradas:
         return []
-    n_preguntas = len(re.findall(r"\bpregunta:\s*", limpio[q:]))
-    if len(re.findall(r"seccion:\s*'", limpio[q:])) != n_preguntas:
+    n_preguntas = len(re.findall(r"\bpregunta:\s*", zona))
+    if len(re.findall(r"seccion:\s*'", zona)) != n_preguntas:
         return [f"línea {linea_de(texto, desplazamiento + q)}: unas preguntas del "
                 f"`Quiz` declaran `seccion` y otras no; o todas o ninguna"]
-    secciones = [m for m in re.findall(r"id:\s*'([^']+)'", cuerpo)
+    cur = re.search(r"const\s+curriculum\s*=\s*\[(.*?)\n\s*\];", limpio, re.S)
+    if not cur:
+        return [f"línea {linea_de(texto, desplazamiento + q)}: no se encontró el "
+                f"arreglo `curriculum`, no se puede comprobar la cobertura"]
+    secciones = [m for m in re.findall(r"\bid:\s*'([^']+)'", cur.group(1))
                  if m not in ("portada", "eval")]
+    ajenas = sorted(declaradas - set(secciones))
+    if ajenas:
+        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario "
+                f"declara secciones que no están en el `curriculum`: {', '.join(ajenas)}"]
     faltan = [x for x in secciones if x not in declaradas]
     if faltan:
         return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario no "

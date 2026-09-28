@@ -4270,6 +4270,7 @@ End Sub`,
                 <h3>Parte 3 · Cuestionario integrador</h3>
                 <Quiz titulo="Evaluación · Capítulo 01 — Introducción" preguntas={[
                     {
+                        seccion: 'cap1',
                         pregunta: 'El número binario 1101 equivale en decimal a:',
                         opciones: [
                             { texto: '13 (8 + 4 + 0 + 1 = 13)', correcta: true },
@@ -4279,6 +4280,7 @@ End Sub`,
                         justificacion: '1×8 + 1×4 + 0×2 + 1×1 = 13.'
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'En la arquitectura de Von Neumann, el componente que coordina la lectura y ejecución de instrucciones es:',
                         opciones: [
                             { texto: 'La ALU.', correcta: false },
@@ -4288,6 +4290,7 @@ End Sub`,
                         justificacion: 'La UC es el "director de orquesta": lee la instrucción de memoria, la decodifica y coordina su ejecución.'
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: '¿Cuál es el resultado de: 2 ** 3 ** 2?',
                         opciones: [
                             { texto: '512 (primero 3**2=9, luego 2**9=512).', correcta: true },
@@ -4297,6 +4300,7 @@ End Sub`,
                         justificacion: 'El operador ** se evalúa de derecha a izquierda: primero 3**2=9, luego 2**9=512.'
                     },
                     {
+                        seccion: 'cap1',
                         pregunta: 'Un byte puede representar valores desde 0 hasta:',
                         opciones: [
                             { texto: '1024', correcta: false },
@@ -4306,6 +4310,7 @@ End Sub`,
                         justificacion: '8 bits → 2⁸ = 256 valores distintos, de 0 a 255.'
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'La expresión: not (saldo > 0) and cuenta_activa, significa:',
                         opciones: [
                             { texto: 'El saldo es positivo Y la cuenta NO está activa.', correcta: false },
@@ -4315,6 +4320,7 @@ End Sub`,
                         justificacion: 'not (saldo > 0) significa saldo <= 0. Con AND, ambas condiciones deben cumplirse.'
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'El operador // en Python realiza:',
                         opciones: [
                             { texto: 'División entera (descarta decimales).', correcta: true },
@@ -4324,6 +4330,7 @@ End Sub`,
                         justificacion: '// es división entera: 10 // 3 = 3. La división con decimales es /.'
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: '¿Qué tipo de memoria pierde su contenido al apagar el computador?',
                         opciones: [
                             { texto: 'RAM', correcta: true },
@@ -4333,6 +4340,7 @@ End Sub`,
                         justificacion: 'La RAM es volátil. Disco SSD y ROM conservan los datos sin alimentación eléctrica.'
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'En Python, ¿qué valor tiene la expresión: False or True and False?',
                         opciones: [
                             { texto: 'Error de tipo.', correcta: false },

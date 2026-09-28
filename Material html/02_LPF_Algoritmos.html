@@ -3851,6 +3851,7 @@ Debug.Print pasos`,
                 <h3>Cuestionario integrador</h3>
                 <Quiz titulo="Evaluación · Capítulo 02 — Introducción a algoritmos" preguntas={[
                     {
+                        seccion: 'cap1',
                         pregunta: 'Un instructivo dice: «revise si el cliente lleva una mora considerable y, si es así, escale el caso». ¿Qué propiedad de un algoritmo viola?',
                         opciones: [
                             { texto: 'La precisión: «considerable» deja la decisión al criterio de quien ejecuta.', correcta: true },
@@ -3861,6 +3862,7 @@ Debug.Print pasos`,
                         justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase: «mora superior a 90 días».',
                     },
                     {
+                        seccion: 'cap1',
                         pregunta: 'Un procedimiento de cálculo itera «hasta obtener un resultado razonable». ¿Qué propiedad está en riesgo?',
                         opciones: [
                             { texto: 'La definición, pero no la finitud.', correcta: false },
@@ -3871,6 +3873,7 @@ Debug.Print pasos`,
                         justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. En un cierre diario eso no se manifiesta como un error: se manifiesta como un proceso que sigue corriendo a medianoche.',
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'En la liquidación de la cuota, el seguro de vida deudor del 0,12 % mensual lo fija la política del banco y es igual para todas las solicitudes. En el análisis EPS, ¿qué es?',
                         opciones: [
                             { texto: 'Una salida, porque se informa al cliente.', correcta: false },
@@ -3881,11 +3884,13 @@ Debug.Print pasos`,
                         justificacion: 'Entrada es lo que cambia en cada ejecución y viene de fuera; constante es lo que fija la política y no cambia. Declararla arriba y con nombre hace que el día que la política cambie se corrija en un solo sitio.',
                     },
                     {
+                        seccion: 'cap2',
                         pregunta: 'El análisis Entrada–Proceso–Salida se hace después de escribir el algoritmo, para documentarlo. (Verdadero/Falso)',
                         opciones: [{ texto: 'Verdadero', correcta: false }, { texto: 'Falso', correcta: true }],
                         justificacion: 'Falso. Se hace antes, y ese es todo su valor: son tres columnas en una hoja que evitan escribir un algoritmo que resuelve el problema equivocado. Es también el esqueleto del Formato Definición y Análisis que el syllabus pide como entregable en el capítulo siguiente.',
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'De las cuatro representaciones de un algoritmo, ¿cuál es la normativa del curso, es decir, la que se evalúa?',
                         opciones: [
                             { texto: 'El diagrama de flujo, porque se ve de un vistazo.', correcta: false },
@@ -3896,6 +3901,7 @@ Debug.Print pasos`,
                         justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el flujograma para acordarla con quien no programa, el código para ejecutarla y comprobarla.',
                     },
                     {
+                        seccion: 'cap3',
                         pregunta: 'En un flujograma correctamente dibujado, el rombo de decisión tiene:',
                         opciones: [
                             { texto: 'Tantas salidas como condiciones se quieran evaluar.', correcta: false },
@@ -3906,11 +3912,13 @@ Debug.Print pasos`,
                         justificacion: 'La condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. Un rombo con una sola salida es un error de dibujo, no una variante.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'La instrucción saldo <- saldo + cuota es incorrecta porque una misma variable no puede aparecer a ambos lados. (Verdadero/Falso)',
                         opciones: [{ texto: 'Verdadero', correcta: false }, { texto: 'Falso', correcta: true }],
                         justificacion: 'Falso, y es el punto donde más se atasca quien viene de matemáticas. La asignación no es una ecuación: primero se evalúa la expresión de la derecha con el valor que ahora tiene saldo, y después el resultado se guarda en saldo. Es el patrón del acumulador, la instrucción más común que existe.',
                     },
                     {
+                        seccion: 'cap4',
                         pregunta: 'Un sistema guarda el número de cédula de los clientes en una variable de tipo entero. ¿Qué problema aparece?',
                         opciones: [
                             { texto: 'Se pierden los ceros a la izquierda, y el identificador deja de coincidir con el documento real.', correcta: true },
@@ -3921,6 +3929,7 @@ Debug.Print pasos`,
                         justificacion: 'Una cédula se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarla como entero borra los ceros iniciales y convierte a dos personas distintas en la misma. El criterio general: si no tiene sentido hacer aritmética con ello, es texto.',
                     },
                     {
+                        seccion: 'cap5',
                         pregunta: 'Sobre dos algoritmos que resuelven el mismo problema, ¿cuáles de estas afirmaciones son ciertas?',
                         // `multiple: true` no es decorativo: sin él, `toggle` trabaja en
                         // modo de opción única y la segunda selección reemplaza a la
@@ -3938,6 +3947,7 @@ Debug.Print pasos`,
                         justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido suele suponer algo —que la cartera está ordenada, por ejemplo— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
                     },
                     {
+                        seccion: 'cap5',
                         pregunta: 'El algoritmo que busca partiendo la cartera por la mitad hace 12 comparaciones frente a 39 814 del que la recorre entera. ¿Bajo qué condición se puede usar?',
                         opciones: [
                             { texto: 'Solo si el dato buscado está en la segunda mitad.', correcta: false },

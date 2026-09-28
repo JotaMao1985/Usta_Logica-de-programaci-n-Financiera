@@ -341,6 +341,14 @@ elige ni quien no sabe. Un buen distractor es una creencia que alguien tiene de
 verdad —«las dos agrupaciones dan lo mismo», «`AndAlso` existe en VBA»—, y por
 eso enseña algo cuando se descarta.
 
+Y cada pregunta del cuestionario final **dice de qué sección es**, con
+`seccion: 'capN'`. Es lo que deja a la regla 19 comprobar que ninguna sección se
+quede sin preguntar: sin la etiqueta la regla no se ejecuta, y no avisa. Un
+capítulo que no declara nada sale en verde sin haberse comprobado —así estuvieron
+el 1, el 2 y el 3 hasta el 2026-09-28, y al declararlo el 1 resultó no tener
+ninguna pregunta de su sección 4—. Solo el cuestionario final: los
+minicuestionarios de sección no se etiquetan.
+
 ## Catálogo de componentes
 
 | Componente | Uso |
