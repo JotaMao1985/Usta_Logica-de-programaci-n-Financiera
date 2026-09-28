@@ -310,6 +310,37 @@ Lo comprueba la regla 12, que apareció al responder el cuestionario del capítu
 2 con las diez respuestas buenas y obtener 9. Ninguna comprobación estructural lo
 veía, y a simple vista tampoco.
 
+### Una pregunta que se contesta sin leer el capítulo no evalúa nada
+
+Tres formas de regalar la respuesta. Las tres se vieron en este material, y las
+tres pasaban en verde antes del 2026-09-28.
+
+**El enunciado la contiene.** Si el enunciado dice «las cinco reglas *son
+correctas*, pero una está mal colocada» y tres distractores afirman que hay una
+regla defectuosa, solo queda una opción compatible con su propio enunciado. Se
+acierta por concordancia gramatical, sin saber qué es una cascada. Léase cada
+distractor preguntando *¿lo descarta el enunciado por sí solo?*: si la respuesta
+es sí en todos menos uno, la pregunta no mide nada.
+
+**La clave es la más larga.** Sale del oficio —se redacta primero la buena, con
+sus matices, y después tres frases cortas—. Lo vigila la regla 17, con dos
+varas. El arreglo es **alargar los distractores**, no acortar la clave: la clave
+necesita sus matices.
+
+**Ya se respondió antes.** El cuestionario final es integrador, no un repaso:
+repetir un ejercicio de sección mide memoria de la respuesta. Lo vigila la
+regla 18. Ojo con el arreglo fácil: la primera vez que apareció se «resolvió»
+reescribiendo la clave, lo justo para que la comparación de cadenas dejara de
+verlo —y las otras tres opciones siguieron siendo las mismas, y la clave nueva
+pasó a repetir el enunciado—. Si una pregunta está repetida, se **cambia la
+pregunta**; reescribirla no la vuelve nueva.
+
+Y una cuarta, que no vigila nadie: **un distractor que nadie marca** deja el
+ítem en tres opciones útiles. «Es ambigua y produce un error de sintaxis» no la
+elige ni quien no sabe. Un buen distractor es una creencia que alguien tiene de
+verdad —«las dos agrupaciones dan lo mismo», «`AndAlso` existe en VBA»—, y por
+eso enseña algo cuando se descarta.
+
 ## Catálogo de componentes
 
 | Componente | Uso |

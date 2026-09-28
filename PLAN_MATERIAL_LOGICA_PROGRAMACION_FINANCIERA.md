@@ -1300,3 +1300,61 @@ una línea de aviso**: el patrón «busca una cadena, y si no está no hagas nad
 convierte un cambio de contenido en un fallo silencioso. Ahora se ancla en
 `<meta name="description"` y aborta si no la encuentra, como ya hacía el título.
 Probado en negativo: quitando la etiqueta, sale por 1.
+
+
+### Las preguntas del capítulo 4, y un arreglo que empeoró lo que arreglaba · 2026-09-28
+
+Auditadas las 17 preguntas con opciones del capítulo —7 en las secciones, 10 en
+el cuestionario—. La mayoría son buenas: el barajado no tiene sesgo (A:4 B:4
+C:3 D:4), todo lo que se pregunta está enseñado, y varias están bien
+construidas de verdad —dos opciones que dan la misma cifra por causas
+distintas, un umbral de 30 días contra una condición de `> 30`—.
+
+Dos de las diez del cuestionario, en cambio, se contestaban sin leer el
+capítulo. Y la lección no está en que existieran, sino en **cómo llegaron a
+existir**.
+
+**La 6 se contestaba con su propio enunciado.** Tres de los cuatro distractores
+afirmaban que había una regla defectuosa; el enunciado acababa de decir que
+todas eran correctas. Quedaba una sola opción compatible, y además repetía el
+enunciado palabra por palabra.
+
+Esa redacción la introdujo `4637904`, el commit titulado *«un cuestionario que
+se aprobaba sin leerlo»*. Antes, las cuatro opciones medían 18 · 22 · **76** ·
+18 y la clave se delataba por larga. El arreglo alargó los distractores —bien—
+y reescribió la clave con las palabras del enunciado —mal—. **Cambió un delator
+que el verificador medía por uno que no medía nadie.** Y dejó intacto el
+problema de fondo: las cuatro categorías eran las del `DetectaError` de la
+sección 4, que el estudiante acaba de responder.
+
+De ahí la regla que faltaba, y es general: **una pregunta repetida no se
+arregla reescribiéndola**. Reescribirla solo despista a la comprobación. Si
+está repetida se cambia la pregunta.
+
+**La 2 era el ejercicio de la sección 1 sin el prefijo.** Misma política,
+mismos números, tres de sus cuatro opciones sin el `rechazado <- ` de delante.
+La regla 18 existía justamente para esto y no lo veía: comparaba cadenas
+enteras.
+
+Las dos reglas quedaron reforzadas, cada una con su prueba negativa contra la
+versión anterior del capítulo:
+
+- **17 · clave más larga.** Tenía una sola vara —el doble que el distractor más
+  largo—, que solo ve el caso extremo. Se le añadió una segunda: siendo la más
+  larga de todas, vez y media la media de los suyos. Al encenderla aparecieron
+  **17 ítems en los cuatro capítulos**, ocho de ellos en el 3 y siete en el 2.
+  Ninguno se había mirado nunca con este criterio.
+- **18 · pregunta repetida.** Ahora compara también por inclusión —el prefijo
+  ya no la vence— y, sobre todo, **a nivel de ítem**: si dos o más opciones de
+  una pregunta del cuestionario dicen lo que decía un ejercicio anterior, se
+  avisa aunque ninguna coincida al pie de la letra. Con una sola no se avisa:
+  dos preguntas sobre el mismo concepto comparten vocabulario sin ser la misma.
+  De paso, `_normaliza` dejó de borrar los operadores: `score < 680` y
+  `score <= 680` le resultaban idénticos, que es ser ciego justo a la
+  distinción de frontera que el capítulo 4 enseña.
+
+Encendidas, las dos reglas encontraron en el **capítulo 3** una duplicación que
+nadie había visto: la pregunta del cuestionario sobre la factura de 8 000 000
+es la del ejercicio E2 de la sección, con los mismos números y tres de sus
+cuatro opciones reescritas. Queda anotada; el capítulo 3 no se tocó.
+

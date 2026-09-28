@@ -50,10 +50,13 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      —no solo las del `Quiz`— no se concentren en una letra ni formen rachas.
      La regla 14 exige casi unanimidad y solo mira el `Quiz`; el capítulo 4
      llegó a la auditoría con 14 de 18 claves en la «b» y pasaba en verde.
- 17. CLAVE MÁS LARGA — que la opción correcta no se delate por medir el doble
-     que los distractores. Solo en ítems cuyas opciones son todas prosa.
- 18. PREGUNTA REPETIDA — que ninguna opción del cuestionario final sea copia
-     literal de otra que el estudiante ya respondió en el capítulo.
+ 17. CLAVE MÁS LARGA — que la opción correcta no se delate por el tamaño. Con
+     dos varas: el doble que el distractor más largo, o —siendo la más larga de
+     todas— vez y media la media de los suyos. Solo en ítems de prosa.
+ 18. PREGUNTA REPETIDA — que el cuestionario final no vuelva a plantear un
+     ejercicio ya respondido, ni copiando una opción —también con un prefijo
+     delante— ni reescribiéndola: si dos o más opciones dicen lo que decía un
+     ejercicio anterior, lo repetido es la pregunta.
  19. COBERTURA DEL CUESTIONARIO — que el `Quiz` toque todas las secciones del
      `curriculum`. Se comprueba solo si las preguntas lo declaran con
      `seccion: 'capN'`: a qué sección pertenece una pregunta no se puede
@@ -861,12 +864,30 @@ def clave_previsible_en_el_capitulo(texto, cuerpo, desplazamiento):
     return fallos
 
 
+# Dos varas para la misma sospecha. La primera caza el caso extremo; la
+# segunda, el corriente, que es el que más abunda. Ver `clave_mas_larga`.
+FACTOR_SOBRE_MAYOR = 1.8
+FACTOR_SOBRE_MEDIA = 1.5
+
+
 def clave_mas_larga(texto, cuerpo, desplazamiento):
     """La respuesta correcta no se delata por ser mucho más larga que el resto.
 
     Es el sesgo clásico, y nace del oficio: se redacta primero la buena —con
     sus matices, sus «pero» y sus «de modo que»— y después se inventan tres
     frases cortas. Quien no sabe el tema marca la larga y acierta.
+
+    Se mide con DOS varas, porque una sola dejaba pasar demasiado. La primera
+    compara contra el distractor más largo y solo salta si la clave casi lo
+    dobla: es el caso extremo. La segunda compara contra la MEDIA de los
+    distractores y exige además que la clave sea la más larga de todas; es la
+    que ve el caso corriente —84 caracteres contra 68, 54 y 46— que la primera
+    ni roza, porque 84 no llega a 1,8 × 68.
+
+    La segunda vara se añadió el 2026-09-28, auditando las preguntas del
+    capítulo 4: dos ítems se delataban por tamaño y el verificador los daba por
+    buenos. Al encenderla aparecieron 17 en los cuatro capítulos, la mayoría en
+    el 2 y el 3, que nunca se habían revisado con este criterio.
 
     Solo se mira cuando las cuatro opciones son prosa (20 caracteres o más).
     En un ítem cuyas opciones son cifras o un «Cero», la longitud no dice nada
@@ -881,27 +902,95 @@ def clave_mas_larga(texto, cuerpo, desplazamiento):
             continue
         c = largos[correctas[0]]
         otros = [l for k, l in enumerate(largos) if k != correctas[0]]
-        if c >= 1.8 * max(otros):
-            avisos.append(
-                f"línea {linea_de(texto, desplazamiento + ini)}: la opción correcta "
-                f"mide {c} caracteres y el distractor más largo {max(otros)}; "
-                f"se acierta por el tamaño")
+        media = sum(otros) / len(otros)
+        if c >= FACTOR_SOBRE_MAYOR * max(otros):
+            motivo = f"mide {c} caracteres y el distractor más largo {max(otros)}"
+        elif c == max(largos) and c >= FACTOR_SOBRE_MEDIA * media:
+            motivo = (f"mide {c} caracteres, es la más larga de las {len(opciones)} "
+                      f"y los distractores promedian {media:.0f}")
+        else:
+            continue
+        avisos.append(
+            f"línea {linea_de(texto, desplazamiento + ini)}: la opción correcta "
+            f"{motivo}; se acierta por el tamaño")
     return avisos
+
+
+# Los operadores se convierten en palabras ANTES de barrer la puntuación. Si
+# no, `re.sub` los borra y `score < 680` y `score <= 680` quedan idénticos:
+# justo la distinción de frontera que este capítulo enseña. El orden importa,
+# los de dos signos van primero.
+OPERADORES = ((">=", " ge "), ("<=", " le "), ("<>", " ne "), ("!=", " ne "),
+              ("==", " eq "), (">", " gt "), ("<", " lt "))
+
+# Palabras sin carga. `y`, `o`, `no` y `si` NO están: en este material son
+# operadores lógicos, y borrarlos haría iguales una conjunción y una disyunción.
+PALABRAS_VACIAS = {
+    "a", "al", "ante", "con", "como", "cual", "cuando", "de", "del", "desde",
+    "e", "el", "ella", "ellas", "ellos", "en", "entre", "es", "esa", "ese",
+    "eso", "esta", "este", "esto", "ha", "hay", "la", "las", "le", "les", "lo",
+    "los", "mas", "me", "mi", "muy", "para", "pero", "por", "porque", "que",
+    "se", "sea", "ser", "son", "su", "sus", "tan", "te", "un", "una", "uno",
+    "unos", "unas", "ya",
+}
 
 
 def _normaliza(t):
     t = t.lower().replace("á", "a").replace("é", "e").replace("í", "i")
     t = t.replace("ó", "o").replace("ú", "u").replace("ñ", "n")
+    for signo, palabra in OPERADORES:
+        t = t.replace(signo, palabra)
     return re.sub(r"[^a-z0-9]+", " ", t).strip()
 
 
-def opcion_repetida(texto, cuerpo, desplazamiento):
-    """Ninguna opción del cuestionario final es copia literal de una anterior.
+def _copia_literal(a, b):
+    """Una dice lo mismo que la otra palabra por palabra, o la contiene.
 
-    Un cuestionario integrador que repite una opción ya vista mide memoria de
-    la respuesta, no transferencia. En el capítulo 4 la opción correcta de una
-    pregunta era **carácter por carácter** la misma que un `tipoCorrecto` del
-    `DetectaError` de la sección 4, que el estudiante acababa de responder.
+    La inclusión es la que faltaba: la opción `score < 680 O endeudamiento >= 40`
+    del cuestionario era la del ejercicio de la sección 1 sin el `rechazado <- `
+    de delante, y la comparación de cadenas enteras no la veía.
+    """
+    na, nb = _normaliza(a), _normaliza(b)
+    if na == nb:
+        return True
+    corta, larga = (na, nb) if len(na) <= len(nb) else (nb, na)
+    return len(corta) >= 20 and corta in larga
+
+
+def _parafrasea(a, b):
+    """Dicen lo mismo con otras palabras: comparten la mitad de las que pesan."""
+    ca = {p for p in _normaliza(a).split() if p not in PALABRAS_VACIAS}
+    cb = {p for p in _normaliza(b).split() if p not in PALABRAS_VACIAS}
+    if len(ca) < 3 or len(cb) < 3:
+        return False
+    return len(ca & cb) / len(ca | cb) >= 0.5
+
+
+def opcion_repetida(texto, cuerpo, desplazamiento):
+    """El cuestionario final no vuelve a plantear un ejercicio ya respondido.
+
+    Un cuestionario integrador que repite lo que el estudiante acaba de hacer
+    mide memoria de la respuesta, no transferencia. Se comprueba de dos formas,
+    y las dos nacieron del mismo capítulo:
+
+    1. COPIA de una opción. La primera versión comparaba las cadenas enteras y
+       la venció un prefijo: la opción `score < 680 O endeudamiento >= 40` del
+       cuestionario era la del ejercicio de la sección 1 sin el `rechazado <- `
+       de delante. Ahora también mira si una contiene a la otra.
+
+    2. PARÁFRASIS del ítem entero. Es la que faltaba, y la descubrió el propio
+       arreglo anterior: una pregunta repetía las cuatro categorías de defecto
+       del `DetectaError` de la sección 4, se «arregló» reescribiendo la clave
+       —con lo que pasó la comprobación 1— y las otras tres siguieron siendo
+       las mismas. Así que no basta con vigilar opción por opción: si DOS o más
+       opciones de una pregunta dicen lo que decía un ejercicio anterior, lo
+       repetido es la pregunta, por mucho que ninguna coincida al pie de la
+       letra. Con una sola no se avisa: dos preguntas distintas sobre el mismo
+       concepto comparten vocabulario sin ser la misma, y avisar ahí sería
+       ruido.
+
+    Se comparan las opciones del cuestionario contra las de todo lo anterior,
+    incluidos los `tipos` de los `DetectaError`, que también son opciones.
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
@@ -911,23 +1000,30 @@ def opcion_repetida(texto, cuerpo, desplazamiento):
     antes, despues = [], []
     for ini, _fin, opciones in items_de_opciones(limpio):
         destino = despues if ini > q else antes
-        for t, _ok in opciones:
-            if len(t) >= 25:
-                destino.append((ini, t))
+        destino.append((ini, [t for t, _ok in opciones if len(t) >= 25]))
     for m in re.finditer(r"tipos=\{\[(.*?)\]\}", limpio, re.S):
-        for t in re.findall(r"'(.*?)'", m.group(1), re.S):
-            if len(t) >= 25:
-                antes.append((m.start(), t))
-    vistas = {_normaliza(t): i for i, t in antes}
-    for ini, t in despues:
-        n = _normaliza(t)
-        if n in vistas:
-            avisos.append(
-                f"línea {linea_de(texto, desplazamiento + ini)}: esta opción del "
-                f"cuestionario repite palabra por palabra una de la línea "
-                f"{linea_de(texto, desplazamiento + vistas[n])}")
-    return avisos
+        tipos = [t for t in re.findall(r"'(.*?)'", m.group(1), re.S) if len(t) >= 25]
+        if tipos:
+            antes.append((m.start(), tipos))
 
+    for ini, opciones in despues:
+        linea_q = linea_de(texto, desplazamiento + ini)
+        for ini_a, previas in antes:
+            linea_a = linea_de(texto, desplazamiento + ini_a)
+            for t in opciones:
+                if any(_copia_literal(t, p) for p in previas):
+                    avisos.append(
+                        f"línea {linea_q}: esta opción del cuestionario repite "
+                        f"una de la línea {linea_a}: «{t[:55]}…»")
+            calcadas = [t for t in opciones
+                        if any(_parafrasea(t, p) for p in previas)]
+            if len(calcadas) >= 2:
+                avisos.append(
+                    f"línea {linea_q}: {len(calcadas)} de las {len(opciones)} "
+                    f"opciones dicen lo mismo que las de la línea {linea_a}; "
+                    f"la pregunta repite un ejercicio ya respondido, aunque "
+                    f"esté reescrita")
+    return avisos
 
 def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
     """El cuestionario final toca todas las secciones del `curriculum`.
