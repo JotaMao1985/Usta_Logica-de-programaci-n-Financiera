@@ -1426,3 +1426,27 @@ Y una que no vigila nadie: la pregunta 8 del final del 1, `False or True and
 False`, es la de `True and False or True` del minicuestionario de la sección 3
 con los términos cambiados de sitio. La regla 18 no la ve porque solo compara
 opciones de 25 caracteres o más, y las de ese ítem son `True` y `False`.
+
+**Post scriptum del mismo día.** Cerrado el rojo del 1 cambiando dos preguntas
+de operadores por dos de la sección 4; el cuestionario sigue en ocho y queda en
+2 por sección. Salieron la 8, que repetía el minicuestionario de la sección 3, y
+la 6 —«el operador // realiza:»—, que era memoria de una definición. Entran las
+dos ideas de la sección 4 que ningún ejercicio evaluaba:
+
+- **Qué resuelve el problema de raíz** en un cierre que decide si un saldo
+  cuadra: centavos enteros, `Currency` o `Decimal`. El distractor fuerte es la
+  tolerancia de medio centavo, que la tabla de la sección reserva para cálculos
+  intermedios; la justificación explica por qué no basta con un caso ejecutado:
+  `round(2.675, 2)` da `2.67` en Python, porque ese 2,675 está guardado como
+  2,67499….
+- **Cuál de 0,1, 0,2 y 0,75 se guarda exacto.** El 0,75 no aparece en ninguna
+  parte del capítulo, así que se contesta entendiendo, no recordando el
+  laboratorio. El distractor del 0,2 es el que enseña: multiplicar por dos sí es
+  exacto en base 2, y `0.1 * 2 == 0.2` da `True`, pero el 0,2 guardado no es
+  0,2 —su error es exactamente el doble del de 0,1—. Es la tesis de la sección
+  hecha pregunta: el error no es de la operación, es de la representación.
+
+De paso la regla 17 pasa de 4 avisos a 3 en el 1: el que se fue era la clave de
+la vieja pregunta 8, de 76 caracteres contra «True». Comprobado en el navegador:
+8/8 bien respondido, 6/8 fallando solo las dos nuevas con sus justificaciones a
+la vista, y a 375 px sin desborde.

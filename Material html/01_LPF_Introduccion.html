@@ -4320,14 +4320,15 @@ End Sub`,
                         justificacion: 'not (saldo > 0) significa saldo <= 0. Con AND, ambas condiciones deben cumplirse.'
                     },
                     {
-                        seccion: 'cap3',
-                        pregunta: 'El operador // en Python realiza:',
+                        seccion: 'cap4',
+                        pregunta: 'Un cierre diario tiene que decidir si el saldo de cada cuenta cuadra, al centavo, con la suma de sus movimientos. Hoy los importes se guardan como números reales. ¿Qué cambio resuelve el problema de raíz?',
                         opciones: [
-                            { texto: 'División entera (descarta decimales).', correcta: true },
-                            { texto: 'División con decimales.', correcta: false },
-                            { texto: 'Comentario de una línea.', correcta: false },
+                            { texto: 'Comparar con una tolerancia de medio centavo, que absorbe el error de representación.', correcta: false },
+                            { texto: 'Usar reales de 64 bits en vez de 32: con el doble de bits, el 0,1 ya se guarda exacto.', correcta: false },
+                            { texto: 'Mostrar los importes con menos cifras, como hace R por defecto, para que el desfase no aparezca.', correcta: false },
+                            { texto: 'Guardar los importes en centavos enteros —o en Currency o Decimal—, para que la igualdad sea exacta.', correcta: true },
                         ],
-                        justificacion: '// es división entera: 10 // 3 = 3. La división con decimales es /.'
+                        justificacion: 'Es la solución que la tabla de la sección atribuye a la banca: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
                     },
                     {
                         seccion: 'cap2',
@@ -4340,14 +4341,15 @@ End Sub`,
                         justificacion: 'La RAM es volátil. Disco SSD y ROM conservan los datos sin alimentación eléctrica.'
                     },
                     {
-                        seccion: 'cap3',
-                        pregunta: 'En Python, ¿qué valor tiene la expresión: False or True and False?',
+                        seccion: 'cap4',
+                        pregunta: 'Un programa guarda en variables reales (double) tres valores: 0,1, 0,2 y 0,75. ¿Cuál de ellos queda guardado exactamente?',
                         opciones: [
-                            { texto: 'Error de tipo.', correcta: false },
-                            { texto: 'False (and primero: True and False → False; luego False or False → False).', correcta: true },
-                            { texto: 'True', correcta: false },
+                            { texto: 'Ninguno: en un double, todo número con decimales se guarda aproximado.', correcta: false },
+                            { texto: '0,75: es 1/2 + 1/4, una suma de potencias de dos, y en binario se escribe 0,11.', correcta: true },
+                            { texto: '0,2: es el doble de 0,1, y multiplicar por dos en base 2 es exacto.', correcta: false },
+                            { texto: '0,1: tiene una sola cifra decimal, y un número tan corto cabe exacto en 64 bits.', correcta: false },
                         ],
-                        justificacion: 'and precede a or: True and False → False; False or False → False.'
+                        justificacion: 'En base 2 solo caben exactas las fracciones que se arman con mitades, cuartos, octavos…: 0,75 es 1/2 + 1/4. El 0,1 no se puede armar así con ningún número finito de cifras, igual que 1/3 en base 10, por corto que se vea: cuántas cifras decimales tiene un número no dice nada de cuántas binarias necesita. El 0,2 es la trampa fina. Multiplicar por dos sí es exacto en base 2 —solo corre la coma—, pero lo que se multiplica es un 0,1 que ya estaba aproximado, y el doble hereda el error, duplicado. Y «ninguno» es el error contrario: 0,5, 0,25 y 0,75 se guardan exactos, y el laboratorio de la sección lo muestra bit a bit.'
                     },
                 ]} />
 
