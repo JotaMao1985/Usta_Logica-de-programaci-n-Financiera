@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 aprobado el 2026-09-28 (§9). En curso: Fase 1.
+**Estado:** PC0 aprobado el 2026-09-28 (§9). Fase 1 hecha; en el punto de control 1.
 
 ---
 
@@ -350,6 +350,22 @@ En el capítulo 4 todo esto se arregló después de escribir. Aquí entra antes:
   (H1) y `TablaTraza` donde la raya sea la mayoría de las celdas ocultas. Ninguno
   tiene regla. Se comprueban a mano en la Fase 3.
 
+### H14 · La cuota fija nunca se presentó *(encontrado en la Fase 1)*
+
+La tabla de amortización necesita la cuota de la amortización francesa, y
+ningún capítulo anterior la da. La «cuota fija» del capítulo 2 (`02:2611`) es
+`(capital + interes + seguro) / plazo`, con interés simple. El capítulo 3 usa
+`(1 + periodica) ^ m - 1` para las tasas, pero nunca la anualidad. Y el plan
+maestro deja la cuota fija (`PMT`) para el capítulo 8, como función.
+
+**Decisión provisional de la Fase 1:** la fórmula aparece como un dato, en una
+sola línea, `cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))`, con un
+comentario que dice de dónde sale y que el capítulo 8 la convierte en función.
+No se deduce ni se ejercita. Así se conserva H3, que se midió con la cuota sin
+redondear. La otra salida sería dar la cuota como un número ya redondeado
+(916 799,93); pero entonces el residuo final pasa a ser de centavos y la tabla
+de H3 deja de valer. → **P6.**
+
 ---
 
 ## 3. Grafo de dependencias
@@ -400,7 +416,7 @@ un historial ajeno. La versión aprobada entra con el primer commit de la rama.
 
 ### Fase 1 — El archivo, los tres artefactos y los flujogramas
 
-#### Tarea 1.1 · Crear el capítulo y retirar la demostración en el mismo paso
+#### Tarea 1.1 · Crear el capítulo y retirar la demostración en el mismo paso · ✅
 `cp` de `lp-base.html`, `migrar.py --dry-run` y luego en firme. La demostración
 (unas 2 800 líneas, con un ejercicio de cada tipo) se retira **en el mismo
 paso** en que se sustituye la región entre `LP-CORE FIN` y `const App`.
@@ -409,20 +425,38 @@ paso** en que se sustituye la región entre `LP-CORE FIN` y `const App`.
 `verificar.py --sin-cuota` debe dar **0 ejercicios**: si la demostración hubiera
 quedado, saldría exactamente uno de cada tipo.
 
-#### Tarea 1.2 · `CONFIG` y `curriculum` contra la fila 35
+*Hecho.* `migrar.py` dejó el archivo sin cambios, porque era la plantilla misma.
+El `grep` da cero y el verificador, 0 ejercicios. Las secciones son **andamio**:
+cada una lleva solo su `Motivacion` de borrador y los artefactos que le tocan,
+para verlos en su sitio. El andamio lleva la marca `BORRADOR-FASE1`, y la Fase 2
+cierra cuando `grep -n BORRADOR-FASE1` dé cero.
+
+#### Tarea 1.2 · `CONFIG` y `curriculum` contra la fila 35 · ✅
 El `CONFIG` de la plantilla no trae ningún `TODO`, así que se reescribe a mano.
 Entregable: la tarea en Moodle (S1), con el juego mencionado como actividad. El
 nombre del capítulo se escribe igual en los cuatro sitios que viven en el
 archivo (tabla del `README.md`).
 
-#### Tarea 1.3 · `AmortizacionPasoAPaso`
+*Hecho:* `<title>`, `<meta name="description">` y `CONFIG.titulo`. El cuarto
+sitio, el título del `Quiz` final, llega con la Tarea 2.8. La fila «Evaluación
+asociada» de la portada nombra la tarea, el formato y el juego.
+
+#### Tarea 1.3 · `AmortizacionPasoAPaso` · ✅
 Construye la tabla de amortización **una fila por clic**. Muestran su estado a
 la vista el contador de la cuota, el saldo y los intereses acumulados. Un botón
 completa la tabla hasta el final: **240 filas** (H2.1), dentro de su propio
 contenedor con `overflow-x`. Se controla **por contador**, no por saldo (H3). Es
 lo que convierte en visible que una tabla de amortización *es* un ciclo.
 
-#### Tarea 1.4 · `TIRBiseccion`
+*Hecho, con tres créditos a elegir:* vivienda, 150 000 000 al 1,1 % en 240 (el que
+abre por defecto, porque es el de la promesa); vehículo, 30 000 000 al 1,45 % en
+60; y libre inversión, 10 000 000 al 1,5 % en 12, que es el hilo del curso (S2).
+Un crédito a 240 meses no existe en libre inversión, y por eso el de la promesa es
+de vivienda. Botones: una vuelta, doce vueltas y hasta el final. El pseudocódigo
+del ciclo va encima, y el estado se ve en las cuatro variables. Al terminar se
+muestra el residuo real del saldo (−3,6 × 10⁻⁶), que es el gancho de la sección 6.
+
+#### Tarea 1.4 · `TIRBiseccion` · ✅
 Busca la TIR por bisección, una vuelta por clic, sobre una gráfica de Plotly del
 VPN en función de la tasa. El intervalo se va estrechando a la vista, y el
 criterio de parada (ancho < tolerancia) va escrito con su contador de vueltas.
@@ -432,29 +466,60 @@ vueltas**, con el intervalo [0 %, 10 %] y tolerancia 10⁻⁶. Es la misma idea 
 búsqueda binaria del capítulo 2, que parte 40 000 créditos en 16 pasos, aplicada
 a una función. Se cita, no se repite.
 
-#### Tarea 1.5 · `TresCiclosComparados`
+*Hecho.* El VPN se calcula con un `Para` **dentro** del `Mientras` de la
+bisección, así que el pseudocódigo no llama a ninguna función (son del
+capítulo 6) y la sección 7 reutiliza el anidamiento de la 5. La casilla «Acercar
+la gráfica al intervalo» hace visible la franja después de la vuelta 6, cuando
+a escala completa ya no se distingue. El artefacto da la TIR y la tasa pactada,
+pero **no las interpreta**, porque eso es el E7 de la sección 7.
+
+#### Tarea 1.5 · `TresCiclosComparados` · ✅
 El mismo problema resuelto con `Mientras`, `Para` y `Repita`, cada uno con su
 contador de vueltas, y una entrada que se puede cambiar. Tiene que incluir el
 caso en que difieren: con cero cuotas pendientes, `Repita` cobra una (H5).
 
-#### Tarea 1.6 · Los tres flujogramas
+*Hecho, con un añadido:* una casilla agrega un cuarto panel, el `for (k in 1:n)`
+de R, que con *n* = 0 cobra **dos** cuotas (H4, medido otra vez en R: `k = 1`,
+`k = 0`). Es la diferencia más cara del capítulo, y aquí se ve sin ejecutar R.
+→ **P7.**
+
+#### Tarea 1.6 · Los tres flujogramas · ✅
 `Mientras`, `Repita` y `Para`, hechos en SVG con las lecciones del capítulo 4
 (H13): versión estrecha para móvil y leyenda en HTML. La letra se mide a 375 px:
 **nunca por debajo de 14 px CSS**.
 
+*Hecho, con una desviación:* **una sola versión** por flujograma, estrecha
+(248 unidades), en lugar de las dos del capítulo 4. Allí la versión ancha hacía
+falta porque las ramas de la cascada salen hacia el costado. En un ciclo no sale
+nada hacia el costado: el retorno va por un carril a la izquierda y la salida por
+uno a la derecha, y los dos caben en la versión estrecha. Con un ancho máximo de
+340 px, la letra mide **entre 14,8 y 16,7 px a 375 px** y unos 16 px en escritorio.
+
+El retorno va en el color secundario, y es la única forma nueva de la simbología,
+que va en HTML. En el de `Para`, las tres piezas que el ciclo hace por su cuenta
+(iniciar, comparar y aumentar el contador) van con borde discontinuo. En el de
+`Repita`, el retorno sale por el «No», al revés que en el de `Mientras`: es H5
+dibujado.
+
 ### ⏸ Punto de control 1 — Los artefactos
-- [ ] Los tres funcionan, **medidos**: la tabla llega a 240 filas y su última
-      fila deja el saldo en cero redondeado al peso; la bisección da 1,9924 % en
-      17 vueltas; con *n* = 0, `TresCiclosComparados` muestra la cuota que cobra
-      `Repita`
-- [ ] 375 px en todas las secciones: `scrollWidth` igual al viewport, medido con
-      el menú cerrado y tras recargar. Incluye la tabla de 240 filas y la gráfica
-- [ ] La letra de los tres flujogramas, medida a 375 px
-- [ ] Los iconos de Font Awesome pintan un glifo real (R9 del plan maestro)
-- [ ] Consola limpia: solo los dos avisos de siempre
-- [ ] La comprobación 1 en verde y ningún residuo de la demostración
+- [x] Los tres funcionan, **medidos por DOM**. La tabla llega a 240 filas; la
+      última es `240 | 19.353,68 | 1.759.425,20 | 0,00 | 276.906.929,57`, y los
+      intereses coinciden con Python al centavo. Con 12 cuotas, el último abono
+      es 903.251,16 (el E3 de H4). La bisección da **1,9924 % en 17 vueltas**,
+      y sus tres primeras filas son [0; 10] −, [0; 5] − y [0; 2,5] +. Con
+      *n* = 0, `Repita` cobra 916.799,93 y el `for` de R, 1.833.599,86
+- [x] 375 px en las nueve entradas: `scrollWidth` = 375 en todas, con el menú
+      cerrado, y también con la tabla completa, los cuatro paneles y la gráfica
+      acercada. El único elemento «fuera» es el SVG de medición de Plotly
+      (`left: −10000`), que no es contenido
+- [x] Letra de los flujogramas a 375 px: **14,8 a 16,7 px**
+- [x] Font Awesome: los trece iconos nuevos dan un glifo real
+- [x] Consola limpia: solo los dos avisos de siempre
+- [x] Comprobación 1 en verde; `verificar.py --sin-cuota --con-salidas` en verde
+      sobre los cinco capítulos; ningún residuo de la demostración
 - [ ] **Revisión del docente:** ver los tres artefactos y aprobar la interacción
-      antes de escribir las siete secciones
+      antes de escribir las siete secciones. Además, **P6** y **P7**, y
+      confirmar el corte en siete secciones y los iconos que quedaron del PC0
 
 ---
 
@@ -709,6 +774,13 @@ python3 -m http.server 8777 --directory "Material html"
 - **P4 · ¿El juego «Millonario» necesita preguntas del banco?** (H11)
   **Respondida en el PC0:** el juego está montado con cloze, así que toma los
   del banco tal como salen.
+- **P6 · ¿La cuota fija se da como una fórmula de una línea?** (H14) La
+  alternativa es darla como un número redondeado, pero entonces el residuo final
+  sería de centavos y la tabla de H3 dejaría de valer. **Propuesta:** la fórmula,
+  sin deducirla y con la cita al capítulo 8.
+- **P7 · ¿Se queda el cuarto panel de `TresCiclosComparados`?** Es el
+  `for (k in 1:n)` de R, que está apagado por defecto. **Propuesta: sí.** Es H4
+  hecho visible, y sin él la sección 4 solo podría contarlo.
 - **P5 · ¿Las revisiones de los capítulos 3 y 4, antes o después del PC1?** Antes
   abarata el R1; después no bloquea el arranque. *Sigue abierta; no bloquea la
   Fase 1.*
