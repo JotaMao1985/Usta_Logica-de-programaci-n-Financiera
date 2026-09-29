@@ -2985,10 +2985,22 @@ FinMientras`;
         ============================================================ */
         const PortadaSection = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-table-list" etiqueta="Borrador · Fase 1">
-                    La portada se escribe en la Fase 2 (Tarea 2.1) y abre con las 240 filas de la tabla
-                    de amortización que prometieron los capítulos 3 y 4.
+                <Motivacion icon="fa-house-chimney"
+                    gancho="¿Cuántas veces da la vuelta un ciclo, y qué lo hace parar? En una tabla de amortización, equivocarse por una sola vuelta cuesta una cuota entera.">
+                    Una pareja firma un crédito de vivienda: 150 millones al 1,1 % mensual, a veinte
+                    años. Pide la tabla de amortización y recibe 240 filas, una por cuota, con el
+                    interés, el abono y el saldo de cada mes. Nadie las escribió a mano: las escribió un
+                    ciclo de siete líneas. Si ese ciclo diera una vuelta de menos, el crédito quedaría
+                    con 1,76 millones sin cobrar; si diera una de más, cobraría una cuota que nadie debe.
                 </Motivacion>
+
+                <Box type="tip" label="Cómo estudiar este capítulo">
+                    Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
+                    <em> Anterior / Siguiente</em>, y el navegador <strong>recuerda la última lección</strong>,
+                    así que se puede pausar y retomar. Conviene intentar cada ejercicio <em>antes</em> de
+                    ver la retroalimentación: el capítulo revela sus soluciones a propósito, y leerlas
+                    primero convierte un ejercicio en una lectura.
+                </Box>
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
@@ -3000,53 +3012,1210 @@ FinMientras`;
                             <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra} — «Construye un algoritmo computacional incorporando variables de tipo financiero cuya solución lo pueda hacer una calculadora o una computadora»</td></tr>
                             <tr><th>Tiempo estimado</th><td>{CONFIG.horas} horas</td></tr>
                             <tr><th>Naturaleza</th><td>Teórico-práctico</td></tr>
-                            <tr><th>Evaluación asociada</th><td>Tarea «Estructuras de control repetitivo» subida a Moodle, con el «Formato Definición y Análisis», y el juego «Millonario» de estructuras de control en Moodle</td></tr>
+                            <tr><th>Evaluación asociada</th><td>Taller «Estructuras de Control Repetitivo» y «Formato Definición y Análisis» — tarea subida a Moodle —, y el juego «Millonario» de estructuras de control, también en Moodle</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <AvisoBorrador>
-                    Esta versión solo trae los tres artefactos y los tres flujogramas, cada uno en su
-                    sección: <strong>2</strong> (<span className="inline-code">Mientras</span>),
-                    {' '}<strong>3</strong> (<span className="inline-code">Repita</span>), <strong>4</strong> (<span className="inline-code">Para</span>,
-                    la tabla de amortización y los tres ciclos comparados) y <strong>7</strong> (la TIR por bisección).
-                </AvisoBorrador>
+                <h3>Qué se lleva de aquí</h3>
+                <p>
+                    Este es el capítulo donde una instrucción escrita una vez <strong>se ejecuta muchas
+                    veces</strong>. Al terminarlo debería poder decir cuántas vueltas da un ciclo sin
+                    ejecutarlo; elegir entre <span className="inline-code">Mientras</span>, <span className="inline-code">Repita</span> y <span className="inline-code">Para</span> según
+                    se sepa o no cuántas vueltas hacen falta, y según pueda o no ser ninguna; poner los
+                    valores iniciales fuera del ciclo y no dentro; reconocer que un <span className="inline-code">Para</span> no
+                    significa lo mismo en R que en Python; y —sobre todo— anticipar <strong>cuándo
+                    para</strong>: el ciclo que no termina nunca, y el que da una vuelta de más por un
+                    residuo de millonésimas.
+                </p>
+
+                <Pipeline steps={[
+                    { num: 1, title: 'Contar y acumular', desc: 'Las dos variables de casi todo ciclo, y dónde nace cada una' },
+                    { num: 2, title: 'Mientras', desc: 'Preguntar antes de entrar: puede no dar ninguna vuelta' },
+                    { num: 3, title: 'Repita…Hasta', desc: 'Entrar antes de preguntar: da al menos una' },
+                    { num: 4, title: 'Para', desc: 'Cuando se sabe cuántas veces, y lo que cada lenguaje entiende por eso' },
+                    { num: 5, title: 'Anidados', desc: 'Un ciclo dentro de otro, que vuelve a empezar en cada vuelta' },
+                    { num: 6, title: 'Cuándo para', desc: 'El ciclo que no termina y el que da una vuelta de más' },
+                    { num: 7, title: 'El oficio', desc: 'Saldos, intereses y una TIR que se busca por aproximación' },
+                ]} />
+
+                <h3>De dónde viene este capítulo</h3>
+                <p>
+                    Los capítulos 3 y 4 construyeron programas en los que cada instrucción se ejecuta una
+                    vez, o ninguna si queda en la rama que no se tomó. Aquí cae la última de esas
+                    garantías: una instrucción puede ejecutarse <strong>cientos de veces</strong>, y la
+                    pregunta deja de ser <em>por dónde pasó el programa</em> para volverse <em>cuántas
+                    veces, y cuándo para</em>. Así lo anunció el cierre del capítulo 4, y son las dos
+                    mitades de este: las secciones 2 a 5 responden a la primera; la 6 y la búsqueda de la
+                    TIR de la 7, a la segunda.
+                </p>
+                <p>
+                    No es, sin embargo, la primera vez que usted ve un ciclo. Los capítulos 1 y 2 le
+                    hicieron seguir varios —la conversión a binario, la meta de ahorro, la búsqueda en
+                    una cartera de 40 000 créditos— sin detenerse en cómo se llamaban. La sección 1 empieza
+                    por ahí, y lo que ya está escrito en esos capítulos se cita, no se repite.
+                </p>
+                <Box type="info" label="Una promesa de los capítulos 3 y 4 que se cumple aquí">
+                    El capítulo 3 llamó al acumulador «el patrón con el que el capítulo 5 construirá
+                    tablas de 240 filas», y el 4 cerró diciendo que la tabla de un crédito a 240 meses
+                    «tiene 240 filas y nadie las escribió». Esa tabla está en la sección 4, y se
+                    construye ahí fila por fila: las 240.
+                </Box>
+
+                <h3>Los cuatro lenguajes</h3>
+                <p>
+                    Todo algoritmo aparece en cuatro versiones, y cada bloque tiene <strong>su propia
+                    pestaña</strong>; el material recuerda la última elección. En este capítulo las
+                    diferencias entre lenguajes dejan de ser de acento. Python no tiene la forma que
+                    pregunta al final, y hay que construirla. <span className="inline-code">range(1, n)</span> da
+                    una vuelta menos de las que parece. El <span className="inline-code">for</span> de R,
+                    con cero cuotas pendientes, da <strong>dos</strong> vueltas. Y en VBA, el cuerpo de un <span className="inline-code">For</span> puede
+                    cambiar su propio contador. Ninguna de las cuatro cosas produce un error: producen
+                    otro número.
+                </p>
+
+                <Box type="tip" label="El video del syllabus">
+                    La fila 35 del syllabus remite a la charla tutorial «Estructuras de control» —sus
+                    videos 1, 2 y 3— en <a href="https://youtu.be/Dw58xKJiUVc" target="_blank" rel="noopener noreferrer">youtu.be/Dw58xKJiUVc</a>.
+                    A diferencia de la fila del capítulo 4, esta no trae videos propios de cada estructura.
+                </Box>
+
+                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Dieciocho ejercicios y un cuestionario integrador" icon="fa-brain">
+                    Ninguno pide <strong>escribir un programa desde cero</strong>: eso corresponde al taller
+                    evaluable que el syllabus pide subir a Moodle. Aquí se ejercita <strong>contar</strong> las
+                    vueltas de un ciclo sin ejecutarlo, <strong>trazar</strong> un ciclo vuelta por vuelta,
+                    {' '}<strong>diagnosticar</strong> el que cobra una cuota de más o de menos, <strong>comparar</strong> dos
+                    formas de ciclo que parecen equivalentes e <strong>interpretar</strong> lo que un ciclo
+                    calculó. Es lo que la rúbrica del syllabus llama <em>dominio de algoritmos y
+                    procedimientos</em>.
+                </CalloutPro>
             </div>
         );
 
         /* ============================================================
-           SECCIONES 1 A 7 — andamio (BORRADOR-FASE1)
+           SECCIÓN 1 — CONTAR Y ACUMULAR: LO QUE YA TRAZÓ SIN NOMBRARLO
         ============================================================ */
+        /* El plan de ahorro programado: un contador y dos acumuladores en el
+           mismo ciclo. La forma del ciclo es de la sección 2; aquí se mira lo
+           que pasa dentro. Salidas ejecutadas el 2026-09-28. */
+        const EJ_AHORRO = {
+            pseudo: `Inicio
+    // Ahorro programado: 300 000 al mes, al 0,9 % mensual,
+    // hasta reunir 4 000 000
+    aporte <- 300000
+    tasa   <- 0.009
+    meta   <- 4000000
+
+    saldo     <- 0      // acumulador: lo que hay en la cuenta
+    intereses <- 0      // acumulador: lo que ha pagado el banco
+    meses     <- 0      // contador: cuántos meses van
+
+    Mientras saldo < meta Hacer
+        interes   <- saldo * tasa
+        intereses <- intereses + interes
+        saldo     <- saldo + interes + aporte
+        meses     <- meses + 1
+    FinMientras
+
+    Escribir "Meses: ", meses
+    //> Meses: 13
+    Escribir "Saldo: ", saldo
+    //> Saldo: 4117709
+    Escribir "Intereses ganados: ", intereses
+    //> Intereses ganados: 217709
+Fin`,
+            python: `# Ahorro programado: 300 000 al mes, al 0,9 % mensual,
+# hasta reunir 4 000 000
+aporte = 300_000
+tasa   = 0.009
+meta   = 4_000_000
+
+saldo     = 0      # acumulador: lo que hay en la cuenta
+intereses = 0      # acumulador: lo que ha pagado el banco
+meses     = 0      # contador: cuántos meses van
+
+while saldo < meta:
+    interes   = saldo * tasa
+    intereses = intereses + interes
+    saldo     = saldo + interes + aporte
+    meses     = meses + 1
+
+print(f"Meses: {meses}")
+#> Meses: 13
+print(f"Saldo: {saldo:,.0f}")
+#> Saldo: 4,117,709
+print(f"Intereses ganados: {intereses:,.0f}")
+#> Intereses ganados: 217,709`,
+            r: `# Ahorro programado: 300 000 al mes, al 0,9 % mensual,
+# hasta reunir 4 000 000
+aporte <- 300000
+tasa   <- 0.009
+meta   <- 4000000
+
+saldo     <- 0      # acumulador: lo que hay en la cuenta
+intereses <- 0      # acumulador: lo que ha pagado el banco
+meses     <- 0      # contador: cuántos meses van
+
+while (saldo < meta) {
+  interes   <- saldo * tasa
+  intereses <- intereses + interes
+  saldo     <- saldo + interes + aporte
+  meses     <- meses + 1
+}
+
+cat(sprintf("Meses: %d\\n", meses))
+#> Meses: 13
+cat(sprintf("Saldo: %.0f\\n", saldo))
+#> Saldo: 4117709
+cat(sprintf("Intereses ganados: %.0f\\n", intereses))
+#> Intereses ganados: 217709`,
+            vba: `Option Explicit
+
+Sub AhorroProgramado()
+    Dim aporte As Currency, meta As Currency, tasa As Double
+    Dim saldo As Currency, interes As Currency, intereses As Currency
+    Dim meses As Integer
+
+    ' Ahorro programado: 300 000 al mes, al 0,9 % mensual,
+    ' hasta reunir 4 000 000
+    aporte = 300000
+    tasa = 0.009
+    meta = 4000000
+
+    saldo = 0        ' acumulador: lo que hay en la cuenta
+    intereses = 0    ' acumulador: lo que ha pagado el banco
+    meses = 0        ' contador: cuántos meses van
+
+    Do While saldo < meta
+        interes = saldo * tasa
+        intereses = intereses + interes
+        saldo = saldo + interes + aporte
+        meses = meses + 1
+    Loop
+
+    Debug.Print "Meses: " & meses
+    '> Meses: 13
+    Debug.Print "Saldo: " & Format(saldo, "0")
+    '> Saldo: 4117709
+    Debug.Print "Intereses ganados: " & Format(intereses, "0")
+    '> Intereses ganados: 217709
+End Sub`,
+        };
+
+        /* El mismo programa con `intereses <- 0` un renglón más abajo: dentro
+           del ciclo. Es el extracto de la motivación. En las dos primeras
+           vueltas coincide con el bueno —el interés del mes 1 es cero—, y por
+           eso una traza de dos vueltas no lo delata. Salidas ejecutadas el
+           2026-09-28. */
+        const EJ_AHORRO_MAL = {
+            pseudo: `Inicio
+    aporte <- 300000
+    tasa   <- 0.009
+    meta   <- 4000000
+
+    saldo <- 0
+    meses <- 0
+
+    Mientras saldo < meta Hacer
+        intereses <- 0          // un renglón más abajo: dentro del ciclo
+        interes   <- saldo * tasa
+        intereses <- intereses + interes
+        saldo     <- saldo + interes + aporte
+        meses     <- meses + 1
+    FinMientras
+
+    Escribir "Meses: ", meses
+    //> Meses: 13
+    Escribir "Saldo: ", saldo
+    //> Saldo: 4117709
+    Escribir "Intereses ganados: ", intereses
+    //> Intereses ganados: 34053
+Fin`,
+            python: `aporte = 300_000
+tasa   = 0.009
+meta   = 4_000_000
+
+saldo = 0
+meses = 0
+
+while saldo < meta:
+    intereses = 0          # un renglón más abajo: dentro del ciclo
+    interes   = saldo * tasa
+    intereses = intereses + interes
+    saldo     = saldo + interes + aporte
+    meses     = meses + 1
+
+print(f"Meses: {meses}")
+#> Meses: 13
+print(f"Saldo: {saldo:,.0f}")
+#> Saldo: 4,117,709
+print(f"Intereses ganados: {intereses:,.0f}")
+#> Intereses ganados: 34,053`,
+            r: `aporte <- 300000
+tasa   <- 0.009
+meta   <- 4000000
+
+saldo <- 0
+meses <- 0
+
+while (saldo < meta) {
+  intereses <- 0          # un renglón más abajo: dentro del ciclo
+  interes   <- saldo * tasa
+  intereses <- intereses + interes
+  saldo     <- saldo + interes + aporte
+  meses     <- meses + 1
+}
+
+cat(sprintf("Meses: %d\\n", meses))
+#> Meses: 13
+cat(sprintf("Saldo: %.0f\\n", saldo))
+#> Saldo: 4117709
+cat(sprintf("Intereses ganados: %.0f\\n", intereses))
+#> Intereses ganados: 34053`,
+            vba: `Option Explicit
+
+Sub AhorroProgramadoMal()
+    Dim aporte As Currency, meta As Currency, tasa As Double
+    Dim saldo As Currency, interes As Currency, intereses As Currency
+    Dim meses As Integer
+
+    aporte = 300000
+    tasa = 0.009
+    meta = 4000000
+
+    saldo = 0
+    meses = 0
+
+    Do While saldo < meta
+        intereses = 0        ' un renglón más abajo: dentro del ciclo
+        interes = saldo * tasa
+        intereses = intereses + interes
+        saldo = saldo + interes + aporte
+        meses = meses + 1
+    Loop
+
+    Debug.Print "Meses: " & meses
+    '> Meses: 13
+    Debug.Print "Saldo: " & Format(saldo, "0")
+    '> Saldo: 4117709
+    Debug.Print "Intereses ganados: " & Format(intereses, "0")
+    '> Intereses ganados: 34053
+End Sub`,
+        };
+
+        /* Contar no es contar vueltas: `enMora` es un contador aunque no
+           aumente en todas. Lee los datos de cada crédito, así que no declara
+           salida. */
+        const EJ_CARTERA_MORA = {
+            pseudo: `Inicio
+    Leer n                          // créditos a revisar
+    revisados <- 0
+    enMora    <- 0
+    saldoMora <- 0
+
+    Mientras revisados < n Hacer
+        Leer saldo, diasMora
+        revisados <- revisados + 1
+        Si diasMora > 30 Entonces
+            enMora    <- enMora + 1
+            saldoMora <- saldoMora + saldo
+        FinSi
+    FinMientras
+
+    Escribir enMora, " créditos en mora por ", saldoMora
+Fin`,
+            python: `n = int(input("Créditos a revisar: "))
+revisados  = 0
+en_mora    = 0
+saldo_mora = 0
+
+while revisados < n:
+    saldo     = float(input("Saldo: "))
+    dias_mora = int(input("Días de mora: "))
+    revisados = revisados + 1
+    if dias_mora > 30:
+        en_mora    = en_mora + 1
+        saldo_mora = saldo_mora + saldo
+
+print(en_mora, "créditos en mora por", saldo_mora)`,
+            r: `n <- as.integer(readline("Créditos a revisar: "))
+revisados  <- 0
+en_mora    <- 0
+saldo_mora <- 0
+
+while (revisados < n) {
+  saldo     <- as.numeric(readline("Saldo: "))
+  dias_mora <- as.integer(readline("Días de mora: "))
+  revisados <- revisados + 1
+  if (dias_mora > 30) {
+    en_mora    <- en_mora + 1
+    saldo_mora <- saldo_mora + saldo
+  }
+}
+
+cat(en_mora, "créditos en mora por", saldo_mora, "\\n")`,
+            vba: `Option Explicit
+
+Sub CarteraEnMora()
+    Dim n As Long, revisados As Long, enMora As Long, diasMora As Long
+    Dim saldo As Currency, saldoMora As Currency
+
+    n = CLng(InputBox("Créditos a revisar:"))
+    revisados = 0
+    enMora = 0
+    saldoMora = 0
+
+    Do While revisados < n
+        saldo = CCur(InputBox("Saldo:"))
+        diasMora = CLng(InputBox("Días de mora:"))
+        revisados = revisados + 1
+        If diasMora > 30 Then
+            enMora = enMora + 1
+            saldoMora = saldoMora + saldo
+        End If
+    Loop
+
+    MsgBox enMora & " créditos en mora por " & saldoMora
+End Sub`,
+        };
+
+        /* E5. El orden entre las dos inicializaciones, y entre las dos
+           actualizaciones, no cambia el resultado. El enunciado fija uno —las
+           inicializaciones en el orden en que se actualizan, y la vuelta
+           contada al final— para que el ejercicio tenga una sola respuesta.
+           Ningún paso se repite dentro de un mismo lenguaje: `OrdenaPasos`
+           califica por posición, y dos pasos idénticos serían indistinguibles. */
+        const ORDENA_RECAUDO = {
+            pseudo: ['Inicio', 'Leer n', 'total <- 0', 'k <- 0',
+                'Mientras k < n Hacer', '    Leer pago', '    total <- total + pago', '    k <- k + 1',
+                'FinMientras', 'Escribir total', 'Fin'],
+            python: ['n = int(input("Pagos recibidos: "))', 'total = 0', 'k = 0',
+                'while k < n:', '    pago = float(input("Pago: "))', '    total = total + pago', '    k = k + 1',
+                'print(total)'],
+            r: ['n <- as.integer(readline("Pagos recibidos: "))', 'total <- 0', 'k <- 0',
+                'while (k < n) {', '  pago <- as.numeric(readline("Pago: "))', '  total <- total + pago', '  k <- k + 1',
+                '}', 'cat(total)'],
+            vba: ['Sub CierreDeRecaudo()', 'Dim n As Long, k As Long, total As Currency, pago As Currency',
+                'n = CLng(InputBox("Pagos recibidos:"))', 'total = 0', 'k = 0',
+                'Do While k < n', '    pago = CCur(InputBox("Pago:"))', '    total = total + pago', '    k = k + 1',
+                'Loop', 'MsgBox total', 'End Sub'],
+        };
+
         const Cap1Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-calculator" etiqueta="Borrador · Fase 1">
-                    Sección 1, «Contar y acumular: lo que ya trazó sin nombrarlo». Se escribe en la
-                    Tarea 2.1.
+                <Motivacion icon="fa-piggy-bank"
+                    gancho="Casi todo ciclo lleva una variable que cuenta y otra que acumula. ¿Qué las distingue, y dónde tiene que nacer cada una?">
+                    El plan de ahorro programado de una clienta terminó en el mes 13, con 4,1 millones
+                    en la cuenta, y el extracto de cierre le informó 34 053 pesos de intereses ganados.
+                    Había ganado 217 709. El ciclo dio sus trece vueltas y sumó el interés en cada una:
+                    el defecto era una sola línea, <span className="inline-code">intereses &lt;- 0</span>, escrita
+                    un renglón más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
+                    a empezar.
                 </Motivacion>
+
+                <h3>Usted ya trazó ciclos</h3>
+                <p>
+                    Antes de este capítulo, el material ya le había hecho seguir a mano varios ciclos, y
+                    en ninguno se detuvo a decir cómo se llamaban. Vale la pena reconocerlos, porque todo
+                    lo que esta sección nombra ya estaba en ellos:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Dónde</th><th>Qué siguió a mano</th><th>El ciclo que era</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Capítulo 1, sección 1</td><td>El 22 convertido a binario, una fila por división</td><td><span className="inline-code">Mientras numero &gt; 0</span></td></tr>
+                            <tr><td>Capítulo 1, sección 2</td><td>Doce cuotas que leían la tasa de memoria en cada vuelta</td><td><span className="inline-code">Para i &lt;- 1 Hasta 12</span></td></tr>
+                            <tr><td>Capítulo 1, sección 3</td><td>Los meses que tarda un ahorro en llegar a la meta, y la vuelta que no se da cuando la meta se alcanza exacta</td><td><span className="inline-code">Mientras saldo &lt; meta</span></td></tr>
+                            <tr><td>Capítulo 1, sección 4</td><td>Tres décimos que no suman 0,3, y cien centavos que no suman un peso</td><td><span className="inline-code">Para i &lt;- 1 Hasta 3</span> y <span className="inline-code">Hasta 100</span></td></tr>
+                            <tr><td>Capítulo 2, sección 1</td><td>«Repita hasta obtener un resultado razonable», que falla la finitud</td><td>Uno que puede no terminar</td></tr>
+                            <tr><td>Capítulo 2, sección 5</td><td>Las comparaciones que hacen dos búsquedas del mismo crédito en una cartera de 40 000</td><td><span className="inline-code">Para</span> contra <span className="inline-code">Mientras izq &lt;= der</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Nada de eso se repite aquí: la frontera entre <span className="inline-code">&lt;</span> y <span className="inline-code">&lt;=</span>,
+                    la suma de décimos y el conteo de comparaciones están resueltos donde están. Lo que
+                    aquellos capítulos no se detuvieron a preguntar es lo que este necesita:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>¿Qué variables lleva dentro casi todo ciclo, y dónde reciben su valor inicial?</td><td><strong>Aquí</strong></td></tr>
+                            <tr><td>¿Cuándo se pregunta si hay otra vuelta: antes de darla o después?</td><td>Secciones 2 y 3</td></tr>
+                            <tr><td>¿Qué entiende cada lenguaje por «repetir <em>n</em> veces»?</td><td>Sección 4</td></tr>
+                            <tr><td>¿Qué pasa cuando un ciclo va dentro de otro?</td><td>Sección 5</td></tr>
+                            <tr><td>¿Qué garantiza que un ciclo termine, y que no dé una vuelta de más?</td><td>Sección 6</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Las dos variables de casi todo ciclo</h3>
+                <p>
+                    El capítulo 2 presentó el <strong>acumulador</strong> —una variable que se lee a sí misma
+                    para actualizarse—, y el 3 lo usó para conciliar una cuenta. Dentro de un ciclo casi
+                    nunca aparece solo, y conviene distinguirlo de su compañero:
+                </p>
+                <ul>
+                    <li>
+                        Un <Termino def="Variable que aumenta en una cantidad fija —casi siempre 1— cada vez que ocurre algo. Responde a la pregunta «¿cuántas veces?».">contador</Termino> aumenta
+                        en una cantidad <strong>fija</strong>, casi siempre 1, cada vez que pasa algo.
+                        Responde <em>cuántas veces</em>.
+                    </li>
+                    <li>
+                        Un <Termino def="Variable que aumenta en una cantidad que cambia de una vez a la siguiente: un saldo, un total de intereses, un recaudo. Responde a la pregunta «¿cuánto?».">acumulador</Termino> aumenta
+                        en una cantidad que <strong>cambia</strong> de una vuelta a la siguiente. Responde <em>cuánto</em>.
+                    </li>
+                </ul>
+                <p>
+                    El ejemplo es pariente de la meta de ahorro del capítulo 1, ahora con un aporte cada
+                    mes. Allí la pregunta era cuántos meses; aquí es qué papel cumple cada variable.
+                </p>
+
+                <CodeTabs
+                    titulo="Un plan de ahorro programado: un contador y dos acumuladores"
+                    bloques={EJ_AHORRO}
+                    nota="La forma del ciclo es la de la sección 2; aquí interesa lo que pasa dentro. meses suma siempre 1; intereses y saldo suman cada vez una cifra distinta, porque el interés de cada mes depende del saldo que dejó el anterior." />
+
+                <p>
+                    Las tres variables reciben su valor <strong>antes</strong> del ciclo, y no es cuestión de
+                    orden. Una línea escrita antes del ciclo se ejecuta una vez; una escrita dentro se
+                    ejecuta una vez <strong>por vuelta</strong>. Ante cada instrucción, la pregunta que decide
+                    dónde va es justamente esa: <em>¿cuántas veces tiene que ejecutarse?</em> Y el valor
+                    inicial no es siempre cero: depende de la operación que lo va a actualizar.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Variable</th><th>Cómo cambia</th><th>Valor inicial</th><th>Por qué ese</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Contador</td><td><span className="inline-code">meses &lt;- meses + 1</span></td><td>0</td><td>Antes de la primera vuelta no ha pasado ningún mes</td></tr>
+                            <tr><td>Acumulador de suma</td><td><span className="inline-code">intereses &lt;- intereses + interes</span></td><td>0</td><td>Sumar cero no cambia nada: es el punto de partida neutro</td></tr>
+                            <tr><td>Acumulador de producto</td><td><span className="inline-code">factor &lt;- factor * (1 + tasa)</span></td><td>1</td><td>Multiplicar por uno no cambia nada. Si arranca en 0, vale 0 para siempre</td></tr>
+                            <tr><td>Saldo de un crédito</td><td><span className="inline-code">saldo &lt;- saldo - abono</span></td><td>El capital</td><td>Es lo que se debe antes de pagar la primera cuota</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>La línea en el lugar equivocado</h3>
+                <p>
+                    Este es el programa de la motivación. Es el de arriba con una sola diferencia: la
+                    línea <span className="inline-code">intereses &lt;- 0</span> bajó un renglón y quedó como la
+                    primera instrucción del cuerpo.
+                </p>
+
+                <CodeTabs
+                    titulo="El extracto de cierre, con la inicialización dentro del ciclo"
+                    bloques={EJ_AHORRO_MAL}
+                    nota="Trece vueltas, el mismo saldo y un solo número distinto. Los 34 053 son exactamente el interés del mes 13: el único que sobrevivió, porque cada vuelta empezaba borrando el anterior." />
+
+                <Box type="warn" label="Un número plausible y falso">
+                    El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
+                    cifra que nadie discutiría a primera vista. El ciclo <strong>sí</strong> sumó en cada vuelta;
+                    solo que cada vuelta empezaba por borrar lo sumado. Y ni siquiera una traza corta lo
+                    delata: en las dos primeras vueltas las dos versiones coinciden, porque el interés del
+                    primer mes es cero —la cuenta todavía está vacía—. La diferencia aparece en la
+                    tercera.
+                </Box>
+
+                <h3>Contar no es lo mismo que contar vueltas</h3>
+                <p>
+                    Un contador cuenta cuántas veces pasó <em>algo</em>, y ese algo no tiene por qué ser una
+                    vuelta. En este recorrido de una cartera, un contador aumenta en todas las vueltas y
+                    el otro solo en algunas. Dentro de un ciclo puede ir una selectiva como las del
+                    capítulo 4, y lo que está dentro de ella se ejecuta solo en las vueltas en que su
+                    condición se cumple.
+                </p>
+
+                <CodeTabs
+                    titulo="Cuántos créditos están en mora, y por cuánto"
+                    bloques={EJ_CARTERA_MORA}
+                    nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo." />
+
+                <Ejercicio tipo="E2"><MCQ
+                    multiple={true}
+                    pregunta="En el recorrido de la cartera, ¿cuáles de estas variables son contadores?"
+                    opciones={[
+                        { texto: 'revisados, que suma 1 en cada vuelta, sea cual sea el crédito leído', correcta: true, justificacion: 'Son revisados y enMora. Las dos aumentan en una cantidad fija, 1, y responden «¿cuántos?»: revisados, cuántos créditos se han leído, y por eso suma en todas las vueltas; enMora, cuántos de ellos pasan de 30 días de mora, y por eso solo suma en las vueltas en que la condición de la selectiva se cumple. Que un contador no aumente en todas las vueltas no lo convierte en otra cosa. saldoMora es un acumulador: también se lee a sí misma para actualizarse, pero lo que suma cambia de un crédito a otro, y responde «¿cuánto?». Y diasMora no es ninguna de las dos cosas, aunque cambie en cada vuelta: recibe un dato nuevo con Leer y olvida el anterior, sin leerse nunca a sí misma. Cambiar en cada vuelta no basta; lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía.' },
+                        { texto: 'saldoMora, que suma el saldo de cada crédito en mora al total que ya llevaba', correcta: false },
+                        { texto: 'diasMora, que cambia en todas las vueltas porque cada crédito trae los suyos', correcta: false },
+                        { texto: 'enMora, que suma 1, pero solo en las vueltas en que el crédito leído está en mora', correcta: true },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Dónde va cada línea</h3>
+                <p>
+                    El defecto de la motivación tiene una regla que lo evita: antes de ubicar una
+                    instrucción, preguntarse <strong>cuántas veces tiene que ejecutarse</strong>. Si la
+                    respuesta es «una vez», va fuera del ciclo, aunque la variable se use dentro. Si es
+                    «una vez por cada dato», va dentro.
+                </p>
+
+                <OrdenaPasos
+                    enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Para que tenga una sola respuesta, siga dos convenciones que no cambian el resultado: las inicializaciones van en el mismo orden en que sus variables se actualizan dentro del ciclo, y la vuelta se cuenta al final del cuerpo."
+                    pasos={ORDENA_RECAUDO}
+                    pista="Hay dos líneas que no pueden quedar dentro del ciclo: una deja en el total solo el último pago, y la otra impide que el ciclo termine. Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago."
+                />
             </div>
         );
+
+        /* ============================================================
+           SECCIÓN 2 — MIENTRAS: PREGUNTAR ANTES DE ENTRAR
+        ============================================================ */
+        /* El acuerdo de pago de la motivación. Seis vueltas, y la sexta cobra
+           400 000 cuando solo se debían 350 000: el saldo sale en −50 000.
+           Salidas ejecutadas el 2026-09-28. */
+        const EJ_ACUERDO = {
+            pseudo: `Inicio
+    // Acuerdo de pago: intereses de mora condonados, abonos fijos
+    saldo <- 2350000
+    abono <- 400000
+    meses <- 0
+
+    Mientras saldo > 0 Hacer
+        saldo <- saldo - abono
+        meses <- meses + 1
+    FinMientras
+
+    Escribir "Meses: ", meses
+    //> Meses: 6
+    Escribir "Saldo final: ", saldo
+    //> Saldo final: -50000
+Fin`,
+            python: `# Acuerdo de pago: intereses de mora condonados, abonos fijos
+saldo = 2_350_000
+abono = 400_000
+meses = 0
+
+while saldo > 0:
+    saldo = saldo - abono
+    meses = meses + 1
+
+print(f"Meses: {meses}")
+#> Meses: 6
+print(f"Saldo final: {saldo:,.0f}")
+#> Saldo final: -50,000`,
+            r: `# Acuerdo de pago: intereses de mora condonados, abonos fijos
+saldo <- 2350000
+abono <- 400000
+meses <- 0
+
+while (saldo > 0) {
+  saldo <- saldo - abono
+  meses <- meses + 1
+}
+
+cat(sprintf("Meses: %d\\n", meses))
+#> Meses: 6
+cat(sprintf("Saldo final: %.0f\\n", saldo))
+#> Saldo final: -50000`,
+            vba: `Option Explicit
+
+Sub AcuerdoDePago()
+    Dim saldo As Currency, abono As Currency
+    Dim meses As Integer
+
+    ' Acuerdo de pago: intereses de mora condonados, abonos fijos
+    saldo = 2350000
+    abono = 400000
+    meses = 0
+
+    Do While saldo > 0
+        saldo = saldo - abono
+        meses = meses + 1
+    Loop
+
+    Debug.Print "Meses: " & meses
+    '> Meses: 6
+    Debug.Print "Saldo final: " & saldo
+    '> Saldo final: -50000
+End Sub`,
+        };
+
+        /* La traza guiada: el mismo acuerdo con 1 000 000 y abonos de 400 000.
+           Tres vueltas y cuatro evaluaciones de la condición: 14 pasos, que
+           caben en el Trazador a 375 px (plan de la Tarea 10, H9). */
+        const TZ_ACUERDO = {
+            pseudo: `Inicio
+    saldo <- 1000000
+    abono <- 400000
+    meses <- 0
+    Mientras saldo > 0 Hacer
+        saldo <- saldo - abono
+        meses <- meses + 1
+    FinMientras
+    Escribir meses
+Fin`,
+            python: `saldo = 1_000_000
+abono = 400_000
+meses = 0
+while saldo > 0:
+    saldo = saldo - abono
+    meses = meses + 1
+print(meses)`,
+            r: `saldo <- 1000000
+abono <- 400000
+meses <- 0
+while (saldo > 0) {
+  saldo <- saldo - abono
+  meses <- meses + 1
+}
+cat(meses, "\\n")`,
+            vba: `Sub AcuerdoDePago()
+    Dim saldo As Currency, abono As Currency, meses As Integer
+    saldo = 1000000
+    abono = 400000
+    meses = 0
+    Do While saldo > 0
+        saldo = saldo - abono
+        meses = meses + 1
+    Loop
+    Debug.Print meses
+End Sub`,
+        };
+        const TZ_L_SALDO = { pseudo: 2, python: 1, r: 1, vba: 3 };
+        const TZ_L_ABONO = { pseudo: 3, python: 2, r: 2, vba: 4 };
+        const TZ_L_MESES0 = { pseudo: 4, python: 3, r: 3, vba: 5 };
+        const TZ_L_COND = { pseudo: 5, python: 4, r: 4, vba: 6 };
+        const TZ_L_RESTA = { pseudo: 6, python: 5, r: 5, vba: 7 };
+        const TZ_L_CUENTA = { pseudo: 7, python: 6, r: 6, vba: 8 };
+        const TZ_L_ESCRIBIR = { pseudo: 9, python: 7, r: 8, vba: 10 };
+        const TZ_ACUERDO_PASOS = [
+            { linea: TZ_L_SALDO, estado: { saldo: '1000000' },
+                nota: 'La deuda con la que empieza el acuerdo. Esta línea se ejecuta una sola vez: está antes del ciclo.' },
+            { linea: TZ_L_ABONO, estado: { abono: '400000' },
+                nota: 'El abono de cada mes. No va a cambiar en todo el programa, pero se usa en cada vuelta.' },
+            { linea: TZ_L_MESES0, estado: { meses: '0' },
+                nota: 'El contador arranca en cero: antes de la primera vuelta no se ha pagado ningún mes.' },
+            { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
+                nota: 'Primera evaluación de la condición, y todavía no se ha dado ninguna vuelta. 1 000 000 > 0: se entra.' },
+            { linea: TZ_L_RESTA, estado: { saldo: '600000' },
+                nota: 'Primer abono. La variable saldo pierde su valor anterior: el millón ya no existe en ninguna parte del programa, solo en esta tabla.' },
+            { linea: TZ_L_CUENTA, estado: { meses: '1' },
+                nota: 'Fin de la primera vuelta. Mire el código: la línea siguiente no es la de abajo, es la condición, que está más arriba.' },
+            { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
+                nota: 'Segunda evaluación, con el saldo que dejó la vuelta anterior: 600 000 > 0. La misma línea se ilumina por segunda vez.' },
+            { linea: TZ_L_RESTA, estado: { saldo: '200000' },
+                nota: 'Segundo abono.' },
+            { linea: TZ_L_CUENTA, estado: { meses: '2' },
+                nota: 'Fin de la segunda vuelta, y de vuelta a la condición.' },
+            { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
+                nota: 'Tercera evaluación: 200 000 > 0. Quedan 200 000 y el abono es de 400 000, pero el Mientras no mira eso: solo pregunta si queda saldo.' },
+            { linea: TZ_L_RESTA, estado: { saldo: '-200000' },
+                nota: 'Tercer abono, completo. El saldo queda en −200 000: el deudor pagó 200 000 de más, y la resta no tiene cómo saberlo.' },
+            { linea: TZ_L_CUENTA, estado: { meses: '3' },
+                nota: 'Fin de la tercera vuelta.' },
+            { linea: TZ_L_COND, estado: { cond: 'Falso' },
+                nota: 'Cuarta evaluación: −200 000 > 0 es falso. El cuerpo no se ejecuta y el flujo salta a la línea que sigue al final del ciclo.' },
+            { linea: TZ_L_ESCRIBIR, estado: {}, salida: '3',
+                nota: 'Tres vueltas y cuatro evaluaciones de la condición. La línea del Mientras se ejecutó una vez más que las del cuerpo, y esa última vez fue la que dijo que no.' },
+        ];
+
+        /* E1. Una fila por EVALUACIÓN de la condición, no por vuelta: es lo
+           que distingue esta traza de la del capítulo 1 (sección 3), que iba
+           por vueltas. Cuatro vueltas, cinco evaluaciones. Cifras ejecutadas
+           el 2026-09-28. */
+        const TRAZA_ABONOS = {
+            pseudo: `Inicio
+    saldo <- 1850000
+    abono <- 500000
+    meses <- 0
+    Mientras saldo > 0 Hacer
+        saldo <- saldo - abono
+        meses <- meses + 1
+    FinMientras
+    Escribir meses, saldo
+Fin`,
+            python: `saldo = 1_850_000
+abono = 500_000
+meses = 0
+while saldo > 0:
+    saldo = saldo - abono
+    meses = meses + 1
+print(meses, saldo)`,
+            r: `saldo <- 1850000
+abono <- 500000
+meses <- 0
+while (saldo > 0) {
+  saldo <- saldo - abono
+  meses <- meses + 1
+}
+cat(meses, saldo, "\\n")`,
+            vba: `Sub OtroAcuerdo()
+    Dim saldo As Currency, abono As Currency, meses As Integer
+    saldo = 1850000
+    abono = 500000
+    meses = 0
+    Do While saldo > 0
+        saldo = saldo - abono
+        meses = meses + 1
+    Loop
+    Debug.Print meses, saldo
+End Sub`,
+        };
 
         const Cap2Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-rotate" etiqueta="Borrador · Fase 1">
-                    Sección 2, «Mientras: preguntar antes de entrar». Se escribe en la Tarea 2.2. De la
-                    Fase 1 lleva el flujograma y la simbología.
+                <Motivacion icon="fa-handshake"
+                    gancho="Un Mientras pregunta antes de cada vuelta. ¿Cuántas veces pregunta, y con qué valor sale del ciclo?">
+                    Cobranza ofrece un acuerdo: condona los intereses de mora y recibe la deuda, 2 350 000
+                    pesos, en abonos mensuales de 400 000. El sistema calcula cuánto dura el acuerdo con
+                    un ciclo que resta el abono mientras quede saldo, y responde seis meses, que es
+                    correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
+                    cuando solo se debían 350 000. El saldo final quedó en −50 000.
                 </Motivacion>
-                <FlujogramaMientras />
+
+                <h3>La estructura</h3>
+                <p>
+                    Un <span className="inline-code">Mientras</span> tiene una condición y un cuerpo. Antes de
+                    cada vuelta —<strong>también antes de la primera</strong>— evalúa la condición: si es
+                    verdadera, ejecuta el cuerpo entero y vuelve a preguntar; si es falsa, salta al final
+                    y sigue con lo que viene después. Por eso se dice que es un ciclo de <Termino def="La condición se evalúa antes de cada vuelta, incluida la primera. Si es falsa desde el principio, el cuerpo no se ejecuta ninguna vez.">evaluación previa</Termino>,
+                    y de ahí sale todo lo que esta sección tiene que decir.
+                </p>
+
                 <SimbologiaFlujograma />
+
+                <FlujogramaMientras />
+
+                <CodeTabs
+                    titulo="El acuerdo de pago de la motivación"
+                    bloques={EJ_ACUERDO}
+                    nota="Seis vueltas, y el saldo sale del ciclo en −50 000: el sexto abono cobró 400 000 cuando quedaban 350 000. El ciclo no tiene un error; hace exactamente lo que dice su condición." />
+
+                <Box type="warn" label="El sexto abono">
+                    La condición <span className="inline-code">saldo &gt; 0</span> decide <em>si</em> hay otra vuelta,
+                    no <em>cuánto</em> se cobra en ella. En la sexta quedaban 350 000, la condición se cumplió
+                    y el cuerpo restó el abono entero. El arreglo va dentro del cuerpo y es una selectiva
+                    del capítulo 4: si el saldo es menor que el abono, el abono de ese mes es el saldo. Un
+                    ciclo puede llevar dentro cualquier cosa que un programa lleve fuera.
+                </Box>
+
+                <p>La misma estructura, en los cuatro lenguajes:</p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Lenguaje</th><th>Forma</th><th>Observación</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Pseudocódigo</td><td><span className="inline-code">Mientras c Hacer … FinMientras</span></td><td>El cuerpo es lo que queda entre las dos palabras</td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">while c:</span></td><td>El cuerpo es lo que está sangrado debajo; no hay palabra de cierre</td></tr>
+                            <tr><td>R</td><td><span className="inline-code">while (c) {'{ … }'}</span></td><td>La condición va entre paréntesis y el cuerpo entre llaves</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do While c … Loop</span></td><td>Existe también <span className="inline-code">While … Wend</span>, más antigua. Se usa <span className="inline-code">Do</span> porque admite las variantes de la sección 3</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Tres piezas que el Mientras no pone</h3>
+                <p>
+                    El <span className="inline-code">Mientras</span> solo aporta la pregunta. Las otras dos piezas
+                    que un ciclo necesita para funcionar las escribe quien programa, y el lenguaje no
+                    comprueba que estén:
+                </p>
+                <ol>
+                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener valor la primera vez que se pregunta.</li>
+                    <li><strong>La condición</strong>, que se evalúa antes de cada vuelta.</li>
+                    <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
+                </ol>
+                <p>
+                    Si falta la tercera, la condición nunca cambia y el ciclo no termina. Es el tema de la
+                    sección 6.
+                </p>
+
+                <h3>La línea que se ilumina en cada vuelta</h3>
+                <p>
+                    En una traza de los capítulos 3 y 4 cada línea aparecía como mucho una vez. Aquí la
+                    línea del <span className="inline-code">Mientras</span> vuelve a iluminarse al final de cada
+                    vuelta, y es la única que se ejecuta una vez más que las del cuerpo.
+                </p>
+
+                <Trazador
+                    titulo="Traza guiada · un acuerdo de tres abonos"
+                    enunciado={<>Un acuerdo más corto: 1 000 000 en abonos de 400 000. Avance instrucción por
+                        instrucción y fíjese en dos cosas: <strong>adónde salta el flujo</strong> después de la
+                        última línea del cuerpo, y <strong>cuántas veces</strong> se evalúa la condición
+                        comparado con cuántas vueltas se dan.</>}
+                    codigo={TZ_ACUERDO}
+                    variables={[
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'abono', titulo: 'abono' },
+                        { clave: 'meses', titulo: 'meses' },
+                        { clave: 'cond', titulo: 'saldo > 0' },
+                    ]}
+                    pasos={TZ_ACUERDO_PASOS}
+                    nota="Catorce instrucciones ejecutadas: las cuatro de fuera del ciclo, una vez cada una; las dos del cuerpo, tres veces cada una; y la del Mientras, cuatro." />
+
+                <TablaTraza
+                    titulo="Una fila por cada vez que se pregunta"
+                    enunciado={<>Otro acuerdo: 1 850 000 en abonos de 500 000. Esta vez la tabla no tiene una fila por vuelta sino <strong>una por cada evaluación de la condición</strong>. Anote el saldo y los meses con que el programa llega a esa evaluación, y si <span className="inline-code">saldo &gt; 0</span> resulta <span className="inline-code">Verdadero</span> o <span className="inline-code">Falso</span>.</>}
+                    codigo={TRAZA_ABONOS}
+                    columnas={[
+                        { clave: 'paso', titulo: 'Evaluación' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'meses', titulo: 'meses' },
+                        { clave: 'condicion', titulo: 'saldo > 0' },
+                    ]}
+                    ocultas={['saldo', 'meses', 'condicion']}
+                    filas={[
+                        { paso: '1.ª', saldo: '1850000', meses: '0', condicion: 'Verdadero' },
+                        { paso: '2.ª', saldo: '1350000', meses: '1', condicion: 'Verdadero' },
+                        { paso: '3.ª', saldo: '850000', meses: '2', condicion: 'Verdadero' },
+                        { paso: '4.ª', saldo: '350000', meses: '3', condicion: 'Verdadero' },
+                        { paso: '5.ª', saldo: '-150000', meses: '4', condicion: 'Falso' },
+                    ]}
+                    pista="La primera evaluación ocurre antes de entrar al ciclo, con los valores iniciales. Un saldo negativo se escribe con el signo menos delante."
+                />
+
+                <Box type="info" label="Una evaluación más que vueltas">
+                    Cinco evaluaciones y cuatro vueltas. En un <span className="inline-code">Mientras</span> que
+                    termina, la condición se evalúa siempre <strong>una vez más</strong> que las vueltas que da:
+                    cada vuelta necesita un «sí», y la salida, un «no». Contar vueltas es contar los «sí».
+                </Box>
+
+                <h3>Cero vueltas</h3>
+                <p>
+                    Como la pregunta va antes de la primera vuelta, un <span className="inline-code">Mientras</span> puede
+                    no dar <strong>ninguna</strong>. No es un caso raro que haya que evitar: es la respuesta
+                    correcta cada vez que no hay nada que hacer. Un cliente que ya no debe nada no necesita
+                    ningún abono, y un programa que se lo cobrara estaría mal. Las variables se quedan con el
+                    valor que tenían antes del ciclo, y por eso ese valor tiene que ser el correcto para
+                    el caso en que no se entra.
+                </p>
+
+                <Ejercicio tipo="E2"><MCQ
+                    multiple={true}
+                    pregunta="¿Con cuáles de estos datos el ciclo del acuerdo de pago no da ninguna vuelta?"
+                    opciones={[
+                        { texto: 'Saldo 400 000 y abono 400 000: la deuda se cubre justo con el primer abono', correcta: false },
+                        { texto: 'Saldo 0 y abono 400 000: el cliente ya había pagado todo por otro canal', correcta: true, justificacion: 'Son el saldo 0 y el saldo −20 000. En los dos casos la primera evaluación de saldo > 0 da falso, antes de que exista ninguna vuelta, y el programa escribe meses = 0 con el saldo intacto: es lo correcto, porque no hay nada que cobrar. El saldo a favor muestra además que la condición no pregunta si el saldo es cero, sino si es positivo. Con saldo 400 000 y abono 400 000 sí hay una vuelta: la primera evaluación es 400 000 > 0, verdadera; después de restar, el saldo queda en 0 y la segunda evaluación da falso. Una vuelta y dos evaluaciones. Y con abono 0 pasa lo contrario de lo que pregunta el ejercicio: el ciclo entra, pero el saldo nunca baja, la condición nunca cambia y el ciclo no termina. Es el defecto de la tercera pieza —la actualización que no acerca la condición a ser falsa— y el tema de la sección 6.' },
+                        { texto: 'Saldo 500 000 y abono 0: el cliente no alcanza a abonar nada este mes', correcta: false },
+                        { texto: 'Saldo −20 000 y abono 400 000: el cliente quedó con un saldo a favor', correcta: true },
+                    ]}
+                /></Ejercicio>
             </div>
         );
+
+        /* ============================================================
+           SECCIÓN 3 — REPITA…HASTA: ENTRAR ANTES DE PREGUNTAR
+        ============================================================ */
+        /* La validación de un monto: el caso donde la primera vuelta es
+           obligatoria, porque no hay nada que validar antes de leer. Python no
+           tiene la estructura y la construye con `while True` y `break`; R
+           tiene `repeat` y también sale con `break`. Lee datos: no declara
+           salida. */
+        const EJ_VALIDAR_MONTO = {
+            pseudo: `Inicio
+    Repita
+        Escribir "Monto a pagar: "
+        Leer monto
+    Hasta monto > 0
+
+    Escribir "Pago registrado por ", monto
+Fin`,
+            python: `# Python no tiene Repita: se construye con un while que
+# siempre entra y un break que hace de «Hasta»
+while True:
+    monto = float(input("Monto a pagar: "))
+    if monto > 0:
+        break
+
+print("Pago registrado por", monto)`,
+            r: `# R tiene repeat, que siempre entra; la salida es un break
+repeat {
+  monto <- as.numeric(readline("Monto a pagar: "))
+  if (monto > 0) break
+}
+
+cat("Pago registrado por", monto, "\\n")`,
+            vba: `Option Explicit
+
+Sub PedirMonto()
+    Dim monto As Currency
+
+    Do
+        monto = CCur(InputBox("Monto a pagar:"))
+    Loop Until monto > 0
+
+    MsgBox "Pago registrado por " & monto
+End Sub`,
+        };
+
+        /* La misma validación con Mientras: hay que leer antes del ciclo para
+           que la condición tenga con qué preguntar, y otra vez dentro. Es la
+           versión que el E8 pide comparar. */
+        const EJ_VALIDAR_MIENTRAS = {
+            pseudo: `Inicio
+    Escribir "Monto a pagar: "
+    Leer monto
+    Mientras monto <= 0 Hacer
+        Escribir "Monto a pagar: "
+        Leer monto
+    FinMientras
+
+    Escribir "Pago registrado por ", monto
+Fin`,
+            python: `monto = float(input("Monto a pagar: "))
+while monto <= 0:
+    monto = float(input("Monto a pagar: "))
+
+print("Pago registrado por", monto)`,
+            r: `monto <- as.numeric(readline("Monto a pagar: "))
+while (monto <= 0) {
+  monto <- as.numeric(readline("Monto a pagar: "))
+}
+
+cat("Pago registrado por", monto, "\\n")`,
+            vba: `Option Explicit
+
+Sub PedirMontoConMientras()
+    Dim monto As Currency
+
+    monto = CCur(InputBox("Monto a pagar:"))
+    Do While monto <= 0
+        monto = CCur(InputBox("Monto a pagar:"))
+    Loop
+
+    MsgBox "Pago registrado por " & monto
+End Sub`,
+        };
+
+        /* E4. Las dos condiciones son la negación exacta una de la otra, así
+           que con saldo positivo dan las mismas vueltas. Solo difieren cuando
+           el saldo inicial ya es cero o negativo: el crédito a paz y salvo de
+           la motivación, al que el Repita le cobra una cuota. */
+        const CMP_COBRO_MIENTRAS = {
+            pseudo: `cobrado <- 0
+Mientras saldo > 0 Hacer
+    saldo   <- saldo - cuota
+    cobrado <- cobrado + cuota
+FinMientras
+Escribir cobrado`,
+            python: `cobrado = 0
+while saldo > 0:
+    saldo   = saldo - cuota
+    cobrado = cobrado + cuota
+print(cobrado)`,
+            r: `cobrado <- 0
+while (saldo > 0) {
+  saldo   <- saldo - cuota
+  cobrado <- cobrado + cuota
+}
+cat(cobrado, "\\n")`,
+            vba: `cobrado = 0
+Do While saldo > 0
+    saldo = saldo - cuota
+    cobrado = cobrado + cuota
+Loop
+Debug.Print cobrado`,
+        };
+        const CMP_COBRO_REPITA = {
+            pseudo: `cobrado <- 0
+Repita
+    saldo   <- saldo - cuota
+    cobrado <- cobrado + cuota
+Hasta saldo <= 0
+Escribir cobrado`,
+            python: `cobrado = 0
+while True:
+    saldo   = saldo - cuota
+    cobrado = cobrado + cuota
+    if saldo <= 0:
+        break
+print(cobrado)`,
+            r: `cobrado <- 0
+repeat {
+  saldo   <- saldo - cuota
+  cobrado <- cobrado + cuota
+  if (saldo <= 0) break
+}
+cat(cobrado, "\\n")`,
+            vba: `cobrado = 0
+Do
+    saldo = saldo - cuota
+    cobrado = cobrado + cuota
+Loop Until saldo <= 0
+Debug.Print cobrado`,
+        };
 
         const Cap3Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-arrow-rotate-left" etiqueta="Borrador · Fase 1">
-                    Sección 3, «Repita…Hasta: entrar antes de preguntar». Se escribe en la Tarea 2.3. De la
-                    Fase 1 lleva el flujograma.
+                <Motivacion icon="fa-money-check-dollar"
+                    gancho="Repita entra antes de preguntar. ¿Cuándo es justo lo que hace falta, y cuándo cobra lo que no se debe?">
+                    Dos rutinas del mismo banco usan la misma estructura. La primera pide el monto de un
+                    pago y vuelve a pedirlo si el cliente escribe cero: tiene que leer al menos una vez, y
+                    lo hace bien. La segunda, copiada de la primera, cobra cuotas hasta dejar el saldo en
+                    cero. Con los clientes que ya estaban a paz y salvo, cobró una cuota de 916 799,93 que
+                    nadie debía.
                 </Motivacion>
+
+                <h3>La estructura</h3>
+                <p>
+                    <span className="inline-code">Repita … Hasta</span> invierte el orden del <span className="inline-code">Mientras</span>:
+                    primero ejecuta el cuerpo y <strong>después</strong> evalúa la condición. Es un ciclo de <Termino def="La condición se evalúa después de cada vuelta. El cuerpo se ejecuta siempre al menos una vez, sea cual sea la condición.">evaluación posterior</Termino>,
+                    y eso tiene dos consecuencias. La primera: el cuerpo se ejecuta <strong>al menos una
+                    vez</strong>, pase lo que pase. La segunda: la condición dice cuándo <em>parar</em>, no
+                    cuándo <em>seguir</em>. El ciclo sale cuando la condición es <strong>verdadera</strong>, al
+                    revés que el <span className="inline-code">Mientras</span>.
+                </p>
+
                 <FlujogramaRepita />
+
+                <p>
+                    El caso donde encaja sin forzar nada es la validación de un dato: antes de leerlo no
+                    hay nada que validar, así que la primera lectura es obligatoria, y las siguientes
+                    dependen de lo que se leyó.
+                </p>
+
+                <CodeTabs
+                    titulo="Pedir un monto hasta que sea válido"
+                    bloques={EJ_VALIDAR_MONTO}
+                    nota="El programa lee datos, así que no hay una salida fija. Lo que hay que mirar es dónde está la pregunta: después de la lectura, en los cuatro lenguajes." />
+
+                <p>Aquí los cuatro lenguajes sí se separan:</p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Lenguaje</th><th>Forma</th><th>Cómo sale</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Pseudocódigo</td><td><span className="inline-code">Repita … Hasta monto &gt; 0</span></td><td>Cuando la condición es <strong>verdadera</strong></td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">while True:</span> … <span className="inline-code">if monto &gt; 0: break</span></td><td>No tiene la estructura: se construye con un ciclo que siempre entra y un <span className="inline-code">break</span></td></tr>
+                            <tr><td>R</td><td><span className="inline-code">repeat {'{'}</span> … <span className="inline-code">if (monto &gt; 0) break {'}'}</span></td><td>Tiene <span className="inline-code">repeat</span>, que siempre entra; la salida también es un <span className="inline-code">break</span></td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do … Loop Until monto &gt; 0</span></td><td>Existe tal cual</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="info" label="El único break del capítulo">
+                    Python y R usan <span className="inline-code">break</span> aquí porque no tienen otra forma de
+                    preguntar al final. Es el único uso que le da este capítulo, y el pseudocódigo no lo
+                    tiene: la salida de un ciclo se escribe en su condición. Un ciclo con salidas en medio
+                    del cuerpo esconde justo lo que este capítulo enseña a leer, que es <em>cuándo
+                    para</em>.
+                </Box>
+
+                <Box type="tip" label="VBA tiene las cuatro combinaciones">
+                    En VBA, <span className="inline-code">Do … Loop</span> admite la condición arriba o abajo, y en
+                    cualquiera de los dos sitios con <span className="inline-code">While</span> —seguir mientras— o
+                    con <span className="inline-code">Until</span> —parar cuando—. <span className="inline-code">Do While</span> es el
+                    {' '}<span className="inline-code">Mientras</span> de la sección 2 y <span className="inline-code">Loop Until</span>,
+                    el <span className="inline-code">Repita</span> de esta. Las otras dos,
+                    {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, son las mismas
+                    preguntas con la condición negada.
+                </Box>
+
+                <h3>Mientras o Repita, para validar</h3>
+                <p>
+                    La misma validación se puede resolver con un <span className="inline-code">Mientras</span>, y
+                    funciona. Pero para que la condición tenga con qué preguntar la primera vez, hay que
+                    leer el monto <strong>antes</strong> del ciclo, y otra vez dentro:
+                </p>
+
+                <CodeTabs
+                    titulo="La misma validación, con Mientras"
+                    bloques={EJ_VALIDAR_MIENTRAS}
+                    nota="La lectura aparece dos veces: una para la primera pregunta y otra para las siguientes. Hacen lo mismo, y hay que mantenerlas iguales." />
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="Justifique la forma del ciclo"
+                    solucion={<>
+                        <p>
+                            Para <strong>validar un dato</strong>, la forma natural es <span className="inline-code">Repita</span>,
+                            porque la estructura dice lo mismo que el problema: hay que leer al menos una vez,
+                            y la condición solo tiene sentido después de haber leído. La lectura se escribe una
+                            sola vez y la condición se lee como la regla de negocio: <em>hasta que el monto sea
+                            positivo</em>.
+                        </p>
+                        <p>
+                            Las dos versiones con <span className="inline-code">Mientras</span> funcionan, pero cada una
+                            paga un precio. La de las <strong>dos lecturas</strong> duplica una instrucción: si mañana
+                            cambia el mensaje o se agrega un tope al monto, hay dos sitios que mantener, y el día
+                            que se actualice uno y no el otro la primera lectura y las siguientes se comportarán
+                            distinto. La del <strong>valor inicial falso</strong> —<span className="inline-code">monto &lt;- -1</span>—
+                            esconde la intención: quien lee tiene que descubrir que ese −1 no es un dato sino un
+                            truco para forzar la entrada. Y es frágil: si la regla cambia y un día se admiten
+                            montos negativos —una reversión, por ejemplo—, el −1 deja de forzar nada y el ciclo
+                            no pide el monto ni una vez.
+                        </p>
+                        <p>
+                            <strong>El criterio:</strong> si la primera vuelta es obligatoria por la naturaleza del
+                            problema, <span className="inline-code">Repita</span>; si <strong>cero vueltas</strong> es una
+                            respuesta posible y correcta, <span className="inline-code">Mientras</span>. Es el mismo
+                            argumento el que lleva a elegir <span className="inline-code">Mientras</span> para cobrar
+                            cuotas: un crédito a paz y salvo no debe ninguna, y el cobro tiene que poder no
+                            ejecutarse. La rutina de la motivación falló por eso: copió una estructura que
+                            garantiza una vuelta en un problema donde la respuesta correcta a veces es ninguna.
+                        </p>
+                    </>}
+                >
+                    <p>
+                        La validación del monto admite tres versiones: con <span className="inline-code">Repita</span>,
+                        como en el primer bloque; con <span className="inline-code">Mientras</span> y dos lecturas,
+                        como en el segundo; o con <span className="inline-code">Mientras</span> y una sola lectura,
+                        dándole antes a <span className="inline-code">monto</span> un valor inválido a propósito
+                        —<span className="inline-code">monto &lt;- -1</span>— para obligar al ciclo a entrar. Las tres
+                        funcionan. <strong>Argumente cuál elegiría y por qué</strong>, diga qué riesgo corre cada una
+                        de las otras dos, y explique en qué situación ese mismo argumento lleva a elegir
+                        {' '}<span className="inline-code">Mientras</span>.
+                    </p>
+                </Reto></Ejercicio>
+
+                <h3>Pasar de uno al otro es negar la condición</h3>
+                <p>
+                    <span className="inline-code">Mientras</span> escribe cuándo <em>seguir</em>;
+                    {' '}<span className="inline-code">Hasta</span>, cuándo <em>parar</em>. Pasar de una forma a la
+                    otra obliga a negar la condición, y con una condición compuesta eso es De Morgan, de la
+                    sección 1 del capítulo 4: al negar, el conector también cambia.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Mientras… (seguir si)</th><th>Hasta… (parar si)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span className="inline-code">saldo &gt; 0</span></td><td><span className="inline-code">saldo &lt;= 0</span></td></tr>
+                            <tr><td><span className="inline-code">monto &lt;= 0</span></td><td><span className="inline-code">monto &gt; 0</span></td></tr>
+                            <tr><td><span className="inline-code">saldo &gt; 0 Y meses &lt; 60</span></td><td><span className="inline-code">saldo &lt;= 0 O meses &gt;= 60</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Pero negar bien la condición no basta para que las dos formas sean equivalentes. La
+                    pregunta también cambia de sitio.
+                </p>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="El cobro de cuotas, con Mientras y con Repita"
+                    enunciado={<>Las dos versiones cobran cuotas de un crédito hasta dejar el saldo en cero o por debajo, y la condición de la segunda es la negación exacta de la primera. <strong>Compárelas y responda.</strong></>}
+                    a={{ etiqueta: 'Versión A · Mientras', codigo: CMP_COBRO_MIENTRAS }}
+                    b={{ etiqueta: 'Versión B · Repita…Hasta', codigo: CMP_COBRO_REPITA }}
+                    pregunta="¿Son equivalentes? Y si no lo son, ¿con qué datos dan resultados distintos?"
+                    opciones={[
+                        { texto: 'Sí: Hasta saldo <= 0 es la negación exacta de saldo > 0, así que dan las mismas vueltas con cualquier saldo.', correcta: false },
+                        { texto: 'No: B da siempre una vuelta más que A, porque cobra la cuota antes de preguntar si queda saldo.', correcta: false },
+                        { texto: 'No: difieren cuando el saldo inicial ya es cero o negativo. A no cobra nada y B cobra una cuota.', correcta: true, justificacion: 'Con saldo positivo las dos dan exactamente las mismas vueltas: A entra porque saldo > 0, y B habría entrado de todos modos; después de cada cobro, A sigue si saldo > 0 y B sigue si no se cumple saldo <= 0, que es lo mismo. La negación está bien hecha, y por eso la primera opción parece cierta. Lo que cambia es el momento de la primera pregunta. Con un crédito a paz y salvo —saldo 0—, A pregunta antes de entrar, la condición es falsa y no cobra nada; B cobra antes de preguntar, y cobra una cuota que nadie debe. Es el caso de la motivación. No es cierto que B dé siempre una vuelta más: solo la da cuando A no da ninguna. Y el residuo no los distingue: cuando el saldo no es múltiplo de la cuota, las dos cobran la última cuota completa y dejan el mismo saldo negativo, como el sexto abono de la sección 2.' },
+                        { texto: 'No: difieren cuando el saldo no es múltiplo de la cuota. A deja un saldo negativo y B se detiene en cero.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Box type="tip" label="Lo que sigue">
+                    Las dos formas de esta sección y de la anterior se detienen por una condición sobre un
+                    dato: el saldo, el monto. La sección 4 trata el caso en que se sabe de antemano cuántas
+                    vueltas hacen falta —doce cuotas, 240 cuotas—, y allí vuelve este mismo cobro: con cero
+                    cuotas pendientes, el <span className="inline-code">Repita</span> cobra una, y el
+                    {' '}<span className="inline-code">for</span> de R, dos.
+                </Box>
             </div>
         );
 
+        /* ============================================================
+           SECCIONES 4 A 7 — andamio (BORRADOR-FASE1)
+        ============================================================ */
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-list-ol" etiqueta="Borrador · Fase 1">

@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 aprobado el 2026-09-28 (§9). Fase 1 hecha; en el punto de control 1.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9). Tareas 2.1 a 2.3 hechas; en el punto de control 2.
 
 ---
 
@@ -107,7 +107,7 @@ maestro pondría aquí.
 | Acumular 0,1 tres veces (E1) y conciliar cien centavos con un `Para` (E3) | `01:4131` y `:3983`, sección 4 |
 | «Repita hasta obtener un resultado razonable» **falla la finitud** | `02_LPF_Algoritmos.html:2399`, sección 1 |
 | Búsqueda lineal (`Para` + `Salir`) contra búsqueda binaria (`Mientras izq <= der`), **contando vueltas** | `02:3541`, sección 5; el recuadro de `02:3750` dice que son «las estructuras repetitivas del capítulo 5» y que «basta con leerlas» |
-| El patrón **acumulador**, con ese nombre | `03_LPF_Control_Secuencial.html:2798` y `:3200` |
+| El patrón **acumulador**, con ese nombre | `02_LPF_Algoritmos.html:3445` y `:3482`, sección 4, con la inicialización en cero y su entrada de glosario; después, `03_LPF_Control_Secuencial.html:2798` y `:3200` *(la fila del capítulo 2 se añadió en la Fase 2: el plan solo citaba el 3)* |
 
 Hay dos consecuencias:
 
@@ -294,7 +294,7 @@ Quedan 13 iconos, sin contar `BookOpen` (portada) ni `Award` (evaluación).
 | Sección | Icono | Por qué |
 |---|---|---|
 | 1 · Contar y acumular | `Calculator` | el acumulador |
-| 2 · `Mientras` | `Repeat` | la repetición; **ningún capítulo lo usa como sección todavía** |
+| 2 · `Mientras` | `Repeat` | la repetición *(el borrador decía que ningún capítulo lo usaba; es falso, el 2 lo usa en su sección 5. No importa: la regla es no repetir icono dentro de un capítulo)* |
 | 3 · `Repita…Hasta` | `ArrowDownUp` | se baja y después se vuelve a subir |
 | 4 · `Para` | `Table` | una fila por valor del contador, la tabla de amortización |
 | 5 · Anidados | `Layers` | literal: un ciclo dentro de otro |
@@ -364,7 +364,26 @@ comentario que dice de dónde sale y que el capítulo 8 la convierte en función
 No se deduce ni se ejercita. Así se conserva H3, que se midió con la cuota sin
 redondear. La otra salida sería dar la cuota como un número ya redondeado
 (916 799,93); pero entonces el residuo final pasa a ser de centavos y la tabla
-de H3 deja de valer. → **P6.**
+de H3 deja de valer. → **P6**, aprobada en el PC1.
+
+### H15 · La medida de 375 px de la skill no puede fallar en este formato *(encontrado en la Fase 2)*
+
+La puerta de la skill pide dos cosas a 375 px: `document.documentElement.scrollWidth`
+igual al viewport, y ningún elemento fuera de él «que no esté dentro de su propio
+contenedor con `overflow-x`». Medido en este capítulo, **la primera no puede
+fallar**: el `<main>` del `App` tiene `overflow-x: hidden`, así que lo que se sale
+queda recortado y el documento no se ensancha. Se probó con un bloque de 600 px
+metido a propósito: `scrollWidth` siguió en 375.
+
+La segunda solo funciona si «su propio contenedor» significa uno que **desplaza**
+(`auto` o `scroll`). Un guion que acepte también `hidden` se detiene en el `<main>`
+y da por bueno cualquier desborde. Con el criterio corregido, el mismo bloque de
+600 px sale señalado, y las nueve entradas del capítulo vuelven a dar cero, con la
+tabla completa, los cuatro paneles y la bisección terminada. La conclusión del
+PC1 se mantiene, pero ahora está medida con un instrumento que puede fallar.
+
+**Para la skill:** la puerta debe decir que `scrollWidth` es ciego aquí, y que el
+contenedor válido es el que desplaza, con la prueba negativa del bloque de 600 px.
 
 ---
 
@@ -501,7 +520,7 @@ que va en HTML. En el de `Para`, las tres piezas que el ciclo hace por su cuenta
 `Repita`, el retorno sale por el «No», al revés que en el de `Mientras`: es H5
 dibujado.
 
-### ⏸ Punto de control 1 — Los artefactos
+### ⏸ Punto de control 1 — Los artefactos · ✅ 2026-09-28
 - [x] Los tres funcionan, **medidos por DOM**. La tabla llega a 240 filas; la
       última es `240 | 19.353,68 | 1.759.425,20 | 0,00 | 276.906.929,57`, y los
       intereses coinciden con Python al centavo. Con 12 cuotas, el último abono
@@ -517,9 +536,12 @@ dibujado.
 - [x] Consola limpia: solo los dos avisos de siempre
 - [x] Comprobación 1 en verde; `verificar.py --sin-cuota --con-salidas` en verde
       sobre los cinco capítulos; ningún residuo de la demostración
-- [ ] **Revisión del docente:** ver los tres artefactos y aprobar la interacción
-      antes de escribir las siete secciones. Además, **P6** y **P7**, y
-      confirmar el corte en siete secciones y los iconos que quedaron del PC0
+- [x] **Revisión del docente** (2026-09-28): aprobados **P6** y **P7**, el corte
+      en siete secciones y los iconos. P5 sigue sin respuesta, y el docente
+      pidió seguir con la Fase 2
+- [x] *Remedido en la Fase 2 (H15):* la medida de 375 px de este punto de
+      control podía estar ciega. Repetida con un instrumento que sí falla, da
+      cero en las nueve entradas
 
 ---
 
@@ -528,29 +550,77 @@ dibujado.
 Una tarea es una sección terminada: motivación, código en los cuatro lenguajes y
 sus ejercicios.
 
-#### Tarea 2.1 · Portada + Sección 1 — «Contar y acumular: lo que ya trazó sin nombrarlo»
+#### Tarea 2.1 · Portada + Sección 1 — «Contar y acumular: lo que ya trazó sin nombrarlo» · ✅
 La portada abre con las 240 filas (H2.1). La sección 1 cita los siete sitios de
 H1 sin repetirlos, y nombra el contador y el acumulador, que el capítulo 3 ya
 presentó sin ciclo. **E2:** ¿contador o acumulador? **E5:** ordenar los pasos
 para que la inicialización quede **fuera** del ciclo.
 
-#### Tarea 2.2 · Sección 2 — «`Mientras`: preguntar antes de entrar»
+*Hecho.* La portada abre con el crédito de vivienda de 240 filas: una vuelta de
+menos deja 1 759 425,20 sin cobrar (ejecutado). Cita las promesas de los
+capítulos 3 y 4 con sus palabras. La sección 1 abre con un extracto de ahorro
+programado que informa 34 053 de intereses cuando se ganaron 217 709: es la
+inicialización del acumulador escrita dentro del ciclo. Los dos programas se
+ejecutan, y las dos versiones **coinciden en las dos primeras vueltas**, porque
+el interés del mes 1 es cero. El texto lo dice: una traza corta no lo delata. La
+sección nombra también el acumulador de producto, que arranca en 1. **E2**
+(selección múltiple): el contador que no aumenta en todas las vueltas y el dato
+leído que cambia sin ser acumulador. **E5:** el cierre de recaudo. `OrdenaPasos`
+califica por posición, así que el enunciado fija dos convenciones que no cambian
+el resultado: las inicializaciones en el orden de sus actualizaciones, y la
+vuelta contada al final.
+
+#### Tarea 2.2 · Sección 2 — «`Mientras`: preguntar antes de entrar» · ✅
 Un `Trazador` de tres vueltas, donde la línea del `Mientras` vuelve a iluminarse
 en cada una (H9). **E1:** traza de un saldo insoluto con abonos. **E2:** cero
 vueltas, porque la condición es falsa de entrada.
 
-#### Tarea 2.3 · Sección 3 — «`Repita…Hasta`: entrar antes de preguntar»
+*Hecho.* Un acuerdo de pago: 2 350 000 en abonos de 400 000 da seis meses, y el
+sexto abono cobra 400 000 cuando se debían 350 000. El arreglo se describe, no
+se escribe: es una selectiva dentro del cuerpo. El `Trazador` tiene 14 pasos. El
+**E1 va por evaluación de la condición**, no por vuelta: cinco filas para cuatro
+vueltas. Es lo que lo separa de la traza de la meta de ahorro del capítulo 1, que
+iba por vueltas. El **E2** es de selección múltiple: el saldo 0 y el saldo a favor
+dan cero vueltas, y los distractores son el abono justo (una vuelta) y el abono 0
+(no termina, anticipa la sección 6).
+
+#### Tarea 2.3 · Sección 3 — «`Repita…Hasta`: entrar antes de preguntar» · ✅
 Los cuatro lenguajes con sus diferencias (H5). **E8:** validar un monto, del plan
 maestro. **E4:** `Mientras` contra `Repita` con la condición negada, que solo
 difieren en el crédito ya pagado.
 
+*Hecho.* La motivación junta las dos rutinas: la validación que funciona y el
+cobro copiado de ella, que le cobra 916 799,93 a quien está a paz y salvo.
+Incluye la tabla de H5, el `break` como único del capítulo (H6) y las cuatro
+combinaciones de `Do…Loop` en VBA. Para negar la condición se usa De Morgan. El
+**E8** compara tres validaciones: con `Repita`, con `Mientras` y dos lecturas, y
+con `Mientras` y un `−1` inicial. El **E4** tiene de distractores las dos
+creencias reales: «la negación es exacta, luego son iguales» y «B da siempre una
+vuelta más».
+
 ### ⏸ Punto de control 2 — Tono, densidad y primer tercio
-- [ ] Seis ejercicios: E1:1 · E2:2 · E4:1 · E5:1 · E8:1
-- [ ] Cada ejercicio que califica, llevado hasta el veredicto por DOM, con una
-      respuesta mala incluida
-- [ ] `verificar.py --sin-cuota --con-salidas` en verde
-- [ ] La sección 1, leída junto a los capítulos 1 y 2: **ninguna repetición**
-      (R4)
+- [x] Seis ejercicios: E1:1 · E2:2 · E4:1 · E5:1 · E8:1, y ningún aviso de la
+      regla 17
+- [x] Cada ejercicio que califica, llevado hasta el veredicto por DOM, con una
+      respuesta mala incluida. Los dos E2 y el E4 dan «Correcto» con la clave y
+      «Revisa la explicación» con una de más, una de menos y un distractor. El
+      E5 da la secuencia correcta en los cuatro lenguajes, y 8 de 11 con el
+      total inicializado dentro del ciclo. El E1 da 15/15 también con puntos de
+      miles y mayúsculas, y 3/15 con la tabla hecha por vueltas. El `Trazador`
+      recorre sus 14 pasos en los cuatro lenguajes con la línea activa
+      correcta, y el E8 muestra su solución
+- [x] `verificar.py --sin-cuota --con-salidas` en verde sobre los cinco
+      capítulos. Seis bloques de Python y R ejecutados; cada cifra en prosa
+      (las 34 053 del mes 13, la coincidencia de las dos primeras vueltas, las
+      evaluaciones de cada acuerdo, el cobro con saldo 0, −5, 100, 250 y 300)
+      ejecutada aparte
+- [x] La sección 1, leída junto a los capítulos 1 y 2: **ninguna repetición**
+      (R4). El ahorro programado se parece a la meta de ahorro del capítulo 1, y
+      el texto lo dice en vez de esconderlo
+- [x] 375 px en las nueve entradas, con el instrumento corregido (H15);
+      consola limpia; los cuatro iconos nuevos de las motivaciones dan glifo;
+      ningún espacio comido entre texto y elemento, comprobado en el DOM con un
+      guion que también se probó en negativo
 - [ ] **Revisión del docente:** ¿las motivaciones son ganchos o son índices? ¿la
       densidad es la del capítulo 4?
 
@@ -776,11 +846,12 @@ python3 -m http.server 8777 --directory "Material html"
   del banco tal como salen.
 - **P6 · ¿La cuota fija se da como una fórmula de una línea?** (H14) La
   alternativa es darla como un número redondeado, pero entonces el residuo final
-  sería de centavos y la tabla de H3 dejaría de valer. **Propuesta:** la fórmula,
-  sin deducirla y con la cita al capítulo 8.
+  sería de centavos y la tabla de H3 dejaría de valer. **Aprobada en el PC1:** la
+  fórmula, sin deducirla y con la cita al capítulo 8.
 - **P7 · ¿Se queda el cuarto panel de `TresCiclosComparados`?** Es el
-  `for (k in 1:n)` de R, que está apagado por defecto. **Propuesta: sí.** Es H4
-  hecho visible, y sin él la sección 4 solo podría contarlo.
+  `for (k in 1:n)` de R, que está apagado por defecto. **Aprobada en el PC1:
+  sí.** Es H4 hecho visible, y sin él la sección 4 solo podría contarlo.
 - **P5 · ¿Las revisiones de los capítulos 3 y 4, antes o después del PC1?** Antes
-  abarata el R1; después no bloquea el arranque. *Sigue abierta; no bloquea la
-  Fase 1.*
+  abarata el R1; después no bloquea el arranque. *Sin respuesta en el PC1: el
+  docente pidió seguir con la Fase 2, así que en la práctica quedan para
+  después, y el R1 sigue abierto.*
