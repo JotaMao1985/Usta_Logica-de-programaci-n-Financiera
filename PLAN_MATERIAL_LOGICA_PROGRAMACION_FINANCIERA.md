@@ -1499,3 +1499,42 @@ cuestionario —¿bajo qué condición se puede usar la búsqueda por mitades?�
 comparador de la sección 5 con otras palabras, y las dos claves dicen lo mismo:
 solo si la cartera está ordenada. La regla pide dos opciones calcadas y aquí
 solo lo está la clave.
+
+### Las claves largas del capítulo 3, y una clave falsa · 2026-09-28
+
+Los cuatro avisos del 3, con el mismo método del 2: cada distractor recibe la
+razón de la creencia equivocada, y la clave queda entre 1,02 y 1,06 veces la
+media en los cuatro. El 3 queda sin avisos.
+
+Al comprobar las cifras antes de escribir apareció algo más grave que el
+tamaño: **la clave de la pregunta 6 era falsa.** Decía que `(a + b) / 2` y
+`a / 2 + b / 2`, con división entera, dejan de coincidir «cuando alguno de los
+dos valores es impar». Con 3 y 4 dan 3 las dos. Difieren si y solo si **los dos**
+son impares —3 y 5 dan 4 y 3—: cada mitad pierde su medio por separado, y la
+suma, dividida una sola vez, no pierde nada porque es par. Si solo uno es impar,
+la suma también lo es y pierde el mismo medio. Comprobado en los 900 pares de 0
+a 29, y en Python también con negativos; con el `\` de VBA y signos mezclados
+basta uno solo impar (`-3` y `4`), pero el ejercicio habla de saldos. La
+pregunta lo había copiado de la sección 3, donde la justificación del
+comparador decía lo mismo; se corrigieron las dos. Y la frase vieja entra como
+distractor: es exactamente el error que el propio capítulo cometía, y solo se
+descarta probando con 3 y 4.
+
+Dos distractores más se cambiaron por **defendibles**, no por cortos:
+
+- «Cuando a y b son muy grandes, porque la suma se desborda» es cierto en VBA:
+  `a + b` puede pasarse de un `Long` —21 millones de pesos en centavos— cuando
+  `a \ 2 + b \ 2` no. Es el fallo clásico del punto medio en la búsqueda
+  binaria.
+- La justificación de la pregunta 10 decía que «2 % mensual» se detiene antes de
+  componer. Pero 2 % mensual es exacto si capitaliza cada mes; el error es dar
+  por sabido el dato que falta. Si el 24 % fuera efectivo anual, el mes costaría
+  1,81 %.
+
+Navegador: 10/10, y 6/10 fallando las cuatro tocadas —la 6 con la clave vieja,
+que ahora cuenta como error—; el comparador de la sección 3 muestra la
+advertencia corregida; a 375 px, sin desborde.
+
+Ninguna regla podía ver una clave falsa: todas miden la forma de la pregunta,
+no si lo que afirma es cierto. La encontró ejecutar la cifra antes de
+reescribir el ítem —la misma regla que cazó el `#> 600000` del capítulo 1—.
