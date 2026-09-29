@@ -1538,3 +1538,19 @@ advertencia corregida; a 375 px, sin desborde.
 Ninguna regla podía ver una clave falsa: todas miden la forma de la pregunta,
 no si lo que afirma es cierto. La encontró ejecutar la cifra antes de
 reescribir el ítem —la misma regla que cazó el `#> 600000` del capítulo 1—.
+
+### La clave larga del capítulo 4 · 2026-09-28
+
+El único aviso del 4 era el E2 de la sección 3: con la versión de dos `Si`,
+¿qué tarifa recibe un cliente no preferencial de 800 000? La clave —«0, ninguna
+condición se cumple»— medía 84 contra una media de 56. Cada distractor recibió
+su razón, y las cifras se ejecutaron: 800 000 × 0,002 = 1 600 y × 0,005 =
+4 000. El fuerte es el de 4 000: es lo que daría la versión correcta con
+`Si…Sino`, así que lo marca quien lee la intención del programa y no el
+programa. Clave a 1,02 veces la media. Navegador: «Revisa la explicación» con
+el 4 000 y «¡Correcto!» con la clave; a 375 px, sin desborde.
+
+Con esto el 2, el 3 y el 4 pasan sin ningún aviso. **Quedan tres en el 1**, en la
+sección 2 —el E del cajero automático que tarda 15 segundos y dos preguntas del
+minicuestionario—: se anotaron al arreglar el cuestionario final del 1 y se
+dieron por resueltos al hacer la cuenta de lo que faltaba. No lo estaban.

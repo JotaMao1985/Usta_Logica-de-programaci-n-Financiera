@@ -3835,9 +3835,9 @@ Debug.Print tarifa`,
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
                         { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
-                        { texto: '1 600 — se le aplica la tarifa preferencial por error.', correcta: false },
-                        { texto: '4 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
-                        { texto: 'Un error de ejecución: tarifa nunca se asigna.', correcta: false },
+                        { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
+                        { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
+                        { texto: 'Un error de ejecución: ninguno de los dos Si le asigna un valor a tarifa.', correcta: false },
                     ]}
                 /></Ejercicio>
 
