@@ -1554,3 +1554,46 @@ Con esto el 2, el 3 y el 4 pasan sin ningún aviso. **Quedan tres en el 1**, en 
 sección 2 —el E del cajero automático que tarda 15 segundos y dos preguntas del
 minicuestionario—: se anotaron al arreglar el cuestionario final del 1 y se
 dieron por resueltos al hacer la cuenta de lo que faltaba. No lo estaban.
+
+### Las claves largas del capítulo 1 · 2026-09-28
+
+Los tres avisos del 1 estaban en la sección 2 —el cajero que tarda 15 segundos,
+la ALU y el paso *decode*—, pero el capítulo tenía **ocho más que la regla 17
+no ve**: sus minicuestionarios y su cuestionario final están llenos de opciones
+cortas («11», «RAM», «False»), y la regla se salta todo ítem con una opción de
+menos de 20 caracteres. Se arreglaron los once.
+
+Casi todos los invisibles eran de un tipo que no había aparecido en los otros
+capítulos: **la clave trae su propia cuenta.** `'21 (16 + 4 + 1 = 21)'` contra
+`'17'` y `'10101'`; `'2 (17 dividido entre 5 da 3, sobra 2)'` contra `'3.4'` y
+`'3'`; `'255 (2⁸ - 1).'` contra `'1024'` y `'128'`. Se acierta sin saber el
+tema: la única opción que razona es la buena, y su aritmética cuadra. El arreglo
+es darle a cada distractor su cuenta equivocada, que es la creencia que
+representa, ejecutada antes de escribirla:
+
+- `42 (32 + 8 + 2)`: los pesos binarios empezando en 2 en vez de en 1.
+- `11 (1 + 2 + 0 + 8)`: los pesos leídos al revés.
+- `3.4 (% divide)` y `3 (% da el cociente)`: las dos confusiones del módulo.
+- `256 (2⁸)` en lugar de `1024`: el error de uno —256 valores, pero el último
+  es el 255—, que es exactamente lo que explica la justificación.
+
+En el ciclo de instrucción, los distractores de «¿qué hace *decode*?» son ahora
+los otros tres pasos que la sección enseña —leer, ejecutar, guardar—, no «se
+guarda en el disco duro». Y los de la ALU, lo que hace la Unidad de Control,
+que es lo que dice la justificación.
+
+Resultado: **los cuatro capítulos pasan sin ningún aviso.** Navegador: los
+tres minicuestionarios y el final con puntaje completo, y con exactamente el
+puntaje esperado al marcar los distractores nuevos (2/3, 1/3, 1/4, 5/8); los dos
+MCQ, «¡Correcto!» y «Revisa la explicación»; a 375 px, sin desborde en las
+cuatro secciones.
+
+Dos cosas anotadas, sin tocar:
+
+- **La regla 17 no ve 8 de las 11 claves largas del 1.** El filtro de 20
+  caracteres existe para no medir opciones como «Cero», pero deja fuera también
+  las claves que traen su cuenta, que son las que más regalan. Queda propuesto
+  ajustarlo.
+- **`True and False or True` da `True` se agrupe como se agrupe**, así que esa
+  pregunta del minicuestionario de la sección 3 no mide la precedencia, que es
+  para lo que está. Pide otra expresión, no otros distractores.

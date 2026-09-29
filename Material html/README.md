@@ -341,6 +341,14 @@ elige ni quien no sabe. Un buen distractor es una creencia que alguien tiene de
 verdad —«las dos agrupaciones dan lo mismo», «`AndAlso` existe en VBA»—, y por
 eso enseña algo cuando se descarta.
 
+Y una quinta, que tampoco vigila nadie: **la clave trae su propia cuenta.**
+`'13 (8 + 4 + 0 + 1 = 13)'` contra un `'11'` pelado se acierta sin saber binario:
+es la única opción que muestra su razonamiento, y la aritmética cuadra. No se
+arregla quitándole la cuenta a la clave sino dándole a cada distractor **la suya,
+la equivocada**: `'11 (1 + 2 + 0 + 8 = 11)'` son los pesos leídos al revés, y
+descartarlo obliga a saber por qué lado empiezan. La regla 17 no lo ve, porque
+las opciones numéricas miden menos de 20 caracteres.
+
 Y cada pregunta del cuestionario final **dice de qué sección es**, con
 `seccion: 'capN'`. Es lo que deja a la regla 19 comprobar que ninguna sección se
 quede sin preguntar. Sin etiquetas la regla no puede comprobar nada, y lo dice

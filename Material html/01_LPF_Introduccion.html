@@ -2881,8 +2881,8 @@ End Sub`,
                         pregunta: 'El número 10101 en binario equivale en decimal a:',
                         opciones: [
                             { texto: '21 (16 + 4 + 1 = 21)', correcta: true },
-                            { texto: '17', correcta: false },
-                            { texto: '10101', correcta: false },
+                            { texto: '42 (32 + 8 + 2 = 42)', correcta: false },
+                            { texto: '10101 (es el mismo número, escrito en otra base)', correcta: false },
                         ],
                         justificacion: '1×16 + 0×8 + 1×4 + 0×2 + 1×1 = 21.'
                     },
@@ -3261,9 +3261,9 @@ Debug.Print total`,
                     pregunta="Un cajero automático que tarda 15 segundos en autorizar un retiro probablemente sufre de:"
                     opciones={[
                         { texto: 'Un cuello de botella de I/O: está esperando la respuesta del servidor central del banco por la red.', correcta: true, justificacion: 'La validación de PIN, consulta de saldo y autorización requieren comunicación con el core bancario central. La red suele ser el eslabón más lento.' },
-                        { texto: 'La CPU del ATM es demasiado lenta para sumar y restar.', correcta: false },
-                        { texto: 'La memoria RAM del ATM está llena de transacciones anteriores.', correcta: false },
-                        { texto: 'El teclado numérico está defectuoso.', correcta: false },
+                        { texto: 'Una CPU demasiado lenta: el procesador del cajero no alcanza a hacer las sumas y restas del retiro.', correcta: false },
+                        { texto: 'Falta de memoria: la RAM del cajero está llena de transacciones anteriores y no le cabe la nueva.', correcta: false },
+                        { texto: 'Un teclado defectuoso: las teclas registran la clave con retraso y el cajero espera cada dígito.', correcta: false },
                     ]} />
 
                 <Quiz titulo="Mini-cuestionario · Capítulo 2" preguntas={[
@@ -3271,8 +3271,8 @@ Debug.Print total`,
                         pregunta: 'La ALU (Unidad Aritmético-Lógica) es responsable de:',
                         opciones: [
                             { texto: 'Ejecutar operaciones matemáticas y lógicas (suma, resta, AND, OR, comparaciones).', correcta: true },
-                            { texto: 'Leer la siguiente instrucción de la memoria.', correcta: false },
-                            { texto: 'Mostrar el resultado en la pantalla.', correcta: false },
+                            { texto: 'Leer la siguiente instrucción de la memoria y decidir qué operación representa.', correcta: false },
+                            { texto: 'Mostrar el resultado en la pantalla y en los demás dispositivos de salida.', correcta: false },
                         ],
                         justificacion: 'La ALU es la "calculadora" de la CPU. La UC se encarga de leer y decodificar instrucciones.'
                     },
@@ -3288,9 +3288,9 @@ Debug.Print total`,
                     {
                         pregunta: 'En el ciclo fetch-decode-execute, ¿qué hace el paso "decode"?',
                         opciones: [
-                            { texto: 'Se guarda el resultado en el disco duro.', correcta: false },
+                            { texto: 'Se guarda el resultado de la operación en un registro o en la memoria principal.', correcta: false },
                             { texto: 'La Unidad de Control interpreta qué operación representa el código binario leído.', correcta: true },
-                            { texto: 'La ALU ejecuta la suma.', correcta: false },
+                            { texto: 'La ALU ejecuta la operación que pide la instrucción sobre los operandos.', correcta: false },
                         ],
                         justificacion: 'Decode = decodificar el código de operación (opcode) para saber si es MOV, ADD, CMP, JMP, etc.'
                     },
@@ -3808,8 +3808,8 @@ End Sub`,
                 <MCQ
                     pregunta="¿Qué imprime: print(10 + 5 * 2)?"
                     opciones={[
-                        { texto: '30 (se suma primero y luego se multiplica).', correcta: false },
-                        { texto: 'Error de sintaxis.', correcta: false },
+                        { texto: '30 (se opera de izquierda a derecha: 10 + 5 = 15, luego 15 * 2 = 30).', correcta: false },
+                        { texto: 'Error de sintaxis: print recibe un valor, no una operación que haya que calcular.', correcta: false },
                         { texto: '20 (la multiplicación tiene mayor precedencia: 5*2=10, luego 10+10=20).', correcta: true, justificacion: 'La multiplicación (*) tiene precedencia sobre la suma (+). Es equivalente a 10 + (5*2) = 20.' },
                     ]} />
 
@@ -3825,9 +3825,9 @@ End Sub`,
                     {
                         pregunta: '¿Cuál es el resultado de 17 % 5?',
                         opciones: [
-                            { texto: '3.4', correcta: false },
+                            { texto: '3.4 (% divide: 17 entre 5 da 3,4).', correcta: false },
                             { texto: '2 (17 dividido entre 5 da 3, sobra 2).', correcta: true },
-                            { texto: '3', correcta: false },
+                            { texto: '3 (% da el cociente: 5 cabe 3 veces en 17).', correcta: false },
                         ],
                         justificacion: 'El módulo (%) devuelve el residuo de la división entera: 17 = 5×3 + 2.'
                     },
@@ -3844,17 +3844,17 @@ End Sub`,
                         pregunta: '¿Cuál es el resultado de: True and False or True?',
                         opciones: [
                             { texto: 'True (and primero: True and False → False; luego False or True → True).', correcta: true },
-                            { texto: 'False', correcta: false },
-                            { texto: 'Error, no se puede mezclar and y or.', correcta: false },
+                            { texto: 'False (basta un False para que toda la expresión sea falsa).', correcta: false },
+                            { texto: 'Error: and y or no se pueden mezclar en una expresión sin paréntesis.', correcta: false },
                         ],
                         justificacion: 'and tiene precedencia sobre or. True and False → False, luego False or True → True.'
                     },
                     {
                         pregunta: 'En la expresión (1 + tasa) ** n, ¿qué hace **?',
                         opciones: [
-                            { texto: 'Es un comentario especial.', correcta: false },
-                            { texto: 'Eleva a la potencia n. Es el operador de exponenciación.', correcta: true },
-                            { texto: 'Multiplica por n.', correcta: false },
+                            { texto: 'Eleva al cuadrado (1 + tasa) y después multiplica el resultado por n.', correcta: false },
+                            { texto: 'Eleva (1 + tasa) a la potencia n: es el operador de exponenciación.', correcta: true },
+                            { texto: 'Multiplica por n, como el *, pero con más prioridad que la suma.', correcta: false },
                         ],
                         justificacion: '** es el operador de potencia en Python. (1 + i) ** n calcula (1 + i)^n, base del interés compuesto.'
                     },
@@ -4274,7 +4274,7 @@ End Sub`,
                         pregunta: 'El número binario 1101 equivale en decimal a:',
                         opciones: [
                             { texto: '13 (8 + 4 + 0 + 1 = 13)', correcta: true },
-                            { texto: '11', correcta: false },
+                            { texto: '11 (1 + 2 + 0 + 8 = 11)', correcta: false },
                             { texto: '1101 (es el mismo número)', correcta: false },
                         ],
                         justificacion: '1×8 + 1×4 + 0×2 + 1×1 = 13.'
@@ -4283,8 +4283,8 @@ End Sub`,
                         seccion: 'cap2',
                         pregunta: 'En la arquitectura de Von Neumann, el componente que coordina la lectura y ejecución de instrucciones es:',
                         opciones: [
-                            { texto: 'La ALU.', correcta: false },
-                            { texto: 'La memoria RAM.', correcta: false },
+                            { texto: 'La Unidad Aritmético-Lógica (ALU).', correcta: false },
+                            { texto: 'La memoria principal (RAM).', correcta: false },
                             { texto: 'La Unidad de Control (UC).', correcta: true },
                         ],
                         justificacion: 'La UC es el "director de orquesta": lee la instrucción de memoria, la decodifica y coordina su ejecución.'
@@ -4303,9 +4303,9 @@ End Sub`,
                         seccion: 'cap1',
                         pregunta: 'Un byte puede representar valores desde 0 hasta:',
                         opciones: [
-                            { texto: '1024', correcta: false },
+                            { texto: '256 (2⁸).', correcta: false },
                             { texto: '255 (2⁸ - 1).', correcta: true },
-                            { texto: '128', correcta: false },
+                            { texto: '128 (2⁷).', correcta: false },
                         ],
                         justificacion: '8 bits → 2⁸ = 256 valores distintos, de 0 a 255.'
                     },
