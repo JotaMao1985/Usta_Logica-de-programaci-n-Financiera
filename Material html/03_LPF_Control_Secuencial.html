@@ -2795,8 +2795,8 @@ Debug.Print saldo`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Las tres asignaciones sobre saldo se ejecutan en orden. ¿Qué imprime la última línea?"
                     opciones={[
-                        { texto: '1 050 000.', correcta: true, justificacion: 'Cada asignación calcula primero la derecha con el valor que saldo tiene en ese momento y después lo reemplaza: 1 200 000 → 1 550 000 → 1 050 000. Es un acumulador, el patrón con el que se construyen todos los saldos del capítulo 5.' },
-                        { texto: '2 050 000, la suma de los tres números.', correcta: false },
+                        { texto: '1 050 000: cada línea parte del saldo que dejó la anterior y lo reemplaza.', correcta: true, justificacion: 'Cada asignación calcula primero la derecha con el valor que saldo tiene en ese momento y después lo reemplaza: 1 200 000 → 1 550 000 → 1 050 000. Quien marca 700 000 lee saldo como si guardara para siempre su primer valor, y ese valor se borró en la segunda línea. Es un acumulador, el patrón con el que se construyen todos los saldos del capítulo 5.' },
+                        { texto: '700 000: a la derecha, saldo vale siempre lo que se le dio al principio.', correcta: false },
                         { texto: '1 200 000: las dos últimas líneas son ecuaciones imposibles y se ignoran.', correcta: false },
                         { texto: 'Un error: una variable no puede aparecer a ambos lados de la asignación.', correcta: false },
                     ]}

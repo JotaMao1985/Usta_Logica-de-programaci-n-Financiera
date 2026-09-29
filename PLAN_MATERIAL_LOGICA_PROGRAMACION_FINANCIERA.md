@@ -1630,3 +1630,23 @@ La octava clave del 1 sigue sin verse, y no por el tamaño:
 `'13 (8 + 4 + 0 + 1 = 13)'` competía con `'1101 (es el mismo número)'`, que mide
 más. Lo que la delataba era ser la única que razona, y eso no se mide contando
 caracteres. Queda anotado en el README como algo que se mira leyendo.
+
+### La clave del acumulador del 3 ya no es la única sin razón · 2026-09-28
+
+Al calibrar la regla 17 apareció el caso contrario, que ninguna regla mira: en
+el E2 del acumulador (sección 2 del 3) la clave era `'1 050 000.'`, pelada, y
+los tres distractores traían su razón —39, 72 y 73 caracteres—. Es la quinta
+forma del README vista del revés: la única opción que no razona también se
+distingue.
+
+Se le dio a la clave su razón, como a las demás, y de paso se cambió un
+distractor. `'2 050 000, la suma de los tres números'` era sumar mal, no una
+creencia sobre la asignación. El nuevo es la que la justificación desmiente:
+`'700 000: a la derecha, saldo vale siempre lo que se le dio al principio'`,
+que es leer `saldo` como una incógnita fija, ejecutado (1 200 000 − 500 000).
+La justificación suma una frase para quien lo marque. Las cuatro opciones miden
+ahora 72–74.
+
+Navegador: con el 700 000, «Revisa la explicación»; con la clave, «¡Correcto!»
+y la frase nueva a la vista; a 375 px, sin desborde en la sección 2; consola
+limpia.
