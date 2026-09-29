@@ -1597,3 +1597,36 @@ Dos cosas anotadas, sin tocar:
 - **`True and False or True` da `True` se agrupe como se agrupe**, así que esa
   pregunta del minicuestionario de la sección 3 no mide la precedencia, que es
   para lo que está. Pide otra expresión, no otros distractores.
+
+### La regla 17 ve las opciones cortas · 2026-09-28
+
+La regla se saltaba todo ítem con una opción de menos de 20 caracteres, y por
+ahí se le escaparon ocho claves del 1 y una del 2. El filtro no se quitó sin
+más: existía porque entre cifras la proporción no dice nada —`'10'` es el doble
+que `'7'`—. Se cambió por un **margen**: si alguna opción es corta, además de
+cumplir una de las dos varas, la clave tiene que sacarle **8 caracteres** al
+distractor más largo. En prosa la regla queda como estaba.
+
+El 8 sale de lo medido. Los 17 avisos que la regla ya daba le sacan al
+distractor más largo entre 16 y 65 caracteres; las claves del punto ciego,
+entre 9 y 35 (la más justa, `'255 (2⁸ - 1).'` contra `'1024'`); las listas de
+cifras se diferencian en 1 a 4.
+
+Prueba negativa, contra las versiones de antes de cada arreglo:
+
+- el 1 pasa de 3 avisos a 10: las siete claves nuevas son siete de las ocho
+  invisibles;
+- el 2 pasa de 7 a 8: el nuevo es la finitud, el «uno que la regla no ve»
+  anotado al arreglar ese capítulo;
+- el 3 y el 4, iguales; ningún aviso de los que ya salían se pierde;
+- los cuatro capítulos de hoy, cero avisos: el ajuste no mete ruido.
+
+Casos sintéticos: `'10'` entre `'7'` y `'8'`, `'1000'` entre `'1'`, `'10'` y
+`'100'`, y `'Cero'` entre cifras, callan. `'Error de tipo (TypeError)'` como
+clave entre `'53'` y `'8'` **salta, y es a propósito**: ser la única opción
+escrita con palabras la delata igual que el tamaño. Como distractor, calla.
+
+La octava clave del 1 sigue sin verse, y no por el tamaño:
+`'13 (8 + 4 + 0 + 1 = 13)'` competía con `'1101 (es el mismo número)'`, que mide
+más. Lo que la delataba era ser la única que razona, y eso no se mide contando
+caracteres. Queda anotado en el README como algo que se mira leyendo.

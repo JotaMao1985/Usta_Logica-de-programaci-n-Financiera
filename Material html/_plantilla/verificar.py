@@ -52,7 +52,8 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      llegó a la auditoría con 14 de 18 claves en la «b» y pasaba en verde.
  17. CLAVE MÁS LARGA — que la opción correcta no se delate por el tamaño. Con
      dos varas: el doble que el distractor más largo, o —siendo la más larga de
-     todas— vez y media la media de los suyos. Solo en ítems de prosa.
+     todas— vez y media la media de los suyos. Si alguna opción es corta
+     (cifras, «RAM»), le tiene que sacar además 8 caracteres al más largo.
  18. PREGUNTA REPETIDA — que el cuestionario final no vuelva a plantear un
      ejercicio ya respondido, ni copiando una opción —también con un prefijo
      delante— ni reescribiéndola: si dos o más opciones dicen lo que decía un
@@ -890,6 +891,12 @@ def clave_previsible_en_el_capitulo(texto, cuerpo, desplazamiento):
 FACTOR_SOBRE_MAYOR = 1.8
 FACTOR_SOBRE_MEDIA = 1.5
 
+# En un ítem con opciones cortas la proporción sola no basta: `'10'` es el
+# doble que `'7'` y nadie lo ve. Ahí se exige además que la clave le saque al
+# distractor más largo este margen, en caracteres.
+OPCION_CORTA = 20
+MARGEN_EN_CORTAS = 8
+
 
 def clave_mas_larga(texto, cuerpo, desplazamiento):
     """La respuesta correcta no se delata por ser mucho más larga que el resto.
@@ -910,20 +917,28 @@ def clave_mas_larga(texto, cuerpo, desplazamiento):
     buenos. Al encenderla aparecieron 17 en los cuatro capítulos, la mayoría en
     el 2 y el 3, que nunca se habían revisado con este criterio.
 
-    Solo se mira cuando las cuatro opciones son prosa (20 caracteres o más).
-    En un ítem cuyas opciones son cifras o un «Cero», la longitud no dice nada
-    y avisar sería ruido.
+    Cuando alguna opción es corta —menos de 20 caracteres: cifras, «RAM»,
+    «False»— las dos varas no bastan, porque ahí la proporción no dice nada:
+    `'10'` es el doble que `'7'`. Se exige además que la clave le saque al
+    distractor más largo al menos 8 caracteres, que es lo que la hace visible.
+    Hasta el 2026-09-28 esos ítems no se medían, y el capítulo 1 tenía ocho
+    claves que se delataban así, casi todas con su cuenta al lado:
+    `'21 (16 + 4 + 1 = 21)'` contra `'17'` y `'10101'`. El margen sale de lo
+    medido: el caso real más ajustado le sacaba 9 (`'255 (2⁸ - 1).'` contra
+    `'1024'`), y las listas de cifras se diferencian en 1 a 4.
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
     for ini, _fin, opciones in items_de_opciones(limpio):
         largos = [len(t) for t, _ok in opciones]
         correctas = [k for k, (_t, ok) in enumerate(opciones) if ok]
-        if len(correctas) != 1 or len(opciones) < 3 or min(largos) < 20:
+        if len(correctas) != 1 or len(opciones) < 3:
             continue
         c = largos[correctas[0]]
         otros = [l for k, l in enumerate(largos) if k != correctas[0]]
         media = sum(otros) / len(otros)
+        if min(largos) < OPCION_CORTA and c - max(otros) < MARGEN_EN_CORTAS:
+            continue
         if c >= FACTOR_SOBRE_MAYOR * max(otros):
             motivo = f"mide {c} caracteres y el distractor más largo {max(otros)}"
         elif c == max(largos) and c >= FACTOR_SOBRE_MEDIA * media:
