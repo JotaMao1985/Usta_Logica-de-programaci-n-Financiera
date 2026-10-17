@@ -1650,3 +1650,39 @@ ahora 72–74.
 Navegador: con el 700 000, «Revisa la explicación»; con la clave, «¡Correcto!»
 y la frase nueva a la vista; a 375 px, sin desborde en la sección 2; consola
 limpia.
+
+### Tres errores del material, corregidos · 2026-10-16
+
+Los tres estaban anotados y sin tocar.
+
+**Capítulo 4 · el error de VBA de la guardia no era el 11.** El ejemplo
+`EJ_GUARDIA` divide `total / compras` con los dos en 0, y el capítulo decía en
+tres sitios —el comentario del bloque VBA, el recuadro «El único de los cuatro
+que no perdona» y una pregunta del cuestionario final— que eso es el error 11,
+«División por cero». Se comprobó en Excel 16.112 con una macro que ejecuta la
+línea tal cual, `compras` Long y `total` Currency: **0/0 da el error 6,
+«Desbordamiento»**; con `total = 5`, la misma línea da el 11. En Double pasa lo
+mismo (0/0 → 6; 1/0 → 11, nunca infinito). El texto dice ahora las dos cosas, y
+la pregunta del cuestionario habla de «un error de ejecución», porque no fija el
+total. Lo cazó el agente que escribía el cloze `cortocircuito` del Parcial II,
+que por eso usa siempre un numerador distinto de cero.
+
+**Capítulo 1 · `True and False or True` no medía la precedencia.** Da `True` se
+agrupe como se agrupe, así que el ítem del minicuestionario de la sección 3 —que
+existe para eso— se acertaba sin saberla. Ahora es `True or True and False`:
+con la precedencia da `True` y de izquierda a derecha da `False`, ejecutado en
+Python y en R. El distractor nuevo es justamente la lectura de izquierda a
+derecha.
+
+**Capítulo 2 · la pregunta 10 del cuestionario repetía el Comparador.** Las dos
+tenían la misma clave —la búsqueda binaria exige la cartera ordenada—, y la regla
+18 no lo veía porque solo la clave estaba parafraseada. La nueva sigue en la
+sección 5 pero mide otra cosa: cuántas comparaciones hace el algoritmo A para el
+crédito 2 500. La clave sale de ejecutar `EJ_CONTEO` del propio capítulo con ese
+crédito (A: 2 500; B: 4), y los distractores son tres creencias: que A recorre
+siempre toda la cartera, que A también descarta mitades, que cuesta el promedio.
+
+Verificación: `verificar.py --con-salidas` en verde en el 1, el 2 y el 4;
+`ensamblar.py` no mueve `lp-base.html`. Navegador: el minicuestionario del 1 da
+4/4 y 3/4 con la lectura de izquierda a derecha; el cuestionario final del 2, 10/10
+y 9/10 con el distractor nuevo; el 4 muestra los textos nuevos; consola limpia.

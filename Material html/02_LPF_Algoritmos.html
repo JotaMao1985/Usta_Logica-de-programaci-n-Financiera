@@ -3948,14 +3948,14 @@ Debug.Print pasos`,
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'El algoritmo que busca partiendo la cartera por la mitad hace 12 comparaciones frente a 39 814 del que la recorre entera. ¿Bajo qué condición se puede usar?',
+                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas comparaciones hace?',
                         opciones: [
-                            { texto: 'Solo si el dato buscado está en la segunda mitad, que es por donde sigue después de partir.', correcta: false },
-                            { texto: 'Siempre: 12 comparaciones contra 39 814 lo hacen más rápido en todos los casos.', correcta: false },
-                            { texto: 'Solo si la cartera está ordenada; sobre una lista desordenada da respuestas falsas.', correcta: true },
-                            { texto: 'Solo si la cartera tiene menos de 40 000 registros; con más, el número de mitades se dispara.', correcta: false },
+                            { texto: '40 000: A recorre siempre la cartera completa, esté donde esté el crédito.', correcta: false },
+                            { texto: '4: con la cartera ordenada, A también descarta mitades, igual que B.', correcta: false },
+                            { texto: '2 500: A se detiene en cuanto lo encuentra, y el 2 500 está en la posición 2 500.', correcta: true },
+                            { texto: '20 000: en promedio, A recorre la mitad de la cartera antes de encontrar un crédito.', correcta: false },
                         ],
-                        justificacion: 'Descartar media lista en cada paso solo es válido si el orden garantiza que lo descartado no podía contener el dato. Sin orden, el algoritmo responde «no encontrado» cuando el crédito sí estaba: no es más lento, es incorrecto. Y el tamaño no es el límite: partir por la mitad 40 000 registros cuesta como mucho 16 comparaciones, y 4 000 000, como mucho 22. Ante todo algoritmo rápido, la primera pregunta es qué está suponiendo.',
+                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 hace 2 500 comparaciones, igual que para el 39 814 hizo 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 comparaciones para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
                     },
                 ]} />
 

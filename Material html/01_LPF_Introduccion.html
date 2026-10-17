@@ -3841,13 +3841,13 @@ End Sub`,
                         justificacion: '== compara, = asigna. Es uno de los errores más comunes al empezar.'
                     },
                     {
-                        pregunta: '¿Cuál es el resultado de: True and False or True?',
+                        pregunta: '¿Cuál es el resultado de: True or True and False?',
                         opciones: [
-                            { texto: 'True (and primero: True and False → False; luego False or True → True).', correcta: true },
-                            { texto: 'False (basta un False para que toda la expresión sea falsa).', correcta: false },
+                            { texto: 'True (and primero: True and False → False; luego True or False → True).', correcta: true },
+                            { texto: 'False (de izquierda a derecha: True or True → True; luego True and False → False).', correcta: false },
                             { texto: 'Error: and y or no se pueden mezclar en una expresión sin paréntesis.', correcta: false },
                         ],
-                        justificacion: 'and tiene precedencia sobre or. True and False → False, luego False or True → True.'
+                        justificacion: 'and tiene precedencia sobre or aunque esté a la derecha: True or True and False se lee True or (True and False), que es True or False → True. Leída de izquierda a derecha daría (True or True) and False → False, y por eso esta expresión sí distingue las dos lecturas.'
                     },
                     {
                         pregunta: 'En la expresión (1 + tasa) ** n, ¿qué hace **?',
