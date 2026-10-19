@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribió la sección 4 (Tarea 2.4). Siguiente: la sección 5 (Tarea 2.5).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. Siguiente: la sección 6 (Tarea 2.6).
 
 ---
 
@@ -287,6 +287,16 @@ componente propio y no un `Trazador` largo. Las trazas guiadas se limitan a
 **Consecuencia:** la comprobación 1 sigue en verde de principio a fin. Si falla,
 alguien editó la librería a mano, y hay que deshacerlo.
 
+*Medido en la Tarea 2.5:* la traza de la sección 5 tiene **33 pasos**: dos
+créditos por tres cuotas, con un cuerpo de dos líneas. A 375 px no saca nada
+fuera, y los botones de paso caben en cuatro filas. Lo que crece es el alto: con
+el historial completo mide de 3 115 px (R) a 4 171 (pseudocódigo), frente a
+1 956–2 140 de la traza de 14 pasos de la sección 2, porque cada fila del
+historial parte la instrucción en dos o tres líneas. El código, los botones y la
+nota del paso quedan arriba, así que avanzar no obliga a bajar. Las dos salidas que lo bajan son dos cuotas por crédito, con 27 pasos, o
+quitar la columna de `tasa`, que no cambia. Las dos quedan a decisión del
+docente.
+
 ### H10 · Siete secciones y siete iconos, sin repetir ninguno
 
 Quedan 13 iconos, sin contar `BookOpen` (portada) ni `Award` (evaluación).
@@ -399,6 +409,14 @@ real da cero. Queda una salvedad: un `CodeBlock` largo arranca **plegado**, y
 en ese estado su `pre` recorta con `overflow: hidden` lo que pasa del borde,
 sin barra. Es así por diseño, porque es una vista previa, y al desplegarlo
 vuelve a desplazar.
+
+*Remedido en la Tarea 2.5:* las medidas del PC2 (portada y secciones 1 a 3) se
+habían hecho con el criterio todavía ciego. Repetidas con el corregido, después
+de su prueba negativa, dan **cero** en la portada y en las secciones 1 a 5, en
+los cuatro lenguajes, con los bloques desplegados, las trazas al final y los
+términos y las explicaciones abiertos. Con los bloques plegados, todo lo que
+sale está dentro de un `pre` plegado: 57 de 57 en la sección 1, 3 de 3 en la 2,
+61 de 61 en la 4 y 74 de 74 en la 5. La conclusión del PC2 se mantiene.
 
 ### H16 · Sin `localStorage`, el capítulo se queda en blanco *(encontrado en la Tarea 2.4)*
 
@@ -645,7 +663,8 @@ vuelta más».
 - [x] La sección 1, leída junto a los capítulos 1 y 2: **ninguna repetición**
       (R4). El ahorro programado se parece a la meta de ahorro del capítulo 1, y
       el texto lo dice en vez de esconderlo
-- [x] 375 px en las nueve entradas, con el instrumento corregido (H15);
+- [x] 375 px en las nueve entradas, con el instrumento corregido (H15) *(que
+      todavía era ciego: remedido en la Tarea 2.5, da cero)*;
       consola limpia; los cuatro iconos nuevos de las motivaciones dan glifo;
       ningún espacio comido entre texto y elemento, comprobado en el DOM con un
       guion que también se probó en negativo
@@ -715,10 +734,67 @@ desde `file://`, que el panel convierte en una URL `data:`, y ahí no hay
 `localStorage` (H16). Se le dio a la pestaña un `localStorage` en memoria y se
 volvió a montar el `App`, sin tocar el archivo.
 
-#### Tarea 2.5 · Sección 5 — «Ciclos anidados»
+#### Tarea 2.5 · Sección 5 — «Ciclos anidados» · ✅
 Sin arreglos (H7, P2). Un `Trazador` de dos créditos con tres cuotas cada uno,
 donde el ciclo de dentro vuelve a empezar. **E1:** subtotales y total. **E5:**
 el subtotal que no se reinicia.
+
+*Hecho el 2026-10-19.* La motivación es un simulador que compara el crédito de la
+sección 4 a uno, dos y tres años: el plan de pagos dentro de otro ciclo. Su
+acumulador de intereses nace antes de los dos ciclos, así que cada plazo arrastra
+los anteriores. A tres años informa 5 998 246,01, la suma de los tres plazos,
+cuando son 3 014 862,39. Es el espejo del defecto de la sección 1, y el texto lo
+dice: allí la inicialización estaba un nivel demasiado adentro, y aquí uno
+demasiado afuera. Los dos simuladores, el bueno y el de la motivación, se
+imprimen. El de dentro da 12 + 24 + 36 = 72 vueltas, porque su tope lo calcula el
+de fuera. Una tabla da los tres niveles de ejecución: una vez, una por vuelta
+del de fuera y una por vuelta del de dentro. Un `Box` añade el segundo
+acumulador fuera de sitio, el saldo: con `saldo <- capital` antes de los dos
+ciclos, el plazo de dos años informa −2 313 243,65 de intereses.
+
+- **Traza guiada** (`Trazador`): dos créditos de abono constante a capital y un
+  trimestre, al 2 %. Los topes van escritos (2 y 3) para no gastar pasos. Cada
+  paso que avanza un contador apunta a la línea donde ocurre en cada lenguaje:
+  el `Para` o el `for`, y en VBA el `Next`. No hay paso para la última
+  comparación de cada ciclo. Python y R dejan el contador en el último valor, 3
+  (ejecutado), y VBA en uno más, así que los valores ya no serían los mismos en
+  las cuatro pestañas. **Son 33 pasos**, más que los 14 a 20 que H9 daba por
+  cómodos (ver H9).
+- **E1** (`TablaTraza`): otra cartera, al 1,5 %, con saldos que no coinciden con
+  los de la traza. Una fila por vuelta del de dentro y una al final: 21 celdas,
+  todas enteras.
+- **E5** (`OrdenaPasos`): el cierre de recaudo de la sección 1, ahora por
+  oficina. Tres pares de líneas conmutan. El enunciado fija dos convenciones: la
+  lectura antes que la inicialización, en cada nivel, y el subtotal escrito antes
+  de sumarse al total. Los dos cierres de ciclo del pseudocódigo y de R llevan un
+  comentario (`// pagos`, `# oficinas`), porque dos `FinPara` iguales serían
+  indistinguibles.
+- Cierra un `Box` que remite los subtotales guardados al capítulo 7 y la
+  terminación a la sección 6.
+
+*Medido:* `verificar.py --sin-cuota --con-salidas` en verde sobre los cinco
+capítulos: 11 ejercicios (E1:3 E2:2 E3:1 E4:2 E5:2 E8:1) y 14 bloques de Python y
+R ejecutados; los cuatro nuevos son los dos simuladores. Los programas que leen
+datos no los puede ejecutar el verificador, así que se ejecutaron aparte, en
+Python y en R, con las entradas de los enunciados:
+- la traza da 120 000, 90 000 y 210 000;
+- el E1 da 72 000, 81 000 y 153 000;
+- el E5 da 720 bien ordenado y 1 320 con el subtotal fuera.
+
+Por DOM:
+- la traza recorre sus 33 pasos en los cuatro lenguajes con la línea activa
+  esperada en cada uno;
+- el E1 da 21/21 con la clave y con puntos de miles, y 16/21 con el subtotal sin
+  reiniciar;
+- el E5 da «¡Secuencia correcta!» en los cuatro lenguajes, y con el subtotal
+  antes del ciclo de fuera deja tres pasos fuera de sitio en cada uno.
+
+Ningún espacio comido en los 24 elementos en línea, y la consola está limpia. A
+375 px, con la barra cerrada y el criterio de H15 —primero en negativo: el
+bloque de 600 px lleva el panel de 367 a 624 px—, la sección no saca nada fuera
+en los cuatro lenguajes, con los bloques desplegados, la traza en el paso 33 y
+los dos ejercicios comprobados. Con los bloques plegados salen 74 elementos, y
+los 74 están dentro de su `pre` plegado (salvedad de H15).
 
 #### Tarea 2.6 · Sección 6 — «Cuándo para: terminación, ciclos infinitos y centinelas»
 Cita la finitud del capítulo 2. La tabla de H3 va entera. **E3:** el `Mientras

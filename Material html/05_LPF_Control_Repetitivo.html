@@ -4910,15 +4910,616 @@ Loop`,
         );
 
         /* ============================================================
-           SECCIONES 5 A 7 — andamio (BORRADOR-FASE1)
+           SECCIÓN 5 — CICLOS ANIDADOS
         ============================================================ */
+        /* El plan de pagos de la sección 4, metido dentro de otro ciclo que
+           recorre los plazos: uno, dos y tres años. Sin arreglos (H7, P2):
+           cada plazo escribe su línea y se olvida. El de dentro da
+           12 + 24 + 36 = 72 vueltas, porque su tope lo calcula el de fuera.
+           Salidas de Python y R ejecutadas el 2026-10-19; la de VBA no se
+           ejecutó (R10 del plan). */
+        const EJ_SIMULADOR = {
+            pseudo: `Inicio
+    // Simulador: el mismo crédito a uno, dos y tres años
+    capital <- 10000000
+    tasa    <- 0.015
+
+    Para anios <- 1 Hasta 3 Hacer
+        n         <- 12 * anios
+        cuota     <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+        saldo     <- capital
+        intereses <- 0
+        Para k <- 1 Hasta n Hacer
+            interes   <- saldo * tasa
+            abono     <- cuota - interes
+            saldo     <- saldo - abono
+            intereses <- intereses + interes
+        FinPara
+        Escribir n, " cuotas de ", cuota, ": intereses ", intereses
+    FinPara
+    //> 12 cuotas de 916799.93: intereses 1001599.15
+    //> 24 cuotas de 499241.02: intereses 1981784.47
+    //> 36 cuotas de 361523.96: intereses 3014862.39
+Fin`,
+            python: `# Simulador: el mismo crédito a uno, dos y tres años
+capital = 10_000_000
+tasa    = 0.015
+
+for anios in range(1, 4):          # 1, 2 y 3: el tope no se incluye
+    n         = 12 * anios
+    cuota     = capital * tasa / (1 - (1 + tasa) ** (-n))
+    saldo     = capital
+    intereses = 0
+    for k in range(1, n + 1):
+        interes   = saldo * tasa
+        abono     = cuota - interes
+        saldo     = saldo - abono
+        intereses = intereses + interes
+    print(f"{n} cuotas de {cuota:,.2f}: intereses {intereses:,.2f}")
+#> 12 cuotas de 916,799.93: intereses 1,001,599.15
+#> 24 cuotas de 499,241.02: intereses 1,981,784.47
+#> 36 cuotas de 361,523.96: intereses 3,014,862.39`,
+            r: `# Simulador: el mismo crédito a uno, dos y tres años
+capital <- 10000000
+tasa    <- 0.015
+
+for (anios in 1:3) {
+  n         <- 12 * anios
+  cuota     <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+  saldo     <- capital
+  intereses <- 0
+  for (k in seq_len(n)) {
+    interes   <- saldo * tasa
+    abono     <- cuota - interes
+    saldo     <- saldo - abono
+    intereses <- intereses + interes
+  }
+  cat(sprintf("%d cuotas de %.2f: intereses %.2f\\n", n, cuota, intereses))
+}
+#> 12 cuotas de 916799.93: intereses 1001599.15
+#> 24 cuotas de 499241.02: intereses 1981784.47
+#> 36 cuotas de 361523.96: intereses 3014862.39`,
+            vba: `Option Explicit
+
+Sub SimuladorDePlazos()
+    Dim capital As Double, tasa As Double, cuota As Double
+    Dim saldo As Double, interes As Double, abono As Double
+    Dim intereses As Double
+    Dim anios As Integer, n As Integer, k As Integer
+
+    ' Simulador: el mismo crédito a uno, dos y tres años
+    capital = 10000000
+    tasa = 0.015
+
+    For anios = 1 To 3
+        n = 12 * anios
+        cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+        saldo = capital
+        intereses = 0
+        For k = 1 To n
+            interes = saldo * tasa
+            abono = cuota - interes
+            saldo = saldo - abono
+            intereses = intereses + interes
+        Next k
+        ' El separador decimal que imprime Format depende de la
+        ' configuración regional de Windows.
+        Debug.Print n & " cuotas de " & Format(cuota, "0.00") & _
+                    ": intereses " & Format(intereses, "0.00")
+    Next anios
+    '> 12 cuotas de 916799.93: intereses 1001599.15
+    '> 24 cuotas de 499241.02: intereses 1981784.47
+    '> 36 cuotas de 361523.96: intereses 3014862.39
+End Sub`,
+        };
+
+        /* El simulador de la motivación: `intereses <- 0` quedó antes de los
+           dos ciclos. El plazo de un año sale bien; el de dos informa la suma
+           de los dos, y el de tres, la de los tres. Ejecutado el 2026-10-19.
+           Con `saldo <- capital` también fuera, el de dos años informa
+           −2 313 243,65 (ejecutado aparte): lo dice el recuadro. */
+        const EJ_SIMULADOR_MAL = {
+            pseudo: `Inicio
+    capital   <- 10000000
+    tasa      <- 0.015
+    intereses <- 0          // antes de los dos ciclos
+
+    Para anios <- 1 Hasta 3 Hacer
+        n     <- 12 * anios
+        cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+        saldo <- capital
+        Para k <- 1 Hasta n Hacer
+            interes   <- saldo * tasa
+            abono     <- cuota - interes
+            saldo     <- saldo - abono
+            intereses <- intereses + interes
+        FinPara
+        Escribir n, " cuotas de ", cuota, ": intereses ", intereses
+    FinPara
+    //> 12 cuotas de 916799.93: intereses 1001599.15
+    //> 24 cuotas de 499241.02: intereses 2983383.62
+    //> 36 cuotas de 361523.96: intereses 5998246.01
+Fin`,
+            python: `capital   = 10_000_000
+tasa      = 0.015
+intereses = 0          # antes de los dos ciclos
+
+for anios in range(1, 4):
+    n     = 12 * anios
+    cuota = capital * tasa / (1 - (1 + tasa) ** (-n))
+    saldo = capital
+    for k in range(1, n + 1):
+        interes   = saldo * tasa
+        abono     = cuota - interes
+        saldo     = saldo - abono
+        intereses = intereses + interes
+    print(f"{n} cuotas de {cuota:,.2f}: intereses {intereses:,.2f}")
+#> 12 cuotas de 916,799.93: intereses 1,001,599.15
+#> 24 cuotas de 499,241.02: intereses 2,983,383.62
+#> 36 cuotas de 361,523.96: intereses 5,998,246.01`,
+            r: `capital   <- 10000000
+tasa      <- 0.015
+intereses <- 0          # antes de los dos ciclos
+
+for (anios in 1:3) {
+  n     <- 12 * anios
+  cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+  saldo <- capital
+  for (k in seq_len(n)) {
+    interes   <- saldo * tasa
+    abono     <- cuota - interes
+    saldo     <- saldo - abono
+    intereses <- intereses + interes
+  }
+  cat(sprintf("%d cuotas de %.2f: intereses %.2f\\n", n, cuota, intereses))
+}
+#> 12 cuotas de 916799.93: intereses 1001599.15
+#> 24 cuotas de 499241.02: intereses 2983383.62
+#> 36 cuotas de 361523.96: intereses 5998246.01`,
+            vba: `Option Explicit
+
+Sub SimuladorDePlazos()
+    Dim capital As Double, tasa As Double, cuota As Double
+    Dim saldo As Double, interes As Double, abono As Double
+    Dim intereses As Double
+    Dim anios As Integer, n As Integer, k As Integer
+
+    capital = 10000000
+    tasa = 0.015
+    intereses = 0          ' antes de los dos ciclos
+
+    For anios = 1 To 3
+        n = 12 * anios
+        cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+        saldo = capital
+        For k = 1 To n
+            interes = saldo * tasa
+            abono = cuota - interes
+            saldo = saldo - abono
+            intereses = intereses + interes
+        Next k
+        Debug.Print n & " cuotas de " & Format(cuota, "0.00") & _
+                    ": intereses " & Format(intereses, "0.00")
+    Next anios
+    '> 12 cuotas de 916799.93: intereses 1001599.15
+    '> 24 cuotas de 499241.02: intereses 2983383.62
+    '> 36 cuotas de 361523.96: intereses 5998246.01
+End Sub`,
+        };
+
+        /* La traza guiada: dos créditos de abono constante a capital y un
+           trimestre, 2 × 3 = 6 vueltas del de dentro. Son 33 pasos, más que
+           los 14 a 20 que H9 daba por cómodos; se midieron a 375 px. Los
+           topes van escritos (2 y 3) para no gastar pasos en asignarlos.
+           Cada paso que avanza un contador apunta a la línea donde ocurre en
+           cada lenguaje: el `for` en Python y R, el `Para` en pseudocódigo y
+           el `Next` en VBA. No hay paso para la última comparación de cada
+           ciclo, porque el valor con que sale el contador no es el mismo en
+           los cuatro: Python y R lo dejan en el último valor; VBA, en uno más.
+           Cifras ejecutadas el 2026-10-19. */
+        const TZ_CARTERA = {
+            pseudo: `Inicio
+    tasa  <- 0.02
+    total <- 0
+    Para i <- 1 Hasta 2 Hacer
+        Leer saldo
+        Leer abono
+        subtotal <- 0
+        Para k <- 1 Hasta 3 Hacer
+            subtotal <- subtotal + saldo * tasa
+            saldo    <- saldo - abono
+        FinPara
+        total <- total + subtotal
+        Escribir i, subtotal
+    FinPara
+    Escribir total
+Fin`,
+            python: `tasa = 0.02
+total = 0
+for i in range(1, 3):
+    saldo = float(input("Saldo: "))
+    abono = float(input("Abono: "))
+    subtotal = 0
+    for k in range(1, 4):
+        subtotal = subtotal + saldo * tasa
+        saldo = saldo - abono
+    total = total + subtotal
+    print(i, subtotal)
+print(total)`,
+            r: `tasa <- 0.02
+total <- 0
+for (i in 1:2) {
+  saldo <- as.numeric(readline("Saldo: "))
+  abono <- as.numeric(readline("Abono: "))
+  subtotal <- 0
+  for (k in 1:3) {
+    subtotal <- subtotal + saldo * tasa
+    saldo <- saldo - abono
+  }
+  total <- total + subtotal
+  cat(i, subtotal, "\\n")
+}
+cat(total, "\\n")`,
+            vba: `Sub InteresesDelTrimestre()
+    Dim tasa As Double, i As Integer, k As Integer
+    Dim saldo As Currency, abono As Currency
+    Dim subtotal As Currency, total As Currency
+    tasa = 0.02
+    total = 0
+    For i = 1 To 2
+        saldo = CCur(InputBox("Saldo:"))
+        abono = CCur(InputBox("Abono:"))
+        subtotal = 0
+        For k = 1 To 3
+            subtotal = subtotal + saldo * tasa
+            saldo = saldo - abono
+        Next k
+        total = total + subtotal
+        Debug.Print i, subtotal
+    Next i
+    Debug.Print total
+End Sub`,
+        };
+        const TZC_TASA = { pseudo: 2, python: 1, r: 1, vba: 5 };
+        const TZC_TOTAL0 = { pseudo: 3, python: 2, r: 2, vba: 6 };
+        const TZC_PARA_I = { pseudo: 4, python: 3, r: 3, vba: 7 };
+        const TZC_SIGUE_I = { pseudo: 4, python: 3, r: 3, vba: 17 };
+        const TZC_SALDO = { pseudo: 5, python: 4, r: 4, vba: 8 };
+        const TZC_ABONO = { pseudo: 6, python: 5, r: 5, vba: 9 };
+        const TZC_SUB0 = { pseudo: 7, python: 6, r: 6, vba: 10 };
+        const TZC_PARA_K = { pseudo: 8, python: 7, r: 7, vba: 11 };
+        const TZC_SIGUE_K = { pseudo: 8, python: 7, r: 7, vba: 14 };
+        const TZC_SUMA = { pseudo: 9, python: 8, r: 8, vba: 12 };
+        const TZC_RESTA = { pseudo: 10, python: 9, r: 9, vba: 13 };
+        const TZC_TOTAL = { pseudo: 12, python: 10, r: 11, vba: 15 };
+        const TZC_ESCRIBIR = { pseudo: 13, python: 11, r: 12, vba: 16 };
+        const TZC_ESCRIBIR_TOTAL = { pseudo: 15, python: 12, r: 14, vba: 18 };
+        const TZ_CARTERA_PASOS = [
+            { linea: TZC_TASA, estado: { tasa: '0.02' },
+                nota: 'La tasa de los dos créditos, 2 % mensual. Está antes de los dos ciclos: se ejecuta una sola vez.' },
+            { linea: TZC_TOTAL0, estado: { total: '0' },
+                nota: 'El acumulador de la cartera nace en cero, también una sola vez. Al final tendrá los intereses de los dos créditos.' },
+            { linea: TZC_PARA_I, estado: { i: '1' },
+                nota: 'Primera vuelta del ciclo de fuera: el crédito 1.' },
+            { linea: TZC_SALDO, estado: { saldo: '3000000' },
+                nota: 'Se lee lo que debe el crédito 1: 3 000 000.' },
+            { linea: TZC_ABONO, estado: { abono: '1000000' },
+                nota: 'Y lo que abona a capital cada mes: 1 000 000.' },
+            { linea: TZC_SUB0, estado: { subtotal: '0' },
+                nota: 'El subtotal del crédito 1 nace en cero. Esta línea está dentro del ciclo de fuera y antes del de dentro: se va a ejecutar una vez por crédito.' },
+            { linea: TZC_PARA_K, estado: { k: '1' },
+                nota: 'Empieza el ciclo de dentro, con k en 1: la primera cuota del trimestre.' },
+            { linea: TZC_SUMA, estado: { subtotal: '60000' },
+                nota: 'El interés de la cuota 1 es 3 000 000 × 0,02 = 60 000, y va al subtotal.' },
+            { linea: TZC_RESTA, estado: { saldo: '2000000' },
+                nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
+            { linea: TZC_SIGUE_K, estado: { k: '2' },
+                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido.' },
+            { linea: TZC_SUMA, estado: { subtotal: '100000' },
+                nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
+            { linea: TZC_RESTA, estado: { saldo: '1000000' },
+                nota: 'El saldo baja a 1 000 000.' },
+            { linea: TZC_SIGUE_K, estado: { k: '3' },
+                nota: 'k pasa a 3: la última vuelta del ciclo de dentro para este crédito.' },
+            { linea: TZC_SUMA, estado: { subtotal: '120000' },
+                nota: '1 000 000 × 0,02 = 20 000 más: 120 000.' },
+            { linea: TZC_RESTA, estado: { saldo: '0' },
+                nota: 'El crédito 1 queda pagado.' },
+            { linea: TZC_TOTAL, estado: { total: '120000' },
+                nota: 'El ciclo de dentro dio sus tres vueltas y el flujo salió de él. Esta línea está en el de fuera: suma al total el subtotal del crédito 1.' },
+            { linea: TZC_ESCRIBIR, estado: {},
+                nota: 'Escribe 1 y 120 000: los intereses del trimestre del crédito 1.' },
+            { linea: TZC_SIGUE_I, estado: { i: '2' },
+                nota: 'i pasa a 2: segunda vuelta del ciclo de fuera, el crédito 2. Todo lo que está dentro de este ciclo se va a ejecutar otra vez, empezando por las lecturas.' },
+            { linea: TZC_SALDO, estado: { saldo: '2000000' },
+                nota: 'Se lee el saldo del crédito 2, 2 000 000, que reemplaza al 0 que dejó el crédito 1.' },
+            { linea: TZC_ABONO, estado: { abono: '500000' },
+                nota: 'Su abono mensual: 500 000.' },
+            { linea: TZC_SUB0, estado: { subtotal: '0' },
+                nota: 'El subtotal vuelve a cero. De esta línea depende el reporte: si estuviera antes del ciclo de fuera, el crédito 2 empezaría con los 120 000 del crédito 1.' },
+            { linea: TZC_PARA_K, estado: { k: '1' },
+                nota: 'El ciclo de dentro vuelve a empezar, y k vuelve a 1. La traza ya había visto k = 3, pero para este ciclo es otra primera vuelta.' },
+            { linea: TZC_SUMA, estado: { subtotal: '40000' },
+                nota: '2 000 000 × 0,02 = 40 000. El subtotal parte de cero, no de 120 000.' },
+            { linea: TZC_RESTA, estado: { saldo: '1500000' },
+                nota: 'El saldo baja a 1 500 000.' },
+            { linea: TZC_SIGUE_K, estado: { k: '2' },
+                nota: 'k pasa a 2: segunda cuota del crédito 2.' },
+            { linea: TZC_SUMA, estado: { subtotal: '70000' },
+                nota: '1 500 000 × 0,02 = 30 000: el subtotal llega a 70 000.' },
+            { linea: TZC_RESTA, estado: { saldo: '1000000' },
+                nota: 'El saldo baja a 1 000 000.' },
+            { linea: TZC_SIGUE_K, estado: { k: '3' },
+                nota: 'k pasa a 3: tercera cuota del crédito 2.' },
+            { linea: TZC_SUMA, estado: { subtotal: '90000' },
+                nota: '1 000 000 × 0,02 = 20 000: 90 000.' },
+            { linea: TZC_RESTA, estado: { saldo: '500000' },
+                nota: 'Al crédito 2 le quedan 500 000 por pagar. El reporte no lo mira: cuenta las cuotas del trimestre, no el saldo.' },
+            { linea: TZC_TOTAL, estado: { total: '210000' },
+                nota: '120 000 + 90 000 = 210 000.' },
+            { linea: TZC_ESCRIBIR, estado: {},
+                nota: 'Escribe 2 y 90 000.' },
+            { linea: TZC_ESCRIBIR_TOTAL, estado: {},
+                nota: 'El ciclo de fuera dio sus dos vueltas y terminó. Escribe 210 000: los intereses del trimestre de toda la cartera.' },
+        ];
+
+        /* E1. El mismo reporte con otra cartera, al 1,5 %: los saldos del
+           crédito 2 no coinciden con los de la traza guiada, así que no se
+           pueden copiar. Una fila por vuelta del ciclo de dentro y una al
+           final. Quien no reinicia el subtotal escribe 108 000, 135 000 y
+           153 000 en el crédito 2, y 225 000 de total. Cifras ejecutadas el
+           2026-10-19; todas son enteras, sin residuo de punto flotante. */
+        const TRAZA_CARTERA = {
+            pseudo: `Inicio
+    tasa  <- 0.015
+    total <- 0
+    Para i <- 1 Hasta 2 Hacer
+        Leer saldo
+        Leer abono
+        subtotal <- 0
+        Para k <- 1 Hasta 3 Hacer
+            subtotal <- subtotal + saldo * tasa
+            saldo    <- saldo - abono
+        FinPara
+        total <- total + subtotal
+        Escribir i, subtotal
+    FinPara
+    Escribir total
+Fin`,
+            python: `tasa = 0.015
+total = 0
+for i in range(1, 3):
+    saldo = float(input("Saldo: "))
+    abono = float(input("Abono: "))
+    subtotal = 0
+    for k in range(1, 4):
+        subtotal = subtotal + saldo * tasa
+        saldo = saldo - abono
+    total = total + subtotal
+    print(i, subtotal)
+print(total)`,
+            r: `tasa <- 0.015
+total <- 0
+for (i in 1:2) {
+  saldo <- as.numeric(readline("Saldo: "))
+  abono <- as.numeric(readline("Abono: "))
+  subtotal <- 0
+  for (k in 1:3) {
+    subtotal <- subtotal + saldo * tasa
+    saldo <- saldo - abono
+  }
+  total <- total + subtotal
+  cat(i, subtotal, "\\n")
+}
+cat(total, "\\n")`,
+            vba: `Sub InteresesDeOtraCartera()
+    Dim tasa As Double, i As Integer, k As Integer
+    Dim saldo As Currency, abono As Currency
+    Dim subtotal As Currency, total As Currency
+    tasa = 0.015
+    total = 0
+    For i = 1 To 2
+        saldo = CCur(InputBox("Saldo:"))
+        abono = CCur(InputBox("Abono:"))
+        subtotal = 0
+        For k = 1 To 3
+            subtotal = subtotal + saldo * tasa
+            saldo = saldo - abono
+        Next k
+        total = total + subtotal
+        Debug.Print i, subtotal
+    Next i
+    Debug.Print total
+End Sub`,
+        };
+
+        /* E5. El cierre de recaudo de la sección 1, ahora por oficina. Tres
+           pares de líneas conmutan sin cambiar el resultado, y el enunciado
+           fija dos convenciones que los ordenan: la lectura antes que la
+           inicialización, en cada nivel, y el subtotal escrito antes de
+           sumarse al total. Los dos cierres de ciclo del pseudocódigo y de R
+           llevan un comentario porque `OrdenaPasos` califica por posición:
+           dos `FinPara` iguales serían indistinguibles. */
+        const ORDENA_OFICINAS = {
+            pseudo: ['Inicio', 'Leer oficinas', 'total <- 0', 'Para i <- 1 Hasta oficinas Hacer',
+                '    Leer n', '    subtotal <- 0', '    Para k <- 1 Hasta n Hacer',
+                '        Leer pago', '        subtotal <- subtotal + pago', '    FinPara    // pagos',
+                '    Escribir i, subtotal', '    total <- total + subtotal', 'FinPara    // oficinas',
+                'Escribir total', 'Fin'],
+            python: ['oficinas = int(input("Oficinas: "))', 'total = 0', 'for i in range(1, oficinas + 1):',
+                '    n = int(input("Pagos: "))', '    subtotal = 0', '    for k in range(1, n + 1):',
+                '        pago = float(input("Pago: "))', '        subtotal = subtotal + pago',
+                '    print(i, subtotal)', '    total = total + subtotal', 'print(total)'],
+            r: ['oficinas <- as.integer(readline("Oficinas: "))', 'total <- 0', 'for (i in seq_len(oficinas)) {',
+                '  n <- as.integer(readline("Pagos: "))', '  subtotal <- 0', '  for (k in seq_len(n)) {',
+                '    pago <- as.numeric(readline("Pago: "))', '    subtotal <- subtotal + pago', '  }  # pagos',
+                '  cat(i, subtotal, "\\n")', '  total <- total + subtotal', '}  # oficinas', 'cat(total)'],
+            vba: ['Sub RecaudoPorOficina()',
+                'Dim oficinas As Long, n As Long, i As Long, k As Long, pago As Currency, subtotal As Currency, total As Currency',
+                'oficinas = CLng(InputBox("Oficinas:"))', 'total = 0', 'For i = 1 To oficinas',
+                '    n = CLng(InputBox("Pagos:"))', '    subtotal = 0', '    For k = 1 To n',
+                '        pago = CCur(InputBox("Pago:"))', '        subtotal = subtotal + pago', '    Next k',
+                '    Debug.Print i, subtotal', '    total = total + subtotal', 'Next i',
+                'Debug.Print total', 'End Sub'],
+        };
+
         const Cap5Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-layer-group" etiqueta="Borrador · Fase 1">
-                    Sección 5, «Ciclos anidados». Se escribe en la Tarea 2.5.
+                <Motivacion icon="fa-layer-group"
+                    gancho="Cuando un ciclo va dentro de otro, el de dentro da todas sus vueltas en cada vuelta del de fuera. ¿Qué tiene que volver a empezar cada vez, y qué no?">
+                    El simulador de la oficina compara el mismo crédito de libre inversión —10 millones al
+                    1,5 % mensual— a uno, dos y tres años. Para un año informaba 1 001 599 pesos de intereses,
+                    lo mismo que el plan de pagos de la sección 4. Para tres años informaba 5 998 246, casi el
+                    doble de los 3 014 862 que el cliente pagaría de verdad. El acumulador de intereses nacía
+                    en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses de los
+                    anteriores. Durante un mes, cada cliente que comparó plazos vio, para el más largo, unos
+                    intereses que casi doblaban los reales.
                 </Motivacion>
+
+                <h3>La estructura</h3>
+                <p>
+                    Un <Termino def="Un ciclo escrito dentro del cuerpo de otro. En cada vuelta del de fuera, el de dentro empieza desde su primera vuelta y las da todas.">ciclo anidado</Termino> es
+                    un ciclo escrito dentro del cuerpo de otro. No es una estructura nueva: el cuerpo de un
+                    ciclo admite cualquier instrucción —en la sección 1 llevó una selectiva—, y un ciclo es una
+                    instrucción más, igual que una selectiva podía ir dentro de otra en el capítulo 4. Lo nuevo
+                    es cómo se reparten las vueltas: en cada vuelta del ciclo de fuera, el de dentro empieza
+                    desde su primera vuelta y las da todas.
+                </p>
+                <p>
+                    El simulador es el plan de pagos de la sección 4, metido dentro de otro ciclo que recorre
+                    los plazos. El de fuera da tres vueltas, una por plazo. En cada una prepara lo que es propio
+                    de ese plazo —el número de cuotas, la cuota, el saldo con que arranca y el acumulador de
+                    sus intereses— y le pasa el turno al de dentro, que da una vuelta por cuota.
+                </p>
+
+                <CodeTabs
+                    titulo="El simulador de plazos, bien escrito"
+                    bloques={EJ_SIMULADOR}
+                    nota="Tres vueltas del ciclo de fuera y 72 del de dentro: 12 + 24 + 36. El de dentro no da siempre las mismas, porque su tope, n, lo calcula el de fuera en cada vuelta. La cifra de un año es la del plan de pagos de la sección 4." />
+
+                <h3>Cuántas veces se ejecuta cada línea</h3>
+                <p>
+                    En la sección 1, lo que decidía el sitio de una línea era cuántas veces tenía que
+                    ejecutarse, y había dos respuestas: una vez, o una vez por vuelta. Con dos ciclos hay tres.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Dónde está la línea</th><th>Cuántas veces se ejecuta</th><th>En el simulador</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Antes de los dos ciclos</td><td>Una vez</td><td><span className="inline-code">capital</span> y <span className="inline-code">tasa</span>: una vez</td></tr>
+                            <tr><td>Dentro del de fuera, pero no del de dentro</td><td>Una vez por vuelta del de fuera</td><td><span className="inline-code">n</span>, <span className="inline-code">cuota</span>, <span className="inline-code">saldo &lt;- capital</span>, <span className="inline-code">intereses &lt;- 0</span> y el <span className="inline-code">Escribir</span>: tres veces</td></tr>
+                            <tr><td>Dentro del de dentro</td><td>Una vez por vuelta del de dentro, sumando las de todas las vueltas del de fuera</td><td>Las cuatro líneas del cuerpo: 72 veces</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Cuando el de dentro da siempre las mismas vueltas, la última fila es una multiplicación:
+                    dos créditos de tres cuotas son seis vueltas. En el simulador es una suma, porque cada plazo
+                    tiene las suyas. Y la fila del medio es la que esta sección necesita: todo lo que depende del
+                    plazo —su cuota, su saldo inicial, el acumulador de sus intereses— tiene que volver a
+                    calcularse cada vez que el ciclo de fuera cambia de plazo.
+                </p>
+
+                <h3>Demasiado afuera</h3>
+                <p>
+                    Este es el simulador de la motivación. Es el de arriba con una sola diferencia: la línea
+                    {' '}<span className="inline-code">intereses &lt;- 0</span> salió del ciclo de fuera y quedó antes
+                    de los dos ciclos.
+                </p>
+
+                <CodeTabs
+                    titulo="El simulador de la motivación, con el acumulador fuera de los dos ciclos"
+                    bloques={EJ_SIMULADOR_MAL}
+                    nota="El plazo de un año sale bien, y una prueba con ese plazo no encuentra nada. El de dos años informa 2 983 383,62, que son 1 001 599,15 + 1 981 784,47: los intereses de los dos plazos. Y el de tres, 5 998 246,01: la suma de los tres." />
+
+                <Box type="warn" label="El espejo de la sección 1">
+                    En la sección 1, el acumulador nacía dentro del ciclo y cada vuelta borraba lo sumado. Aquí
+                    nace fuera de los dos ciclos y no se borra nunca. Es el mismo defecto: la inicialización
+                    escrita en un nivel que no es el suyo. Los intereses de un plazo tienen que empezar en cero
+                    una vez por plazo, así que la línea va dentro del ciclo de fuera, justo antes del de dentro.
+                    Y no es la única que tiene ese sitio. Si <span className="inline-code">saldo &lt;- capital</span> también
+                    sale del ciclo, el plazo de dos años arranca con el saldo en cero que dejó el de un año, y el
+                    simulador informa intereses negativos: −2 313 243,65.
+                </Box>
+
+                <h3>El de dentro vuelve a empezar</h3>
+                <p>
+                    Las 72 vueltas del simulador no se pueden seguir una por una. Un reporte más pequeño sí cabe
+                    en una traza: para cada crédito de una cartera, los intereses de sus tres próximas cuotas
+                    —el <strong>subtotal</strong>—, y al final los de toda la cartera —el <strong>total</strong>—.
+                    Estos créditos abonan a capital la misma cifra cada mes, que es otra forma de amortizar,
+                    distinta de la cuota fija de la sección 4: el interés de cada cuota se cobra sobre un saldo
+                    que baja siempre lo mismo.
+                </p>
+
+                <Trazador
+                    titulo="Traza guiada · dos créditos, tres cuotas cada uno"
+                    enunciado={<>La cartera tiene dos créditos al 2 % mensual. El primero debe 3 000 000 y abona 1 000 000 al mes; el segundo debe 2 000 000 y abona 500 000. Avance instrucción por instrucción y fíjese en dos momentos: qué le pasa a <span className="inline-code">k</span> cuando empieza el crédito 2, y qué le pasa al subtotal.</>}
+                    codigo={TZ_CARTERA}
+                    variables={[
+                        { clave: 'tasa', titulo: 'tasa' },
+                        { clave: 'i', titulo: 'i' },
+                        { clave: 'k', titulo: 'k' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'abono', titulo: 'abono' },
+                        { clave: 'subtotal', titulo: 'subtotal' },
+                        { clave: 'total', titulo: 'total' },
+                    ]}
+                    pasos={TZ_CARTERA_PASOS}
+                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final se ejecutaron una vez; las del ciclo de fuera que no están en el de dentro, dos veces, una por crédito; y las dos del cuerpo de dentro, seis veces: dos créditos por tres cuotas. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro: Python y R lo dejan en el último de la secuencia, y en VBA, Next le suma uno más antes de salir." />
+
+                <TablaTraza
+                    titulo="Subtotales y total de otra cartera"
+                    enunciado={<>Otra cartera de dos créditos, ahora al <strong>1,5 %</strong> mensual. El primero debe <strong>2 000 000</strong> y abona <strong>400 000</strong> al mes; el segundo debe <strong>2 400 000</strong> y abona <strong>600 000</strong>. Complete <span className="inline-code">saldo</span>, <span className="inline-code">subtotal</span> y <span className="inline-code">total</span> al final de cada vuelta del ciclo de dentro, y cuando ya terminaron los dos ciclos.</>}
+                    codigo={TRAZA_CARTERA}
+                    columnas={[
+                        { clave: 'momento', titulo: 'Momento' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'subtotal', titulo: 'subtotal' },
+                        { clave: 'total', titulo: 'total' },
+                    ]}
+                    ocultas={['saldo', 'subtotal', 'total']}
+                    filas={[
+                        { momento: 'Crédito 1, cuota 1', saldo: '1600000', subtotal: '30000', total: '0' },
+                        { momento: 'Crédito 1, cuota 2', saldo: '1200000', subtotal: '54000', total: '0' },
+                        { momento: 'Crédito 1, cuota 3', saldo: '800000', subtotal: '72000', total: '0' },
+                        { momento: 'Crédito 2, cuota 1', saldo: '1800000', subtotal: '36000', total: '72000' },
+                        { momento: 'Crédito 2, cuota 2', saldo: '1200000', subtotal: '63000', total: '72000' },
+                        { momento: 'Crédito 2, cuota 3', saldo: '600000', subtotal: '81000', total: '72000' },
+                        { momento: 'Al terminar los dos ciclos', saldo: '600000', subtotal: '81000', total: '153000' },
+                    ]}
+                    pista="El total cambia en una línea que está fuera del ciclo de dentro. Fíjese en qué líneas se ejecutan entre la última cuota del crédito 1 y la primera del crédito 2."
+                />
+
+                <h3>Tres niveles</h3>
+                <p>
+                    La regla de la sección 1 sigue valiendo, con una respuesta más. Ante cada línea, la pregunta
+                    es si se ejecuta una vez, una vez por crédito o una vez por cuota. Y cada inicialización va
+                    justo antes del ciclo que recorre su variable: el total, antes del de fuera; el subtotal,
+                    dentro del de fuera y antes del de dentro.
+                </p>
+
+                <OrdenaPasos
+                    enunciado="Es el cierre de recaudo de la sección 1, ahora para una red de oficinas. El programa lee cuántas oficinas hay; de cada una lee cuántos pagos llegaron, los lee uno por uno y escribe su subtotal; al final escribe el total de la red. Para que tenga una sola respuesta, siga dos convenciones que no cambian el resultado: en cada nivel, la lectura va antes que la inicialización, y el subtotal de cada oficina se escribe antes de sumarse al total."
+                    pasos={ORDENA_OFICINAS}
+                    pista="Hay tres niveles: lo que se ejecuta una vez, lo que se ejecuta una vez por oficina y lo que se ejecuta una vez por pago. Pregúntese, para cada línea, en cuál le toca."
+                />
+
+                <Box type="tip" label="Lo que sigue">
+                    Los programas de esta sección escriben cada resultado y lo olvidan: cuando el simulador
+                    calcula los intereses a dos años, los de un año ya no están en ninguna variable. Guardarlos
+                    para compararlos u ordenarlos después pide un arreglo, que es el tema del capítulo 7. La
+                    sección 6 vuelve a la segunda pregunta del capítulo: qué hace parar a un ciclo, y qué pasa
+                    cuando nada lo hace.
+                </Box>
             </div>
         );
+
+        /* ============================================================
+           SECCIONES 6 Y 7 — andamio (BORRADOR-FASE1)
+        ============================================================ */
 
         const Cap6Section = () => (
             <div className="prose-lp">
