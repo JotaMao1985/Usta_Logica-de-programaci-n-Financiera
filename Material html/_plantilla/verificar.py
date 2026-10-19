@@ -52,7 +52,8 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      llegó a la auditoría con 14 de 18 claves en la «b» y pasaba en verde.
  17. CLAVE MÁS LARGA — que la opción correcta no se delate por el tamaño. Con
      dos varas: el doble que el distractor más largo, o —siendo la más larga de
-     todas— vez y media la media de los suyos. Solo en ítems de prosa.
+     todas— vez y media la media de los suyos. Si alguna opción es corta
+     (cifras, «RAM»), le tiene que sacar además 8 caracteres al más largo.
  18. PREGUNTA REPETIDA — que el cuestionario final no vuelva a plantear un
      ejercicio ya respondido, ni copiando una opción —también con un prefijo
      delante— ni reescribiéndola: si dos o más opciones dicen lo que decía un
@@ -61,7 +62,8 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      toque todas las secciones del `curriculum`, y solo esas. Se comprueba
      solo si las preguntas lo declaran con `seccion: 'capN'`: a qué sección
      pertenece una pregunta no se puede adivinar leyéndola, y adivinarlo mal
-     sería peor que no comprobarlo.
+     sería peor que no comprobarlo. Si no declara ninguna, avisa de que no
+     se comprobó.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -889,6 +891,12 @@ def clave_previsible_en_el_capitulo(texto, cuerpo, desplazamiento):
 FACTOR_SOBRE_MAYOR = 1.8
 FACTOR_SOBRE_MEDIA = 1.5
 
+# En un ítem con opciones cortas la proporción sola no basta: `'10'` es el
+# doble que `'7'` y nadie lo ve. Ahí se exige además que la clave le saque al
+# distractor más largo este margen, en caracteres.
+OPCION_CORTA = 20
+MARGEN_EN_CORTAS = 8
+
 
 def clave_mas_larga(texto, cuerpo, desplazamiento):
     """La respuesta correcta no se delata por ser mucho más larga que el resto.
@@ -909,20 +917,28 @@ def clave_mas_larga(texto, cuerpo, desplazamiento):
     buenos. Al encenderla aparecieron 17 en los cuatro capítulos, la mayoría en
     el 2 y el 3, que nunca se habían revisado con este criterio.
 
-    Solo se mira cuando las cuatro opciones son prosa (20 caracteres o más).
-    En un ítem cuyas opciones son cifras o un «Cero», la longitud no dice nada
-    y avisar sería ruido.
+    Cuando alguna opción es corta —menos de 20 caracteres: cifras, «RAM»,
+    «False»— las dos varas no bastan, porque ahí la proporción no dice nada:
+    `'10'` es el doble que `'7'`. Se exige además que la clave le saque al
+    distractor más largo al menos 8 caracteres, que es lo que la hace visible.
+    Hasta el 2026-09-28 esos ítems no se medían, y el capítulo 1 tenía ocho
+    claves que se delataban así, casi todas con su cuenta al lado:
+    `'21 (16 + 4 + 1 = 21)'` contra `'17'` y `'10101'`. El margen sale de lo
+    medido: el caso real más ajustado le sacaba 9 (`'255 (2⁸ - 1).'` contra
+    `'1024'`), y las listas de cifras se diferencian en 1 a 4.
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
     for ini, _fin, opciones in items_de_opciones(limpio):
         largos = [len(t) for t, _ok in opciones]
         correctas = [k for k, (_t, ok) in enumerate(opciones) if ok]
-        if len(correctas) != 1 or len(opciones) < 3 or min(largos) < 20:
+        if len(correctas) != 1 or len(opciones) < 3:
             continue
         c = largos[correctas[0]]
         otros = [l for k, l in enumerate(largos) if k != correctas[0]]
         media = sum(otros) / len(otros)
+        if min(largos) < OPCION_CORTA and c - max(otros) < MARGEN_EN_CORTAS:
+            continue
         if c >= FACTOR_SOBRE_MAYOR * max(otros):
             motivo = f"mide {c} caracteres y el distractor más largo {max(otros)}"
         elif c == max(largos) and c >= FACTOR_SOBRE_MEDIA * media:
@@ -1065,35 +1081,44 @@ def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
     preguntas de «terminal», «entrada» o «decision», que son los símbolos del
     diagrama de flujo. En los capítulos 3 y 4 no había otro `id:` y funcionaba
     por casualidad.
+
+    Devuelve (problemas, avisos), como `jsx_compila`. Un cuestionario sin
+    ninguna etiqueta es un aviso y no un fallo: no es que esté mal, es que no
+    se pudo comprobar. Antes callaba, y así estuvieron los capítulos 1, 2 y 3
+    hasta el 2026-09-28 sin que nada lo dijera; al declararlo, el 1 resultó no
+    tener ninguna pregunta de su sección 4.
     """
     limpio = _sin_comentarios(cuerpo)
     final = _cuestionario_final(limpio)
     if final is None:
-        return []
+        return [], []
     q, fin_q = final
+    linea = linea_de(texto, desplazamiento + q)
     zona = limpio[q:fin_q]
     declaradas = set(re.findall(r"seccion:\s*'([^']+)'", zona))
     if not declaradas:
-        return []
+        return [], [f"línea {linea}: ninguna pregunta del cuestionario final "
+                    f"declara `seccion`, así que no se comprobó que cubra todas "
+                    f"las secciones"]
     n_preguntas = len(re.findall(r"\bpregunta:\s*", zona))
     if len(re.findall(r"seccion:\s*'", zona)) != n_preguntas:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: unas preguntas del "
-                f"`Quiz` declaran `seccion` y otras no; o todas o ninguna"]
+        return [f"línea {linea}: unas preguntas del `Quiz` declaran `seccion` y "
+                f"otras no; o todas o ninguna"], []
     cur = re.search(r"const\s+curriculum\s*=\s*\[(.*?)\n\s*\];", limpio, re.S)
     if not cur:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: no se encontró el "
-                f"arreglo `curriculum`, no se puede comprobar la cobertura"]
+        return [f"línea {linea}: no se encontró el arreglo `curriculum`, no se "
+                f"puede comprobar la cobertura"], []
     secciones = [m for m in re.findall(r"\bid:\s*'([^']+)'", cur.group(1))
                  if m not in ("portada", "eval")]
     ajenas = sorted(declaradas - set(secciones))
     if ajenas:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario "
-                f"declara secciones que no están en el `curriculum`: {', '.join(ajenas)}"]
+        return [f"línea {linea}: el cuestionario declara secciones que no están "
+                f"en el `curriculum`: {', '.join(ajenas)}"], []
     faltan = [x for x in secciones if x not in declaradas]
     if faltan:
-        return [f"línea {linea_de(texto, desplazamiento + q)}: el cuestionario no "
-                f"tiene ninguna pregunta de {', '.join(faltan)}"]
-    return []
+        return [f"línea {linea}: el cuestionario no tiene ninguna pregunta de "
+                f"{', '.join(faltan)}"], []
+    return [], []
 
 
 def jsx_compila(ruta):
@@ -1219,9 +1244,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     for f in opcion_repetida(texto, cuerpo, desplazamiento):
         avisos.append(f"pregunta repetida — {f}")
 
-    # 19 · el cuestionario cubre todas las secciones (si lo declaran)
-    for f in cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
-        problemas.append(f"cobertura — {f}")
+    # 19 · el cuestionario cubre todas las secciones (avisa si no lo declara)
+    p19, a19 = cobertura_del_cuestionario(texto, cuerpo, desplazamiento)
+    problemas += [f"cobertura — {f}" for f in p19]
+    avisos += [f"cobertura — {f}" for f in a19]
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

@@ -3170,7 +3170,7 @@ total   <- 0
 # La guardia: con && R no evalúa el segundo operando si el primero es FALSE.
 # OJO: con & (un solo signo) sí lo evaluaría. Y no se detiene: 0/0 da NaN,
 # NaN > 500000 da NA, y FALSE & NA da FALSE. Ni un aviso. Es peor que el
-# error 11 de VBA: allí el fallo se ve; aquí se cuela sin dejar rastro.
+# error de VBA: allí el fallo se ve; aquí se cuela sin dejar rastro.
 consumo_alto <- compras != 0 && total / compras > 500000`,
             vba: `Option Explicit
 
@@ -3182,7 +3182,8 @@ Sub ConsumoPromedio()
     total = 0
 
     ' And evalúa SIEMPRE los dos lados: la guardia no protege nada.
-    ' Esta línea se detiene con el error 11, «División por cero».
+    ' Esta línea se detiene con el error 6, «Desbordamiento»: aquí es
+    ' 0/0. Si total no fuera 0 sería el 11, «División por cero».
     consumoAlto = compras <> 0 And total / compras > 500000
 End Sub`,
         };
@@ -3347,7 +3348,9 @@ End Sub`,
                 <Box type="warn" label="El único de los cuatro que no perdona">
                     <span className="inline-code">And</span> y <span className="inline-code">Or</span> de VBA
                     evalúan <strong>siempre los dos lados</strong>. La guardia de arriba no protege nada allí:
-                    la división se ejecuta y el procedimiento se detiene con el error 11. La forma de
+                    la división se ejecuta y el procedimiento se detiene: con el error 6,
+                    «Desbordamiento», porque aquí es 0 entre 0; con un total distinto de cero
+                    sería el 11, «División por cero». La forma de
                     conseguir el mismo efecto en VBA es <strong>anidar dos <span className="inline-code">Si</span></strong>,
                     y eso es exactamente lo que hace la sección siguiente.
                 </Box>
@@ -3835,9 +3838,9 @@ Debug.Print tarifa`,
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
                         { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
-                        { texto: '1 600 — se le aplica la tarifa preferencial por error.', correcta: false },
-                        { texto: '4 000 — se le aplica la tarifa plena, como a cualquier otro cliente.', correcta: false },
-                        { texto: 'Un error de ejecución: tarifa nunca se asigna.', correcta: false },
+                        { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
+                        { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
+                        { texto: 'Un error de ejecución: ninguno de los dos Si le asigna un valor a tarifa.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -5417,14 +5420,14 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap1',
-                        pregunta: 'Un equipo traslada a VBA una línea que en Python funcionaba: if compras != 0 and total / compras > 500_000. Con compras en 0, el procedimiento se detiene con el error 11. ¿Cuál es el arreglo?',
+                        pregunta: 'Un equipo traslada a VBA una línea que en Python funcionaba: if compras != 0 and total / compras > 500_000. Con compras en 0, el procedimiento se detiene en esa línea con un error de ejecución. ¿Cuál es el arreglo?',
                         opciones: [
                             { texto: 'Cambiar And por AndAlso, que en VBA sí hace cortocircuito.', correcta: false },
                             { texto: 'Invertir los operandos, para que la división se evalúe la primera.', correcta: false },
                             { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
                             { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA es el error 11, no infinito. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
+                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         seccion: 'cap5',

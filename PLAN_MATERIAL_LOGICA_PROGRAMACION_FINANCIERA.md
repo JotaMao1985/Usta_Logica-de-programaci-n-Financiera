@@ -1450,3 +1450,239 @@ De paso la regla 17 pasa de 4 avisos a 3 en el 1: el que se fue era la clave de
 la vieja pregunta 8, de 76 caracteres contra «True». Comprobado en el navegador:
 8/8 bien respondido, 6/8 fallando solo las dos nuevas con sus justificaciones a
 la vista, y a 375 px sin desborde.
+
+Y la regla 19 ya no calla: un cuestionario final sin ninguna etiqueta da un
+**aviso** —no un fallo: no está mal, no se miró—. Es el caso del capítulo 5
+recién copiado de la plantilla, cuya demostración no trae etiquetas: el aviso
+sale hasta que se declaren. Prueba negativa: el 1 sin etiquetas avisa y pasa;
+con etiquetas a medias, o sin `cap5`, sigue fallando; sin `Quiz`, no dice nada.
+
+### Las claves largas del capítulo 2 · 2026-09-28
+
+Los siete avisos de la regla 17 en el 2, más uno que la regla no ve: la
+pregunta 2 del cuestionario —clave de 65 caracteres contra «La salida.» y «La
+entrada.»— es el peor caso del capítulo (3,5 veces la media de los
+distractores), y la regla lo salta porque solo mide ítems con todas las opciones
+de 20 caracteres o más. El filtro existe para no medir opciones como «Cero» o
+una cifra; aquí deja fuera justo los distractores más pobres, que son los que
+más regalan la clave.
+
+El arreglo es el de siempre, **alargar los distractores**: cada uno recibe una
+razón, como la clave ya tenía, y la razón es la creencia equivocada —«ocupa
+menos memoria: carga 12 registros en vez de 39 814», «una cédula está hecha
+solo de dígitos, así que el tipo entero es el que le corresponde»—. Tres cosas
+que salieron al hacerlo:
+
+- **Un distractor alargado puede volverse defendible.** «Una salida: se le
+  informa al cliente junto con la cuota» era verdad a medias, porque el
+  algoritmo de la sección 2 sí imprime el seguro total. Se reescribió con una
+  razón inequívocamente falsa. Lo mismo con la inflación («no se sabe cuánto
+  cuesta de verdad» es cierto; «cualquier cifra depende de la inflación» no, las
+  24 cuotas son fijas) y con «ninguna de las dos cifras se nota», que en tiempo
+  de reloj puede ser cierto.
+- **Pasarse de largo crea la pista contraria.** Al primer intento la clave quedó
+  la más corta en las preguntas 1, 2 y 3 seguidas. Se acortó un distractor en
+  cada una: ahora la clave queda en medio en seis de ocho, y en las otras dos a
+  menos de 1,1 veces la media.
+- **Las cifras de los distractores se ejecutan.** El seguro de 0,12 % son
+  345 600, el 6 % del sobrecosto, así que atribuirle «la mayor parte» sigue
+  siendo falso. Y la justificación de la pregunta 10 dice ahora que partir por
+  la mitad cuesta como mucho 16 comparaciones con 40 000 registros y 22 con
+  4 000 000: corrido con el contador del propio capítulo, exhaustivo en 40 000.
+
+El 2 queda sin ningún aviso, el primero de los cuatro. Navegador: 10/10, y 6/10
+fallando las preguntas 1, 2, 3 y 10; los dos E7 dan «Revisa la explicación» con
+un distractor y «¡Correcto!» con la clave; a 375 px, sin desborde.
+
+Queda anotada una repetición que la regla 18 no ve: la pregunta 10 del
+cuestionario —¿bajo qué condición se puede usar la búsqueda por mitades?— es el
+comparador de la sección 5 con otras palabras, y las dos claves dicen lo mismo:
+solo si la cartera está ordenada. La regla pide dos opciones calcadas y aquí
+solo lo está la clave.
+
+### Las claves largas del capítulo 3, y una clave falsa · 2026-09-28
+
+Los cuatro avisos del 3, con el mismo método del 2: cada distractor recibe la
+razón de la creencia equivocada, y la clave queda entre 1,02 y 1,06 veces la
+media en los cuatro. El 3 queda sin avisos.
+
+Al comprobar las cifras antes de escribir apareció algo más grave que el
+tamaño: **la clave de la pregunta 6 era falsa.** Decía que `(a + b) / 2` y
+`a / 2 + b / 2`, con división entera, dejan de coincidir «cuando alguno de los
+dos valores es impar». Con 3 y 4 dan 3 las dos. Difieren si y solo si **los dos**
+son impares —3 y 5 dan 4 y 3—: cada mitad pierde su medio por separado, y la
+suma, dividida una sola vez, no pierde nada porque es par. Si solo uno es impar,
+la suma también lo es y pierde el mismo medio. Comprobado en los 900 pares de 0
+a 29, y en Python también con negativos; con el `\` de VBA y signos mezclados
+basta uno solo impar (`-3` y `4`), pero el ejercicio habla de saldos. La
+pregunta lo había copiado de la sección 3, donde la justificación del
+comparador decía lo mismo; se corrigieron las dos. Y la frase vieja entra como
+distractor: es exactamente el error que el propio capítulo cometía, y solo se
+descarta probando con 3 y 4.
+
+Dos distractores más se cambiaron por **defendibles**, no por cortos:
+
+- «Cuando a y b son muy grandes, porque la suma se desborda» es cierto en VBA:
+  `a + b` puede pasarse de un `Long` —21 millones de pesos en centavos— cuando
+  `a \ 2 + b \ 2` no. Es el fallo clásico del punto medio en la búsqueda
+  binaria.
+- La justificación de la pregunta 10 decía que «2 % mensual» se detiene antes de
+  componer. Pero 2 % mensual es exacto si capitaliza cada mes; el error es dar
+  por sabido el dato que falta. Si el 24 % fuera efectivo anual, el mes costaría
+  1,81 %.
+
+Navegador: 10/10, y 6/10 fallando las cuatro tocadas —la 6 con la clave vieja,
+que ahora cuenta como error—; el comparador de la sección 3 muestra la
+advertencia corregida; a 375 px, sin desborde.
+
+Ninguna regla podía ver una clave falsa: todas miden la forma de la pregunta,
+no si lo que afirma es cierto. La encontró ejecutar la cifra antes de
+reescribir el ítem —la misma regla que cazó el `#> 600000` del capítulo 1—.
+
+### La clave larga del capítulo 4 · 2026-09-28
+
+El único aviso del 4 era el E2 de la sección 3: con la versión de dos `Si`,
+¿qué tarifa recibe un cliente no preferencial de 800 000? La clave —«0, ninguna
+condición se cumple»— medía 84 contra una media de 56. Cada distractor recibió
+su razón, y las cifras se ejecutaron: 800 000 × 0,002 = 1 600 y × 0,005 =
+4 000. El fuerte es el de 4 000: es lo que daría la versión correcta con
+`Si…Sino`, así que lo marca quien lee la intención del programa y no el
+programa. Clave a 1,02 veces la media. Navegador: «Revisa la explicación» con
+el 4 000 y «¡Correcto!» con la clave; a 375 px, sin desborde.
+
+Con esto el 2, el 3 y el 4 pasan sin ningún aviso. **Quedan tres en el 1**, en la
+sección 2 —el E del cajero automático que tarda 15 segundos y dos preguntas del
+minicuestionario—: se anotaron al arreglar el cuestionario final del 1 y se
+dieron por resueltos al hacer la cuenta de lo que faltaba. No lo estaban.
+
+### Las claves largas del capítulo 1 · 2026-09-28
+
+Los tres avisos del 1 estaban en la sección 2 —el cajero que tarda 15 segundos,
+la ALU y el paso *decode*—, pero el capítulo tenía **ocho más que la regla 17
+no ve**: sus minicuestionarios y su cuestionario final están llenos de opciones
+cortas («11», «RAM», «False»), y la regla se salta todo ítem con una opción de
+menos de 20 caracteres. Se arreglaron los once.
+
+Casi todos los invisibles eran de un tipo que no había aparecido en los otros
+capítulos: **la clave trae su propia cuenta.** `'21 (16 + 4 + 1 = 21)'` contra
+`'17'` y `'10101'`; `'2 (17 dividido entre 5 da 3, sobra 2)'` contra `'3.4'` y
+`'3'`; `'255 (2⁸ - 1).'` contra `'1024'` y `'128'`. Se acierta sin saber el
+tema: la única opción que razona es la buena, y su aritmética cuadra. El arreglo
+es darle a cada distractor su cuenta equivocada, que es la creencia que
+representa, ejecutada antes de escribirla:
+
+- `42 (32 + 8 + 2)`: los pesos binarios empezando en 2 en vez de en 1.
+- `11 (1 + 2 + 0 + 8)`: los pesos leídos al revés.
+- `3.4 (% divide)` y `3 (% da el cociente)`: las dos confusiones del módulo.
+- `256 (2⁸)` en lugar de `1024`: el error de uno —256 valores, pero el último
+  es el 255—, que es exactamente lo que explica la justificación.
+
+En el ciclo de instrucción, los distractores de «¿qué hace *decode*?» son ahora
+los otros tres pasos que la sección enseña —leer, ejecutar, guardar—, no «se
+guarda en el disco duro». Y los de la ALU, lo que hace la Unidad de Control,
+que es lo que dice la justificación.
+
+Resultado: **los cuatro capítulos pasan sin ningún aviso.** Navegador: los
+tres minicuestionarios y el final con puntaje completo, y con exactamente el
+puntaje esperado al marcar los distractores nuevos (2/3, 1/3, 1/4, 5/8); los dos
+MCQ, «¡Correcto!» y «Revisa la explicación»; a 375 px, sin desborde en las
+cuatro secciones.
+
+Dos cosas anotadas, sin tocar:
+
+- **La regla 17 no ve 8 de las 11 claves largas del 1.** El filtro de 20
+  caracteres existe para no medir opciones como «Cero», pero deja fuera también
+  las claves que traen su cuenta, que son las que más regalan. Queda propuesto
+  ajustarlo.
+- **`True and False or True` da `True` se agrupe como se agrupe**, así que esa
+  pregunta del minicuestionario de la sección 3 no mide la precedencia, que es
+  para lo que está. Pide otra expresión, no otros distractores.
+
+### La regla 17 ve las opciones cortas · 2026-09-28
+
+La regla se saltaba todo ítem con una opción de menos de 20 caracteres, y por
+ahí se le escaparon ocho claves del 1 y una del 2. El filtro no se quitó sin
+más: existía porque entre cifras la proporción no dice nada —`'10'` es el doble
+que `'7'`—. Se cambió por un **margen**: si alguna opción es corta, además de
+cumplir una de las dos varas, la clave tiene que sacarle **8 caracteres** al
+distractor más largo. En prosa la regla queda como estaba.
+
+El 8 sale de lo medido. Los 17 avisos que la regla ya daba le sacan al
+distractor más largo entre 16 y 65 caracteres; las claves del punto ciego,
+entre 9 y 35 (la más justa, `'255 (2⁸ - 1).'` contra `'1024'`); las listas de
+cifras se diferencian en 1 a 4.
+
+Prueba negativa, contra las versiones de antes de cada arreglo:
+
+- el 1 pasa de 3 avisos a 10: las siete claves nuevas son siete de las ocho
+  invisibles;
+- el 2 pasa de 7 a 8: el nuevo es la finitud, el «uno que la regla no ve»
+  anotado al arreglar ese capítulo;
+- el 3 y el 4, iguales; ningún aviso de los que ya salían se pierde;
+- los cuatro capítulos de hoy, cero avisos: el ajuste no mete ruido.
+
+Casos sintéticos: `'10'` entre `'7'` y `'8'`, `'1000'` entre `'1'`, `'10'` y
+`'100'`, y `'Cero'` entre cifras, callan. `'Error de tipo (TypeError)'` como
+clave entre `'53'` y `'8'` **salta, y es a propósito**: ser la única opción
+escrita con palabras la delata igual que el tamaño. Como distractor, calla.
+
+La octava clave del 1 sigue sin verse, y no por el tamaño:
+`'13 (8 + 4 + 0 + 1 = 13)'` competía con `'1101 (es el mismo número)'`, que mide
+más. Lo que la delataba era ser la única que razona, y eso no se mide contando
+caracteres. Queda anotado en el README como algo que se mira leyendo.
+
+### La clave del acumulador del 3 ya no es la única sin razón · 2026-09-28
+
+Al calibrar la regla 17 apareció el caso contrario, que ninguna regla mira: en
+el E2 del acumulador (sección 2 del 3) la clave era `'1 050 000.'`, pelada, y
+los tres distractores traían su razón —39, 72 y 73 caracteres—. Es la quinta
+forma del README vista del revés: la única opción que no razona también se
+distingue.
+
+Se le dio a la clave su razón, como a las demás, y de paso se cambió un
+distractor. `'2 050 000, la suma de los tres números'` era sumar mal, no una
+creencia sobre la asignación. El nuevo es la que la justificación desmiente:
+`'700 000: a la derecha, saldo vale siempre lo que se le dio al principio'`,
+que es leer `saldo` como una incógnita fija, ejecutado (1 200 000 − 500 000).
+La justificación suma una frase para quien lo marque. Las cuatro opciones miden
+ahora 72–74.
+
+Navegador: con el 700 000, «Revisa la explicación»; con la clave, «¡Correcto!»
+y la frase nueva a la vista; a 375 px, sin desborde en la sección 2; consola
+limpia.
+
+### Tres errores del material, corregidos · 2026-10-16
+
+Los tres estaban anotados y sin tocar.
+
+**Capítulo 4 · el error de VBA de la guardia no era el 11.** El ejemplo
+`EJ_GUARDIA` divide `total / compras` con los dos en 0, y el capítulo decía en
+tres sitios —el comentario del bloque VBA, el recuadro «El único de los cuatro
+que no perdona» y una pregunta del cuestionario final— que eso es el error 11,
+«División por cero». Se comprobó en Excel 16.112 con una macro que ejecuta la
+línea tal cual, `compras` Long y `total` Currency: **0/0 da el error 6,
+«Desbordamiento»**; con `total = 5`, la misma línea da el 11. En Double pasa lo
+mismo (0/0 → 6; 1/0 → 11, nunca infinito). El texto dice ahora las dos cosas, y
+la pregunta del cuestionario habla de «un error de ejecución», porque no fija el
+total. Lo cazó el agente que escribía el cloze `cortocircuito` del Parcial II,
+que por eso usa siempre un numerador distinto de cero.
+
+**Capítulo 1 · `True and False or True` no medía la precedencia.** Da `True` se
+agrupe como se agrupe, así que el ítem del minicuestionario de la sección 3 —que
+existe para eso— se acertaba sin saberla. Ahora es `True or True and False`:
+con la precedencia da `True` y de izquierda a derecha da `False`, ejecutado en
+Python y en R. El distractor nuevo es justamente la lectura de izquierda a
+derecha.
+
+**Capítulo 2 · la pregunta 10 del cuestionario repetía el Comparador.** Las dos
+tenían la misma clave —la búsqueda binaria exige la cartera ordenada—, y la regla
+18 no lo veía porque solo la clave estaba parafraseada. La nueva sigue en la
+sección 5 pero mide otra cosa: cuántas comparaciones hace el algoritmo A para el
+crédito 2 500. La clave sale de ejecutar `EJ_CONTEO` del propio capítulo con ese
+crédito (A: 2 500; B: 4), y los distractores son tres creencias: que A recorre
+siempre toda la cartera, que A también descarta mitades, que cuesta el promedio.
+
+Verificación: `verificar.py --con-salidas` en verde en el 1, el 2 y el 4;
+`ensamblar.py` no mueve `lp-base.html`. Navegador: el minicuestionario del 1 da
+4/4 y 3/4 con la lectura de izquierda a derecha; el cuestionario final del 2, 10/10
+y 9/10 con el distractor nuevo; el 4 muestra los textos nuevos; consola limpia.
