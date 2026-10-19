@@ -4214,20 +4214,704 @@ Debug.Print cobrado`,
         );
 
         /* ============================================================
-           SECCIONES 4 A 7 — andamio (BORRADOR-FASE1)
+           SECCIÓN 4 — PARA: CUANDO SE SABE CUÁNTAS VECES
         ============================================================ */
+        /* El plan de pagos del hilo del curso: 10 000 000 al 1,5 % mensual en
+           12 cuotas. La cuota va sin redondear (P6, H14), y por eso la última
+           fila sale con −0.00: el saldo que queda es −7,5 × 10⁻⁸, el residuo
+           de la sección 6. En R se usa 1:n a propósito: con n = 12 funciona, y
+           el recuadro de los cuatro lenguajes muestra cuándo no. Salidas de
+           Python y R ejecutadas el 2026-10-19. La de VBA no se ejecutó (R10
+           del plan), y el −0.00 de su última fila está sin cotejar en Excel. */
+        const EJ_PLAN_PAGOS = {
+            pseudo: `Inicio
+    // Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas
+    capital <- 10000000
+    tasa    <- 0.015
+    n       <- 12
+
+    // La cuota fija de la amortización francesa. Se toma como dada:
+    // el capítulo 8 la convierte en función. No se redondea.
+    cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+    Escribir "Cuota: ", cuota
+    //> Cuota: 916799.93
+
+    saldo          <- capital
+    totalIntereses <- 0
+    Para k <- 1 Hasta n Hacer
+        interes        <- saldo * tasa
+        abono          <- cuota - interes
+        saldo          <- saldo - abono
+        totalIntereses <- totalIntereses + interes
+        Escribir k, interes, abono, saldo
+    FinPara
+    //>  1  150000.00  766799.93  9233200.07
+    //>  2  138498.00  778301.93  8454898.14
+    //>  3  126823.47  789976.46  7664921.69
+    //>  4  114973.83  801826.10  6863095.58
+    //>  5  102946.43  813853.50  6049242.09
+    //>  6   90738.63  826061.30  5223180.79
+    //>  7   78347.71  838452.22  4384728.57
+    //>  8   65770.93  851029.00  3533699.57
+    //>  9   53005.49  863794.44  2669905.14
+    //> 10   40048.58  876751.35  1793153.78
+    //> 11   26897.31  889902.62   903251.16
+    //> 12   13548.77  903251.16       -0.00
+
+    Escribir "Intereses: ", totalIntereses
+    //> Intereses: 1001599.15
+Fin`,
+            python: `# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas
+capital = 10_000_000
+tasa    = 0.015
+n       = 12
+
+# La cuota fija de la amortización francesa. Se toma como dada:
+# el capítulo 8 la convierte en función. No se redondea.
+cuota = capital * tasa / (1 - (1 + tasa) ** (-n))
+print(f"Cuota: {cuota:,.2f}")
+#> Cuota: 916,799.93
+
+saldo           = capital
+total_intereses = 0
+for k in range(1, n + 1):
+    interes         = saldo * tasa
+    abono           = cuota - interes
+    saldo           = saldo - abono
+    total_intereses = total_intereses + interes
+    print(f"{k:2d} {interes:11,.2f} {abono:11,.2f} {saldo:13,.2f}")
+#>  1  150,000.00  766,799.93  9,233,200.07
+#>  2  138,498.00  778,301.93  8,454,898.14
+#>  3  126,823.47  789,976.46  7,664,921.69
+#>  4  114,973.83  801,826.10  6,863,095.58
+#>  5  102,946.43  813,853.50  6,049,242.09
+#>  6   90,738.63  826,061.30  5,223,180.79
+#>  7   78,347.71  838,452.22  4,384,728.57
+#>  8   65,770.93  851,029.00  3,533,699.57
+#>  9   53,005.49  863,794.44  2,669,905.14
+#> 10   40,048.58  876,751.35  1,793,153.78
+#> 11   26,897.31  889,902.62    903,251.16
+#> 12   13,548.77  903,251.16         -0.00
+
+print(f"Intereses: {total_intereses:,.2f}")
+#> Intereses: 1,001,599.15`,
+            r: `# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas
+capital <- 10000000
+tasa    <- 0.015
+n       <- 12
+
+# La cuota fija de la amortización francesa. Se toma como dada:
+# el capítulo 8 la convierte en función. No se redondea.
+cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+cat(sprintf("Cuota: %.2f\\n", cuota))
+#> Cuota: 916799.93
+
+saldo           <- capital
+total_intereses <- 0
+for (k in 1:n) {
+  interes         <- saldo * tasa
+  abono           <- cuota - interes
+  saldo           <- saldo - abono
+  total_intereses <- total_intereses + interes
+  cat(sprintf("%2d %10.2f %10.2f %11.2f\\n", k, interes, abono, saldo))
+}
+#>  1  150000.00  766799.93  9233200.07
+#>  2  138498.00  778301.93  8454898.14
+#>  3  126823.47  789976.46  7664921.69
+#>  4  114973.83  801826.10  6863095.58
+#>  5  102946.43  813853.50  6049242.09
+#>  6   90738.63  826061.30  5223180.79
+#>  7   78347.71  838452.22  4384728.57
+#>  8   65770.93  851029.00  3533699.57
+#>  9   53005.49  863794.44  2669905.14
+#> 10   40048.58  876751.35  1793153.78
+#> 11   26897.31  889902.62   903251.16
+#> 12   13548.77  903251.16       -0.00
+
+cat(sprintf("Intereses: %.2f\\n", total_intereses))
+#> Intereses: 1001599.15`,
+            vba: `Option Explicit
+
+Sub PlanDePagos()
+    Dim capital As Double, tasa As Double, cuota As Double
+    Dim saldo As Double, interes As Double, abono As Double
+    Dim totalIntereses As Double
+    Dim n As Integer, k As Integer
+
+    ' Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas
+    capital = 10000000
+    tasa = 0.015
+    n = 12
+
+    ' La cuota fija de la amortización francesa. Se toma como dada:
+    ' el capítulo 8 la convierte en función. No se redondea.
+    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+    ' Format fija los decimales; el separador decimal que imprime
+    ' depende de la configuración regional de Windows.
+    Debug.Print "Cuota: " & Format(cuota, "0.00")
+    '> Cuota: 916799.93
+
+    saldo = capital
+    totalIntereses = 0
+    For k = 1 To n
+        interes = saldo * tasa
+        abono = cuota - interes
+        saldo = saldo - abono
+        totalIntereses = totalIntereses + interes
+        Debug.Print k & "  " & Format(interes, "0.00") & "  " & _
+                    Format(abono, "0.00") & "  " & Format(saldo, "0.00")
+    Next k
+    '> 1  150000.00  766799.93  9233200.07
+    '> 2  138498.00  778301.93  8454898.14
+    '> 3  126823.47  789976.46  7664921.69
+    '> 4  114973.83  801826.10  6863095.58
+    '> 5  102946.43  813853.50  6049242.09
+    '> 6  90738.63  826061.30  5223180.79
+    '> 7  78347.71  838452.22  4384728.57
+    '> 8  65770.93  851029.00  3533699.57
+    '> 9  53005.49  863794.44  2669905.14
+    '> 10  40048.58  876751.35  1793153.78
+    '> 11  26897.31  889902.62  903251.16
+    '> 12  13548.77  903251.16  -0.00
+
+    Debug.Print "Intereses: " & Format(totalIntereses, "0.00")
+    '> Intereses: 1001599.15
+End Sub`,
+        };
+
+        /* E1. Otro crédito, para que la traza no se pueda copiar de
+           `AmortizacionPasoAPaso`, que trae los tres del capítulo. La fila de
+           antes del ciclo tiene tres rayas que son respuesta: k, interes y
+           abono no tienen valor hasta la primera vuelta. Por eso
+           `exigeRespuesta`, y por eso el VBA va como fragmento, sin `Dim`: un
+           `Dim interes As Double` le daría un 0 antes de la primera vuelta, y
+           la fila dejaría de ser la misma en los cuatro lenguajes. Cifras
+           ejecutadas el 2026-10-19; también se comprobó que quien redondea al
+           centavo en cada paso cae dentro de la tolerancia de `TablaTraza`. */
+        const TRAZA_PLAN = {
+            pseudo: `Inicio
+    capital <- 4000000
+    tasa    <- 0.02
+    n       <- 12
+    cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+    saldo   <- capital
+    Para k <- 1 Hasta n Hacer
+        interes <- saldo * tasa
+        abono   <- cuota - interes
+        saldo   <- saldo - abono
+        Escribir k, interes, abono, saldo
+    FinPara
+Fin`,
+            python: `capital = 4_000_000
+tasa    = 0.02
+n       = 12
+cuota   = capital * tasa / (1 - (1 + tasa) ** (-n))
+saldo   = capital
+for k in range(1, n + 1):
+    interes = saldo * tasa
+    abono   = cuota - interes
+    saldo   = saldo - abono
+    print(k, interes, abono, saldo)`,
+            r: `capital <- 4000000
+tasa    <- 0.02
+n       <- 12
+cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+saldo   <- capital
+for (k in 1:n) {
+  interes <- saldo * tasa
+  abono   <- cuota - interes
+  saldo   <- saldo - abono
+  cat(k, interes, abono, saldo, "\\n")
+}`,
+            vba: `capital = 4000000
+tasa = 0.02
+n = 12
+cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+saldo = capital
+For k = 1 To n
+    interes = saldo * tasa
+    abono = cuota - interes
+    saldo = saldo - abono
+    Debug.Print k, interes, abono, saldo
+Next k`,
+        };
+
+        /* El caso n = 0 de H4: un crédito al día. Pseudocódigo, Python y VBA
+           no cobran nada; el `for (k in 1:n)` de R cobra la cuota 1 y la
+           cuota 0, y `seq_len(n)` vuelve a cobrar cero. Salidas de Python y R
+           ejecutadas el 2026-10-19. Lo que el texto dice del contador en VBA
+           sale de la referencia del lenguaje, «Instrucción For...Next (VBA)»
+           de Microsoft Learn: `Next` suma el paso al contador y vuelve a
+           hacer la misma prueba, `contador <= fin`. */
+        const EJ_CERO_PENDIENTES = {
+            pseudo: `Inicio
+    n      <- 0        // cuotas pendientes: el crédito está al día
+    cobros <- 0
+    Para k <- 1 Hasta n Hacer
+        Escribir "Cobro de la cuota ", k
+        cobros <- cobros + 1
+    FinPara
+    Escribir "Cuotas cobradas: ", cobros
+    //> Cuotas cobradas: 0
+Fin`,
+            python: `n      = 0          # cuotas pendientes: el crédito está al día
+cobros = 0
+for k in range(1, n + 1):
+    print(f"Cobro de la cuota {k}")
+    cobros = cobros + 1
+print(f"Cuotas cobradas: {cobros}")
+#> Cuotas cobradas: 0`,
+            r: `n      <- 0          # cuotas pendientes: el crédito está al día
+cobros <- 0
+for (k in 1:n) {
+  cat(sprintf("Cobro de la cuota %d\\n", k))
+  cobros <- cobros + 1
+}
+#> Cobro de la cuota 1
+#> Cobro de la cuota 0
+cat(sprintf("Cuotas cobradas: %d\\n", cobros))
+#> Cuotas cobradas: 2
+
+# La forma segura: seq_len(n) da 1, 2, ..., n, y nada si n vale 0
+cobros <- 0
+for (k in seq_len(n)) {
+  cat(sprintf("Cobro de la cuota %d\\n", k))
+  cobros <- cobros + 1
+}
+cat(sprintf("Cuotas cobradas: %d\\n", cobros))
+#> Cuotas cobradas: 0`,
+            vba: `Option Explicit
+
+Sub CobrarPendientes()
+    Dim n As Integer, k As Integer, cobros As Integer
+
+    n = 0          ' cuotas pendientes: el crédito está al día
+    cobros = 0
+    For k = 1 To n
+        Debug.Print "Cobro de la cuota " & k
+        cobros = cobros + 1
+    Next k
+    Debug.Print "Cuotas cobradas: " & cobros
+    '> Cuotas cobradas: 0
+End Sub`,
+        };
+
+        /* E3 de alto valor (H4.2). El plan de la motivación con un Mientras
+           que deja la cuota 12 sin escribir. Se escribe con `k < n` y no con
+           `range(1, n)` para que el defecto exista en los cuatro lenguajes;
+           la línea cambia con el lenguaje, y con ella la explicación.
+           Medido el 2026-10-19: 11 vueltas, y la última fila deja un saldo de
+           903 251,16, el abono de la cuota 12. Con el interés de ese mes,
+           13 548,77, suman la cuota: 916 799,93. */
+        const ERROR_PLAN_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                '    capital <- 10000000',
+                '    tasa    <- 0.015',
+                '    n       <- 12',
+                '    cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                '    saldo   <- capital',
+                '    k       <- 1',
+                '    Mientras k < n Hacer',
+                '        interes <- saldo * tasa',
+                '        abono   <- cuota - interes',
+                '        saldo   <- saldo - abono',
+                '        Escribir k, interes, abono, saldo',
+                '        k <- k + 1',
+                '    FinMientras',
+                'Fin',
+            ],
+            python: [
+                '# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                'capital = 10_000_000',
+                'tasa    = 0.015',
+                'n       = 12',
+                'cuota   = capital * tasa / (1 - (1 + tasa) ** (-n))',
+                'saldo   = capital',
+                'k       = 1',
+                'while k < n:',
+                '    interes = saldo * tasa',
+                '    abono   = cuota - interes',
+                '    saldo   = saldo - abono',
+                '    print(k, interes, abono, saldo)',
+                '    k = k + 1',
+            ],
+            r: [
+                '# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                'capital <- 10000000',
+                'tasa    <- 0.015',
+                'n       <- 12',
+                'cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                'saldo   <- capital',
+                'k       <- 1',
+                'while (k < n) {',
+                '  interes <- saldo * tasa',
+                '  abono   <- cuota - interes',
+                '  saldo   <- saldo - abono',
+                '  cat(k, interes, abono, saldo, "\\n")',
+                '  k <- k + 1',
+                '}',
+            ],
+            vba: [
+                'Sub PlanDePagos()',
+                "    ' Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas",
+                '    Dim capital As Double, tasa As Double, cuota As Double',
+                '    Dim saldo As Double, interes As Double, abono As Double',
+                '    Dim n As Integer, k As Integer',
+                '    capital = 10000000',
+                '    tasa = 0.015',
+                '    n = 12',
+                '    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                '    saldo = capital',
+                '    k = 1',
+                '    Do While k < n',
+                '        interes = saldo * tasa',
+                '        abono = cuota - interes',
+                '        saldo = saldo - abono',
+                '        Debug.Print k, interes, abono, saldo',
+                '        k = k + 1',
+                '    Loop',
+                'End Sub',
+            ],
+        };
+        const ERROR_PLAN_LINEA_OK = { pseudo: 9, python: 8, r: 8, vba: 12 };
+
+        // La explicación es la misma en los cuatro lenguajes salvo los números
+        // de línea y la sintaxis que cita (trampa 4 de la skill).
+        const explicacionPlan = (lCond, cond, lIni, ini, arreglo) => (
+            <>
+                La <strong>línea {lCond}</strong>, <span className="inline-code">{cond}</span>. Las tres piezas del
+                contador están, y cada una por separado parece bien: arranca en 1 porque la primera cuota es la 1
+                (<span className="inline-code">{ini}</span>, en la línea {lIni}), aumenta de a uno al final del
+                cuerpo, y la condición lo compara con <span className="inline-code">n</span>. Lo que no casa es el
+                conjunto. Con el contador en 1 y el aumento al final, el ciclo da las vueltas k = 1, 2, …, 11;
+                cuando k llega a 12, <span className="inline-code">12 &lt; 12</span> es falso y la cuota 12 no
+                se escribe. Once vueltas para doce cuotas: un error de frontera, una vuelta <strong>de menos</strong>,
+                no de más. El arreglo es <span className="inline-code">{arreglo}</span>. Arrancar el contador en 0
+                también daría doce vueltas, pero numeraría las cuotas de 0 a 11, y la tabla tendría una cuota 0:
+                por eso el defecto está en la condición y no en la línea {lIni}. Y el saldo que deja la última fila
+                no es una cuota entera sino su parte de capital: después de once pagos falta el abono de la cuota
+                12, 903 251,16, porque el interés de ese mes, 13 548,77, no alcanza a causarse. Un{' '}
+                <span className="inline-code">Para</span> no tiene esta línea: la comparación la pone el ciclo.
+            </>
+        );
+        const ERROR_PLAN_EXPLICACION = {
+            pseudo: explicacionPlan(9, 'Mientras k < n Hacer', 8, 'k <- 1', 'Mientras k <= n Hacer'),
+            python: explicacionPlan(8, 'while k < n:', 7, 'k = 1', 'while k <= n:'),
+            r: explicacionPlan(8, 'while (k < n) {', 7, 'k <- 1', 'while (k <= n) {'),
+            vba: explicacionPlan(12, 'Do While k < n', 11, 'k = 1', 'Do While k <= n'),
+        };
+
+        /* E4 (H8): no se pide reescribir, se decide. B no se parece a un Para
+           —el contador nace en 0, aumenta al principio del cuerpo y la
+           condición usa <— y aun así es equivalente con cualquier n, también
+           con 0 y con negativos (ejecutado el 2026-10-19). Va justo después
+           del E3 a propósito: quien aprendió «el < es el defecto» sin mirar
+           las otras dos piezas elige la «a». En R, la versión A usa
+           `seq_len(n)`: con `1:n` las dos diferirían con n = 0, y la clave
+           dependería de la pestaña. */
+        const CMP_PLAN_PARA = {
+            pseudo: `saldo <- capital
+Para k <- 1 Hasta n Hacer
+    interes <- saldo * tasa
+    abono   <- cuota - interes
+    saldo   <- saldo - abono
+    Escribir k, saldo
+FinPara`,
+            python: `saldo = capital
+for k in range(1, n + 1):
+    interes = saldo * tasa
+    abono   = cuota - interes
+    saldo   = saldo - abono
+    print(k, saldo)`,
+            r: `saldo <- capital
+for (k in seq_len(n)) {
+  interes <- saldo * tasa
+  abono   <- cuota - interes
+  saldo   <- saldo - abono
+  cat(k, saldo, "\\n")
+}`,
+            vba: `saldo = capital
+For k = 1 To n
+    interes = saldo * tasa
+    abono = cuota - interes
+    saldo = saldo - abono
+    Debug.Print k, saldo
+Next k`,
+        };
+        const CMP_PLAN_MIENTRAS = {
+            pseudo: `saldo <- capital
+k <- 0
+Mientras k < n Hacer
+    k       <- k + 1
+    interes <- saldo * tasa
+    abono   <- cuota - interes
+    saldo   <- saldo - abono
+    Escribir k, saldo
+FinMientras`,
+            python: `saldo = capital
+k = 0
+while k < n:
+    k       = k + 1
+    interes = saldo * tasa
+    abono   = cuota - interes
+    saldo   = saldo - abono
+    print(k, saldo)`,
+            r: `saldo <- capital
+k <- 0
+while (k < n) {
+  k       <- k + 1
+  interes <- saldo * tasa
+  abono   <- cuota - interes
+  saldo   <- saldo - abono
+  cat(k, saldo, "\\n")
+}`,
+            vba: `saldo = capital
+k = 0
+Do While k < n
+    k = k + 1
+    interes = saldo * tasa
+    abono = cuota - interes
+    saldo = saldo - abono
+    Debug.Print k, saldo
+Loop`,
+        };
+
         const Cap4Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-list-ol" etiqueta="Borrador · Fase 1">
-                    Sección 4, «Para: cuando se sabe cuántas veces». Se escribe en la Tarea 2.4. De la Fase 1
-                    lleva el flujograma, la tabla de amortización y los tres ciclos comparados.
+                <Motivacion icon="fa-calendar-days"
+                    gancho="Si el número de vueltas se sabe desde la firma, ¿cómo puede un ciclo dar una de menos? Porque «de 1 hasta n» no significa lo mismo en los cuatro lenguajes.">
+                    Un crédito de libre inversión de 10 millones al 1,5 % mensual se firma a doce cuotas, así
+                    que su plan de pagos tiene doce filas desde el día de la firma. Al migrarlo de Excel a
+                    Python, un analista tradujo <span className="inline-code">For k = 1 To 12</span> como
+                    {' '}<span className="inline-code">range(1, 12)</span>. El sistema emitió once cuotas, el
+                    cliente las pagó y recibió su paz y salvo, y el banco dejó de recaudar la cuota doce:
+                    916 799,93.
                 </Motivacion>
+
+                <h3>La estructura</h3>
+                <p>
+                    Cuando el número de vueltas se conoce <strong>antes de entrar</strong> —las doce cuotas de
+                    un crédito, los 240 meses de una hipoteca—, la forma indicada es <span className="inline-code">Para</span>.
+                    {' '}<span className="inline-code">Para k &lt;- 1 Hasta n Hacer … FinPara</span> ejecuta el
+                    cuerpo una vez por cada valor de <span className="inline-code">k</span>, de 1 a <span className="inline-code">n</span>,
+                    y a <span className="inline-code">k</span> se le llama la <Termino def="El contador que lleva un Para: el ciclo le da el valor inicial, lo compara con el tope antes de cada vuelta y lo aumenta al final de cada una.">variable de control</Termino> del ciclo.
+                </p>
+                <p>
+                    El contador lo lleva el ciclo. Lo inicia en 1, lo compara con el tope antes de cada vuelta y
+                    lo aumenta al final de cada una: son la inicialización, la condición y la actualización que
+                    en la sección 2 escribía usted, y el flujograma las dibuja con borde discontinuo.
+                </p>
+
                 <FlujogramaPara />
+
+                <p>
+                    Que esas piezas sean del ciclo tiene dos consecuencias. La primera: el número de vueltas se
+                    lee en la primera línea, sin trazar el cuerpo. <span className="inline-code">Para k &lt;- 1 Hasta 12</span> da
+                    doce, y en pseudocódigo, por convención, el cuerpo no toca el contador; lo que pasa si lo
+                    toca depende del lenguaje, y se ve más abajo. La segunda: como la comparación va antes de
+                    cada vuelta, un <span className="inline-code">Para</span> es de evaluación previa, igual que
+                    el <span className="inline-code">Mientras</span>. Si <span className="inline-code">n</span> vale 0, no da ninguna.
+                </p>
+                <p>
+                    ¿Cuándo no sirve? Cuando el número de vueltas depende de lo que pasa dentro: cuántos meses
+                    tarda en cumplirse una meta de ahorro, cuántos abonos cubren una deuda. Ahí el tope no se
+                    conoce al entrar, y la forma es <span className="inline-code">Mientras</span> o <span className="inline-code">Repita</span>.
+                </p>
+
+                <h3>La tabla de amortización es un Para</h3>
+                <p>
+                    Una tabla de amortización es el caso de manual. Se sabe cuántas filas tiene desde el día de
+                    la firma, y cada fila repite los mismos tres cálculos con el saldo que dejó la anterior: el
+                    interés del mes, que se cobra sobre ese saldo; el abono a capital, que es lo que queda de la
+                    cuota después de pagar el interés; y el saldo nuevo.
+                </p>
+                <p>
+                    Falta la cuota. La de cuotas iguales —la de la amortización francesa— sale de una fórmula de
+                    las matemáticas financieras que este capítulo <strong>toma como dada</strong>: no se deduce
+                    ni se ejercita, y el capítulo 8 la convierte en una función. Aquí ocupa una línea, con un
+                    comentario que dice de dónde sale, y no se redondea.
+                </p>
+
+                <CodeTabs
+                    titulo="El plan de pagos del crédito de la motivación"
+                    bloques={EJ_PLAN_PAGOS}
+                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. La última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
+
+                <Box type="info" label="Lo que hace un banco de verdad">
+                    Un banco redondea la cuota al peso —aquí serían 916 800— y ajusta la última para que el saldo
+                    cierre en cero. Ese ajuste es una selectiva dentro del ciclo, del capítulo 4, y este capítulo
+                    no la modela: la cuota va sin redondear, para que lo que se vea sea el ciclo y no el ajuste.
+                </Box>
+
+                <h3>Las 240 filas</h3>
+                <p>
+                    La tabla de 240 filas que prometieron los capítulos 3 y 4 sale de este mismo ciclo, sin
+                    cambiar una línea: solo cambian el capital, la tasa y <span className="inline-code">n</span>.
+                    Avance de a una vuelta y fíjese en tres cosas. El contador avanza sin que ninguna línea del
+                    cuerpo lo toque. El interés baja y el abono sube, porque la cuota es siempre la misma y cada
+                    mes el interés se cobra sobre un saldo menor. Y el ciclo para en la cuota <span className="inline-code">n</span> sin
+                    preguntar por el saldo.
+                </p>
+
                 <AmortizacionPasoAPaso />
+
+                <p>Ahora, a mano, las primeras vueltas de un crédito que la tabla de arriba no trae:</p>
+
+                <TablaTraza
+                    titulo="Las cuatro primeras cuotas de otro crédito"
+                    enunciado={<>Un crédito de libre inversión de <strong>4 000 000</strong> al <strong>2 %</strong> mensual en <strong>12 cuotas</strong>: la fórmula da una cuota de 378 238,39. Complete <span className="inline-code">k</span>, <span className="inline-code">interes</span>, <span className="inline-code">abono</span> y <span className="inline-code">saldo</span> justo antes de que empiece el ciclo y al final de cada una de las cuatro primeras vueltas. Escriba las cifras con sus centavos, y <span className="inline-code">—</span> en las variables que en ese momento todavía no tengan valor.</>}
+                    codigo={TRAZA_PLAN}
+                    columnas={[
+                        { clave: 'momento', titulo: 'Momento' },
+                        { clave: 'k', titulo: 'k' },
+                        { clave: 'interes', titulo: 'interes' },
+                        { clave: 'abono', titulo: 'abono' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                    ]}
+                    ocultas={['k', 'interes', 'abono', 'saldo']}
+                    exigeRespuesta
+                    filas={[
+                        { momento: 'Antes del ciclo', k: '—', interes: '—', abono: '—', saldo: '4000000' },
+                        { momento: 'Fin de la vuelta 1', k: '1', interes: '80000', abono: '298238,39', saldo: '3701761,61' },
+                        { momento: 'Fin de la vuelta 2', k: '2', interes: '74035,23', abono: '304203,15', saldo: '3397558,46' },
+                        { momento: 'Fin de la vuelta 3', k: '3', interes: '67951,17', abono: '310287,22', saldo: '3087271,24' },
+                        { momento: 'Fin de la vuelta 4', k: '4', interes: '61745,42', abono: '316492,96', saldo: '2770778,28' },
+                    ]}
+                    pista="Antes del ciclo solo tienen valor las variables que alguna línea ya asignó. Dentro de cada vuelta, el interés se calcula con el saldo que dejó la vuelta anterior, y el saldo es lo último que cambia."
+                />
+
+                <h3>Lo que «Para» significa en cada lenguaje</h3>
+                <p>
+                    Hasta aquí, los cuatro lenguajes dieron las doce vueltas. Pero «de 1 hasta n» no se escribe
+                    igual en los cuatro, y tampoco significa lo mismo. A cada uno conviene hacerle tres
+                    preguntas: si el tope se incluye, qué pasa cuando <span className="inline-code">n</span> vale
+                    0, y qué pasa si el cuerpo cambia el contador.
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Lenguaje</th><th>Forma</th><th>¿Incluye el tope?</th><th>Con n = 0</th><th>Si el cuerpo cambia el contador</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Pseudocódigo</td><td><span className="inline-code">Para k &lt;- 1 Hasta n</span></td><td>Sí</td><td>0 vueltas</td><td>No se hace, por convención</td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: <span className="inline-code">range(1, n)</span> da n − 1 vueltas</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
+                            <tr><td>R</td><td><span className="inline-code">for (k in 1:n)</span></td><td>Sí</td><td><strong>2 vueltas</strong>, con k = 1 y luego k = 0. Con <span className="inline-code">seq_len(n)</span>, 0</td><td>No afecta: la vuelta siguiente toma el valor que sigue en la secuencia</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: <span className="inline-code">Next</span> le suma 1 al valor ya cambiado</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="warn" label="Tres diferencias que no dan ningún error">
+                    <p>
+                        <strong>Python no incluye el tope.</strong> <span className="inline-code">range(1, n + 1)</span> da
+                        1, 2, …, n: el segundo número es el primero que <em>no</em> se usa. Traducir
+                        {' '}<span className="inline-code">Para k &lt;- 1 Hasta n</span> como <span className="inline-code">range(1, n)</span> da
+                        n − 1 vueltas, y es el error de la motivación: <span className="inline-code">range(1, 12)</span> da once.
+                    </p>
+                    <p>
+                        <strong>En R, <span className="inline-code">1:n</span> cuenta hacia atrás si n es menor que 1.</strong>
+                        {' '}<span className="inline-code">1:0</span> no es una secuencia vacía: es <span className="inline-code">c(1, 0)</span>.
+                        Un crédito sin cuotas pendientes entra dos veces al ciclo de cobro, una con la cuota 1 y
+                        otra con la cuota 0. La forma segura es <span className="inline-code">seq_len(n)</span>, que
+                        da 1, 2, …, n, y nada si n vale 0. El plan de pagos de arriba usa <span className="inline-code">1:n</span> y
+                        funciona porque n vale 12.
+                    </p>
+                    <p>
+                        <strong>En VBA, el cuerpo puede cambiar el contador, y el cambio cuenta.</strong> Al final
+                        de cada vuelta, <span className="inline-code">Next</span> le suma el paso al valor que tenga
+                        k en ese momento y vuelve a comparar, así que un <span className="inline-code">k = k + 1</span> dentro
+                        del cuerpo hace que el ciclo cobre una cuota de cada dos. Así lo describe la referencia del
+                        lenguaje, que desaconseja hacerlo (<a href="https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement" target="_blank" rel="noopener noreferrer">Instrucción For...Next</a>,
+                        Microsoft Learn). En Python y en R, la vuelta siguiente toma el valor que sigue en la
+                        secuencia, se haya cambiado k o no; en pseudocódigo, la convención es no tocarlo.
+                    </p>
+                </Box>
+
+                <CodeTabs
+                    titulo="Un crédito al día: cero cuotas pendientes"
+                    bloques={EJ_CERO_PENDIENTES}
+                    nota="Con n = 0, pseudocódigo, Python y VBA no cobran nada. El for de R con 1:n cobra dos cuotas, la 1 y la 0, sin ningún aviso; con seq_len(n), ninguna." />
+
+                <h3>Una vuelta de menos</h3>
+                <p>
+                    El <span className="inline-code">Para</span> existe para que nadie tenga que escribir a mano
+                    las tres piezas del contador. Cuando se escriben con un <span className="inline-code">Mientras</span>,
+                    cada una puede estar bien por separado y no casar con las otras, y el ciclo da una vuelta de
+                    más o de menos. Es un <Termino def="Un ciclo que da una vuelta de más o de menos porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En inglés se le dice off-by-one.">error de frontera</Termino>.
+                    El capítulo 1 ya advirtió, con la meta de ahorro, que el signo de la condición produce «los
+                    errores de un mes de diferencia en las proyecciones». En un plan de pagos, la misma frontera
+                    vale una cuota.
+                </p>
+
+                <Ejercicio tipo="E3"><DetectaError
+                    titulo="El plan de pagos que se queda corto"
+                    enunciado={<>Es el crédito de la motivación —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93—, ahora escrito con un <span className="inline-code">Mientras</span>. Corre sin errores y su tabla tiene buen aspecto: los intereses bajan y los abonos suben. Pero no es el plan que se firmó. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y con qué saldo termina la tabla.</>}
+                    lineas={ERROR_PLAN_LINEAS}
+                    lineaCorrecta={ERROR_PLAN_LINEA_OK}
+                    tipos={[
+                        'Frontera del ciclo: da una vuelta de más y cobra una cuota 13 que el cliente no debe, de 916 799,93.',
+                        'Inicialización: el contador tenía que nacer en 0; así el ciclo daría doce vueltas y la tabla saldría completa.',
+                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 916 799,93, el de una cuota completa.',
+                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 903 251,16, el abono de la cuota 12.',
+                    ]}
+                    tipoCorrecto={3}
+                    explicacion={ERROR_PLAN_EXPLICACION}
+                    impacto={<>La tabla sale con <strong>once filas</strong> en vez de doce, y la última termina con un saldo de <strong>903 251,16</strong>: el 9 % del capital prestado. Nada lo delata a simple vista, porque los intereses bajan y los abonos suben como deben. Si la facturación se genera desde esta tabla, el cliente recibe once cuotas, las paga y queda a paz y salvo, y el banco deja de recaudar la cuota doce: 916 799,93, que son esos 903 251,16 de capital más 13 548,77 de interés. Es el caso de la motivación, escrito ahora con un <span className="inline-code">Mientras</span>, y por eso el defecto existe en los cuatro lenguajes y no solo en Python.</>}
+                /></Ejercicio>
+
+                <h3>Para o Mientras</h3>
+                <p>
+                    Un <span className="inline-code">Mientras</span> bien escrito da las mismas vueltas que un
+                    {' '}<span className="inline-code">Para</span>. La dificultad es reconocerlo sin ejecutarlo.
+                </p>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="El plan de pagos, con Para y con Mientras"
+                    enunciado={<>Las dos versiones escriben el plan de pagos de un crédito de <span className="inline-code">n</span> cuotas, con el capital, la tasa y la cuota ya calculados. <strong>Compárelas y responda.</strong></>}
+                    a={{ etiqueta: 'Versión A · Para', codigo: CMP_PLAN_PARA }}
+                    b={{ etiqueta: 'Versión B · Mientras', codigo: CMP_PLAN_MIENTRAS }}
+                    pregunta="¿Son equivalentes? Y si no lo son, ¿con qué valor de n escriben tablas distintas?"
+                    opciones={[
+                        { texto: 'No: B compara con k < n, como el plan de pagos del ejercicio anterior, y deja sin escribir la fila de la cuota n.', correcta: false },
+                        { texto: 'Sí: B empieza en 0 y aumenta k antes de usarlo, así que escribe las cuotas 1 a n, también con n igual a 0.', correcta: true, justificacion: 'B no se parece a un Para, pero da exactamente sus vueltas. Su contador nace en 0 y aumenta al principio del cuerpo, así que cuando llega a las líneas que lo usan ya vale 1 en la primera vuelta, 2 en la segunda y n en la última. La condición se evalúa con el valor que dejó la vuelta anterior: después de la vuelta n, k vale n y k < n es falso. Son n vueltas con k = 1, …, n, igual que A. El < no es un defecto aquí, aunque lo fuera en el ejercicio anterior: allí el contador nacía en 1 y aumentaba al final, y con esas dos piezas la condición tenía que ser <=. Lo que tiene que casar es el conjunto —valor inicial, sitio del aumento y condición—, no cada pieza por separado. Tampoco empieza la tabla en la cuota 0: el 0 es el valor de antes de la primera vuelta, y la primera fila ya se escribe con k = 1. Y con n = 0 no difieren: la primera evaluación de B es 0 < 0, falsa, y no escribe nada, igual que A. Difería el Repita de la sección 3, que pregunta después de cobrar. En R, A usa seq_len(n): con 1:n, las dos sí escribirían tablas distintas con n = 0.' },
+                        { texto: 'No: B arranca el contador en 0, así que su tabla empieza en la cuota 0 y termina en la cuota n − 1.', correcta: false },
+                        { texto: 'No: difieren con n igual a 0, porque A no escribe ninguna fila y B escribe una, la de la cuota 1.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Las tres formas, frente a frente</h3>
+                <p>
+                    Con esta sección quedan completas las tres formas de ciclo. Lo que las separa no es lo que
+                    pueden hacer —las tres pueden cobrar las mismas cuotas— sino lo que garantizan:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Forma</th><th>Pregunta</th><th>Vueltas, como mínimo</th><th>Conviene cuando</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span className="inline-code">Mientras</span></td><td>Antes de cada vuelta</td><td>0</td><td>El número de vueltas depende de lo que pase dentro, y puede ser ninguna</td></tr>
+                            <tr><td><span className="inline-code">Repita…Hasta</span></td><td>Después de cada vuelta</td><td>1</td><td>La primera vuelta es obligatoria, como al validar un dato</td></tr>
+                            <tr><td><span className="inline-code">Para</span></td><td>Antes de cada vuelta, contra un tope</td><td>0 (en R, solo con <span className="inline-code">seq_len(n)</span>)</td><td>El número de vueltas se sabe al entrar</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    El comparador de abajo pone el mismo cobro en las tres formas y, si se le pide, en el
+                    {' '}<span className="inline-code">for</span> de R con <span className="inline-code">1:n</span>. Antes de
+                    tocarlo, diga con qué valor de <span className="inline-code">n</span> se separan y cuánto cobra
+                    cada una; después, compruébelo.
+                </p>
+
                 <TresCiclosComparados />
             </div>
         );
 
+        /* ============================================================
+           SECCIONES 5 A 7 — andamio (BORRADOR-FASE1)
+        ============================================================ */
         const Cap5Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group" etiqueta="Borrador · Fase 1">

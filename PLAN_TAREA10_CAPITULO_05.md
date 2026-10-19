@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. Siguiente: traer `main` y escribir la sección 4 (Tarea 2.4).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribió la sección 4 (Tarea 2.4). Siguiente: la sección 5 (Tarea 2.5).
 
 ---
 
@@ -385,6 +385,34 @@ PC1 se mantiene, pero ahora está medida con un instrumento que puede fallar.
 **Para la skill:** la puerta debe decir que `scrollWidth` es ciego aquí, y que el
 contenedor válido es el que desplaza, con la prueba negativa del bloque de 600 px.
 
+*Corregido en la Tarea 2.4:* tal como quedó escrito, el criterio vuelve a ser
+ciego. El panel que desplaza la lección (`div.flex-1.overflow-y-auto`, padre de
+`.max-w-4xl`) solo declara `overflow-y: auto`, pero el navegador calcula su
+`overflow-x` como `auto`: cuando un eje no es `visible`, el otro deja de poder
+serlo. Un guion que sube por los ancestros buscando `auto` o `scroll` se detiene
+en ese panel y da por bueno el bloque de 600 px. Se comprobó: la prueba negativa
+no saltó. Hay que **detener la subida en ese panel**, sin contarlo, y medir además
+su `scrollWidth` contra su `clientWidth`, que es la medida de página que
+`document.documentElement.scrollWidth` ya no da. Con las dos correcciones, el
+bloque de 600 px sale señalado (24 elementos, y el panel pasa de 367 a 624 px). Lo
+real da cero. Queda una salvedad: un `CodeBlock` largo arranca **plegado**, y
+en ese estado su `pre` recorta con `overflow: hidden` lo que pasa del borde,
+sin barra. Es así por diseño, porque es una vista previa, y al desplegarlo
+vuelve a desplazar.
+
+### H16 · Sin `localStorage`, el capítulo se queda en blanco *(encontrado en la Tarea 2.4)*
+
+El `App` lee la lección guardada con `localStorage.getItem` dentro del
+inicializador de `useState` (`lp-demo.jsx:762`), y `CodeTabs` lee y escribe la
+preferencia de lenguaje igual (`lp-core-extra.jsx:229` y `:303`). Ninguna de las
+dos lecturas va en `try/catch`. Si el navegador no da almacenamiento, la primera
+lectura lanza un `SecurityError`, React desmonta el árbol y la página queda en
+blanco, con la consola como única pista. Se vio en el panel de vista previa, que
+abre los `file://` como URL `data:`. Pero el mismo fallo puede aparecer en una
+ventana privada, o con el almacenamiento bloqueado por política. Es de la
+plantilla, así que afecta a los cinco capítulos, y arreglarlo obliga a
+reestampar. → **cuarta deuda de P3.**
+
 ---
 
 ## 3. Grafo de dependencias
@@ -625,7 +653,7 @@ vuelta más».
       son ganchos o índices? ¿La densidad es la del capítulo 4? Sin
       observaciones
 
-#### Tarea 2.4 · Sección 4 — «`Para`: cuando se sabe cuántas veces» ← **núcleo**
+#### Tarea 2.4 · Sección 4 — «`Para`: cuando se sabe cuántas veces» ← **núcleo** · ✅
 La tabla de H4 y `AmortizacionPasoAPaso` (P1). **E3 de alto valor:** el
 `Mientras k < n` que deja una cuota sin cobrar. Medido: 10 000 000 al 1,5 % en 12
 cuotas de 916 799,93, y con una vuelta de menos quedan **903 251,16** sin cobrar.
@@ -633,6 +661,59 @@ El estudiante tiene que **nombrar** el defecto y estimar el impacto. La
 `lineaCorrecta` y la `explicacion` van por lenguaje. **E1:** traza de las
 primeras cuatro filas. **E4:** `Para` contra `Mientras`, con `Comparador` (H8).
 `TresCiclosComparados` cierra la sección.
+
+*Hecho el 2026-10-19, después de traer `main`.* La motivación es el plan de pagos
+migrado de VBA a Python con `range(1, 12)`: once cuotas, y el banco deja de
+recaudar la doce, 916 799,93. La cuota va como dato de una línea, con el
+comentario que remite al capítulo 8 y sin redondear (P6). El plan de doce cuotas
+se imprime entero, y su última fila sale con −0.00, porque el residuo es
+−7,5 × 10⁻⁸; la nota del bloque lo deja para la sección 6. Un `Box` dice que los
+bancos redondean al peso y ajustan la última (S3). La tabla de H4 va entera,
+con un `Box` para las tres diferencias —la del contador de VBA, con la
+referencia de Microsoft Learn, «Instrucción For...Next (VBA)»— y un bloque del
+crédito al día: con *n* = 0, R cobra la cuota 1 y la cuota 0, y `seq_len(n)`
+ninguna.
+
+- **E1** (`TablaTraza`): las cuatro primeras cuotas de **otro** crédito, 4 000 000
+  al 2 % en 12, para que no se copien de `AmortizacionPasoAPaso`. La fila de
+  antes del ciclo tiene tres rayas que son respuesta (`k`, `interes` y `abono`),
+  y lleva `exigeRespuesta`. El VBA de la traza va como fragmento, sin `Dim`: un
+  `Dim interes As Double` le daría 0 antes del ciclo, y la fila dejaría de ser la
+  misma en los cuatro lenguajes.
+- **E3** (`DetectaError`): el `Mientras k < n`. Los tipos combinan el nombre del
+  defecto con su magnitud. El distractor fuerte es la cuota completa
+  (916 799,93) contra el saldo que de verdad queda, el abono de la cuota 12
+  (903 251,16). Clave en la «d».
+- **E4** (`Comparador`): un `Mientras` que no se parece a un `Para` —nace en 0,
+  aumenta arriba y compara con `<`— y es equivalente con cualquier *n*, también
+  0 y negativos. Va después del E3 para que no se resuelva por patrón («el `<`
+  es el defecto»). En R, la versión A usa `seq_len(n)`: con `1:n` la clave
+  dependería de la pestaña. Clave en la «b».
+- La cierran una tabla de las tres formas y `TresCiclosComparados`.
+
+*Medido:* `verificar.py --sin-cuota --con-salidas` en verde en los cinco
+capítulos: 9 ejercicios (E1:2 E2:2 E3:1 E4:2 E5:1 E8:1) y 10 bloques de Python y
+R ejecutados. Cada cifra en prosa se ejecutó aparte, en Python y en R: once
+vueltas, 903 251,16, 13 548,77, el 9 % del capital, −7,5 × 10⁻⁸, `1:0` = `c(1, 0)`,
+`range(1, 12)` con once vueltas y la equivalencia del E4 con *n* = 0, 1, 2, 12 y
+−3. Regla 17 sin avisos, con su prueba negativa: la clave del E4 alargada sale
+señalada. Claves del capítulo: a, b, c, d, b. Por DOM, el E1 da 20/20 con la
+clave, y también redondeando al centavo en cada paso; con las rayas en blanco y
+un saldo malo da 16/20 y avisa de las tres sin responder. El E3 da «¡Diagnóstico
+correcto!» en los cuatro lenguajes (líneas 9, 8, 8 y 12), y da error con la cuota
+completa y con la inicialización. El E4 da «¡Correcto!» con la «b» y «Revisa la
+explicación» con las otras tres. A 375 px, con la barra lateral cerrada, no queda
+ningún elemento fuera en ningún estado: bloque desplegado, tabla de 240 filas,
+cuarto panel de R, explicaciones abiertas y el E3 en los cuatro lenguajes. Y no
+hay ningún espacio comido en los 104 elementos en línea. Las dos pruebas se
+hicieron antes en negativo. *Sin cotejar:* el −0.00 de la última fila en VBA
+(R10), y si `Format` lo imprime con signo.
+
+*Cómo se probó en el navegador:* el servidor «portal» no se pudo arrancar,
+porque la tarea corrió programada y el arranque se rechazó. El archivo se abrió
+desde `file://`, que el panel convierte en una URL `data:`, y ahí no hay
+`localStorage` (H16). Se le dio a la pestaña un `localStorage` en memoria y se
+volvió a montar el `App`, sin tocar el archivo.
 
 #### Tarea 2.5 · Sección 5 — «Ciclos anidados»
 Sin arreglos (H7, P2). Un `Trazador` de dos créditos con tres cuotas cada uno,
