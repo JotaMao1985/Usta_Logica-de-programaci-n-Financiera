@@ -431,6 +431,20 @@ ventana privada, o con el almacenamiento bloqueado por política. Es de la
 plantilla, así que afecta a los cinco capítulos, y arreglarlo obliga a
 reestampar. → **cuarta deuda de P3.**
 
+### H17 · `OrdenaPasos` no muestra la sangría *(encontrado en la Tarea 2.5)*
+
+Los pasos llevan su sangría en el texto (`'    subtotal = 0'`), pero el `span`
+que los pinta tiene `white-space: normal`: los espacios del principio se
+colapsan y las tres líneas de la sección 5 —a 0, 4 y 8 espacios— empiezan en
+el mismo píxel (medido en el DOM). Lo mismo pasa en el recuadro «Orden
+correcto». En pseudocódigo es una pista que se pierde. En Python es la
+estructura misma: la sangría dice a qué ciclo pertenece cada línea, y con dos
+ciclos el estudiante ordena sin verla. El ejercicio sigue teniendo una sola
+respuesta, porque se califica por posición, pero la solución que se muestra no
+dice qué va dentro de qué. El arreglo es `whitespace-pre` en ese `span` y en el
+de la solución, en `lp-core-extra.jsx:763`, y obliga a
+reestampar. → **quinta deuda de P3.**
+
 ---
 
 ## 3. Grafo de dependencias
