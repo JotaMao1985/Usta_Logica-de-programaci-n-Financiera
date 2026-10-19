@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9). Tareas 2.1 a 2.3 hechas; en el punto de control 2.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. Siguiente: traer `main` y escribir la sección 4 (Tarea 2.4).
 
 ---
 
@@ -598,7 +598,7 @@ con `Mientras` y un `−1` inicial. El **E4** tiene de distractores las dos
 creencias reales: «la negación es exacta, luego son iguales» y «B da siempre una
 vuelta más».
 
-### ⏸ Punto de control 2 — Tono, densidad y primer tercio
+### ⏸ Punto de control 2 — Tono, densidad y primer tercio · ✅ 2026-10-18
 - [x] Seis ejercicios: E1:1 · E2:2 · E4:1 · E5:1 · E8:1, y ningún aviso de la
       regla 17
 - [x] Cada ejercicio que califica, llevado hasta el veredicto por DOM, con una
@@ -621,8 +621,9 @@ vuelta más».
       consola limpia; los cuatro iconos nuevos de las motivaciones dan glifo;
       ningún espacio comido entre texto y elemento, comprobado en el DOM con un
       guion que también se probó en negativo
-- [ ] **Revisión del docente:** ¿las motivaciones son ganchos o son índices? ¿la
-      densidad es la del capítulo 4?
+- [x] **Revisión del docente** (2026-10-18): PC2 aprobado. ¿Las motivaciones
+      son ganchos o índices? ¿La densidad es la del capítulo 4? Sin
+      observaciones
 
 #### Tarea 2.4 · Sección 4 — «`Para`: cuando se sabe cuántas veces» ← **núcleo**
 La tabla de H4 y `AmortizacionPasoAPaso` (P1). **E3 de alto valor:** el
