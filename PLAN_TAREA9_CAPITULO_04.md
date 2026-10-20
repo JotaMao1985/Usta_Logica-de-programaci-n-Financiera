@@ -672,3 +672,87 @@ python3 -m http.server 8777 --directory "Material html"
   pero hay que decidir si se explica o solo se enseña.
 - **P4 · ¿La revisión del capítulo 3, antes o después del PC1?** Antes abarata el
   R1; después no bloquea el arranque. (R1)
+
+---
+
+## 10. Revisión de contenido del 2026-10-20
+
+**Rama:** `cap04/revision-contenido`, salida de `main` (fec3737).
+
+**Encargo del docente:** «Arregla los graves y medios de los capítulos 4 y 5». El
+detalle de la revisión, que hicieron cinco revisores, está en
+`REVISION_CAPITULOS_04_05.md` (rama del capítulo 5). Las cifras y las claves nuevas
+se ejecutaron en Python y R antes de escribirlas.
+
+**Graves:**
+1. **El error de Python que el texto negaba.** «Ninguna de las cuatro respuestas es
+   un error visible» era falso: sin `case _`, Python deja la variable sin definir y
+   se detiene más adelante con `NameError`, y la cascada de R sin `else` hace lo
+   mismo. Se corrigió en la prosa de la sección 5, en `SelectivasComparadas` y en la
+   clave y la justificación de la pregunta 2: el que no avisa es el `Segun`. El
+   banco del parcial no tenía este error (comprobado en su repositorio privado).
+2. **Las cuatro `TablaTraza` delataban la rama.** Sus filas eran las instrucciones
+   ejecutadas, así que la de la sección 4 se acertaba 12/12 sin evaluar nada.
+   - Ahora tienen una fila por cada línea, se ejecute o no, y una sola columna
+     **flujo**, la que prometió el capítulo 3: `verdadero` o `falso` en una
+     condición evaluada, `salta` en una que no se llega a evaluar, y `ejecuta` o
+     `salta` en las demás líneas. Sigue sin tildes (H3).
+   - La de la sección 4 usa otro solicitante (5 000 000 / 600 / 30 %), que cae en
+     el borde de `>=` y deja condiciones sin evaluar.
+   - El recuadro «La fila que no está» pasó a ser «La fila que se salta».
+3. **El E7 de la sección 6.** Su justificación avalaba un distractor, y «tres de
+   ellas ni siquiera le aplican» era falso. Ahora el solicitante es otro
+   (3 200 000 / 520 / 64 %), para que no se acierte por reconocimiento, y hay
+   opciones nuevas.
+
+**Medios — ejercicios:**
+- El MCQ de De Morgan se respondía copiando el párrafo. Ahora usa
+  `antiguedad >= 24 Y diasMora = 0`, con un distractor de borde.
+- El E2 de `switch` se respondía por eliminación. El párrafo que eliminaba
+  opciones va ahora después del ejercicio.
+- El `Comparador` del `Segun` anunciaba la respuesta en su enunciado y en las
+  etiquetas. Ahora va antes del texto del caso por defecto, y su distractor «d»
+  habla de los bordes de tramo.
+- El E3 de la negación tenía un segundo defecto: `marcarRevisionManual` no tenía
+  valor por defecto. Se le añadió, así que la línea del error baja una en los
+  cuatro lenguajes (7, 6, 6 y 7). Además se quitaron las pistas del enunciado y
+  se pusieron tipos verosímiles.
+- El E3 de la cascada ya no dice «la línea que hay que mover». Su primer tipo es
+  ahora «asignación pisada», y el comentario dice «en producción», no «del comité».
+- Los dos `OrdenaPasos` eran ambiguos: las lecturas conmutaban y las cuotas no
+  estaban en el enunciado. Ahora tienen la convención y los datos.
+- En el cuestionario cambiaron cuatro preguntas:
+  - Q1 era recuerdo; ahora es De Morgan, que no aparecía.
+  - Q3 repetía el E1 de la sección 2; ahora es `>=` en el borde.
+  - Q8 era trivial; ahora pregunta qué regla admite `switch`.
+  - Q10 se respondía por eliminación.
+  - Con la clave, el cuestionario da 10 de 10 en el navegador.
+
+**Medios — prosa:**
+- La precedencia era «la misma en los cuatro lenguajes» también para los
+  aritméticos, y no lo es.
+- La comparación encadenada de Python no tenía explicación.
+- La definición de anidar la contradecía el propio ejemplo. Ahora hay un
+  ejemplo nuevo, `EJ_ANIDADA`, y la frase «`Sino Si` es un `Si` en el `Sino`».
+- El valor por defecto en VBA.
+- El comentario de R sobre `&`.
+- «Nunca» en el gancho de la sección 4.
+- El título de la negación.
+- «Primera vez» y «único punto» del curso.
+- El origen de `Select Case … To`.
+- `cut()` y `findInterval()`.
+- «Negar sin invertir su sentido».
+- El millón de la motivación de la sección 3.
+- «No pase del 40 %».
+- La nota de la mora y la usura.
+- El evaluador lógico y el cortocircuito de VBA.
+
+**Comprobado:**
+- `verificar.py --con-salidas` en verde, con 18 bloques ejecutados.
+- Las claves nuevas se ejecutaron en Python (`c4_claves.py`) y lo que dice el
+  texto, en R y Python.
+- En el navegador: las cuatro tablas, los dos E3 en los cuatro lenguajes, los MCQ
+  y el `Comparador` se condujeron hasta el veredicto, con una respuesta mala en
+  cada uno, y el cuestionario dio 10/10.
+- La consola está limpia.
+- A 375 px nada se sale en las ocho secciones, con su prueba negativa.
