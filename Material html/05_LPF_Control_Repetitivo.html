@@ -2392,9 +2392,12 @@ FinPara`;
            use. Con CERO no: `Repita` entra antes de preguntar y cobra una cuota
            que nadie debía (plan de la Tarea 10, H5).
 
-           El cuarto panel, opcional, es el `for (k in 1:n)` de R: con n = 0 da
-           DOS vueltas, con k = 1 y con k = 0 (H4). Es la diferencia entre
-           lenguajes más cara del capítulo, y aquí se ve sin ejecutar R.
+           Los dos paneles opcionales son los `for` con trampa. El de R con
+           `1:n`: con n = 0 da DOS vueltas, con k = 1 y con k = 0 (H4). Y el de
+           Python con `range(1, n)`, el error de la motivación: da n − 1 vueltas
+           y solo cobra bien con n = 0. Lo añadió la revisión del 2026-10-20: el
+           caso n = 0 ya lo resolvían la tabla y el recuadro de la sección, y
+           este panel deja algo que descubrir.
         ------------------------------------------------------------ */
         const COBRO_CUOTA = cuotaFija(10000000, 0.015, 12);
 
@@ -2439,10 +2442,20 @@ for (k in 1:n) {
             vueltas: (n) => (n >= 1 ? n : 2 - n),
         };
 
+        // `range(1, n)` se detiene antes de n: el segundo número no se usa.
+        const FORMA_PY = {
+            id: 'py', nombre: 'for de Python con range(1, n)', nota: 'La traducción de la motivación.',
+            codigo: `cobrado = 0
+for k in range(1, n):
+    cobrado = cobrado + cuota`,
+            vueltas: (n) => Math.max(0, n - 1),
+        };
+
         const TresCiclosComparados = () => {
             const [n, setN] = useState(3);
             const [conR, setConR] = useState(false);
-            const formas = conR ? [...FORMAS_CICLO, FORMA_R] : FORMAS_CICLO;
+            const [conPy, setConPy] = useState(false);
+            const formas = [...FORMAS_CICLO, ...(conR ? [FORMA_R] : []), ...(conPy ? [FORMA_PY] : [])];
             const debido = n * COBRO_CUOTA;
             const resultados = formas.map(f => ({ ...f, v: f.vueltas(n) }));
             const alguienFalla = resultados.some(r => r.v !== n);
@@ -2458,7 +2471,8 @@ for (k in 1:n) {
                     <p className="text-[0.95rem] text-gray-700 mb-3">
                         Tres formas de cobrar las <span className="inline-code">n</span> cuotas pendientes de un
                         crédito, cada una de {pesosCO(COBRO_CUOTA)}. Cambie <span className="inline-code">n</span> y
-                        busque el valor con el que <strong>no cobran lo mismo</strong>. Existe.
+                        compruebe con qué valor <strong>dejan de cobrar lo mismo</strong>. Después añada los
+                        dos <span className="inline-code">for</span> de abajo.
                     </p>
 
                     <div className="mb-3">
@@ -2474,7 +2488,7 @@ for (k in 1:n) {
                         </div>
                     </div>
 
-                    <div className={'grid gap-3 mb-3 ' + (conR ? 'sm:grid-cols-2' : 'sm:grid-cols-3')}>
+                    <div className={'grid gap-3 mb-3 ' + (formas.length === 4 ? 'sm:grid-cols-2' : 'sm:grid-cols-3')}>
                         {resultados.map(r => {
                             const mal = r.v !== n;
                             return (
@@ -2491,9 +2505,13 @@ for (k in 1:n) {
                         })}
                     </div>
 
-                    <label className="flex items-center gap-2 text-sm text-gray-700 mb-3 cursor-pointer">
+                    <label className="flex items-center gap-2 text-sm text-gray-700 mb-1 cursor-pointer">
                         <input type="checkbox" checked={conR} onChange={(e) => setConR(e.target.checked)} className="w-4 h-4 accent-[#3D008D]" />
                         Añadir el <span className="inline-code">for (k in 1:n)</span> de R
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-gray-700 mb-3 cursor-pointer">
+                        <input type="checkbox" checked={conPy} onChange={(e) => setConPy(e.target.checked)} className="w-4 h-4 accent-[#3D008D]" />
+                        Añadir el <span className="inline-code">for k in range(1, n)</span> de Python
                     </label>
 
                     <div role="status" className={'rounded-xl p-3 text-sm ' +
@@ -2501,8 +2519,9 @@ for (k in 1:n) {
                         {!alguienFalla
                             ? <span>Con n = {n} los {formas.length} ciclos dan {n} {n === 1 ? 'vuelta' : 'vueltas'} y
                                 cobran {pesosCO(debido)}. Pruebe otro valor.</span>
-                            : <span><strong>Aquí difieren.</strong> No se debe nada, y aun así {resultados.filter(r => r.v !== n).map(r =>
-                                r.nombre + ' cobra ' + pesosCO(r.v * COBRO_CUOTA)).join(' y ')}. Ninguno da un error: el
+                            : <span><strong>Aquí difieren.</strong> {n === 0 ? 'No se debe nada, y aun así ' : 'Se deben ' + pesosCO(debido) + ', y '}
+                                {resultados.filter(r => r.v !== n).map(r =>
+                                'el ' + r.nombre + ' cobra ' + pesosCO(r.v * COBRO_CUOTA)).join(' y ')}. Ninguno da un error: el
                                 cobro sale como si fuera correcto.</span>}
                     </div>
                 </div>
@@ -2924,6 +2943,113 @@ FinMientras`;
             );
         };
 
+        /* Dos Para, uno dentro de otro: el reporte de la cartera que traza la
+           sección 5. Los dos retornos van por carriles concéntricos —el de fuera
+           por x = 14, el de dentro por x = 34— y las piezas del ciclo de dentro
+           se estrechan (x de 44 a 204) para dejarle sitio. Lo que el dibujo tiene
+           que dejar ver es dónde queda `subtotal ← 0`: dentro del retorno de
+           fuera y fuera del de dentro. Las coordenadas de abajo suponen una
+           primera caja de una línea; la real tiene dos —tasa y total—, y por eso
+           todo lo demás va en un grupo trasladado 17 unidades. Añadido en la
+           revisión del 2026-10-20. */
+        const FlujogramaAnidado = () => {
+            const DESCRIPCION = 'Flujograma de dos ciclos Para, uno dentro de otro: el reporte de la cartera. tasa vale 0,02 y total se inicia en 0; i se inicia en 1 y un rombo pregunta si i es menor o igual que 2. Por el Sí se leen saldo y abono, subtotal se inicia en 0, k se inicia en 1 y un segundo rombo, más adentro, pregunta si k es menor o igual que 3. Por su Sí, subtotal suma el interés de la cuota, el saldo baja en el abono y k aumenta en 1, y un retorno interior sube por un carril de adentro hasta antes del segundo rombo. Por su No se vuelve al ciclo de fuera: total suma subtotal, se escriben i y subtotal, i aumenta en 1 y un retorno exterior sube por el carril de afuera hasta antes del primer rombo. Por el No del primer rombo se escribe total. subtotal ← 0 queda dentro del retorno exterior y fuera del interior: se ejecuta una vez por crédito.';
+            const N1 = 44, N2 = 204, CARRIL_DENTRO = 34, SALIDA_DENTRO = 216;
+            const UNION_I = 98, ROMBO_I = 110, UNION_K = 314, ROMBO_K = 326;
+            const caja = (x1, x2, y, lineas, delCiclo, tam = 12) => {
+                const alto = 17 + lineas.length * 17;
+                return (
+                    <g>
+                        <rect x={x1} y={y} width={x2 - x1} height={alto} rx="6"
+                            fill={delCiclo ? '#E0F2F7' : '#F5F0FA'} stroke={delCiclo ? '#0E7490' : '#3D008D'}
+                            strokeWidth="1.5" strokeDasharray={delCiclo ? '5 3' : undefined} />
+                        {lineas.map((l, i) => (
+                            <text key={i} x={EJE} y={y + 22 + i * 17} textAnchor="middle"
+                                fontSize={tam} fontFamily={MONO} fill="#001A4D">{l}</text>
+                        ))}
+                    </g>
+                );
+            };
+            const es = (y, texto) => (
+                <g>
+                    <polygon points={`38,${y} 224,${y} 210,${y + 34} 24,${y + 34}`} fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                    <text x={EJE} y={y + 22} textAnchor="middle" fontSize="12" fontFamily={MONO} fill="#001A4D">{texto}</text>
+                </g>
+            );
+            const rombo = (x1, x2, y, texto) => (
+                <g>
+                    <polygon points={`${EJE},${y} ${x2},${y + 24} ${EJE},${y + 48} ${x1},${y + 24}`}
+                        fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.8" strokeDasharray="5 3" />
+                    <text x={EJE} y={y + 29} textAnchor="middle" fontSize="12.5" fontFamily={MONO} fill="#001A4D">{texto}</text>
+                </g>
+            );
+            const retorno = (yDesde, carril, yHasta) => (
+                <g>
+                    {fjLinea(EJE, yDesde, EJE, yDesde + 12, RETORNO)}
+                    {fjLinea(carril, yDesde + 12, EJE, yDesde + 12, RETORNO)}
+                    {fjLinea(carril, yDesde + 12, carril, yHasta, RETORNO)}
+                    <line x1={carril} y1={yHasta} x2={EJE - 5} y2={yHasta} stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
+                    <circle cx={EJE} cy={yHasta} r="3.5" fill="#3D008D" />
+                </g>
+            );
+            return (
+                <figure className="my-6 not-prose">
+                    <svg viewBox="0 0 248 761" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
+                        {FLECHA_DEFS}
+                        {caja(24, 224, 4, ['tasa ← 0.02', 'total ← 0'])}
+                        <g transform="translate(0, 17)">
+                        {fjFlecha(38, 50)}
+                        {caja(24, 224, 52, ['i ← 1'], true)}
+                        {fjLinea(EJE, 86, EJE, UNION_I)}
+                        {fjFlecha(UNION_I, ROMBO_I - 2)}
+                        {rombo(32, 216, ROMBO_I, 'i <= 2')}
+                        {fjRotulo(EJE + 8, ROMBO_I + 60, 'Sí')}
+                        {fjFlecha(ROMBO_I + 48, 170)}
+                        {es(172, 'Leer saldo, abono')}
+                        {fjFlecha(206, 218)}
+                        {caja(24, 224, 220, ['subtotal ← 0'])}
+                        {fjFlecha(254, 266)}
+                        {caja(N1, N2, 268, ['k ← 1'], true, 11.5)}
+                        {fjLinea(EJE, 302, EJE, UNION_K)}
+                        {fjFlecha(UNION_K, ROMBO_K - 2)}
+                        {rombo(N1, N2, ROMBO_K, 'k <= 3')}
+                        {fjRotulo(EJE + 8, ROMBO_K + 60, 'Sí')}
+                        {fjFlecha(ROMBO_K + 48, 386)}
+                        {caja(N1, N2, 388, ['subtotal ← subtotal', '+ saldo * tasa', 'saldo ← saldo - abono'], false, 11)}
+                        {fjFlecha(456, 462)}
+                        {caja(N1, N2, 464, ['k ← k + 1'], true, 11.5)}
+                        {retorno(498, CARRIL_DENTRO, UNION_K)}
+                        {fjLinea(N2, ROMBO_K + 24, SALIDA_DENTRO, ROMBO_K + 24)}
+                        {fjRotulo(207, ROMBO_K + 17, 'No')}
+                        {fjLinea(SALIDA_DENTRO, ROMBO_K + 24, SALIDA_DENTRO, 522)}
+                        {fjLinea(SALIDA_DENTRO, 522, EJE, 522)}
+                        {fjFlecha(522, 534)}
+                        {caja(24, 224, 536, ['total ← total + subtotal'])}
+                        {fjFlecha(570, 582)}
+                        {es(584, 'Escribir i, subtotal')}
+                        {fjFlecha(618, 630)}
+                        {caja(24, 224, 632, ['i ← i + 1'], true)}
+                        {retorno(666, CARRIL_IZQ, UNION_I)}
+                        {fjLinea(216, ROMBO_I + 24, CARRIL_DER, ROMBO_I + 24)}
+                        {fjRotulo(221, ROMBO_I + 17, 'No')}
+                        {fjLinea(CARRIL_DER, ROMBO_I + 24, CARRIL_DER, 690)}
+                        {fjLinea(CARRIL_DER, 690, EJE, 690)}
+                        {fjFlecha(690, 702)}
+                        {es(704, 'Escribir total')}
+                        </g>
+                    </svg>
+                    <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                        El reporte que se traza abajo, con sus dos <span className="inline-code">Para</span> desarmados.
+                        El retorno de adentro devuelve el flujo a <span className="inline-code">k &lt;= 3</span> y da las
+                        tres cuotas de un crédito; el de afuera lo devuelve a <span className="inline-code">i &lt;= 2</span> y
+                        pasa al crédito siguiente, donde <span className="inline-code">k ← 1</span> vuelve a empezar.
+                        {' '}<span className="inline-code">subtotal ← 0</span> queda <strong>dentro</strong> del retorno de
+                        afuera y <strong>fuera</strong> del de adentro: se ejecuta una vez por crédito.
+                    </figcaption>
+                </figure>
+            );
+        };
+
         // La simbología de los flujogramas, con la única forma nueva de este
         // capítulo: el retorno. La forma va en SVG; el texto, en HTML.
         const SimbologiaFlujograma = () => {
@@ -3303,6 +3429,110 @@ Sub AhorroProgramadoMal()
 End Sub`,
         };
 
+        /* Traza del defecto de la motivación, con la meta en 900 000 para que el
+           ciclo dé tres vueltas: es la vuelta en que se separa del programa bien
+           escrito. El VBA va como fragmento, sin Sub ni Dim, para que ninguna
+           variable aparezca valiendo 0 antes de su primera asignación. Valores
+           ejecutados en Python y R el 2026-10-20: 5 424,30 frente a 8 124,30. */
+        const TZ_AHORRO_MAL = {
+            pseudo: `Inicio
+    saldo <- 0
+    meses <- 0
+    Mientras saldo < 900000 Hacer
+        intereses <- 0
+        interes   <- saldo * 0.009
+        intereses <- intereses + interes
+        saldo     <- saldo + interes + 300000
+        meses     <- meses + 1
+    FinMientras
+    Escribir intereses
+Fin`,
+            python: `saldo = 0
+meses = 0
+while saldo < 900_000:
+    intereses = 0
+    interes   = saldo * 0.009
+    intereses = intereses + interes
+    saldo     = saldo + interes + 300_000
+    meses     = meses + 1
+print(round(intereses, 2))`,
+            r: `saldo <- 0
+meses <- 0
+while (saldo < 900000) {
+  intereses <- 0
+  interes   <- saldo * 0.009
+  intereses <- intereses + interes
+  saldo     <- saldo + interes + 300000
+  meses     <- meses + 1
+}
+cat(round(intereses, 2), "\\n")`,
+            vba: `saldo = 0
+meses = 0
+Do While saldo < 900000
+    intereses = 0
+    interes = saldo * 0.009
+    intereses = intereses + interes
+    saldo = saldo + interes + 300000
+    meses = meses + 1
+Loop
+Debug.Print intereses`,
+        };
+        const TZA_SALDO0 = { pseudo: 2, python: 1, r: 1, vba: 1 };
+        const TZA_MESES0 = { pseudo: 3, python: 2, r: 2, vba: 2 };
+        const TZA_COND = { pseudo: 4, python: 3, r: 3, vba: 3 };
+        const TZA_CERO = { pseudo: 5, python: 4, r: 4, vba: 4 };
+        const TZA_INTERES = { pseudo: 6, python: 5, r: 5, vba: 5 };
+        const TZA_SUMA = { pseudo: 7, python: 6, r: 6, vba: 6 };
+        const TZA_SALDO = { pseudo: 8, python: 7, r: 7, vba: 7 };
+        const TZA_MESES = { pseudo: 9, python: 8, r: 8, vba: 8 };
+        const TZA_ESCRIBIR = { pseudo: 11, python: 9, r: 10, vba: 10 };
+        const TZ_AHORRO_MAL_PASOS = [
+            { linea: TZA_SALDO0, estado: { saldo: '0' },
+                nota: 'La cuenta empieza vacía. Esta línea está antes del ciclo: se ejecuta una sola vez.' },
+            { linea: TZA_MESES0, estado: { meses: '0' },
+                nota: 'El contador de meses, también una sola vez. Fíjese en la línea que falta aquí: intereses <- 0 no está entre las de antes del ciclo.' },
+            { linea: TZA_COND, estado: {},
+                nota: 'Primera evaluación: 0 < 900 000. Se entra.' },
+            { linea: TZA_CERO, estado: { intereses: '0' },
+                nota: 'La primera instrucción del cuerpo pone intereses en cero. En esta vuelta no se nota: todavía no había nada que borrar.' },
+            { linea: TZA_INTERES, estado: { interes: '0' },
+                nota: 'El interés del primer mes es cero, porque la cuenta está vacía.' },
+            { linea: TZA_SUMA, estado: { intereses: '0' },
+                nota: '0 + 0. El acumulador se lee a sí mismo para actualizarse, como debe.' },
+            { linea: TZA_SALDO, estado: { saldo: '300000' },
+                nota: 'Entra el primer aporte.' },
+            { linea: TZA_MESES, estado: { meses: '1' },
+                nota: 'Fin de la primera vuelta. El flujo vuelve a la condición.' },
+            { linea: TZA_COND, estado: {},
+                nota: 'Segunda evaluación: 300 000 < 900 000. Otra vuelta.' },
+            { linea: TZA_CERO, estado: { intereses: '0' },
+                nota: 'Otra vez a cero. Tampoco se nota todavía: lo que se borró era un cero.' },
+            { linea: TZA_INTERES, estado: { interes: '2700' },
+                nota: 'El interés del mes 2: 300 000 × 0,009.' },
+            { linea: TZA_SUMA, estado: { intereses: '2700' },
+                nota: '2 700, lo mismo que llevaría el programa bien escrito: 0 + 2 700. Hasta aquí las dos versiones coinciden, y por eso una traza de dos vueltas no lo delata.' },
+            { linea: TZA_SALDO, estado: { saldo: '602700' },
+                nota: 'Saldo, interés y aporte.' },
+            { linea: TZA_MESES, estado: { meses: '2' },
+                nota: 'Fin de la segunda vuelta.' },
+            { linea: TZA_COND, estado: {},
+                nota: 'Tercera evaluación: 602 700 < 900 000. Una vuelta más.' },
+            { linea: TZA_CERO, estado: { intereses: '0' },
+                nota: 'Aquí está el defecto: los 2 700 del mes 2 desaparecen. Ninguna línea los vuelve a leer.' },
+            { linea: TZA_INTERES, estado: { interes: '5424.3' },
+                nota: 'El interés del mes 3: 602 700 × 0,009.' },
+            { linea: TZA_SUMA, estado: { intereses: '5424.3' },
+                nota: 'Se separan. El programa bien escrito llevaría 2 700 + 5 424,30 = 8 124,30; este lleva solo los 5 424,30 de este mes.' },
+            { linea: TZA_SALDO, estado: { saldo: '908124.3' },
+                nota: 'El saldo, en cambio, está bien: no depende de intereses, sino de interes, que se calcula de nuevo en cada vuelta.' },
+            { linea: TZA_MESES, estado: { meses: '3' },
+                nota: 'Fin de la tercera vuelta.' },
+            { linea: TZA_COND, estado: {},
+                nota: 'Cuarta evaluación: 908 124,30 < 900 000 es falso. El ciclo termina.' },
+            { linea: TZA_ESCRIBIR, estado: {}, salida: '5424.3',
+                nota: 'El extracto informa 5 424,30 de intereses; la clienta ganó 8 124,30. Es el defecto de la motivación en pequeño: el último interés en vez de la suma de todos.' },
+        ];
+
         /* Contar no es contar vueltas: `enMora` es un contador aunque no
            aumente en todas. Lee los datos de cada crédito, así que no declara
            salida. */
@@ -3379,10 +3609,13 @@ Sub CarteraEnMora()
 End Sub`,
         };
 
-        /* E5. El orden entre las dos inicializaciones, y entre las dos
-           actualizaciones, no cambia el resultado. El enunciado fija uno —las
-           inicializaciones en el orden en que se actualizan, y la vuelta
-           contada al final— para que el ejercicio tenga una sola respuesta.
+        /* E5. El orden entre las dos inicializaciones, entre ellas y la lectura
+           de n, y entre las dos actualizaciones, no cambia el resultado. El
+           enunciado fija uno —la lectura antes de las inicializaciones, las
+           inicializaciones en el orden en que se actualizan y la vuelta contada
+           al final— para que el ejercicio tenga una sola respuesta. La lectura
+           la fijó la revisión del 2026-10-20: sin ella, inicializar y después
+           leer, que es correcto, sacaba 8 de 11.
            Ningún paso se repite dentro de un mismo lenguaje: `OrdenaPasos`
            califica por posición, y dos pasos idénticos serían indistinguibles. */
         const ORDENA_RECAUDO = {
@@ -3462,15 +3695,22 @@ End Sub`,
                 </p>
                 <ul>
                     <li>
-                        Un <Termino def="Variable que aumenta en una cantidad fija —casi siempre 1— cada vez que ocurre algo. Responde a la pregunta «¿cuántas veces?».">contador</Termino> aumenta
-                        en una cantidad <strong>fija</strong>, casi siempre 1, cada vez que pasa algo.
-                        Responde <em>cuántas veces</em>.
+                        Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada vez, su valor nuevo es el anterior más una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
+                        <strong>cuántas veces</strong> pasa algo: cada vez, su valor nuevo es el anterior más
+                        una cantidad fija, casi siempre 1.
                     </li>
                     <li>
-                        Un <Termino def="Variable que aumenta en una cantidad que cambia de una vez a la siguiente: un saldo, un total de intereses, un recaudo. Responde a la pregunta «¿cuánto?».">acumulador</Termino> aumenta
-                        en una cantidad que <strong>cambia</strong> de una vuelta a la siguiente. Responde <em>cuánto</em>.
+                        Un <Termino def="Variable que lleva un total calculado a partir del que ya tenía: un saldo, un total de intereses, un recaudo. Puede subir o bajar, en cantidades iguales o distintas. Responde a la pregunta «¿cuánto?».">acumulador</Termino> lleva
+                        un <strong>total</strong>: su valor nuevo se calcula a partir del que ya tenía,
+                        sumándole —o restándole— lo que trae cada vuelta. Responde <em>cuánto</em>.
                     </li>
                 </ul>
+                <p>
+                    Lo que los distingue no es si la cantidad cambia de una vuelta a otra, sino la
+                    pregunta a la que responden. Un acumulador puede sumar siempre lo mismo —una cuota
+                    fija, por ejemplo— y sigue siendo un acumulador: no cuenta veces, suma pesos. Y puede
+                    bajar, como el saldo de un crédito.
+                </p>
                 <p>
                     El ejemplo es pariente de la meta de ahorro del capítulo 1, ahora con un aporte cada
                     mes. Allí la pregunta era cuántos meses; aquí es qué papel cumple cada variable.
@@ -3497,7 +3737,7 @@ End Sub`,
                             <tr><td>Contador</td><td><span className="inline-code">meses &lt;- meses + 1</span></td><td>0</td><td>Antes de la primera vuelta no ha pasado ningún mes</td></tr>
                             <tr><td>Acumulador de suma</td><td><span className="inline-code">intereses &lt;- intereses + interes</span></td><td>0</td><td>Sumar cero no cambia nada: es el punto de partida neutro</td></tr>
                             <tr><td>Acumulador de producto</td><td><span className="inline-code">factor &lt;- factor * (1 + tasa)</span></td><td>1</td><td>Multiplicar por uno no cambia nada. Si arranca en 0, vale 0 para siempre</td></tr>
-                            <tr><td>Saldo de un crédito</td><td><span className="inline-code">saldo &lt;- saldo - abono</span></td><td>El capital</td><td>Es lo que se debe antes de pagar la primera cuota</td></tr>
+                            <tr><td>Acumulador que resta: el saldo de un crédito</td><td><span className="inline-code">saldo &lt;- saldo - abono</span></td><td>El capital</td><td>Es lo que se debe antes de pagar la primera cuota</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -3514,13 +3754,29 @@ End Sub`,
                     bloques={EJ_AHORRO_MAL}
                     nota="Trece vueltas, el mismo saldo y un solo número distinto. Los 34 053 son exactamente el interés del mes 13: el único que sobrevivió, porque cada vuelta empezaba borrando el anterior." />
 
+                <Trazador
+                    titulo="Traza guiada · el acumulador que vuelve a cero"
+                    enunciado={<>El mismo defecto con una meta más corta, 900 000, para que el ciclo dé solo
+                        tres vueltas. Avance instrucción por instrucción y mire la columna
+                        <span className="inline-code"> intereses</span>: en qué vuelta deja de coincidir con lo
+                        que debería llevar.</>}
+                    codigo={TZ_AHORRO_MAL}
+                    variables={[
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'meses', titulo: 'meses' },
+                        { clave: 'interes', titulo: 'interes' },
+                        { clave: 'intereses', titulo: 'intereses' },
+                    ]}
+                    pasos={TZ_AHORRO_MAL_PASOS}
+                    nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar." />
+
                 <Box type="warn" label="Un número plausible y falso">
                     El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
                     cifra que nadie discutiría a primera vista. El ciclo <strong>sí</strong> sumó en cada vuelta;
-                    solo que cada vuelta empezaba por borrar lo sumado. Y ni siquiera una traza corta lo
-                    delata: en las dos primeras vueltas las dos versiones coinciden, porque el interés del
-                    primer mes es cero —la cuenta todavía está vacía—. La diferencia aparece en la
-                    tercera.
+                    solo que cada vuelta empezaba por borrar lo sumado. Y una traza de dos vueltas no lo
+                    delata: en las dos primeras las dos versiones coinciden, porque el interés del primer
+                    mes es cero —la cuenta todavía está vacía— y lo que se borra es un cero. La diferencia
+                    aparece en la tercera, como acaba de ver.
                 </Box>
 
                 <h3>Contar no es lo mismo que contar vueltas</h3>
@@ -3538,13 +3794,12 @@ End Sub`,
                     nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    multiple={true}
-                    pregunta="En el recorrido de la cartera, ¿cuáles de estas variables son contadores?"
+                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Qué muestra el programa al terminar?"
                     opciones={[
-                        { texto: 'revisados, que suma 1 en cada vuelta, sea cual sea el crédito leído', correcta: true, justificacion: 'Son revisados y enMora. Las dos aumentan en una cantidad fija, 1, y responden «¿cuántos?»: revisados, cuántos créditos se han leído, y por eso suma en todas las vueltas; enMora, cuántos de ellos pasan de 30 días de mora, y por eso solo suma en las vueltas en que la condición de la selectiva se cumple. Que un contador no aumente en todas las vueltas no lo convierte en otra cosa. saldoMora es un acumulador: también se lee a sí misma para actualizarse, pero lo que suma cambia de un crédito a otro, y responde «¿cuánto?». Y diasMora no es ninguna de las dos cosas, aunque cambie en cada vuelta: recibe un dato nuevo con Leer y olvida el anterior, sin leerse nunca a sí misma. Cambiar en cada vuelta no basta; lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía.' },
-                        { texto: 'saldoMora, que suma el saldo de cada crédito en mora al total que ya llevaba', correcta: false },
-                        { texto: 'diasMora, que cambia en todas las vueltas porque cada crédito trae los suyos', correcta: false },
-                        { texto: 'enMora, que suma 1, pero solo en las vueltas en que el crédito leído está en mora', correcta: true },
+                        { texto: '3 créditos en mora por 1 500 000', correcta: false },
+                        { texto: '2 créditos en mora por 500 000', correcta: false },
+                        { texto: '2 créditos en mora por 1 500 000', correcta: true, justificacion: 'revisados aumenta en todas las vueltas y llega a 3. enMora es un contador también, pero está dentro de la selectiva: solo aumenta en las vueltas en que la condición se cumple —45 > 30 y 31 > 30 sí, 10 > 30 no—, así que vale 2. saldoMora es un acumulador dentro de la misma selectiva: suma el saldo de esos dos créditos, 1 000 000 + 500 000 = 1 500 000. Tres créditos en mora sería un contador que aumenta en todas las vueltas, como revisados. 500 000 sería una variable que se reemplaza en vez de sumarse: el último saldo en mora, no el total. Y 3 500 000 sería la suma de todos los saldos, la de un acumulador que no está dentro de la selectiva. Fíjese, de paso, en diasMora: cambia en cada vuelta y no es ni contador ni acumulador, porque Leer le pone un dato nuevo sin mirar el anterior. Lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía. (En Python y R, las variables se llaman en_mora, saldo_mora y dias_mora.)' },
+                        { texto: '2 créditos en mora por 3 500 000', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3557,7 +3812,7 @@ End Sub`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Para que tenga una sola respuesta, siga dos convenciones que no cambian el resultado: las inicializaciones van en el mismo orden en que sus variables se actualizan dentro del ciclo, y la vuelta se cuenta al final del cuerpo."
+                    enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Para que tenga una sola respuesta, siga tres convenciones que no cambian el resultado: la cantidad de pagos se lee antes de las inicializaciones; las inicializaciones van en el mismo orden en que sus variables se actualizan dentro del ciclo, y la vuelta se cuenta al final del cuerpo."
                     pasos={ORDENA_RECAUDO}
                     pista="Hay dos líneas que no pueden quedar dentro del ciclo: una deja en el total solo el último pago, y la otra impide que el ciclo termine. Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago."
                 />
@@ -3694,21 +3949,21 @@ End Sub`,
                 nota: 'El contador arranca en cero: antes de la primera vuelta no se ha pagado ningún mes.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
                 nota: 'Primera evaluación de la condición, y todavía no se ha dado ninguna vuelta. 1 000 000 > 0: se entra.' },
-            { linea: TZ_L_RESTA, estado: { saldo: '600000' },
+            { linea: TZ_L_RESTA, estado: { saldo: '600000', cond: '—' },
                 nota: 'Primer abono. La variable saldo pierde su valor anterior: el millón ya no existe en ninguna parte del programa, solo en esta tabla.' },
-            { linea: TZ_L_CUENTA, estado: { meses: '1' },
+            { linea: TZ_L_CUENTA, estado: { meses: '1', cond: '—' },
                 nota: 'Fin de la primera vuelta. Mire el código: la línea siguiente no es la de abajo, es la condición, que está más arriba.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
                 nota: 'Segunda evaluación, con el saldo que dejó la vuelta anterior: 600 000 > 0. La misma línea se ilumina por segunda vez.' },
-            { linea: TZ_L_RESTA, estado: { saldo: '200000' },
+            { linea: TZ_L_RESTA, estado: { saldo: '200000', cond: '—' },
                 nota: 'Segundo abono.' },
-            { linea: TZ_L_CUENTA, estado: { meses: '2' },
+            { linea: TZ_L_CUENTA, estado: { meses: '2', cond: '—' },
                 nota: 'Fin de la segunda vuelta, y de vuelta a la condición.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
                 nota: 'Tercera evaluación: 200 000 > 0. Quedan 200 000 y el abono es de 400 000, pero el Mientras no mira eso: solo pregunta si queda saldo.' },
-            { linea: TZ_L_RESTA, estado: { saldo: '-200000' },
+            { linea: TZ_L_RESTA, estado: { saldo: '-200000', cond: '—' },
                 nota: 'Tercer abono, completo. El saldo queda en −200 000: el deudor pagó 200 000 de más, y la resta no tiene cómo saberlo.' },
-            { linea: TZ_L_CUENTA, estado: { meses: '3' },
+            { linea: TZ_L_CUENTA, estado: { meses: '3', cond: '—' },
                 nota: 'Fin de la tercera vuelta.' },
             { linea: TZ_L_COND, estado: { cond: 'Falso' },
                 nota: 'Cuarta evaluación: −200 000 > 0 es falso. El cuerpo no se ejecuta y el flujo salta a la línea que sigue al final del ciclo.' },
@@ -3811,20 +4066,20 @@ End Sub`,
                     </table>
                 </div>
 
-                <h3>Tres piezas que el Mientras no pone</h3>
+                <h3>Las tres piezas de un ciclo</h3>
                 <p>
-                    El <span className="inline-code">Mientras</span> solo aporta la pregunta. Las otras dos piezas
-                    que un ciclo necesita para funcionar las escribe quien programa, y el lenguaje no
-                    comprueba que estén:
+                    El <span className="inline-code">Mientras</span> evalúa la condición, pero las tres piezas que
+                    un ciclo necesita para funcionar las escribe quien programa, y el lenguaje no
+                    comprueba que tengan sentido:
                 </p>
                 <ol>
-                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener valor la primera vez que se pregunta.</li>
+                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque <span className="inline-code">Dim</span> ya la deja en 0, y el ciclo arranca con un valor que nadie eligió.</li>
                     <li><strong>La condición</strong>, que se evalúa antes de cada vuelta.</li>
                     <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
                 </ol>
                 <p>
-                    Si falta la tercera, la condición nunca cambia y el ciclo no termina. Es el tema de la
-                    sección 6.
+                    Si falta la tercera, la condición nunca cambia y, si era verdadera al entrar, el ciclo
+                    no termina. Es el tema de la sección 6.
                 </p>
 
                 <h3>La línea que se ilumina en cada vuelta</h3>
@@ -3984,61 +4239,80 @@ Sub PedirMontoConMientras()
 End Sub`,
         };
 
-        /* E4. Las dos condiciones son la negación exacta una de la otra, así
-           que con saldo positivo dan las mismas vueltas. Solo difieren cuando
-           el saldo inicial ya es cero o negativo: el crédito a paz y salvo de
-           la motivación, al que el Repita le cobra una cuota. */
+        /* E4. La condición de B es la negación de la de A con De Morgan —el Y
+           pasa a O—, así que con saldo positivo y cuotas pendientes dan las
+           mismas vueltas. Solo difieren cuando al entrar el saldo ya es cero o
+           negativo, o n vale 0: A no cobra nada y B cobra una cuota. Ejecutado
+           el 2026-10-20 sobre seis saldos y cinco valores de n. La versión de
+           la revisión anterior, con una sola condición, se acertaba recordando
+           la motivación y no ejercitaba la negación de la tabla de arriba. */
         const CMP_COBRO_MIENTRAS = {
             pseudo: `cobrado <- 0
-Mientras saldo > 0 Hacer
+k <- 0
+Mientras saldo > 0 Y k < n Hacer
     saldo   <- saldo - cuota
     cobrado <- cobrado + cuota
+    k       <- k + 1
 FinMientras
 Escribir cobrado`,
             python: `cobrado = 0
-while saldo > 0:
+k = 0
+while saldo > 0 and k < n:
     saldo   = saldo - cuota
     cobrado = cobrado + cuota
+    k       = k + 1
 print(cobrado)`,
             r: `cobrado <- 0
-while (saldo > 0) {
+k <- 0
+while (saldo > 0 && k < n) {
   saldo   <- saldo - cuota
   cobrado <- cobrado + cuota
+  k       <- k + 1
 }
 cat(cobrado, "\\n")`,
             vba: `cobrado = 0
-Do While saldo > 0
+k = 0
+Do While saldo > 0 And k < n
     saldo = saldo - cuota
     cobrado = cobrado + cuota
+    k = k + 1
 Loop
 Debug.Print cobrado`,
         };
         const CMP_COBRO_REPITA = {
             pseudo: `cobrado <- 0
+k <- 0
 Repita
     saldo   <- saldo - cuota
     cobrado <- cobrado + cuota
-Hasta saldo <= 0
+    k       <- k + 1
+Hasta saldo <= 0 O k >= n
 Escribir cobrado`,
             python: `cobrado = 0
+k = 0
 while True:
     saldo   = saldo - cuota
     cobrado = cobrado + cuota
-    if saldo <= 0:
+    k       = k + 1
+    if saldo <= 0 or k >= n:
         break
 print(cobrado)`,
             r: `cobrado <- 0
+k <- 0
 repeat {
   saldo   <- saldo - cuota
   cobrado <- cobrado + cuota
-  if (saldo <= 0) break
+  k       <- k + 1
+  if (saldo <= 0 || k >= n) break
 }
 cat(cobrado, "\\n")`,
             vba: `cobrado = 0
+k = 0
 Do
     saldo = saldo - cuota
     cobrado = cobrado + cuota
-Loop Until saldo <= 0
+    k = k + 1
+Loop Until saldo <= 0 Or k >= n
 Debug.Print cobrado`,
         };
 
@@ -4091,12 +4365,14 @@ Debug.Print cobrado`,
                     </table>
                 </div>
 
-                <Box type="info" label="El único break del capítulo">
+                <Box type="info" label="El único uso de break en el capítulo">
                     Python y R usan <span className="inline-code">break</span> aquí porque no tienen otra forma de
-                    preguntar al final. Es el único uso que le da este capítulo, y el pseudocódigo no lo
-                    tiene: la salida de un ciclo se escribe en su condición. Un ciclo con salidas en medio
-                    del cuerpo esconde justo lo que este capítulo enseña a leer, que es <em>cuándo
-                    para</em>.
+                    preguntar al final, y es el único uso que le da este capítulo: cada vez que aparezca,
+                    será para cerrar un <span className="inline-code">Repita</span>. El pseudocódigo de este
+                    capítulo no lo usa, aunque la búsqueda del capítulo 2 sí salía a mitad del ciclo con
+                    {' '}<span className="inline-code">Salir</span>. Aquí la salida se escribe en la condición: un
+                    ciclo con salidas en medio del cuerpo esconde justo lo que este capítulo enseña a leer,
+                    que es <em>cuándo para</em>.
                 </Box>
 
                 <Box type="tip" label="VBA tiene las cuatro combinaciones">
@@ -4191,24 +4467,23 @@ Debug.Print cobrado`,
 
                 <Ejercicio tipo="E4"><Comparador
                     titulo="El cobro de cuotas, con Mientras y con Repita"
-                    enunciado={<>Las dos versiones cobran cuotas de un crédito hasta dejar el saldo en cero o por debajo, y la condición de la segunda es la negación exacta de la primera. <strong>Compárelas y responda.</strong></>}
+                    enunciado={<>Las dos versiones cobran las cuotas pendientes de un crédito —<span className="inline-code">n</span> es cuántas quedan— y paran cuando el saldo llega a cero o se han cobrado las <span className="inline-code">n</span>. La condición de B se obtuvo negando la de A con De Morgan. <strong>Compárelas y responda.</strong></>}
                     a={{ etiqueta: 'Versión A · Mientras', codigo: CMP_COBRO_MIENTRAS }}
                     b={{ etiqueta: 'Versión B · Repita…Hasta', codigo: CMP_COBRO_REPITA }}
                     pregunta="¿Son equivalentes? Y si no lo son, ¿con qué datos dan resultados distintos?"
                     opciones={[
-                        { texto: 'Sí: Hasta saldo <= 0 es la negación exacta de saldo > 0, así que dan las mismas vueltas con cualquier saldo.', correcta: false },
-                        { texto: 'No: B da siempre una vuelta más que A, porque cobra la cuota antes de preguntar si queda saldo.', correcta: false },
-                        { texto: 'No: difieren cuando el saldo inicial ya es cero o negativo. A no cobra nada y B cobra una cuota.', correcta: true, justificacion: 'Con saldo positivo las dos dan exactamente las mismas vueltas: A entra porque saldo > 0, y B habría entrado de todos modos; después de cada cobro, A sigue si saldo > 0 y B sigue si no se cumple saldo <= 0, que es lo mismo. La negación está bien hecha, y por eso la primera opción parece cierta. Lo que cambia es el momento de la primera pregunta. Con un crédito a paz y salvo —saldo 0—, A pregunta antes de entrar, la condición es falsa y no cobra nada; B cobra antes de preguntar, y cobra una cuota que nadie debe. Es el caso de la motivación. No es cierto que B dé siempre una vuelta más: solo la da cuando A no da ninguna. Y el residuo no los distingue: cuando el saldo no es múltiplo de la cuota, las dos cobran la última cuota completa y dejan el mismo saldo negativo, como el sexto abono de la sección 2.' },
-                        { texto: 'No: difieren cuando el saldo no es múltiplo de la cuota. A deja un saldo negativo y B se detiene en cero.', correcta: false },
+                        { texto: 'No: difieren cuando al entrar el saldo ya es cero o negativo, o no quedan cuotas (n = 0): A no cobra nada y B cobra una.', correcta: true, justificacion: 'Con saldo positivo y al menos una cuota pendiente dan exactamente las mismas vueltas. La negación está bien hecha: lo contrario de «saldo > 0 Y k < n» es «saldo <= 0 O k >= n», con el conector cambiado, que es De Morgan. Por eso la opción que dice que son equivalentes parece cierta, y la que conserva el Y es justo el error que De Morgan evita: con Hasta saldo <= 0 Y k >= n, B no pararía al cobrar las n cuotas mientras quedara saldo, y cobraría de más. Lo que cambia entre A y B es el momento de la primera pregunta. Si al entrar el saldo ya es cero o negativo —el crédito a paz y salvo de la motivación—, o n vale 0 —un crédito sin cuotas pendientes—, A pregunta antes de entrar, la condición es falsa y no cobra nada; B cobra antes de preguntar, y cobra una cuota que nadie debe. B no da siempre una vuelta más: solo la da cuando A no da ninguna.' },
+                        { texto: 'Sí: Hasta saldo <= 0 O k >= n es la negación exacta de la condición de A, así que dan las mismas vueltas con cualquier dato.', correcta: false },
+                        { texto: 'No: B está mal negada; por De Morgan debería decir Hasta saldo <= 0 Y k >= n, y con O se detiene antes de tiempo.', correcta: false },
+                        { texto: 'No: B da siempre una vuelta más que A, porque cobra la cuota antes de preguntar si queda saldo o quedan cuotas.', correcta: false },
                     ]}
                 /></Ejercicio>
 
                 <Box type="tip" label="Lo que sigue">
                     Las dos formas de esta sección y de la anterior se detienen por una condición sobre un
                     dato: el saldo, el monto. La sección 4 trata el caso en que se sabe de antemano cuántas
-                    vueltas hacen falta —doce cuotas, 240 cuotas—, y allí vuelve este mismo cobro: con cero
-                    cuotas pendientes, el <span className="inline-code">Repita</span> cobra una, y el
-                    {' '}<span className="inline-code">for</span> de R, dos.
+                    vueltas hacen falta —doce cuotas, 240 cuotas—, y allí vuelve este mismo cobro, escrito
+                    con las tres formas.
                 </Box>
             </div>
         );
@@ -4333,6 +4608,9 @@ cat(sprintf("Intereses: %.2f\\n", total_intereses))
             vba: `Option Explicit
 
 Sub PlanDePagos()
+    ' Double y no Currency, solo en esta sección: la cuota no se redondea, y
+    ' así el residuo del saldo final es el mismo que en Python y en R. Con
+    ' Currency, que guarda cuatro decimales, el saldo cerraría en -0,0005.
     Dim capital As Double, tasa As Double, cuota As Double
     Dim saldo As Double, interes As Double, abono As Double
     Dim totalIntereses As Double
@@ -4696,7 +4974,7 @@ Loop`,
                     un crédito, los 240 meses de una hipoteca—, la forma indicada es <span className="inline-code">Para</span>.
                     {' '}<span className="inline-code">Para k &lt;- 1 Hasta n Hacer … FinPara</span> ejecuta el
                     cuerpo una vez por cada valor de <span className="inline-code">k</span>, de 1 a <span className="inline-code">n</span>,
-                    y a <span className="inline-code">k</span> se le llama la <Termino def="El contador que lleva un Para: el ciclo le da el valor inicial, lo compara con el tope antes de cada vuelta y lo aumenta al final de cada una.">variable de control</Termino> del ciclo.
+                    y a <span className="inline-code">k</span> se le llama la <Termino def="El contador que lleva un Para. En pseudocódigo y en VBA, el ciclo le da el valor inicial, lo compara con el tope antes de cada vuelta y lo aumenta al final de cada una; en Python y en R, el for recorre una secuencia ya hecha y le da cada valor por turno.">variable de control</Termino> del ciclo.
                 </p>
                 <p>
                     El contador lo lleva el ciclo. Lo inicia en 1, lo compara con el tope antes de cada vuelta y
@@ -4785,9 +5063,14 @@ Loop`,
                 <h3>Lo que «Para» significa en cada lenguaje</h3>
                 <p>
                     Hasta aquí, los cuatro lenguajes dieron las doce vueltas. Pero «de 1 hasta n» no se escribe
-                    igual en los cuatro, y tampoco significa lo mismo. A cada uno conviene hacerle tres
-                    preguntas: si el tope se incluye, qué pasa cuando <span className="inline-code">n</span> vale
-                    0, y qué pasa si el cuerpo cambia el contador.
+                    igual en los cuatro, y tampoco significa lo mismo. La razón de fondo es una sola. En
+                    pseudocódigo y en VBA, el <span className="inline-code">Para</span> inicia un contador, lo
+                    compara con el tope y lo aumenta. En Python y en R, el <span className="inline-code">for</span> no
+                    compara ni suma nada: <strong>recorre una secuencia ya hecha</strong>
+                    —<span className="inline-code">range(1, n + 1)</span>, <span className="inline-code">1:n</span>— y le
+                    da a <span className="inline-code">k</span> cada valor por turno. De ahí salen las respuestas
+                    a tres preguntas que conviene hacerle a cada uno: si el tope se incluye, qué pasa cuando
+                    {' '}<span className="inline-code">n</span> vale 0, y qué pasa si el cuerpo cambia el contador.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -4833,6 +5116,17 @@ Loop`,
                     titulo="Un crédito al día: cero cuotas pendientes"
                     bloques={EJ_CERO_PENDIENTES}
                     nota="Con n = 0, pseudocódigo, Python y VBA no cobran nada. El for de R con 1:n cobra dos cuotas, la 1 y la 0, sin ningún aviso; con seq_len(n), ninguna." />
+
+                <Ejercicio tipo="E2"><MCQ
+                    multiple={true}
+                    pregunta="Con n = 1, ¿cuáles de estos ciclos no dan ninguna vuelta?"
+                    opciones={[
+                        { texto: 'Python: for k in range(1, n + 1):', correcta: false },
+                        { texto: 'Python: for k in range(1, n):', correcta: true, justificacion: 'range(1, 1) está vacío, porque el segundo número es el primero que no se usa; y For k = 1 To 0 no entra, porque VBA compara antes de la primera vuelta y 1 ya pasa del tope. Las otras dos sí entran. range(1, 2) da una vuelta, con k = 1. Y 1:(n - 1) es 1:0, que en R no es una secuencia vacía sino c(1, 0): dos vueltas, sin ningún aviso. El mismo «hasta n − 1» da cero vueltas en VBA y dos en R, y la razón es la de la tabla: VBA compara un contador con un tope, y R recorre la secuencia que le dieron.' },
+                        { texto: 'VBA: For k = 1 To n - 1', correcta: true },
+                        { texto: 'R: for (k in 1:(n - 1))', correcta: false },
+                    ]}
+                /></Ejercicio>
 
                 <h3>Una vuelta de menos</h3>
                 <p>
@@ -4899,10 +5193,12 @@ Loop`,
                     </table>
                 </div>
                 <p>
-                    El comparador de abajo pone el mismo cobro en las tres formas y, si se le pide, en el
-                    {' '}<span className="inline-code">for</span> de R con <span className="inline-code">1:n</span>. Antes de
-                    tocarlo, diga con qué valor de <span className="inline-code">n</span> se separan y cuánto cobra
-                    cada una; después, compruébelo.
+                    El panel de abajo pone el mismo cobro en las tres formas. Compruebe en él lo que dicen
+                    la tabla y el recuadro de arriba: con qué <span className="inline-code">n</span> se separan y
+                    cuánto cobra cada una. Después añada los dos <span className="inline-code">for</span> que tienen
+                    trampa —el de R con <span className="inline-code">1:n</span> y el de Python de la motivación, con
+                    {' '}<span className="inline-code">range(1, n)</span>— y busque con este último un valor de
+                    {' '}<span className="inline-code">n</span> con el que cobre bien.
                 </p>
 
                 <TresCiclosComparados />
@@ -4982,6 +5278,7 @@ for (anios in 1:3) {
             vba: `Option Explicit
 
 Sub SimuladorDePlazos()
+    ' Double, como el plan de pagos de la sección 4: la cuota no se redondea.
     Dim capital As Double, tasa As Double, cuota As Double
     Dim saldo As Double, interes As Double, abono As Double
     Dim intereses As Double
@@ -5016,8 +5313,11 @@ End Sub`,
         /* El simulador de la motivación: `intereses <- 0` quedó antes de los
            dos ciclos. El plazo de un año sale bien; el de dos informa la suma
            de los dos, y el de tres, la de los tres. Ejecutado el 2026-10-19.
-           Con `saldo <- capital` también fuera, el de dos años informa
-           −2 313 243,65 (ejecutado aparte): lo dice el recuadro. */
+           El recuadro cita otro caso: en el simulador BIEN escrito, sacar solo
+           `saldo <- capital` del ciclo de fuera hace que el de dos años informe
+           −2 313 243,65. Con las dos líneas fuera —esta versión más el saldo—
+           serían −1 311 644,50. Las dos cifras, ejecutadas el 2026-10-20; la
+           primera versión del recuadro mezclaba los dos casos. */
         const EJ_SIMULADOR_MAL = {
             pseudo: `Inicio
     capital   <- 10000000
@@ -5079,6 +5379,7 @@ for (anios in 1:3) {
             vba: `Option Explicit
 
 Sub SimuladorDePlazos()
+    ' Double, como el plan de pagos de la sección 4: la cuota no se redondea.
     Dim capital As Double, tasa As Double, cuota As Double
     Dim saldo As Double, interes As Double, abono As Double
     Dim intereses As Double
@@ -5439,9 +5740,10 @@ End Sub`,
                     nace fuera de los dos ciclos y no se borra nunca. Es el mismo defecto: la inicialización
                     escrita en un nivel que no es el suyo. Los intereses de un plazo tienen que empezar en cero
                     una vez por plazo, así que la línea va dentro del ciclo de fuera, justo antes del de dentro.
-                    Y no es la única que tiene ese sitio. Si <span className="inline-code">saldo &lt;- capital</span> también
-                    sale del ciclo, el plazo de dos años arranca con el saldo en cero que dejó el de un año, y el
-                    simulador informa intereses negativos: −2 313 243,65.
+                    Y no es la única que tiene ese sitio: <span className="inline-code">saldo &lt;- capital</span> también.
+                    Si en el simulador bien escrito se saca esa línea del ciclo de fuera, el plazo de dos años
+                    arranca con el residuo que dejó el de un año —prácticamente cero— y el simulador informa
+                    intereses negativos: −2 313 243,65.
                 </Box>
 
                 <h3>El de dentro vuelve a empezar</h3>
@@ -5451,8 +5753,11 @@ End Sub`,
                     —el <strong>subtotal</strong>—, y al final los de toda la cartera —el <strong>total</strong>—.
                     Estos créditos abonan a capital la misma cifra cada mes, que es otra forma de amortizar,
                     distinta de la cuota fija de la sección 4: el interés de cada cuota se cobra sobre un saldo
-                    que baja siempre lo mismo.
+                    que baja siempre lo mismo. En flujograma, con los dos <span className="inline-code">Para</span> desarmados
+                    como en la sección 4, el reporte se ve así:
                 </p>
+
+                <FlujogramaAnidado />
 
                 <Trazador
                     titulo="Traza guiada · dos créditos, tres cuotas cada uno"
@@ -5468,7 +5773,7 @@ End Sub`,
                         { clave: 'total', titulo: 'total' },
                     ]}
                     pasos={TZ_CARTERA_PASOS}
-                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final se ejecutaron una vez; las del ciclo de fuera que no están en el de dentro, dos veces, una por crédito; y las dos del cuerpo de dentro, seis veces: dos créditos por tres cuotas. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro: Python y R lo dejan en el último de la secuencia, y en VBA, Next le suma uno más antes de salir." />
+                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final, una vez cada una: 3. Las seis del ciclo de fuera que no están en el de dentro —su Para, las dos lecturas, el subtotal, el total y el Escribir—, dos veces cada una, una por crédito: 12. La del Para de dentro, seis veces, tres por crédito: una al arrancar el ciclo y dos al pasar a la cuota siguiente. Y las dos del cuerpo de dentro, seis veces cada una, dos créditos por tres cuotas: 12. En total, 3 + 12 + 6 + 12 = 33. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro: Python y R lo dejan en el último de la secuencia, y en VBA, Next le suma uno más antes de salir." />
 
                 <TablaTraza
                     titulo="Subtotales y total de otra cartera"

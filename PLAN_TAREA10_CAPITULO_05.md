@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. Siguiente: la sección 6 (Tarea 2.6).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18). Siguiente: la sección 6 (Tarea 2.6).
 
 ---
 
@@ -444,6 +444,74 @@ respuesta, porque se califica por posición, pero la solución que se muestra no
 dice qué va dentro de qué. El arreglo es `whitespace-pre` en ese `span` y en el
 de la solución, en `lp-core-extra.jsx:763`, y obliga a
 reestampar. → **quinta deuda de P3.**
+
+### H18 · La revisión de contenido de los capítulos 4 y 5 *(2026-10-20)*
+
+El docente pidió revisar la redacción, la coherencia, los gráficos y los
+ejercicios de los capítulos 4 y 5, y después arreglar los graves y los medios.
+- El informe completo está en `REVISION_CAPITULOS_04_05.md`. Lo hicieron cinco
+  revisores, y cada grave se volvió a comprobar antes de anotarlo.
+- Las correcciones del capítulo 4 van en su propia rama, `cap04/revision-contenido`,
+  salida de `main` y fundida en esta. Están anotadas en la §10 de
+  `PLAN_TAREA9_CAPITULO_04.md`.
+
+**Graves del capítulo 5:**
+1. **Una cifra mía, mal atribuida.** El recuadro «El espejo de la sección 1» daba
+   −2 313 243,65 para un caso que en realidad informa −1 311 644,50.
+   - La cifra es la de sacar solo `saldo <- capital` del simulador bien escrito,
+     y así lo dice ahora el recuadro.
+   - Las cuatro variantes están ejecutadas (`g1_espejo.py`).
+2. **El E5 de la sección 1 admitía tres órdenes y aceptaba uno.** `Leer n`
+   conmutaba con las inicializaciones, e inicializar primero sacaba 8 de 11.
+   - Se resolvió con una tercera convención, la misma del E5 de la sección 5: la
+     lectura va antes.
+3. **La definición de contador y acumulador chocaba con los ejemplos del propio
+   capítulo:** el saldo baja, y `cobrado + cuota` suma siempre lo mismo.
+   - Ahora manda la pregunta a la que responde cada variable.
+   - El E2 de la sección 1, que se acertaba emparejando «suma 1», pasó a ser una
+     predicción de salida de verdad: 2 créditos en mora por 1 500 000, ejecutado
+     en Python y R.
+
+**Medios del capítulo 5:**
+- **Traza nueva en la sección 1, `TZ_AHORRO_MAL`.** El defecto de la motivación,
+  con la meta en 900 000 para que el ciclo dé tres vueltas.
+  - Se ve el acumulador volver a cero, y la separación en la tercera vuelta:
+    5 424,30 frente a 8 124,30.
+  - Tiene 22 pasos y es correcta en los cuatro lenguajes, medida en el navegador.
+- **Traza de la sección 2.** La columna «saldo > 0» arrastraba «Verdadero» a los
+  pasos del cuerpo, con el saldo ya en −200 000. Ahora muestra «—» donde no se
+  pregunta nada; el arreglo de fondo es la deuda L5.
+- **Nota de la traza de la sección 5.** Su desglose no sumaba 33. Ahora suma
+  3 + 12 + 6 + 12 = 33, contado contra los pasos.
+- **E4 de la sección 3, rehecho con una condición compuesta.** Ahora es
+  `saldo > 0 Y k < n` frente a `Hasta saldo <= 0 O k >= n`. Antes se acertaba
+  recordando la motivación; ahora ejercita De Morgan. Está ejecutado sobre seis
+  saldos y cinco valores de n.
+- **E2 nuevo en la sección 4.** Pregunta qué ciclos no dan ninguna vuelta con
+  n = 1. Es lo único que califica el contenido central de la sección: qué
+  significa `Para` en cada lenguaje.
+- **La frase de fondo de la sección 4.** El `for` de Python y R recorre una
+  secuencia; no compara ni suma. Está en el texto y en el término «variable de
+  control».
+- **`TresCiclosComparados` gana un panel: el `for` de Python con `range(1, n)`.**
+  La pregunta por n = 0 ya estaba respondida seis veces en la sección; ahora el
+  panel deja algo por descubrir. Además, el recuadro de la sección 3 ya no
+  adelanta la respuesta.
+- **`FlujogramaAnidado`, nuevo en la sección 5.** Dos retornos concéntricos, con
+  `subtotal ← 0` entre los dos.
+- **Correcciones de texto:**
+  - «Las tres piezas de un ciclo», que decía tres y después dos;
+  - «el único uso de break», que olvidaba el `Salir` del capítulo 2;
+  - un comentario que explica el `Double` de VBA en las secciones 4 y 5.
+
+**Cuota.** El E2 nuevo agota el margen que la §5 reservaba para la auditoría. Si
+la sección 6 trae su E2, el capítulo queda en 19 ejercicios, con E2 en 4, el
+máximo de su cuota.
+
+**Hueco del verificador (para la tarea de deudas).** La regla 11 tomó «¿Qué
+escribe el programa?» —la pregunta por lo que imprime— como un encargo de
+escribir un programa. Se redactó de otro modo, pero la regla confunde los dos
+sentidos de «escribir».
 
 ---
 
@@ -930,12 +998,12 @@ un solo ejercicio.
 | 1 · Contar y acumular | | 1 | | | 1 | | | | 2 |
 | 2 · `Mientras` | 1 | 1 | | | | | | | 2 |
 | 3 · `Repita…Hasta` | | | | 1 | | | | 1 | 2 |
-| 4 · `Para` | 1 | | **1** | 1 | | | | | 3 |
+| 4 · `Para` | 1 | 1 *(H18)* | **1** | 1 | | | | | 4 |
 | 5 · Anidados | 1 | | | | 1 | | | | 2 |
 | 6 · Cuándo para | | 1 | 1 | | | | | 1 | 3 |
 | 7 · Casos financieros | 1 | | | | | | 2 | | 3 |
 | Evaluación | | | | | | 1 | | | 1 |
-| **Total** | **4** | **3** | **2** | **2** | **2** | **1** | **2** | **2** | **18** |
+| **Total** | **4** | **4** | **2** | **2** | **2** | **1** | **2** | **2** | **19** |
 | Cuota | 3–4 | 2–4 | 2 | 1–2 | 1–2 | 1 | 2 | 1–2 | |
 
 Los dos E3 son las dos preguntas del capítulo: el de la sección 4 falla en
