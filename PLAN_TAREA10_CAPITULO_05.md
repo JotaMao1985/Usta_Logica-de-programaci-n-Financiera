@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18). Siguiente: la sección 6 (Tarea 2.6).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Siguiente: la sección 7 (Tarea 2.7).
 
 ---
 
@@ -513,6 +513,26 @@ escribe el programa?» —la pregunta por lo que imprime— como un encargo de
 escribir un programa. Se redactó de otro modo, pero la regla confunde los dos
 sentidos de «escribir».
 
+### H19 · Las cifras se parten entre renglones *(encontrado en la Tarea 2.6)*
+
+El material escribe los miles con un espacio normal («1 150 000»), y en ninguno
+de los cinco capítulos hay un solo espacio duro (U+00A0 o U+202F): medido con un
+guion sobre los archivos. El navegador puede cortar una cifra en cualquiera de
+esos espacios. En una celda angosta de la tabla del acuerdo de pago, «1 150 000»
+salió como «1 150» en un renglón y «000» en el siguiente. En prosa pasa lo mismo
+al final de un renglón, solo que menos a la vista.
+
+**En esta sección** se evitó en las dos tablas: una cifra por celda y
+`whitespace-nowrap`.
+
+**Para el resto del material** hacen falta dos cosas:
+- una pasada que cambie el separador de miles dentro de las cifras por un espacio
+  fino duro (U+202F), en los cinco capítulos, sin tocar el código;
+- una regla en `verificar.py` que lo vigile.
+
+No es de LP-CORE, así que no obliga a reestampar. Queda a decisión del docente si
+va con la tarea de deudas (P3) o aparte.
+
 ---
 
 ## 3. Grafo de dependencias
@@ -878,11 +898,87 @@ en los cuatro lenguajes, con los bloques desplegados, la traza en el paso 33 y
 los dos ejercicios comprobados. Con los bloques plegados salen 74 elementos, y
 los 74 están dentro de su `pre` plegado (salvedad de H15).
 
-#### Tarea 2.6 · Sección 6 — «Cuándo para: terminación, ciclos infinitos y centinelas»
+#### Tarea 2.6 · Sección 6 — «Cuándo para: terminación, ciclos infinitos y centinelas» · ✅
 Cita la finitud del capítulo 2. La tabla de H3 va entera. **E3:** el `Mientras
 saldo <> 0` que no termina. **E8:** ¿por qué la tabla se controla con el
 contador y no con el saldo? **E2:** el centinela que se suma como si fuera un
 monto.
+
+*Hecho el 2026-10-20.* La motivación es la fila dos de H3: un crédito de 20 000 000
+al 1,8 % en 36 cuotas, cobrado con `Mientras saldo > 0`, factura una cuota 37 de
+759 676,64, porque tras la 36 el saldo es 0,00000002. La sección cumple las cinco
+promesas que el capítulo dejó escritas para ella: la del recuadro de
+`AmortizacionPasoAPaso`, la nota del plan de pagos de la sección 4, el abono 0 de
+la sección 2, el recuadro final de la sección 5 y la fila de la portada.
+
+- **Finitud.** Cita las dos frases del capítulo 2, sección 1: la propiedad y «repita
+  hasta obtener un resultado razonable». La convierte en tres preguntas sobre la
+  variable de la condición: si el cuerpo la cambia, si la cambia hacia la salida y
+  si la salida se puede saltar. Las dos primeras son la tercera pieza de la
+  sección 2. Una tabla muestra el acuerdo de pago con `> 0` y con `<> 0`: con
+  enteros, 350 000 pasa a −50 000 sin tocar el cero. Un `Para` responde por su
+  cuenta las tres; el `for` de Python y R ni compara.
+- **E3** (`DetectaError`): el plan de pagos de la sección 4 con `saldo <> 0`. Clave
+  en la «c»; las líneas son 10, 9, 9 y 13. Los distractores son las tres creencias
+  reales: que se detiene en la cuota 13, que el saldo debería bajar en la cuota
+  completa y que redondear la cuota lo arregla (con 916 800 el saldo queda en
+  −0,93). La explicación de VBA dice lo que pasa allí: `k` es `Integer` y el
+  programa se detiene con el error 6 al empezar la vuelta 32 768. Sale de la
+  referencia del lenguaje, no de una ejecución (R10).
+- **La cuota 37.** El programa de la motivación en los cuatro lenguajes, con sus
+  salidas, y la tabla de H3 entera. **Hallazgo nuevo:** el signo del residuo
+  tampoco es del crédito. Con el saldo nuevo escrito `saldo + saldo * tasa - cuota`,
+  el de vivienda (150 000 000 al 1,1 % en 240) da **241** vueltas. Va en el texto,
+  y es el argumento más fuerte del E8.
+- **E8** (`Reto`): contar las cuotas o mirar el saldo. Pide además cuándo sí se
+  controla por saldo y con qué cuidados, para que no se responda solo con la tabla.
+  Respeta la regla del capítulo 1: no propone tolerancia para decidir un saldo,
+  sino centavos enteros o `Currency`.
+- **E2** (`MCQ`): el cierre de caja con `Repita` y un 0 de centinela. Clave en la «a».
+  *Desviación:* con 0 de centinela, el total no cambia; lo que falla es el conteo,
+  4 pagos para 3 recibos. Se prefirió a un −1 porque así el defecto es «un número
+  plausible y falso», como en la sección 1. Con −1, un total de 799 999 se ve a
+  simple vista. Le siguen la lectura adelantada (el `Mientras` con dos lecturas de
+  la sección 3, que aquí sí gana) y la aclaración de por qué `monto <> 0` sí
+  sirve: el 0 se digita, no se calcula.
+- La cierra la tabla «Qué hace parar a un ciclo»: contador, valor calculado,
+  centinela y precisión. Su última fila es otro **hallazgo medido**: la bisección
+  de la sección 7, con tolerancia 10⁻¹⁸, se queda en un intervalo de 3,5 × 10⁻¹⁸ y no
+  termina; con 10⁻¹⁷, termina en 54 vueltas.
+
+*Medido:*
+- `verificar.py --sin-cuota --con-salidas` en verde sobre los cinco capítulos: 15
+  ejercicios (E1:3 E2:4 E3:2 E4:2 E5:2 E8:2) y 16 bloques de Python y R
+  ejecutados; los dos nuevos son los del programa de la motivación.
+- Claves del capítulo: c b a b d b c a. Con ocho, la regla 16 ya se aplica, y
+  pasa. La regla 17 no da avisos.
+- Cada cifra en prosa está ejecutada en Python y R: la tabla de H3, también en
+  JavaScript; las vueltas 13 y 14 del E3; el −0,93; el 241; la bisección.
+- Los dos cierres de caja se ejecutaron con las entradas del enunciado (4 y 3
+  pagos por 800 000), y con un 0 solo (0 pagos por 0).
+
+*Por DOM:*
+- El E3 da «¡Diagnóstico correcto!» en los cuatro lenguajes; con la «b», la «a» y
+  la «d», en otras líneas, da los otros tres veredictos.
+- El E2 da «¡Correcto!» con la clave y «Revisa la explicación» con 3 pagos.
+- El E8 muestra su solución, y los tres `CodeTabs` cambian bien en los cuatro
+  lenguajes.
+- El icono nuevo de la motivación (`fa-file-invoice-dollar`) da glifo.
+- Ningún espacio comido en los 45 elementos en línea ni junto a los tres términos.
+  La prueba se hizo antes en negativo.
+- Consola limpia.
+
+*A 375 px*, con la barra cerrada y el criterio de H15, primero en negativo (el
+panel pasa de 367 a 624 px), la sección no saca nada fuera:
+- en los cuatro lenguajes;
+- con los bloques desplegados y las explicaciones del E2, el E3 y el E8 abiertas;
+- con cada uno de los tres términos abierto.
+
+Dos ajustes salieron de mirarla:
+- la tabla del acuerdo partía «1 150 000» en dos renglones;
+- la tabla final tenía cuatro columnas y pasó a tres.
+
+Lo primero lleva a H19.
 
 #### Tarea 2.7 · Sección 7 — «Casos financieros»
 Saldo insoluto, capitalización y la TIR con `TIRBiseccion`. **E1:** tres vueltas

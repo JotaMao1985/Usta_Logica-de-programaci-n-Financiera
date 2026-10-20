@@ -5823,17 +5823,641 @@ End Sub`,
         );
 
         /* ============================================================
-           SECCIONES 6 Y 7 — andamio (BORRADOR-FASE1)
+           SECCIÓN 6 — CUÁNDO PARA: TERMINACIÓN, CICLOS INFINITOS Y CENTINELAS
         ============================================================ */
+        /* El plan de la motivación: 20 000 000 al 1,8 % mensual en 36 cuotas,
+           cobrando mientras quede saldo. Tras la cuota 36 el saldo es
+           +2,0 × 10⁻⁸, y `saldo > 0` cobra una cuota 37 completa (H3 del
+           plan). El saldo se escribe solo cuando k vale n, para no imprimir 37
+           filas. Salidas de Python y R ejecutadas el 2026-10-20; JavaScript da
+           el mismo residuo, porque los tres hacen las mismas operaciones en el
+           mismo orden. La de VBA no se ejecutó (R10): que Excel dé 37 depende
+           de que su potencia redondee el último bit como las otras tres, y eso
+           no está cotejado. */
+        const EJ_CUOTA_37 = {
+            pseudo: `Inicio
+    // 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
+    capital <- 20000000
+    tasa    <- 0.018
+    n       <- 36
+    cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+    Escribir "Cuota: ", cuota
+    //> Cuota: 759676.64
+
+    saldo <- capital
+    k     <- 0
+    Mientras saldo > 0 Hacer
+        k       <- k + 1
+        interes <- saldo * tasa
+        abono   <- cuota - interes
+        saldo   <- saldo - abono
+        Si k = n Entonces
+            Escribir "Saldo tras la cuota ", k, ": ", saldo
+        FinSi
+    FinMientras
+    //> Saldo tras la cuota 36: 0.0000000200
+
+    Escribir "Cuotas cobradas: ", k
+    //> Cuotas cobradas: 37
+    Escribir "Saldo final: ", saldo
+    //> Saldo final: -759676.64
+Fin`,
+            python: `# 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
+capital = 20_000_000
+tasa    = 0.018
+n       = 36
+cuota   = capital * tasa / (1 - (1 + tasa) ** (-n))
+print(f"Cuota: {cuota:,.2f}")
+#> Cuota: 759,676.64
+
+saldo = capital
+k     = 0
+while saldo > 0:
+    k       = k + 1
+    interes = saldo * tasa
+    abono   = cuota - interes
+    saldo   = saldo - abono
+    if k == n:
+        print(f"Saldo tras la cuota {k}: {saldo:.10f}")
+#> Saldo tras la cuota 36: 0.0000000200
+
+print(f"Cuotas cobradas: {k}")
+#> Cuotas cobradas: 37
+print(f"Saldo final: {saldo:,.2f}")
+#> Saldo final: -759,676.64`,
+            r: `# 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
+capital <- 20000000
+tasa    <- 0.018
+n       <- 36
+cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+cat(sprintf("Cuota: %.2f\\n", cuota))
+#> Cuota: 759676.64
+
+saldo <- capital
+k     <- 0
+while (saldo > 0) {
+  k       <- k + 1
+  interes <- saldo * tasa
+  abono   <- cuota - interes
+  saldo   <- saldo - abono
+  if (k == n) {
+    cat(sprintf("Saldo tras la cuota %d: %.10f\\n", k, saldo))
+  }
+}
+#> Saldo tras la cuota 36: 0.0000000200
+
+cat(sprintf("Cuotas cobradas: %d\\n", k))
+#> Cuotas cobradas: 37
+cat(sprintf("Saldo final: %.2f\\n", saldo))
+#> Saldo final: -759676.64`,
+            vba: `Option Explicit
+
+Sub PlanPorSaldo()
+    ' Double, como en la sección 4: la cuota no se redondea
+    Dim capital As Double, tasa As Double, cuota As Double
+    Dim saldo As Double, interes As Double, abono As Double
+    Dim n As Integer, k As Integer
+
+    ' 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
+    capital = 20000000
+    tasa = 0.018
+    n = 36
+    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+    Debug.Print "Cuota: " & Format(cuota, "0.00")
+    '> Cuota: 759676.64
+
+    saldo = capital
+    k = 0
+    Do While saldo > 0
+        k = k + 1
+        interes = saldo * tasa
+        abono = cuota - interes
+        saldo = saldo - abono
+        If k = n Then
+            Debug.Print "Saldo tras la cuota " & k & ": " & Format(saldo, "0.0000000000")
+        End If
+    Loop
+    '> Saldo tras la cuota 36: 0.0000000200
+
+    Debug.Print "Cuotas cobradas: " & k
+    '> Cuotas cobradas: 37
+    Debug.Print "Saldo final: " & Format(saldo, "0.00")
+    '> Saldo final: -759676.64
+End Sub`,
+        };
+
+        /* E3, la segunda pregunta del capítulo: el plan de pagos de la
+           sección 4, ahora con `saldo <> 0`. En la aritmética del contrato,
+           doce cuotas dejan el saldo en cero; en la de la máquina, en
+           −7,5 × 10⁻⁸. La vuelta 13 lo deja en −916 799,93, la 14 en
+           −1 847 351,86, y de ahí solo baja: la condición no vuelve a ser
+           falsa (ejecutado el 2026-10-20 en Python y R). Con la cuota
+           redondeada al peso tampoco para: tras doce cuotas de 916 800 el
+           saldo es −0,93. En VBA, k es Integer, que no pasa de 32 767: al
+           empezar la vuelta 32 768, k + 1 no cabe y el programa se detiene
+           con el error 6. Eso sale de la referencia del lenguaje, no de una
+           ejecución (R10). La línea cambia con el lenguaje, y con ella la
+           explicación (trampa 4 de la skill). */
+        const ERROR_IGUALDAD_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    // Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                '    // La cuota está calculada para que el saldo llegue a cero en la cuota 12',
+                '    capital <- 10000000',
+                '    tasa    <- 0.015',
+                '    n       <- 12',
+                '    cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                '    saldo   <- capital',
+                '    k       <- 0',
+                '    Mientras saldo <> 0 Hacer',
+                '        k       <- k + 1',
+                '        interes <- saldo * tasa',
+                '        abono   <- cuota - interes',
+                '        saldo   <- saldo - abono',
+                '        Escribir k, interes, abono, saldo',
+                '    FinMientras',
+                'Fin',
+            ],
+            python: [
+                '# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                '# La cuota está calculada para que el saldo llegue a cero en la cuota 12',
+                'capital = 10_000_000',
+                'tasa    = 0.015',
+                'n       = 12',
+                'cuota   = capital * tasa / (1 - (1 + tasa) ** (-n))',
+                'saldo   = capital',
+                'k       = 0',
+                'while saldo != 0:',
+                '    k       = k + 1',
+                '    interes = saldo * tasa',
+                '    abono   = cuota - interes',
+                '    saldo   = saldo - abono',
+                '    print(k, interes, abono, saldo)',
+            ],
+            r: [
+                '# Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas',
+                '# La cuota está calculada para que el saldo llegue a cero en la cuota 12',
+                'capital <- 10000000',
+                'tasa    <- 0.015',
+                'n       <- 12',
+                'cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                'saldo   <- capital',
+                'k       <- 0',
+                'while (saldo != 0) {',
+                '  k       <- k + 1',
+                '  interes <- saldo * tasa',
+                '  abono   <- cuota - interes',
+                '  saldo   <- saldo - abono',
+                '  cat(k, interes, abono, saldo, "\\n")',
+                '}',
+            ],
+            vba: [
+                'Sub PlanDePagos()',
+                "    ' Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas",
+                "    ' La cuota está calculada para que el saldo llegue a cero en la cuota 12",
+                '    Dim capital As Double, tasa As Double, cuota As Double',
+                '    Dim saldo As Double, interes As Double, abono As Double',
+                '    Dim n As Integer, k As Integer',
+                '    capital = 10000000',
+                '    tasa = 0.015',
+                '    n = 12',
+                '    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))',
+                '    saldo = capital',
+                '    k = 0',
+                '    Do While saldo <> 0',
+                '        k = k + 1',
+                '        interes = saldo * tasa',
+                '        abono = cuota - interes',
+                '        saldo = saldo - abono',
+                '        Debug.Print k, interes, abono, saldo',
+                '    Loop',
+                'End Sub',
+            ],
+        };
+        const ERROR_IGUALDAD_LINEA_OK = { pseudo: 10, python: 9, r: 9, vba: 13 };
+
+        const explicacionIgualdad = (l, cond, comp, alFinal) => (
+            <>
+                La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. En la aritmética del
+                contrato, la cuota está calculada para que doce cuotas dejen el saldo exactamente en cero. En la de
+                la máquina lo dejan en −7,5 × 10⁻⁸, el residuo que la sección 4 imprimió como −0.00. Ese número no es
+                cero, así que la condición sigue verdadera y el ciclo da la vuelta 13: cobra otra cuota, y el saldo
+                queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
+                negativo el interés es negativo y el abono crece. La condición no vuelve a ser falsa: la salida de
+                {' '}<span className="inline-code">{comp}</span> es un solo punto, el cero, y el saldo lo salta. Por eso el ciclo no para en la cuota
+                13. Redondear la cuota al peso tampoco lo arregla: con 916 800, el saldo tras doce cuotas es −0,93,
+                que tampoco es cero. Y que el saldo baje en el abono y no en la cuota completa no es un defecto: el
+                interés paga el uso del dinero durante el mes, y lo que reduce la deuda es solo el abono. El capítulo
+                1 lo dejó como regla: nunca comparar dinero con igualdad exacta. El arreglo es no preguntar por el
+                saldo: un <span className="inline-code">Para</span> de 1 a n da las doce vueltas del contrato. Preguntar
+                {' '}<span className="inline-code">saldo &gt; 0</span> haría que este plan parara en la cuota 12, pero
+                por suerte, y lo que sigue muestra por qué. {alFinal}
+            </>
+        );
+        const ERROR_IGUALDAD_EXPLICACION = {
+            pseudo: explicacionIgualdad(10, 'Mientras saldo <> 0 Hacer', 'saldo <> 0',
+                'El programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe.'),
+            python: explicacionIgualdad(9, 'while saldo != 0:', 'saldo != 0',
+                'En Python, el programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe con Ctrl+C.'),
+            r: explicacionIgualdad(9, 'while (saldo != 0) {', 'saldo != 0',
+                'En R, el programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe con Esc o Ctrl+C.'),
+            vba: explicacionIgualdad(13, 'Do While saldo <> 0', 'saldo <> 0',
+                'En VBA el programa sí acaba por detenerse, pero no por su condición: k está declarado As Integer, que no pasa de 32 767, y al empezar la vuelta 32 768 VBA se detiene con el error 6, «Desbordamiento». Para entonces ya escribió 32 755 cuotas que no existen.'),
+        };
+
+        /* E2: el centinela procesado como un dato. El cierre de caja con
+           Repita pregunta al final de la vuelta, después de sumar y contar,
+           así que el 0 entra al total —donde no se nota— y al conteo, donde
+           sí. Con 250 000, 400 000, 150 000 y 0 escribe «4 pagos por 800 000»
+           (ejecutado el 2026-10-20 en Python y R, con esas entradas). R
+           escribe con sprintf porque cat(800000) imprime 8e+05. */
+        const EJ_CAJA_REPITA = {
+            pseudo: `Inicio
+    // Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+    total    <- 0
+    cantidad <- 0
+    Repita
+        Escribir "Monto del pago (0 para terminar): "
+        Leer monto
+        total    <- total + monto
+        cantidad <- cantidad + 1
+    Hasta monto = 0
+    Escribir cantidad, " pagos por ", total
+Fin`,
+            python: `# Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+total    = 0
+cantidad = 0
+while True:
+    monto    = float(input("Monto del pago (0 para terminar): "))
+    total    = total + monto
+    cantidad = cantidad + 1
+    if monto == 0:
+        break
+print(f"{cantidad} pagos por {total:,.0f}")`,
+            r: `# Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+total    <- 0
+cantidad <- 0
+repeat {
+  monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
+  total    <- total + monto
+  cantidad <- cantidad + 1
+  if (monto == 0) break
+}
+cat(sprintf("%d pagos por %.0f\\n", cantidad, total))`,
+            vba: `Option Explicit
+
+Sub CierreDeCaja()
+    ' Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+    Dim monto As Currency, total As Currency
+    Dim cantidad As Long
+
+    total = 0
+    cantidad = 0
+    Do
+        monto = CCur(InputBox("Monto del pago (0 para terminar):"))
+        total = total + monto
+        cantidad = cantidad + 1
+    Loop Until monto = 0
+
+    MsgBox cantidad & " pagos por " & total
+End Sub`,
+        };
+
+        /* La forma que sirve: lectura adelantada. Con los mismos datos
+           escribe «3 pagos por 800 000»; si el primer dato ya es el 0, no da
+           ninguna vuelta y escribe «0 pagos por 0» (ejecutado el 2026-10-20
+           en Python y R). */
+        const EJ_CAJA_ADELANTADA = {
+            pseudo: `Inicio
+    // Cierre de caja, con lectura adelantada: el primer pago se lee antes
+    total    <- 0
+    cantidad <- 0
+    Escribir "Monto del pago (0 para terminar): "
+    Leer monto
+    Mientras monto <> 0 Hacer
+        total    <- total + monto
+        cantidad <- cantidad + 1
+        Escribir "Monto del pago (0 para terminar): "
+        Leer monto
+    FinMientras
+    Escribir cantidad, " pagos por ", total
+Fin`,
+            python: `# Cierre de caja, con lectura adelantada: el primer pago se lee antes
+total    = 0
+cantidad = 0
+monto    = float(input("Monto del pago (0 para terminar): "))
+while monto != 0:
+    total    = total + monto
+    cantidad = cantidad + 1
+    monto    = float(input("Monto del pago (0 para terminar): "))
+print(f"{cantidad} pagos por {total:,.0f}")`,
+            r: `# Cierre de caja, con lectura adelantada: el primer pago se lee antes
+total    <- 0
+cantidad <- 0
+monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
+while (monto != 0) {
+  total    <- total + monto
+  cantidad <- cantidad + 1
+  monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
+}
+cat(sprintf("%d pagos por %.0f\\n", cantidad, total))`,
+            vba: `Option Explicit
+
+Sub CierreDeCaja()
+    ' Cierre de caja, con lectura adelantada: el primer pago se lee antes
+    Dim monto As Currency, total As Currency
+    Dim cantidad As Long
+
+    total = 0
+    cantidad = 0
+    monto = CCur(InputBox("Monto del pago (0 para terminar):"))
+    Do While monto <> 0
+        total = total + monto
+        cantidad = cantidad + 1
+        monto = CCur(InputBox("Monto del pago (0 para terminar):"))
+    Loop
+
+    MsgBox cantidad & " pagos por " & total
+End Sub`,
+        };
+
+        // Un residuo con su signo, como en la tabla de la sección: +2,0 × 10⁻⁸.
+        // La última fila de la tabla «Qué hace parar a un ciclo» también está
+        // medida (2026-10-20, Python y R): la bisección de la sección 7, con
+        // tolerancia 10⁻¹⁷, termina en 54 vueltas; con 10⁻¹⁸ el intervalo se
+        // queda en 3,5 × 10⁻¹⁸, el espacio entre dos Double vecinos cerca de
+        // 0,02, y no termina.
+        const residuo = (signo, m, e) => (
+            <span className="whitespace-nowrap">{signo}{m} × 10<sup>−{e}</sup></span>
+        );
 
         const Cap6Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-bug" etiqueta="Borrador · Fase 1">
-                    Sección 6, «Cuándo para: terminación, ciclos infinitos y centinelas». Se escribe en la
-                    Tarea 2.6.
+                <Motivacion icon="fa-file-invoice-dollar"
+                    gancho="Un ciclo que pregunta por el saldo para cuando el saldo se lo dice. ¿Y si el saldo que guarda la máquina no es el del contrato?">
+                    Un cliente tomó un crédito de libre inversión de 20 millones al 1,8 % mensual, a 36 cuotas
+                    de 759 676,64. Pagó las 36, y al mes siguiente le llegó la factura de la cuota 37, por el
+                    mismo valor. El programa que generaba los planes de pago cobraba cuotas mientras quedara
+                    saldo, y llevaba meses funcionando bien con créditos de 12, de 60 y de 240 cuotas. Con este,
+                    después de la cuota 36 el saldo no quedó en cero: quedó en 0,00000002 pesos. Y 0,00000002 es
+                    mayor que cero.
                 </Motivacion>
+
+                <h3>Lo que el capítulo 2 llamó finitud</h3>
+                <p>
+                    En su sección 1, el capítulo 2 puso la <strong>finitud</strong> entre las propiedades de un
+                    algoritmo: termina después de un número limitado de pasos. Allí se juzgaba leyendo
+                    instrucciones escritas en palabras, como «repita hasta obtener un resultado razonable», que
+                    puede no terminar nunca. En un programa se juzga mirando sus ciclos, porque en los programas
+                    de este curso son lo único que repite: sin ciclos, cada instrucción se ejecuta como mucho una
+                    vez y el programa llega al final. Un ciclo que no termina es un <Termino def="Un ciclo cuya condición nunca deja salir: la de un Mientras nunca se vuelve falsa, o la de un Repita nunca se vuelve verdadera. El programa no termina por sí mismo: hay que detenerlo desde fuera, o se detiene con un error.">ciclo infinito</Termino>.
+                </p>
+                <p>
+                    Para saber si un ciclo termina, hay que mirar la variable de su condición y hacerle tres
+                    preguntas. Con el acuerdo de pago de la sección 2 —2 350 000 en abonos de 400 000,
+                    {' '}<span className="inline-code">Mientras saldo &gt; 0</span>—:
+                </p>
+                <ol>
+                    <li><strong>¿Alguna línea del cuerpo la cambia?</strong> Aquí sí: <span className="inline-code">saldo &lt;- saldo - abono</span>. Si ninguna la cambiara, la condición daría en cada vuelta lo mismo que en la primera.</li>
+                    <li><strong>¿La cambia siempre en la dirección de la salida?</strong> Solo si el abono es positivo. Con un abono de 0 —la opción que no terminaba en el ejercicio de cero vueltas de la sección 2—, el saldo no se mueve; con uno negativo, digitado con el signo cambiado, se aleja.</li>
+                    <li><strong>¿Puede pasar de largo la salida?</strong> Con <span className="inline-code">saldo &gt; 0</span>, no: la condición se vuelve falsa con cualquier saldo que no sea positivo, sea 0 o −50 000. Con <span className="inline-code">saldo &lt;&gt; 0</span>, sí.</li>
+                </ol>
+                <p>Las dos primeras miran la actualización, que la sección 2 contaba como la tercera pieza de un ciclo. La última mira la condición, y es la que menos se ve. El mismo acuerdo, con las dos condiciones:</p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Vuelta</th><th>saldo al terminarla</th><th>¿saldo &gt; 0?</th><th>¿saldo &lt;&gt; 0?</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Antes del ciclo</td><td className="whitespace-nowrap">2 350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>1</td><td className="whitespace-nowrap">1 950 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>2</td><td className="whitespace-nowrap">1 550 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>3</td><td className="whitespace-nowrap">1 150 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>4</td><td className="whitespace-nowrap">750 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>5</td><td className="whitespace-nowrap">350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>6</td><td className="whitespace-nowrap">−50 000</td><td><strong>Falso</strong>: el ciclo para</td><td>Verdadero</td></tr>
+                            <tr><td>7</td><td className="whitespace-nowrap">−450 000</td><td>—</td><td>Verdadero</td></tr>
+                            <tr><td>8</td><td className="whitespace-nowrap">−850 000</td><td>—</td><td>Verdadero</td></tr>
+                            <tr><td>…</td><td>Sigue bajando</td><td>—</td><td>Verdadero, siempre</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    400 000 no cabe un número exacto de veces en 2 350 000, así que el saldo pasa de 350 000 a
+                    −50 000 sin tocar el cero. Con <span className="inline-code">&gt;</span>, ahí terminaba el
+                    ciclo. Con <span className="inline-code">&lt;&gt;</span>, la condición sigue verdadera, y lo
+                    seguirá siendo, porque de ahí en adelante el saldo solo baja. La salida de
+                    {' '}<span className="inline-code">saldo &lt;&gt; 0</span> es un punto, y el saldo lo salta; la de
+                    {' '}<span className="inline-code">saldo &gt; 0</span> es el cero y todo lo que queda por debajo, y
+                    no hay forma de saltarla.
+                </p>
+                <p>
+                    Un <span className="inline-code">Para</span> responde por su cuenta las tres preguntas: el
+                    contador cambia en cada vuelta, siempre hacia el tope, y el ciclo sale cuando lo pasa, no
+                    cuando lo iguala, así que no hay un punto que saltar. El <span className="inline-code">for</span> de
+                    Python y de R ni siquiera compara: recorre una secuencia ya hecha, y termina cuando la secuencia
+                    se acaba. Por eso un <span className="inline-code">Para</span> termina siempre, con las vueltas
+                    que dice su primera línea. Con la salvedad de la sección 4: en VBA, si el cuerpo toca el
+                    contador, la garantía se pierde.
+                </p>
+
+                <h3>El cero que no llega</h3>
+                <p>
+                    En el acuerdo de pago, el saldo se saltaba el cero porque los abonos no lo alcanzaban exacto. En
+                    un plan de pagos, la cuota está calculada para que el saldo llegue a cero justo en la última
+                    cuota: eso es lo que dice la fórmula. ¿Basta con eso para que un ciclo pueda esperar a que el
+                    saldo llegue a cero?
+                </p>
+
+                <Ejercicio tipo="E3"><DetectaError
+                    titulo="El plan de pagos que cobra hasta el cero"
+                    enunciado={<>Es el plan de pagos de la sección 4 —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93, con la cuota sin redondear—, escrito ahora con un <span className="inline-code">Mientras</span> que cobra hasta que el saldo llegue a cero, como dice su comentario. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y qué pasa al ejecutar el programa.</>}
+                    lineas={ERROR_IGUALDAD_LINEAS}
+                    lineaCorrecta={ERROR_IGUALDAD_LINEA_OK}
+                    tipos={[
+                        'Actualización: el saldo baja solo en el abono y no en la cuota completa, así que nunca llega a cero y el ciclo no termina.',
+                        'Frontera del ciclo: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸ y no en cero, así que cobra una cuota 13 y ahí se detiene.',
+                        'Condición de igualdad: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸; de ahí solo baja, y la condición nunca se vuelve falsa.',
+                        'Cuota sin redondear: con 916 799,929… el saldo no cierra; redondeada al peso, llegaría a cero en la cuota 12 y el ciclo pararía.',
+                    ]}
+                    tipoCorrecto={2}
+                    explicacion={ERROR_IGUALDAD_EXPLICACION}
+                    impacto={<>El cliente firmó doce cuotas, y el programa no se detiene en la doce: escribe la 13, la 14, la 15…, con intereses negativos y un saldo cada vez más negativo. Si el plan alimenta la facturación en una corrida nocturna, la corrida no termina, y por la mañana las oficinas abren sin el cierre del día. Es el ejemplo con que el capítulo 2 ilustró la finitud, el cierre diario bloqueado, con un ciclo de cobro en lugar de un cálculo de TIR.</>}
+                /></Ejercicio>
+
+                <h3>La cuota 37</h3>
+                <p>
+                    Con <span className="inline-code">saldo &gt; 0</span> no hay un punto que saltar, y el plan de la
+                    sección 4 para donde debe: tras la cuota 12 su saldo es {residuo('−', '7,5', 8)}, que no es
+                    positivo. El plan de la motivación usa esa misma condición, y no para donde debe:
+                </p>
+
+                <CodeTabs
+                    titulo="El plan de la motivación, cobrando mientras quede saldo"
+                    bloques={EJ_CUOTA_37}
+                    nota="La cuota 36 deja un saldo de 0,0000000200: dos cienmillonésimas de peso, pero positivas. La condición pregunta si el saldo es mayor que cero, y lo es, así que el ciclo da la vuelta 37. Sobre un saldo así el interés es prácticamente cero, toda la cuota se va a abono, y el saldo termina en menos una cuota." />
+
+                <p>El mismo programa, con seis créditos de una cartera, cambiando solo los datos:</p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Crédito</th><th>Tasa mensual</th><th>Cuotas</th><th>Vueltas con <span className="inline-code">saldo &gt; 0</span></th><th>Saldo tras la última cuota</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td className="whitespace-nowrap">10 000 000</td><td>1,5 %</td><td>12</td><td>12</td><td>{residuo('−', '7,5', 8)}</td></tr>
+                            <tr><td className="whitespace-nowrap">20 000 000</td><td>1,8 %</td><td>36</td><td><strong>37</strong></td><td><strong>{residuo('+', '2,0', 8)}</strong></td></tr>
+                            <tr><td className="whitespace-nowrap">80 000 000</td><td>1,2 %</td><td>240</td><td>240</td><td>{residuo('−', '2,0', 7)}</td></tr>
+                            <tr><td className="whitespace-nowrap">5 000 000</td><td>2 %</td><td>24</td><td><strong>25</strong></td><td><strong>{residuo('+', '5,4', 9)}</strong></td></tr>
+                            <tr><td className="whitespace-nowrap">150 000 000</td><td>1,1 %</td><td>240</td><td>240</td><td>{residuo('−', '3,6', 6)}</td></tr>
+                            <tr><td className="whitespace-nowrap">30 000 000</td><td>1,45 %</td><td>60</td><td>60</td><td>{residuo('−', '1,2', 7)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    El signo del residuo decide. Cuando es negativo, la última cuota deja el saldo un poco por
+                    debajo de cero, la condición da falso y el ciclo para a tiempo. Cuando es positivo, el ciclo
+                    cobra una cuota más, y completa. Cuatro de los seis créditos dan sus vueltas exactas, y quien
+                    pruebe el programa con ellos no encuentra nada: el de la motivación llevaba meses funcionando.
+                </p>
+                <p>
+                    ¿Y de qué depende el signo? De cómo se redondea el último bit en cada operación, y son
+                    cientos: es el punto flotante del capítulo 1, que esta vez no cambia un centavo sino una
+                    vuelta. Ni siquiera es una propiedad del crédito. El de 150 000 000 es el de la tabla de 240
+                    filas de la sección 4, cuyo saldo final era {residuo('−', '3,6', 6)}. Si el saldo nuevo se escribe
+                    {' '}<span className="inline-code">saldo + saldo * tasa - cuota</span> —la misma cuenta, con las
+                    operaciones en otro orden—, su residuo sale positivo y el ciclo da 241 vueltas.
+                </p>
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="Contar las cuotas o mirar el saldo"
+                    solucion={<>
+                        <p>
+                            <strong>Por qué el contador.</strong> El número de cuotas es un dato del contrato: se fija
+                            el día de la firma y no sale de ninguna cuenta. Un ciclo que cuenta las cuotas da
+                            exactamente n vueltas, con cualquier tasa, en cualquier lenguaje y en cualquier máquina.
+                            El saldo, en cambio, es el resultado de cientos de operaciones de punto flotante, y lo
+                            que queda tras la última cuota es un residuo cuyo signo nadie elige: en dos de los seis
+                            créditos es positivo, y el ciclo cobra una cuota que no está en el contrato. Con
+                            {' '}<span className="inline-code">saldo &lt;&gt; 0</span> es peor: el residuo no es cero y el
+                            ciclo no termina.
+                        </p>
+                        <p>
+                            <strong>Por qué no se nota.</strong> Una prueba corta no lo encuentra: cuatro de los seis
+                            créditos dan sus vueltas exactas, y el programa de la motivación funcionó meses antes de
+                            facturar la cuota 37. Tampoco es estable: escribir la misma cuenta en otro orden cambia
+                            qué créditos fallan. Un programa cuyo número de vueltas depende del último bit de una
+                            cuenta no se puede auditar.
+                        </p>
+                        <p>
+                            <strong>Cuándo sí por el saldo.</strong> Cuando el número de pagos no se conoce al
+                            entrar: el acuerdo de pago de la sección 2, con abonos fijos que no dividen la deuda; un
+                            crédito con abonos extraordinarios; una tarjeta de crédito. Ahí no hay un número de cuotas
+                            que contar, y lo que decide es el saldo. Los cuidados son cuatro. La condición es
+                            {' '}<span className="inline-code">saldo &gt; 0</span> y nunca <span className="inline-code">saldo &lt;&gt; 0</span>,
+                            para que no se pueda pasar de largo. El último abono se ajusta a lo que se debe —la selectiva
+                            de la sección 2—, para no cobrar de más. El abono se valida positivo antes de entrar,
+                            porque con un abono de 0 el ciclo no termina. Y los montos van en centavos enteros o en
+                            {' '}<span className="inline-code">Currency</span>, como pidió el capítulo 1, para que un
+                            saldo que llega a cero llegue de verdad.
+                        </p>
+                    </>}
+                >
+                    <p>
+                        La tabla de amortización de la sección 4 —la de doce filas y la de 240— se controla con el
+                        contador de cuotas, aunque lo que de verdad se quiere llevar a cero es el saldo.
+                        {' '}<strong>Argumente por qué</strong>, apoyándose en la tabla de los seis créditos. Diga
+                        después en qué situación un ciclo de cobro <strong>sí</strong> tiene que controlarse por el
+                        saldo, y qué cuidados pide entonces su condición.
+                    </p>
+                </Reto></Ejercicio>
+
+                <h3>Cuando el final lo marca un dato</h3>
+                <p>
+                    Hasta aquí, cada ciclo sabía cuándo parar por algo que él mismo calculaba: un contador, un
+                    saldo. El cierre de recaudo de la sección 1 leía primero cuántos pagos habían llegado, y con
+                    eso contaba. En una caja nadie sabe de antemano cuántos van a llegar: el cajero digita los
+                    pagos a medida que los recibe y, al cerrar, digita un 0. Ese 0 no es un pago, sino la marca de
+                    que no hay más.
+                </p>
+
+                <CodeTabs
+                    titulo="El cierre de caja, con Repita"
+                    bloques={EJ_CAJA_REPITA}
+                    nota="El programa lee datos, así que no hay una salida fija. Fíjese en dónde está la pregunta: al final de la vuelta, como en la validación de la sección 3." />
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta="El cajero digita tres pagos —250 000, 400 000 y 150 000— y después el 0. ¿Qué muestra el programa al terminar?"
+                    opciones={[
+                        { texto: '4 pagos por 800 000', correcta: true, justificacion: 'El Repita pregunta al final de la vuelta, después de sumar y de contar. Cuando el cajero digita el 0, la vuelta ya está en marcha: el 0 se lee, se suma al total —donde no cambia nada— y se cuenta como un pago; solo después la condición monto = 0 da verdadero y el ciclo sale. Por eso el total cuadra con la caja y la cantidad no: cuatro pagos para tres recibos. Tres pagos es lo que el cajero espera, pero el ciclo no sabe que el 0 es el final hasta que lo pregunta, y lo pregunta tarde. Un pago por 250 000 sería leer el Hasta como si fuera un Mientras —seguir mientras el monto sea 0—, y es al revés: el Hasta dice cuándo parar. Y el ciclo sí termina: en la vuelta del 0, la condición se cumple. (En Python y en R, el if … break del final hace de Hasta.)' },
+                        { texto: '3 pagos por 800 000', correcta: false },
+                        { texto: '1 pago por 250 000', correcta: false },
+                        { texto: 'Nada: vuelve a pedir un monto, y no termina', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <p>
+                    A un valor como ese 0 se le llama <Termino def="Un valor que ningún dato real puede tomar, y que se escribe después del último dato para marcar que no hay más. El ciclo lo lee, pero no lo procesa.">centinela</Termino>.
+                    El <span className="inline-code">Repita</span> lo procesa porque pregunta al final, después de
+                    sumar y contar. Con un centinela, la pregunta tiene que ir en medio: después de leer y antes de
+                    procesar. La forma de conseguirlo sin salir a mitad del cuerpo es leer el primer dato antes del
+                    ciclo y los siguientes al final del cuerpo. Se llama <Termino def="Leer el primer dato antes del ciclo y los siguientes al final del cuerpo. Así la condición se evalúa siempre entre una lectura y el proceso del dato leído.">lectura adelantada</Termino>:
+                </p>
+
+                <CodeTabs
+                    titulo="El cierre de caja, con lectura adelantada"
+                    bloques={EJ_CAJA_ADELANTADA}
+                    nota="Con los mismos datos, escribe 3 pagos por 800 000. Y si el primer dato ya es el 0, el ciclo no da ninguna vuelta y escribe 0 pagos por 0, que es lo correcto en un día sin recaudo." />
+
+                <p>
+                    Es el <span className="inline-code">Mientras</span> con dos lecturas de la sección 3, que allí
+                    perdía frente al <span className="inline-code">Repita</span> para validar un monto, y aquí es el
+                    que sirve. La diferencia está en el cuerpo. En la validación,
+                    el cuerpo solo leía, y lo que se hacía con el monto venía después del ciclo: la pregunta del
+                    {' '}<span className="inline-code">Repita</span> quedaba justo entre leer y usar. Aquí el cuerpo
+                    lee y además suma, y el <span className="inline-code">Repita</span> pregunta después de sumar.
+                </p>
+                <p>
+                    La condición vuelve a comparar con <span className="inline-code">&lt;&gt; 0</span>, y esta vez no
+                    hay salida que saltar: <span className="inline-code">monto</span> no se acerca al 0 vuelta a
+                    vuelta, sino que en cada una recibe lo que se digita, y un 0 digitado se guarda exacto. La regla
+                    del capítulo 1 —nunca comparar dinero con igualdad exacta— es para cifras que salen de cuentas,
+                    como el saldo del plan de pagos. Lo
+                    que cambia es de quién depende la finitud: el ciclo termina cuando llega el centinela, y si
+                    nadie lo digita, no termina. Por eso el centinela tiene que ser un valor que ningún dato real
+                    pueda tomar. Un pago de 0 no existe; en una lista de ajustes contables, un 0 podría ser un dato.
+                </p>
+
+                <h3>Qué hace parar a un ciclo</h3>
+                <p>
+                    Con esta sección, el capítulo ha visto cuatro maneras de que un ciclo sepa cuándo parar. La
+                    última llega en la sección 7:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Para cuando…</th><th>Termina si…</th><th>La trampa</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>Siempre, con las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo</td></tr>
+                            <tr><td><strong>Un valor calculado cruza un límite.</strong> El acuerdo de pago, con <span className="inline-code">Mientras saldo &gt; 0</span></td><td>Cada vuelta lo acerca, y la condición no se puede saltar</td><td>Comparar con <span className="inline-code">&lt;&gt; 0</span>, que se salta; un residuo, que da una vuelta de más</td></tr>
+                            <tr><td><strong>Llega un dato que marca el final.</strong> El cierre de caja, con un centinela</td><td>Los datos traen el centinela</td><td>Procesar el centinela como si fuera un dato</td></tr>
+                            <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: con una tolerancia de <span className="whitespace-nowrap">10<sup>−18</sup></span>, el intervalo se queda en {residuo('', '3,5', 18)} y la bisección no termina</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <Box type="tip" label="Lo que sigue">
+                    La bisección de la sección 7 no sabe cuántas vueltas va a dar, ni espera un dato que le diga
+                    cuándo parar: para cuando el intervalo donde está la TIR es más angosto que una tolerancia. Es
+                    el caso con que el capítulo 2 ilustró la falta de finitud —«un cálculo de TIR que no converge
+                    deja el cierre diario bloqueado a las once de la noche»—, escrito para que sí termine.
+                </Box>
             </div>
         );
+
+        /* ============================================================
+           SECCIÓN 7 — andamio (BORRADOR-FASE1)
+        ============================================================ */
 
         const Cap7Section = () => (
             <div className="prose-lp">
