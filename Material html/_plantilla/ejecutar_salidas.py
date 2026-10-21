@@ -17,9 +17,9 @@ Lo que se ejecuta y lo que no:
     para que `TablaTraza` los muestre, y otros son fragmentos con un error
     deliberado. Ejecutarlos produce fallos que no son fallos.
   · **Pseudocódigo** no es ejecutable, por definición.
-  · **VBA** se verifica en Excel real, como dice el README. Aquí se omite, y se
-    dice que se omite: dar por bueno lo que no se ha medido es peor que no
-    medirlo.
+  · **VBA** se verifica en Excel real, con `ejecutar_vba.py`, porque necesita
+    Excel abierto y un módulo pegado a mano. Aquí se omite, y se dice que se
+    omite: dar por bueno lo que no se ha medido es peor que no medirlo.
 
 La comparación es **exacta y por lenguaje**, sin normalizar cifras: Python
 imprime `2,160,000` con `:,.0f` y R imprime `2160000`. Normalizarlas escondería
@@ -56,7 +56,7 @@ EJECUTABLES = {
 }
 OMITIDOS = {
     "pseudo": "no es ejecutable",
-    "vba": "se verifica en Excel real",
+    "vba": "se verifica en Excel con ejecutar_vba.py",
 }
 
 TIEMPO_LIMITE = 20

@@ -78,6 +78,24 @@ error deliberado—, así que ejecutarlos produciría fallos que no son fallos. 
 pseudocódigo no es ejecutable y VBA se verifica en Excel real; ambos se declaran
 omitidos en el informe en vez de darse por buenos en silencio.
 
+VBA se ejecuta aparte, con `ejecutar_vba.py`, porque necesita Excel (sirve Excel
+para Mac). El guion arma con los bloques que declaran `'>` un módulo de arnés y
+lo deja en el portapapeles. Se pega una vez en el editor de VBA, en un libro
+nuevo: Herramientas › Macro › Editor de Visual Basic, Insertar › Módulo, ⌘V.
+Después el guion lo corre por AppleScript y compara, igual que la regla 9:
+
+```bash
+python3 "Material html/_plantilla/ejecutar_vba.py" preparar 05_LPF_*.html
+python3 "Material html/_plantilla/ejecutar_vba.py" comparar
+```
+
+`Debug.Print` se cambia por `Print #`, que imprime con las mismas reglas, y
+`MsgBox` e `InputBox` por versiones que escriben en el mismo canal o leen de una
+cola (`--incluir NOMBRE=250000,-1` corre un bloque que lee datos). La única
+diferencia que se perdona, y se informa, es el separador decimal: lo pone la
+configuración regional, y un Excel en español de Colombia escribe `916799,93`
+donde el material declara `916799.93`.
+
 `ensamblar.py` además **falla si Font Awesome es anterior a 6.5**: varios iconos
 del material (`fa-clipboard-question`, `fa-money-bill-trend-up`,
 `fa-magnifying-glass-chart`) no existen en versiones previas y aparecen como
@@ -272,7 +290,8 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
 - **Orden de pestañas fijo:** Pseudocódigo → Python → R → VBA. Pestaña por
   defecto: `pseudo` en los capítulos 1–5, `vba` en los capítulos 6–8.
 - **Toda salida documentada debe haberse ejecutado**, no
-  supuesto. Python y R se ejecutan; VBA se verifica en Excel real.
+  supuesto. Python y R se ejecutan; VBA se verifica en Excel real, con
+  `ejecutar_vba.py`.
 - Los ejercicios **no piden escribir programas desde cero**: eso es de los
   talleres. Aquí se lee, se traza, se diagnostica, se compara y se interpreta.
   Lo comprueba la regla 11, que mira **solo los enunciados** —las propiedades
