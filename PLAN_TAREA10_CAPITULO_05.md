@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. Siguiente: la revisión del docente en el PC3, que no está aprobado.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. Siguiente: la revisión del docente en el PC4, y después la Fase 4 (el banco de Moodle).
 
 ---
 
@@ -1260,49 +1260,221 @@ repitieron después de la última corrección del texto.
       *cuántas veces* en las secciones 2 a 5 y *cuándo para* en la 6 y la
       bisección de la 7; y la traza de muchas vueltas, que traza tres a mano y
       deja ver las otras en el componente (H2.3)
-- [ ] **Revisión del docente:** pendiente. El PC3 no está aprobado
+- [x] **Revisión del docente:** aprobado el 2026-10-21
 
 ---
 
 ### Fase 3 — Auditoría
 
-#### Tarea 3.1 · `verificar.py --con-salidas`
+#### Tarea 3.1 · `verificar.py --con-salidas` · ✅
 Todas las comprobaciones, con las salidas de Python y R **ejecutadas**, y la
 regla 17 sin ningún aviso en este capítulo.
 
-#### Tarea 3.2 · Auditoría por DOM
+*Hecho el 2026-10-21*, sin `--sin-cuota`: los cinco capítulos en verde y sin un
+solo aviso. El 5 queda con 19 ejercicios y la cuota cumplida. Se repitió después
+de cada arreglo de esta fase.
+
+#### Tarea 3.2 · Auditoría por DOM · ✅
 Cada ejercicio que califica, llevado hasta el veredicto en los cuatro lenguajes y
 con una respuesta mala incluida. El cuestionario final, respondido entero y con
 las diez acertadas.
 
-#### Tarea 3.3 · Las vueltas, contadas
+*Hecho el 2026-10-21, con un arnés en el navegador.* El arnés lee las propiedades
+de cada componente del árbol de React (la clave sale del propio componente, no
+de una copia) y conduce la interfaz. Recorrió las nueve entradas y probó los 17
+ejercicios que califican:
+- **`MCQ` (6 y el del E4):** «¡Correcto!» con la clave y «Revisa la explicación»
+  con un distractor. Los dos de selección múltiple, además, rechazan una
+  respuesta incompleta. Todos muestran su justificación.
+- **`TablaTraza` (4), en los cuatro lenguajes:** 15/15, 20/20, 21/21 y 16/16 con
+  la clave, y una celda menos con una celda mala.
+- **`DetectaError` (2), en los cuatro lenguajes:** «¡Diagnóstico correcto!» en
+  la línea de cada lenguaje (9, 8, 8 y 12; 10, 9, 9 y 13). «Clasificó bien el
+  tipo» con la línea de al lado, y «Ubicó bien la línea» con el tipo equivocado.
+- **`OrdenaPasos` (2), en los cuatro lenguajes:** «¡Secuencia correcta!» en
+  orden, y entre 0 y 1 pasos bien puestos al revés. Ningún paso repetido.
+- **`Emparejamiento`, en los cuatro lenguajes:** 7 de 7, y 5 de 7 cruzando dos.
+- **Cuestionario:** **10/10** con las claves. Con una respuesta mala y las dos de
+  selección múltiple incompletas, da 7/10, como se esperaba. Cubre las siete
+  secciones.
+- **Los dos `Reto` (E8):** muestran su solución.
+
+*El instrumento falló dos veces antes de servir*, y las dos se arreglaron en el
+guion, no en el capítulo. La primera versión leía el árbol de React desde el nodo
+que se guarda al montar, y React alterna entre dos copias del árbol. Por eso a
+veces leía la copia vieja, la de una sección anterior, y la sección 4 salía sin
+ejercicios. Se lee desde `stateNode.current`.
+
+#### Tarea 3.3 · Las vueltas, contadas · ✅
 Es la auditoría propia de este capítulo. `ejecutar_salidas.py` solo comprueba
 lo que va tras `#>`. Un número de vueltas dicho en prosa, o escrito en la clave
 de un ejercicio, no lo mira nadie. Por eso, cada cifra de vueltas y cada saldo
 del texto se ejecutan en Python y R con los datos exactos, incluidos el caso
 *n* = 0 de R (H4) y los ciclos controlados por saldo (H3).
 
-#### Tarea 3.4 · 375 px, sección por sección
+*Hecho el 2026-10-21, con tres auditores en paralelo*, uno por tramo del archivo:
+artefactos, portada y secciones 1 a 3; secciones 4 y 5; secciones 6, 7 y
+evaluación. Cada uno escribió sus propios guiones en Python y R, sin tocar el
+archivo, y cada hallazgo se volvió a ejecutar aquí antes de corregirlo.
+- **Alcance:** unas 240 afirmaciones con cifra. Entran los pasos de los cuatro
+  `Trazador` y las celdas de las cuatro `TablaTraza`, contrastados contra
+  ejecuciones instrumentadas; los seis residuos de H3, también en Node; el caso
+  `1:0` de R; y los programas con centinela, con las entradas del texto.
+- **Salidas declaradas:** en los 27 objetos de código, las líneas `//>` y `'>`
+  se cotejaron con las `#>` de R. Todas coinciden, con dos diferencias de forma
+  que son deliberadas:
+  - el VBA de `EJ_PLAN_PAGOS` no rellena columnas, y lo que declara es lo que
+    imprime su código;
+  - `EJ_CERO_PENDIENTES` enseña en R la trampa de `1:n` con más líneas.
+- **Un error, corregido. Pregunta 7 del cuestionario:** el distractor decía
+  «2 235 699,92 … 6 × 372 616,65», y esa multiplicación da 2 235 699,90. Las
+  cuatro cifras arrastradas salían de la cuota sin redondear. Ahora los
+  distractores usan la cuota que da el enunciado (,90 y ,80/,20), y la
+  justificación aclara que la clave, 2 144 726,08, sale con la cuota sin
+  redondear, como en la pregunta 8.
+- **Cuatro ambiguas, corregidas:**
+  - **`uniroot`:** con su tolerancia por omisión da 1,992167 %, y solo con
+    `tol = 1e-10` da 1,992398 %. Ahora la nota dice las dos.
+  - **Distractor del E7 de la TIR:** con la TIR de la pregunta salen 49 240 y
+    590 880, no 49 238 y 590 854.
+  - **Lo pagado en vivienda:** 120 × 1 778 778,87 da 213 453 464,40, no ,79.
+    Ahora va en millones.
+  - **Portada:** el residuo que da la vuelta de más es de cienmillonésimas, no de
+    millonésimas.
+- **Comentarios corregidos,** que el estudiante no ve:
+  - la diferencia entre el valor presente y el saldo es de 6,9 × 10⁻⁸ en Python
+    y 7,0 × 10⁻⁸ en R;
+  - el E4 de la sección 4 es equivalente con n negativo en tres lenguajes, pero
+    en R `seq_len(n)` da error.
+- **No se tocó:** la cuota de 916 799,93 de la motivación de la sección 3, sin
+  los datos del crédito. Es una escena, aprobada en el PC2, y añadirlos pasaría
+  la motivación de las 80 palabras.
+
+#### Tarea 3.4 · 375 px, sección por sección · ✅
 Con la barra lateral **cerrada**.
 
-#### Tarea 3.5 · Contraste
+*Hecho el 2026-10-21*, con el criterio de H15 y primero en negativo (el panel pasa
+de 367 a 624 px). Las nueve entradas dan **cero** fuera en los cuatro lenguajes,
+con la barra cerrada en todas. Todo estaba abierto:
+- los bloques desplegados;
+- las soluciones de los `Reto`;
+- la tabla de amortización hasta la cuota 240;
+- la bisección terminada y acercada;
+- los dos paneles opcionales de `TresCiclosComparados`.
+
+#### Tarea 3.5 · Contraste · ✅
 Medido en el navegador, también en los `fill` de los `<text>` de los
 flujogramas. El gold nunca va como texto sobre fondo claro.
 
-#### Tarea 3.6 · Lo que otros capítulos dicen
+*Hecho el 2026-10-21*, con la razón de WCAG sobre el fondo efectivo de cada texto.
+El fondo se obtiene componiendo los fondos semitransparentes hacia arriba y
+multiplicando la opacidad de los ancestros.
+- **Texto sobre fondo liso:** en las nueve entradas, todo el texto habilitado
+  pasa de 4,5. El mínimo es **4,62**, salvo un título grande de la portada (3,96,
+  con un umbral de 3 para texto grande).
+- **Lo único por debajo** son botones deshabilitados, con opacidad 0,4:
+  «Anterior», «Inicio» y «Reiniciar» cuando no se pueden pulsar. WCAG los exceptúa.
+- **Texto sobre degradado** (pestañas, insignias, cabeceras de bloque, pie): se
+  mide contra cada parada del degradado. Ninguno queda bajo; el mínimo es 4,50,
+  en el pie de página de LP-CORE.
+- **`<text>` de los flujogramas:** 48, contra la figura que tienen debajo;
+  ninguno bajo. El único SVG señalado fue una etiqueta del eje de Plotly sobre un
+  rectángulo transparente, que el guion leyó como negro. Sobre el blanco real da
+  9,7:1.
+- **El gold** no aparece como texto en ninguna sección: ningún color de texto
+  baja de 4,5 sobre fondo claro.
+
+*Falsos positivos del instrumento, todos arreglados en el guion:*
+- Con el panel en segundo plano, la animación de entrada de cada sección se
+  queda en opacidad 0, y todo el texto daba razón 1,00.
+- Las transiciones de color también se quedan congeladas, y el botón
+  «Siguiente» de la cabecera daba gris sobre morado.
+
+Para medir, se inyectó en la pestaña, sin tocar el archivo, un estilo que quita
+animaciones y transiciones. Con él, el botón calcula blanco, que es lo que se ve
+en pantalla.
+
+#### Tarea 3.6 · Lo que otros capítulos dicen · ✅
 Búsqueda manual de frases como «primera vez», «único» y «nunca antes», cotejadas
 contra los capítulos 1 a 4 (H1). Y al revés: que nada de lo que el capítulo 4
 anuncia en «Lo que viene» quede sin cumplir.
 
+*Hecho el 2026-10-21, con un cuarto auditor; cada hallazgo se verificó aquí.*
+- **Lo que está bien:**
+  - **Citas a otros capítulos:** todas correctas. Las que van entre «» son
+    literales, y ningún número de sección está mal.
+  - **Remisiones internas:** todas apuntan a la sección que dice.
+  - **Promesas de los capítulos 1 a 4 sobre el 5:** todas cumplidas. Son diez,
+    contando las del 2 («estructuras repetitivas del capítulo 5») y la finitud.
+    La referencia de H2 al recuadro del capítulo 4 está desfasada: hoy está en
+    `04:5612`.
+- **Una afirmación falsa, corregida, en la portada:** «en este capítulo las
+  diferencias entre lenguajes dejan de ser de acento». El capítulo 4 ya se
+  presentó como «el primero donde esas diferencias deciden el resultado de un
+  programa». Ahora dice: «Como en el capítulo 4, las diferencias entre lenguajes
+  no son de acento: aquí deciden cuántas vueltas da un ciclo».
+- **Nueve inexactas, corregidas:**
+  - **Portada y sección 1:** «sin detenerse en cómo se llamaban» chocaba con el
+    capítulo 2, que los nombró y pidió solo leerlos. La tabla de los sitios
+    decía «Qué siguió a mano» y solo tres de los seis se trazaron a mano: ahora
+    dice «Qué vio ahí».
+  - **Sección 1:** «nada de eso se repite», cuando la frontera `<` / `<=` vuelve
+    en el E3 y el E4 de la sección 4. Ahora dice dónde reaparece y por qué es
+    otra cosa.
+  - **Sección 2:** «la condición se evalúa siempre una vez más que las vueltas»
+    no vale para el `Mientras` con `Salir` del capítulo 2. Ahora: «que termina
+    porque su condición se vuelve falsa».
+  - **Leyenda del flujograma:** el retorno es «la única forma nueva», no «lo
+    único nuevo», porque el borde discontinuo del `Para` también es nuevo.
+  - **Sección 6:**
+    - «cada ciclo sabía cuándo parar por algo que él mismo calculaba» olvidaba la
+      validación de la sección 3;
+    - «el capítulo ha visto cuatro maneras», cuando la cuarta llega en la 7;
+    - «en los programas de este curso son lo único que repite» deja de valer con
+      las funciones del capítulo 8.
+  - **Glosario, «Acumulador»:** decía que nace en 0 o en 1, cuando el saldo de su
+    propio ejemplo nace en el capital.
+- **Tres comentarios corregidos:**
+  - las funciones son del capítulo 8, no del 6;
+  - una frase entre comillas que no era literal;
+  - el «16 como mucho», que el capítulo 2 no dice.
+- **Defecto viejo, encontrado de paso al revisar los espacios de las nueve
+  entradas a la vez:** la sección 1 decía «Un contador cuentacuántas veces pasa
+  algo». Se le añadió un `{' '}`.
+
 ### ⏸ Punto de control 4 — Auditoría
-- [ ] `verificar.py --con-salidas` en verde sobre los **cinco** capítulos
-- [ ] Consola limpia
-- [ ] 375 px, las nueve entradas de la barra lateral
-- [ ] Contraste medido, con la razón escrita
-- [ ] Todos los ejercicios que califican, por DOM, con una respuesta mala cada uno
-- [ ] Cuestionario: 10/10
-- [ ] Las vueltas contadas (Tarea 3.3) y las afirmaciones cotejadas (Tarea 3.6)
-- [ ] Si salió una comprobación nueva, su **prueba negativa** registrada
+- [x] `verificar.py --con-salidas` en verde sobre los **cinco** capítulos, sin
+      `--sin-cuota` y después del último arreglo
+- [x] Consola limpia
+- [x] 375 px, las nueve entradas de la barra lateral, en los cuatro lenguajes y
+      sobre la versión final, con la prueba negativa antes
+- [x] Contraste medido, con la razón escrita (Tarea 3.5)
+- [x] Todos los ejercicios que califican, por DOM, con una respuesta mala cada uno
+      (Tarea 3.2). La pregunta 7 y el E7 de la TIR, que cambiaron, se volvieron a
+      probar
+- [x] Cuestionario: 10/10, también después de los arreglos
+- [x] Las vueltas contadas (Tarea 3.3) y las afirmaciones cotejadas (Tarea 3.6)
+- [x] **No salió ninguna comprobación nueva** para `verificar.py`. Los
+      instrumentos de esta fase (el arnés por DOM y la medida de contraste) se
+      probaron antes en negativo, pero viven en el navegador: ver «Huecos» abajo
+- [ ] **Revisión del docente:** pendiente
+
+*Huecos de las herramientas que dejó la fase:*
+- **`ejecutar_salidas.py` no coteja las salidas declaradas entre lenguajes.** Las
+  `//>` del pseudocódigo y las `'>` de VBA no se ejecutan, pero se pueden
+  comparar con las `#>` de R, y aquí se hizo a mano. Sería una comprobación
+  nueva, con excepciones declaradas (el relleno de columnas de VBA).
+- **Las cifras en prosa, los distractores y las justificaciones siguen sin
+  regla** (H13). Esta fase encontró en ellos un error y cuatro ambigüedades que
+  ninguna comprobación habría visto.
+- **Para la skill:** medir en el panel de vista previa tiene dos trampas nuevas.
+  - Con el panel en segundo plano, las animaciones y las transiciones se quedan
+    en su estado inicial. La opacidad sale 0, y los colores, los de partida.
+  - Leer el árbol de React desde el nodo del contenedor da a veces la copia
+    alterna del árbol; hay que leer `stateNode.current`.
+- **Comprobar los espacios comidos** solo existe como guion en el navegador.
+  Revisado sección por sección, se le escapó uno a la sección 1. Conviene que
+  la skill pida correrlo sobre las nueve entradas al cerrar.
 
 ---
 

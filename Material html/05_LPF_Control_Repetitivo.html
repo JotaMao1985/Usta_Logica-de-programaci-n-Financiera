@@ -2215,8 +2215,7 @@
         /* ------------------------------------------------------------
            AmortizacionPasoAPaso — la tabla de amortización ES un ciclo
 
-           Los capítulos 3 y 4 dejaron escrita una promesa: «240 filas que
-           nadie escribió». Aquí aparecen, una por clic, con el estado del
+           Los capítulos 3 y 4 dejaron escrita una promesa: una tabla de 240 filas que nadie escribió. Aquí aparecen, una por clic, con el estado del
            ciclo a la vista —el contador, el saldo y el acumulador de
            intereses— y un botón que la completa hasta la última.
 
@@ -2542,11 +2541,11 @@ for k in range(1, n):
            [0 %, 10 %] y tolerancia 10⁻⁶: 1,9924 % mensual en 17 vueltas.
 
            Es la búsqueda binaria del capítulo 2 —que encontró un crédito entre
-           40 000 en 12 comparaciones; 16 como mucho— aplicada a una función en
+           40 000 en 12 comparaciones; en el peor caso harían falta 16, aunque el capítulo 2 no lo dice— aplicada a una función en
            vez de a una lista. Se cita, no se repite.
 
            El VPN se calcula con un ciclo DENTRO del ciclo de la bisección: el
-           pseudocódigo no llama a ninguna función, que son del capítulo 6.
+           pseudocódigo no llama a ninguna función, que son del capítulo 8.
         ------------------------------------------------------------ */
         const TIR_CASO = { capital: 10000000, tasa: 0.015, n: 12, comision: 300000 };
         const TIR_CUOTA = cuotaFija(TIR_CASO.capital, TIR_CASO.tasa, TIR_CASO.n);
@@ -3065,7 +3064,7 @@ FinMientras`;
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha5)" />],
-                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es lo único nuevo de este capítulo.',
+                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo.',
                     <g>
                         <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
                     </g>],
@@ -3138,7 +3137,7 @@ FinMientras`;
                     valores iniciales fuera del ciclo y no dentro; reconocer que un <span className="inline-code">Para</span> no
                     significa lo mismo en R que en Python; y —sobre todo— anticipar <strong>cuándo
                     para</strong>: el ciclo que no termina nunca, y el que da una vuelta de más por un
-                    residuo de millonésimas.
+                    residuo de cienmillonésimas.
                 </p>
 
                 <Pipeline steps={[
@@ -3164,7 +3163,7 @@ FinMientras`;
                 <p>
                     No es, sin embargo, la primera vez que usted ve un ciclo. Los capítulos 1 y 2 le
                     hicieron seguir varios —la conversión a binario, la meta de ahorro, la búsqueda en
-                    una cartera de 40 000 créditos— sin detenerse en cómo se llamaban. La sección 1 empieza
+                    una cartera de 40 000 créditos— y el 2 hasta los nombró, pero solo le pidió leerlos. La sección 1 empieza
                     por ahí, y lo que ya está escrito en esos capítulos se cita, no se repite.
                 </p>
                 <Box type="info" label="Una promesa de los capítulos 3 y 4 que se cumple aquí">
@@ -3177,8 +3176,7 @@ FinMientras`;
                 <h3>Los cuatro lenguajes</h3>
                 <p>
                     Todo algoritmo aparece en cuatro versiones, y cada bloque tiene <strong>su propia
-                    pestaña</strong>; el material recuerda la última elección. En este capítulo las
-                    diferencias entre lenguajes dejan de ser de acento. Python no tiene la forma que
+                    pestaña</strong>; el material recuerda la última elección. Como en el capítulo 4, las diferencias entre lenguajes no son de acento: aquí deciden cuántas vueltas da un ciclo. Python no tiene la forma que
                     pregunta al final, y hay que construirla. <span className="inline-code">range(1, n)</span> da
                     una vuelta menos de las que parece. El <span className="inline-code">for</span> de R,
                     con cero cuotas pendientes, da <strong>dos</strong> vueltas. Y en VBA, el cuerpo de un <span className="inline-code">For</span> puede
@@ -3634,14 +3632,13 @@ End Sub`,
 
                 <h3>Usted ya trazó ciclos</h3>
                 <p>
-                    Antes de este capítulo, el material ya le había hecho seguir a mano varios ciclos, y
-                    en ninguno se detuvo a decir cómo se llamaban. Vale la pena reconocerlos, porque todo
+                    Antes de este capítulo, el material ya le había mostrado varios ciclos, y algunos los trazó usted a mano. Ninguno se estudió como ciclo. Vale la pena reconocerlos, porque todo
                     lo que esta sección nombra ya estaba en ellos:
                 </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead>
-                            <tr><th>Dónde</th><th>Qué siguió a mano</th><th>El ciclo que era</th></tr>
+                            <tr><th>Dónde</th><th>Qué vio ahí</th><th>El ciclo que era</th></tr>
                         </thead>
                         <tbody>
                             <tr><td>Capítulo 1, sección 1</td><td>El 22 convertido a binario, una fila por división</td><td><span className="inline-code">Mientras numero &gt; 0</span></td></tr>
@@ -3654,8 +3651,7 @@ End Sub`,
                     </table>
                 </div>
                 <p>
-                    Nada de eso se repite aquí: la frontera entre <span className="inline-code">&lt;</span> y <span className="inline-code">&lt;=</span>,
-                    la suma de décimos y el conteo de comparaciones están resueltos donde están. Lo que
+                    Nada de eso se vuelve a enseñar aquí: la frontera entre <span className="inline-code">&lt;</span> y <span className="inline-code">&lt;=</span> de la meta de ahorro, la suma de décimos y el conteo de comparaciones están resueltos donde están. La frontera reaparece en la sección 4, pero en el contador de un <span className="inline-code">Mientras</span>, donde además tiene que casar con su valor inicial. Lo que
                     aquellos capítulos no se detuvieron a preguntar es lo que este necesita:
                 </p>
                 <div className="overflow-x-auto">
@@ -3682,7 +3678,7 @@ End Sub`,
                 <ul>
                     <li>
                         Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada vez, su valor nuevo es el anterior más una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
-                        <strong>cuántas veces</strong> pasa algo: cada vez, su valor nuevo es el anterior más
+                        {' '}<strong>cuántas veces</strong> pasa algo: cada vez, su valor nuevo es el anterior más
                         una cantidad fija, casi siempre 1.
                     </li>
                     <li>
@@ -4113,8 +4109,7 @@ End Sub`,
                 />
 
                 <Box type="info" label="Una evaluación más que vueltas">
-                    Cinco evaluaciones y cuatro vueltas. En un <span className="inline-code">Mientras</span> que
-                    termina, la condición se evalúa siempre <strong>una vez más</strong> que las vueltas que da:
+                    Cinco evaluaciones y cuatro vueltas. En un <span className="inline-code">Mientras</span> que termina porque su condición se vuelve falsa, la condición se evalúa siempre <strong>una vez más</strong> que las vueltas que da:
                     cada vuelta necesita un «sí», y la salida, un «no». Contar vueltas es contar los «sí».
                 </Box>
 
@@ -4870,7 +4865,10 @@ End Sub`,
         /* E4 (H8): no se pide reescribir, se decide. B no se parece a un Para
            —el contador nace en 0, aumenta al principio del cuerpo y la
            condición usa <— y aun así es equivalente con cualquier n, también
-           con 0 y con negativos (ejecutado el 2026-10-19). Va justo después
+           con 0 (ejecutado el 2026-10-19). Con n negativo coinciden en
+           pseudocódigo, Python y VBA, pero en R `seq_len(n)` da error: la
+           auditoría de la Fase 3 lo encontró, y el ejercicio no pregunta por
+           negativos. Va justo después
            del E3 a propósito: quien aprendió «el < es el defecto» sin mirar
            las otras dos piezas elige la «a». En R, la versión A usa
            `seq_len(n)`: con `1:n` las dos diferirían con n = 0, y la clave
@@ -6196,8 +6194,7 @@ End Sub`,
                     En su sección 1, el capítulo 2 puso la <strong>finitud</strong> entre las propiedades de un
                     algoritmo: termina después de un número limitado de pasos. Allí se juzgaba leyendo
                     instrucciones escritas en palabras, como «repita hasta obtener un resultado razonable», que
-                    puede no terminar nunca. En un programa se juzga mirando sus ciclos, porque en los programas
-                    de este curso son lo único que repite: sin ciclos, cada instrucción se ejecuta como mucho una
+                    puede no terminar nunca. En un programa se juzga mirando sus ciclos, porque en los programas que el curso ha visto hasta aquí son lo único que repite: sin ciclos, cada instrucción se ejecuta como mucho una
                     vez y el programa llega al final. Un ciclo que no termina es un <Termino def="Un ciclo cuya condición nunca deja salir: la de un Mientras nunca se vuelve falsa, o la de un Repita nunca se vuelve verdadera. El programa no termina por sí mismo: hay que detenerlo desde fuera, o se detiene con un error.">ciclo infinito</Termino>.
                 </p>
                 <p>
@@ -6361,8 +6358,7 @@ End Sub`,
 
                 <h3>Cuando el final lo marca un dato</h3>
                 <p>
-                    Hasta aquí, cada ciclo sabía cuándo parar por algo que él mismo calculaba: un contador, un
-                    saldo. El cierre de recaudo de la sección 1 leía primero cuántos pagos habían llegado, y con
+                    Hasta aquí, los ciclos que recorren pagos sabían cuándo parar por algo que ellos mismos calculaban: un contador, un saldo. El cierre de recaudo de la sección 1 leía primero cuántos pagos habían llegado, y con
                     eso contaba. En una caja nadie sabe de antemano cuántos van a llegar: el cajero digita los
                     pagos a medida que los recibe y, al cerrar, digita un −1. Ese −1 no es un pago —ningún pago es
                     negativo—, sino la marca de que no hay más.
@@ -6419,8 +6415,7 @@ End Sub`,
 
                 <h3>Qué hace parar a un ciclo</h3>
                 <p>
-                    Con esta sección, el capítulo ha visto cuatro maneras de que un ciclo sepa cuándo parar. La
-                    última llega en la sección 7:
+                    Con esta sección, el capítulo reúne cuatro maneras de que un ciclo sepa cuándo parar. Tres ya las vio, y la cuarta llega en la sección 7:
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -6454,15 +6449,17 @@ End Sub`,
              6 863 095,58 e intereses pagados 530 295,30. La resta del
              cliente da 6 332 800,28. Las ocho cuotas que faltan, traídas a
              hoy al 1,5 %, dan el mismo saldo; en la máquina difieren en
-             6,9 × 10⁻⁸.
+             6,9 × 10⁻⁸ en Python y 7,0 × 10⁻⁸ en R.
            · El plan entero: 1 001 599,15 de intereses, el 10,02 % del
              capital. El saldo promedio es 5 564 439,72, y su 18 % son esos
              mismos intereses.
            · Vivienda, 150 000 000 al 1,1 % en 240: tras 120 cuotas se deben
-             118 197 017,68, el 78,80 %. De los 213 453 464,79 pagados,
+             118 197 017,68, el 78,80 %. De los 213 453 464,79 pagados (120
+             cuotas sin redondear; con la de 1 778 778,87, 213 453 464,40),
              181 650 482,47 son intereses, el 85,10 %.
            · TIR con la comisión de 300 000: 1,9924 % en 17 vueltas.
-             uniroot de R da 1,992398 %. VPN(0) = 1 301 599,15 y
+             uniroot de R da 1,992398 % con tol = 1e-10 (1,992167 % con la
+             tolerancia por omisión). VPN(0) = 1 301 599,15 y
              VPN(0,10) = −3 453 207,82.
            · Efectivas anuales: 19,5618 % y 26,7105 %. Con la TIR redondeada
              a 0,019924, la que usa el bloque, 26,7108 %: con dos decimales,
@@ -6915,8 +6912,8 @@ End Sub`,
                 <p>
                     En un crédito largo la diferencia crece mucho. Quien tomó el de vivienda de la sección 4
                     —150 000 000 al 1,1 % en 240 cuotas de 1 778 778,87— y lleva diez años pagando, la mitad del
-                    plazo, todavía debe 118 197 017,68: el 78,8 % de lo que le prestaron. De los 213 453 464,79
-                    que pagó en esos diez años, 181 650 482,47 fueron intereses. Lo puede comprobar en la tabla de la sección 4,
+                    plazo, todavía debe 118 197 017,68: el 78,8 % de lo que le prestaron. De los 213,45 millones
+                    que pagó en esos diez años, 181,65 millones fueron intereses. Lo puede comprobar en la tabla de la sección 4,
                     con el crédito de vivienda, avanzando hasta la cuota 120.
                 </p>
 
@@ -6962,7 +6959,7 @@ End Sub`,
                 <CodeTabs
                     titulo="La TIR por bisección"
                     bloques={EJ_TIR}
-                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, porque R recorre la secuencia por usted. Y R trae <span className="inline-code">uniroot</span>, que busca la misma tasa con un método más rápido y da 1,992398 %.</>} />
+                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, porque R recorre la secuencia por usted. Y R trae <span className="inline-code">uniroot</span>, que busca la misma tasa con un método más rápido: con <span className="inline-code">tol = 1e-10</span> da 1,992398 %. Con su tolerancia por omisión, que es más gruesa, da 1,992167 %.</>} />
 
                 <p>
                     El <span className="inline-code">Mientras</span> no cuenta vueltas: sigue mientras el intervalo
@@ -7032,7 +7029,7 @@ End Sub`,
                     pregunta="La TIR del crédito con la comisión es 1,9924 % mensual, y la tasa pactada es 1,5 %. ¿Qué significa esa diferencia para el cliente?"
                     opciones={[
                         { texto: 'Que el banco calculó mal las cuotas: con el 1,5 % del contrato, cada una debería ser menor que 916 799,93.', correcta: false },
-                        { texto: 'Que la comisión le cuesta 0,49 puntos sobre 10 000 000 cada mes: 49 238 al mes, 590 854 al cabo del año.', correcta: false },
+                        { texto: 'Que la comisión le cuesta 0,4924 puntos sobre 10 000 000 cada mes: 49 240 al mes, 590 880 al cabo del año.', correcta: false },
                         { texto: 'Que, contando la comisión, el crédito le cuesta 1,99 % al mes sobre lo que de verdad recibió: siete puntos efectivos anuales más.', correcta: true, justificacion: 'La TIR es la tasa a la que las doce cuotas, traídas a hoy, valen lo que el cliente recibió: 9 700 000. El 1,5 % es la tasa a la que valen 10 000 000. Como recibió menos y paga lo mismo, su tasa es mayor, y esa diferencia es lo que le cuesta la comisión, dicho como tasa. Llevadas a un año, son 19,56 % contra 26,71 % efectivo anual. Las cuotas están bien calculadas: 916 799,93 es la cuota del 1,5 % sobre 10 000 000, y la comisión no cambió la cuota, sino lo que se recibió. La diferencia de 0,49 puntos tampoco se pasa a pesos multiplicándola por 10 000 000 cada mes: la comisión fueron 300 000, pagados una vez y al principio, y lo que la TIR mide es cuánto encarecen esos 300 000 un crédito de un año. Y 1,9924 % no es la efectiva anual de nada: la del 1,5 % mensual es 19,56 %, y las dos tasas de la pregunta son mensuales.' },
                         { texto: 'Que 1,9924 % es la tasa efectiva del 1,5 % mensual: la misma tasa del contrato, escrita en otro período.', correcta: false },
                     ]}
@@ -7106,7 +7103,7 @@ End Sub`,
            usa sin ese recuadro: las tres formas de ciclo, la bisección, la
            tolerancia y el VPN. En orden alfabético. */
         const GLOSARIO_CAP05 = [
-            ['Acumulador', 'Variable cuyo valor nuevo se calcula a partir del que ya tenía, sumándole o restándole lo que trae cada vuelta: un saldo, un total de intereses, un recaudo. Responde «¿cuánto?». Nace antes del ciclo, en 0 si suma y en 1 si multiplica.'],
+            ['Acumulador', 'Variable cuyo valor nuevo se calcula a partir del que ya tenía, sumándole o restándole lo que trae cada vuelta: un saldo, un total de intereses, un recaudo. Responde «¿cuánto?». Nace antes del ciclo: en 0 si suma, en 1 si multiplica, o en su valor de partida, como el capital en un saldo.'],
             ['Bisección', 'Búsqueda que parte en dos un intervalo donde está la respuesta y se queda con la mitad donde el VPN cambia de signo. Cada vuelta divide el ancho por dos, y el ciclo para cuando es menor que la tolerancia.'],
             ['Capitalización', 'Sumar al saldo el interés de un período para que en el siguiente también gane interés. Escrita como ciclo, es un acumulador de producto que arranca en 1 y multiplica por (1 + tasa) en cada vuelta.'],
             ['Centinela', 'Valor que ningún dato real puede tomar, y que se digita después del último dato para marcar que no hay más, como el −1 al cerrar la caja. Se lee, pero no se procesa.'],
@@ -7229,11 +7226,11 @@ End Sub`,
                         pregunta: 'Un crédito de 6 000 000 al 1,2 % mensual en 18 cuotas de 372 616,65 lleva 12 cuotas pagadas, y el cliente quiere cancelarlo. ¿Cuánto debe?',
                         opciones: [
                             { texto: '2 000 000: le quedan 6 de las 18 cuotas, y eso es un tercio del capital prestado.', correcta: false },
-                            { texto: '1 528 600,15: los 6 000 000 menos lo que ya pagó en las 12 cuotas, 4 471 399,85.', correcta: false },
-                            { texto: '2 235 699,92: las 6 cuotas que le faltan, 6 × 372 616,65, que es lo que va a pagar.', correcta: false },
+                            { texto: '1 528 600,20: los 6 000 000 menos lo que ya pagó en las 12 cuotas, 4 471 399,80.', correcta: false },
+                            { texto: '2 235 699,90: las 6 cuotas que le faltan, 6 × 372 616,65, que es lo que va a pagar.', correcta: false },
                             { texto: '2 144 726,08: el valor presente de las 6 cuotas que faltan, a la tasa del contrato.', correcta: true },
                         ],
-                        justificacion: 'Lo que se debe hoy es lo que valen hoy las cuotas que faltan, a la tasa del contrato: el valor presente de las seis, la primera dividida por 1,012, la segunda por 1,012², y así hasta la sexta. Da 2 144 726,08, y el ciclo de la tabla de amortización con doce vueltas da el mismo saldo, como en la sección 7. Sumar las seis cuotas sin traerlas a hoy, 2 235 699,92, cobra los intereses de seis meses que todavía no han corrido; la diferencia, 90 973,84, es lo que el cliente se ahorra al cancelar hoy. Restar del capital las cuotas pagadas supone que cada cuota bajó la deuda completa, y no: una parte pagó el interés de su mes. Y un tercio del capital supone abonos iguales, cuando con cuota fija el abono crece mes a mes: los primeros abonaron poco, y por eso el saldo real queda por encima de los 2 000 000.',
+                        justificacion: 'Lo que se debe hoy es lo que valen hoy las cuotas que faltan, a la tasa del contrato: el valor presente de las seis, la primera dividida por 1,012, la segunda por 1,012², y así hasta la sexta. Da 2 144 726,08 con la cuota sin redondear, 372 616,654…, que es la que usa el programa, y el ciclo de la tabla de amortización con doce vueltas da el mismo saldo, como en la sección 7. Con la cuota redondeada del enunciado, la cuenta cambia en centavos. Sumar las seis cuotas sin traerlas a hoy, 2 235 699,90, cobra los intereses de seis meses que todavía no han corrido; la diferencia, unos 90 974, es lo que el cliente se ahorra al cancelar hoy. Restar del capital las cuotas pagadas supone que cada cuota bajó la deuda completa, y no: una parte pagó el interés de su mes. Y un tercio del capital supone abonos iguales, cuando con cuota fija el abono crece mes a mes: los primeros abonaron poco, y por eso el saldo real queda por encima de los 2 000 000.',
                     },
                     {
                         seccion: 'cap4',
