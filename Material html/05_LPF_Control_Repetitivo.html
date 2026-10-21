@@ -2203,7 +2203,7 @@
         // como lo imprime JavaScript, -3.6e-6.
         const cientifica = (x) => {
             const [m, e] = x.toExponential(1).split('e');
-            return <span className="whitespace-nowrap">{m.replace('-', '−').replace('.', ',')} × 10<sup>{e.replace('+', '').replace('-', '−')}</sup></span>;
+            return <span className="whitespace-nowrap">{m.replace('-', '−').replace('.', ',')} × 10<sup>{e.replace('+', '').replace('-', '−')}</sup></span>;
         };
 
         // Pesos con centavos, a la colombiana. Un residuo por debajo de medio
@@ -2301,7 +2301,7 @@ FinPara`;
                             className="w-full rounded-lg border-2 border-gray-300 bg-white px-2 py-1.5 text-sm text-navy focus:border-primary focus:outline-none">
                             {CREDITOS_AMORTIZACION.map(c => (
                                 <option key={c.id} value={c.id}>
-                                    {c.nombre} — {c.capital.toLocaleString('es-CO')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
+                                    {c.nombre} — {c.capital.toLocaleString('es-CO')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
                                 </option>
                             ))}
                         </select>
@@ -2576,7 +2576,7 @@ FinMientras`;
 
         // Una tasa en porcentaje, con los decimales que hagan falta para que
         // dos extremos del intervalo no salgan escritos igual.
-        const tasaPct = (r, dec = 4) => (r * 100).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: dec }) + ' %';
+        const tasaPct = (r, dec = 4) => (r * 100).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: dec }) + ' %';
 
         const TIRBiseccion = () => {
             const [vueltas, setVueltas] = useState([]);
@@ -2727,10 +2727,10 @@ FinMientras`;
                     <div className={'rounded-xl p-3 text-sm ' + (termino ? 'bg-[#15803D]/10 border-2 border-[#15803D]' : 'bg-gray-100 border border-gray-300')}>
                         {termino
                             ? <span><strong>El ciclo paró en la vuelta {vueltas.length}.</strong> El intervalo mide
-                                {' '}{tasaPct(ancho, 7)}, menos que la tolerancia de 0,0001 %, así que la condición
+                                {' '}{tasaPct(ancho, 7)}, menos que la tolerancia de 0,0001 %, así que la condición
                                 del <span className="inline-code">Mientras</span> ya es falsa. TIR mensual:
                                 {' '}<strong>{tasaPct((bajo + alto) / 2, 4)}</strong>. La tasa pactada era {tasaPct(TIR_CASO.tasa)}.</span>
-                            : <span>El ciclo sigue mientras el intervalo mida <strong>0,0001 % o más</strong>. Nadie
+                            : <span>El ciclo sigue mientras el intervalo mida <strong>0,0001 % o más</strong>. Nadie
                                 le dijo cuántas vueltas dar: eso lo decide la tolerancia.</span>}
                     </div>
                 </div>
@@ -3113,7 +3113,7 @@ FinMientras`;
             <div className="prose-lp">
                 <Motivacion icon="fa-house-chimney"
                     gancho="¿Cuántas veces da la vuelta un ciclo, y qué lo hace parar? En una tabla de amortización, equivocarse por una sola vuelta cuesta una cuota entera.">
-                    Una pareja firma un crédito de vivienda: 150 millones al 1,1 % mensual, a veinte
+                    Una pareja firma un crédito de vivienda: 150 millones al 1,1 % mensual, a veinte
                     años. Pide la tabla de amortización y recibe 240 filas, una por cuota, con el
                     interés, el abono y el saldo de cada mes. Nadie las escribió a mano: las escribió un
                     ciclo de siete líneas. Si ese ciclo diera una vuelta de menos, el crédito quedaría
@@ -3178,7 +3178,7 @@ FinMientras`;
                 <p>
                     No es, sin embargo, la primera vez que usted ve un ciclo. Los capítulos 1 y 2 le
                     hicieron seguir varios —la conversión a binario, la meta de ahorro, la búsqueda en
-                    una cartera de 40 000 créditos— sin detenerse en cómo se llamaban. La sección 1 empieza
+                    una cartera de 40 000 créditos— sin detenerse en cómo se llamaban. La sección 1 empieza
                     por ahí, y lo que ya está escrito en esos capítulos se cita, no se repite.
                 </p>
                 <Box type="info" label="Una promesa de los capítulos 3 y 4 que se cumple aquí">
@@ -3492,7 +3492,7 @@ Debug.Print intereses`,
             { linea: TZA_MESES0, estado: { meses: '0' },
                 nota: 'El contador de meses, también una sola vez. Fíjese en la línea que falta aquí: intereses <- 0 no está entre las de antes del ciclo.' },
             { linea: TZA_COND, estado: {},
-                nota: 'Primera evaluación: 0 < 900 000. Se entra.' },
+                nota: 'Primera evaluación: 0 < 900 000. Se entra.' },
             { linea: TZA_CERO, estado: { intereses: '0' },
                 nota: 'La primera instrucción del cuerpo pone intereses en cero. En esta vuelta no se nota: todavía no había nada que borrar.' },
             { linea: TZA_INTERES, estado: { interes: '0' },
@@ -3504,33 +3504,33 @@ Debug.Print intereses`,
             { linea: TZA_MESES, estado: { meses: '1' },
                 nota: 'Fin de la primera vuelta. El flujo vuelve a la condición.' },
             { linea: TZA_COND, estado: {},
-                nota: 'Segunda evaluación: 300 000 < 900 000. Otra vuelta.' },
+                nota: 'Segunda evaluación: 300 000 < 900 000. Otra vuelta.' },
             { linea: TZA_CERO, estado: { intereses: '0' },
                 nota: 'Otra vez a cero. Tampoco se nota todavía: lo que se borró era un cero.' },
             { linea: TZA_INTERES, estado: { interes: '2700' },
-                nota: 'El interés del mes 2: 300 000 × 0,009.' },
+                nota: 'El interés del mes 2: 300 000 × 0,009.' },
             { linea: TZA_SUMA, estado: { intereses: '2700' },
-                nota: '2 700, lo mismo que llevaría el programa bien escrito: 0 + 2 700. Hasta aquí las dos versiones coinciden, y por eso una traza de dos vueltas no lo delata.' },
+                nota: '2 700, lo mismo que llevaría el programa bien escrito: 0 + 2 700. Hasta aquí las dos versiones coinciden, y por eso una traza de dos vueltas no lo delata.' },
             { linea: TZA_SALDO, estado: { saldo: '602700' },
                 nota: 'Saldo, interés y aporte.' },
             { linea: TZA_MESES, estado: { meses: '2' },
                 nota: 'Fin de la segunda vuelta.' },
             { linea: TZA_COND, estado: {},
-                nota: 'Tercera evaluación: 602 700 < 900 000. Una vuelta más.' },
+                nota: 'Tercera evaluación: 602 700 < 900 000. Una vuelta más.' },
             { linea: TZA_CERO, estado: { intereses: '0' },
-                nota: 'Aquí está el defecto: los 2 700 del mes 2 desaparecen. Ninguna línea los vuelve a leer.' },
+                nota: 'Aquí está el defecto: los 2 700 del mes 2 desaparecen. Ninguna línea los vuelve a leer.' },
             { linea: TZA_INTERES, estado: { interes: '5424.3' },
-                nota: 'El interés del mes 3: 602 700 × 0,009.' },
+                nota: 'El interés del mes 3: 602 700 × 0,009.' },
             { linea: TZA_SUMA, estado: { intereses: '5424.3' },
-                nota: 'Se separan. El programa bien escrito llevaría 2 700 + 5 424,30 = 8 124,30; este lleva solo los 5 424,30 de este mes.' },
+                nota: 'Se separan. El programa bien escrito llevaría 2 700 + 5 424,30 = 8 124,30; este lleva solo los 5 424,30 de este mes.' },
             { linea: TZA_SALDO, estado: { saldo: '908124.3' },
                 nota: 'El saldo, en cambio, está bien: no depende de intereses, sino de interes, que se calcula de nuevo en cada vuelta.' },
             { linea: TZA_MESES, estado: { meses: '3' },
                 nota: 'Fin de la tercera vuelta.' },
             { linea: TZA_COND, estado: {},
-                nota: 'Cuarta evaluación: 908 124,30 < 900 000 es falso. El ciclo termina.' },
+                nota: 'Cuarta evaluación: 908 124,30 < 900 000 es falso. El ciclo termina.' },
             { linea: TZA_ESCRIBIR, estado: {}, salida: '5424.3',
-                nota: 'El extracto informa 5 424,30 de intereses; la clienta ganó 8 124,30. Es el defecto de la motivación en pequeño: el último interés en vez de la suma de todos.' },
+                nota: 'El extracto informa 5 424,30 de intereses; la clienta ganó 8 124,30. Es el defecto de la motivación en pequeño: el último interés en vez de la suma de todos.' },
         ];
 
         /* Contar no es contar vueltas: `enMora` es un contador aunque no
@@ -3639,8 +3639,8 @@ End Sub`,
                 <Motivacion icon="fa-piggy-bank"
                     gancho="Casi todo ciclo lleva una variable que cuenta y otra que acumula. ¿Qué las distingue, y dónde tiene que nacer cada una?">
                     El plan de ahorro programado de una clienta terminó en el mes 13, con 4,1 millones
-                    en la cuenta, y el extracto de cierre le informó 34 053 pesos de intereses ganados.
-                    Había ganado 217 709. El ciclo dio sus trece vueltas y sumó el interés en cada una:
+                    en la cuenta, y el extracto de cierre le informó 34 053 pesos de intereses ganados.
+                    Había ganado 217 709. El ciclo dio sus trece vueltas y sumó el interés en cada una:
                     el defecto era una sola línea, <span className="inline-code">intereses &lt;- 0</span>, escrita
                     un renglón más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
                     a empezar.
@@ -3663,7 +3663,7 @@ End Sub`,
                             <tr><td>Capítulo 1, sección 3</td><td>Los meses que tarda un ahorro en llegar a la meta, y la vuelta que no se da cuando la meta se alcanza exacta</td><td><span className="inline-code">Mientras saldo &lt; meta</span></td></tr>
                             <tr><td>Capítulo 1, sección 4</td><td>Tres décimos que no suman 0,3, y cien centavos que no suman un peso</td><td><span className="inline-code">Para i &lt;- 1 Hasta 3</span> y <span className="inline-code">Hasta 100</span></td></tr>
                             <tr><td>Capítulo 2, sección 1</td><td>«Repita hasta obtener un resultado razonable», que falla la finitud</td><td>Uno que puede no terminar</td></tr>
-                            <tr><td>Capítulo 2, sección 5</td><td>Las comparaciones que hacen dos búsquedas del mismo crédito en una cartera de 40 000</td><td><span className="inline-code">Para</span> contra <span className="inline-code">Mientras izq &lt;= der</span></td></tr>
+                            <tr><td>Capítulo 2, sección 5</td><td>Las comparaciones que hacen dos búsquedas del mismo crédito en una cartera de 40 000</td><td><span className="inline-code">Para</span> contra <span className="inline-code">Mientras izq &lt;= der</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -3752,11 +3752,11 @@ End Sub`,
                 <CodeTabs
                     titulo="El extracto de cierre, con la inicialización dentro del ciclo"
                     bloques={EJ_AHORRO_MAL}
-                    nota="Trece vueltas, el mismo saldo y un solo número distinto. Los 34 053 son exactamente el interés del mes 13: el único que sobrevivió, porque cada vuelta empezaba borrando el anterior." />
+                    nota="Trece vueltas, el mismo saldo y un solo número distinto. Los 34 053 son exactamente el interés del mes 13: el único que sobrevivió, porque cada vuelta empezaba borrando el anterior." />
 
                 <Trazador
                     titulo="Traza guiada · el acumulador que vuelve a cero"
-                    enunciado={<>El mismo defecto con una meta más corta, 900 000, para que el ciclo dé solo
+                    enunciado={<>El mismo defecto con una meta más corta, 900 000, para que el ciclo dé solo
                         tres vueltas. Avance instrucción por instrucción y mire la columna
                         <span className="inline-code"> intereses</span>: en qué vuelta deja de coincidir con lo
                         que debería llevar.</>}
@@ -3771,7 +3771,7 @@ End Sub`,
                     nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar." />
 
                 <Box type="warn" label="Un número plausible y falso">
-                    El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
+                    El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
                     cifra que nadie discutiría a primera vista. El ciclo <strong>sí</strong> sumó en cada vuelta;
                     solo que cada vuelta empezaba por borrar lo sumado. Y una traza de dos vueltas no lo
                     delata: en las dos primeras las dos versiones coinciden, porque el interés del primer
@@ -3794,12 +3794,12 @@ End Sub`,
                     nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Qué muestra el programa al terminar?"
+                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Qué muestra el programa al terminar?"
                     opciones={[
-                        { texto: '3 créditos en mora por 1 500 000', correcta: false },
-                        { texto: '2 créditos en mora por 500 000', correcta: false },
-                        { texto: '2 créditos en mora por 1 500 000', correcta: true, justificacion: 'revisados aumenta en todas las vueltas y llega a 3. enMora es un contador también, pero está dentro de la selectiva: solo aumenta en las vueltas en que la condición se cumple —45 > 30 y 31 > 30 sí, 10 > 30 no—, así que vale 2. saldoMora es un acumulador dentro de la misma selectiva: suma el saldo de esos dos créditos, 1 000 000 + 500 000 = 1 500 000. Tres créditos en mora sería un contador que aumenta en todas las vueltas, como revisados. 500 000 sería una variable que se reemplaza en vez de sumarse: el último saldo en mora, no el total. Y 3 500 000 sería la suma de todos los saldos, la de un acumulador que no está dentro de la selectiva. Fíjese, de paso, en diasMora: cambia en cada vuelta y no es ni contador ni acumulador, porque Leer le pone un dato nuevo sin mirar el anterior. Lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía. (En Python y R, las variables se llaman en_mora, saldo_mora y dias_mora.)' },
-                        { texto: '2 créditos en mora por 3 500 000', correcta: false },
+                        { texto: '3 créditos en mora por 1 500 000', correcta: false },
+                        { texto: '2 créditos en mora por 500 000', correcta: false },
+                        { texto: '2 créditos en mora por 1 500 000', correcta: true, justificacion: 'revisados aumenta en todas las vueltas y llega a 3. enMora es un contador también, pero está dentro de la selectiva: solo aumenta en las vueltas en que la condición se cumple —45 > 30 y 31 > 30 sí, 10 > 30 no—, así que vale 2. saldoMora es un acumulador dentro de la misma selectiva: suma el saldo de esos dos créditos, 1 000 000 + 500 000 = 1 500 000. Tres créditos en mora sería un contador que aumenta en todas las vueltas, como revisados. 500 000 sería una variable que se reemplaza en vez de sumarse: el último saldo en mora, no el total. Y 3 500 000 sería la suma de todos los saldos, la de un acumulador que no está dentro de la selectiva. Fíjese, de paso, en diasMora: cambia en cada vuelta y no es ni contador ni acumulador, porque Leer le pone un dato nuevo sin mirar el anterior. Lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía. (En Python y R, las variables se llaman en_mora, saldo_mora y dias_mora.)' },
+                        { texto: '2 créditos en mora por 3 500 000', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3948,25 +3948,25 @@ End Sub`,
             { linea: TZ_L_MESES0, estado: { meses: '0' },
                 nota: 'El contador arranca en cero: antes de la primera vuelta no se ha pagado ningún mes.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
-                nota: 'Primera evaluación de la condición, y todavía no se ha dado ninguna vuelta. 1 000 000 > 0: se entra.' },
+                nota: 'Primera evaluación de la condición, y todavía no se ha dado ninguna vuelta. 1 000 000 > 0: se entra.' },
             { linea: TZ_L_RESTA, estado: { saldo: '600000', cond: '—' },
                 nota: 'Primer abono. La variable saldo pierde su valor anterior: el millón ya no existe en ninguna parte del programa, solo en esta tabla.' },
             { linea: TZ_L_CUENTA, estado: { meses: '1', cond: '—' },
                 nota: 'Fin de la primera vuelta. Mire el código: la línea siguiente no es la de abajo, es la condición, que está más arriba.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
-                nota: 'Segunda evaluación, con el saldo que dejó la vuelta anterior: 600 000 > 0. La misma línea se ilumina por segunda vez.' },
+                nota: 'Segunda evaluación, con el saldo que dejó la vuelta anterior: 600 000 > 0. La misma línea se ilumina por segunda vez.' },
             { linea: TZ_L_RESTA, estado: { saldo: '200000', cond: '—' },
                 nota: 'Segundo abono.' },
             { linea: TZ_L_CUENTA, estado: { meses: '2', cond: '—' },
                 nota: 'Fin de la segunda vuelta, y de vuelta a la condición.' },
             { linea: TZ_L_COND, estado: { cond: 'Verdadero' },
-                nota: 'Tercera evaluación: 200 000 > 0. Quedan 200 000 y el abono es de 400 000, pero el Mientras no mira eso: solo pregunta si queda saldo.' },
+                nota: 'Tercera evaluación: 200 000 > 0. Quedan 200 000 y el abono es de 400 000, pero el Mientras no mira eso: solo pregunta si queda saldo.' },
             { linea: TZ_L_RESTA, estado: { saldo: '-200000', cond: '—' },
-                nota: 'Tercer abono, completo. El saldo queda en −200 000: el deudor pagó 200 000 de más, y la resta no tiene cómo saberlo.' },
+                nota: 'Tercer abono, completo. El saldo queda en −200 000: el deudor pagó 200 000 de más, y la resta no tiene cómo saberlo.' },
             { linea: TZ_L_CUENTA, estado: { meses: '3', cond: '—' },
                 nota: 'Fin de la tercera vuelta.' },
             { linea: TZ_L_COND, estado: { cond: 'Falso' },
-                nota: 'Cuarta evaluación: −200 000 > 0 es falso. El cuerpo no se ejecuta y el flujo salta a la línea que sigue al final del ciclo.' },
+                nota: 'Cuarta evaluación: −200 000 > 0 es falso. El cuerpo no se ejecuta y el flujo salta a la línea que sigue al final del ciclo.' },
             { linea: TZ_L_ESCRIBIR, estado: {}, salida: '3',
                 nota: 'Tres vueltas y cuatro evaluaciones de la condición. La línea del Mientras se ejecutó una vez más que las del cuerpo, y esa última vez fue la que dijo que no.' },
         ];
@@ -4018,11 +4018,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-handshake"
                     gancho="Un Mientras pregunta antes de cada vuelta. ¿Cuántas veces pregunta, y con qué valor sale del ciclo?">
-                    Cobranza ofrece un acuerdo: condona los intereses de mora y recibe la deuda, 2 350 000
-                    pesos, en abonos mensuales de 400 000. El sistema calcula cuánto dura el acuerdo con
+                    Cobranza ofrece un acuerdo: condona los intereses de mora y recibe la deuda, 2 350 000
+                    pesos, en abonos mensuales de 400 000. El sistema calcula cuánto dura el acuerdo con
                     un ciclo que resta el abono mientras quede saldo, y responde seis meses, que es
-                    correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
-                    cuando solo se debían 350 000. El saldo final quedó en −50 000.
+                    correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
+                    cuando solo se debían 350 000. El saldo final quedó en −50 000.
                 </Motivacion>
 
                 <h3>La estructura</h3>
@@ -4041,11 +4041,11 @@ End Sub`,
                 <CodeTabs
                     titulo="El acuerdo de pago de la motivación"
                     bloques={EJ_ACUERDO}
-                    nota="Seis vueltas, y el saldo sale del ciclo en −50 000: el sexto abono cobró 400 000 cuando quedaban 350 000. El ciclo no tiene un error; hace exactamente lo que dice su condición." />
+                    nota="Seis vueltas, y el saldo sale del ciclo en −50 000: el sexto abono cobró 400 000 cuando quedaban 350 000. El ciclo no tiene un error; hace exactamente lo que dice su condición." />
 
                 <Box type="warn" label="El sexto abono">
                     La condición <span className="inline-code">saldo &gt; 0</span> decide <em>si</em> hay otra vuelta,
-                    no <em>cuánto</em> se cobra en ella. En la sexta quedaban 350 000, la condición se cumplió
+                    no <em>cuánto</em> se cobra en ella. En la sexta quedaban 350 000, la condición se cumplió
                     y el cuerpo restó el abono entero. El arreglo va dentro del cuerpo y es una selectiva
                     del capítulo 4: si el saldo es menor que el abono, el abono de ese mes es el saldo. Un
                     ciclo puede llevar dentro cualquier cosa que un programa lleve fuera.
@@ -4091,7 +4091,7 @@ End Sub`,
 
                 <Trazador
                     titulo="Traza guiada · un acuerdo de tres abonos"
-                    enunciado={<>Un acuerdo más corto: 1 000 000 en abonos de 400 000. Avance instrucción por
+                    enunciado={<>Un acuerdo más corto: 1 000 000 en abonos de 400 000. Avance instrucción por
                         instrucción y fíjese en dos cosas: <strong>adónde salta el flujo</strong> después de la
                         última línea del cuerpo, y <strong>cuántas veces</strong> se evalúa la condición
                         comparado con cuántas vueltas se dan.</>}
@@ -4107,7 +4107,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Una fila por cada vez que se pregunta"
-                    enunciado={<>Otro acuerdo: 1 850 000 en abonos de 500 000. Esta vez la tabla no tiene una fila por vuelta sino <strong>una por cada evaluación de la condición</strong>. Anote el saldo y los meses con que el programa llega a esa evaluación, y si <span className="inline-code">saldo &gt; 0</span> resulta <span className="inline-code">Verdadero</span> o <span className="inline-code">Falso</span>.</>}
+                    enunciado={<>Otro acuerdo: 1 850 000 en abonos de 500 000. Esta vez la tabla no tiene una fila por vuelta sino <strong>una por cada evaluación de la condición</strong>. Anote el saldo y los meses con que el programa llega a esa evaluación, y si <span className="inline-code">saldo &gt; 0</span> resulta <span className="inline-code">Verdadero</span> o <span className="inline-code">Falso</span>.</>}
                     codigo={TRAZA_ABONOS}
                     columnas={[
                         { clave: 'paso', titulo: 'Evaluación' },
@@ -4146,10 +4146,10 @@ End Sub`,
                     multiple={true}
                     pregunta="¿Con cuáles de estos datos el ciclo del acuerdo de pago no da ninguna vuelta?"
                     opciones={[
-                        { texto: 'Saldo 400 000 y abono 400 000: la deuda se cubre justo con el primer abono', correcta: false },
-                        { texto: 'Saldo 0 y abono 400 000: el cliente ya había pagado todo por otro canal', correcta: true, justificacion: 'Son el saldo 0 y el saldo −20 000. En los dos casos la primera evaluación de saldo > 0 da falso, antes de que exista ninguna vuelta, y el programa escribe meses = 0 con el saldo intacto: es lo correcto, porque no hay nada que cobrar. El saldo a favor muestra además que la condición no pregunta si el saldo es cero, sino si es positivo. Con saldo 400 000 y abono 400 000 sí hay una vuelta: la primera evaluación es 400 000 > 0, verdadera; después de restar, el saldo queda en 0 y la segunda evaluación da falso. Una vuelta y dos evaluaciones. Y con abono 0 pasa lo contrario de lo que pregunta el ejercicio: el ciclo entra, pero el saldo nunca baja, la condición nunca cambia y el ciclo no termina. Es el defecto de la tercera pieza —la actualización que no acerca la condición a ser falsa— y el tema de la sección 6.' },
-                        { texto: 'Saldo 500 000 y abono 0: el cliente no alcanza a abonar nada este mes', correcta: false },
-                        { texto: 'Saldo −20 000 y abono 400 000: el cliente quedó con un saldo a favor', correcta: true },
+                        { texto: 'Saldo 400 000 y abono 400 000: la deuda se cubre justo con el primer abono', correcta: false },
+                        { texto: 'Saldo 0 y abono 400 000: el cliente ya había pagado todo por otro canal', correcta: true, justificacion: 'Son el saldo 0 y el saldo −20 000. En los dos casos la primera evaluación de saldo > 0 da falso, antes de que exista ninguna vuelta, y el programa escribe meses = 0 con el saldo intacto: es lo correcto, porque no hay nada que cobrar. El saldo a favor muestra además que la condición no pregunta si el saldo es cero, sino si es positivo. Con saldo 400 000 y abono 400 000 sí hay una vuelta: la primera evaluación es 400 000 > 0, verdadera; después de restar, el saldo queda en 0 y la segunda evaluación da falso. Una vuelta y dos evaluaciones. Y con abono 0 pasa lo contrario de lo que pregunta el ejercicio: el ciclo entra, pero el saldo nunca baja, la condición nunca cambia y el ciclo no termina. Es el defecto de la tercera pieza —la actualización que no acerca la condición a ser falsa— y el tema de la sección 6.' },
+                        { texto: 'Saldo 500 000 y abono 0: el cliente no alcanza a abonar nada este mes', correcta: false },
+                        { texto: 'Saldo −20 000 y abono 400 000: el cliente quedó con un saldo a favor', correcta: true },
                     ]}
                 /></Ejercicio>
             </div>
@@ -4323,7 +4323,7 @@ Debug.Print cobrado`,
                     Dos rutinas del mismo banco usan la misma estructura. La primera pide el monto de un
                     pago y vuelve a pedirlo si el cliente escribe cero: tiene que leer al menos una vez, y
                     lo hace bien. La segunda, copiada de la primera, cobra cuotas hasta dejar el saldo en
-                    cero. Con los clientes que ya estaban a paz y salvo, cobró una cuota de 916 799,93 que
+                    cero. Con los clientes que ya estaban a paz y salvo, cobró una cuota de 916 799,93 que
                     nadie debía.
                 </Motivacion>
 
@@ -4870,7 +4870,7 @@ End Sub`,
                 también daría doce vueltas, pero numeraría las cuotas de 0 a 11, y la tabla tendría una cuota 0:
                 por eso el defecto está en la condición y no en la línea {lIni}. Y el saldo que deja la última fila
                 no es una cuota entera sino su parte de capital: después de once pagos falta el abono de la cuota
-                12, 903 251,16, porque el interés de ese mes, 13 548,77, no alcanza a causarse. Un{' '}
+                12, 903 251,16, porque el interés de ese mes, 13 548,77, no alcanza a causarse. Un{' '}
                 <span className="inline-code">Para</span> no tiene esta línea: la comparación la pone el ciclo.
             </>
         );
@@ -4960,12 +4960,12 @@ Loop`,
             <div className="prose-lp">
                 <Motivacion icon="fa-calendar-days"
                     gancho="Si el número de vueltas se sabe desde la firma, ¿cómo puede un ciclo dar una de menos? Porque «de 1 hasta n» no significa lo mismo en los cuatro lenguajes.">
-                    Un crédito de libre inversión de 10 millones al 1,5 % mensual se firma a doce cuotas, así
+                    Un crédito de libre inversión de 10 millones al 1,5 % mensual se firma a doce cuotas, así
                     que su plan de pagos tiene doce filas desde el día de la firma. Al migrarlo de Excel a
                     Python, un analista tradujo <span className="inline-code">For k = 1 To 12</span> como
                     {' '}<span className="inline-code">range(1, 12)</span>. El sistema emitió once cuotas, el
                     cliente las pagó y recibió su paz y salvo, y el banco dejó de recaudar la cuota doce:
-                    916 799,93.
+                    916 799,93.
                 </Motivacion>
 
                 <h3>La estructura</h3>
@@ -5015,10 +5015,10 @@ Loop`,
                 <CodeTabs
                     titulo="El plan de pagos del crédito de la motivación"
                     bloques={EJ_PLAN_PAGOS}
-                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. La última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
+                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. La última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
 
                 <Box type="info" label="Lo que hace un banco de verdad">
-                    Un banco redondea la cuota al peso —aquí serían 916 800— y ajusta la última para que el saldo
+                    Un banco redondea la cuota al peso —aquí serían 916 800— y ajusta la última para que el saldo
                     cierre en cero. Ese ajuste es una selectiva dentro del ciclo, del capítulo 4, y este capítulo
                     no la modela: la cuota va sin redondear, para que lo que se vea sea el ciclo y no el ajuste.
                 </Box>
@@ -5039,7 +5039,7 @@ Loop`,
 
                 <TablaTraza
                     titulo="Las cuatro primeras cuotas de otro crédito"
-                    enunciado={<>Un crédito de libre inversión de <strong>4 000 000</strong> al <strong>2 %</strong> mensual en <strong>12 cuotas</strong>: la fórmula da una cuota de 378 238,39. Complete <span className="inline-code">k</span>, <span className="inline-code">interes</span>, <span className="inline-code">abono</span> y <span className="inline-code">saldo</span> justo antes de que empiece el ciclo y al final de cada una de las cuatro primeras vueltas. Escriba las cifras con sus centavos, y <span className="inline-code">—</span> en las variables que en ese momento todavía no tengan valor.</>}
+                    enunciado={<>Un crédito de libre inversión de <strong>4 000 000</strong> al <strong>2 %</strong> mensual en <strong>12 cuotas</strong>: la fórmula da una cuota de 378 238,39. Complete <span className="inline-code">k</span>, <span className="inline-code">interes</span>, <span className="inline-code">abono</span> y <span className="inline-code">saldo</span> justo antes de que empiece el ciclo y al final de cada una de las cuatro primeras vueltas. Escriba las cifras con sus centavos, y <span className="inline-code">—</span> en las variables que en ese momento todavía no tengan valor.</>}
                     codigo={TRAZA_PLAN}
                     columnas={[
                         { clave: 'momento', titulo: 'Momento' },
@@ -5141,18 +5141,18 @@ Loop`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="El plan de pagos que se queda corto"
-                    enunciado={<>Es el crédito de la motivación —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93—, ahora escrito con un <span className="inline-code">Mientras</span>. Corre sin errores y su tabla tiene buen aspecto: los intereses bajan y los abonos suben. Pero no es el plan que se firmó. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y con qué saldo termina la tabla.</>}
+                    enunciado={<>Es el crédito de la motivación —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93—, ahora escrito con un <span className="inline-code">Mientras</span>. Corre sin errores y su tabla tiene buen aspecto: los intereses bajan y los abonos suben. Pero no es el plan que se firmó. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y con qué saldo termina la tabla.</>}
                     lineas={ERROR_PLAN_LINEAS}
                     lineaCorrecta={ERROR_PLAN_LINEA_OK}
                     tipos={[
-                        'Frontera del ciclo: da una vuelta de más y cobra una cuota 13 que el cliente no debe, de 916 799,93.',
+                        'Frontera del ciclo: da una vuelta de más y cobra una cuota 13 que el cliente no debe, de 916 799,93.',
                         'Inicialización: el contador tenía que nacer en 0; así el ciclo daría doce vueltas y la tabla saldría completa.',
-                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 916 799,93, el de una cuota completa.',
-                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 903 251,16, el abono de la cuota 12.',
+                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 916 799,93, el de una cuota completa.',
+                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 903 251,16, el abono de la cuota 12.',
                     ]}
                     tipoCorrecto={3}
                     explicacion={ERROR_PLAN_EXPLICACION}
-                    impacto={<>La tabla sale con <strong>once filas</strong> en vez de doce, y la última termina con un saldo de <strong>903 251,16</strong>: el 9 % del capital prestado. Nada lo delata a simple vista, porque los intereses bajan y los abonos suben como deben. Si la facturación se genera desde esta tabla, el cliente recibe once cuotas, las paga y queda a paz y salvo, y el banco deja de recaudar la cuota doce: 916 799,93, que son esos 903 251,16 de capital más 13 548,77 de interés. Es el caso de la motivación, escrito ahora con un <span className="inline-code">Mientras</span>, y por eso el defecto existe en los cuatro lenguajes y no solo en Python.</>}
+                    impacto={<>La tabla sale con <strong>once filas</strong> en vez de doce, y la última termina con un saldo de <strong>903 251,16</strong>: el 9 % del capital prestado. Nada lo delata a simple vista, porque los intereses bajan y los abonos suben como deben. Si la facturación se genera desde esta tabla, el cliente recibe once cuotas, las paga y queda a paz y salvo, y el banco deja de recaudar la cuota doce: 916 799,93, que son esos 903 251,16 de capital más 13 548,77 de interés. Es el caso de la motivación, escrito ahora con un <span className="inline-code">Mientras</span>, y por eso el defecto existe en los cuatro lenguajes y no solo en Python.</>}
                 /></Ejercicio>
 
                 <h3>Para o Mientras</h3>
@@ -5497,71 +5497,71 @@ End Sub`,
         const TZC_ESCRIBIR_TOTAL = { pseudo: 15, python: 12, r: 14, vba: 18 };
         const TZ_CARTERA_PASOS = [
             { linea: TZC_TASA, estado: { tasa: '0.02' },
-                nota: 'La tasa de los dos créditos, 2 % mensual. Está antes de los dos ciclos: se ejecuta una sola vez.' },
+                nota: 'La tasa de los dos créditos, 2 % mensual. Está antes de los dos ciclos: se ejecuta una sola vez.' },
             { linea: TZC_TOTAL0, estado: { total: '0' },
                 nota: 'El acumulador de la cartera nace en cero, también una sola vez. Al final tendrá los intereses de los dos créditos.' },
             { linea: TZC_PARA_I, estado: { i: '1' },
                 nota: 'Primera vuelta del ciclo de fuera: el crédito 1.' },
             { linea: TZC_SALDO, estado: { saldo: '3000000' },
-                nota: 'Se lee lo que debe el crédito 1: 3 000 000.' },
+                nota: 'Se lee lo que debe el crédito 1: 3 000 000.' },
             { linea: TZC_ABONO, estado: { abono: '1000000' },
-                nota: 'Y lo que abona a capital cada mes: 1 000 000.' },
+                nota: 'Y lo que abona a capital cada mes: 1 000 000.' },
             { linea: TZC_SUB0, estado: { subtotal: '0' },
                 nota: 'El subtotal del crédito 1 nace en cero. Esta línea está dentro del ciclo de fuera y antes del de dentro: se va a ejecutar una vez por crédito.' },
             { linea: TZC_PARA_K, estado: { k: '1' },
                 nota: 'Empieza el ciclo de dentro, con k en 1: la primera cuota del trimestre.' },
             { linea: TZC_SUMA, estado: { subtotal: '60000' },
-                nota: 'El interés de la cuota 1 es 3 000 000 × 0,02 = 60 000, y va al subtotal.' },
+                nota: 'El interés de la cuota 1 es 3 000 000 × 0,02 = 60 000, y va al subtotal.' },
             { linea: TZC_RESTA, estado: { saldo: '2000000' },
-                nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
+                nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
             { linea: TZC_SIGUE_K, estado: { k: '2' },
                 nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido.' },
             { linea: TZC_SUMA, estado: { subtotal: '100000' },
-                nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
+                nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1000000' },
-                nota: 'El saldo baja a 1 000 000.' },
+                nota: 'El saldo baja a 1 000 000.' },
             { linea: TZC_SIGUE_K, estado: { k: '3' },
                 nota: 'k pasa a 3: la última vuelta del ciclo de dentro para este crédito.' },
             { linea: TZC_SUMA, estado: { subtotal: '120000' },
-                nota: '1 000 000 × 0,02 = 20 000 más: 120 000.' },
+                nota: '1 000 000 × 0,02 = 20 000 más: 120 000.' },
             { linea: TZC_RESTA, estado: { saldo: '0' },
                 nota: 'El crédito 1 queda pagado.' },
             { linea: TZC_TOTAL, estado: { total: '120000' },
                 nota: 'El ciclo de dentro dio sus tres vueltas y el flujo salió de él. Esta línea está en el de fuera: suma al total el subtotal del crédito 1.' },
             { linea: TZC_ESCRIBIR, estado: {},
-                nota: 'Escribe 1 y 120 000: los intereses del trimestre del crédito 1.' },
+                nota: 'Escribe 1 y 120 000: los intereses del trimestre del crédito 1.' },
             { linea: TZC_SIGUE_I, estado: { i: '2' },
                 nota: 'i pasa a 2: segunda vuelta del ciclo de fuera, el crédito 2. Todo lo que está dentro de este ciclo se va a ejecutar otra vez, empezando por las lecturas.' },
             { linea: TZC_SALDO, estado: { saldo: '2000000' },
-                nota: 'Se lee el saldo del crédito 2, 2 000 000, que reemplaza al 0 que dejó el crédito 1.' },
+                nota: 'Se lee el saldo del crédito 2, 2 000 000, que reemplaza al 0 que dejó el crédito 1.' },
             { linea: TZC_ABONO, estado: { abono: '500000' },
-                nota: 'Su abono mensual: 500 000.' },
+                nota: 'Su abono mensual: 500 000.' },
             { linea: TZC_SUB0, estado: { subtotal: '0' },
-                nota: 'El subtotal vuelve a cero. De esta línea depende el reporte: si estuviera antes del ciclo de fuera, el crédito 2 empezaría con los 120 000 del crédito 1.' },
+                nota: 'El subtotal vuelve a cero. De esta línea depende el reporte: si estuviera antes del ciclo de fuera, el crédito 2 empezaría con los 120 000 del crédito 1.' },
             { linea: TZC_PARA_K, estado: { k: '1' },
                 nota: 'El ciclo de dentro vuelve a empezar, y k vuelve a 1. La traza ya había visto k = 3, pero para este ciclo es otra primera vuelta.' },
             { linea: TZC_SUMA, estado: { subtotal: '40000' },
-                nota: '2 000 000 × 0,02 = 40 000. El subtotal parte de cero, no de 120 000.' },
+                nota: '2 000 000 × 0,02 = 40 000. El subtotal parte de cero, no de 120 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1500000' },
-                nota: 'El saldo baja a 1 500 000.' },
+                nota: 'El saldo baja a 1 500 000.' },
             { linea: TZC_SIGUE_K, estado: { k: '2' },
                 nota: 'k pasa a 2: segunda cuota del crédito 2.' },
             { linea: TZC_SUMA, estado: { subtotal: '70000' },
-                nota: '1 500 000 × 0,02 = 30 000: el subtotal llega a 70 000.' },
+                nota: '1 500 000 × 0,02 = 30 000: el subtotal llega a 70 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1000000' },
-                nota: 'El saldo baja a 1 000 000.' },
+                nota: 'El saldo baja a 1 000 000.' },
             { linea: TZC_SIGUE_K, estado: { k: '3' },
                 nota: 'k pasa a 3: tercera cuota del crédito 2.' },
             { linea: TZC_SUMA, estado: { subtotal: '90000' },
-                nota: '1 000 000 × 0,02 = 20 000: 90 000.' },
+                nota: '1 000 000 × 0,02 = 20 000: 90 000.' },
             { linea: TZC_RESTA, estado: { saldo: '500000' },
-                nota: 'Al crédito 2 le quedan 500 000 por pagar. El reporte no lo mira: cuenta las cuotas del trimestre, no el saldo.' },
+                nota: 'Al crédito 2 le quedan 500 000 por pagar. El reporte no lo mira: cuenta las cuotas del trimestre, no el saldo.' },
             { linea: TZC_TOTAL, estado: { total: '210000' },
-                nota: '120 000 + 90 000 = 210 000.' },
+                nota: '120 000 + 90 000 = 210 000.' },
             { linea: TZC_ESCRIBIR, estado: {},
-                nota: 'Escribe 2 y 90 000.' },
+                nota: 'Escribe 2 y 90 000.' },
             { linea: TZC_ESCRIBIR_TOTAL, estado: {},
-                nota: 'El ciclo de fuera dio sus dos vueltas y terminó. Escribe 210 000: los intereses del trimestre de toda la cartera.' },
+                nota: 'El ciclo de fuera dio sus dos vueltas y terminó. Escribe 210 000: los intereses del trimestre de toda la cartera.' },
         ];
 
         /* E1. El mismo reporte con otra cartera, al 1,5 %: los saldos del
@@ -5669,9 +5669,9 @@ End Sub`,
                 <Motivacion icon="fa-layer-group"
                     gancho="Cuando un ciclo va dentro de otro, el de dentro da todas sus vueltas en cada vuelta del de fuera. ¿Qué tiene que volver a empezar cada vez, y qué no?">
                     El simulador de la oficina compara el mismo crédito de libre inversión —10 millones al
-                    1,5 % mensual— a uno, dos y tres años. Para un año informaba 1 001 599 pesos de intereses,
-                    lo mismo que el plan de pagos de la sección 4. Para tres años informaba 5 998 246, casi el
-                    doble de los 3 014 862 que el cliente pagaría de verdad. El acumulador de intereses nacía
+                    1,5 % mensual— a uno, dos y tres años. Para un año informaba 1 001 599 pesos de intereses,
+                    lo mismo que el plan de pagos de la sección 4. Para tres años informaba 5 998 246, casi el
+                    doble de los 3 014 862 que el cliente pagaría de verdad. El acumulador de intereses nacía
                     en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses de los
                     anteriores. Durante un mes, cada cliente que comparó plazos vio, para el más largo, unos
                     intereses que casi doblaban los reales.
@@ -5733,7 +5733,7 @@ End Sub`,
                 <CodeTabs
                     titulo="El simulador de la motivación, con el acumulador fuera de los dos ciclos"
                     bloques={EJ_SIMULADOR_MAL}
-                    nota="El plazo de un año sale bien, y una prueba con ese plazo no encuentra nada. El de dos años informa 2 983 383,62, que son 1 001 599,15 + 1 981 784,47: los intereses de los dos plazos. Y el de tres, 5 998 246,01: la suma de los tres." />
+                    nota="El plazo de un año sale bien, y una prueba con ese plazo no encuentra nada. El de dos años informa 2 983 383,62, que son 1 001 599,15 + 1 981 784,47: los intereses de los dos plazos. Y el de tres, 5 998 246,01: la suma de los tres." />
 
                 <Box type="warn" label="El espejo de la sección 1">
                     En la sección 1, el acumulador nacía dentro del ciclo y cada vuelta borraba lo sumado. Aquí
@@ -5743,7 +5743,7 @@ End Sub`,
                     Y no es la única que tiene ese sitio: <span className="inline-code">saldo &lt;- capital</span> también.
                     Si en el simulador bien escrito se saca esa línea del ciclo de fuera, el plazo de dos años
                     arranca con el residuo que dejó el de un año —prácticamente cero— y el simulador informa
-                    intereses negativos: −2 313 243,65.
+                    intereses negativos: −2 313 243,65.
                 </Box>
 
                 <h3>El de dentro vuelve a empezar</h3>
@@ -5761,7 +5761,7 @@ End Sub`,
 
                 <Trazador
                     titulo="Traza guiada · dos créditos, tres cuotas cada uno"
-                    enunciado={<>La cartera tiene dos créditos al 2 % mensual. El primero debe 3 000 000 y abona 1 000 000 al mes; el segundo debe 2 000 000 y abona 500 000. Avance instrucción por instrucción y fíjese en dos momentos: qué le pasa a <span className="inline-code">k</span> cuando empieza el crédito 2, y qué le pasa al subtotal.</>}
+                    enunciado={<>La cartera tiene dos créditos al 2 % mensual. El primero debe 3 000 000 y abona 1 000 000 al mes; el segundo debe 2 000 000 y abona 500 000. Avance instrucción por instrucción y fíjese en dos momentos: qué le pasa a <span className="inline-code">k</span> cuando empieza el crédito 2, y qué le pasa al subtotal.</>}
                     codigo={TZ_CARTERA}
                     variables={[
                         { clave: 'tasa', titulo: 'tasa' },
@@ -5777,7 +5777,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Subtotales y total de otra cartera"
-                    enunciado={<>Otra cartera de dos créditos, ahora al <strong>1,5 %</strong> mensual. El primero debe <strong>2 000 000</strong> y abona <strong>400 000</strong> al mes; el segundo debe <strong>2 400 000</strong> y abona <strong>600 000</strong>. Complete <span className="inline-code">saldo</span>, <span className="inline-code">subtotal</span> y <span className="inline-code">total</span> al final de cada vuelta del ciclo de dentro, y cuando ya terminaron los dos ciclos.</>}
+                    enunciado={<>Otra cartera de dos créditos, ahora al <strong>1,5 %</strong> mensual. El primero debe <strong>2 000 000</strong> y abona <strong>400 000</strong> al mes; el segundo debe <strong>2 400 000</strong> y abona <strong>600 000</strong>. Complete <span className="inline-code">saldo</span>, <span className="inline-code">subtotal</span> y <span className="inline-code">total</span> al final de cada vuelta del ciclo de dentro, y cuando ya terminaron los dos ciclos.</>}
                     codigo={TRAZA_CARTERA}
                     columnas={[
                         { clave: 'momento', titulo: 'Momento' },
@@ -6040,12 +6040,12 @@ End Sub`,
             <>
                 La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. En la aritmética del
                 contrato, la cuota está calculada para que doce cuotas dejen el saldo exactamente en cero. En la de
-                la máquina lo dejan en −7,5 × 10⁻⁸, el residuo que la sección 4 imprimió como −0.00. Ese número no es
+                la máquina lo dejan en −7,5 × 10⁻⁸, el residuo que la sección 4 imprimió como −0.00. Ese número no es
                 cero, así que la condición sigue verdadera y el ciclo da la vuelta 13: cobra otra cuota, y el saldo
-                queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
+                queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
                 negativo el interés es negativo y el abono crece. La condición no vuelve a ser falsa: la salida de
                 {' '}<span className="inline-code">{comp}</span> es un solo punto, el cero, y el saldo lo salta. Por eso el ciclo no para en la cuota
-                13. Redondear la cuota al peso tampoco lo arregla: con 916 800, el saldo tras doce cuotas es −0,93,
+                13. Redondear la cuota al peso tampoco lo arregla: con 916 800, el saldo tras doce cuotas es −0,93,
                 que tampoco es cero. Y que el saldo baje en el abono y no en la cuota completa no es un defecto: el
                 interés paga el uso del dinero durante el mes, y lo que reduce la deuda es solo el abono. El capítulo
                 1 lo dejó como regla: nunca comparar dinero con igualdad exacta. El arreglo es no preguntar por el
@@ -6062,7 +6062,7 @@ End Sub`,
             r: explicacionIgualdad(9, 'while (saldo != 0) {', 'saldo != 0',
                 'En R, el programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe con Esc o Ctrl+C.'),
             vba: explicacionIgualdad(13, 'Do While saldo <> 0', 'saldo <> 0',
-                'En VBA el programa sí acaba por detenerse, pero no por su condición: k está declarado As Integer, que no pasa de 32 767, y al empezar la vuelta 32 768 VBA se detiene con el error 6, «Desbordamiento». Para entonces ya escribió 32 755 cuotas que no existen.'),
+                'En VBA el programa sí acaba por detenerse, pero no por su condición: k está declarado As Integer, que no pasa de 32 767, y al empezar la vuelta 32 768 VBA se detiene con el error 6, «Desbordamiento». Para entonces ya escribió 32 755 cuotas que no existen.'),
         };
 
         /* E2: el centinela procesado como un dato. El cierre de caja con
@@ -6190,15 +6190,15 @@ End Sub`,
         // queda en 3,5 × 10⁻¹⁸, el espacio entre dos Double vecinos cerca de
         // 0,02, y no termina.
         const residuo = (signo, m, e) => (
-            <span className="whitespace-nowrap">{signo}{m} × 10<sup>−{e}</sup></span>
+            <span className="whitespace-nowrap">{signo}{m} × 10<sup>−{e}</sup></span>
         );
 
         const Cap6Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-file-invoice-dollar"
                     gancho="Un ciclo que pregunta por el saldo para cuando el saldo se lo dice. ¿Y si el saldo que guarda la máquina no es el del contrato?">
-                    Un cliente tomó un crédito de libre inversión de 20 millones al 1,8 % mensual, a 36 cuotas
-                    de 759 676,64. Pagó las 36, y al mes siguiente le llegó la factura de la cuota 37, por el
+                    Un cliente tomó un crédito de libre inversión de 20 millones al 1,8 % mensual, a 36 cuotas
+                    de 759 676,64. Pagó las 36, y al mes siguiente le llegó la factura de la cuota 37, por el
                     mismo valor. El programa que generaba los planes de pago cobraba cuotas mientras quedara
                     saldo, y llevaba meses funcionando bien con créditos de 12, de 60 y de 240 cuotas. Con este,
                     después de la cuota 36 el saldo no quedó en cero: quedó en 0,00000002 pesos. Y 0,00000002 es
@@ -6216,13 +6216,13 @@ End Sub`,
                 </p>
                 <p>
                     Para saber si un ciclo termina, hay que mirar la variable de su condición y hacerle tres
-                    preguntas. Con el acuerdo de pago de la sección 2 —2 350 000 en abonos de 400 000,
+                    preguntas. Con el acuerdo de pago de la sección 2 —2 350 000 en abonos de 400 000,
                     {' '}<span className="inline-code">Mientras saldo &gt; 0</span>—:
                 </p>
                 <ol>
                     <li><strong>¿Alguna línea del cuerpo la cambia?</strong> Aquí sí: <span className="inline-code">saldo &lt;- saldo - abono</span>. Si ninguna la cambiara, la condición daría en cada vuelta lo mismo que en la primera.</li>
                     <li><strong>¿La cambia siempre en la dirección de la salida?</strong> Solo si el abono es positivo. Con un abono de 0 —la opción que no terminaba en el ejercicio de cero vueltas de la sección 2—, el saldo no se mueve; con uno negativo, digitado con el signo cambiado, se aleja.</li>
-                    <li><strong>¿Puede pasar de largo la salida?</strong> Con <span className="inline-code">saldo &gt; 0</span>, no: la condición se vuelve falsa con cualquier saldo que no sea positivo, sea 0 o −50 000. Con <span className="inline-code">saldo &lt;&gt; 0</span>, sí.</li>
+                    <li><strong>¿Puede pasar de largo la salida?</strong> Con <span className="inline-code">saldo &gt; 0</span>, no: la condición se vuelve falsa con cualquier saldo que no sea positivo, sea 0 o −50 000. Con <span className="inline-code">saldo &lt;&gt; 0</span>, sí.</li>
                 </ol>
                 <p>Las dos primeras miran la actualización, que la sección 2 contaba como la tercera pieza de un ciclo. La última mira la condición, y es la que menos se ve. El mismo acuerdo, con las dos condiciones:</p>
                 <div className="overflow-x-auto">
@@ -6231,22 +6231,22 @@ End Sub`,
                             <tr><th>Vuelta</th><th>saldo al terminarla</th><th>¿saldo &gt; 0?</th><th>¿saldo &lt;&gt; 0?</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Antes del ciclo</td><td className="whitespace-nowrap">2 350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>1</td><td className="whitespace-nowrap">1 950 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>2</td><td className="whitespace-nowrap">1 550 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>3</td><td className="whitespace-nowrap">1 150 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>4</td><td className="whitespace-nowrap">750 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>5</td><td className="whitespace-nowrap">350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
-                            <tr><td>6</td><td className="whitespace-nowrap">−50 000</td><td><strong>Falso</strong>: el ciclo para</td><td>Verdadero</td></tr>
-                            <tr><td>7</td><td className="whitespace-nowrap">−450 000</td><td>—</td><td>Verdadero</td></tr>
-                            <tr><td>8</td><td className="whitespace-nowrap">−850 000</td><td>—</td><td>Verdadero</td></tr>
+                            <tr><td>Antes del ciclo</td><td className="whitespace-nowrap">2 350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>1</td><td className="whitespace-nowrap">1 950 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>2</td><td className="whitespace-nowrap">1 550 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>3</td><td className="whitespace-nowrap">1 150 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>4</td><td className="whitespace-nowrap">750 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>5</td><td className="whitespace-nowrap">350 000</td><td>Verdadero</td><td>Verdadero</td></tr>
+                            <tr><td>6</td><td className="whitespace-nowrap">−50 000</td><td><strong>Falso</strong>: el ciclo para</td><td>Verdadero</td></tr>
+                            <tr><td>7</td><td className="whitespace-nowrap">−450 000</td><td>—</td><td>Verdadero</td></tr>
+                            <tr><td>8</td><td className="whitespace-nowrap">−850 000</td><td>—</td><td>Verdadero</td></tr>
                             <tr><td>…</td><td>Sigue bajando</td><td>—</td><td>Verdadero, siempre</td></tr>
                         </tbody>
                     </table>
                 </div>
                 <p>
-                    400 000 no cabe un número exacto de veces en 2 350 000, así que el saldo pasa de 350 000 a
-                    −50 000 sin tocar el cero. Con <span className="inline-code">&gt;</span>, ahí terminaba el
+                    400 000 no cabe un número exacto de veces en 2 350 000, así que el saldo pasa de 350 000 a
+                    −50 000 sin tocar el cero. Con <span className="inline-code">&gt;</span>, ahí terminaba el
                     ciclo. Con <span className="inline-code">&lt;&gt;</span>, la condición sigue verdadera, y lo
                     seguirá siendo, porque de ahí en adelante el saldo solo baja. La salida de
                     {' '}<span className="inline-code">saldo &lt;&gt; 0</span> es un punto, y el saldo lo salta; la de
@@ -6273,14 +6273,14 @@ End Sub`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="El plan de pagos que cobra hasta el cero"
-                    enunciado={<>Es el plan de pagos de la sección 4 —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93, con la cuota sin redondear—, escrito ahora con un <span className="inline-code">Mientras</span> que cobra hasta que el saldo llegue a cero, como dice su comentario. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y qué pasa al ejecutar el programa.</>}
+                    enunciado={<>Es el plan de pagos de la sección 4 —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93, con la cuota sin redondear—, escrito ahora con un <span className="inline-code">Mientras</span> que cobra hasta que el saldo llegue a cero, como dice su comentario. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y qué pasa al ejecutar el programa.</>}
                     lineas={ERROR_IGUALDAD_LINEAS}
                     lineaCorrecta={ERROR_IGUALDAD_LINEA_OK}
                     tipos={[
                         'Actualización: el saldo baja solo en el abono y no en la cuota completa, así que nunca llega a cero y el ciclo no termina.',
-                        'Frontera del ciclo: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸ y no en cero, así que cobra una cuota 13 y ahí se detiene.',
-                        'Condición de igualdad: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸; de ahí solo baja, y la condición nunca se vuelve falsa.',
-                        'Cuota sin redondear: con 916 799,929… el saldo no cierra; redondeada al peso, llegaría a cero en la cuota 12 y el ciclo pararía.',
+                        'Frontera del ciclo: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸ y no en cero, así que cobra una cuota 13 y ahí se detiene.',
+                        'Condición de igualdad: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸; de ahí solo baja, y la condición nunca se vuelve falsa.',
+                        'Cuota sin redondear: con 916 799,929… el saldo no cierra; redondeada al peso, llegaría a cero en la cuota 12 y el ciclo pararía.',
                     ]}
                     tipoCorrecto={2}
                     explicacion={ERROR_IGUALDAD_EXPLICACION}
@@ -6306,12 +6306,12 @@ End Sub`,
                             <tr><th>Crédito</th><th>Tasa mensual</th><th>Cuotas</th><th>Vueltas con <span className="inline-code">saldo &gt; 0</span></th><th>Saldo tras la última cuota</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td className="whitespace-nowrap">10 000 000</td><td>1,5 %</td><td>12</td><td>12</td><td>{residuo('−', '7,5', 8)}</td></tr>
-                            <tr><td className="whitespace-nowrap">20 000 000</td><td>1,8 %</td><td>36</td><td><strong>37</strong></td><td><strong>{residuo('+', '2,0', 8)}</strong></td></tr>
-                            <tr><td className="whitespace-nowrap">80 000 000</td><td>1,2 %</td><td>240</td><td>240</td><td>{residuo('−', '2,0', 7)}</td></tr>
-                            <tr><td className="whitespace-nowrap">5 000 000</td><td>2 %</td><td>24</td><td><strong>25</strong></td><td><strong>{residuo('+', '5,4', 9)}</strong></td></tr>
-                            <tr><td className="whitespace-nowrap">150 000 000</td><td>1,1 %</td><td>240</td><td>240</td><td>{residuo('−', '3,6', 6)}</td></tr>
-                            <tr><td className="whitespace-nowrap">30 000 000</td><td>1,45 %</td><td>60</td><td>60</td><td>{residuo('−', '1,2', 7)}</td></tr>
+                            <tr><td className="whitespace-nowrap">10 000 000</td><td>1,5 %</td><td>12</td><td>12</td><td>{residuo('−', '7,5', 8)}</td></tr>
+                            <tr><td className="whitespace-nowrap">20 000 000</td><td>1,8 %</td><td>36</td><td><strong>37</strong></td><td><strong>{residuo('+', '2,0', 8)}</strong></td></tr>
+                            <tr><td className="whitespace-nowrap">80 000 000</td><td>1,2 %</td><td>240</td><td>240</td><td>{residuo('−', '2,0', 7)}</td></tr>
+                            <tr><td className="whitespace-nowrap">5 000 000</td><td>2 %</td><td>24</td><td><strong>25</strong></td><td><strong>{residuo('+', '5,4', 9)}</strong></td></tr>
+                            <tr><td className="whitespace-nowrap">150 000 000</td><td>1,1 %</td><td>240</td><td>240</td><td>{residuo('−', '3,6', 6)}</td></tr>
+                            <tr><td className="whitespace-nowrap">30 000 000</td><td>1,45 %</td><td>60</td><td>60</td><td>{residuo('−', '1,2', 7)}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -6324,7 +6324,7 @@ End Sub`,
                 <p>
                     ¿Y de qué depende el signo? De cómo se redondea el último bit en cada operación, y son
                     cientos: es el punto flotante del capítulo 1, que esta vez no cambia un centavo sino una
-                    vuelta. Ni siquiera es una propiedad del crédito. El de 150 000 000 es el de la tabla de 240
+                    vuelta. Ni siquiera es una propiedad del crédito. El de 150 000 000 es el de la tabla de 240
                     filas de la sección 4, cuyo saldo final era {residuo('−', '3,6', 6)}. Si el saldo nuevo se escribe
                     {' '}<span className="inline-code">saldo + saldo * tasa - cuota</span> —la misma cuenta, con las
                     operaciones en otro orden—, su residuo sale positivo y el ciclo da 241 vueltas.
@@ -6388,11 +6388,11 @@ End Sub`,
                     nota="El programa lee datos, así que no hay una salida fija. Fíjese en dónde está la pregunta: al final de la vuelta, como en la validación de la sección 3." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="El cajero digita tres pagos —250 000, 400 000 y 150 000— y después el −1. ¿Qué muestra el programa al terminar?"
+                    pregunta="El cajero digita tres pagos —250 000, 400 000 y 150 000— y después el −1. ¿Qué muestra el programa al terminar?"
                     opciones={[
-                        { texto: '4 pagos por 799 999', correcta: true, justificacion: 'El Repita pregunta al final de la vuelta, después de sumar y de contar. Cuando el cajero digita el −1, la vuelta ya está en marcha: el −1 se lee, se suma al total como si fuera un pago y se cuenta; solo después la condición monto = −1 da verdadero y el ciclo sale. Por eso la caja no cuadra por ningún lado: cuatro pagos para tres recibos, y un peso menos de lo que entró. Tres pagos por 800 000 es lo que el cajero espera, pero el ciclo no sabe que el −1 es el final hasta que lo pregunta, y lo pregunta tarde. Cuatro pagos por 800 000 ve que el −1 se cuenta, pero olvida que en la misma vuelta también se sumó. Y el ciclo sí termina: en la vuelta del −1, la condición se cumple. (En Python y en R, el if … break del final hace de Hasta.)' },
-                        { texto: '3 pagos por 800 000', correcta: false },
-                        { texto: '4 pagos por 800 000', correcta: false },
+                        { texto: '4 pagos por 799 999', correcta: true, justificacion: 'El Repita pregunta al final de la vuelta, después de sumar y de contar. Cuando el cajero digita el −1, la vuelta ya está en marcha: el −1 se lee, se suma al total como si fuera un pago y se cuenta; solo después la condición monto = −1 da verdadero y el ciclo sale. Por eso la caja no cuadra por ningún lado: cuatro pagos para tres recibos, y un peso menos de lo que entró. Tres pagos por 800 000 es lo que el cajero espera, pero el ciclo no sabe que el −1 es el final hasta que lo pregunta, y lo pregunta tarde. Cuatro pagos por 800 000 ve que el −1 se cuenta, pero olvida que en la misma vuelta también se sumó. Y el ciclo sí termina: en la vuelta del −1, la condición se cumple. (En Python y en R, el if … break del final hace de Hasta.)' },
+                        { texto: '3 pagos por 800 000', correcta: false },
+                        { texto: '4 pagos por 800 000', correcta: false },
                         { texto: 'Nada: vuelve a pedir un monto, y no termina', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -6408,7 +6408,7 @@ End Sub`,
                 <CodeTabs
                     titulo="El cierre de caja, con lectura adelantada"
                     bloques={EJ_CAJA_ADELANTADA}
-                    nota="Con los mismos datos, escribe 3 pagos por 800 000. Y si el primer dato ya es el −1, el ciclo no da ninguna vuelta y escribe 0 pagos por 0, que es lo correcto en un día sin recaudo." />
+                    nota="Con los mismos datos, escribe 3 pagos por 800 000. Y si el primer dato ya es el −1, el ciclo no da ninguna vuelta y escribe 0 pagos por 0, que es lo correcto en un día sin recaudo." />
 
                 <p>
                     Es el <span className="inline-code">Mientras</span> con dos lecturas de la sección 3, que allí
@@ -6580,7 +6580,7 @@ End Sub`,
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
-                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
                                         <button disabled={safeIndex === 0} onClick={() => setActiveLessonIndex(c => c - 1)}

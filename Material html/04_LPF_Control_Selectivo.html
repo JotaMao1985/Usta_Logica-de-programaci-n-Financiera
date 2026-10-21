@@ -2212,7 +2212,7 @@
             const VARS = [
                 { clave: 'A', etiqueta: 'ingreso > 3.000.000', corto: 'ingreso alto' },
                 { clave: 'B', etiqueta: 'score >= 680', corto: 'score bueno' },
-                { clave: 'C', etiqueta: 'endeudamiento < 40 %', corto: 'poco endeudado' },
+                { clave: 'C', etiqueta: 'endeudamiento < 40 %', corto: 'poco endeudado' },
             ];
             const [v, setV] = useState({ A: true, B: false, C: false });
             const alternar = (k) => setV(p => ({ ...p, [k]: !p[k] }));
@@ -2409,10 +2409,10 @@
                     { v: 745, t: '745 — alto' },
                 ],
                 endeud: [
-                    { v: 22, t: '22 % — holgado' },
-                    { v: 45, t: '45 % — ajustado' },
-                    { v: 60, t: '60 % — el tope, exacto' },
-                    { v: 68, t: '68 % — comprometido' },
+                    { v: 22, t: '22 % — holgado' },
+                    { v: 45, t: '45 % — ajustado' },
+                    { v: 60, t: '60 % — el tope, exacto' },
+                    { v: 68, t: '68 % — comprometido' },
                 ],
             };
             const [sol, setSol] = useState({ ingreso: 2800000, score: 660, endeud: 45 });
@@ -2684,7 +2684,7 @@
                         (difieren ? 'bg-[#B45309]/15 border-2 border-[#B45309]' : 'bg-gray-100 border border-gray-300')}>
                         {difieren
                             ? (monto <= 0
-                                ? <span><strong>Aquí difieren, y las dos están mal.</strong> La cascada cobra 2 500 sobre un monto
+                                ? <span><strong>Aquí difieren, y las dos están mal.</strong> La cascada cobra 2 500 sobre un monto
                                     que no es una venta: <span className="inline-code">monto &lt;= 100.000</span> también es cierto
                                     para un negativo y para el cero. El <span className="inline-code">Segun</span> no asigna
                                     ninguna. Son dos defectos distintos: un tope sin piso de un lado, y un caso por
@@ -3199,7 +3199,7 @@ End Sub`,
                 <Motivacion icon="fa-scale-balanced"
                     gancho="¿En qué orden lee la máquina una condición con Y, O y NO? Porque no es de izquierda a derecha.">
                     La regla decía: aprobar a quien supere tres millones de ingreso o llegue a 680 de
-                    score, siempre que el endeudamiento esté por debajo del 40 %. Se escribió tal cual, sin
+                    score, siempre que el endeudamiento esté por debajo del 40 %. Se escribió tal cual, sin
                     paréntesis. Y sin paréntesis esa frase no dice eso: aprueba a cualquiera que gane
                     más de tres millones, tenga el endeudamiento que tenga. Doscientos créditos
                     después, alguien comparó la regla del documento con la del código.
@@ -3317,10 +3317,10 @@ End Sub`,
                             <tr><th>Solicitante</th><th>La regla correcta</th><th>La regla con el conector sin cambiar</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>score 720 · endeudamiento 35 %</td><td>aprueba</td><td>aprueba</td></tr>
-                            <tr><td>score 720 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
-                            <tr><td>score 600 · endeudamiento 35 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
-                            <tr><td>score 600 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td>rechaza</td></tr>
+                            <tr><td>score 720 · endeudamiento 35 %</td><td>aprueba</td><td>aprueba</td></tr>
+                            <tr><td>score 720 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
+                            <tr><td>score 600 · endeudamiento 35 %</td><td><strong>rechaza</strong></td><td className="text-[#B91C1C]"><strong>se le escapa</strong></td></tr>
+                            <tr><td>score 600 · endeudamiento 55 %</td><td><strong>rechaza</strong></td><td>rechaza</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -3363,11 +3363,11 @@ End Sub`,
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
+                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
                     opciones={[
-                        { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
-                        { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
-                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6.500.000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
+                        { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
+                        { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
+                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6.500.000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -3551,7 +3551,7 @@ Debug.Print total`,
                 <CodeTabs
                     titulo="El recargo que no se cobró"
                     bloques={EJ_MORA}
-                    nota="Con 30 días exactos la condición es falsa: recargo se queda en el 0 que le dieron antes del Si, y el total sale como si la factura estuviera al día. Cambie el 30 por un 31 y la misma rutina cobra 240 000. El 5 % sobre todo el saldo es ilustrativo: en Colombia, el cobro por mora está topado por la tasa de usura y se liquida sobre lo vencido." />
+                    nota="Con 30 días exactos la condición es falsa: recargo se queda en el 0 que le dieron antes del Si, y el total sale como si la factura estuviera al día. Cambie el 30 por un 31 y la misma rutina cobra 240 000. El 5 % sobre todo el saldo es ilustrativo: en Colombia, el cobro por mora está topado por la tasa de usura y se liquida sobre lo vencido." />
 
                 <p>
                     Fíjese en la línea <span className="inline-code">recargo &lt;- 0</span>, antes del
@@ -3823,7 +3823,7 @@ Debug.Print tarifa`,
                 <CodeTabs
                     titulo="La tarifa, resuelta con Si…Sino"
                     bloques={EJ_TARIFA_SINO}
-                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no existe para este dato. Cambie Verdadero por Falso y la tarifa pasa a 10 000." />
+                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no existe para este dato. Cambie Verdadero por Falso y la tarifa pasa a 10 000." />
 
                 <h3>Por qué no da igual escribirlo con dos Si</h3>
                 <p>
@@ -3838,21 +3838,21 @@ Debug.Print tarifa`,
                 <CodeTabs
                     titulo="La misma tarifa, con dos Si independientes"
                     bloques={EJ_TARIFA_DOS_SI}
-                    nota="El mismo cliente preferencial, el mismo monto, y la tarifa sale 10 000 en vez de 4 000. No hay error ni advertencia: la segunda asignación es perfectamente válida." />
+                    nota="El mismo cliente preferencial, el mismo monto, y la tarifa sale 10 000 en vez de 4 000. No hay error ni advertencia: la segunda asignación es perfectamente válida." />
 
                 <Box type="warn" label="Seis mil pesos por transacción">
-                    El cliente preferencial de 2 000 000 paga <strong>10 000 en vez de 4 000</strong>. Sobre
-                    un corporativo con cuatrocientas transacciones al mes son 2 400 000 mensuales cobrados
+                    El cliente preferencial de 2 000 000 paga <strong>10 000 en vez de 4 000</strong>. Sobre
+                    un corporativo con cuatrocientas transacciones al mes son 2 400 000 mensuales cobrados
                     de más, en una cuenta que además es la que el banco menos quiere perder. Y el
                     programa nunca dejó de funcionar.
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
+                    pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
-                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
-                        { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
-                        { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
+                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
+                        { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
+                        { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
                         { texto: 'Un error de ejecución: ninguno de los dos Si le asigna un valor a tarifa.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -3900,8 +3900,8 @@ Debug.Print tarifa`,
                         </p>
                         <p>
                             En este capítulo ya aparecieron los dos fallos posibles: el cliente preferencial de
-                            2 000 000 cumple las dos condiciones y la segunda pisa a la primera —cobro de más—;
-                            el cliente corriente de 800 000 no cumple ninguna y se queda con la tarifa por
+                            2 000 000 cumple las dos condiciones y la segunda pisa a la primera —cobro de más—;
+                            el cliente corriente de 800 000 no cumple ninguna y se queda con la tarifa por
                             defecto —cobro de cero—. Los dos son datos perfectamente normales, no casos extremos.
                         </p>
                         <p>
@@ -4536,7 +4536,7 @@ End Sub`,
             { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { endeudamiento: '68' },
                 nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores el comité habría rechazado sin dudar.' },
             { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: {},
-                nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las dos condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
+                nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las dos condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
             { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { decision: 'APROBADO PREFERENCIAL' },
                 nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que un auditor encuentra seis meses después y no sabe explicar.' },
             { linea: { pseudo: 14, python: 12, r: 13, vba: 16 }, estado: {}, salida: TZ_MAL_SALIDA,
@@ -4599,7 +4599,7 @@ End Sub`,
                 <p>
                     Ahora la regla del ingreso alto sube al primer lugar. No se ha cambiado ni una
                     condición, ni una cifra, ni una decisión: solo el orden de las ramas. El mismo
-                    solicitante —6 500 000 de ingreso, score 480, endeudamiento del 68 %— recibe la
+                    solicitante —6 500 000 de ingreso, score 480, endeudamiento del 68 %— recibe la
                     respuesta contraria.
                 </p>
 
@@ -4646,7 +4646,7 @@ End Sub`,
                     ]}
                     tipoCorrecto={3}
                     explicacion={ERROR_CASCADA_EXPLICACION}
-                    impacto={<>Todo solicitante con ingreso de cinco millones o más entra como <strong>preferencial</strong>, incluidos los que tienen el score por debajo del mínimo y los que están por encima del 60 % de endeudamiento. Sobre una cartera de originación de mil solicitudes mensuales, con un 8 % de ingresos altos y un 12 % de esos con score insuficiente, son <strong>alrededor de diez desembolsos al mes</strong> a clientes que la política rechaza —y a tasa preferencial—. El motor no registra ningún error: registra diez aprobaciones perfectamente normales.</>}
+                    impacto={<>Todo solicitante con ingreso de cinco millones o más entra como <strong>preferencial</strong>, incluidos los que tienen el score por debajo del mínimo y los que están por encima del 60 % de endeudamiento. Sobre una cartera de originación de mil solicitudes mensuales, con un 8 % de ingresos altos y un 12 % de esos con score insuficiente, son <strong>alrededor de diez desembolsos al mes</strong> a clientes que la política rechaza —y a tasa preferencial—. El motor no registra ningún error: registra diez aprobaciones perfectamente normales.</>}
                 /></Ejercicio>
 
                 <h3>La traza de una cascada</h3>
@@ -4659,7 +4659,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio de la cascada completa"
-                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada línea de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
+                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada línea de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
                     codigo={TRAZA_CASCADA}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -5032,7 +5032,7 @@ End If`,
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
                     bloques={EJ_SEGUN_RANGOS}
-                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante, así que un monto con centavos cae entre dos tramos y termina en el caso por defecto." />
+                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante, así que un monto con centavos cae entre dos tramos y termina en el caso por defecto." />
 
                 <Box type="info" label="Por qué esto anticipa el capítulo 6">
                     <span className="inline-code">Select Case</span> con rangos es de las pocas cosas que VBA
@@ -5049,16 +5049,16 @@ End If`,
                     b={{ etiqueta: 'Versión B · cascada', codigo: CMP_CASCADA_TRAMOS }}
                     pregunta="¿Dan las dos el mismo resultado para cualquier monto?"
                     opciones={[
-                        { texto: 'No: fuera de los tramos el Segun no asigna nada y la cascada sí.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A no tiene caso por defecto y deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el panel de abajo con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. En los bordes, en cambio, coinciden: 100 000, 500 000 y 5 000 000 caen en el mismo tramo con las dos versiones, porque los dos lados incluyen el tope.' },
+                        { texto: 'No: fuera de los tramos el Segun no asigna nada y la cascada sí.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A no tiene caso por defecto y deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el panel de abajo con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. En los bordes, en cambio, coinciden: 100 000, 500 000 y 5 000 000 caen en el mismo tramo con las dos versiones, porque los dos lados incluyen el tope.' },
                         { texto: 'Sí: los tres tramos cubren todos los montos posibles.', correcta: false },
                         { texto: 'No, pero solo si el monto es negativo: para valores positivos son idénticas.', correcta: false },
-                        { texto: 'No: difieren en los bordes de tramo, como 100 000 y 500 000.', correcta: false },
+                        { texto: 'No: difieren en los bordes de tramo, como 100 000 y 500 000.', correcta: false },
                     ]}
                 /></Ejercicio>
 
                 <h3>El caso por defecto no es opcional</h3>
                 <p>
-                    Los tramos de arriba cubren de 1 a 5 000 000. ¿Y una devolución? ¿Y un ajuste por
+                    Los tramos de arriba cubren de 1 a 5 000 000. ¿Y una devolución? ¿Y un ajuste por
                     encima del tope? Sin caso por defecto, el valor que no encaja en ningún caso
                     <strong> no ejecuta nada</strong>. Lo que pasa después depende del lenguaje.
                 </p>
@@ -5086,7 +5086,7 @@ End If`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
+                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
                     pasos={ORDENA_SEGUN}
                     pista="En R la selectiva múltiple es una única expresión que devuelve un valor: se lee como una llamada a función, con el caso por defecto al final y sin nombre."
                 />
@@ -5303,12 +5303,12 @@ neto = pago - retencion`,
                 <ArbolRiesgo />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="Un solicitante con ingreso de 3 200 000, score 520 y endeudamiento del 64 % recibe un rechazo. El cliente llama a preguntar cuál de las condiciones lo rechazó. ¿Qué se le dice?"
+                    pregunta="Un solicitante con ingreso de 3 200 000, score 520 y endeudamiento del 64 % recibe un rechazo. El cliente llama a preguntar cuál de las condiciones lo rechazó. ¿Qué se le dice?"
                     opciones={[
                         { texto: 'Que lo rechazaron el score y el endeudamiento: el sistema evaluó los dos y encontró las dos fallas.', correcta: false },
-                        { texto: 'Que lo rechazó el endeudamiento del 64 %, que es la causal más grave de las dos.', correcta: false },
+                        { texto: 'Que lo rechazó el endeudamiento del 64 %, que es la causal más grave de las dos.', correcta: false },
                         { texto: 'Que incumple dos de las cinco reglas de la política, y que debe corregir ambas.', correcta: false },
-                        { texto: 'Que lo decidió el score de 520, por debajo del mínimo de 550; el endeudamiento ni se llegó a evaluar.', correcta: true, justificacion: 'La cascada decide en la primera condición que se cumple, y aquí es score < 550. La del endeudamiento está más abajo y no se evaluó: es cierto que el 64 % también la cumpliría, pero eso lo sabemos nosotros leyendo la política, no el sistema, que se detuvo antes. Por eso no se le puede decir que el sistema encontró dos fallas, ni que lo rechazó el endeudamiento: el sistema no lo miró. Otra cosa es el consejo. Si el cliente vuelve dentro de seis meses con el score arreglado y el endeudamiento igual, será rechazado otra vez, ahora por la segunda condición; advertírselo es buen servicio, pero es un consejo que sale de leer la política, no la explicación de lo que decidió el sistema. Y una lista de reglas incumplidas no responde lo que el cliente preguntó: de las tres condiciones que quedaron debajo, solo la del endeudamiento se cumpliría, y nadie la evaluó.' },
+                        { texto: 'Que lo decidió el score de 520, por debajo del mínimo de 550; el endeudamiento ni se llegó a evaluar.', correcta: true, justificacion: 'La cascada decide en la primera condición que se cumple, y aquí es score < 550. La del endeudamiento está más abajo y no se evaluó: es cierto que el 64 % también la cumpliría, pero eso lo sabemos nosotros leyendo la política, no el sistema, que se detuvo antes. Por eso no se le puede decir que el sistema encontró dos fallas, ni que lo rechazó el endeudamiento: el sistema no lo miró. Otra cosa es el consejo. Si el cliente vuelve dentro de seis meses con el score arreglado y el endeudamiento igual, será rechazado otra vez, ahora por la segunda condición; advertírselo es buen servicio, pero es un consejo que sale de leer la política, no la explicación de lo que decidió el sistema. Y una lista de reglas incumplidas no responde lo que el cliente preguntó: de las tres condiciones que quedaron debajo, solo la del endeudamiento se cumpliría, y nadie la evaluó.' },
                     ]}
                 /></Ejercicio>
 
@@ -5325,7 +5325,7 @@ neto = pago - retencion`,
                     nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas no es negociable —preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral—." />
 
                 <Box type="warn" label="La UVT de este ejemplo está redondeada a propósito">
-                    50 000 no es el valor real de la UVT: es un número redondo para que las cuentas se
+                    50 000 no es el valor real de la UVT: es un número redondo para que las cuentas se
                     puedan seguir de cabeza. El valor vigente lo publica la DIAN cada año, y en una
                     rutina de producción <strong>nunca va escrito en el código</strong> —va en un parámetro—,
                     justamente porque cambia todos los eneros.
@@ -5333,7 +5333,7 @@ neto = pago - retencion`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio: un pago pequeño"
-                    enunciado={<>Un pago de <strong>150 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada línea, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
+                    enunciado={<>Un pago de <strong>150 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada línea, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
                     codigo={TRAZA_RETENCION}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -5367,17 +5367,17 @@ neto = pago - retencion`,
                     titulo="Explíquele al proveedor"
                     solucion={<>
                         <p>
-                            <strong>Lo que pasó:</strong> los tres pagos de 150 000 quedaron cada uno por debajo
-                            de la base mínima de 200 000, así que a cada uno se le aplicó la primera rama
+                            <strong>Lo que pasó:</strong> los tres pagos de 150 000 quedaron cada uno por debajo
+                            de la base mínima de 200 000, así que a cada uno se le aplicó la primera rama
                             —retención cero—. La base se compara <strong>contra cada pago</strong>, no contra el
                             acumulado del mes, porque la rutina se ejecuta una vez por factura y no guarda
                             memoria de las anteriores.
                         </p>
                         <p>
-                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
-                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
+                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
+                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
                             tercera y no por la segunda porque este proveedor no es declarante; el de la
-                            prueba de escritorio de arriba sí lo era, y a él le habría correspondido el 4 %.
+                            prueba de escritorio de arriba sí lo era, y a él le habría correspondido el 4 %.
                             No es que el sistema lo trate distinto: es que la condición del umbral se evalúa
                             sobre el valor del pago, y ese lo pasa.
                         </p>
@@ -5386,16 +5386,16 @@ neto = pago - retencion`,
                             no es una estrategia; es exactamente lo que la norma llama fraccionamiento de pagos
                             y lo que la base mínima existe para detectar cuando se acumula. Si el área de pagos
                             decide agrupar por mes —que es lo razonable—, la rutina tiene que sumar antes de
-                            comparar, y entonces los tres pagos de 150 000 pasan a retener. El defecto no está
+                            comparar, y entonces los tres pagos de 150 000 pasan a retener. El defecto no está
                             en la cascada: está en <em>qué</em> se le da a comparar.
                         </p>
                     </>}
                 >
                     <p>
                         Un proveedor <strong>no declarante</strong> recibió cuatro pagos este mes: tres de
-                        <strong> 150 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
+                        <strong> 150 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
                         retuvo nada y al cuarto sí. El proveedor llama convencido de que hubo un error,
-                        porque «en total facturé 900 000 y me retuvieron sobre 450 000».
+                        porque «en total facturé 900 000 y me retuvieron sobre 450 000».
                     </p>
                     <p>
                         <strong>Explíquele qué hizo el sistema y por qué</strong>, con la rutina de arriba a la
@@ -5484,14 +5484,14 @@ neto = pago - retencion`,
                 <Quiz titulo="Evaluación · Capítulo 04 — Control selectivo" preguntas={[
                     {
                         seccion: 'cap1',
-                        pregunta: 'Un pago se libera solo si monto <= 5 000 000 Y inscrito, donde inscrito dice si el beneficiario está en la lista autorizada. Todo pago que no se libera va a revisión. ¿Qué condición manda un pago a revisión?',
+                        pregunta: 'Un pago se libera solo si monto <= 5 000 000 Y inscrito, donde inscrito dice si el beneficiario está en la lista autorizada. Todo pago que no se libera va a revisión. ¿Qué condición manda un pago a revisión?',
                         opciones: [
-                            { texto: 'monto > 5 000 000 Y NO inscrito', correcta: false },
-                            { texto: 'monto >= 5 000 000 O NO inscrito', correcta: false },
-                            { texto: 'monto > 5 000 000 O NO inscrito', correcta: true },
-                            { texto: 'monto > 5 000 000 O inscrito', correcta: false },
+                            { texto: 'monto > 5 000 000 Y NO inscrito', correcta: false },
+                            { texto: 'monto >= 5 000 000 O NO inscrito', correcta: false },
+                            { texto: 'monto > 5 000 000 O NO inscrito', correcta: true },
+                            { texto: 'monto > 5 000 000 O inscrito', correcta: false },
                         ],
-                        justificacion: 'Va a revisión lo contrario de lo que se libera, y por De Morgan lo contrario de «A Y B» es «NO A O NO B»: se niega cada parte y se cambia el conector. Lo contrario de monto <= 5 000 000 es monto > 5 000 000 —un pago de 5 000 000 exactos se libera—, y lo contrario de inscrito es NO inscrito. Conservar el Y solo manda a revisión los pagos que fallan en las dos cosas a la vez, y deja salir un pago de diez millones a un beneficiario inscrito. Con >= va a revisión el pago de 5 000 000 exactos, que se liberaba. Y la última opción niega el monto pero no la inscripción: mandaría a revisión todos los pagos a beneficiarios inscritos.',
+                        justificacion: 'Va a revisión lo contrario de lo que se libera, y por De Morgan lo contrario de «A Y B» es «NO A O NO B»: se niega cada parte y se cambia el conector. Lo contrario de monto <= 5 000 000 es monto > 5 000 000 —un pago de 5 000 000 exactos se libera—, y lo contrario de inscrito es NO inscrito. Conservar el Y solo manda a revisión los pagos que fallan en las dos cosas a la vez, y deja salir un pago de diez millones a un beneficiario inscrito. Con >= va a revisión el pago de 5 000 000 exactos, que se liberaba. Y la última opción niega el monto pero no la inscripción: mandaría a revisión todos los pagos a beneficiarios inscritos.',
                     },
                     {
                         seccion: 'cap5',
@@ -5506,14 +5506,14 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap2',
-                        pregunta: 'Una rutina hace recargo <- 0; después Si diasMora >= 60 Entonces recargo <- saldo * 0.08 FinSi; y termina con total <- saldo + recargo. Con saldo 2 500 000 y 60 días de mora, ¿cuánto vale total?',
+                        pregunta: 'Una rutina hace recargo <- 0; después Si diasMora >= 60 Entonces recargo <- saldo * 0.08 FinSi; y termina con total <- saldo + recargo. Con saldo 2 500 000 y 60 días de mora, ¿cuánto vale total?',
                         opciones: [
-                            { texto: '2 500 000: con 60 días exactos la condición no se cumple.', correcta: false },
-                            { texto: '2 700 000: 60 >= 60 es verdadero y se cobra el 8 %.', correcta: true },
-                            { texto: '2 700 000, y el programa deja constancia de que la rama se ejecutó.', correcta: false },
+                            { texto: '2 500 000: con 60 días exactos la condición no se cumple.', correcta: false },
+                            { texto: '2 700 000: 60 >= 60 es verdadero y se cobra el 8 %.', correcta: true },
+                            { texto: '2 700 000, y el programa deja constancia de que la rama se ejecutó.', correcta: false },
                             { texto: 'No se puede saber: depende de lo que valiera recargo antes del Si.', correcta: false },
                         ],
-                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. La ejecución no deja constancia de qué rama tomó, ni de la que se ejecuta ni de la que se salta. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
+                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. La ejecución no deja constancia de qué rama tomó, ni de la que se ejecuta ni de la que se salta. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
                     },
                     {
                         seccion: 'cap3',
@@ -5525,29 +5525,29 @@ neto = pago - retencion`,
                             { texto: 'Que el valor que tenía la variable antes del Si no se pierda.', correcta: false },
                         ],
                         multiple: true,
-                        justificacion: 'La primera y la tercera, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia. Y tampoco protege el valor que la variable traía: la rama que se ejecute lo sobrescribe, que es justamente por lo que el valor por defecto se asigna ANTES del Si y no después.',
+                        justificacion: 'La primera y la tercera, y son las dos caras del mismo defecto: con dos Si sueltos, el cliente preferencial de 2 000 000 cumple las dos condiciones y la segunda pisa a la primera, mientras el cliente corriente de 800 000 no cumple ninguna y se le cobra cero. Lo que Si…Sino no hace es evaluar las dos condiciones: evalúa una, y la segunda rama no tiene condición propia. Y tampoco protege el valor que la variable traía: la rama que se ejecute lo sobrescribe, que es justamente por lo que el valor por defecto se asigna ANTES del Si y no después.',
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTÁNDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
+                        pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTÁNDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
                         opciones: [
                             { texto: 'RECHAZADO, después de evaluar dos condiciones.', correcta: true },
                             { texto: 'RECHAZADO, después de evaluar las tres condiciones.', correcta: false },
                             { texto: 'APROBADO PREFERENCIAL, porque el ingreso supera los cinco millones.', correcta: false },
                             { texto: 'RECHAZADO, y basta con evaluar la primera condición.', correcta: false },
                         ],
-                        justificacion: 'La primera, endeudamiento > 60, es falsa con un 25 %. La segunda, score < 550, es verdadera con 500, y ahí decide: RECHAZADO tras evaluar dos. La del ingreso queda debajo y no llega a mirarse, así que los ocho millones no entran en la decisión por mucho que superen el umbral. No se evalúan las tres —la cascada se detiene en la primera que se cumple— ni basta con la primera, que en este solicitante no se cumple. La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó.',
+                        justificacion: 'La primera, endeudamiento > 60, es falsa con un 25 %. La segunda, score < 550, es verdadera con 500, y ahí decide: RECHAZADO tras evaluar dos. La del ingreso queda debajo y no llega a mirarse, así que los ocho millones no entran en la decisión por mucho que superen el umbral. No se evalúan las tres —la cascada se detiene en la primera que se cumple— ni basta con la primera, que en este solicitante no se cumple. La diferencia entre «dio falso» y «no se evaluó» es la que permite contestarle a un cliente cuál condición lo rechazó.',
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'Una cascada evalúa primero ingreso >= 5 000 000, que da PREFERENCIAL, y debajo score < 550, que da RECHAZADO. Se corrige subiendo la del score por encima de la del ingreso. Llegan tres solicitantes: el 1 con ingreso 7 200 000 y score 510; el 2 con ingreso 7 200 000 y score 690; el 3 con ingreso 3 400 000 y score 510. ¿A cuáles les cambia la decisión el arreglo?',
+                        pregunta: 'Una cascada evalúa primero ingreso >= 5 000 000, que da PREFERENCIAL, y debajo score < 550, que da RECHAZADO. Se corrige subiendo la del score por encima de la del ingreso. Llegan tres solicitantes: el 1 con ingreso 7 200 000 y score 510; el 2 con ingreso 7 200 000 y score 690; el 3 con ingreso 3 400 000 y score 510. ¿A cuáles les cambia la decisión el arreglo?',
                         opciones: [
                             { texto: 'A los solicitantes 1 y 2, porque los dos superan los cinco millones.', correcta: false },
                             { texto: 'Solo al 1: es a quien la regla del ingreso le tapaba la del score.', correcta: true },
                             { texto: 'A los solicitantes 1 y 3, porque los dos tienen el score por debajo de 550.', correcta: false },
                             { texto: 'A los tres: cambiar el orden de una cascada cambia todas las decisiones.', correcta: false },
                         ],
-                        justificacion: 'El 2 y el 3 deciden igual en los dos órdenes, y por razones distintas: al 2 la regla del score no lo toca —tiene 690— y sigue saliendo preferencial por el ingreso; al 3 no le llega la del ingreso —3 400 000 no alcanza— así que la del score ya lo estaba decidiendo antes del arreglo. Solo el 1 cae en las dos a la vez, y es ahí donde manda el orden. Eso es lo que hace tan difícil de encontrar un defecto de orden: no cambia todas las decisiones, solo las del cruce, y mientras tanto las demás siguen saliendo bien. Y el arreglo no reescribe ninguna condición: mueve dos líneas.',
+                        justificacion: 'El 2 y el 3 deciden igual en los dos órdenes, y por razones distintas: al 2 la regla del score no lo toca —tiene 690— y sigue saliendo preferencial por el ingreso; al 3 no le llega la del ingreso —3 400 000 no alcanza— así que la del score ya lo estaba decidiendo antes del arreglo. Solo el 1 cae en las dos a la vez, y es ahí donde manda el orden. Eso es lo que hace tan difícil de encontrar un defecto de orden: no cambia todas las decisiones, solo las del cruce, y mientras tanto las demás siguen saliendo bien. Y el arreglo no reescribe ninguna condición: mueve dos líneas.',
                     },
                     {
                         seccion: 'cap1',
@@ -5564,7 +5564,7 @@ neto = pago - retencion`,
                         seccion: 'cap5',
                         pregunta: 'Un equipo que trabaja en R tiene que escribir cuatro reglas. ¿Cuál de ellas se puede escribir con switch?',
                         opciones: [
-                            { texto: 'La tarifa por tramos de monto: de 1 a 100 000, de 100 001 a 500 000, y así.', correcta: false },
+                            { texto: 'La tarifa por tramos de monto: de 1 a 100 000, de 100 001 a 500 000, y así.', correcta: false },
                             { texto: 'La tasa según la calificación de riesgo del cliente: A, B, C, D o E.', correcta: true },
                             { texto: 'La decisión de crédito según el score, el endeudamiento y el ingreso.', correcta: false },
                             { texto: 'El recargo que se cobra si la mora de la factura supera los 30 días.', correcta: false },
@@ -5573,18 +5573,18 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap6',
-                        pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
+                        pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
                         opciones: [
-                            { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
-                            { texto: 'Nada: el pago no llega a la base mínima de 200 000.', correcta: true },
-                            { texto: 'Se le retienen 7 200, que es el 4 % del pago.', correcta: false },
+                            { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
+                            { texto: 'Nada: el pago no llega a la base mínima de 200 000.', correcta: true },
+                            { texto: 'Se le retienen 7 200, que es el 4 % del pago.', correcta: false },
                             { texto: 'Nada, pero porque el proveedor no es declarante.', correcta: false },
                         ],
-                        justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
+                        justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
                     },
                     {
                         seccion: 'cap6',
-                        pregunta: 'Con la política de originación en su orden correcto, un solicitante con ingreso de 6 500 000, score 720 y endeudamiento del 68 % es rechazado. ¿Qué pasó con la regla del ingreso preferencial?',
+                        pregunta: 'Con la política de originación en su orden correcto, un solicitante con ingreso de 6 500 000, score 720 y endeudamiento del 68 % es rechazado. ¿Qué pasó con la regla del ingreso preferencial?',
                         opciones: [
                             { texto: 'Se evaluó después del endeudamiento y dio verdadero, pero ya no cambiaba nada.', correcta: false },
                             { texto: 'Se evaluó antes que las de rechazo: las reglas de aprobación se miran primero.', correcta: false },
@@ -5715,7 +5715,7 @@ neto = pago - retencion`,
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
-                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
                                         <button disabled={safeIndex === 0} onClick={() => setActiveLessonIndex(c => c - 1)}

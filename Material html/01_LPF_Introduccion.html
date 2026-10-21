@@ -2538,7 +2538,7 @@
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
                     gancho="Un centavo de diferencia por transacción, multiplicado por un millón de transacciones, es un descuadre contable que nadie sabe explicar.">
-                    El cierre de mes no cuadra por $8 432. El sistema liquidó bien cada uno de los 840 000 pagos
+                    El cierre de mes no cuadra por $8 432. El sistema liquidó bien cada uno de los 840 000 pagos
                     —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún error de
                     cálculo: hay ochocientos cuarenta mil redondeos que la máquina hizo a su manera, porque
                     así representa los números por dentro.
@@ -2696,7 +2696,7 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-credit-card"
                     gancho="Leer 0x0A no es un truco de examen: es saber qué le pasó a la transacción de un cliente que está esperando.">
-                    Una pasarela de pagos rechaza el 0,4 % de las transacciones con el código
+                    Una pasarela de pagos rechaza el 0,4 % de las transacciones con el código
                     <span className="inline-code">0x0A</span> y nadie en el equipo sabe qué significa. El manual dice
                     «estado en hexadecimal, dieciséis banderas». Son cuatro caracteres que guardan dieciséis respuestas
                     de sí o no, y mientras nadie sepa leerlos, cada rechazo se escala a soporte y se responde por teléfono.
@@ -3205,7 +3205,7 @@ Debug.Print total`,
                     pregunta="¿Qué diferencia hay entre las dos?"
                     opciones={[
                         { texto: 'Son idénticas: el compilador las convierte en el mismo programa.', correcta: false },
-                        { texto: 'Dan el mismo total, pero la A cruza el bus de memoria doce veces más que la B.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es el número de accesos a memoria, y ahí está el cuello de botella de Von Neumann: la CPU calcula mucho más rápido de lo que el bus le trae los datos. Con doce cuotas la diferencia no se nota; recorriendo 40 000 filas de una hoja, es la diferencia entre segundos y minutos. De ahí viene la regla de sacar del ciclo todo lo que no cambia dentro de él.' },
+                        { texto: 'Dan el mismo total, pero la A cruza el bus de memoria doce veces más que la B.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es el número de accesos a memoria, y ahí está el cuello de botella de Von Neumann: la CPU calcula mucho más rápido de lo que el bus le trae los datos. Con doce cuotas la diferencia no se nota; recorriendo 40 000 filas de una hoja, es la diferencia entre segundos y minutos. De ahí viene la regla de sacar del ciclo todo lo que no cambia dentro de él.' },
                         { texto: 'La B da un total distinto porque lee la tasa antes de empezar.', correcta: false },
                         { texto: 'La A es más rápida porque no usa una variable adicional.', correcta: false },
                     ]}
@@ -3721,7 +3721,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="¿Cuántos meses hasta la meta?"
-                    enunciado={<>Un ahorro de $1 000 000 crece al 2 % mensual y la meta es $1 050 000. Complete el estado <strong>al terminar cada vuelta</strong>, incluida la columna <span className="inline-code">saldo &lt; meta</span>, que decide si hay otra vuelta.</>}
+                    enunciado={<>Un ahorro de $1 000 000 crece al 2 % mensual y la meta es $1 050 000. Complete el estado <strong>al terminar cada vuelta</strong>, incluida la columna <span className="inline-code">saldo &lt; meta</span>, que decide si hay otra vuelta.</>}
                     codigo={META_AHORRO}
                     columnas={[
                         { clave: 'paso', titulo: 'Vuelta' },
@@ -3735,10 +3735,10 @@ End Sub`,
                 />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En ese mismo algoritmo, si la meta fuera $1 020 000 en lugar de $1 050 000, ¿qué imprimiría?"
+                    pregunta="En ese mismo algoritmo, si la meta fuera $1 020 000 en lugar de $1 050 000, ¿qué imprimiría?"
                     opciones={[
                         { texto: 'Nada: el ciclo no termina.', correcta: false },
-                        { texto: '1 — entra una sola vez y sale.', correcta: true, justificacion: 'Con saldo inicial 1 000 000 la condición 1 000 000 < 1 020 000 se cumple, así que entra. Dentro, el saldo pasa a 1 020 000 exactos y mes a 1. Al volver a comprobar, 1 020 000 < 1 020 000 es Falso —el operador es «menor que», no «menor o igual»— y el ciclo termina. Alcanzar la meta exacta no da una vuelta más: ese detalle del signo es el que produce los errores de un mes de diferencia en las proyecciones.' },
+                        { texto: '1 — entra una sola vez y sale.', correcta: true, justificacion: 'Con saldo inicial 1 000 000 la condición 1 000 000 < 1 020 000 se cumple, así que entra. Dentro, el saldo pasa a 1 020 000 exactos y mes a 1. Al volver a comprobar, 1 020 000 < 1 020 000 es Falso —el operador es «menor que», no «menor o igual»— y el ciclo termina. Alcanzar la meta exacta no da una vuelta más: ese detalle del signo es el que produce los errores de un mes de diferencia en las proyecciones.' },
                         { texto: '0 — la condición no se cumple nunca.', correcta: false },
                         { texto: '2 — hace falta superar la meta, no solo igualarla.', correcta: false },
                     ]}
@@ -3765,9 +3765,9 @@ End Sub`,
                     solucion={<Box type="tip" label="Cómo se lee ese resultado">
                         <p>
                             El rechazo <strong>no</strong> dice que el cliente sea mal pagador. Las dos primeras condiciones se
-                            cumplen: el score de 720 supera el mínimo de 680, y los ingresos de $3 500 000 superan de sobra la
-                            cuota estimada de $300 000. La que falla es la tercera, la de respaldo: los ingresos no llegan a
-                            $5 000 000 y no hay codeudor.
+                            cumplen: el score de 720 supera el mínimo de 680, y los ingresos de $3 500 000 superan de sobra la
+                            cuota estimada de $300 000. La que falla es la tercera, la de respaldo: los ingresos no llegan a
+                            $5 000 000 y no hay codeudor.
                         </p>
                         <p>
                             Traducido a algo accionable: <strong>este cliente se aprueba si presenta un codeudor</strong>. Esa
@@ -3776,8 +3776,8 @@ End Sub`,
                             <em>cuál</em> condición falló convierte un rechazo en una venta.
                         </p>
                     </Box>}>
-                    El sistema niega el crédito de $15 000 000 a una persona con score 720 —muy por encima del mínimo— e
-                    ingresos de $3 500 000 mensuales. El asesor comercial tiene al cliente enfrente y solo ve la palabra
+                    El sistema niega el crédito de $15 000 000 a una persona con score 720 —muy por encima del mínimo— e
+                    ingresos de $3 500 000 mensuales. El asesor comercial tiene al cliente enfrente y solo ve la palabra
                     <em> Falso</em> en la pantalla. ¿Qué le está diciendo realmente el algoritmo, y qué debería responderle
                     al cliente?
                 </Reto></Ejercicio>
@@ -4043,8 +4043,8 @@ End Sub`,
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
-                    gancho="El descuadre de $8 432 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjo la forma en que la máquina guarda los decimales.">
-                    Un analista revisa 840 000 pagos buscando el que está mal. No lo va a encontrar, porque no
+                    gancho="El descuadre de $8 432 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjo la forma en que la máquina guarda los decimales.">
+                    Un analista revisa 840 000 pagos buscando el que está mal. No lo va a encontrar, porque no
                     existe: cada uno está bien calculado. Lo que falla es más profundo y más incómodo de aceptar:
                     la máquina no puede guardar exactamente 0,1, igual que usted no puede escribir un tercio
                     con decimales sin cortarlo en algún punto.
@@ -4095,7 +4095,7 @@ End Sub`,
                         <tbody>
                             <tr>
                                 <td><strong>Centavos enteros</strong></td>
-                                <td>Guardar 150 000 en vez de 1 500,00. Los enteros no tienen este problema.</td>
+                                <td>Guardar 150 000 en vez de 1 500,00. Los enteros no tienen este problema.</td>
                                 <td>La solución de la banca y de casi todo sistema de pagos.</td>
                             </tr>
                             <tr>
@@ -4157,10 +4157,10 @@ End Sub`,
                 />
 
                 <Ejercicio tipo="E7"><Reto
-                    titulo="$8 432 sobre 840 000 pagos"
+                    titulo="$8 432 sobre 840 000 pagos"
                     solucion={<Box type="tip" label="Qué dice realmente esa cifra">
                         <p>
-                            Lo primero es dividir: 8 432 ÷ 840 000 ≈ <strong>0,01 pesos por pago</strong>. Un centavo cada
+                            Lo primero es dividir: 8 432 ÷ 840 000 ≈ <strong>0,01 pesos por pago</strong>. Un centavo cada
                             uno. Eso descarta de entrada la hipótesis de «un pago mal calculado»: un error puntual daría un
                             descuadre grande en un registro, no uno diminuto en todos.
                         </p>
@@ -4170,13 +4170,13 @@ End Sub`,
                         </p>
                         <p>
                             Y de ahí sale la acción, que es lo que se le pedía: <strong>no</strong> hay que auditar los
-                            840 000 registros. Hay que revisar cómo se guardan los importes y en qué momento se redondea
+                            840 000 registros. Hay que revisar cómo se guardan los importes y en qué momento se redondea
                             —una sola vez al final, o en cada operación intermedia—. Buscar el registro culpable habría
                             costado semanas y no habría encontrado nada, porque no existe.
                         </p>
                     </Box>}>
-                    Vuelva al descuadre con el que abre el capítulo: el cierre de mes no cuadra por $8 432 sobre
-                    840 000 pagos, y cada pago está bien calculado. Antes de tocar una línea de código: ¿qué le dice
+                    Vuelva al descuadre con el que abre el capítulo: el cierre de mes no cuadra por $8 432 sobre
+                    840 000 pagos, y cada pago está bien calculado. Antes de tocar una línea de código: ¿qué le dice
                     esa cifra sobre <em>dónde</em> está el problema, y qué haría usted primero?
                 </Reto></Ejercicio>
 
@@ -4328,7 +4328,7 @@ End Sub`,
                             { texto: 'Mostrar los importes con menos cifras, como hace R por defecto, para que el desfase no aparezca.', correcta: false },
                             { texto: 'Guardar los importes en centavos enteros —o en Currency o Decimal—, para que la igualdad sea exacta.', correcta: true },
                         ],
-                        justificacion: 'Es la solución que la tabla de la sección atribuye a la banca: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
+                        justificacion: 'Es la solución que la tabla de la sección atribuye a la banca: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
                     },
                     {
                         seccion: 'cap2',
@@ -4496,7 +4496,7 @@ End Sub`,
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
-                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
                                         <button disabled={safeIndex === 0} onClick={() => setActiveLessonIndex(c => c - 1)}

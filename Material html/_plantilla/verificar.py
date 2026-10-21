@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y diecinueve sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -64,6 +64,12 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      pertenece una pregunta no se puede adivinar leyéndola, y adivinarlo mal
      sería peor que no comprobarlo. Si no declara ninguna, avisa de que no
      se comprobó.
+ 20. CIFRAS PARTIBLES — que ninguna cifra de la prosa se pueda partir entre dos
+     renglones: el separador de miles es un espacio fino duro (U+202F), y el
+     espacio antes del % es duro (U+00A0). Vive en `comprobar_cifras.js`,
+     porque distinguir la prosa del código necesita el analizador de Babel;
+     el mismo guion, con `--corregir`, pone los espacios. Nació de una celda
+     del capítulo 5 que mostró «1 150» en un renglón y «000» en el siguiente.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -72,7 +78,7 @@ Uso:
                                                     # (útil en capítulos a medias)
     python3 _plantilla/verificar.py --con-salidas   # añade la regla 9 (lenta)
 
-La regla 15 necesita Node con @babel/core y @babel/preset-react instalados en
+Las reglas 15 y 20 necesitan Node con @babel/core y @babel/preset-react instalados en
 global (`npm i -g @babel/core @babel/preset-react`). Si faltan, avisa en vez de
 fallar: no es lo mismo «está mal» que «no se pudo comprobar».
 
@@ -1148,6 +1154,36 @@ def jsx_compila(ruta):
     return [f"jsx — {l}" for l in salida.splitlines() if l.strip()], []
 
 
+def cifras_partibles(ruta):
+    """Ninguna cifra de la prosa se puede partir entre dos renglones (regla 20).
+
+    Vive en `comprobar_cifras.js` por la misma razón que la regla 15: hay que
+    saber qué es prosa y qué es código, y eso solo lo sabe el analizador. Un
+    espacio duro en un bloque de código sería un error de sintaxis al copiarlo.
+
+    Devuelve (problemas, avisos), con un problema por cifra.
+    """
+    guion = Path(__file__).resolve().parent / "comprobar_cifras.js"
+    if not guion.exists():
+        return [], ["cifras — falta _plantilla/comprobar_cifras.js, no se pudo comprobar"]
+    try:
+        r = subprocess.run(["node", str(guion), str(ruta)],
+                           capture_output=True, text=True, timeout=180)
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return [], ["cifras — no se pudo ejecutar Node, no se comprobó"]
+    if r.returncode == 0:
+        return [], []
+    if r.returncode == 2:
+        return [], [f"cifras — no se pudo comprobar: {(r.stderr or r.stdout).strip()}"]
+    lineas = [l.split(":", 1)[1] for l in r.stdout.splitlines() if ":" in l]
+    if not lineas:
+        return [f"cifras — {(r.stderr or r.stdout).strip()}"], []
+    return ([f"cifra que se puede partir en la línea {l}" for l in lineas[:8]] +
+            ([f"cifras — {len(lineas) - 8} más; las arregla "
+              f"`node _plantilla/comprobar_cifras.js --corregir {ruta.name}`"]
+             if len(lineas) > 8 else [])), []
+
+
 def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     texto = ruta.read_text(encoding="utf-8")
     cuerpo = cuerpo_capitulo(texto)
@@ -1248,6 +1284,11 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     p19, a19 = cobertura_del_cuestionario(texto, cuerpo, desplazamiento)
     problemas += [f"cobertura — {f}" for f in p19]
     avisos += [f"cobertura — {f}" for f in a19]
+
+    # 20 · ninguna cifra de la prosa se parte entre renglones
+    p20, a20 = cifras_partibles(ruta)
+    problemas += p20
+    avisos += a20
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

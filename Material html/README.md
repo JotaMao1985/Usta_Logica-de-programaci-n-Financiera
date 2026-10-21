@@ -292,6 +292,16 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
 - **Toda salida documentada debe haberse ejecutado**, no
   supuesto. Python y R se ejecutan; VBA se verifica en Excel real, con
   `ejecutar_vba.py`.
+- **Las cifras no se parten entre renglones.** En la prosa, el separador de
+  miles es un espacio duro (U+00A0), no uno normal: «1 150 000» no puede quedar
+  como «1 150» al final de un renglón y «000» al principio del siguiente. Lo
+  mismo el espacio antes del % («1,8 %») y los del producto de la notación
+  científica («7,5 × 10⁻⁸»). En el código no: allí sobra, y en una línea que el
+  estudiante copia es un error de sintaxis. No hace falta escribirlo a mano. La
+  regla 20 avisa, y `node _plantilla/comprobar_cifras.js --corregir <capítulo>`
+  pone los espacios solo en la prosa. Se probó el espacio fino (U+202F), que es
+  el que recomiendan la RAE y el SI, pero en Montserrat queda tan angosto que
+  «20 000 000» se lee «20000000».
 - Los ejercicios **no piden escribir programas desde cero**: eso es de los
   talleres. Aquí se lee, se traza, se diagnostica, se compara y se interpreta.
   Lo comprueba la regla 11, que mira **solo los enunciados** —las propiedades

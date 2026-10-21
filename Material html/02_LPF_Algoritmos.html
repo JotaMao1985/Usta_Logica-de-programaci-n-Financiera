@@ -2186,9 +2186,9 @@
                 <Motivacion icon="fa-money-bill-trend-up"
                     gancho="Dos algoritmos correctos para el mismo problema, y uno tarda mil veces más. ¿Qué los diferencia, si los dos dan el resultado bueno?">
                     A dos analistas les encargan lo mismo: encontrar un crédito dentro de una cartera de
-                    40 000. El primero escribe una rutina que los revisa uno por uno y funciona. El
+                    40 000. El primero escribe una rutina que los revisa uno por uno y funciona. El
                     segundo aprovecha que la cartera ya viene ordenada y escribe otra que también
-                    funciona. Uno hace 39 814 comparaciones; el otro, doce. Las dos respuestas son
+                    funciona. Uno hace 39 814 comparaciones; el otro, doce. Las dos respuestas son
                     correctas y solo una sirve para el cierre diario.
                 </Motivacion>
 
@@ -2388,7 +2388,7 @@ End Sub`,
                     siempre en el mismo número de pasos.
                 </p>
                 <CodeTabs
-                    titulo="Descuento por pronto pago sobre una factura de $8 000 000"
+                    titulo="Descuento por pronto pago sobre una factura de $8 000 000"
                     bloques={EJ_DESCUENTO}
                     nota={<>Las líneas que empiezan por <span className="inline-code">#&gt;</span> son la <strong>salida</strong> de la máquina, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
                 />
@@ -2438,12 +2438,12 @@ End Sub`,
                 </Reto></Ejercicio>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En el algoritmo del descuento, alguien cambia la línea de la tasa y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
+                    pregunta="En el algoritmo del descuento, alguien cambia la línea de la tasa y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
                     opciones={[
-                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. La entrada estaba mal declarada, no el proceso.' },
-                        { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
+                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. La entrada estaba mal declarada, no el proceso.' },
+                        { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
                         { texto: 'El programa se detiene con un error: 0.03 no es un porcentaje válido.', correcta: false },
-                        { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
+                        { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
                     ]}
                 /></Ejercicio>
             </div>
@@ -2607,13 +2607,13 @@ End Sub`,
 
                 <h3>El caso: la cuota de un crédito de libre inversión</h3>
                 <p>
-                    Un cliente solicita $12 000 000 a 24 meses. El banco cobra 1,8 % mensual de interés y
-                    un seguro de vida deudor del 0,12 % mensual. Se pide la cuota fija.
+                    Un cliente solicita $12 000 000 a 24 meses. El banco cobra 1,8 % mensual de interés y
+                    un seguro de vida deudor del 0,12 % mensual. Se pide la cuota fija.
                 </p>
 
                 <CalloutPro tema="tip" titulo="Un dato de entrada no es lo mismo que una constante del negocio" subtitulo="La distinción que decide qué se pregunta y qué se escribe" icon="fa-key">
                     El capital, la tasa y el plazo <strong>cambian en cada solicitud</strong>: son
-                    entradas, y el algoritmo las recibe. El 0,12 % del seguro <strong>lo fija la
+                    entradas, y el algoritmo las recibe. El 0,12 % del seguro <strong>lo fija la
                     política del banco</strong>: es una constante, y va escrita en el algoritmo con un
                     nombre. Confundirlas tiene dos costos simétricos —pedirle al usuario un dato que él
                     no decide, o enterrar en el código un número que mañana cambia y nadie encuentra—.
@@ -2993,7 +2993,7 @@ End Sub`,
                     <div className="lp-card p-4">
                         <p className="text-xs uppercase tracking-widest text-primary font-bold m-0 mb-2">4 · Código</p>
                         <CodeTabs
-                            titulo="Interés simple de un microcrédito de $6 000 000 a 18 meses"
+                            titulo="Interés simple de un microcrédito de $6 000 000 a 18 meses"
                             bloques={EJ_INTERES_MICRO}
                         />
                     </div>
@@ -3225,10 +3225,10 @@ End Sub`,
                 nota: 'Antes de empezar, las tres casillas están vacías. Una variable no tiene valor hasta que una instrucción se lo da.' },
             { instruccion: ins('a <- 500000', 'a = 500_000', 'a <- 500000', 'a = 500000'),
                 a: '500000', b: '—', aux: '—', cambia: 'a',
-                nota: 'La cuenta A tiene $500 000. Solo cambia la casilla de la izquierda de la flecha.' },
+                nota: 'La cuenta A tiene $500 000. Solo cambia la casilla de la izquierda de la flecha.' },
             { instruccion: ins('b <- 800000', 'b = 800_000', 'b <- 800000', 'b = 800000'),
                 a: '500000', b: '800000', aux: '—', cambia: 'b',
-                nota: 'La cuenta B tiene $800 000. La casilla a no se entera: nadie la tocó.' },
+                nota: 'La cuenta B tiene $800 000. La casilla a no se entera: nadie la tocó.' },
             { instruccion: ins('aux <- a', 'aux = a', 'aux <- a', 'aux = a'),
                 a: '500000', b: '800000', aux: '500000', cambia: 'aux',
                 nota: 'aux COPIA lo que hay en a. Copiar no es mover: a conserva su valor. Es el punto donde falla la intuición.' },
@@ -3386,10 +3386,10 @@ End Sub`,
         const ERROR_TIPO_OK = { pseudo: 4, python: 3, r: 3, vba: 4 };
 
         const ERROR_TIPO_EXPL = {
-            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Debe declararse como un tipo con decimales —moneda, idealmente—.</>,
-            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta = rendimiento / 3</span>.</>,
-            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span>.</>,
-            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Debe ser <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3.</>,
+            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Debe declararse como un tipo con decimales —moneda, idealmente—.</>,
+            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta = rendimiento / 3</span>.</>,
+            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span>.</>,
+            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Debe ser <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3.</>,
         };
 
         const Cap4Section = () => (
@@ -3500,17 +3500,17 @@ End Sub`,
                 />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="Alguien intenta intercambiar los saldos sin usar la variable auxiliar y escribe solo dos instrucciones: primero a toma el valor de b, y después b toma el valor de a. Partiendo de a = 500 000 y b = 800 000, ¿con qué valores terminan?"
+                    pregunta="Alguien intenta intercambiar los saldos sin usar la variable auxiliar y escribe solo dos instrucciones: primero a toma el valor de b, y después b toma el valor de a. Partiendo de a = 500 000 y b = 800 000, ¿con qué valores terminan?"
                     opciones={[
-                        { texto: 'a = 500 000 y b = 500 000: se pierde el saldo de la cuenta B.', correcta: false },
-                        { texto: 'a = 500 000 y b = 800 000: no cambia nada, las dos instrucciones se anulan.', correcta: false },
-                        { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
-                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
+                        { texto: 'a = 500 000 y b = 500 000: se pierde el saldo de la cuenta B.', correcta: false },
+                        { texto: 'a = 500 000 y b = 800 000: no cambia nada, las dos instrucciones se anulan.', correcta: false },
+                        { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
+                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
                     ]}
                 /></Ejercicio>
 
                 <DetectaError
-                    enunciado={<>Un rendimiento de $100 000 se reparte entre tres cuentas de ahorro. El algoritmo informa cuánto recibe cada una y cuánto se repartió en total, y ese total no coincide con el rendimiento. <strong>¿En qué línea está la decisión que provoca el fallo?</strong></>}
+                    enunciado={<>Un rendimiento de $100 000 se reparte entre tres cuentas de ahorro. El algoritmo informa cuánto recibe cada una y cuánto se repartió en total, y ese total no coincide con el rendimiento. <strong>¿En qué línea está la decisión que provoca el fallo?</strong></>}
                     lineas={ERROR_TIPO_LINEAS}
                     lineaCorrecta={ERROR_TIPO_OK}
                     tipos={[
@@ -3521,7 +3521,7 @@ End Sub`,
                     ]}
                     tipoCorrecto={2}
                     explicacion={ERROR_TIPO_EXPL}
-                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso no le importa a nadie hasta que se repara en que este reparto corre para cada rendimiento, de cada producto, todos los días. Ese peso diario no desaparece del mundo: queda en una cuenta de descuadre que alguien tiene que explicar a fin de mes. Es el mismo problema del capítulo 1 llegando por otra puerta —allí por el binario, aquí por el tipo elegido—.</>}
+                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso no le importa a nadie hasta que se repara en que este reparto corre para cada rendimiento, de cada producto, todos los días. Ese peso diario no desaparece del mundo: queda en una cuenta de descuadre que alguien tiene que explicar a fin de mes. Es el mismo problema del capítulo 1 llegando por otra puerta —allí por el binario, aquí por el tipo elegido—.</>}
                 />
             </div>
         );
@@ -3732,7 +3732,7 @@ Debug.Print pasos`,
                     gancho="Contar operaciones no es una manía académica: es la diferencia entre un cierre de dos minutos y uno de dos horas.">
                     El cierre diario de cartera empezó tardando ocho minutos. Con el negocio creciendo,
                     pasó a cuarenta, y el equipo pidió un servidor más grande. Alguien miró el código
-                    antes de firmar la compra: la rutina de búsqueda recorría los 40 000 créditos uno por
+                    antes de firmar la compra: la rutina de búsqueda recorría los 40 000 créditos uno por
                     uno, y la cartera ya estaba ordenada por número de obligación. El servidor no hacía
                     falta.
                 </Motivacion>
@@ -3755,7 +3755,7 @@ Debug.Print pasos`,
 
                 <h3>El mismo problema, dos maneras</h3>
                 <p>
-                    Buscar el crédito número 39 814 en una cartera de 40 000, ordenada por número de
+                    Buscar el crédito número 39 814 en una cartera de 40 000, ordenada por número de
                     obligación. El algoritmo <strong>A</strong> empieza por el primero y avanza. El
                     algoritmo <strong>B</strong> mira el del medio: si el buscado es mayor, descarta de
                     golpe la mitad de abajo; si es menor, la de arriba; y repite. Los dos encuentran el
@@ -3765,7 +3765,7 @@ Debug.Print pasos`,
                 <CodeTabs
                     titulo="Contar las comparaciones de cada algoritmo"
                     bloques={EJ_CONTEO}
-                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador. La diferencia es de <strong>3 318 veces</strong>, y no depende de tener una máquina mejor.</>}
+                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador. La diferencia es de <strong>3 318 veces</strong>, y no depende de tener una máquina mejor.</>}
                 />
 
                 <CalloutPro tema="warn" titulo="Por qué B no siempre se puede usar" subtitulo="La condición que hace correcto al algoritmo rápido" icon="fa-scale-balanced">
@@ -3779,7 +3779,7 @@ Debug.Print pasos`,
                 <h3>Ejercicios</h3>
 
                 <Comparador
-                    enunciado="Las dos versiones buscan el mismo crédito en la misma cartera de 40 000 registros, ordenada por número de obligación."
+                    enunciado="Las dos versiones buscan el mismo crédito en la misma cartera de 40 000 registros, ordenada por número de obligación."
                     a={{ etiqueta: 'A · Uno por uno', codigo: CMP_SECUENCIAL }}
                     b={{ etiqueta: 'B · Partiendo por la mitad', codigo: CMP_BINARIA }}
                     pregunta="¿Las dos versiones encuentran siempre el mismo crédito?"
@@ -3792,10 +3792,10 @@ Debug.Print pasos`,
                 />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="El cierre diario ejecuta esa búsqueda 5 000 veces. Con el algoritmo A son 39 814 comparaciones cada vez; con el B, 12. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
+                    pregunta="El cierre diario ejecuta esa búsqueda 5 000 veces. Con el algoritmo A son 39 814 comparaciones cada vez; con el B, 12. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
                     opciones={[
-                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de comparaciones a unas 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 ≈ 199 millones frente a 5 000 × 12 = 60 000: tres órdenes de magnitud. Y el argumento decisivo para un comité no es la elegancia del algoritmo sino que el ahorro no cuesta inversión. Es también el motivo por el que revisar el código antes de comprar hardware suele ser rentable.' },
-                        { texto: 'El algoritmo B es preferible porque ocupa menos memoria: carga 12 registros por búsqueda en vez de 39 814.', correcta: false },
+                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de comparaciones a unas 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 ≈ 199 millones frente a 5 000 × 12 = 60 000: tres órdenes de magnitud. Y el argumento decisivo para un comité no es la elegancia del algoritmo sino que el ahorro no cuesta inversión. Es también el motivo por el que revisar el código antes de comprar hardware suele ser rentable.' },
+                        { texto: 'El algoritmo B es preferible porque ocupa menos memoria: carga 12 registros por búsqueda en vez de 39 814.', correcta: false },
                         { texto: 'La diferencia es irrelevante: los computadores actuales hacen millones de operaciones por segundo, sea cual sea el algoritmo.', correcta: false },
                         { texto: 'El algoritmo B entrega un resultado más preciso: con 12 comparaciones hay menos pasos en los que equivocarse.', correcta: false },
                     ]}
@@ -3839,12 +3839,12 @@ Debug.Print pasos`,
                 <h3>Interpretación financiera del resultado</h3>
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="El algoritmo de la sección 2 liquida un crédito de $12 000 000 a 24 meses y arroja una cuota de $730 400. El cliente pagará 24 cuotas iguales. ¿Qué se puede afirmar ante el cliente?"
+                    pregunta="El algoritmo de la sección 2 liquida un crédito de $12 000 000 a 24 meses y arroja una cuota de $730 400. El cliente pagará 24 cuotas iguales. ¿Qué se puede afirmar ante el cliente?"
                     opciones={[
                         { texto: 'El seguro de vida deudor explica la mayor parte del sobrecosto, porque se cobra en cada una de las 24 cuotas.', correcta: false },
                         { texto: 'No puede afirmarse nada todavía: cualquier cifra depende de la inflación que haya en los dos años del crédito.', correcta: false },
-                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
-                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false },
+                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
+                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3874,7 +3874,7 @@ Debug.Print pasos`,
                     },
                     {
                         seccion: 'cap2',
-                        pregunta: 'En la liquidación de la cuota, el seguro de vida deudor del 0,12 % mensual lo fija la política del banco y es igual para todas las solicitudes. En el análisis EPS, ¿qué es?',
+                        pregunta: 'En la liquidación de la cuota, el seguro de vida deudor del 0,12 % mensual lo fija la política del banco y es igual para todas las solicitudes. En el análisis EPS, ¿qué es?',
                         opciones: [
                             { texto: 'Una salida: es una cifra que el banco publica y el cliente conoce antes de pedir el crédito.', correcta: false },
                             { texto: 'Un proceso: es una de las cantidades que intervienen en el cálculo.', correcta: false },
@@ -3948,14 +3948,14 @@ Debug.Print pasos`,
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas comparaciones hace?',
+                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas comparaciones hace?',
                         opciones: [
-                            { texto: '40 000: A recorre siempre la cartera completa, esté donde esté el crédito.', correcta: false },
+                            { texto: '40 000: A recorre siempre la cartera completa, esté donde esté el crédito.', correcta: false },
                             { texto: '4: con la cartera ordenada, A también descarta mitades, igual que B.', correcta: false },
-                            { texto: '2 500: A se detiene en cuanto lo encuentra, y el 2 500 está en la posición 2 500.', correcta: true },
-                            { texto: '20 000: en promedio, A recorre la mitad de la cartera antes de encontrar un crédito.', correcta: false },
+                            { texto: '2 500: A se detiene en cuanto lo encuentra, y el 2 500 está en la posición 2 500.', correcta: true },
+                            { texto: '20 000: en promedio, A recorre la mitad de la cartera antes de encontrar un crédito.', correcta: false },
                         ],
-                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 hace 2 500 comparaciones, igual que para el 39 814 hizo 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 comparaciones para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
+                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 hace 2 500 comparaciones, igual que para el 39 814 hizo 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 comparaciones para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
                     },
                 ]} />
 
@@ -4080,7 +4080,7 @@ Debug.Print pasos`,
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
-                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
                                         <button disabled={safeIndex === 0} onClick={() => setActiveLessonIndex(c => c - 1)}

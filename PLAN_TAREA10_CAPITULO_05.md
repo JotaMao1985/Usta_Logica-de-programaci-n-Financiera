@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Siguiente: la sección 7 (Tarea 2.7).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. Siguiente: la sección 7 (Tarea 2.7).
 
 ---
 
@@ -533,6 +533,34 @@ al final de un renglón, solo que menos a la vista.
 No es de LP-CORE, así que no obliga a reestampar. Queda a decisión del docente si
 va con la tarea de deudas (P3) o aparte.
 
+**Resuelto el 2026-10-20, aparte, a pedido del docente.** La regla 20 de
+`verificar.py` vive en `_plantilla/comprobar_cifras.js`. Usa Babel para separar la
+prosa del código, porque un espacio duro en un bloque que el estudiante copia es
+un error de sintaxis. Con `--corregir` cambió 816 espacios en los cinco
+capítulos: 48, 87, 255, 164 y 262. Cubre tres casos: el separador de miles, el
+espacio antes del % y los dos de «× 10⁻ⁿ».
+- *Ningún bloque de código* tiene un espacio duro, y LP-CORE tampoco. Las salidas
+  de Python y R se vuelven a ejecutar sin cambios.
+- *El espacio es U+00A0, no U+202F.* El espacio fino era la propuesta. Se probó,
+  pero Montserrat lo dibuja de 0,14 em, y en la tabla de H3 «20 000 000» se leía
+  «20000000». U+00A0 mide lo mismo que el espacio que había: la página se ve
+  igual.
+- *Lo que no se toca* son los atributos SVG (`viewBox="0 0 700 180"` parece una
+  cifra), lo que va en `inline-code` y el % de módulo («17 % 5»).
+- *Prueba negativa*, sobre una copia del capítulo 5 con cinco trampas. Salen la
+  cifra de prosa con su espacio normal de vuelta, una cifra a medio arreglar y un
+  «2,5 %». No salen la cifra de un comentario de código ni el «17 % 5».
+- *La calificación no cambia:* la tabla de traza quita todo blanco con `\s`, que
+  incluye el espacio duro.
+- *En el navegador*, «1 150 000» no se parte ni en una caja de 1 px de ancho.
+  Antes daba tres renglones.
+- *A 375 px*, con el criterio de H15 y la prueba en negativo, se midieron todas
+  las secciones de los cinco capítulos. Cero elementos fuera, salvo la sección 3
+  del capítulo 2, que se sale 16 px después de visitar las secciones 1 y 2.
+  `main` hace lo mismo, y devolver los espacios normales no lo cambia: ya
+  existía. Es un elemento de cuadrícula con `min-width: auto`, y quedó propuesto
+  como tarea aparte.
+
 ---
 
 ## 3. Grafo de dependencias
@@ -934,13 +962,15 @@ la sección 2, el recuadro final de la sección 5 y la fila de la portada.
   controla por saldo y con qué cuidados, para que no se responda solo con la tabla.
   Respeta la regla del capítulo 1: no propone tolerancia para decidir un saldo,
   sino centavos enteros o `Currency`.
-- **E2** (`MCQ`): el cierre de caja con `Repita` y un 0 de centinela. Clave en la «a».
-  *Desviación:* con 0 de centinela, el total no cambia; lo que falla es el conteo,
-  4 pagos para 3 recibos. Se prefirió a un −1 porque así el defecto es «un número
-  plausible y falso», como en la sección 1. Con −1, un total de 799 999 se ve a
-  simple vista. Le siguen la lectura adelantada (el `Mientras` con dos lecturas de
-  la sección 3, que aquí sí gana) y la aclaración de por qué `monto <> 0` sí
-  sirve: el 0 se digita, no se calcula.
+- **E2** (`MCQ`): el cierre de caja con `Repita` y un −1 de centinela, que entra
+  al conteo y al total: «4 pagos por 799 999». Clave en la «a». Los distractores
+  son lo que el cajero espera (3 por 800 000), contar el centinela sin ver que en
+  la misma vuelta también se sumó (4 por 800 000) y creer que el ciclo no termina.
+  Le siguen la lectura adelantada (el `Mientras` con dos lecturas de la sección 3,
+  que aquí sí gana) y la aclaración de por qué `monto <> -1` sí sirve: el −1 se
+  digita, no se calcula. *Corregido el 2026-10-20, a pedido del docente:* la
+  primera versión usaba un 0, con el que el total no cambia, y el E2 no mostraba
+  lo que esta tarea le pedía, «el centinela que se suma como si fuera un monto».
 - La cierra la tabla «Qué hace parar a un ciclo»: contador, valor calculado,
   centinela y precisión. Su última fila es otro **hallazgo medido**: la bisección
   de la sección 7, con tolerancia 10⁻¹⁸, se queda en un intervalo de 3,5 × 10⁻¹⁸ y no
@@ -954,8 +984,9 @@ la sección 2, el recuadro final de la sección 5 y la fila de la portada.
   pasa. La regla 17 no da avisos.
 - Cada cifra en prosa está ejecutada en Python y R: la tabla de H3, también en
   JavaScript; las vueltas 13 y 14 del E3; el −0,93; el 241; la bisección.
-- Los dos cierres de caja se ejecutaron con las entradas del enunciado (4 y 3
-  pagos por 800 000), y con un 0 solo (0 pagos por 0).
+- Los dos cierres de caja se ejecutaron con las entradas del enunciado, y con el
+  centinela solo (0 pagos por 0). Con el −1 de la corrección, dan 4 pagos por
+  799 999 y 3 por 800 000.
 
 *Por DOM:*
 - El E3 da «¡Diagnóstico correcto!» en los cuatro lenguajes; con la «b», la «a» y
@@ -979,6 +1010,18 @@ Dos ajustes salieron de mirarla:
 - la tabla final tenía cuatro columnas y pasó a tres.
 
 Lo primero lleva a H19.
+
+*Correcciones del 2026-10-20, pedidas por el docente al revisar la sección:*
+- **El centinela pasó de 0 a −1** (ver el E2). Python y R, ejecutados con las
+  entradas del enunciado: 4 pagos por 799 999 con el `Repita`, 3 pagos por
+  800 000 con la lectura adelantada y 0 pagos por 0 con un −1 solo. Por DOM, el
+  E2 da «¡Correcto!» con la clave y «Revisa la explicación» con 4 por 800 000.
+- **H19, resuelto en los cinco capítulos** (ver H19).
+- **R10: VBA ya se puede ejecutar** en esta máquina (ver R10). El arnés de la
+  sección quedó preparado: los ocho bloques que declaran salida, los dos cierres
+  de caja con sus entradas y las líneas del E3. Falta pegarlo en Excel y comparar;
+  hasta entonces, las dos afirmaciones de VBA de la sección —las 37 cuotas y el
+  error 6— siguen sin ejecutar.
 
 #### Tarea 2.7 · Sección 7 — «Casos financieros»
 Saldo insoluto, capitalización y la TIR con `TIRBiseccion`. **E1:** tres vueltas
@@ -1121,7 +1164,7 @@ que no para).
 | R7 | **Cloze intermitentes**, por la notación científica o por sorteos que no distinguen | Medio | `num()` desde el primer `.Rmd`, reglas de H3 y H4, y `--reps 1000` |
 | R8 | **Una pregunta imposible de acertar** en la evaluación | Alto | `multiple: true`, regla 12, y responder las diez |
 | R9 | **Choque con la sesión que revisa el capítulo 4** en la misma carpeta | Medio | Rama en un *worktree*; esta tarea no toca el capítulo 4 |
-| R10 | **El VBA no se puede ejecutar** en esta máquina (R2 del plan maestro) | Medio | `Do…Loop Until` y `For…Next` se escriben y se cotejan con la referencia; lo que el texto afirme del contador en VBA (H4) va con su fuente |
+| R10 | **El VBA no se puede ejecutar** en esta máquina (R2 del plan maestro) | Medio | `Do…Loop Until` y `For…Next` se escriben y se cotejan con la referencia; lo que el texto afirme del contador en VBA (H4) va con su fuente. **2026-10-20:** sí se puede: hay Excel para Mac (16.112), y `_plantilla/ejecutar_vba.py` arma un módulo de arnés con los bloques que declaran `'>`, lo corre por AppleScript y compara. Solo pegar el módulo en el editor de VBA es a mano. Sin probar todavía contra Excel; la lectura y la comparación, sí, con una salida simulada |
 
 ---
 
