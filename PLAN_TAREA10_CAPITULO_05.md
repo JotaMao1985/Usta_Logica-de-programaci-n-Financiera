@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). Siguiente: la evaluación y el glosario (Tarea 2.8).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. Siguiente: la revisión del docente en el PC3, que no está aprobado.
 
 ---
 
@@ -1118,19 +1118,149 @@ rayas dejaba «—;» al principio de un renglón, y se reescribió.
 ciclo infinito, centinela, lectura adelantada, saldo insoluto, valor presente, TIR y
 capitalización.
 
-#### Tarea 2.8 · Evaluación y glosario
+#### Tarea 2.8 · Evaluación y glosario · ✅
 Diez preguntas, cada una con `seccion:` (regla 19), con `multiple: true` donde
 haya dos claves (regla 12), sin repetir ejercicios de sección (regla 18) y con
 distractores tan largos como la clave (regla 17). El E6 (`Emparejamiento`) cruza
 las siete secciones: forma del ciclo ↔ situación financiera. El recuadro «Lo que
 viene» anuncia el capítulo 6.
 
+*Hecho el 2026-10-21, en una corrida programada.*
+- **Motivación.** Un equipo de auditoría que lee, sin ejecutarlas, unas cuarenta
+  rutinas nocturnas, y le hace a cada ciclo las dos preguntas del capítulo. El
+  gancho las pone en dinero: una vuelta de más es una cuota que nadie debe, y un
+  ciclo que no para es un cierre que no llega.
+- **E6** (`Emparejamiento`, siete pares). Un fragmento por sección, en los
+  cuatro lenguajes y en orden; cuatro son formas y tres son defectos, cuya
+  situación es lo que el defecto produce:
+  - el acumulador que nace dentro del ciclo, con un informe que trae solo el
+    último día;
+  - el `Mientras saldo > 0` de unos abonos a una tarjeta, que no le cobra a un
+    saldo a favor;
+  - el `Repita` que valida un plazo;
+  - el `Para` de la tabla de un CDT;
+  - el subtotal que nace fuera de los dos ciclos, con un informe por oficina
+    que arrastra las anteriores;
+  - el `<> 0` con 1 000 000 en abonos de 300 000, que no se detiene;
+  - la bisección, para el costo de un crédito con gastos descontados.
+
+  El `> 0` y el `<> 0` llevan el mismo cuerpo, así que separarlos obliga a leer
+  la condición. Cada situación la cumple un solo fragmento: la del `Mientras` pide
+  no cobrarle a un saldo a favor, que el `<> 0` cobraría sin parar. `solucion` es
+  `[2, 5, 4, 0, 6, 1, 3]`, con la convención del capítulo 4: para cada fragmento,
+  la posición de su pareja en `derecha`. Ningún fragmento queda frente a su pareja.
+- **Cuestionario**, «Evaluación · Capítulo 05 — Control repetitivo». Coincide con
+  `<title>`, `CONFIG.titulo`, la barra lateral y el `<h3>` de `index.html`.
+
+  | # | Sección | Qué pregunta | Clave |
+  |---|---|---|---|
+  | 1 | cap1 | La capitalización de la sección 7 con `factor <- 0`: −100 % | b |
+  | 2 | cap4 | `range(n)` con n = 12: doce filas, numeradas de la 0 a la 11 | d |
+  | 3 | cap2 | El acuerdo en VBA sin la línea del saldo: `Meses: 0` sin error, y `NameError` en Python | a |
+  | 4 | cap3 | Qué formas de VBA equivalen a `Repita … Hasta saldo <= 0`: `Loop While saldo > 0` y `Loop Until saldo <= 0` | b, d |
+  | 5 | cap5 | Cinco créditos con 3, 0, 4, 1 y 2 cuotas: el subtotal se inicia 5 veces y se suma 10 | c |
+  | 6 | cap6 | La lectura adelantada con ajustes contables, uno de ellos −1: 1 ajuste por 80 000 | a |
+  | 7 | cap7 | El saldo insoluto de 6 000 000 al 1,2 % en 18, con 12 pagadas: 2 144 726,08 | d |
+  | 8 | cap4 | Los intereses del crédito de la traza de la sección 4, sin trazar: 538 861 | b |
+  | 9 | cap6 | Qué ciclos terminan seguro: el `Para` y la cuota 37, que tarda una vuelta pero para | c, d |
+  | 10 | cap7 | La bisección con tolerancia 10⁻⁷: 20 vueltas | a |
+
+  Claves del capítulo: c b a b d b c a d c · b d a b c a d b c a. Son 20 ítems, con
+  6 como máximo en una letra y sin rachas.
+- **Glosario** `GLOSARIO_CAP05`, en orden alfabético, con veinte términos: los
+  catorce de los `<Termino>` y seis más que el capítulo usa sin recuadro (las tres
+  formas, la bisección, la tolerancia y el VPN).
+- **«Lo que viene».** Anuncia el capítulo 6, «Entorno de programación VBA».
+  Las trazas hechas a mano las hará la máquina con F8 y la ventana Locales, y
+  quedan dos cosas que este capítulo dijo de paso: el 0 que deja un `Dim` y
+  `Currency` frente a `Double`.
+- **Sin andamio:** se retiraron el comentario `BORRADOR-FASE1` y el componente
+  `AvisoBorrador`, que ya no usaba nadie. `grep -n BORRADOR-FASE1` da cero, y
+  la portada dice ahora «Diecinueve ejercicios».
+
+*Desviaciones y decisiones a revisar:*
+- El glosario tiene veinte entradas y no catorce. Las seis añadidas se usan en
+  ejercicios o en la tabla «Qué hace parar a un ciclo».
+- La pregunta 8 da las cifras al peso (538 861). Con la cuota redondeada del
+  enunciado salen 538 860,68, y con la del programa, 538 860,64. Al peso coinciden,
+  y la justificación da las dos.
+- Dos afirmaciones de VBA no se ejecutaron (R10). La pregunta 3 dice que
+  `Dim … As Currency` deja el saldo en 0; la sección 2 ya lo afirma. La pregunta 4
+  da la equivalencia entre las cuatro formas de `Do…Loop`; se simuló en Python y
+  en R con seis saldos.
+- El E6 vuelve a poner formas y defectos que ya salieron en las secciones, a
+  propósito: lo nuevo son las situaciones. La regla 18 no mira el E6, así que
+  esto no lo vigila nadie.
+
+*Medido:*
+- `verificar.py --con-salidas`, **sin** `--sin-cuota`: los cinco capítulos en
+  verde. El 5 queda con 19 ejercicios (E1:4 E2:4 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2) y
+  la cuota cumplida. Ningún aviso de las reglas 16, 17, 18 ni 20.
+- Pruebas negativas de las reglas 12, 17, 18 y 19 sobre copias del capítulo:
+  - quitar un `multiple: true` da «pregunta imposible»;
+  - alargar una clave da «clave larga»;
+  - copiar en un distractor una opción del E2 de la sección 6 da «pregunta
+    repetida»;
+  - cambiar la `seccion` de la pregunta del 5 da «no tiene ninguna pregunta de
+    cap5».
+- La regla 20 puso 102 espacios duros en la prosa nueva.
+- Las cifras de las diez preguntas y del E6 se ejecutaron en Python y en R
+  antes de escribirlas: la efectiva con el factor en 0, `range(12)`, los
+  intereses, las cuentas de ejecución, el cierre con ajustes, las 37 vueltas, los
+  `<> 0` sin fin, el saldo insoluto y sus tres distractores, y la bisección con
+  10⁻⁶ y 10⁻⁷ (17 y 20 vueltas).
+
+*Por DOM:*
+- El cuestionario da **10/10** con las claves. Con una respuesta mala en la 1 y en
+  la 6, y las dos de selección múltiple incompletas, da 6/10. Las diez
+  justificaciones aparecen al calificar.
+- El E6 da «7 de 7 correctos» en los cuatro lenguajes. Con el `> 0` y el `<> 0`
+  cruzados da «5 de 7» en los cuatro, y muestra el emparejamiento correcto.
+- Ningún espacio comido en los 124 elementos en línea, con la prueba hecha antes
+  en negativo.
+- Consola: solo el error de `localStorage` de la carga en URL `data:` (H16),
+  anterior al montaje. Después, ninguno.
+
+*A 375 px*, con la barra cerrada y el criterio de H15, primero en negativo (el
+panel pasa de 367 a 624 px): cero fuera en los cuatro lenguajes del E6, con el
+cuestionario calificado y el E6 comprobado con error. Un ajuste salió de
+revisarla: un inciso entre rayas de la pregunta 6 podía dejar «—,» al principio
+de un renglón, y se reescribió.
+
+*Cómo se probó en el navegador:* el arranque del servidor «portal» se rechazó otra
+vez. El archivo se abrió desde `file://`, que el panel convierte en una URL
+`data:` sin `localStorage` (H16). Se le dio a la pestaña un `localStorage` en
+memoria y se volvió a montar el `App`, sin tocar el archivo. Las pruebas se
+repitieron después de la última corrección del texto.
+
+*Huecos de las herramientas:*
+- **Reglas 14 y 19.** Cuentan las preguntas con `\bpregunta:` sobre todo el
+  `Quiz`, también dentro de las justificaciones. Una justificación que decía «el
+  sitio de la pregunta: después de la vuelta» hizo que la regla 19 contara once
+  preguntas y fallara con «unas declaran `seccion` y otras no». Se reescribió la
+  frase. El arreglo es buscar `pregunta:` solo como clave de un objeto, o quitar
+  antes las cadenas de `justificacion`.
+- **`Emparejamiento` (LP-CORE).** Un fragmento emparejado muestra en su círculo
+  el *número* de su pareja (`pares[i] + 1`), y la pareja se rotula con una
+  *letra*. Así, el fragmento 1, unido a la «C», muestra un 3. Además, dentro de
+  `<Ejercicio tipo="E6">` la etiqueta «E6 · Emparejar» sale dos veces: la del
+  envoltorio y la del componente. Pasa igual en el capítulo 4. Son candidatas a P3.
+- **`ejecutar_vba.py`.** Solo cubre bloques que declaran `'>`. Lo que un
+  cuestionario afirma de VBA, como el `Meses: 0` de la pregunta 3, queda fuera
+  de cualquier arnés.
+
 ### ⏸ Punto de control 3 — Contenido completo
-- [ ] Las siete secciones, la portada y la evaluación
-- [ ] **Cuota:** 18 ejercicios · E1:4 E2:3 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2 (§5)
-- [ ] **Las promesas de H2, cumplidas:** 240 filas a la vista, las dos
-      preguntas del capítulo (*cuántas veces* y *cuándo para*) y la traza de
-      muchas vueltas
+- [x] Las siete secciones, la portada y la evaluación *(escritas; la evaluación,
+      el 2026-10-21)*
+- [x] **Cuota:** 19 ejercicios · E1:4 E2:4 E3:2 E4:2 E5:2 E6:1 E7:2 E8:2 (§5),
+      medida con `verificar.py` sin `--sin-cuota`. *La casilla decía 18 con E2:3;
+      el E2 nuevo de la sección 4 (H18) agotó el margen, como anotó la §5*
+- [x] **Las promesas de H2, cumplidas:** las 240 filas, en
+      `AmortizacionPasoAPaso` (sección 4); las dos preguntas del capítulo, con
+      *cuántas veces* en las secciones 2 a 5 y *cuándo para* en la 6 y la
+      bisección de la 7; y la traza de muchas vueltas, que traza tres a mano y
+      deja ver las otras en el componente (H2.3)
+- [ ] **Revisión del docente:** pendiente. El PC3 no está aprobado
 
 ---
 
