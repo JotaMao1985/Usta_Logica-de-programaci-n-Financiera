@@ -6067,64 +6067,66 @@ End Sub`,
 
         /* E2: el centinela procesado como un dato. El cierre de caja con
            Repita pregunta al final de la vuelta, después de sumar y contar,
-           así que el 0 entra al total —donde no se nota— y al conteo, donde
-           sí. Con 250 000, 400 000, 150 000 y 0 escribe «4 pagos por 800 000»
-           (ejecutado el 2026-10-20 en Python y R, con esas entradas). R
-           escribe con sprintf porque cat(800000) imprime 8e+05. */
+           así que el −1 entra al conteo y al total, al que le quita un peso.
+           Con 250 000, 400 000, 150 000 y −1 escribe «4 pagos por 799 999»
+           (ejecutado el 2026-10-20 en Python y R, con esas entradas). El
+           centinela era un 0 en la primera versión, y así el total no
+           cambiaba: escondía justo lo que el E2 tiene que mostrar. R escribe
+           con sprintf porque cat(800000) imprime 8e+05. */
         const EJ_CAJA_REPITA = {
             pseudo: `Inicio
-    // Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+    // Cierre de caja: los pagos del día, uno por uno, y un -1 para terminar
     total    <- 0
     cantidad <- 0
     Repita
-        Escribir "Monto del pago (0 para terminar): "
+        Escribir "Monto del pago (-1 para terminar): "
         Leer monto
         total    <- total + monto
         cantidad <- cantidad + 1
-    Hasta monto = 0
+    Hasta monto = -1
     Escribir cantidad, " pagos por ", total
 Fin`,
-            python: `# Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+            python: `# Cierre de caja: los pagos del día, uno por uno, y un -1 para terminar
 total    = 0
 cantidad = 0
 while True:
-    monto    = float(input("Monto del pago (0 para terminar): "))
+    monto    = float(input("Monto del pago (-1 para terminar): "))
     total    = total + monto
     cantidad = cantidad + 1
-    if monto == 0:
+    if monto == -1:
         break
 print(f"{cantidad} pagos por {total:,.0f}")`,
-            r: `# Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+            r: `# Cierre de caja: los pagos del día, uno por uno, y un -1 para terminar
 total    <- 0
 cantidad <- 0
 repeat {
-  monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
+  monto    <- as.numeric(readline("Monto del pago (-1 para terminar): "))
   total    <- total + monto
   cantidad <- cantidad + 1
-  if (monto == 0) break
+  if (monto == -1) break
 }
 cat(sprintf("%d pagos por %.0f\\n", cantidad, total))`,
             vba: `Option Explicit
 
 Sub CierreDeCaja()
-    ' Cierre de caja: los pagos del día, uno por uno, y un 0 para terminar
+    ' Cierre de caja: los pagos del día, uno por uno, y un -1 para terminar
     Dim monto As Currency, total As Currency
     Dim cantidad As Long
 
     total = 0
     cantidad = 0
     Do
-        monto = CCur(InputBox("Monto del pago (0 para terminar):"))
+        monto = CCur(InputBox("Monto del pago (-1 para terminar):"))
         total = total + monto
         cantidad = cantidad + 1
-    Loop Until monto = 0
+    Loop Until monto = -1
 
     MsgBox cantidad & " pagos por " & total
 End Sub`,
         };
 
         /* La forma que sirve: lectura adelantada. Con los mismos datos
-           escribe «3 pagos por 800 000»; si el primer dato ya es el 0, no da
+           escribe «3 pagos por 800 000»; si el primer dato ya es el −1, no da
            ninguna vuelta y escribe «0 pagos por 0» (ejecutado el 2026-10-20
            en Python y R). */
         const EJ_CAJA_ADELANTADA = {
@@ -6132,12 +6134,12 @@ End Sub`,
     // Cierre de caja, con lectura adelantada: el primer pago se lee antes
     total    <- 0
     cantidad <- 0
-    Escribir "Monto del pago (0 para terminar): "
+    Escribir "Monto del pago (-1 para terminar): "
     Leer monto
-    Mientras monto <> 0 Hacer
+    Mientras monto <> -1 Hacer
         total    <- total + monto
         cantidad <- cantidad + 1
-        Escribir "Monto del pago (0 para terminar): "
+        Escribir "Monto del pago (-1 para terminar): "
         Leer monto
     FinMientras
     Escribir cantidad, " pagos por ", total
@@ -6145,20 +6147,20 @@ Fin`,
             python: `# Cierre de caja, con lectura adelantada: el primer pago se lee antes
 total    = 0
 cantidad = 0
-monto    = float(input("Monto del pago (0 para terminar): "))
-while monto != 0:
+monto    = float(input("Monto del pago (-1 para terminar): "))
+while monto != -1:
     total    = total + monto
     cantidad = cantidad + 1
-    monto    = float(input("Monto del pago (0 para terminar): "))
+    monto    = float(input("Monto del pago (-1 para terminar): "))
 print(f"{cantidad} pagos por {total:,.0f}")`,
             r: `# Cierre de caja, con lectura adelantada: el primer pago se lee antes
 total    <- 0
 cantidad <- 0
-monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
-while (monto != 0) {
+monto    <- as.numeric(readline("Monto del pago (-1 para terminar): "))
+while (monto != -1) {
   total    <- total + monto
   cantidad <- cantidad + 1
-  monto    <- as.numeric(readline("Monto del pago (0 para terminar): "))
+  monto    <- as.numeric(readline("Monto del pago (-1 para terminar): "))
 }
 cat(sprintf("%d pagos por %.0f\\n", cantidad, total))`,
             vba: `Option Explicit
@@ -6170,11 +6172,11 @@ Sub CierreDeCaja()
 
     total = 0
     cantidad = 0
-    monto = CCur(InputBox("Monto del pago (0 para terminar):"))
-    Do While monto <> 0
+    monto = CCur(InputBox("Monto del pago (-1 para terminar):"))
+    Do While monto <> -1
         total = total + monto
         cantidad = cantidad + 1
-        monto = CCur(InputBox("Monto del pago (0 para terminar):"))
+        monto = CCur(InputBox("Monto del pago (-1 para terminar):"))
     Loop
 
     MsgBox cantidad & " pagos por " & total
@@ -6376,8 +6378,8 @@ End Sub`,
                     Hasta aquí, cada ciclo sabía cuándo parar por algo que él mismo calculaba: un contador, un
                     saldo. El cierre de recaudo de la sección 1 leía primero cuántos pagos habían llegado, y con
                     eso contaba. En una caja nadie sabe de antemano cuántos van a llegar: el cajero digita los
-                    pagos a medida que los recibe y, al cerrar, digita un 0. Ese 0 no es un pago, sino la marca de
-                    que no hay más.
+                    pagos a medida que los recibe y, al cerrar, digita un −1. Ese −1 no es un pago —ningún pago es
+                    negativo—, sino la marca de que no hay más.
                 </p>
 
                 <CodeTabs
@@ -6386,17 +6388,17 @@ End Sub`,
                     nota="El programa lee datos, así que no hay una salida fija. Fíjese en dónde está la pregunta: al final de la vuelta, como en la validación de la sección 3." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="El cajero digita tres pagos —250 000, 400 000 y 150 000— y después el 0. ¿Qué muestra el programa al terminar?"
+                    pregunta="El cajero digita tres pagos —250 000, 400 000 y 150 000— y después el −1. ¿Qué muestra el programa al terminar?"
                     opciones={[
-                        { texto: '4 pagos por 800 000', correcta: true, justificacion: 'El Repita pregunta al final de la vuelta, después de sumar y de contar. Cuando el cajero digita el 0, la vuelta ya está en marcha: el 0 se lee, se suma al total —donde no cambia nada— y se cuenta como un pago; solo después la condición monto = 0 da verdadero y el ciclo sale. Por eso el total cuadra con la caja y la cantidad no: cuatro pagos para tres recibos. Tres pagos es lo que el cajero espera, pero el ciclo no sabe que el 0 es el final hasta que lo pregunta, y lo pregunta tarde. Un pago por 250 000 sería leer el Hasta como si fuera un Mientras —seguir mientras el monto sea 0—, y es al revés: el Hasta dice cuándo parar. Y el ciclo sí termina: en la vuelta del 0, la condición se cumple. (En Python y en R, el if … break del final hace de Hasta.)' },
+                        { texto: '4 pagos por 799 999', correcta: true, justificacion: 'El Repita pregunta al final de la vuelta, después de sumar y de contar. Cuando el cajero digita el −1, la vuelta ya está en marcha: el −1 se lee, se suma al total como si fuera un pago y se cuenta; solo después la condición monto = −1 da verdadero y el ciclo sale. Por eso la caja no cuadra por ningún lado: cuatro pagos para tres recibos, y un peso menos de lo que entró. Tres pagos por 800 000 es lo que el cajero espera, pero el ciclo no sabe que el −1 es el final hasta que lo pregunta, y lo pregunta tarde. Cuatro pagos por 800 000 ve que el −1 se cuenta, pero olvida que en la misma vuelta también se sumó. Y el ciclo sí termina: en la vuelta del −1, la condición se cumple. (En Python y en R, el if … break del final hace de Hasta.)' },
                         { texto: '3 pagos por 800 000', correcta: false },
-                        { texto: '1 pago por 250 000', correcta: false },
+                        { texto: '4 pagos por 800 000', correcta: false },
                         { texto: 'Nada: vuelve a pedir un monto, y no termina', correcta: false },
                     ]}
                 /></Ejercicio>
 
                 <p>
-                    A un valor como ese 0 se le llama <Termino def="Un valor que ningún dato real puede tomar, y que se escribe después del último dato para marcar que no hay más. El ciclo lo lee, pero no lo procesa.">centinela</Termino>.
+                    A un valor como ese −1 se le llama <Termino def="Un valor que ningún dato real puede tomar, y que se escribe después del último dato para marcar que no hay más. El ciclo lo lee, pero no lo procesa.">centinela</Termino>.
                     El <span className="inline-code">Repita</span> lo procesa porque pregunta al final, después de
                     sumar y contar. Con un centinela, la pregunta tiene que ir en medio: después de leer y antes de
                     procesar. La forma de conseguirlo sin salir a mitad del cuerpo es leer el primer dato antes del
@@ -6406,7 +6408,7 @@ End Sub`,
                 <CodeTabs
                     titulo="El cierre de caja, con lectura adelantada"
                     bloques={EJ_CAJA_ADELANTADA}
-                    nota="Con los mismos datos, escribe 3 pagos por 800 000. Y si el primer dato ya es el 0, el ciclo no da ninguna vuelta y escribe 0 pagos por 0, que es lo correcto en un día sin recaudo." />
+                    nota="Con los mismos datos, escribe 3 pagos por 800 000. Y si el primer dato ya es el −1, el ciclo no da ninguna vuelta y escribe 0 pagos por 0, que es lo correcto en un día sin recaudo." />
 
                 <p>
                     Es el <span className="inline-code">Mientras</span> con dos lecturas de la sección 3, que allí
@@ -6417,14 +6419,16 @@ End Sub`,
                     lee y además suma, y el <span className="inline-code">Repita</span> pregunta después de sumar.
                 </p>
                 <p>
-                    La condición vuelve a comparar con <span className="inline-code">&lt;&gt; 0</span>, y esta vez no
-                    hay salida que saltar: <span className="inline-code">monto</span> no se acerca al 0 vuelta a
-                    vuelta, sino que en cada una recibe lo que se digita, y un 0 digitado se guarda exacto. La regla
+                    La condición vuelve a usar <span className="inline-code">&lt;&gt;</span>, como el plan de pagos que
+                    no paraba, y esta vez no hay salida que saltar: <span className="inline-code">monto</span> no se
+                    acerca al −1 vuelta a vuelta, sino que en cada una recibe lo que se digita, y un −1 digitado se
+                    guarda exacto. La regla
                     del capítulo 1 —nunca comparar dinero con igualdad exacta— es para cifras que salen de cuentas,
                     como el saldo del plan de pagos. Lo
                     que cambia es de quién depende la finitud: el ciclo termina cuando llega el centinela, y si
                     nadie lo digita, no termina. Por eso el centinela tiene que ser un valor que ningún dato real
-                    pueda tomar. Un pago de 0 no existe; en una lista de ajustes contables, un 0 podría ser un dato.
+                    pueda tomar. Ningún pago es negativo; en una lista de ajustes contables, donde sí los hay, un −1
+                    podría ser un dato.
                 </p>
 
                 <h3>Qué hace parar a un ciclo</h3>
