@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. Siguiente: la sección 7 (Tarea 2.7).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). Siguiente: la evaluación y el glosario (Tarea 2.8).
 
 ---
 
@@ -1023,12 +1023,100 @@ Lo primero lleva a H19.
   hasta entonces, las dos afirmaciones de VBA de la sección —las 37 cuotas y el
   error 6— siguen sin ejecutar.
 
-#### Tarea 2.7 · Sección 7 — «Casos financieros»
+#### Tarea 2.7 · Sección 7 — «Casos financieros» · ✅
 Saldo insoluto, capitalización y la TIR con `TIRBiseccion`. **E1:** tres vueltas
 de la bisección. En las celdas van los extremos del intervalo y el signo, **no
 el VPN con decimales**, que haría fallar la comparación con tolerancia. **E7:**
 qué significan para el cliente 1 001 599 de intereses sobre 10 000 000. **E7:**
 qué significa una TIR del 1,99 % frente a una tasa pactada del 1,5 %.
+
+*Hecho el 2026-10-20.* Toda la sección sigue a un solo cliente: el crédito de libre
+inversión del curso (S2), con 300 000 de comisión descontados al desembolso.
+- **Motivación.** Con cuatro cuotas pagadas, el cliente pide el saldo para
+  cancelar y le dicen 6 863 095,58. Su resta daba 6 332 800,28, y además cree que
+  el crédito le cuesta el 1,5 %. Las dos cifras del cliente están mal, y la sección
+  da las dos correctas.
+- **Saldo insoluto, de dos maneras.** Hacia adelante, es el `Para` de la tabla de
+  la sección 4 con otro tope, y su acumulador da los 530 295,30 de diferencia.
+  Hacia atrás, es el valor presente de las ocho cuotas que faltan. Los dos ciclos
+  dan la misma cifra: en la máquina difieren en 7 × 10⁻⁸, medido en Python y en
+  R. El ciclo de atrás es el `Para` de dentro de la bisección, así que el VPN
+  llega presentado. En R los dos ciclos usan `seq_len`, por la trampa de `1:0`
+  de H4. **Cifra nueva:** en el crédito de vivienda, a mitad del plazo se debe
+  todavía el 78,8 % del capital, y el 85,1 % de lo pagado fueron intereses. Se
+  comprueba en `AmortizacionPasoAPaso`, en la cuota 120.
+- **E7** (`MCQ`, clave en la «d»): qué dicen los 1 001 599,15 de intereses.
+  - Los distractores son las tres lecturas equivocadas: el 10 % como tasa, el
+    banco que cobró de menos y el interés repartido en doceavos.
+  - La justificación usa el saldo promedio, 5 564 439,72, cuyo 18 % son
+    exactamente esos intereses.
+- **La TIR.** Primero el VPN y por qué la TIR está entre 0 % y 10 %. Después la
+  cita de la búsqueda del capítulo 2: 12 comparaciones, según su salida
+  publicada; el comentario del artefacto decía 16 pasos, que es el peor caso, y
+  se corrigió. Siguen el artefacto y el programa en los cuatro lenguajes: 1,9924 %
+  en 17 vueltas.
+  - La nota de R muestra el `sum` vectorizado y `uniroot`, que da 1,992398 %; es
+    lo que el plan maestro llamaba «la TIR luce en R».
+  - El texto aclara que las 17 vueltas se podrían saber de antemano, y que esa
+    cuenta engaña con 10⁻¹⁸: es el enlace con la sección 6.
+- **E1** (`TablaTraza`, 16 celdas, `exigeRespuesta`). Las columnas son `medio`,
+  `vpn > 0`, `bajo` y `alto`, en la fila de antes del ciclo y en las tres vueltas.
+  El VPN no se pide: el enunciado trae una tabla con el VPN de seis tasas. Tres
+  son las del camino correcto, y las otras, las que alcanza quien se equivoca de
+  rama una vez (0,0625 y 0,075 si es en la vuelta 1, 0,0375 si es en la 2), para
+  que el error se pueda seguir.
+- **Capitalización.** Va integrada como el paso que permite comparar: llevar las
+  dos tasas mensuales a efectiva anual con un ciclo de doce multiplicaciones. Es
+  la potencia del capítulo 3 escrita como acumulador de producto (sección 1), y
+  da 19,56 % contra 26,71 %. La nota dice cuándo el ciclo sirve y la potencia no:
+  con una tasa que cambia cada mes.
+- **E7** (`MCQ`, clave en la «c»): qué significa 1,99 % frente a 1,5 %. Los
+  distractores son tres: las cuotas mal calculadas, los 0,49 puntos pasados a
+  pesos cada mes y la TIR como efectiva anual del 1,5 %.
+- **Recuadro final:** de qué pieza del capítulo salió cada cifra.
+
+*Desviaciones del plan:*
+- los dos E7 son `MCQ`, porque el plan no fijaba el componente;
+- la capitalización no es un caso aparte, sino el paso que permite interpretar
+  la TIR;
+- el E1 trae la tabla de VPN con las tasas de la rama equivocada.
+
+*Medido:*
+- `verificar.py --sin-cuota --con-salidas` en verde sobre los cinco capítulos.
+  El 5 llega a 18 ejercicios (E1:4 E2:4 E3:2 E4:2 E5:2 E7:2 E8:2) y a 22 bloques
+  de Python y R ejecutados; los seis nuevos son los tres programas de la sección.
+- Claves del capítulo: c b a b d b c a d c. Las reglas 16 y 17, sin avisos. La
+  regla 20 puso 131 espacios duros en la prosa nueva.
+- Las cifras de la prosa, ejecutadas en Python y en R antes de escribirlas: el
+  saldo, los intereses, el saldo promedio, la vivienda, los VPN de la tabla del
+  E1, la TIR y las efectivas.
+
+*Por DOM:*
+- Los dos E7 dan «¡Correcto!» con la clave y «Revisa la explicación» con un
+  distractor, y muestran la justificación.
+- El E1 da 16/16 con la clave, también escrita «0,05», «falso» o «0.10». Con la
+  rama equivocada en la vuelta 1 da 6/16. Con la fila de antes del ciclo en
+  blanco da 14/16, y avisa «2 sin responder».
+- `TIRBiseccion` para en la vuelta 17 con 1,9924 %, y sus tres primeras filas son
+  la clave del E1.
+- Los tres `CodeTabs` y el código del E1 cambian bien en los cuatro lenguajes.
+- Los cuatro términos abren. El icono (`fa-hand-holding-dollar`) da glifo.
+- Ningún espacio comido en los 25 elementos en línea, con la prueba hecha antes
+  en negativo.
+- Consola limpia.
+
+*A 375 px*, con la barra cerrada y el criterio de H15, primero en negativo (el
+panel pasa de 367 a 624 px): cero fuera en los cuatro lenguajes. Se midió con los
+bloques desplegados, la bisección terminada y acercada, el E1 comprobado, los E7
+respondidos y cada término abierto. Un ajuste salió de mirarla: un inciso entre
+rayas dejaba «—;» al principio de un renglón, y se reescribió.
+
+*Sin ejecutar:* el VBA de los tres programas (R10). Entra en el arnés de
+`ejecutar_vba.py` sin cambios, porque declara `'>`.
+
+*Para la Tarea 2.8:* el glosario suma siete términos nuevos de las secciones 6 y 7:
+ciclo infinito, centinela, lectura adelantada, saldo insoluto, valor presente, TIR y
+capitalización.
 
 #### Tarea 2.8 · Evaluación y glosario
 Diez preguntas, cada una con `seccion:` (regla 19), con `multiple: true` donde

@@ -2541,8 +2541,9 @@ for k in range(1, n):
            iguala lo que recibe con lo que paga. Medida con el intervalo
            [0 %, 10 %] y tolerancia 10⁻⁶: 1,9924 % mensual en 17 vueltas.
 
-           Es la búsqueda binaria del capítulo 2 —40 000 créditos en 16 pasos—
-           aplicada a una función en vez de a una lista. Se cita, no se repite.
+           Es la búsqueda binaria del capítulo 2 —que encontró un crédito entre
+           40 000 en 12 comparaciones; 16 como mucho— aplicada a una función en
+           vez de a una lista. Se cita, no se repite.
 
            El VPN se calcula con un ciclo DENTRO del ciclo de la bisección: el
            pseudocódigo no llama a ninguna función, que son del capítulo 6.
@@ -6460,16 +6461,606 @@ End Sub`,
         );
 
         /* ============================================================
-           SECCIÓN 7 — andamio (BORRADOR-FASE1)
+           SECCIÓN 7 — Casos financieros: el oficio
+
+           Las cifras de la prosa están ejecutadas en Python y en R el
+           2026-10-20, antes de escribirlas:
+           · 10 000 000 al 1,5 % en 12 cuotas, con cuatro pagadas: saldo
+             6 863 095,58 e intereses pagados 530 295,30. La resta del
+             cliente da 6 332 800,28. Las ocho cuotas que faltan, traídas a
+             hoy al 1,5 %, dan el mismo saldo; en la máquina difieren en
+             6,9 × 10⁻⁸.
+           · El plan entero: 1 001 599,15 de intereses, el 10,02 % del
+             capital. El saldo promedio es 5 564 439,72, y su 18 % son esos
+             mismos intereses.
+           · Vivienda, 150 000 000 al 1,1 % en 240: tras 120 cuotas se deben
+             118 197 017,68, el 78,80 %. De los 213 453 464,79 pagados,
+             181 650 482,47 son intereses, el 85,10 %.
+           · TIR con la comisión de 300 000: 1,9924 % en 17 vueltas.
+             uniroot de R da 1,992398 %. VPN(0) = 1 301 599,15 y
+             VPN(0,10) = −3 453 207,82.
+           · Efectivas anuales: 19,5618 % y 26,7105 %. Con la TIR redondeada
+             a 0,019924, la que usa el bloque, 26,7108 %: con dos decimales,
+             26,71 en los dos casos.
+           El VBA no se ejecutó (R10): su arnés existe, pero falta correrlo.
         ============================================================ */
+
+        const EJ_SALDO_INSOLUTO = {
+            pseudo: `Inicio
+    // 10 000 000 al 1,5 % mensual en 12 cuotas, con 4 ya pagadas
+    capital <- 10000000
+    tasa    <- 0.015
+    n       <- 12
+    pagadas <- 4
+    cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+
+    // Hacia adelante: las cuotas pagadas, una por vuelta
+    saldo     <- capital
+    intereses <- 0
+    Para k <- 1 Hasta pagadas Hacer
+        interes   <- saldo * tasa
+        abono     <- cuota - interes
+        saldo     <- saldo - abono
+        intereses <- intereses + interes
+    FinPara
+    Escribir "Saldo para cancelar: ", saldo
+    //> Saldo para cancelar: 6863095.58
+    Escribir "Intereses ya pagados: ", intereses
+    //> Intereses ya pagados: 530295.30
+
+    // Hacia atrás: las cuotas que faltan, traídas a hoy
+    vp <- 0
+    Para j <- 1 Hasta n - pagadas Hacer
+        vp <- vp + cuota / (1 + tasa) ^ j
+    FinPara
+    Escribir "Cuotas que faltan, traídas a hoy: ", vp
+    //> Cuotas que faltan, traídas a hoy: 6863095.58
+Fin`,
+            python: `# 10 000 000 al 1,5 % mensual en 12 cuotas, con 4 ya pagadas
+capital = 10_000_000
+tasa    = 0.015
+n       = 12
+pagadas = 4
+cuota   = capital * tasa / (1 - (1 + tasa) ** (-n))
+
+# Hacia adelante: las cuotas pagadas, una por vuelta
+saldo     = capital
+intereses = 0
+for k in range(1, pagadas + 1):
+    interes   = saldo * tasa
+    abono     = cuota - interes
+    saldo     = saldo - abono
+    intereses = intereses + interes
+print(f"Saldo para cancelar: {saldo:,.2f}")
+#> Saldo para cancelar: 6,863,095.58
+print(f"Intereses ya pagados: {intereses:,.2f}")
+#> Intereses ya pagados: 530,295.30
+
+# Hacia atrás: las cuotas que faltan, traídas a hoy
+vp = 0
+for j in range(1, n - pagadas + 1):
+    vp = vp + cuota / (1 + tasa) ** j
+print(f"Cuotas que faltan, traídas a hoy: {vp:,.2f}")
+#> Cuotas que faltan, traídas a hoy: 6,863,095.58`,
+            r: `# 10 000 000 al 1,5 % mensual en 12 cuotas, con 4 ya pagadas
+capital <- 10000000
+tasa    <- 0.015
+n       <- 12
+pagadas <- 4
+cuota   <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+
+# Hacia adelante: las cuotas pagadas, una por vuelta.
+# seq_len y no 1:pagadas: con un crédito recién desembolsado,
+# pagadas vale 0, y 1:0 daría dos vueltas (sección 4)
+saldo     <- capital
+intereses <- 0
+for (k in seq_len(pagadas)) {
+  interes   <- saldo * tasa
+  abono     <- cuota - interes
+  saldo     <- saldo - abono
+  intereses <- intereses + interes
+}
+cat(sprintf("Saldo para cancelar: %.2f\\n", saldo))
+#> Saldo para cancelar: 6863095.58
+cat(sprintf("Intereses ya pagados: %.2f\\n", intereses))
+#> Intereses ya pagados: 530295.30
+
+# Hacia atrás: las cuotas que faltan, traídas a hoy
+vp <- 0
+for (j in seq_len(n - pagadas)) {
+  vp <- vp + cuota / (1 + tasa) ^ j
+}
+cat(sprintf("Cuotas que faltan, traídas a hoy: %.2f\\n", vp))
+#> Cuotas que faltan, traídas a hoy: 6863095.58`,
+            vba: `Option Explicit
+
+Sub SaldoInsoluto()
+    ' Double, como en la sección 4: la cuota no se redondea
+    Dim capital As Double, tasa As Double, cuota As Double
+    Dim saldo As Double, interes As Double, abono As Double
+    Dim intereses As Double, vp As Double
+    Dim n As Integer, pagadas As Integer, k As Integer, j As Integer
+
+    ' 10 000 000 al 1,5 % mensual en 12 cuotas, con 4 ya pagadas
+    capital = 10000000
+    tasa = 0.015
+    n = 12
+    pagadas = 4
+    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+
+    ' Hacia adelante: las cuotas pagadas, una por vuelta
+    saldo = capital
+    intereses = 0
+    For k = 1 To pagadas
+        interes = saldo * tasa
+        abono = cuota - interes
+        saldo = saldo - abono
+        intereses = intereses + interes
+    Next k
+    Debug.Print "Saldo para cancelar: " & Format(saldo, "0.00")
+    '> Saldo para cancelar: 6863095.58
+    Debug.Print "Intereses ya pagados: " & Format(intereses, "0.00")
+    '> Intereses ya pagados: 530295.30
+
+    ' Hacia atrás: las cuotas que faltan, traídas a hoy
+    vp = 0
+    For j = 1 To n - pagadas
+        vp = vp + cuota / (1 + tasa) ^ j
+    Next j
+    Debug.Print "Cuotas que faltan, traídas a hoy: " & Format(vp, "0.00")
+    '> Cuotas que faltan, traídas a hoy: 6863095.58
+End Sub`,
+        };
+
+        const EJ_TIR = {
+            pseudo: `Inicio
+    // 10 000 000 al 1,5 % mensual en 12 cuotas, con 300 000 de comisión
+    capital  <- 10000000
+    tasa     <- 0.015
+    n        <- 12
+    comision <- 300000
+    cuota    <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+    recibido <- capital - comision
+
+    // La TIR está entre 0 % y 10 % mensual: se parte el intervalo
+    bajo    <- 0
+    alto    <- 0.10
+    vueltas <- 0
+    Mientras alto - bajo >= 0.000001 Hacer
+        medio <- (bajo + alto) / 2
+        vpn   <- -recibido
+        Para k <- 1 Hasta n Hacer
+            vpn <- vpn + cuota / (1 + medio) ^ k
+        FinPara
+        Si vpn > 0 Entonces
+            bajo <- medio
+        Sino
+            alto <- medio
+        FinSi
+        vueltas <- vueltas + 1
+    FinMientras
+
+    tir <- (bajo + alto) / 2
+    Escribir "TIR mensual: ", tir * 100, " %"
+    //> TIR mensual: 1.9924 %
+    Escribir "Vueltas: ", vueltas
+    //> Vueltas: 17
+Fin`,
+            python: `# 10 000 000 al 1,5 % mensual en 12 cuotas, con 300 000 de comisión
+capital  = 10_000_000
+tasa     = 0.015
+n        = 12
+comision = 300_000
+cuota    = capital * tasa / (1 - (1 + tasa) ** (-n))
+recibido = capital - comision
+
+# La TIR está entre 0 % y 10 % mensual: se parte el intervalo
+bajo    = 0
+alto    = 0.10
+vueltas = 0
+while alto - bajo >= 0.000001:
+    medio = (bajo + alto) / 2
+    vpn   = -recibido
+    for k in range(1, n + 1):
+        vpn = vpn + cuota / (1 + medio) ** k
+    if vpn > 0:
+        bajo = medio
+    else:
+        alto = medio
+    vueltas = vueltas + 1
+
+tir = (bajo + alto) / 2
+print(f"TIR mensual: {tir * 100:.4f} %")
+#> TIR mensual: 1.9924 %
+print(f"Vueltas: {vueltas}")
+#> Vueltas: 17`,
+            r: `# 10 000 000 al 1,5 % mensual en 12 cuotas, con 300 000 de comisión
+capital  <- 10000000
+tasa     <- 0.015
+n        <- 12
+comision <- 300000
+cuota    <- capital * tasa / (1 - (1 + tasa) ^ (-n))
+recibido <- capital - comision
+
+# La TIR está entre 0 % y 10 % mensual: se parte el intervalo
+bajo    <- 0
+alto    <- 0.10
+vueltas <- 0
+while (alto - bajo >= 0.000001) {
+  medio <- (bajo + alto) / 2
+  vpn   <- -recibido
+  for (k in 1:n) {
+    vpn <- vpn + cuota / (1 + medio) ^ k
+  }
+  if (vpn > 0) {
+    bajo <- medio
+  } else {
+    alto <- medio
+  }
+  vueltas <- vueltas + 1
+}
+
+tir <- (bajo + alto) / 2
+cat(sprintf("TIR mensual: %.4f %%\\n", tir * 100))
+#> TIR mensual: 1.9924 %
+cat(sprintf("Vueltas: %d\\n", vueltas))
+#> Vueltas: 17`,
+            vba: `Option Explicit
+
+Sub TasaInternaDeRetorno()
+    Dim capital As Double, tasa As Double, comision As Double
+    Dim cuota As Double, recibido As Double
+    Dim bajo As Double, alto As Double, medio As Double
+    Dim vpn As Double, tir As Double
+    Dim n As Integer, k As Integer, vueltas As Integer
+
+    ' 10 000 000 al 1,5 % mensual en 12 cuotas, con 300 000 de comisión
+    capital = 10000000
+    tasa = 0.015
+    n = 12
+    comision = 300000
+    cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
+    recibido = capital - comision
+
+    ' La TIR está entre 0 % y 10 % mensual: se parte el intervalo
+    bajo = 0
+    alto = 0.1
+    vueltas = 0
+    Do While alto - bajo >= 0.000001
+        medio = (bajo + alto) / 2
+        vpn = -recibido
+        For k = 1 To n
+            vpn = vpn + cuota / (1 + medio) ^ k
+        Next k
+        If vpn > 0 Then
+            bajo = medio
+        Else
+            alto = medio
+        End If
+        vueltas = vueltas + 1
+    Loop
+
+    tir = (bajo + alto) / 2
+    Debug.Print "TIR mensual: " & Format(tir * 100, "0.0000") & " %"
+    '> TIR mensual: 1.9924 %
+    Debug.Print "Vueltas: " & vueltas
+    '> Vueltas: 17
+End Sub`,
+        };
+
+        /* E1: la bisección por dentro, solo el ciclo de fuera. El VPN de
+           cada medio se da en el enunciado. La tabla trae también las tasas a
+           las que llega quien se equivoca de rama una vez: 0,075 y 0,0625 si
+           es en la vuelta 1, y 0,0375 si es en la 2. Así el error se puede
+           seguir hasta el final. Los valores están ejecutados en Python y
+           en R. */
+        const TZ_BISECCION = {
+            pseudo: `bajo    <- 0
+alto    <- 0.10
+vueltas <- 0
+Mientras alto - bajo >= 0.000001 Hacer
+    medio <- (bajo + alto) / 2
+    vpn   <- -recibido
+    Para k <- 1 Hasta n Hacer
+        vpn <- vpn + cuota / (1 + medio) ^ k
+    FinPara
+    Si vpn > 0 Entonces
+        bajo <- medio
+    Sino
+        alto <- medio
+    FinSi
+    vueltas <- vueltas + 1
+FinMientras`,
+            python: `bajo    = 0
+alto    = 0.10
+vueltas = 0
+while alto - bajo >= 0.000001:
+    medio = (bajo + alto) / 2
+    vpn   = -recibido
+    for k in range(1, n + 1):
+        vpn = vpn + cuota / (1 + medio) ** k
+    if vpn > 0:
+        bajo = medio
+    else:
+        alto = medio
+    vueltas = vueltas + 1`,
+            r: `bajo    <- 0
+alto    <- 0.10
+vueltas <- 0
+while (alto - bajo >= 0.000001) {
+  medio <- (bajo + alto) / 2
+  vpn   <- -recibido
+  for (k in 1:n) {
+    vpn <- vpn + cuota / (1 + medio) ^ k
+  }
+  if (vpn > 0) {
+    bajo <- medio
+  } else {
+    alto <- medio
+  }
+  vueltas <- vueltas + 1
+}`,
+            vba: `bajo = 0
+alto = 0.1
+vueltas = 0
+Do While alto - bajo >= 0.000001
+    medio = (bajo + alto) / 2
+    vpn = -recibido
+    For k = 1 To n
+        vpn = vpn + cuota / (1 + medio) ^ k
+    Next k
+    If vpn > 0 Then
+        bajo = medio
+    Else
+        alto = medio
+    End If
+    vueltas = vueltas + 1
+Loop`,
+        };
+
+        const VPN_POR_TASA = [
+            ['0.0125', '457 512,42'],
+            ['0.025', '−295 682,14'],
+            ['0.0375', '−969 594,89'],
+            ['0.05', '−1 574 171,53'],
+            ['0.0625', '−2 117 954,02'],
+            ['0.075', '−2 608 297,43'],
+        ];
+
+        const EJ_CAPITALIZAR = {
+            pseudo: `Inicio
+    // Las dos tasas mensuales del crédito, llevadas a un año
+    tasa <- 0.015       // la del contrato
+    tir  <- 0.019924    // la de la bisección: 1,9924 %
+    factorTasa <- 1
+    factorTir  <- 1
+    Para mes <- 1 Hasta 12 Hacer
+        factorTasa <- factorTasa * (1 + tasa)
+        factorTir  <- factorTir * (1 + tir)
+    FinPara
+    Escribir "Contrato: ", (factorTasa - 1) * 100, " % efectivo anual"
+    //> Contrato: 19.56 % efectivo anual
+    Escribir "Con la comisión: ", (factorTir - 1) * 100, " % efectivo anual"
+    //> Con la comisión: 26.71 % efectivo anual
+Fin`,
+            python: `# Las dos tasas mensuales del crédito, llevadas a un año
+tasa = 0.015       # la del contrato
+tir  = 0.019924    # la de la bisección: 1,9924 %
+factor_tasa = 1
+factor_tir  = 1
+for mes in range(1, 13):
+    factor_tasa = factor_tasa * (1 + tasa)
+    factor_tir  = factor_tir * (1 + tir)
+print(f"Contrato: {(factor_tasa - 1) * 100:.2f} % efectivo anual")
+#> Contrato: 19.56 % efectivo anual
+print(f"Con la comisión: {(factor_tir - 1) * 100:.2f} % efectivo anual")
+#> Con la comisión: 26.71 % efectivo anual`,
+            r: `# Las dos tasas mensuales del crédito, llevadas a un año
+tasa <- 0.015       # la del contrato
+tir  <- 0.019924    # la de la bisección: 1,9924 %
+factor_tasa <- 1
+factor_tir  <- 1
+for (mes in 1:12) {
+  factor_tasa <- factor_tasa * (1 + tasa)
+  factor_tir  <- factor_tir * (1 + tir)
+}
+cat(sprintf("Contrato: %.2f %% efectivo anual\\n", (factor_tasa - 1) * 100))
+#> Contrato: 19.56 % efectivo anual
+cat(sprintf("Con la comisión: %.2f %% efectivo anual\\n", (factor_tir - 1) * 100))
+#> Con la comisión: 26.71 % efectivo anual`,
+            vba: `Option Explicit
+
+Sub LlevarAUnAnio()
+    Dim tasa As Double, tir As Double
+    Dim factorTasa As Double, factorTir As Double
+    Dim mes As Integer
+
+    ' Las dos tasas mensuales del crédito, llevadas a un año
+    tasa = 0.015        ' la del contrato
+    tir = 0.019924      ' la de la bisección: 1,9924 %
+    factorTasa = 1
+    factorTir = 1
+    For mes = 1 To 12
+        factorTasa = factorTasa * (1 + tasa)
+        factorTir = factorTir * (1 + tir)
+    Next mes
+    Debug.Print "Contrato: " & Format((factorTasa - 1) * 100, "0.00") & " % efectivo anual"
+    '> Contrato: 19.56 % efectivo anual
+    Debug.Print "Con la comisión: " & Format((factorTir - 1) * 100, "0.00") & " % efectivo anual"
+    '> Con la comisión: 26.71 % efectivo anual
+End Sub`,
+        };
 
         const Cap7Section = () => (
             <div className="prose-lp">
-                <Motivacion icon="fa-briefcase" etiqueta="Borrador · Fase 1">
-                    Sección 7, «Casos financieros». Se escribe en la Tarea 2.7. De la Fase 1 lleva la TIR
-                    por bisección.
+                <Motivacion icon="fa-hand-holding-dollar"
+                    gancho="Las dos cifras del cliente salen de una resta y de leer el contrato, y las dos están mal. ¿Qué ciclo da cada una de las correctas?">
+                    Un cliente tomó un crédito de 10 000 000 al 1,5 % mensual, a 12 cuotas de 916 799,93. El banco
+                    le descontó 300 000 de comisión al desembolsar, así que recibió 9 700 000. Con cuatro cuotas
+                    pagadas, pide el saldo para cancelar y le dicen 6 863 095,58. Él había hecho la resta —10 000 000
+                    menos cuatro cuotas— y le daba 6 332 800,28. Y sigue convencido de que el crédito le cuesta el
+                    1,5 % al mes.
                 </Motivacion>
+
+                <h3>Cuánto debe hoy</h3>
+                <p>
+                    La resta del cliente supone que cada cuota pagada baja la deuda en 916 799,93. No es así: una
+                    parte de cada cuota paga el interés del mes, y solo el resto, el abono, baja la deuda. Es lo
+                    que la tabla de la sección 4 escribió fila por fila. La cifra que le dio el banco es el <Termino def="Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas. Es lo que tendría que pagar para cancelar el crédito ese día, sin los intereses de los meses que aún no han corrido.">saldo insoluto</Termino>, y sale del ciclo de esa tabla con otro tope: en lugar de dar <span className="inline-code">n</span> vueltas, da tantas como cuotas se han pagado.
+                </p>
+
+                <CodeTabs
+                    titulo="El saldo para cancelar, de dos maneras"
+                    bloques={EJ_SALDO_INSOLUTO}
+                    nota="Las dos cifras coinciden hasta el centavo; en la máquina difieren en 7 × 10⁻⁸, el residuo de siempre. En R los dos ciclos van con seq_len: con un crédito recién desembolsado pagadas vale 0, y con uno ya pagado n − pagadas también." />
+
+                <p>
+                    El programa calcula el saldo dos veces. La primera camina hacia adelante: repite las cuatro
+                    cuotas pagadas y se queda con lo que no alcanzaron a abonar. Mientras tanto, el acumulador
+                    suma los intereses de esos cuatro meses: 150 000 + 138 498 + 126 823,47 + 114 973,83 = 530 295,30.
+                    Esa es exactamente la diferencia con la resta del cliente.
+                </p>
+                <p>
+                    La segunda camina hacia atrás. Una cuota que se paga dentro de <span className="inline-code">j</span> meses
+                    vale hoy menos que la cuota: vale lo que habría que tener hoy para que, creciendo al 1,5 %
+                    mensual durante esos meses, llegara a ser la cuota. Es su <Termino def="Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Es lo que habría que tener hoy para que, creciendo a esa tasa, llegara a ser el pago.">valor presente</Termino>, la cuota dividida por <span className="inline-code">(1 + tasa) ^ j</span>. El ciclo suma los valores presentes de las ocho cuotas que faltan, y da el mismo saldo.
+                    No es casualidad: lo que el cliente debe hoy es lo que valen hoy las cuotas que le quedan, a la
+                    tasa del contrato. Ese segundo ciclo vuelve en un momento, con otra tasa, para buscar la TIR.
+                </p>
+                <p>
+                    En un crédito largo la diferencia crece mucho. Quien tomó el de vivienda de la sección 4
+                    —150 000 000 al 1,1 % en 240 cuotas de 1 778 778,87— y lleva diez años pagando, la mitad del
+                    plazo, todavía debe 118 197 017,68: el 78,8 % de lo que le prestaron. De los 213 453 464,79
+                    que pagó en esos diez años, 181 650 482,47 fueron intereses. Lo puede comprobar en la tabla de la sección 4,
+                    con el crédito de vivienda, avanzando hasta la cuota 120.
+                </p>
+
+                <h3>Lo que suman los intereses</h3>
+                <p>
+                    El acumulador de la sección 4 sumó los intereses del plan completo: 1 001 599,15. Es la cifra
+                    que el cliente verá en el extracto final, y se presta a lecturas equivocadas.
+                </p>
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="El plan de pagos de la sección 4 suma 1 001 599,15 de intereses sobre 10 000 000 prestados al 1,5 % mensual, en doce cuotas. ¿Qué dicen esos intereses del crédito?"
+                    opciones={[
+                        { texto: 'Que el crédito le costó al cliente el 10 % anual, menos del 18 % que resulta de multiplicar 1,5 % por doce meses.', correcta: false },
+                        { texto: 'Que el banco cobró de menos: el 1,5 % de 10 000 000 durante doce meses son 1 800 000 de intereses.', correcta: false },
+                        { texto: 'Que de cada una de las doce cuotas, 83 466,60 son intereses y el resto, 833 333,33, abona a la deuda.', correcta: false },
+                        { texto: 'Que se cobró el 1,5 % de cada mes sobre lo que se debía ese mes; como la deuda bajaba, suman el 10 % del capital.', correcta: true, justificacion: 'La tasa se aplica cada mes al saldo de ese mes, y el saldo baja: 10 000 000 en el primer mes y 903 251,16 en el último. En promedio, el cliente debió 5 564 439,72 durante el año, y el 18 % de eso son justo los 1 001 599,15. Por eso dividir los intereses por el capital no da la tasa: ese 10 % no es lo que cuesta el crédito, sino lo que pesan los intereses frente a lo prestado, y con otro plazo sería otra cifra con la misma tasa. Por lo mismo, el banco no cobró de menos: los 1 800 000 suponen que se debió todo el capital todo el año. Y el interés no se reparte en partes iguales: la primera cuota lleva 150 000 de interés y la última, 13 548,77. Lo que es igual en todas es la cuota.' },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Cuánto cuesta de verdad</h3>
+                <p>
+                    La otra cifra del cliente es la tasa. El 1,5 % es la tasa con la que se calcularon las cuotas
+                    sobre 10 000 000. Pero el cliente no recibió 10 000 000: recibió 9 700 000, y paga las mismas
+                    doce cuotas. ¿A qué tasa valen hoy 9 700 000 esas doce cuotas? Esa tasa es la <Termino def="Tasa interna de retorno: la tasa a la que lo que se recibe hoy es igual a lo que se paga después, traído a hoy. En un crédito, es lo que cuesta de verdad, con las comisiones adentro.">TIR</Termino>.
+                </p>
+                <p>
+                    No hay una fórmula que la despeje. Lo que sí se puede hacer es probar una tasa y ver si se
+                    pasa o se queda corta. Con la tasa que se pruebe, el ciclo de atrás del saldo insoluto trae
+                    las doce cuotas a hoy, y a eso se le resta lo recibido: es el <strong>VPN</strong>, el valor
+                    presente neto. Si da positivo, la tasa probada es baja, porque a esa tasa las cuotas valen más
+                    de lo que se recibió. Si da negativo, es alta. Al 0 % el VPN es 1 301 599,15, las doce cuotas
+                    sin descontar menos lo recibido; al 10 % es −3 453 207,82. La TIR está entre las dos.
+                </p>
+                <p>
+                    El capítulo 2 buscó el crédito 39 814 en una cartera ordenada de 40 000 partiéndola por la
+                    mitad, y lo encontró en 12 comparaciones. La <strong>bisección</strong> hace lo mismo con el
+                    intervalo de tasas: prueba la del medio, mira el signo del VPN y se queda con la mitad donde
+                    el signo cambia. Puede seguirla vuelta por vuelta:
+                </p>
+
                 <TIRBiseccion />
+
+                <CodeTabs
+                    titulo="La TIR por bisección"
+                    bloques={EJ_TIR}
+                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, porque R recorre la secuencia por usted. Y R trae <span className="inline-code">uniroot</span>, que busca la misma tasa con un método más rápido y da 1,992398 %.</>} />
+
+                <p>
+                    El <span className="inline-code">Mientras</span> no cuenta vueltas: sigue mientras el intervalo
+                    mida la tolerancia o más, <span className="inline-code">0.000001</span>, que es una diezmilésima de punto porcentual. Como
+                    cada vuelta lo parte por la mitad, se puede saber de antemano cuántas hacen falta: de un ancho
+                    de <span className="inline-code">0.10</span> a uno menor que la tolerancia hay 17 mitades. El programa no hace esa cuenta, y no le hace falta. Además, la
+                    cuenta puede engañar. Con una tolerancia de 10⁻¹⁸ diría 57 vueltas, y la sección 6 mostró que
+                    ese ciclo no para nunca, porque la máquina no distingue tasas tan cercanas.
+                </p>
+
+                <TablaTraza
+                    titulo="Tres vueltas de la bisección"
+                    enunciado={<>
+                        Trace las tres primeras vueltas del ciclo de fuera, con el crédito de la sección: 9 700 000
+                        recibidos y doce cuotas de 916 799,93. El VPN de cada tasa ya está calculado, porque es el
+                        ciclo de dentro y aquí no se repite: búsquelo en esta tabla con el valor de <span className="inline-code">medio</span>.
+                        Anote las tasas como las guarda el programa (0.05, no 5 %), y Verdadero o Falso en la condición.
+                        <table className="mt-2 text-sm" style={{ width: 'auto' }}>
+                            <thead><tr><th>medio</th><th>vpn</th></tr></thead>
+                            <tbody>
+                                {VPN_POR_TASA.map(([t, v]) => (
+                                    <tr key={t}><td className="font-mono">{t}</td><td className="text-right whitespace-nowrap">{v}</td></tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>}
+                    codigo={TZ_BISECCION}
+                    columnas={[
+                        { clave: 'momento', titulo: 'Momento' },
+                        { clave: 'medio', titulo: 'medio' },
+                        { clave: 'condicion', titulo: 'vpn > 0' },
+                        { clave: 'bajo', titulo: 'bajo' },
+                        { clave: 'alto', titulo: 'alto' },
+                    ]}
+                    ocultas={['medio', 'condicion', 'bajo', 'alto']}
+                    filas={[
+                        { momento: 'Antes del ciclo', medio: '—', condicion: '—', bajo: '0', alto: '0.1' },
+                        { momento: 'Al final de la vuelta 1', medio: '0.05', condicion: 'Falso', bajo: '0', alto: '0.05' },
+                        { momento: 'Al final de la vuelta 2', medio: '0.025', condicion: 'Falso', bajo: '0', alto: '0.025' },
+                        { momento: 'Al final de la vuelta 3', medio: '0.0125', condicion: 'Verdadero', bajo: '0.0125', alto: '0.025' },
+                    ]}
+                    exigeRespuesta
+                    pista="En cada vuelta cambia uno solo de los dos extremos, y el otro queda como estaba. Cuál de los dos lo decide el signo del VPN en el medio: si es positivo, la TIR está por encima del medio."
+                />
+
+                <h3>Capitalizar para comparar</h3>
+                <p>
+                    ¿Es mucho 1,99 % frente a 1,5 %? Son tasas mensuales, y la diferencia parece de medio punto.
+                    Para compararlas hay que llevarlas al mismo período, un año, y el capítulo 3 dijo cómo: con la tasa efectiva anual, <span className="inline-code">(1 + periodica) ^ m - 1</span>.
+                    Esa potencia es un ciclo de doce vueltas, porque el interés de cada mes se suma al saldo y al
+                    mes siguiente también gana interés. Es la <Termino def="Sumar al saldo el interés de un período, para que en el período siguiente también gane interés: interés sobre interés.">capitalización</Termino>, y escrita como ciclo es el acumulador de producto de la sección 1, que arranca en 1:
+                </p>
+
+                <CodeTabs
+                    titulo="Llevar las dos tasas a un año"
+                    bloques={EJ_CAPITALIZAR}
+                    nota="Doce multiplicaciones dan lo mismo que la potencia del capítulo 3: con la tasa del contrato, 19,56 % en los dos casos. El ciclo sirve también donde la potencia no sirve: si la tasa cambia de un mes a otro, como en una inversión con tasa variable, cada vuelta multiplica por la tasa de su mes." />
+
+                <p>
+                    Llevadas a un año, el contrato cuesta el 19,56 % efectivo anual y el crédito con la comisión,
+                    el 26,71 %: siete puntos más al año por 300 000 pagados una sola vez. En la sección 5 del
+                    capítulo 3 se compararon dos ofertas por su tasa efectiva; aquí la comparación es entre lo
+                    que dice el contrato y lo que cuesta el crédito.
+                </p>
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="La TIR del crédito con la comisión es 1,9924 % mensual, y la tasa pactada es 1,5 %. ¿Qué significa esa diferencia para el cliente?"
+                    opciones={[
+                        { texto: 'Que el banco calculó mal las cuotas: con el 1,5 % del contrato, cada una debería ser menor que 916 799,93.', correcta: false },
+                        { texto: 'Que la comisión le cuesta 0,49 puntos sobre 10 000 000 cada mes: 49 238 al mes, 590 854 al cabo del año.', correcta: false },
+                        { texto: 'Que, contando la comisión, el crédito le cuesta 1,99 % al mes sobre lo que de verdad recibió: siete puntos efectivos anuales más.', correcta: true, justificacion: 'La TIR es la tasa a la que las doce cuotas, traídas a hoy, valen lo que el cliente recibió: 9 700 000. El 1,5 % es la tasa a la que valen 10 000 000. Como recibió menos y paga lo mismo, su tasa es mayor, y esa diferencia es lo que le cuesta la comisión, dicho como tasa. Llevadas a un año, son 19,56 % contra 26,71 % efectivo anual. Las cuotas están bien calculadas: 916 799,93 es la cuota del 1,5 % sobre 10 000 000, y la comisión no cambió la cuota, sino lo que se recibió. La diferencia de 0,49 puntos tampoco se pasa a pesos multiplicándola por 10 000 000 cada mes: la comisión fueron 300 000, pagados una vez y al principio, y lo que la TIR mide es cuánto encarecen esos 300 000 un crédito de un año. Y 1,9924 % no es la efectiva anual de nada: la del 1,5 % mensual es 19,56 %, y las dos tasas de la pregunta son mensuales.' },
+                        { texto: 'Que 1,9924 % es la tasa efectiva del 1,5 % mensual: la misma tasa del contrato, escrita en otro período.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Box type="tip" label="El capítulo entero, en un crédito">
+                    Las dos respuestas al cliente salieron de piezas que el capítulo ya tenía. El saldo
+                    salió del <span className="inline-code">Para</span> de la tabla de la sección 4 con otro tope;
+                    los intereses, de su acumulador; el valor presente, de un ciclo que camina hacia atrás; y el
+                    VPN de cada tasa, de un <span className="inline-code">Para</span> dentro de un <span className="inline-code">Mientras</span>,
+                    como en la sección 5. Y la TIR, de un ciclo que para cuando el resultado ya es lo bastante
+                    preciso: la cuarta manera de parar de la sección 6.
+                </Box>
             </div>
         );
 
