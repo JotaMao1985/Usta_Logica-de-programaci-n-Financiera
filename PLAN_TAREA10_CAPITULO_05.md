@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. Siguiente: la revisión del docente en el PC4, y después la Fase 4 (el banco de Moodle).
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. Siguiente: la revisión del docente en el punto de control final.
 
 ---
 
@@ -1457,7 +1457,7 @@ anuncia en «Lo que viene» quede sin cumplir.
 - [x] **No salió ninguna comprobación nueva** para `verificar.py`. Los
       instrumentos de esta fase (el arnés por DOM y la medida de contraste) se
       probaron antes en negativo, pero viven en el navegador: ver «Huecos» abajo
-- [ ] **Revisión del docente:** pendiente
+- [x] **Revisión del docente:** aprobado el 2026-10-21
 
 *Huecos de las herramientas que dejó la fase:*
 - **`ejecutar_salidas.py` no coteja las salidas declaradas entre lenguajes.** Las
@@ -1480,14 +1480,14 @@ anuncia en «Lo que viene» quede sin cumplir.
 
 ### Fase 4 — Banco de Moodle y cierre
 
-#### Tarea 4.1 · Diez cloze
+#### Tarea 4.1 · Diez cloze · ✅
 Los del plan maestro: iteraciones ejecutadas (num), valor final del acumulador
 (num), traza de 3 iteraciones (num ×3), identificar un ciclo infinito (schoice),
 saldo tras *N* cuotas (num, `extol` 0.01), total de intereses pagados (num),
 efecto de mover la actualización del contador (schoice) y condición de parada de
 la bisección (schoice). Todo número impreso pasa por `num()` (trampa 9).
 
-#### Tarea 4.2 · Sus diez reglas de contenido
+#### Tarea 4.2 · Sus diez reglas de contenido · ✅
 En `verificar_cloze.R`, en el mismo commit que cada cloze. Tres son propias de
 este capítulo:
 - ningún cloze cuenta vueltas de un ciclo controlado por saldo (H3);
@@ -1495,23 +1495,77 @@ este capítulo:
 - el sorteo de «mover la actualización del contador» cae siempre donde el cambio
   **se nota**. Es la trampa 8: un cloze válido que no enseña nada.
 
-#### Tarea 4.3 · Compilar y verificar
+#### Tarea 4.3 · Compilar y verificar · ✅
 `compilar_banco.R --cap 05` y `verificar_cloze.R --reps 1000`.
 
-#### Tarea 4.4 · Portal
+*Tareas 4.1 a 4.3, hechas el 2026-10-21.* El banco está en su repositorio
+privado, commit 8bcfed6. Aquí no se nombra ningún ítem ni ninguna clave.
+- **Ocho cloze con 19 sub-ítems** cubren las diez respuestas del plan maestro.
+  La traza lleva tres celdas, y varios cloze llevan una o dos preguntas más, como
+  los del capítulo 4.
+- **Desviación: tolerancia.** El saldo tras *N* cuotas se pide redondeado al
+  peso, con tolerancia 1, y no con 0.01. Todo el banco pide pesos enteros sin
+  separador de miles, y con centavos aparece la confusión entre coma y punto
+  decimal.
+- **Las reglas ejecutan el código impreso.** Un intérprete del pseudocódigo del
+  capítulo, en las reglas del banco, corre la rutina que lee el estudiante:
+  - cuenta vueltas;
+  - fotografía el estado al final de cada vuelta;
+  - le pone techo a un ciclo que no termina.
+
+  Cada clave se coteja además por otro camino: fórmulas cerradas, valor presente
+  o la cuenta de las mitades.
+- **Las tres reglas propias del capítulo:**
+  - ningún cloze cuenta vueltas de un ciclo por saldo (H3);
+  - todo va en pseudocódigo (H4);
+  - mover el contador siempre se nota (trampa 8).
+- **Verificado:**
+  - `--reps 1000` en verde sobre el banco entero;
+  - `--agregado --cap 05` sin defectos ni señales;
+  - la prueba negativa: con la clave dañada, la regla falla en los ocho cloze, y
+    también cazan su caso la regla de H3 y la de la trampa 8;
+  - el XML compiló y pasó su revisión: 72 preguntas, nueve variantes por cloze.
+- **Dos defectos que se encontraron al verificar:**
+  - `num()` usa `format()`, que redondea a 7 cifras significativas, y una cuota
+    con centavos salía truncada en el código impreso: la rutina del enunciado no
+    era la del sorteo. Lo vio la regla que comprueba que la TIR queda dentro del
+    intervalo final.
+  - Una opción que nunca era la clave y aparecía en todos los sorteos, así que se
+    aprendía a descartar sin leer. Lo vio el modo `--agregado`.
+
+#### Tarea 4.4 · Portal · ✅
 La tarjeta 05 de `index.html` deja de ser `pendiente` y pasa a ser un enlace. Su
 `<h3>` debe coincidir con los otros cuatro sitios del nombre.
 
-#### Tarea 4.5 · Cierre
+*Hecho el 2026-10-21:* un enlace con «Control repetitivo», la descripción del
+contenido y 8 horas, como el `CONFIG`. Por HTTP el enlace responde 200.
+
+#### Tarea 4.5 · Cierre · ✅
 Bitácora en la §11 del plan maestro, y los hallazgos sobre las herramientas
 llevados a la skill y al `README`. Como mínimo: el techo del `Trazador` (H9),
 `Salir` (H6) y la auditoría de vueltas en prosa (Tarea 3.3), que es candidata a
 regla.
 
+*Hecho el 2026-10-21.*
+- **La bitácora** de la Tarea 10 está en la §11 del plan maestro. Allí también
+  quedan medidas las casillas del punto de control D: las 30 horas del RA1
+  cuadran; el banco tiene 34 cloze de los ~40.
+- **En el `README`:**
+  - el `Trazador` entra al catálogo, con su techo;
+  - una nota sobre `Salir`;
+  - la advertencia de que las cifras fuera de los bloques no las mira ninguna
+    regla. Lleva la propuesta de cotejar `//>` y `'>` con `#>`, que sí es
+    automatizable.
+- **En la skill `lpf-capitulo`:** las trampas nuevas de esta tarea.
+
 ### ⏸ Punto de control final
-- [ ] `verificar.py --con-salidas` en verde sobre los **cinco** capítulos
-- [ ] Banco compilado y verificado con `--reps 1000`
-- [ ] El capítulo abre desde `file://` sin errores de consola
+- [x] `verificar.py --con-salidas` en verde sobre los **cinco** capítulos
+- [x] Banco compilado y verificado con `--reps 1000`, y también con `--agregado`
+- [ ] El capítulo abre desde `file://` sin errores de consola. **No se pudo
+      comprobar aquí:** el panel de vista previa no carga un `file://` como
+      página viva, sino como una instantánea estática o una URL `data:` sin
+      `localStorage` (H16). Servido por HTTP, la consola está limpia en las nueve
+      entradas. Falta abrirlo con doble clic en un navegador normal
 - [ ] **Revisión del docente:** leído completo y con la dificultad aprobada
 
 ---

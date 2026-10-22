@@ -724,9 +724,13 @@ Detalle en `PLAN_TAREA8_CAPITULO_02.md`; bitácora en §11.
 *Paralelizables entre sí* (comparten el `Trazador` ya construido y no dependen uno del otro). **Dependencias:** T6.
 
 ### ✅ Punto de control D — RA1 completo
-- [ ] Capítulos 1–5 cubren las 30 horas del RA1 del syllabus
-- [ ] El hilo financiero (cartera de crédito) es continuo entre capítulos
-- [ ] Banco Moodle del RA1: ~40 cloze compilando
+- [x] Capítulos 1–5 cubren las 30 horas del RA1 del syllabus *(4 + 4 + 6 + 8 + 8,
+      con el capítulo 5 escrito el 2026-10-21; falta fundir su rama en `main`)*
+- [ ] El hilo financiero (cartera de crédito) es continuo entre capítulos *(el 5
+      lo sigue: el crédito de 10 000 000 al 1,5 % en 12 cuotas recorre sus siete
+      secciones; lo decide el docente)*
+- [ ] Banco Moodle del RA1: ~40 cloze compilando *(hay 34: 7, 6, 8, 5 y 8. El
+      capítulo 4 se quedó en 5 de los 9 de su plan)*
 
 ---
 
@@ -1686,3 +1690,66 @@ Verificación: `verificar.py --con-salidas` en verde en el 1, el 2 y el 4;
 `ensamblar.py` no mueve `lp-base.html`. Navegador: el minicuestionario del 1 da
 4/4 y 3/4 con la lectura de izquierda a derecha; el cuestionario final del 2, 10/10
 y 9/10 con el distractor nuevo; el 4 muestra los textos nuevos; consola limpia.
+
+### Tarea 10 · Capítulo 5, «Control repetitivo» · 2026-09-28 a 2026-10-21
+
+El plan, con sus hallazgos y lo medido en cada tarea, está en
+`PLAN_TAREA10_CAPITULO_05.md`. Rama `cap05/control-repetitivo`, en el *worktree*
+`.claude/worktrees/cap05`. Aquí va lo que sirve para los capítulos que siguen.
+
+**Construido.** Siete secciones, portada y evaluación: 19 ejercicios (E1:4 E2:4
+E3:2 E4:2 E5:2 E6:1 E7:2 E8:2) y un glosario de veinte términos. Tres artefactos
+propios del capítulo, fuera de LP-CORE:
+- `AmortizacionPasoAPaso`, la tabla de 240 filas que prometieron los capítulos 3
+  y 4;
+- `TresCiclosComparados`, con el `for` de R y el `range` de Python como paneles
+  opcionales;
+- `TIRBiseccion`.
+
+En el banco privado, ocho cloze con 19 sub-ítems, compilados a Moodle con nueve
+variantes cada uno. La tarjeta 05 del portal ya es un enlace.
+
+**Hallazgos de fondo, medidos en Python y en R:**
+- **`Mientras saldo > 0` da una vuelta de más en dos de cada seis créditos.** El
+  signo del residuo de punto flotante decide, y cambia con el orden de las
+  operaciones: un crédito de 240 cuotas da 241. Por eso la tabla de amortización
+  va por contador, y ningún cloze cuenta vueltas de un ciclo por saldo.
+- **`Para` no significa lo mismo en los cuatro lenguajes.**
+  - En R, `for (k in 1:n)` con n = 0 da dos vueltas.
+  - `range(1, n)` da n − 1.
+  - En VBA, el cuerpo puede cambiar el contador.
+- **Una bisección con tolerancia 10⁻¹⁸ no termina:** el intervalo se queda en el
+  espacio entre dos Double vecinos (3,5 × 10⁻¹⁸).
+
+**Herramientas nuevas:**
+- **`_plantilla/ejecutar_vba.py`:** el arnés que corre en Excel para Mac el VBA
+  que declara salida (riesgo R2). Todavía no se ha corrido contra Excel.
+- **Regla 20 de `verificar.py` y `comprobar_cifras.js`:** las cifras de la prosa
+  no se parten entre renglones. Se pasó a los cinco capítulos: 816 espacios duros.
+- **Un intérprete del pseudocódigo del capítulo, en las reglas del banco
+  privado.** Las reglas de los cloze ejecutan el código impreso, el que lee el
+  estudiante, en vez de rehacer la cuenta.
+
+**La auditoría (Fase 3).** La hicieron cuatro auditores en paralelo: tres
+ejecutaron unas 240 cifras y uno cotejó el capítulo con los capítulos 1 a 4. Se
+corrigieron un error y cuatro cifras ambiguas, una afirmación falsa («en este
+capítulo las diferencias entre lenguajes dejan de ser de acento», cuando el 4 ya
+era el primero) y nueve inexactas. Ninguna regla habría visto nada de eso.
+
+**Trampas nuevas, para la skill:**
+- `num()` usa `format()`, que redondea a 7 cifras significativas. Una cuota de
+  613 097,12 se imprimía `613097.1` en el código del cloze, y el código ya no era
+  el del sorteo.
+- Con el panel de vista previa en segundo plano, las animaciones y las
+  transiciones se quedan en su estado inicial. La medida de contraste dio 1,00
+  hasta que se neutralizaron.
+- El árbol de React se lee desde `stateNode.current`; el nodo del contenedor da a
+  veces la copia vieja.
+
+**Queda pendiente:**
+- correr el VBA en Excel;
+- las deudas de LP-CORE (P3): `Salir`, `localStorage` sin `try`, la sangría de
+  `OrdenaPasos`, la justificación de `MCQ` y el plegado de tildes;
+- el desborde de la sección 3 del capítulo 2 a 375 px, que ya existía y quedó
+  como tarea aparte;
+- la revisión del docente en el punto de control final.

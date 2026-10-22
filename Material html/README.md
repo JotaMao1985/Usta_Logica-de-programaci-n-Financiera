@@ -96,6 +96,18 @@ diferencia que se perdona, y se informa, es el separador decimal: lo pone la
 configuración regional, y un Excel en español de Colombia escribe `916799,93`
 donde el material declara `916799.93`.
 
+**Lo que ninguna regla mira: las cifras fuera de los bloques.** Las reglas 9 y
+`ejecutar_vba.py` comprueban lo que va tras `#>` y `'>`. Nadie mira el número de
+vueltas que se dice en la prosa, el saldo de un distractor o la cifra de una
+justificación. En la auditoría del capítulo 5 se ejecutaron unas 240 de esas
+cifras en Python y en R, y salieron:
+- un distractor cuya multiplicación no daba lo que decía;
+- cuatro cifras calculadas con un valor distinto del que muestra el enunciado.
+
+Hasta que haya una regla, al cerrar cada capítulo se hace esa auditoría a mano
+(Tarea 3.3 de su plan). Otra cosa sí es automatizable: comparar las `//>` y las
+`'>` con las `#>` de R del mismo bloque.
+
 `ensamblar.py` además **falla si Font Awesome es anterior a 6.5**: varios iconos
 del material (`fa-clipboard-question`, `fa-money-bill-trend-up`,
 `fa-magnifying-glass-chart`) no existen en versiones previas y aparecen como
@@ -400,6 +412,7 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `Eq` · `Termino` | Fórmula destacada · término con definición emergente |
 | `Pipeline` · `Timeline` · `Tabs` · `Accordion` | Estructuras de contenido |
 | `ChartFrame` + `usePlotly` | Gráficas interactivas |
+| `Trazador` | Traza guiada, instrucción por instrucción. Es exposición: no califica y no cuenta en la cuota |
 | `TablaTraza` | **E1** prueba de escritorio |
 | `DetectaError` | **E3** ubicar la línea + clasificar el error |
 | `Comparador` | **E4** dos versiones lado a lado + veredicto |
@@ -410,3 +423,16 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 `TablaTraza` compara con tolerancia: acepta `—`, `-` o vacío como «sin valor», y
 normaliza separador de miles y coma decimal (`20.000`, `20000` y `20000,00` se
 consideran iguales).
+
+**El techo del `Trazador`.** Pinta un botón y una fila de historial por paso.
+Medido en el capítulo 5, 33 pasos aún caben a 375 px: los botones ocupan cuatro
+filas y no sale nada de la pantalla. Lo que crece es el alto, que con el
+historial completo llega a unos 4 000 px. Una traza guiada da **tres vueltas
+como mucho**. Una tabla de cientos de filas no es un `Trazador` largo: es un
+componente propio del capítulo, como `AmortizacionPasoAPaso`.
+
+**`Salir` no está en la gramática del pseudocódigo.** Se pinta como un
+identificador cualquiera, sin el color de las palabras clave. El capítulo 2 lo
+usa; del 5 en adelante no se usa. La salida de un ciclo va en su condición, que
+es además lo que se enseña: un ciclo que sale a mitad del cuerpo esconde cuándo
+para. Arreglarlo es una deuda de LP-CORE (P3 del plan del capítulo 5).
