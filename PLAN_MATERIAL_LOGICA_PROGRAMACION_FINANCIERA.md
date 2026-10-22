@@ -1686,3 +1686,47 @@ Verificación: `verificar.py --con-salidas` en verde en el 1, el 2 y el 4;
 `ensamblar.py` no mueve `lp-base.html`. Navegador: el minicuestionario del 1 da
 4/4 y 3/4 con la lectura de izquierda a derecha; el cuestionario final del 2, 10/10
 y 9/10 con el distractor nuevo; el 4 muestra los textos nuevos; consola limpia.
+
+### El desborde de la sección 3 del 2 y la transición de `.lp-card` · 2026-10-21
+
+**Capítulo 2 · el pseudocódigo empujaba la página a 375 px.** En «Cuatro
+representaciones», la columna de lenguaje natural y pseudocódigo es un ítem de
+grid con `min-width: auto`, y las seis líneas del pseudocódigo van con
+`white-space: pre`. La más larga, `interes <- capital * tasa * plazo`, mide
+311 px; con el padding del botón y el de la tarjeta, la columna crecía a 359 px
+en una pista de 319, y el panel de la lección daba `scrollWidth` 383 contra
+`clientWidth` 367. Ahora la columna lleva `min-w-0` y el pseudocódigo se
+desplaza dentro de su tarjeta, con un `min-w-max` interior para que la franja del
+paso activo llegue a la línea más larga (commit 9df2270).
+
+**Parecía depender de haber visitado antes otras secciones, y no dependía.**
+`.lp-card` tenía `transition: all 0.3s ease`. En una carga directa a la sección 3,
+el Tailwind del CDN genera `.p-4` después del primer render, y el padding de las
+tarjetas entraba animado desde 0; con el panel de vista previa oculto esa
+transición se queda congelada (trampa 15 de la skill), así que la medida daba
+367/367 con tarjetas sin padding. Visitando antes otras secciones, `.p-4` ya
+existía y no había transición. Con las animaciones terminadas, la carga directa
+también daba 383.
+
+**La transición de `.lp-card` es ahora solo `box-shadow` y `transform`**, lo
+único que cambia con `:hover`. Se editó en el `head` del capítulo 1, que es la
+fuente (trampa 1), se regeneró `lp-base.html` con `ensamblar.py` y se copió la
+misma línea en el `head` del 2, el 3 y el 4. `migrar.py` no tenía nada que
+estampar: el hash de LP-CORE no cambia.
+
+**Hueco de las herramientas: el `head` de los capítulos no lo propaga ni lo
+compara nadie.** `ensamblar.py` lo lee del 1, `migrar.py` estampa solo LP-CORE y
+el `App`, y `verificar.py` compara LP-CORE (comprobación 1) y la plantilla con
+sus fuentes (13), no el `head` del 2 en adelante. Prueba negativa: el capítulo 3
+con el `head` anterior a este cambio pasa `verificar.py` en verde. Hoy los cuatro
+`head` son idénticos salvo el `<title>` y la descripción.
+
+Queda fuera: seis botones `lp-card p-2 … transition-all` propios del capítulo 2
+(línea 2787) y varios botones de LP-CORE y del `App` con `transition-all` siguen
+animando el padding 0,15 s en la primera carga.
+
+Verificación: `verificar.py` en verde en los cuatro capítulos, con la 13
+incluida. Navegador a 375 px, carga directa a la sección 3 del 2, **sin terminar
+las animaciones**: tarjetas con 16 px de padding desde el primer render, columna
+de 319 px, panel 367/367, pseudocódigo desplazable (327 en 287); un `:hover`
+simulado anima solo `box-shadow` y `transform`; consola limpia.
