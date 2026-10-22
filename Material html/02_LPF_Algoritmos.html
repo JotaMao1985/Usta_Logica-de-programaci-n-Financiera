@@ -2940,8 +2940,11 @@ End Sub`,
 
             return (
                 <div className="my-5 not-prose">
+                    {/* `min-w-0`: sin él, la columna crece hasta la línea más larga del
+                        pseudocódigo (`white-space: pre`) y en un móvil de 375 px empuja
+                        la página de lado; así es el pseudocódigo el que se desplaza. */}
                     <div className="grid lg:grid-cols-2 gap-4">
-                        <div className="space-y-3">
+                        <div className="space-y-3 min-w-0">
                             <div className="lp-card p-4">
                                 <p className="text-xs uppercase tracking-widest text-primary font-bold m-0 mb-2">1 · Lenguaje natural</p>
                                 <ol className="text-sm text-gray-700 m-0 pl-5 space-y-0.5">
@@ -2957,16 +2960,20 @@ End Sub`,
                                 <p className="text-xs uppercase tracking-widest text-primary font-bold m-0 mb-2">2 · Pseudocódigo</p>
                                 {/* Los seis botones son el ÚNICO recorrido de tabulación del
                                     artefacto: seis paradas, no diecinueve. Son botones HTML de
-                                    verdad porque un `<g>` de SVG no dispara eventos de foco. */}
-                                <div className="text-sm" style={{ fontFamily: "'Fira Code', monospace" }}>
-                                    {PASOS_REPR.map(p => (
-                                        <button key={p.id} type="button" className={clase(p.id)}
-                                            aria-pressed={paso === p.id}
-                                            aria-label={`Paso ${p.id} de ${PASOS_REPR.length}: ${p.natural}`}
-                                            {...eventos(p.id)}>
-                                            <span style={{ whiteSpace: 'pre' }}>{p.pseudo}</span>
-                                        </button>
-                                    ))}
+                                    verdad porque un `<g>` de SVG no dispara eventos de foco.
+                                    Un solo desplazamiento para las seis líneas, y el `min-w-max`
+                                    interior lleva la franja del paso activo hasta la más larga. */}
+                                <div className="text-sm overflow-x-auto" style={{ fontFamily: "'Fira Code', monospace" }}>
+                                    <div className="min-w-max">
+                                        {PASOS_REPR.map(p => (
+                                            <button key={p.id} type="button" className={clase(p.id)}
+                                                aria-pressed={paso === p.id}
+                                                aria-label={`Paso ${p.id} de ${PASOS_REPR.length}: ${p.natural}`}
+                                                {...eventos(p.id)}>
+                                                <span style={{ whiteSpace: 'pre' }}>{p.pseudo}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
