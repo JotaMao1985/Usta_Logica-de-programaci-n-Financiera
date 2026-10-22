@@ -47,6 +47,12 @@ también, porque es plantilla: todo lo que varía de un capítulo a otro vive en
 centinelas y se migra; uno ya migrado se reestampa de centinela a centinela.
 Acepta `--dry-run` y deja `.bak`.
 
+**Para cambiar el `head`** (CSS, librerías, configuración de Tailwind):
+editarlo en `01_LPF_Introduccion.html`, que es la fuente de `ensamblar.py`,
+regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.py`
+no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
+sean el del 1 salvo el `<title>` y la descripción.
+
 `verificar.py` comprueba doce cosas y devuelve ≠ 0 si algo falla:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte

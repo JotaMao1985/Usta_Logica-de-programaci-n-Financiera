@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y diecinueve sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -64,6 +64,11 @@ Comprueba una cosa sobre la plantilla y dieciocho sobre cada archivo HTML de cap
      pertenece una pregunta no se puede adivinar leyéndola, y adivinarlo mal
      sería peor que no comprobarlo. Si no declara ninguna, avisa de que no
      se comprobó.
+ 20. HEAD AL DÍA — que el `head` del capítulo sea el del capítulo 1, salvo el
+     `<title>` y la descripción. `ensamblar.py` lo lee del 1 y `migrar.py` no
+     lo estampa, así que un cambio de CSS o de librerías en el `head` solo
+     llega a los demás capítulos si alguien lo copia; sin esta regla, olvidarlo
+     daba verde.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -83,6 +88,7 @@ import hashlib
 import re
 import subprocess
 import sys
+from itertools import zip_longest
 from pathlib import Path
 
 try:
@@ -752,6 +758,53 @@ def plantilla_desactualizada():
             f"{len(esperado)} al ensamblar)\n        ejecute: python3 _plantilla/ensamblar.py")
 
 
+# ------------------------------------------------------------ 20 · head al día
+# Las reglas 1 y 13 cubren LP-CORE y la plantilla, pero no el `head` de los
+# capítulos: `ensamblar.py` lo lee del 1 y `migrar.py` estampa solo LP-CORE y el
+# `App`, así que un cambio en el CSS o en las librerías del `head` llega a los
+# demás capítulos solo si alguien lo copia a mano. Se vio el 2026-10-21 al
+# cambiar la transición de `.lp-card`: el capítulo 3 con el `head` anterior
+# pasaba las diecinueve reglas en verde.
+def head_comun(texto):
+    """El `head` —hasta `<script type="text/babel">`— sin título ni descripción.
+
+    Se vacían el texto del `<title>` y el `content` de la descripción, que son lo
+    único propio de cada capítulo; la descripción se localiza por la etiqueta,
+    como en `ensamblar.py`. Vaciar no quita líneas, así que los números de línea
+    siguen siendo los del archivo. None si no está el ancla.
+    """
+    fin = texto.find(ensamblar.ANCLA_FIN_HEAD)
+    if fin == -1:
+        return None
+    head = texto[:fin + len(ensamblar.ANCLA_FIN_HEAD)]
+    head = re.sub(r"<title>[^<]*</title>", "<title></title>", head, count=1)
+    return re.sub(r'(<meta name="description"[^>]*?content=")[^"]*"', r'\1"', head, count=1)
+
+
+def head_desactualizado(texto):
+    fuente = ensamblar.FUENTE.read_text(encoding="utf-8")
+    referencia = head_comun(fuente)
+    if referencia is None:
+        return f"no se encontró «{ensamblar.ANCLA_FIN_HEAD}» en {ensamblar.FUENTE.name}"
+    propio = head_comun(texto)
+    if propio is None:
+        return f"no se encontró «{ensamblar.ANCLA_FIN_HEAD}»: no se pudo comparar el head"
+    if propio == referencia:
+        return None
+    # Se compara la versión vaciada y se muestran las líneas tal como están en
+    # cada archivo: la vaciada enseñaría un `<title></title>` que nadie escribió.
+    mostrar = lambda lineas, i: lineas[i].strip()[:100] if i < len(lineas) else "(nada)"
+    pares = zip_longest(propio.splitlines(), referencia.splitlines())
+    for i, (x, y) in enumerate(pares):
+        if x != y:
+            return (f"el head difiere del de {ensamblar.FUENTE.name} en la línea {i + 1}\n"
+                    f"        aquí:   {mostrar(texto.splitlines(), i)}\n"
+                    f"        cap. 1: {mostrar(fuente.splitlines(), i)}\n"
+                    f"        el head es común: se cambia en el 1, fuente de ensamblar.py, "
+                    f"y se copia a los demás")
+    return None
+
+
 def _sin_comentarios(cuerpo):
     """Los comentarios `//` sustituidos por espacios de la misma longitud.
 
@@ -1248,6 +1301,11 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     p19, a19 = cobertura_del_cuestionario(texto, cuerpo, desplazamiento)
     problemas += [f"cobertura — {f}" for f in p19]
     avisos += [f"cobertura — {f}" for f in a19]
+
+    # 20 · el head es el del capítulo 1, salvo el título y la descripción
+    desfase_head = head_desactualizado(texto)
+    if desfase_head:
+        problemas.append(f"head — {desfase_head}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

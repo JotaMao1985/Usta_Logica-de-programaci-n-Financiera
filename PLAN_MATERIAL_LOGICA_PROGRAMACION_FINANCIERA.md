@@ -1730,3 +1730,25 @@ incluida. Navegador a 375 px, carga directa a la sección 3 del 2, **sin termina
 las animaciones**: tarjetas con 16 px de padding desde el primer render, columna
 de 319 px, panel 367/367, pseudocódigo desplazable (327 en 287); un `:hover`
 simulado anima solo `box-shadow` y `transform`; consola limpia.
+
+### Comprobación 20: el `head` de cada capítulo es el del 1 · 2026-10-22
+
+Cierra el hueco anotado en la entrada anterior. `verificar.py` compara ahora el
+`head` de cada capítulo —hasta `<script type="text/babel">`, la misma ancla de
+`ensamblar.py`— con el del capítulo 1, después de vaciar en los dos el texto del
+`<title>` y el `content` de la descripción, que son lo único propio de cada uno.
+Vaciar no quita líneas, así que la falla cita la línea del archivo y muestra las
+dos versiones tal como están escritas. Es una falla, no un aviso: un `head`
+distinto es otro CSS u otras librerías.
+
+| Prueba | Resultado |
+|---|---|
+| El 3 con el `head` anterior al cambio de `.lp-card` | Falla en la línea 117 |
+| El 4 con una librería de más tras Tailwind | Falla en la línea 18 |
+| El 4 sin una línea de CSS de `.lp-card` | Falla en la línea 115 |
+| El 2 sin la `<meta>` de descripción | Falla en la línea 7 |
+| El 2 con otro `<title>` y otra descripción (control) | Pasa |
+
+Los cuatro capítulos pasan. De paso: la lista numerada del README se queda en la
+regla 12; la lista completa, del 1 al 20, está en el docstring de `verificar.py`.
+El README explica ahora en «Flujo de trabajo» cómo se cambia el `head`.
