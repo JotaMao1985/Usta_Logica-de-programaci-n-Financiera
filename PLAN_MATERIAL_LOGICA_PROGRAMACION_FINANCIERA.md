@@ -1890,3 +1890,82 @@ los cinco montan, recorren todas sus lecciones y no dan errores de JavaScript. C
 cdnjs bloqueado en el resolvedor de Chrome, el 05 monta y recorre sus nueve
 lecciones con el mismo texto y el código sin color; los únicos errores son las doce
 descargas de cdnjs que no llegan.
+
+### Las deudas de LP-CORE (P3) · 2026-10-27
+
+En la rama `lpcore/deudas-p3`, salida de `main` ya con el capítulo 5. Una sola
+reestampada de los cinco capítulos para todo lo que se venía apuntando desde el
+capítulo 4.
+
+**Lo que se arregló.**
+
+| Deuda | Qué cambia |
+|---|---|
+| H6 · `Salir` | Entra en la gramática del pseudocódigo. Se colorea en la búsqueda del 2. |
+| H16 · `localStorage` | `leerGuardado` y `guardar` con `try`. Sin almacenamiento, los cinco cargan; antes quedaban en blanco. Regla **22** nueva: el contenido no lo toca directo. |
+| P2 del 4 · tildes | `TablaTraza` las ignora: «sí» y «si» valen igual. La ñ cuenta. |
+| L3 · coma de miles | `1,350,000`, como imprime Python, ya no se lee 1,35. Una respuesta ambigua (`1.250`) vale por cualquiera de sus lecturas; la clave tiene una sola. |
+| L1 · desorden | `OrdenaPasos` usa una permutación sembrada con el texto de los pasos: sin pasos en su sitio, sin pares seguidos ni saltos regulares, en los 32 casos del curso. Antes era `[n−1, 0, n−2, 1, …]` en todos. |
+| H17 / L2 · sangría | Los pasos y la solución la conservan (`whitespace-pre-wrap`). Se califica por texto. |
+| H9 del 4 · `MCQ` | Muestra la justificación de cada opción mal elegida y la de todas las correctas. Ningún `MCQ` del material tiene hoy distractores justificados, así que nada publicado cambia. |
+| Etiqueta doble | Dentro de `<Ejercicio>`, `DetectaError`, `Comparador` y `Emparejamiento` la mostraban dos veces en el 4 y el 5. Ahora va una, con el tipo del envoltorio. |
+| `Emparejamiento` | El círculo de un elemento emparejado muestra la letra de su pareja, no un número. |
+| L5 · `Trazador` | Variables `efimera: true`. La columna «saldo > 0» de la sección 2 del 5 la usa, y se fueron los seis «—» puestos a mano. |
+| L6 · `Pipeline` | La flecha va con su etapa y se esconde al final de una fila. |
+| L6 · `ChartFrame` | Admite `descripcion` (`role="figure"`, para no esconder los botones de Plotly). |
+| L6 · marcadores | Cada flujograma del 4 tiene su `id`. Antes la variante estrecha apuntaba al marcador de la ancha, oculta a 375 px. |
+| L4 · `not-prose` | Solo en títulos y tablas (ver abajo). |
+
+**`not-prose`, medido antes de tocarlo.** Se compararon los estilos calculados de
+todo lo que hay dentro de un `.not-prose` con el CSS de siempre y con uno que lo
+respeta, lección por lección. Respetarlo del todo cambiaba cientos de medidas:
+- la motivación de cada sección perdía interlineado (28,6 → 22,4 px);
+- los párrafos de los componentes, su margen;
+- las listas de `CalloutPro`, sus viñetas.
+
+Esos componentes se ajustaron con la prosa puesta. Se aplicó solo a `h3`, `h4`,
+`table`, `th` y `td`, y lo único que cambia es lo que la revisión señalaba:
+- los `h4` de unos pocos componentes recuperan su `text-primary`;
+- la tabla de verdad del 4 centra sus encabezados y entra entera;
+- la de amortización del 5 los alinea a la derecha, sobre sus cifras.
+
+Se miró en capturas de antes y después.
+
+**Herramientas.**
+- **`sonda_navegador.mjs`, nueva.** Chrome sin ventana con `file://`, en cuatro
+  modos: `file`, `375`, `sin-almacen` y `sin-cdnjs`. Se versiona porque el panel
+  de vista previa no sirve para esto: ahí `requestAnimationFrame` no corre y
+  `ResizeObserver` no notifica (medido). La primera prueba del `Pipeline` dio una
+  medida vieja por eso, y no por el componente.
+- **La medida de 375 px cuenta aparte lo recortado.** Es lo que queda dentro de
+  un `overflow-x: hidden`, como los bloques de código plegados. Es idéntico al
+  de `main` salvo dos elementos del 2, que son los `Salir` ahora coloreados.
+- **Un hallazgo del instrumento.** Una sonda que muere sin cerrar su Chrome deja
+  el puerto ocupado, y la siguiente se conecta a la página vieja sin ningún
+  error. `sonda_navegador.mjs` usa un puerto por proceso.
+
+**Verificado.**
+- `verificar.py --con-salidas`: los cinco pasan las 22 reglas.
+- La regla 22, con su prueba negativa: un `localStorage` en el `App` falla, y
+  dos comentarios que lo nombran no cuentan.
+- La sonda, en sus cuatro modos sobre los cinco capítulos. Su propia prueba
+  negativa: el 05 de `main` no monta sin almacenamiento.
+- Por DOM en el 5:
+  - la traza de la sección 2, columna por columna;
+  - `OrdenaPasos` en pseudocódigo y en Python, con una respuesta buena y una
+    mala (11/11 y 9/11; 8/8 y 6/8), con 34 px de sangría;
+  - la `TablaTraza` de la sección 2 llena con cifras al estilo Python: 15/15, y
+    14/15 con una mala;
+  - `Emparejamiento`, con «C A» al emparejar;
+  - diecinueve etiquetas para diecinueve ejercicios;
+  - un `MCQ` de prueba, simple y múltiple, con distractores justificados.
+- Las 22 comparaciones de celdas y el desorden, probados como funciones.
+- El `Pipeline` del 4, a seis anchos.
+
+**Lo que queda.**
+- Que `DetectaError` pida anticipar el `impacto` antes de mostrarlo: cambia
+  cómo se resuelven los E3 de todo el curso, y es decisión del docente.
+- Hacer valer `not-prose` del todo, que sería rediseñar los componentes.
+- Safari y Firefox, sin probar.
+- Los `id` repetidos de los flujogramas del 5: ninguno se oculta, así que se
+  pintan bien, pero son inválidos.

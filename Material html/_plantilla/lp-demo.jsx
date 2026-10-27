@@ -759,7 +759,7 @@ Debug.Print saldo`,
         ============================================================ */
         const App = () => {
             const [activeLessonIndex, setActiveLessonIndex] = useState(() => {
-                const saved = parseInt(localStorage.getItem(CONFIG.storageKey), 10);
+                const saved = parseInt(leerGuardado(CONFIG.storageKey), 10);
                 return Number.isInteger(saved) && saved >= 0 ? saved : 0;
             });
             // La barra es hermana flex del contenido: no lo superpone, lo
@@ -775,7 +775,7 @@ Debug.Print saldo`,
             const progreso = Math.round(((safeIndex + 1) / curriculum.length) * 100);
 
             useEffect(() => {
-                localStorage.setItem(CONFIG.storageKey, String(safeIndex));
+                guardar(CONFIG.storageKey, String(safeIndex));
                 typesetMath();
                 const cont = document.getElementById('contenido-scroll');
                 if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });

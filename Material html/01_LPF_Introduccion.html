@@ -199,19 +199,28 @@
             height: 420px;
         }
 
+        /* `not-prose` es del plugin Typography de Tailwind, que no se carga:
+           aquí solo lo respetan los títulos y las tablas, que es donde
+           `.prose-lp` pisaba lo que el componente pedía (el `th` con
+           `text-right` salía a la izquierda, el `h4` con `text-primary` salía
+           navy; L4). Los párrafos, las listas y las negritas lo siguen
+           ignorando a propósito: los componentes que declaran `not-prose`
+           —`Motivacion` y `CalloutPro`, entre otros— se ajustaron con esos
+           márgenes y viñetas, y quitárselos cambiaba cientos de medidas en
+           los cinco capítulos, viñetas incluidas. Medido el 2026-10-27. */
         .prose-lp p {
             margin-bottom: 1rem;
             line-height: 1.75;
         }
 
-        .prose-lp h3 {
+        .prose-lp h3:not(.not-prose *) {
             color: #D81B6A;
             font-weight: 600;
             font-size: 1.2rem;
             margin: 1.8rem 0 0.6rem;
         }
 
-        .prose-lp h4 {
+        .prose-lp h4:not(.not-prose *) {
             color: #001A4D;
             font-weight: 600;
             font-size: 1.05rem;
@@ -239,14 +248,14 @@
             color: #0F172A;
         }
 
-        .prose-lp table {
+        .prose-lp table:not(.not-prose *) {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
             margin: 1rem 0;
         }
 
-        .prose-lp th {
+        .prose-lp th:not(.not-prose *) {
             background: #F5F0FA;
             color: #001A4D;
             text-align: left;
@@ -254,7 +263,7 @@
             border: 1px solid #E2E8F0;
         }
 
-        .prose-lp td {
+        .prose-lp td:not(.not-prose *) {
             padding: 0.6rem 0.8rem;
             border: 1px solid #E2E8F0;
             vertical-align: top;
@@ -580,20 +589,43 @@
             </div>
         );
 
-        const Pipeline = ({ steps }) => (
-            <div className="flex items-stretch flex-wrap gap-2 my-6 justify-between">
-                {steps.map((s, i) => (
-                    <React.Fragment key={i}>
-                        <div className="flex-1 min-w-[140px] bg-white border border-gray-200 rounded-xl px-3 py-3 text-center text-sm shadow-sm" style={{ borderTop: '4px solid #3D008D' }}>
-                            <span className="inline-block w-6 h-6 leading-6 rounded-full text-white font-bold text-xs mb-1" style={{ background: '#3D008D' }}>{s.num}</span>
-                            <span className="block font-semibold text-navy mb-1">{s.title}</span>
-                            <span className="text-gray-600">{s.desc}</span>
+        // La flecha va DENTRO del mismo ítem que su etapa, así que nunca abre
+        // una fila; y se oculta (sin dejar de ocupar su sitio, para no mover el
+        // reparto) cuando la etapa siguiente cae en otra fila. Antes la flecha
+        // era un ítem suelto y, al partirse la fila, quedaba sola (L6).
+        const Pipeline = ({ steps }) => {
+            const ref = useRef(null);
+            const [corta, setCorta] = useState([]);
+            useEffect(() => {
+                const cont = ref.current;
+                if (!cont || !window.ResizeObserver) return;
+                const medir = () => {
+                    const tops = [...cont.children].map(c => c.offsetTop);
+                    setCorta(tops.map((t, i) => i < tops.length - 1 && tops[i + 1] !== t));
+                };
+                const ro = new ResizeObserver(medir);
+                ro.observe(cont);
+                medir();
+                return () => ro.disconnect();
+            }, [steps.length]);
+            return (
+                <div ref={ref} className="flex items-stretch flex-wrap gap-2 my-6 justify-between">
+                    {steps.map((s, i) => (
+                        <div key={i} className="flex-1 min-w-[140px] flex items-stretch gap-2">
+                            <div className="flex-1 bg-white border border-gray-200 rounded-xl px-3 py-3 text-center text-sm shadow-sm" style={{ borderTop: '4px solid #3D008D' }}>
+                                <span className="inline-block w-6 h-6 leading-6 rounded-full text-white font-bold text-xs mb-1" style={{ background: '#3D008D' }}>{s.num}</span>
+                                <span className="block font-semibold text-navy mb-1">{s.title}</span>
+                                <span className="text-gray-600">{s.desc}</span>
+                            </div>
+                            {i < steps.length - 1 && (
+                                <div aria-hidden="true" className="self-center text-secondary font-bold text-xl hidden md:block"
+                                    style={{ visibility: corta[i] ? 'hidden' : 'visible' }}>→</div>
+                            )}
                         </div>
-                        {i < steps.length - 1 && <div className="self-center text-secondary font-bold text-xl hidden md:block">→</div>}
-                    </React.Fragment>
-                ))}
-            </div>
-        );
+                    ))}
+                </div>
+            );
+        };
 
         const Tabs = ({ tabs }) => {
             const [active, setActive] = useState(0);
@@ -717,11 +749,19 @@
                             </span>
                         )}
                     </div>
+                    {/* Antes solo se mostraba la justificación de la correcta, y la
+                        que un autor escribía para un distractor no la leía nadie
+                        (H9 del capítulo 4). Ahora va primero la de cada opción
+                        mal elegida y después la de las correctas, todas. */}
                     {checked && (
                         <div className="mt-3 text-[0.9rem] text-gray-700 bg-bg rounded-lg p-3 border-l-4 animate-fade-in" style={{ borderColor: '#ED1E79' }}>
+                            {sel.filter(i => !opciones[i].correcta && opciones[i].justificacion).sort((x, y) => x - y).map(i => (
+                                <p key={i} style={{ margin: '0 0 0.5rem' }}>
+                                    <strong>Usted eligió la {String.fromCharCode(97 + i)}: </strong>{opciones[i].justificacion}
+                                </p>
+                            ))}
                             <strong>Explicación: </strong>
-                            {opciones.find(o => o.correcta)?.justificacion ||
-                                opciones.filter(o => o.correcta).map(o => o.justificacion).filter(Boolean).join(' ')}
+                            {opciones.filter(o => o.correcta).map(o => o.justificacion).filter(Boolean).join(' ')}
                         </div>
                     )}
                 </div>
@@ -840,10 +880,15 @@
             }, deps);
         };
 
-        const ChartFrame = ({ id, height = 'chart-h-360', caption }) => (
+        // `descripcion` es lo que oye un lector de pantalla: el gráfico de Plotly
+        // no tiene texto alternativo propio. Sin ella se usa el pie (L6). Es
+        // `figure` y no `img` porque `img` les quitaría a los botones de Plotly
+        // que hubiera dentro su lugar en el árbol de accesibilidad.
+        const ChartFrame = ({ id, height = 'chart-h-360', caption, descripcion }) => (
             <>
                 <div className="bg-white border border-gray-200 rounded-xl p-2 shadow-sm my-3">
-                    <div id={id} className={height} style={{ width: '100%' }}></div>
+                    <div id={id} className={height} style={{ width: '100%' }}
+                        {...((descripcion || caption) ? { role: 'figure', 'aria-label': descripcion || caption } : {})}></div>
                 </div>
                 {caption && <p className="text-xs text-gray-500 italic text-center mb-4">{caption}</p>}
             </>
@@ -1003,7 +1048,7 @@
                 // `comment` va primero: si no, el operador `/` se comería el `//`.
                 'comment': { pattern: /\/\/.*/, greedy: true },
                 'string': { pattern: /"(?:[^"\\\n]|\\.)*"/, greedy: true },
-                'keyword': /\b(?:FinSi|FinMientras|FinPara|FinSegun|FinFuncion|FinProcedimiento|FinRepita|Inicio|Fin|Si|Entonces|SinoSi|Sino|Segun|Caso|DeOtroModo|Mientras|Hacer|Para|Repita|Hasta|Con|Paso|Leer|Escribir|Funcion|Procedimiento|Retornar|Llamar)\b/,
+                'keyword': /\b(?:FinSi|FinMientras|FinPara|FinSegun|FinFuncion|FinProcedimiento|FinRepita|Inicio|Fin|Si|Entonces|SinoSi|Sino|Segun|Caso|DeOtroModo|Mientras|Hacer|Para|Repita|Hasta|Con|Paso|Leer|Escribir|Funcion|Procedimiento|Retornar|Llamar|Salir)\b/,
                 'builtin': /\b(?:Entero|Real|Cadena|Caracter|Logico|Arreglo|Matriz|Constante|Verdadero|Falso)\b/,
                 'function': /\b(?:Y|O|NO|MOD|DIV|abs|raiz|redondear|potencia|longitud)\b/,
                 'number': /\b\d+(?:\.\d+)?\b/,
@@ -1144,10 +1189,23 @@
         ============================================================ */
         const CODETABS_KEY = 'lpf_lenguaje_preferido';
 
+        /* `localStorage` puede no estar: en una ventana privada, con el
+           almacenamiento bloqueado por política o en una URL `data:`, leerlo
+           lanza un `SecurityError`. Sin `try`, esa excepción dentro de un
+           inicializador de `useState` desmonta el árbol y el capítulo queda en
+           blanco (H16 del capítulo 5). Sin almacenamiento todo funciona igual:
+           solo se olvidan la lección y el lenguaje al cerrar la pestaña. */
+        const leerGuardado = (clave) => {
+            try { return window.localStorage.getItem(clave); } catch (e) { return null; }
+        };
+        const guardar = (clave, valor) => {
+            try { window.localStorage.setItem(clave, valor); } catch (e) { /* sin almacenamiento */ }
+        };
+
         const CodeTabs = ({ bloques, titulo, defecto = 'pseudo', nota, plegable }) => {
             const disponibles = LANG_ORDEN.filter(l => bloques && bloques[l]);
             const elegirInicial = () => {
-                const guardado = localStorage.getItem(CODETABS_KEY);
+                const guardado = leerGuardado(CODETABS_KEY);
                 if (guardado && bloques[guardado]) return guardado;
                 if (bloques[defecto]) return defecto;
                 return disponibles[0];
@@ -1159,7 +1217,7 @@
             // demás instancias: son independientes a propósito.
             const cambiar = (l) => {
                 setLang(l);
-                localStorage.setItem(CODETABS_KEY, l);
+                guardar(CODETABS_KEY, l);
             };
 
             if (!disponibles.length) return null;
@@ -1221,7 +1279,7 @@
         const useLenguajeActivo = (disponibles, defecto = 'pseudo') => {
             const clave = disponibles.join('|');
             const elegir = () => {
-                const g = localStorage.getItem(CODETABS_KEY);
+                const g = leerGuardado(CODETABS_KEY);
                 if (g && disponibles.includes(g)) return g;
                 if (disponibles.includes(defecto)) return defecto;
                 return disponibles[0];
@@ -1232,7 +1290,7 @@
             // cambiador para pasárselo a su <SelectorLenguaje>.
             const cambiar = (l) => {
                 setLang(l);
-                localStorage.setItem(CODETABS_KEY, l);
+                guardar(CODETABS_KEY, l);
             };
             return [lang, cambiar];
         };
@@ -1313,9 +1371,29 @@
             E8: { etiqueta: 'E8 · Criterio', color: '#B45309' },
         };
 
+        // Los componentes que se autoetiquetan (E1, E3, E4, E5, E6) se anotan en
+        // `AUTOETIQUETADOS` al final de esta librería. Envueltos en un
+        // <Ejercicio>, la etiqueta salía dos veces —la del envoltorio y la
+        // suya—; ahora el envoltorio no pinta la suya y le pasa su tipo por
+        // contexto, y el componente lo muestra en su sitio de siempre. Manda el
+        // tipo del envoltorio, que es el que cuenta `verificar.py`.
+        const TipoDeEjercicio = React.createContext(null);
+        const AUTOETIQUETADOS = new Set();
+
+        const EtiquetaTipo = ({ texto, className, style }) => {
+            const externo = React.useContext(TipoDeEjercicio);
+            return externo
+                ? <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5" style={{ background: externo.color }}>{externo.etiqueta}</span>
+                : <span className={className} style={style}>{texto}</span>;
+        };
+
         const Ejercicio = ({ tipo, children }) => {
             const t = TIPOS_EJERCICIO[tipo];
             if (!t) return children;
+            const hijos = React.Children.toArray(children);
+            if (hijos.length === 1 && AUTOETIQUETADOS.has(hijos[0].type)) {
+                return <TipoDeEjercicio.Provider value={t}>{children}</TipoDeEjercicio.Provider>;
+            }
             // La etiqueta se ancla SOBRE el borde superior de la tarjeta, no
             // dentro: si se superpone al contenido, un enunciado de dos líneas
             // le pasa por debajo y queda ilegible.
@@ -1336,25 +1414,49 @@
            Comparación tolerante: espacios, mayúsculas, coma/punto decimal
            y marcas de "sin valor" (—, -, vacío) se normalizan.
         ============================================================ */
-        const normalizarCelda = (v) => {
+        // Sin tildes, sin espacios, sin `$` ni `COP`. Las tildes se van porque
+        // «sí» y «si» son la misma respuesta: sin plegarlas, quien escribía la
+        // forma correcta en español veía su celda marcada mal (P2 del
+        // capítulo 4). La ñ se queda: solo se quitan el agudo, el grave y la
+        // diéresis.
+        const limpiarCelda = (v) => {
             let s = String(v === null || v === undefined ? '' : v).trim().toLowerCase();
+            s = s.normalize('NFD').replace(/[\u0300\u0301\u0308]/g, '').normalize('NFC');
             s = s.replace(/\s+/g, '');
-            if (s === '' || s === '-' || s === '—' || s === '–' || s === 'vacio' || s === 'vacío' || s === 'nada' || s === 'null') return '∅';
-            s = s.replace(/\$/g, '').replace(/\bcop\b/g, '');
+            if (s === '' || s === '-' || s === '—' || s === '–' || s === 'vacio' || s === 'nada' || s === 'null') return '∅';
+            return s.replace(/\$/g, '').replace(/\bcop\b/g, '');
+        };
+
+        const normalizarCelda = (v) => {
+            let s = limpiarCelda(v);
             if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
             else s = s.replace(',', '.');
             return s;
         };
 
+        // Lo que el estudiante pudo querer decir con un número. La lectura de
+        // siempre va primero; se añaden dos que la ambigüedad del separador
+        // impedía: «30,000» y «1,350,000», que es como imprime Python con
+        // `f"{x:,}"` y se leían como 30 y 1,35 (L3), y «1.250» como uno coma
+        // veinticinco. Solo se aplican a la respuesta, nunca a la clave: la
+        // clave tiene una sola lectura, y así ninguna respuesta mala pasa por
+        // ambigua.
+        const lecturasNumericas = (v) => {
+            const s = limpiarCelda(v);
+            const out = [parseFloat(normalizarCelda(v))];
+            if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) out.push(parseFloat(s.replace(/,/g, '')));
+            if (/^-?\d{1,3}\.\d{3}$/.test(s)) out.push(parseFloat(s));
+            return out.filter(Number.isFinite);
+        };
+
+        // `a` es la respuesta y `b` la clave.
         const celdasIguales = (a, b) => {
             const na = normalizarCelda(a), nb = normalizarCelda(b);
             if (na === nb) return true;
-            const fa = parseFloat(na), fb = parseFloat(nb);
-            if (Number.isFinite(fa) && Number.isFinite(fb)) {
-                const tol = Math.max(1e-6, Math.abs(fb) * 1e-6);
-                return Math.abs(fa - fb) <= tol;
-            }
-            return false;
+            const fb = parseFloat(nb);
+            if (!Number.isFinite(fb)) return false;
+            const tol = Math.max(1e-6, Math.abs(fb) * 1e-6);
+            return lecturasNumericas(a).some(fa => Math.abs(fa - fb) <= tol);
         };
 
         const TablaTraza = ({ titulo = 'Prueba de escritorio', enunciado, codigo, lang = 'pseudo', columnas, filas, ocultas = [], pista, exigeRespuesta = false }) => {
@@ -1399,7 +1501,7 @@
                     <div className="flex items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-table-list"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5">E1 · Traza</span>
+                        <EtiquetaTipo texto="E1 · Traza" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
                     </div>
                     {enunciado && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciado}</div>}
                     <SelectorLenguaje disponibles={disponibles} activo={langActivo} onCambiar={cambiarLang} />
@@ -1545,7 +1647,7 @@
                     <div className="flex items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#B91C1C 0%,#F59E0B 100%)' }}><i className="fas fa-bug"></i></span>
                         <h4 className="text-base font-bold text-navy" style={{ margin: 0 }}>{titulo}</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-red-700/80 rounded px-2 py-0.5">E3 · Diagnóstico</span>
+                        <EtiquetaTipo texto="E3 · Diagnóstico" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-red-700/80 rounded px-2 py-0.5" />
                     </div>
                     {enunciadoAct && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciadoAct}</div>}
 
@@ -1654,7 +1756,7 @@
                     <div className="flex items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#0E7490,#3D008D)' }}><i className="fas fa-code-compare"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5" style={{ background: '#0E7490' }}>E4 · Equivalencia</span>
+                        <EtiquetaTipo texto="E4 · Equivalencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5" style={{ background: '#0E7490' }} />
                     </div>
                     {enunciado && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciado}</div>}
                     <SelectorLenguaje disponibles={disponibles} activo={langActivo} onCambiar={cambiarLang} />
@@ -1674,11 +1776,34 @@
            El desorden es DETERMINISTA: no puede recalcularse en cada
            render ni cambiar entre visitas.
         ============================================================ */
-        const mezclaPorDefecto = (n) => {
-            const out = [];
-            let i = 0, j = n - 1;
-            while (i <= j) { out.push(j); if (i !== j) out.push(i); i++; j--; }
-            return out;
+        // Una permutación pseudoaleatoria sembrada con el texto de los pasos:
+        // cada ejercicio, y cada lenguaje, tiene la suya, y no cambia entre
+        // visitas. La anterior era `[n−1, 0, n−2, 1, …]` en todos, y quien notaba
+        // el patrón resolvía los ocho del curso sin leer el código (L1). De 200
+        // candidatas se queda con la primera que no deja ningún paso en su sitio,
+        // ni dos seguidos en orden, ni tres a saltos iguales (como 1, 3, 5, que
+        // es otro patrón); con tres pasos no existe, y se queda con la que menos
+        // tiene.
+        const mezclaPorDefecto = (pasos) => {
+            const n = pasos.length;
+            let h = 2166136261;                        // FNV-1a del texto
+            for (const c of pasos.join('\n')) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); }
+            let t = h >>> 0;
+            const azar = () => {                       // mulberry32
+                t = (t + 0x6D2B79F5) | 0;
+                let r = Math.imul(t ^ (t >>> 15), 1 | t);
+                r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
+                return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+            };
+            let mejor = [...Array(n).keys()], defectos = Infinity;
+            for (let intento = 0; intento < 200 && defectos > 0; intento++) {
+                const q = [...Array(n).keys()];
+                for (let i = n - 1; i > 0; i--) { const j = Math.floor(azar() * (i + 1)); [q[i], q[j]] = [q[j], q[i]]; }
+                const d = q.filter((v, k) => v === k || (k > 0 && v === q[k - 1] + 1)
+                    || (k > 1 && v - q[k - 1] === q[k - 1] - q[k - 2])).length;
+                if (d < defectos) { mejor = q; defectos = d; }
+            }
+            return mejor;
         };
 
         const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista }) => {
@@ -1687,7 +1812,7 @@
             const [langActivo, cambiarLang] = useLenguajeActivo(langs, lang);
             const pasosAct = porLenguaje(pasos, langActivo);
 
-            const orden = (mezcla && mezcla.length === pasosAct.length) ? mezcla : mezclaPorDefecto(pasosAct.length);
+            const orden = (mezcla && mezcla.length === pasosAct.length) ? mezcla : mezclaPorDefecto(pasosAct);
             const [secuencia, setSecuencia] = useState([]);
             const [comprobado, setComprobado] = useState(false);
             useEffect(() => { setSecuencia([]); setComprobado(false); }, [langActivo]);
@@ -1696,7 +1821,8 @@
             const agregar = (i) => { if (!comprobado) setSecuencia(s => [...s, i]); };
             const quitar = (pos) => { if (!comprobado) setSecuencia(s => s.filter((_, k) => k !== pos)); };
             const completo = secuencia.length === pasosAct.length;
-            const posOk = (pos) => secuencia[pos] === pos;
+            // Por texto, no por índice: dos pasos iguales intercambiados dan el mismo programa.
+            const posOk = (pos) => pasosAct[secuencia[pos]] === pasosAct[pos];
             const aciertos = secuencia.filter((_, pos) => posOk(pos)).length;
             const todoOk = completo && aciertos === pasosAct.length;
 
@@ -1705,7 +1831,7 @@
                     <div className="flex items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-list-ol"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5">E5 · Secuencia</span>
+                        <EtiquetaTipo texto="E5 · Secuencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
                     </div>
                     {enunciado && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciado}</div>}
 
@@ -1720,7 +1846,7 @@
                                     <button key={i} onClick={() => agregar(i)} disabled={comprobado}
                                         className="w-full text-left px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 hover:border-secondary hover:bg-amber-50 text-[0.88rem] text-gray-700 font-mono transition-all flex items-center gap-2">
                                         <i className="fas fa-plus text-secondary text-xs flex-shrink-0"></i>
-                                        <span className="flex-1">{pasosAct[i]}</span>
+                                        <span className="flex-1 whitespace-pre-wrap">{pasosAct[i]}</span>
                                     </button>
                                 ))}
                                 {!disponibles.length && <p className="text-xs text-gray-500 italic text-center py-3" style={{ margin: 0 }}>Todos los pasos están en la secuencia</p>}
@@ -1739,7 +1865,7 @@
                                         <button key={pos} onClick={() => quitar(pos)} disabled={comprobado}
                                             className={`w-full text-left px-3 py-2 rounded-lg border text-[0.88rem] text-gray-700 font-mono transition-all flex items-center gap-2 ${cls}`}>
                                             <span className="flex-shrink-0 w-5 h-5 rounded-full lp-gradient text-white flex items-center justify-center text-[0.7rem] font-bold">{pos + 1}</span>
-                                            <span className="flex-1">{pasosAct[i]}</span>
+                                            <span className="flex-1 whitespace-pre-wrap">{pasosAct[i]}</span>
                                             {comprobado
                                                 ? <i className={`fas ${posOk(pos) ? 'fa-check text-green-600' : 'fa-xmark text-red-500'} text-xs flex-shrink-0`}></i>
                                                 : <i className="fas fa-xmark text-gray-300 text-xs flex-shrink-0"></i>}
@@ -1772,7 +1898,7 @@
                         <div className="mt-3 animate-fade-in">
                             <Box type="tip" label="Orden correcto">
                                 <ol className="text-sm" style={{ listStyle: 'decimal', paddingLeft: '1.4rem', margin: 0 }}>
-                                    {pasosAct.map((p, i) => <li key={i} className="font-mono text-[0.85rem]">{p}</li>)}
+                                    {pasosAct.map((p, i) => <li key={i} className="font-mono text-[0.85rem] whitespace-pre-wrap">{p}</li>)}
                                 </ol>
                             </Box>
                         </div>
@@ -1829,7 +1955,7 @@
                     <div className="flex items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-link"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
-                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5">E6 · Emparejar</span>
+                        <EtiquetaTipo texto="E6 · Emparejar" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
                     </div>
                     {enunciado && <div className="text-[0.95rem] text-gray-700 mb-2">{enunciado}</div>}
                     <SelectorLenguaje disponibles={langs} activo={langActivo} onCambiar={cambiarLang} />
@@ -1854,7 +1980,7 @@
                                             className={`w-full text-left px-3 py-2 rounded-lg border text-[0.88rem] text-gray-700 transition-all flex items-start gap-2 ${cls}`}>
                                             <span className={'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[0.7rem] font-bold mt-0.5 ' + (color ? 'text-white' : 'text-navy')}
                                                 style={{ background: color || '#CBD5E1' }}>
-                                                {emparejado ? pares[i] + 1 : i + 1}
+                                                {emparejado ? String.fromCharCode(65 + pares[i]) : i + 1}
                                             </span>
                                             <span className="flex-1">{t}</span>
                                             {comprobado && emparejado && <i className={`fas ${parOk(i) ? 'fa-check text-green-600' : 'fa-xmark text-red-500'} text-xs mt-1`}></i>}
@@ -1976,12 +2102,19 @@
                 return Number.isFinite(v) ? v : null;
             };
 
-            // Estado acumulado tras cada paso, y qué claves cambió cada uno.
+            // Estado acumulado tras cada paso, y qué claves cambió cada uno. Una
+            // variable `efimera` no se arrastra: vale solo en el paso que la
+            // escribe. Es para lo que no es una variable del programa sino algo
+            // que se evalúa, como una condición: arrastrada, la columna
+            // «saldo > 0» seguía diciendo «Verdadero» con el saldo ya en
+            // −200 000 (L5).
+            const efimeras = new Set(variables.filter(v => v.efimera).map(v => v.clave));
             const acumulado = [];
             const cambiadas = [];
             let estado = {};
             pasos.forEach(p => {
-                estado = { ...estado, ...(p.estado || {}) };
+                const arrastrado = Object.fromEntries(Object.entries(estado).filter(([k]) => !efimeras.has(k)));
+                estado = { ...arrastrado, ...(p.estado || {}) };
                 acumulado.push(estado);
                 cambiadas.push(Object.keys(p.estado || {}));
             });
@@ -2156,6 +2289,8 @@
                 </div>
             );
         };
+
+        [TablaTraza, DetectaError, Comparador, OrdenaPasos, Emparejamiento].forEach(c => AUTOETIQUETADOS.add(c));
         /* === LP-CORE FIN === */
 
         /* ============================================================
@@ -4423,7 +4558,7 @@ End Sub`,
 
         const App = () => {
             const [activeLessonIndex, setActiveLessonIndex] = useState(() => {
-                const saved = parseInt(localStorage.getItem(CONFIG.storageKey), 10);
+                const saved = parseInt(leerGuardado(CONFIG.storageKey), 10);
                 return Number.isInteger(saved) && saved >= 0 ? saved : 0;
             });
             // La barra es hermana flex del contenido: no lo superpone, lo
@@ -4439,7 +4574,7 @@ End Sub`,
             const progreso = Math.round(((safeIndex + 1) / curriculum.length) * 100);
 
             useEffect(() => {
-                localStorage.setItem(CONFIG.storageKey, String(safeIndex));
+                guardar(CONFIG.storageKey, String(safeIndex));
                 typesetMath();
                 const cont = document.getElementById('contenido-scroll');
                 if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });

@@ -20,7 +20,9 @@ Material html/
     ├── ensamblar.py              genera lp-base.html
     ├── migrar.py                 estampa la librería y el App en un capítulo
     ├── verificar.py              comprueba los capítulos
-    └── ejecutar_salidas.py       ejecuta el código y contrasta lo que declara
+    ├── ejecutar_salidas.py       ejecuta el código y contrasta lo que declara
+    ├── ejecutar_vba.py           lo mismo para VBA, en Excel
+    └── sonda_navegador.mjs       lo que el panel de vista previa no puede medir
 ```
 
 ## Flujo de trabajo
@@ -39,7 +41,20 @@ detectar.
 python3 "Material html/_plantilla/ensamblar.py"     # fuentes  → lp-base.html
 python3 "Material html/_plantilla/migrar.py"        # plantilla → capítulos
 python3 "Material html/_plantilla/verificar.py"     # comprueba
+node "Material html/_plantilla/sonda_navegador.mjs" # y en un Chrome de verdad
 ```
+
+`migrar.py` no acepta opciones que no conoce: sale con 2 sin escribir nada.
+Hasta el 2026-10-27 las ignoraba, y un `--help` estampaba los cinco capítulos.
+
+**`sonda_navegador.mjs`** abre cada capítulo como `file://` en un Chrome sin
+ventana y recorre todas sus lecciones. Tiene cuatro modos: `file` (el de
+omisión: monta, guarda y no da errores de JavaScript), `375` (nada se sale a
+375 px), `sin-almacen` (con `localStorage` lanzando, como en una ventana
+privada) y `sin-cdnjs`. Existe porque el panel de vista previa no sirve para
+eso: abre los `file://` como URL `data:`, congela las animaciones, y en él
+`requestAnimationFrame` no corre y `ResizeObserver` no notifica. Cualquier
+componente que se mida a sí mismo da allí una medida vieja sin ningún error.
 
 `migrar.py` estampa dos regiones: el bloque `LP-CORE` y el `App`. El `App`
 también, porque es plantilla: todo lo que varía de un capítulo a otro vive en
@@ -327,7 +342,14 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   la exposición: ahí la frase es legítima («en el taller se le pedirá escribir un
   programa que…») y marcarla haría que el verificador mintiera.
 - E2, E7 y E8 se construyen con `MCQ` o `Reto` envueltos en
-  `<Ejercicio tipo="E7">`, para que el tipo sea visible y contable.
+  `<Ejercicio tipo="E7">`, para que el tipo sea visible y contable. Si lo que se
+  envuelve es un componente que ya se etiqueta solo (`TablaTraza`,
+  `DetectaError`, `Comparador`, `OrdenaPasos`, `Emparejamiento`), la etiqueta
+  sale una vez, en su sitio, y dice el tipo del envoltorio.
+- En `MCQ`, cada opción puede llevar su `justificacion`. Al comprobar se muestra
+  la de cada opción mal elegida y después la de las correctas. Hasta el
+  2026-10-27 solo se veía la de la correcta (H9 del capítulo 4), y por eso las
+  de los capítulos 1 a 5 absorben los distractores; ahora ya no hace falta.
 
 ### Una pregunta con dos respuestas correctas necesita `multiple: true`
 
@@ -417,7 +439,7 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `Box` · `CalloutPro` | Avisos (`info`, `tip`, `warn`, `danger`) y destacados |
 | `Eq` · `Termino` | Fórmula destacada · término con definición emergente |
 | `Pipeline` · `Timeline` · `Tabs` · `Accordion` | Estructuras de contenido |
-| `ChartFrame` + `usePlotly` | Gráficas interactivas |
+| `ChartFrame` + `usePlotly` | Gráficas interactivas. `descripcion` es lo que oye un lector de pantalla (sin ella, el pie) |
 | `Trazador` | Traza guiada, instrucción por instrucción. Es exposición: no califica y no cuenta en la cuota |
 | `TablaTraza` | **E1** prueba de escritorio |
 | `DetectaError` | **E3** ubicar la línea + clasificar el error |
@@ -426,9 +448,32 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `Emparejamiento` | **E6** relacionar representaciones |
 | `MCQ` · `Quiz` · `Reto` | **E2/E7/E8** y cuestionario integrador |
 
-`TablaTraza` compara con tolerancia: acepta `—`, `-` o vacío como «sin valor», y
-normaliza separador de miles y coma decimal (`20.000`, `20000` y `20000,00` se
-consideran iguales).
+`TablaTraza` compara con tolerancia: acepta `—`, `-` o vacío como «sin valor»,
+ignora las tildes (`sí` y `si` son la misma respuesta; la ñ cuenta), y normaliza
+separador de miles y coma decimal (`20.000`, `20000` y `20000,00` se consideran
+iguales). Desde el 2026-10-27 lee también la coma de miles de Python
+(`1,350,000`), y una respuesta ambigua como `1.250` vale por cualquiera de sus
+dos lecturas; la clave tiene siempre una sola.
+
+`OrdenaPasos` desordena cada ejercicio, y cada lenguaje, con una permutación
+sembrada con el texto de sus pasos: no cambia entre visitas, no deja ningún paso
+en su sitio ni dos seguidos en orden. La de antes era el mismo patrón en todos
+(L1). Los pasos conservan su sangría, y se califica por texto: dos pasos
+idénticos intercambiados cuentan como bien.
+
+Una variable del `Trazador` con `efimera: true` vale solo en el paso que la
+escribe, sin arrastrarse a los siguientes. Es para las condiciones evaluadas:
+`{ clave: 'cond', titulo: 'saldo > 0', efimera: true }`.
+
+**`localStorage`, nunca directo.** El contenido de un capítulo guarda y lee con
+`leerGuardado(clave)` y `guardar(clave, valor)` de LP-CORE, que no lanzan cuando
+el navegador no da almacenamiento. Lo vigila la regla 22.
+
+**`not-prose` solo vale a medias.** Es del plugin Typography, que no se carga. El
+CSS del `head` lo respeta en títulos y tablas, y nada más: los componentes que
+lo declaran se ajustaron con los márgenes, el interlineado y las viñetas de
+`.prose-lp`, y hacerlo valer del todo cambiaba cientos de medidas en los cinco
+capítulos (se midió el 2026-10-27).
 
 **El techo del `Trazador`.** Pinta un botón y una fila de historial por paso.
 Medido en el capítulo 5, 33 pasos aún caben a 375 px: los botones ocupan cuatro
@@ -437,8 +482,7 @@ historial completo llega a unos 4 000 px. Una traza guiada da **tres vueltas
 como mucho**. Una tabla de cientos de filas no es un `Trazador` largo: es un
 componente propio del capítulo, como `AmortizacionPasoAPaso`.
 
-**`Salir` no está en la gramática del pseudocódigo.** Se pinta como un
-identificador cualquiera, sin el color de las palabras clave. El capítulo 2 lo
+**`Salir` se pinta como palabra clave** desde el 2026-10-27. El capítulo 2 lo
 usa; del 5 en adelante no se usa. La salida de un ciclo va en su condición, que
 es además lo que se enseña: un ciclo que sale a mitad del cuerpo esconde cuándo
-para. Arreglarlo es una deuda de LP-CORE (P3 del plan del capítulo 5).
+para.

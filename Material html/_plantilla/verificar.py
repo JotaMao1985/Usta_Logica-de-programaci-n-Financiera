@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y veinte sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y veintiuna sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -75,6 +75,11 @@ Comprueba una cosa sobre la plantilla y veinte sobre cada archivo HTML de capít
      porque distinguir la prosa del código necesita el analizador de Babel;
      el mismo guion, con `--corregir`, pone los espacios. Nació de una celda
      del capítulo 5 que mostró «1 150» en un renglón y «000» en el siguiente.
+ 22. ALMACENAMIENTO PROTEGIDO — que el contenido del capítulo no toque
+     `localStorage` ni `sessionStorage` directamente, sino con `leerGuardado` y
+     `guardar` de LP-CORE. Sin almacenamiento (ventana privada, política del
+     navegador, URL `data:`) leerlo lanza, y una lectura en un `useState`
+     dejaba el capítulo en blanco (H16 del capítulo 5).
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -1180,6 +1185,19 @@ def cobertura_del_cuestionario(texto, cuerpo, desplazamiento):
     return [], []
 
 
+# ---------------------------------------------- 22 · almacenamiento protegido
+# H16 del capítulo 5: sin almacenamiento, `localStorage.getItem` lanza un
+# `SecurityError`, y dentro del inicializador de un `useState` eso desmonta el
+# árbol entero. LP-CORE lo envuelve en `leerGuardado` y `guardar`; LP-CORE lo
+# cubre la regla 1, y esta mira lo que no: el contenido y el `App` del capítulo.
+def almacenamiento_directo(texto, cuerpo, desplazamiento):
+    sin_bloques = re.sub(r"/\*[\s\S]*?\*/", lambda c: re.sub(r"[^\n]", " ", c.group(0)), cuerpo)
+    limpio = _sin_comentarios(sin_bloques)
+    return [f"línea {linea_de(texto, desplazamiento + m.start())}: `{m.group(0)}` directo; "
+            f"use leerGuardado(clave) y guardar(clave, valor), que no lanzan sin almacenamiento"
+            for m in re.finditer(r"\b(?:localStorage|sessionStorage)\b", limpio)]
+
+
 def jsx_compila(ruta):
     """El bloque `text/babel` del capítulo compila de verdad.
 
@@ -1347,6 +1365,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     p21, a21 = cifras_partibles(ruta)
     problemas += p21
     avisos += a21
+
+    # 22 · el almacenamiento se toca solo a través de LP-CORE
+    for f in almacenamiento_directo(texto, cuerpo, desplazamiento):
+        problemas.append(f"almacenamiento — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

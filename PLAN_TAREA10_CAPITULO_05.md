@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 21) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. El 2026-10-27 se comprobó la apertura desde `file://` y la rama recogió la del desborde del 2, con su regla 20 del `head`; la de las cifras pasó a ser la 21. Siguiente: la revisión del docente en el punto de control final.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 21) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. El 2026-10-27 se comprobó la apertura desde `file://` y la rama recogió la del desborde del 2, con su regla 20 del `head`; la de las cifras pasó a ser la 21. El mismo día se pagaron las deudas de LP-CORE (P3) en su propia rama. Siguiente: la revisión del docente en el punto de control final.
 
 ---
 
@@ -1667,7 +1667,10 @@ python3 -m http.server 8777 --directory "Material html"
   justificaba reestampar cuatro capítulos, pero ya van tres, y a partir de aquí
   cada capítulo sube el costo. **Aprobada en el PC0:** no en esta tarea; se
   hace como tarea corta propia antes del capítulo 6, cuando LP-CORE ya no tenga
-  a nadie editándolo.
+  a nadie editándolo. **Hecha el 2026-10-27**, en la rama `lpcore/deudas-p3`, con
+  las deudas que se le sumaron (H16, H17 y L1–L6 de la revisión). El detalle, en
+  la bitácora del plan maestro. Quedan dos para el docente: pedir que se anticipe
+  el `impacto` en `DetectaError` y hacer valer `not-prose` del todo.
 - **P4 · ¿El juego «Millonario» necesita preguntas del banco?** (H11)
   **Respondida en el PC0:** el juego está montado con cloze, así que toma los
   del banco tal como salen.

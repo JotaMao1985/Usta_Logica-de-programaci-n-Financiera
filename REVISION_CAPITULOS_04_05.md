@@ -83,6 +83,16 @@ Todos estos se arreglan en `lp-core-extra.jsx` y obligan a volver a estampar los
 | L5 | media | **`Trazador` arrastra el último valor de cada columna.** Para una condición evaluada eso está mal (ver G5.4). | Propuesta: una propiedad `efimera: true` en `variables`. |
 | L6 | menor | Hay cuatro defectos más. | Ver la lista de abajo. |
 
+> **Estado al 2026-10-27** (rama `lpcore/deudas-p3`):
+> - **Resueltos:** L1, L2, L3 y L5. De L6, tres de cuatro: `Pipeline`,
+>   `ChartFrame` y los `id` de los marcadores del 4.
+> - **L4, a medias y a propósito:** `not-prose` vale ahora en títulos y tablas.
+>   Hacerlo valer en párrafos y listas cambiaba cientos de medidas en los cinco
+>   capítulos, entre ellas las viñetas de los `CalloutPro`.
+> - **Pendiente, a decisión del docente:** que `DetectaError` pida anticipar el
+>   `impacto` cambia cómo se resuelven los E3 de todo el curso.
+> - **Sin probar:** Safari y Firefox.
+
 Los defectos menores de L6 son estos:
 - `Pipeline` deja flechas sueltas cuando las etapas pasan a otra fila. En el capítulo 4, la sexta etapa queda sola.
 - `ChartFrame` (Plotly) no tiene descripción accesible.
