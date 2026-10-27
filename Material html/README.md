@@ -47,6 +47,12 @@ también, porque es plantilla: todo lo que varía de un capítulo a otro vive en
 centinelas y se migra; uno ya migrado se reestampa de centinela a centinela.
 Acepta `--dry-run` y deja `.bak`.
 
+**Para cambiar el `head`** (CSS, librerías, configuración de Tailwind):
+editarlo en `01_LPF_Introduccion.html`, que es la fuente de `ensamblar.py`,
+regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.py`
+no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
+sean el del 1 salvo el `<title>` y la descripción.
+
 `verificar.py` comprueba doce cosas y devuelve ≠ 0 si algo falla:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte
@@ -310,7 +316,7 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   mismo el espacio antes del % («1,8 %») y los del producto de la notación
   científica («7,5 × 10⁻⁸»). En el código no: allí sobra, y en una línea que el
   estudiante copia es un error de sintaxis. No hace falta escribirlo a mano. La
-  regla 20 avisa, y `node _plantilla/comprobar_cifras.js --corregir <capítulo>`
+  regla 21 avisa, y `node _plantilla/comprobar_cifras.js --corregir <capítulo>`
   pone los espacios solo en la prosa. Se probó el espacio fino (U+202F), que es
   el que recomiendan la RAE y el SI, pero en Montserrat queda tan angosto que
   «20 000 000» se lee «20000000».

@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 20) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. Siguiente: la revisión del docente en el punto de control final.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 21) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. El 2026-10-27 se comprobó la apertura desde `file://` y la rama recogió la del desborde del 2, con su regla 20 del `head`; la de las cifras pasó a ser la 21. Siguiente: la revisión del docente en el punto de control final.
 
 ---
 
@@ -533,7 +533,7 @@ al final de un renglón, solo que menos a la vista.
 No es de LP-CORE, así que no obliga a reestampar. Queda a decisión del docente si
 va con la tarea de deudas (P3) o aparte.
 
-**Resuelto el 2026-10-20, aparte, a pedido del docente.** La regla 20 de
+**Resuelto el 2026-10-20, aparte, a pedido del docente.** La regla 21 de
 `verificar.py` vive en `_plantilla/comprobar_cifras.js`. Usa Babel para separar la
 prosa del código, porque un espacio duro en un bloque que el estudiante copia es
 un error de sintaxis. Con `--corregir` cambió 816 espacios en los cinco
@@ -1086,7 +1086,7 @@ inversión del curso (S2), con 300 000 de comisión descontados al desembolso.
   El 5 llega a 18 ejercicios (E1:4 E2:4 E3:2 E4:2 E5:2 E7:2 E8:2) y a 22 bloques
   de Python y R ejecutados; los seis nuevos son los tres programas de la sección.
 - Claves del capítulo: c b a b d b c a d c. Las reglas 16 y 17, sin avisos. La
-  regla 20 puso 131 espacios duros en la prosa nueva.
+  regla 21 puso 131 espacios duros en la prosa nueva.
 - Las cifras de la prosa, ejecutadas en Python y en R antes de escribirlas: el
   saldo, los intereses, el saldo promedio, la vivienda, los VPN de la tabla del
   E1, la TIR y las efectivas.
@@ -1203,7 +1203,7 @@ viene» anuncia el capítulo 6.
     repetida»;
   - cambiar la `seccion` de la pregunta del 5 da «no tiene ninguna pregunta de
     cap5».
-- La regla 20 puso 102 espacios duros en la prosa nueva.
+- La regla 21 puso 102 espacios duros en la prosa nueva.
 - Las cifras de las diez preguntas y del E6 se ejecutaron en Python y en R
   antes de escribirlas: la efectiva con el factor en 0, `range(12)`, los
   intereses, las cuentas de ejecución, el cierre con ajustes, las 37 vueltas, los
@@ -1561,11 +1561,15 @@ regla.
 ### ⏸ Punto de control final
 - [x] `verificar.py --con-salidas` en verde sobre los **cinco** capítulos
 - [x] Banco compilado y verificado con `--reps 1000`, y también con `--agregado`
-- [ ] El capítulo abre desde `file://` sin errores de consola. **No se pudo
-      comprobar aquí:** el panel de vista previa no carga un `file://` como
-      página viva, sino como una instantánea estática o una URL `data:` sin
-      `localStorage` (H16). Servido por HTTP, la consola está limpia en las nueve
-      entradas. Falta abrirlo con doble clic en un navegador normal
+- [x] El capítulo abre desde `file://` sin errores de consola. El panel de
+      vista previa no carga un `file://` como página viva (H16), así que se
+      comprobó el 2026-10-27 con una sonda en Chrome 156 sin ventana, perfil
+      nuevo y sin banderas que cambien la seguridad de `file://`, que es lo que
+      hace un doble clic. El 05 monta, recorre sus nueve lecciones con
+      «Siguiente», colorea el código y guarda `lpf_cap05_control_repetitivo` en
+      `localStorage`: ningún error de JavaScript, solo los dos avisos de siempre
+      (Tailwind y Babel desde CDN). Lo mismo del 1 al 4, con sus 6, 7, 7 y 8
+      lecciones
 - [ ] **Revisión del docente:** leído completo y con la dificultad aprobada
 
 ---

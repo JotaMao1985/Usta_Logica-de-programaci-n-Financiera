@@ -114,7 +114,10 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            /* Solo lo que cambia al pasar el cursor. Con `all`, el padding que
+               el Tailwind del CDN genera tras el primer render entraba animado
+               desde 0, y la tarjeta se medía más angosta de lo que es. */
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .lp-card:hover {

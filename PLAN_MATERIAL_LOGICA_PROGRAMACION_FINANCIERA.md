@@ -1724,7 +1724,7 @@ variantes cada uno. La tarjeta 05 del portal ya es un enlace.
 **Herramientas nuevas:**
 - **`_plantilla/ejecutar_vba.py`:** el arnés que corre en Excel para Mac el VBA
   que declara salida (riesgo R2). Todavía no se ha corrido contra Excel.
-- **Regla 20 de `verificar.py` y `comprobar_cifras.js`:** las cifras de la prosa
+- **Regla 21 de `verificar.py` (la 20 hasta fundirse con la del `head`) y `comprobar_cifras.js`:** las cifras de la prosa
   no se parten entre renglones. Se pasó a los cinco capítulos: 816 espacios duros.
 - **Un intérprete del pseudocódigo del capítulo, en las reglas del banco
   privado.** Las reglas de los cloze ejecutan el código impreso, el que lee el
@@ -1753,3 +1753,98 @@ era el primero) y nueve inexactas. Ninguna regla habría visto nada de eso.
 - el desborde de la sección 3 del capítulo 2 a 375 px, que ya existía y quedó
   como tarea aparte;
 - la revisión del docente en el punto de control final.
+
+### El desborde de la sección 3 del 2 y la transición de `.lp-card` · 2026-10-21
+
+**Capítulo 2 · el pseudocódigo empujaba la página a 375 px.** En «Cuatro
+representaciones», la columna de lenguaje natural y pseudocódigo es un ítem de
+grid con `min-width: auto`, y las seis líneas del pseudocódigo van con
+`white-space: pre`. La más larga, `interes <- capital * tasa * plazo`, mide
+311 px; con el padding del botón y el de la tarjeta, la columna crecía a 359 px
+en una pista de 319, y el panel de la lección daba `scrollWidth` 383 contra
+`clientWidth` 367. Ahora la columna lleva `min-w-0` y el pseudocódigo se
+desplaza dentro de su tarjeta, con un `min-w-max` interior para que la franja del
+paso activo llegue a la línea más larga (commit 9df2270).
+
+**Parecía depender de haber visitado antes otras secciones, y no dependía.**
+`.lp-card` tenía `transition: all 0.3s ease`. En una carga directa a la sección 3,
+el Tailwind del CDN genera `.p-4` después del primer render, y el padding de las
+tarjetas entraba animado desde 0; con el panel de vista previa oculto esa
+transición se queda congelada (trampa 15 de la skill), así que la medida daba
+367/367 con tarjetas sin padding. Visitando antes otras secciones, `.p-4` ya
+existía y no había transición. Con las animaciones terminadas, la carga directa
+también daba 383.
+
+**La transición de `.lp-card` es ahora solo `box-shadow` y `transform`**, lo
+único que cambia con `:hover`. Se editó en el `head` del capítulo 1, que es la
+fuente (trampa 1), se regeneró `lp-base.html` con `ensamblar.py` y se copió la
+misma línea en el `head` del 2, el 3 y el 4. `migrar.py` no tenía nada que
+estampar: el hash de LP-CORE no cambia.
+
+**Hueco de las herramientas: el `head` de los capítulos no lo propaga ni lo
+compara nadie.** `ensamblar.py` lo lee del 1, `migrar.py` estampa solo LP-CORE y
+el `App`, y `verificar.py` compara LP-CORE (comprobación 1) y la plantilla con
+sus fuentes (13), no el `head` del 2 en adelante. Prueba negativa: el capítulo 3
+con el `head` anterior a este cambio pasa `verificar.py` en verde. Hoy los cuatro
+`head` son idénticos salvo el `<title>` y la descripción.
+
+Queda fuera: seis botones `lp-card p-2 … transition-all` propios del capítulo 2
+(línea 2787) y varios botones de LP-CORE y del `App` con `transition-all` siguen
+animando el padding 0,15 s en la primera carga.
+
+Verificación: `verificar.py` en verde en los cuatro capítulos, con la 13
+incluida. Navegador a 375 px, carga directa a la sección 3 del 2, **sin terminar
+las animaciones**: tarjetas con 16 px de padding desde el primer render, columna
+de 319 px, panel 367/367, pseudocódigo desplazable (327 en 287); un `:hover`
+simulado anima solo `box-shadow` y `transform`; consola limpia.
+
+### Comprobación 20: el `head` de cada capítulo es el del 1 · 2026-10-22
+
+Cierra el hueco anotado en la entrada anterior. `verificar.py` compara ahora el
+`head` de cada capítulo —hasta `<script type="text/babel">`, la misma ancla de
+`ensamblar.py`— con el del capítulo 1, después de vaciar en los dos el texto del
+`<title>` y el `content` de la descripción, que son lo único propio de cada uno.
+Vaciar no quita líneas, así que la falla cita la línea del archivo y muestra las
+dos versiones tal como están escritas. Es una falla, no un aviso: un `head`
+distinto es otro CSS u otras librerías.
+
+| Prueba | Resultado |
+|---|---|
+| El 3 con el `head` anterior al cambio de `.lp-card` | Falla en la línea 117 |
+| El 4 con una librería de más tras Tailwind | Falla en la línea 18 |
+| El 4 sin una línea de CSS de `.lp-card` | Falla en la línea 115 |
+| El 2 sin la `<meta>` de descripción | Falla en la línea 7 |
+| El 2 con otro `<title>` y otra descripción (control) | Pasa |
+
+Los cuatro capítulos pasan. De paso: la lista numerada del README se queda en la
+regla 12; la lista completa, del 1 al 20, está en el docstring de `verificar.py`.
+El README explica ahora en «Flujo de trabajo» cómo se cambia el `head`.
+
+### La rama del capítulo 5 recoge la del `head` · 2026-10-27
+
+**Dos reglas 20.** La rama `cap05/control-repetitivo` y la del desborde del 2
+(`claude/magical-hamilton-f5c27e`) salieron las dos de `fec3737` y crearon cada una
+su regla 20: la de las cifras partibles y la del `head` al día. Al fundir la segunda
+en la primera, la del `head` se queda con el 20, que es el que ya citaba la memoria,
+y la de las cifras pasa a ser la **21**. Los textos vigentes (docstring, README,
+`PLAN_TAREA10`) dicen 21; las entradas viejas de esta bitácora que hablan de «una
+regla 20 opcional» son de antes de ambas y se dejan como están. El docstring de la
+21 decía todavía U+202F para el separador de miles: se corrigió a U+00A0, que es lo
+que pone `comprobar_cifras.js`.
+
+**La regla 20 cazó el 05 en cuanto llegó.** Su `head` no tenía el cambio de la
+transición de `.lp-card`; se le aplicó el mismo parche de cinco líneas que al 3. Es
+justo el olvido para el que nació la regla.
+
+**Verificado.** `verificar.py --con-salidas`: los cinco capítulos pasan las 21
+reglas. Prueba negativa de la 21 tras el cambio de número: una cifra con espacios
+normales en una celda del 05 falla. Con `file://`, una sonda en Chrome sin ventana
+—perfil nuevo, sin banderas que cambien la seguridad de `file://`, como un doble
+clic— monta los cinco capítulos, recorre sus 6, 7, 7, 8 y 9 lecciones con
+«Siguiente» y no da ningún error de JavaScript; los cinco guardan su clave en
+`localStorage`.
+
+**Lo que queda.** `main` todavía no tiene nada de esto: su árbol tiene sin commit el
+arreglo de LP-CORE sin cdnjs (entrada del 2026-10-23), que toca los mismos archivos,
+y un avance rápido lo pisaría. Cuando ese arreglo tenga su commit, se trae `main` a
+esta rama, se reestampa el 05 con `migrar.py` y `main` avanza.
