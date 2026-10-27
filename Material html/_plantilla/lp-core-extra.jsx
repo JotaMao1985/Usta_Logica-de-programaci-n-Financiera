@@ -77,7 +77,10 @@
            avisar de nada. `ensamblar.py` lo comprueba para que ese fallo salte
            al ensamblar y no en el aula.
         ============================================================ */
-        if (window.Prism && !Prism.languages.pseudo) {
+        // Sin cdnjs (sin red, o bloqueado), `window.Prism` es solo el `{ manual: true }`
+        // del `<head>`, sin gramáticas: el código sale sin color y el capítulo carga igual.
+        const hayPrism = !!(window.Prism && Prism.languages);
+        if (hayPrism && !Prism.languages.pseudo) {
             Prism.languages.pseudo = {
                 // `comment` va primero: si no, el operador `/` se comería el `//`.
                 'comment': { pattern: /\/\/.*/, greedy: true },
@@ -118,7 +121,7 @@
 
         const resaltar = (codigo, lang) => {
             const nombre = GRAMATICA[lang];
-            const gram = (nombre && window.Prism) ? Prism.languages[nombre] : null;
+            const gram = (nombre && hayPrism) ? Prism.languages[nombre] : null;
             const html = gram ? Prism.highlight(codigo, gram, nombre) : escaparHtml(codigo);
             return marcarSalida(html, lang);
         };

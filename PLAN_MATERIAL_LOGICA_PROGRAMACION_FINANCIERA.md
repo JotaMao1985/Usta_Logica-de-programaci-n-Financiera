@@ -1686,3 +1686,26 @@ Verificación: `verificar.py --con-salidas` en verde en el 1, el 2 y el 4;
 `ensamblar.py` no mueve `lp-base.html`. Navegador: el minicuestionario del 1 da
 4/4 y 3/4 con la lectura de izquierda a derecha; el cuestionario final del 2, 10/10
 y 9/10 con el distractor nuevo; el 4 muestra los textos nuevos; consola limpia.
+
+### LP-CORE arranca sin cdnjs · 2026-10-23
+
+**El fallo.** Sin acceso a cdnjs (sin red, o bloqueado) el `<head>` deja `window.Prism = { manual: true }` y Prism
+no llega. La guarda de la gramática del pseudocódigo, `if (window.Prism && !Prism.languages.pseudo)`, lanzaba
+entonces un `TypeError` al ejecutarse el script de Babel, y React no montaba nada: el capítulo quedaba en blanco.
+`resaltar` tenía el mismo defecto (`(nombre && window.Prism) ? Prism.languages[nombre]`). Lo destapó la auditoría
+de las diapositivas del cap. 5 de Muestreo: la guarda de la skill `diapositivas-clase` venía de aquí.
+
+**El arreglo**, en la fuente: `lp-core-extra.jsx` calcula una vez `const hayPrism = !!(window.Prism &&
+Prism.languages)` y las dos guardas la usan; sin Prism el código sale sin color y el capítulo carga. `ensamblar.py`
+regeneró `lp-base.html` y `migrar.py --sin-copia` reestampó del 1 al 4. Cada archivo cambia solo en esas 7 líneas,
+byte a byte igual al parche a mano.
+
+**Verificado.** `verificar.py`: los 4 capítulos pasan, deriva incluida. Una sonda en Chrome sin ventana recorre
+todas las lecciones con «Siguiente». Con cdnjs bloqueado, antes los cuatro y `lp-base.html` quedaban en blanco con
+`Cannot read properties of undefined (reading 'pseudo')`. Ahora cargan sus 6, 7, 7 y 8 lecciones (y las 5 de la
+plantilla), con el código sin color, sin errores de JavaScript y con el mismo texto que con red. Con red, idéntico
+antes y después.
+
+**Lo que queda.** Sin commit. Con la red caída del todo los capítulos siguen en blanco: React, Babel y Tailwind vienen de unpkg y de cdn.tailwindcss.com. El arreglo cubre cdnjs bloqueado o caído con lo demás accesible. Los worktrees `cap05` y `magical-hamilton-f5c27e` tienen su propio
+`lp-base.html` sin el arreglo: el 05 lo recibe al reestamparlo tras fusionar, y si no, `verificar.py` marca la
+deriva. Los capítulos de Python para APIs e IA, que montan LP-CORE con `montar.py`, se parchearon a mano allí.
