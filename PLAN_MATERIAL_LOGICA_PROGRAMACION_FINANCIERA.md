@@ -1820,6 +1820,29 @@ Los cuatro capítulos pasan. De paso: la lista numerada del README se queda en l
 regla 12; la lista completa, del 1 al 20, está en el docstring de `verificar.py`.
 El README explica ahora en «Flujo de trabajo» cómo se cambia el `head`.
 
+### LP-CORE arranca sin cdnjs · 2026-10-23
+
+**El fallo.** Sin acceso a cdnjs (sin red, o bloqueado) el `<head>` deja `window.Prism = { manual: true }` y Prism
+no llega. La guarda de la gramática del pseudocódigo, `if (window.Prism && !Prism.languages.pseudo)`, lanzaba
+entonces un `TypeError` al ejecutarse el script de Babel, y React no montaba nada: el capítulo quedaba en blanco.
+`resaltar` tenía el mismo defecto (`(nombre && window.Prism) ? Prism.languages[nombre]`). Lo destapó la auditoría
+de las diapositivas del cap. 5 de Muestreo: la guarda de la skill `diapositivas-clase` venía de aquí.
+
+**El arreglo**, en la fuente: `lp-core-extra.jsx` calcula una vez `const hayPrism = !!(window.Prism &&
+Prism.languages)` y las dos guardas la usan; sin Prism el código sale sin color y el capítulo carga. `ensamblar.py`
+regeneró `lp-base.html` y `migrar.py --sin-copia` reestampó del 1 al 4. Cada archivo cambia solo en esas 7 líneas,
+byte a byte igual al parche a mano.
+
+**Verificado.** `verificar.py`: los 4 capítulos pasan, deriva incluida. Una sonda en Chrome sin ventana recorre
+todas las lecciones con «Siguiente». Con cdnjs bloqueado, antes los cuatro y `lp-base.html` quedaban en blanco con
+`Cannot read properties of undefined (reading 'pseudo')`. Ahora cargan sus 6, 7, 7 y 8 lecciones (y las 5 de la
+plantilla), con el código sin color, sin errores de JavaScript y con el mismo texto que con red. Con red, idéntico
+antes y después.
+
+**Lo que queda.** Sin commit. Con la red caída del todo los capítulos siguen en blanco: React, Babel y Tailwind vienen de unpkg y de cdn.tailwindcss.com. El arreglo cubre cdnjs bloqueado o caído con lo demás accesible. Los worktrees `cap05` y `magical-hamilton-f5c27e` tienen su propio
+`lp-base.html` sin el arreglo: el 05 lo recibe al reestamparlo tras fusionar, y si no, `verificar.py` marca la
+deriva. Los capítulos de Python para APIs e IA, que montan LP-CORE con `montar.py`, se parchearon a mano allí.
+
 ### La rama del capítulo 5 recoge la del `head` · 2026-10-27
 
 **Dos reglas 20.** La rama `cap05/control-repetitivo` y la del desborde del 2
@@ -1844,7 +1867,26 @@ clic— monta los cinco capítulos, recorre sus 6, 7, 7, 8 y 9 lecciones con
 «Siguiente» y no da ningún error de JavaScript; los cinco guardan su clave en
 `localStorage`.
 
-**Lo que queda.** `main` todavía no tiene nada de esto: su árbol tiene sin commit el
-arreglo de LP-CORE sin cdnjs (entrada del 2026-10-23), que toca los mismos archivos,
-y un avance rápido lo pisaría. Cuando ese arreglo tenga su commit, se trae `main` a
-esta rama, se reestampa el 05 con `migrar.py` y `main` avanza.
+**Después, `main`.** El docente pidió versionar el arreglo de cdnjs (entrada anterior),
+que estaba sin commit en el árbol de `main`; se hizo con sus siete rutas, tras pasar
+`verificar.py` en verde del 1 al 4. Se trajo `main` a la rama: solo chocó esta
+bitácora, y sus entradas quedan en orden de fecha. El 05 se reestampó con
+`migrar.py --sin-copia` y cambia solo en las siete líneas del arreglo.
+
+**Una reestampada destapó una corrección que no estaba en su fuente.** La pasada de
+la regla 21 había puesto el espacio duro de «{progreso} %» en el `App` de los cinco
+capítulos, pero el `App` sale de `lp-demo.jsx`, que seguía con el espacio normal:
+reestampar lo deshacía en silencio. Ahora está en la fuente, y reestampar no mueve
+ningún capítulo del 1 al 4.
+
+**`migrar.py` estampaba con cualquier opción.** Las opciones que no conoce no
+contaban, y sin rutas el caso por omisión es estampar todos los capítulos: un
+`--help` escribió en los cinco y dejó sus `.bak`. Por suerte la plantilla ya era la
+nueva y las copias eran idénticas al índice. Ahora una opción desconocida muestra el
+uso, no escribe nada y sale con 2. Probado con `--help` y con `--dry_run`.
+
+**Verificado.** `verificar.py --con-salidas`: los cinco pasan. Con `file://` y con red,
+los cinco montan, recorren todas sus lecciones y no dan errores de JavaScript. Con
+cdnjs bloqueado en el resolvedor de Chrome, el 05 monta y recorre sus nueve
+lecciones con el mismo texto y el código sin color; los únicos errores son las doce
+descargas de cdnjs que no llegan.

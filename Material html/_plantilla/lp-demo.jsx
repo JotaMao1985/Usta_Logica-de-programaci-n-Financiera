@@ -838,7 +838,7 @@ Debug.Print saldo`,
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
-                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                                        Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">
                                         <button disabled={safeIndex === 0} onClick={() => setActiveLessonIndex(c => c - 1)}

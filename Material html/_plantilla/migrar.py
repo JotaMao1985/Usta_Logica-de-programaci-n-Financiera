@@ -30,7 +30,8 @@ Uso:
     python3 _plantilla/migrar.py --dry-run              # informa y no escribe
     python3 _plantilla/migrar.py --sin-copia            # no deja .bak
 
-Devuelve 0 si todo se estampó, 1 si algo falló.
+Devuelve 0 si todo se estampó, 1 si algo falló y 2 si se le pasó una opción
+que no existe (en ese caso no escribe nada).
 """
 
 import hashlib
@@ -203,6 +204,17 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     dry_run = "--dry-run" in sys.argv
     con_copia = "--sin-copia" not in sys.argv
+
+    # Una opción desconocida no puede caer en el caso por omisión, que estampa
+    # todos los capítulos: un `--help` (o un `--dry_run` mal escrito) escribía
+    # de verdad en los cinco. Se vio el 2026-10-27.
+    desconocidas = [a for a in sys.argv[1:]
+                    if a.startswith("--") and a not in ("--dry-run", "--sin-copia")]
+    if desconocidas:
+        print(__doc__.strip().split("Uso:")[1].split("Devuelve")[0].rstrip(), file=sys.stderr)
+        print(f"\n{ROJO}ERROR{FIN}: opción desconocida {', '.join(desconocidas)}; "
+              f"no se escribió nada.", file=sys.stderr)
+        return 2
 
     if not BASE.exists():
         print(f"{ROJO}ERROR{FIN}: falta {BASE}. Ejecute antes ensamblar.py.", file=sys.stderr)
