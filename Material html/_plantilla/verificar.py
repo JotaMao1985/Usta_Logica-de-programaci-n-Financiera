@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y veintiuna sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y veintidós sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -80,6 +80,11 @@ Comprueba una cosa sobre la plantilla y veintiuna sobre cada archivo HTML de cap
      `guardar` de LP-CORE. Sin almacenamiento (ventana privada, política del
      navegador, URL `data:`) leerlo lanza, y una lectura en un `useState`
      dejaba el capítulo en blanco (H16 del capítulo 5).
+ 23. APP AL DÍA — que el `App` del capítulo sea byte a byte el de
+     `lp-base.html`. `migrar.py` lo estampa igual que LP-CORE, pero solo LP-CORE
+     tenía regla: un cambio hecho en el capítulo pasaba en verde y la siguiente
+     reestampada lo deshacía. Le pasó al espacio duro de «{progreso} %», que se
+     corrigió en los cinco capítulos y no en `lp-demo.jsx`.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -105,10 +110,12 @@ from pathlib import Path
 try:
     import ejecutar_salidas
     import ensamblar
+    import migrar
 except ImportError:  # se ejecuta desde otro directorio
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import ejecutar_salidas
     import ensamblar
+    import migrar
 
 AQUI = Path(__file__).resolve().parent
 MATERIAL = AQUI.parent
@@ -1198,6 +1205,49 @@ def almacenamiento_directo(texto, cuerpo, desplazamiento):
             for m in re.finditer(r"\b(?:localStorage|sessionStorage)\b", limpio)]
 
 
+# ---------------------------------------------------------------- 23 · App al día
+# `migrar.py` estampa dos regiones, LP-CORE y el `App`, y la regla 1 vigilaba
+# solo la primera. El 2026-10-20, `comprobar_cifras.js --corregir` puso el
+# espacio duro de «{progreso} %» en el `App` de los cinco capítulos y no en
+# `lp-demo.jsx`, que es su fuente; las veintiuna reglas siguieron en verde, y el
+# 2026-10-27 una reestampada se lo quitó. La regla 21 lo señala entonces como
+# una cifra del capítulo, y su `--corregir` lo devuelve al capítulo y no a la
+# fuente: el mismo ciclo otra vez. Las anclas son las de `migrar.py`: se compara
+# exactamente lo que él sobrescribe.
+def app_desactualizado(texto):
+    lineas = texto.splitlines()
+    base = BASE.read_text(encoding="utf-8").splitlines()
+    try:
+        bi, bj = migrar.tramo_app(base)
+    except migrar.Fallo as e:
+        return f"en lp-base.html, {e}: no se pudo comparar el App"
+    try:
+        i, j = migrar.tramo_app(lineas)
+    except migrar.Fallo as e:
+        return f"{e}: no se pudo comparar el App"
+    propio, referencia = lineas[i:j + 1], base[bi:bj + 1]
+    if propio == referencia:
+        return None
+    # La columna y el carácter, porque la diferencia que dio origen a la regla es
+    # un espacio duro contra uno normal: las dos líneas se ven idénticas.
+    caracter = lambda c: f"«{c}» (U+{ord(c):04X})" if c.isprintable() and not c.isspace() else f"U+{ord(c):04X}"
+    for k, (x, y) in enumerate(zip_longest(propio, referencia)):
+        if x != y:
+            donde = ""
+            if x is not None and y is not None:
+                c = next((n for n, (a, b) in enumerate(zip(x, y)) if a != b), min(len(x), len(y)))
+                donde = (f"        columna {c + 1}: "
+                         f"{caracter(x[c]) if c < len(x) else 'fin de línea'} aquí, "
+                         f"{caracter(y[c]) if c < len(y) else 'fin de línea'} en la base\n")
+            return (f"el App difiere del de lp-base.html en la línea {i + k + 1}\n"
+                    f"        aquí:  {(x if x is not None else '(nada)').strip()[:100]}\n"
+                    f"        base:  {(y if y is not None else '(nada)').strip()[:100]}\n"
+                    f"{donde}"
+                    f"        el App es plantilla: se cambia en lp-demo.jsx, se ensambla y se "
+                    f"reestampa con migrar.py; editado aquí, la próxima reestampada lo deshace")
+    return None
+
+
 def jsx_compila(ruta):
     """El bloque `text/babel` del capítulo compila de verdad.
 
@@ -1369,6 +1419,11 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     # 22 · el almacenamiento se toca solo a través de LP-CORE
     for f in almacenamiento_directo(texto, cuerpo, desplazamiento):
         problemas.append(f"almacenamiento — {f}")
+
+    # 23 · el App es el de la plantilla
+    desfase_app = app_desactualizado(texto)
+    if desfase_app:
+        problemas.append(f"App — {desfase_app}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))

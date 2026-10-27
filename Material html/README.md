@@ -60,7 +60,10 @@ componente que se mida a sí mismo da allí una medida vieja sin ningún error.
 también, porque es plantilla: todo lo que varía de un capítulo a otro vive en
 `CONFIG` y en `curriculum`. Un capítulo heredado se reconoce por no traer
 centinelas y se migra; uno ya migrado se reestampa de centinela a centinela.
-Acepta `--dry-run` y deja `.bak`.
+Acepta `--dry-run` y deja `.bak`. Las dos regiones se vigilan: LP-CORE con la
+regla 1 de `verificar.py` y el `App` con la 23. Un cambio en cualquiera de ellas
+se hace en su fuente (`lp-core-extra.jsx`, `lp-demo.jsx`), no en el capítulo:
+la siguiente reestampada lo desharía.
 
 **Para cambiar el `head`** (CSS, librerías, configuración de Tailwind):
 editarlo en `01_LPF_Introduccion.html`, que es la fuente de `ensamblar.py`,
@@ -68,7 +71,9 @@ regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.
 no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
 sean el del 1 salvo el `<title>` y la descripción.
 
-`verificar.py` comprueba doce cosas y devuelve ≠ 0 si algo falla:
+`verificar.py` comprueba veintitrés cosas —la 13 sobre la plantilla, las demás
+sobre cada capítulo— y devuelve ≠ 0 si algo falla. Aquí van las doce primeras;
+la lista completa, con el porqué de cada una, es el docstring del guion:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte
    con el de `lp-base.html` (comparación SHA-256).
@@ -332,9 +337,11 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   científica («7,5 × 10⁻⁸»). En el código no: allí sobra, y en una línea que el
   estudiante copia es un error de sintaxis. No hace falta escribirlo a mano. La
   regla 21 avisa, y `node _plantilla/comprobar_cifras.js --corregir <capítulo>`
-  pone los espacios solo en la prosa. Se probó el espacio fino (U+202F), que es
-  el que recomiendan la RAE y el SI, pero en Montserrat queda tan angosto que
-  «20 000 000» se lee «20000000».
+  pone los espacios solo en la prosa. Si la cifra está en el `App`, el espacio
+  va en `lp-demo.jsx`: corregido solo en el capítulo, lo quita la siguiente
+  reestampada, y la regla 23 no lo deja pasar. Se probó el espacio fino
+  (U+202F), que es el que recomiendan la RAE y el SI, pero en Montserrat queda
+  tan angosto que «20 000 000» se lee «20000000».
 - Los ejercicios **no piden escribir programas desde cero**: eso es de los
   talleres. Aquí se lee, se traza, se diagnostica, se compara y se interpreta.
   Lo comprueba la regla 11, que mira **solo los enunciados** —las propiedades

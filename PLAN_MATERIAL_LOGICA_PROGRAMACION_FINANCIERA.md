@@ -1969,3 +1969,32 @@ Se miró en capturas de antes y después.
 - Safari y Firefox, sin probar.
 - Los `id` repetidos de los flujogramas del 5: ninguno se oculta, así que se
   pintan bien, pero son inválidos.
+
+### Comprobación 23: el `App` de cada capítulo es el de la plantilla · 2026-10-27
+
+`migrar.py` estampa dos regiones, LP-CORE y el `App`, y solo la primera tenía
+regla. El 2026-10-20, `comprobar_cifras.js --corregir` puso el espacio duro de
+«{progreso} %» en el `App` de los cinco capítulos y no en `lp-demo.jsx`, su
+fuente; las veintiuna reglas siguieron en verde. El 2026-10-27, la reestampada
+accidental de los cinco capítulos (un `migrar.py --help`) se lo quitó, y se vio en
+el diff. La regla 21 lo habría señalado, pero como una cifra del capítulo, y su
+`--corregir` lo habría devuelto al capítulo y no a la fuente: el mismo ciclo otra
+vez.
+
+`verificar.py` compara ahora el `App` de cada capítulo con el de `lp-base.html`,
+con las anclas de `migrar.py`: se compara exactamente lo que él sobrescribe. Es
+una falla, no un aviso. Cita la línea del archivo, las dos versiones y, como la
+diferencia que dio origen a la regla es invisible, la columna y el código del
+carácter de cada lado.
+
+| Prueba | Resultado |
+|---|---|
+| El 01 y la plantilla de `ba32c8c`, el caso real | Falla en la línea 4502: `U+00A0` aquí, `U+0020` en la base |
+| El 3 con el espacio normal en «{progreso} %» | Falla en la línea 4840, columna 100 |
+| El 3 con una línea de más al principio o al final del `App` | Falla en la línea añadida |
+| El 3 con una letra cambiada («Leccion») | Falla en la columna 46 |
+| El 3 sin el ancla `root.render(<App />);` | Falla: no se pudo comparar |
+| El 3 con un cambio en `CONFIG`, que no es `App` (control) | Pasa |
+
+Los cinco capítulos pasan. El README corrige de paso su «comprueba doce cosas»:
+son veintitrés, y la lista completa sigue siendo la del docstring.
