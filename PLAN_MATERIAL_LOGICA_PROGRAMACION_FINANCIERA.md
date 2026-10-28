@@ -2149,11 +2149,26 @@ En el 5 cambiaron además tres textos:
 El libro de Excel salió del repositorio: está en `Usta 2026II/Arnes_VBA_LPF.xlsm`,
 con los dos módulos de esta corrida.
 
+**El identificador del arnés, arreglado el mismo día.** Incluía la hora y las
+salidas declaradas, que no van en el módulo. Por eso corregir un `'>` obligaba a
+pegar de nuevo un módulo idéntico al que ya estaba en Excel. Ahora es la huella
+de los módulos que se pegan, y de nada más:
+- corregir una salida pide `preparar` otra vez, no pegar;
+- `preparar` avisa cuando el código no cambió;
+- `comparar` sigue pidiendo pegar cuando sí cambió.
+
+Trece pruebas, con Excel simulado por la salida real de esta corrida:
+- con el material real, ninguna salida que no cuadre;
+- con un `'>` cambiado en una copia, el mismo identificador, y `comparar` caza
+  ese bloque sin pedir pegar;
+- con una línea de código cambiada, otro identificador, y `comparar` pide pegar.
+
+La negativa: con la huella de antes, fallan las tres que importan.
+
+El libro guardado tiene todavía el módulo con el identificador viejo, así que la
+próxima corrida pide pegar una última vez.
+
 **Lo que queda.**
-- **El identificador del arnés incluye las salidas declaradas, y la hora.**
-  Corregir un `'>` obliga a preparar y pegar de nuevo los módulos aunque el
-  código VBA no haya cambiado. Si la huella mirara solo el código, `preparar`
-  daría el mismo identificador y `comparar` correría con el módulo ya pegado.
 - **El material no explica todavía ninguna de las dos rarezas de `Debug.Print`:**
   el espacio que escribe delante de un número y las zonas de 14 columnas. Es
   tema del capítulo 6.

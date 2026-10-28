@@ -23,6 +23,13 @@ decía que VBA no se podía ejecutar desde macOS; con Excel para Mac instalado,
 sí se puede, y el VBA de Excel para Mac es el mismo lenguaje que el de Windows
 en todo lo que usa el material: tipos, `Format`, `Print`, errores.
 
+Y solo se pega cuando cambia el código. El arnés imprime al empezar su
+identificador, que es la huella de los módulos que se pegan y de nada más: ni
+la hora ni las salidas declaradas, que no van en el módulo. Así `comparar` sabe
+si lo que corre en Excel es lo preparado, y corregir un `'>` no obliga a pegar
+otra vez: se vuelve a preparar, para que el manifiesto tenga la salida nueva, y
+se compara.
+
 Qué cambia el arnés en cada bloque, y por qué eso no cambia lo que se mide:
 
   · `Debug.Print` pasa a ser `Print #canalArnes,`. La ventana Inmediato no se
@@ -67,7 +74,6 @@ import re
 import subprocess
 import sys
 import tempfile
-from datetime import datetime
 from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
@@ -370,15 +376,32 @@ def rutas_de(args):
     return rutas
 
 
+def identificador(bloques):
+    """La huella de los módulos que se pegan en Excel, y de nada más.
+
+    Antes entraban también la hora y las salidas declaradas: corregir un `'>`
+    obligaba a pegar de nuevo un módulo idéntico al que ya estaba en Excel."""
+    borrador, _ = armar(bloques, "")
+    return hashlib.sha1("".join(texto for _, texto in borrador).encode("utf-8")).hexdigest()[:10]
+
+
+def ident_preparado():
+    """El identificador del último arnés preparado, o None."""
+    try:
+        return json.loads(MANIFIESTO.read_text(encoding="utf-8"))["ident"]
+    except (OSError, ValueError, KeyError):
+        return None
+
+
 def preparar(opciones):
     rutas = rutas_de(opciones.capitulos)
     bloques = bloques_vba(rutas, opciones.incluir)
     if not bloques:
         print(f"{AMAR}Ningún bloque VBA que ejecutar.{FIN}")
         return 0
-    huella = hashlib.sha1(json.dumps(bloques, sort_keys=True).encode()).hexdigest()[:10]
-    ident = f"{datetime.now():%Y-%m-%d %H:%M} {huella}"
+    ident = identificador(bloques)
     modulos, adaptados = armar(bloques, ident)
+    anterior = ident_preparado()
 
     DIR_ARNES.mkdir(exist_ok=True)
     for i, (_, texto) in enumerate(modulos, 1):
@@ -395,6 +418,11 @@ def preparar(opciones):
                                                     f"{len(a['esperado'])} líneas declaradas")
         aviso = "" if a["entrada"] else f"  {ROJO}sin Sub de entrada{FIN}"
         print(f"  {a['n']:3d}  {a['capitulo'][:2]} {a['nombre']:28s} {estado}{aviso}")
+    if ident == anterior:
+        print(f"\nEl código VBA no cambió desde la preparación anterior: si ese arnés sigue "
+              f"pegado en Excel, no hay que pegar nada.\n"
+              f"  python3 _plantilla/ejecutar_vba.py comparar")
+        return 0
     print(f"\n{modulos[0][0]} copiado al portapapeles. En Excel, con un libro nuevo:\n"
           f"  Herramientas › Macro › Editor de Visual Basic › Insertar › Módulo › ⌘V")
     if len(modulos) > 1:
@@ -464,7 +492,8 @@ def comparar(opciones):
         return 2
     if ident != manifiesto["ident"]:
         print(f"{ROJO}El arnés que corre en Excel es «{ident}», y el preparado es "
-              f"«{manifiesto['ident']}». Pegue el módulo nuevo.{FIN}")
+              f"«{manifiesto['ident']}»: el código VBA cambió desde que se pegó. "
+              f"Pegue el módulo nuevo.{FIN}")
         return 2
 
     fallos, regionales, comparados, mostrados = [], [], 0, []

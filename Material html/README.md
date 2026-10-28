@@ -115,6 +115,10 @@ python3 "Material html/_plantilla/ejecutar_vba.py" preparar 05_LPF_*.html
 python3 "Material html/_plantilla/ejecutar_vba.py" comparar
 ```
 
+El módulo solo se vuelve a pegar si cambia el código VBA. El arnés se identifica
+por la huella de lo que se pega, así que corregir una salida declarada pide
+`preparar` otra vez, no pegar; `preparar` avisa cuando el código no cambió.
+
 `Debug.Print` se cambia por `Print #`, que imprime con las mismas reglas, y
 `MsgBox` e `InputBox` por versiones que escriben en el mismo canal o leen de una
 cola (`--incluir NOMBRE=250000,-1` corre un bloque que lee datos). La única
