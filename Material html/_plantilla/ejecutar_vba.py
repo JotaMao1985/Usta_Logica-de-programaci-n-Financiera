@@ -36,6 +36,9 @@ Qué cambia el arnés en cada bloque, y por qué eso no cambia lo que se mide:
     escribe en el mismo canal, la segunda lee de una cola de entradas. Un
     procedimiento del proyecto con ese nombre tiene prioridad sobre el de la
     librería de VBA, así que el bloque no se toca.
+  · Un bloque de instrucciones sueltas, sin procedimiento, se envuelve en un
+    `Sub Fragmento_b<N>`: VBA no admite instrucciones fuera de un
+    procedimiento, y uno solo así impedía compilar el proyecto entero.
   · Un error en tiempo de ejecución no detiene el arnés: queda escrito como
     `@@ERROR <número> <descripción>`, y se compara como cualquier salida.
 
@@ -224,6 +227,17 @@ def adaptar(bloque, n):
                     t = patron.sub(lambda m: m.group(0) + sufijo, t)
             partes.append(t)
         fuera.append("".join(partes))
+
+    # Un fragmento sin procedimientos —instrucciones sueltas, como las que se
+    # escriben en la ventana Inmediato— no puede ir tal cual al módulo: VBA no
+    # admite instrucciones fuera de un procedimiento, y con un solo bloque así
+    # el proyecto entero no compilaba ni corría ninguna macro (se vio el
+    # 2026-10-27 con los dos `Comparador` del capítulo 3). Se envuelve en un
+    # Sub propio, que pasa a ser su entrada.
+    if not procs:
+        envoltorio = f"Fragmento{sufijo}"
+        cuerpo = [("    " + l) if l.strip() else l for l in fuera]
+        return "\n".join([f"Sub {envoltorio}()"] + cuerpo + ["End Sub"]), envoltorio, explicito
 
     # La entrada: un Sub sin parámetros al que no llame ningún otro procedimiento.
     cuerpo_codigo = [solo_codigo(l) for l in lineas]
@@ -440,6 +454,14 @@ def comparar(opciones):
         print(f"{ROJO}No se pudo ejecutar en Excel.{FIN} {error}")
         return 2
     ident, obtenidos = por_bloque(salida)
+    # Sin identificador, la macro no corrió: Excel acepta la llamada y no hace
+    # nada si el proyecto no compila. Antes esto salía como «arnés de otra
+    # versión» y mandaba a pegar de nuevo, que no era el problema.
+    if ident is None:
+        print(f"{ROJO}Excel no devolvió la salida del arnés: la macro no llegó a correr.{FIN} "
+              f"Lo más común es que el proyecto no compile —un módulo pegado dos veces, por "
+              f"ejemplo—. En el editor de VBA, Depurar › Compilar VBAProject muestra el error.")
+        return 2
     if ident != manifiesto["ident"]:
         print(f"{ROJO}El arnés que corre en Excel es «{ident}», y el preparado es "
               f"«{manifiesto['ident']}». Pegue el módulo nuevo.{FIN}")

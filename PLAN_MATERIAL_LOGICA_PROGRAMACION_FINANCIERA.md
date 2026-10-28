@@ -2086,3 +2086,45 @@ porque la demostración se sustituye al escribirlo.
 - Safari y Firefox.
 - Los `id` repetidos de los flujogramas del 5.
 - Las tres preguntas de la demostración.
+
+### El arnés de VBA corre en Excel por primera vez · 2026-10-27
+
+`ejecutar_vba.py` llevaba armado desde el capítulo 5 y no se había ejecutado
+nunca de punta a punta. Esta vez sí, en Excel para Mac: 42 bloques de los cinco
+capítulos.
+
+**Dos defectos del guion, cazados al correrlo.**
+- **Los bloques sin procedimiento.** Los dos del `Comparador` del 3
+  (`CMP_MENSUALES` y `CMP_EFECTIVAS`) son instrucciones sueltas, y el guion los
+  copiaba tal cual al módulo. VBA no admite instrucciones fuera de un
+  procedimiento, así que el proyecto entero no compilaba y no corría ninguna
+  macro. Ahora cada uno va envuelto en un `Sub Fragmento_b<N>`, y esos dos también
+  se comparan.
+- **Un mensaje que despistaba.** Si la macro no corre, Excel acepta la llamada de
+  AppleScript y no devuelve nada. El guion lo tomaba por un arnés de otra versión
+  y mandaba a pegar de nuevo. Ahora dice que la macro no corrió y que
+  Depurar › Compilar muestra el error.
+
+Lo que la impedía en esta corrida, además, fue el segundo módulo pegado también
+dentro del primero: «Ambiguous name detected».
+
+**El resultado.**
+- **30 bloques coinciden exactos.**
+- **7 coinciden salvo la coma decimal,** que pone la región Colombia del Mac: el
+  guion lo informa aparte.
+- **5 no cuadran.** Son salidas declaradas que nadie había ejecutado:
+  - **`CICLO_INSTRUCCION` y `META_AHORRO`, del 1:** `Debug.Print` de un número
+    escribe un espacio delante, el del signo (« 150», « 3»), y el material
+    declara «150» y «3».
+  - **`CMP_MENSUALES` y `CMP_EFECTIVAS`, del 3:** la coma de `Debug.Print` salta a
+    la siguiente zona de 14 columnas. Excel escribe « 0.018         0.02», y el
+    material declara «0.018  0.02».
+  - **`EJ_PLAN_PAGOS`, del 5:** la última fila. El material declara «-0.00», que
+    es lo que dan Python y R; el `Format` de VBA escribe «0.00», sin signo. El
+    propio comentario del bloque decía que ese −0.00 estaba «sin cotejar en
+    Excel». La `nota` del `CodeTabs` («La última fila sale con −0.00 y no con
+    0.00») vale para tres lenguajes, no para VBA.
+
+**Lo que queda.**
+- Corregir esas cinco salidas declaradas. Es contenido publicado, y espera
+  decisión del docente.
