@@ -517,6 +517,13 @@ Debug.Print saldo`,
                         'Error de alcance: la variable se usa fuera del bloque donde fue declarada.',
                     ]}
                     tipoCorrecto={1}
+                    consecuencias={[
+                        'Se detiene con un error: ningún lenguaje deja multiplicar un capital por un porcentaje.',
+                        'Sobre 10 000 000 informa un interés de 18 000 000: diez veces el correcto, sin avisar.',
+                        'Sobre 10 000 000 informa un interés de 1 800: mil veces menos que el correcto, sin avisar.',
+                        'Sobre 10 000 000 informa un interés de 180 000 000: cien veces el correcto, sin avisar.',
+                    ]}
+                    consecuenciaCorrecta={3}
                     explicacion={ERROR_EXPLICACION}
                     impacto={<>Sobre un capital de $10 000 000 el algoritmo reporta un interés de <strong>$180 000 000</strong> en vez de <strong>$1 800 000</strong>: cien veces más. Si esa cifra alimenta una liquidación o un reporte de cartera, el error es inmediato y visible; si alimenta una provisión contable promediada entre miles de créditos, puede pasar inadvertido durante meses.</>}
                 />

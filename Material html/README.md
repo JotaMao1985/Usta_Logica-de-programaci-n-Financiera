@@ -71,7 +71,7 @@ regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.
 no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
 sean el del 1 salvo el `<title>` y la descripción.
 
-`verificar.py` comprueba veintitrés cosas —la 13 sobre la plantilla, las demás
+`verificar.py` comprueba veinticuatro cosas —la 13 sobre la plantilla, las demás
 sobre cada capítulo— y devuelve ≠ 0 si algo falla. Aquí van las doce primeras;
 la lista completa, con el porqué de cada una, es el docstring del guion:
 
@@ -312,6 +312,25 @@ respuesta —el enunciado la regala mientras afirma otra cosa—.
 La comprobación 8 de `verificar.py` avisa cuando un `DetectaError` multilingüe
 tiene un `enunciado` o una `explicacion` fijos que citan «línea N».
 
+**El Paso 3: anticipar la consecuencia.** La taxonomía pide al E3 nombrar el
+error y anticipar lo que cuesta. `consecuencias` (cuatro cadenas) y
+`consecuenciaCorrecta` (el índice) funcionan como `tipos` y `tipoCorrecto`, y
+no van por lenguaje: si la consecuencia cambia de un lenguaje a otro, la opción
+correcta lo dice («Python y R se detienen en la primera prueba; VBA informa un
+interés de cero sin avisar»). El `impacto` sale al comprobar y hace de
+explicación del paso.
+- La correcta sale del `impacto`, en pesos cuando el daño es monetario.
+- Los distractores salen de confusiones reales —se detiene o sigue en silencio,
+  una cifra sacada de leer mal el código, el sentido contrario— y **no
+  contradicen el enunciado**: si dice que el programa aprobó, ninguno dice que
+  se detuvo.
+- Cada cifra se ejecuta contra el código del ejercicio, también las de los
+  distractores: ninguno puede resultar cierto en algún lenguaje.
+
+Lo vigilan tres reglas: la 24 exige que todo E3 las traiga, la 17 que la clave
+no se delate por el tamaño —también en los `tipos`— y la 16 reparte sus claves
+junto con las de los demás ítems.
+
 Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
 
 ```jsx
@@ -449,7 +468,7 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `ChartFrame` + `usePlotly` | Gráficas interactivas. `descripcion` es lo que oye un lector de pantalla (sin ella, el pie) |
 | `Trazador` | Traza guiada, instrucción por instrucción. Es exposición: no califica y no cuenta en la cuota |
 | `TablaTraza` | **E1** prueba de escritorio |
-| `DetectaError` | **E3** ubicar la línea + clasificar el error |
+| `DetectaError` | **E3** ubicar la línea + clasificar el error + anticipar la consecuencia |
 | `Comparador` | **E4** dos versiones lado a lado + veredicto |
 | `OrdenaPasos` | **E5** reconstruir la secuencia |
 | `Emparejamiento` | **E6** relacionar representaciones |

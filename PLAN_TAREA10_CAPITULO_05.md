@@ -1669,8 +1669,10 @@ python3 -m http.server 8777 --directory "Material html"
   hace como tarea corta propia antes del capítulo 6, cuando LP-CORE ya no tenga
   a nadie editándolo. **Hecha el 2026-10-27**, en la rama `lpcore/deudas-p3`, con
   las deudas que se le sumaron (H16, H17 y L1–L6 de la revisión). El detalle, en
-  la bitácora del plan maestro. Quedan dos para el docente: pedir que se anticipe
-  el `impacto` en `DetectaError` y hacer valer `not-prose` del todo.
+  la bitácora del plan maestro. Quedaban dos para el docente. Pedir que se
+  anticipe el `impacto` en `DetectaError` se hizo el mismo día, en la rama
+  `lpcore/e3-consecuencia`. Hacer valer `not-prose` del todo sigue pendiente:
+  sería rediseñar los componentes.
 - **P4 · ¿El juego «Millonario» necesita preguntas del banco?** (H11)
   **Respondida en el PC0:** el juego está montado con cloze, así que toma los
   del banco tal como salen.

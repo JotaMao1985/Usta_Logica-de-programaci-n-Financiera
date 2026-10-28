@@ -1595,11 +1595,13 @@
 
         /* ============================================================
            E3 · DETECTA Y DIAGNOSTICA EL ERROR
-           Dos respuestas obligatorias: UBICAR la línea y CLASIFICAR el
-           tipo de error. La retroalimentación distingue el caso
-           "ubicó bien pero clasificó mal", que es el más informativo.
+           Tres respuestas obligatorias: UBICAR la línea, CLASIFICAR el
+           tipo de error y ANTICIPAR su consecuencia, que es lo que la
+           taxonomía E3 pide y lo que el `impacto` solo mostraba. La
+           retroalimentación nombra los pasos que fallan: «ubicó bien
+           pero clasificó mal» es el caso más informativo.
         ============================================================ */
-        const DetectaError = ({ titulo = 'Detecte y diagnostique el error', enunciado, lineas, lang = 'pseudo', lineaCorrecta, tipos, tipoCorrecto, explicacion, impacto }) => {
+        const DetectaError = ({ titulo = 'Detecte y diagnostique el error', enunciado, lineas, lang = 'pseudo', lineaCorrecta, tipos, tipoCorrecto, consecuencias, consecuenciaCorrecta, explicacion, impacto }) => {
             // OJO: `lineaCorrecta` también admite {pseudo, python, r, vba}. El
             // mismo fallo NO está en la misma línea en los cuatro lenguajes
             // (VBA añade Sub/Dim, Python no lleva declaraciones...). Darlo por
@@ -1622,26 +1624,74 @@
 
             const [linea, setLinea] = useState(null);
             const [tipo, setTipo] = useState(null);
+            const [consecuencia, setConsecuencia] = useState(null);
             const [comprobado, setComprobado] = useState(false);
             const ref = useRef(null);
             useTypeset(ref, [comprobado]);
 
-            // Al cambiar de lenguaje la selección previa deja de tener sentido.
+            // Al cambiar de lenguaje la selección de la línea deja de tener
+            // sentido; el tipo y la consecuencia son los mismos en los cuatro.
             useEffect(() => { setLinea(null); setComprobado(false); }, [langActivo]);
 
+            // Sin `consecuencias` el ejercicio se queda en dos pasos en vez de
+            // romperse: un `.map` sobre `undefined` dejaría el capítulo en
+            // blanco. Que todo E3 las traiga lo exige la regla 24 de verificar.py.
+            const conConsecuencia = Array.isArray(consecuencias) && consecuencias.length > 0;
+            const pasos = conConsecuencia ? 3 : 2;
             const lineaOk = linea === correctaAct;
             const tipoOk = tipo === tipoCorrecto;
-            // El botón exige las DOS respuestas. Un botón deshabilitado que no
+            const consecuenciaOk = !conConsecuencia || consecuencia === consecuenciaCorrecta;
+            // El botón exige TODAS las respuestas. Un botón deshabilitado que no
             // dice por qué se lee como roto: quien completó el Paso 1 pulsa y
             // no pasa nada. Se rotula el progreso —igual que `Emparejamiento`,
-            // que muestra «Comprobar (2/4)»— y se nombra el paso que falta.
-            const hechos = (linea !== null ? 1 : 0) + (tipo !== null ? 1 : 0);
-            const listo = hechos === 2;
-            const queFalta = linea === null && tipo === null
-                ? 'Señale la línea (Paso 1) y clasifique el error (Paso 2) para poder comprobar.'
-                : linea === null ? 'Falta el Paso 1: señale la línea que contiene el error.'
-                    : tipo === null ? 'Falta el Paso 2: clasifique el tipo de error.'
-                        : null;
+            // que muestra «Comprobar (2/4)»— y se nombran los pasos que faltan.
+            const pendientes = [
+                linea === null && 'señale la línea (Paso 1)',
+                tipo === null && 'clasifique el error (Paso 2)',
+                conConsecuencia && consecuencia === null && 'anticipe la consecuencia (Paso 3)',
+            ].filter(Boolean);
+            const hechos = pasos - pendientes.length;
+            const listo = pendientes.length === 0;
+            const unir = (partes) => partes.length < 2 ? partes.join('')
+                : `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}`;
+            const queFalta = listo ? null
+                : pendientes.length === 1 ? `Falta un paso: ${pendientes[0]}.`
+                    : `Para poder comprobar: ${unir(pendientes)}.`;
+            const fallados = [
+                !lineaOk && 'la línea',
+                !tipoOk && 'el tipo de error',
+                !consecuenciaOk && 'la consecuencia',
+            ].filter(Boolean);
+            const veredicto = fallados.length === 0 ? '¡Diagnóstico correcto!'
+                : fallados.length === pasos ? `No acertó ningún paso: revise ${unir(fallados)}.`
+                    : `Revise ${unir(fallados)}: lo demás está bien.`;
+            const reintentar = () => { setComprobado(false); setLinea(null); setTipo(null); setConsecuencia(null); };
+
+            // Los pasos 2 y 3 son la misma pieza: opciones con letra que se
+            // colorean al comprobar.
+            const opcionesDe = (lista, elegida, elegir, correcta) => (
+                <div className="space-y-1.5 mb-3">
+                    {lista.map((t, i) => {
+                        const sel = elegida === i;
+                        let cls = 'border-gray-200 bg-white hover:border-primary/40';
+                        if (comprobado) {
+                            if (i === correcta) cls = 'border-green-500 bg-green-50';
+                            else if (sel) cls = 'border-red-400 bg-red-50';
+                            else cls = 'border-gray-200 bg-white opacity-70';
+                        } else if (sel) cls = 'border-secondary bg-amber-50';
+                        return (
+                            <button key={i} onClick={() => !comprobado && elegir(i)} disabled={comprobado} aria-pressed={sel}
+                                className={`w-full text-left px-3 py-2 rounded-lg border text-[0.9rem] flex items-center gap-2.5 transition-all ${cls}`}>
+                                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[0.7rem] font-bold ${sel ? 'lp-gradient text-white' : 'bg-gray-100 text-gray-600'}`}>
+                                    {String.fromCharCode(97 + i)}
+                                </span>
+                                <span className="flex-1 text-gray-700">{t}</span>
+                                {comprobado && i === correcta && <i className="fas fa-check text-green-600 text-xs"></i>}
+                            </button>
+                        );
+                    })}
+                </div>
+            );
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 p-5 shadow-sm" style={{ borderColor: '#FCA5A5', background: '#FFFBFB' }}>
@@ -1677,35 +1727,20 @@
                     </div>
 
                     <p className="text-xs font-semibold text-gray-600 mb-1"><span className="text-red-700">Paso 2.</span> Clasifique el tipo de error:</p>
-                    <div className="space-y-1.5 mb-3">
-                        {tipos.map((t, i) => {
-                            const sel = tipo === i;
-                            let cls = 'border-gray-200 bg-white hover:border-primary/40';
-                            if (comprobado) {
-                                if (i === tipoCorrecto) cls = 'border-green-500 bg-green-50';
-                                else if (sel) cls = 'border-red-400 bg-red-50';
-                                else cls = 'border-gray-200 bg-white opacity-70';
-                            } else if (sel) cls = 'border-secondary bg-amber-50';
-                            return (
-                                <button key={i} onClick={() => !comprobado && setTipo(i)} disabled={comprobado}
-                                    className={`w-full text-left px-3 py-2 rounded-lg border text-[0.9rem] flex items-center gap-2.5 transition-all ${cls}`}>
-                                    <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[0.7rem] font-bold ${sel ? 'lp-gradient text-white' : 'bg-gray-100 text-gray-600'}`}>
-                                        {String.fromCharCode(97 + i)}
-                                    </span>
-                                    <span className="flex-1 text-gray-700">{t}</span>
-                                    {comprobado && i === tipoCorrecto && <i className="fas fa-check text-green-600 text-xs"></i>}
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {opcionesDe(tipos, tipo, setTipo, tipoCorrecto)}
+
+                    {conConsecuencia && <>
+                        <p className="text-xs font-semibold text-gray-600 mb-1"><span className="text-red-700">Paso 3.</span> Anticipe la consecuencia:</p>
+                        {opcionesDe(consecuencias, consecuencia, setConsecuencia, consecuenciaCorrecta)}
+                    </>}
 
                     <div className="flex items-center gap-3 flex-wrap">
                         {!comprobado
                             ? <button onClick={() => listo && setComprobado(true)} disabled={!listo}
                                 className="text-sm font-bold px-4 py-1.5 rounded-full text-white lp-gradient disabled:opacity-40">
-                                <i className="fas fa-magnifying-glass mr-1"></i>Comprobar diagnóstico ({hechos}/2)
+                                <i className="fas fa-magnifying-glass mr-1"></i>Comprobar diagnóstico ({hechos}/{pasos})
                             </button>
-                            : <button onClick={() => { setComprobado(false); setLinea(null); setTipo(null); }}
+                            : <button onClick={reintentar}
                                 className="text-sm font-bold px-4 py-1.5 rounded-full border border-primary text-primary hover:bg-primary/5">
                                 <i className="fas fa-rotate-right mr-1"></i>Reintentar
                             </button>}
@@ -1715,12 +1750,9 @@
                             </span>
                         )}
                         {comprobado && (
-                            <span className={`text-sm font-bold ${lineaOk && tipoOk ? 'text-green-600' : 'text-red-500'}`}>
-                                <i className={`fas ${lineaOk && tipoOk ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
-                                {lineaOk && tipoOk ? '¡Diagnóstico correcto!'
-                                    : lineaOk ? 'Ubicó bien la línea, pero el tipo de error no es ese.'
-                                        : tipoOk ? 'Clasificó bien el tipo, pero el error está en otra línea.'
-                                            : 'Ni la línea ni el tipo son correctos.'}
+                            <span className={`text-sm font-bold ${fallados.length === 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                <i className={`fas ${fallados.length === 0 ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
+                                {veredicto}
                             </span>
                         )}
                     </div>
@@ -5266,16 +5298,23 @@ Loop`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="El plan de pagos que se queda corto"
-                    enunciado={<>Es el crédito de la motivación —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93—, ahora escrito con un <span className="inline-code">Mientras</span>. Corre sin errores y su tabla tiene buen aspecto: los intereses bajan y los abonos suben. Pero no es el plan que se firmó. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y con qué saldo termina la tabla.</>}
+                    enunciado={<>Es el crédito de la motivación —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93—, ahora escrito con un <span className="inline-code">Mientras</span>. Corre sin errores y su tabla tiene buen aspecto: los intereses bajan y los abonos suben. Pero no es el plan que se firmó. <strong>Señale la línea que hay que corregir</strong>, diga qué defecto es y anticipe con qué saldo termina la tabla.</>}
                     lineas={ERROR_PLAN_LINEAS}
                     lineaCorrecta={ERROR_PLAN_LINEA_OK}
                     tipos={[
-                        'Frontera del ciclo: da una vuelta de más y cobra una cuota 13 que el cliente no debe, de 916 799,93.',
-                        'Inicialización: el contador tenía que nacer en 0; así el ciclo daría doce vueltas y la tabla saldría completa.',
-                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 916 799,93, el de una cuota completa.',
-                        'Frontera del ciclo: da una vuelta de menos y la última fila deja un saldo de 903 251,16, el abono de la cuota 12.',
+                        'Frontera del ciclo: la condición le deja dar una vuelta de más.',
+                        'Inicialización: el contador tenía que nacer en 0 y no en 1.',
+                        'Actualización: el saldo tenía que bajar en la cuota y no en el abono.',
+                        'Frontera del ciclo: la condición le deja dar una vuelta de menos.',
                     ]}
                     tipoCorrecto={3}
+                    consecuencias={[
+                        'La tabla sale con once filas y termina con un saldo de 903 251,16 que nadie cobra.',
+                        'La tabla sale con once filas y termina con un saldo de 916 799,93, una cuota entera.',
+                        'La tabla sale con trece filas y cobra 916 799,93 de más, que el cliente no debe.',
+                        'La tabla sale completa, con doce filas; solo el redondeo deja unos centavos sin cobrar.',
+                    ]}
+                    consecuenciaCorrecta={0}
                     explicacion={ERROR_PLAN_EXPLICACION}
                     impacto={<>La tabla sale con <strong>once filas</strong> en vez de doce, y la última termina con un saldo de <strong>903 251,16</strong>: el 9 % del capital prestado. Nada lo delata a simple vista, porque los intereses bajan y los abonos suben como deben. Si la facturación se genera desde esta tabla, el cliente recibe once cuotas, las paga y queda a paz y salvo, y el banco deja de recaudar la cuota doce: 916 799,93, que son esos 903 251,16 de capital más 13 548,77 de interés. Es el caso de la motivación, escrito ahora con un <span className="inline-code">Mientras</span>, y por eso el defecto existe en los cuatro lenguajes y no solo en Python.</>}
                 /></Ejercicio>
@@ -6397,16 +6436,23 @@ End Sub`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="El plan de pagos que cobra hasta el cero"
-                    enunciado={<>Es el plan de pagos de la sección 4 —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93, con la cuota sin redondear—, escrito ahora con un <span className="inline-code">Mientras</span> que cobra hasta que el saldo llegue a cero, como dice su comentario. <strong>Señale la línea que hay que corregir</strong>, y en el segundo paso diga qué defecto es y qué pasa al ejecutar el programa.</>}
+                    enunciado={<>Es el plan de pagos de la sección 4 —10 000 000 al 1,5 % mensual en 12 cuotas de 916 799,93, con la cuota sin redondear—, escrito ahora con un <span className="inline-code">Mientras</span> que cobra hasta que el saldo llegue a cero, como dice su comentario. <strong>Señale la línea que hay que corregir</strong>, diga qué defecto es y anticipe qué pasa al ejecutar el programa.</>}
                     lineas={ERROR_IGUALDAD_LINEAS}
                     lineaCorrecta={ERROR_IGUALDAD_LINEA_OK}
                     tipos={[
-                        'Actualización: el saldo baja solo en el abono y no en la cuota completa, así que nunca llega a cero y el ciclo no termina.',
-                        'Frontera del ciclo: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸ y no en cero, así que cobra una cuota 13 y ahí se detiene.',
-                        'Condición de igualdad: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸; de ahí solo baja, y la condición nunca se vuelve falsa.',
-                        'Cuota sin redondear: con 916 799,929… el saldo no cierra; redondeada al peso, llegaría a cero en la cuota 12 y el ciclo pararía.',
+                        'Actualización: el saldo baja en el abono cuando tenía que bajar en la cuota.',
+                        'Frontera del ciclo: la condición le deja dar una vuelta de más.',
+                        'Condición de igualdad: espera que un saldo decimal llegue exacto a cero.',
+                        'Cuota sin redondear: la cuota tenía que redondearse al peso antes del ciclo.',
                     ]}
                     tipoCorrecto={2}
+                    consecuencias={[
+                        'Cobra una cuota 13 de 916 799,93 y ahí se detiene, con el saldo exacto en cero.',
+                        'No se detiene: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸, y de ahí solo baja.',
+                        'Se detiene en la cuota 12, pero deja 7,5 × 10⁻⁸ pesos del saldo sin cobrar.',
+                        'Se detiene con un error de división por cero cuando el saldo llega a cero.',
+                    ]}
+                    consecuenciaCorrecta={1}
                     explicacion={ERROR_IGUALDAD_EXPLICACION}
                     impacto={<>El cliente firmó doce cuotas, y el programa no se detiene en la doce: escribe la 13, la 14, la 15…, con intereses negativos y un saldo cada vez más negativo. Si el plan alimenta la facturación en una corrida nocturna, la corrida no termina, y por la mañana las oficinas abren sin el cierre del día. Es el ejemplo con que el capítulo 2 ilustró la finitud, el cierre diario bloqueado, con un ciclo de cobro en lugar de un cálculo de TIR.</>}
                 /></Ejercicio>

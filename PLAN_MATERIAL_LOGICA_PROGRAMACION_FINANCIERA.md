@@ -1998,3 +1998,91 @@ carácter de cada lado.
 
 Los cinco capítulos pasan. El README corrige de paso su «comprueba doce cosas»:
 son veintitrés, y la lista completa sigue siendo la del docstring.
+
+### `DetectaError` pide anticipar la consecuencia · 2026-10-27
+
+La taxonomía (§4) pide al E3 nombrar el error y **anticipar su consecuencia
+financiera**. El componente pedía la línea y el tipo, y después **mostraba** el
+`impacto` sin preguntarlo. Era la última deuda de P3 a decisión del docente, que
+eligió un Paso 3 de **opción múltiple calificada** y, en la misma pasada, que la
+regla 17 mirara también los `tipos`. Rama `lpcore/e3-consecuencia`.
+
+**El componente.**
+- `consecuencias` y `consecuenciaCorrecta`, como `tipos` y `tipoCorrecto`. No van
+  por lenguaje.
+- El contador pasa a (n/3), y el veredicto nombra lo que falla («Revise la
+  consecuencia: lo demás está bien»).
+- Al cambiar de lenguaje se borra la línea y se conservan el tipo y la
+  consecuencia.
+- El `impacto` sale al comprobar, como explicación del Paso 3.
+- Sin `consecuencias`, el ejercicio se queda en dos pasos en vez de dejar el
+  capítulo en blanco.
+
+**Las reglas.**
+- **La 24, nueva:** todo E3 trae al menos tres consecuencias y una clave que
+  señale una de ellas.
+- **Las 16, 17 y 18** leen los dos pasos de opción múltiple de cada E3 con una
+  sola función. Antes, la 16 leía `tipoCorrecto` con su propia expresión, la 18
+  los `tipos` con otra, y la 17 no los miraba.
+- **Lo que la 17 encontró al mirarlos:** dos E3 del 1 y uno del 3 delataban el
+  tipo correcto por el tamaño (93 caracteres contra una media de 56; 104 contra 52;
+  121 contra 72). Se reescribieron al largo de sus distractores, sin cambiar la
+  clave.
+
+**El contenido.** Diez E3, cuarenta consecuencias.
+- La correcta sale del `impacto`, que ya estaba comprobado.
+- Los distractores salen de confusiones reales:
+  - se detiene o sigue en silencio;
+  - una cifra sacada de leer mal el código: 330 000 en vez de 198 000 en el abono
+    del 3;
+  - el sentido contrario.
+
+  Ninguno contradice el enunciado. Las claves van sobre todo en la «a» y la «d»,
+  porque las de los tipos están casi todas en la «b» y la «c».
+- En el 5, los dos E3 traían la consecuencia fundida en las opciones del tipo
+  («da una vuelta de menos y la última fila deja un saldo de 903 251,16»). Se
+  separó: el Paso 2 es el tipo y el saldo pasa al Paso 3. Los dos enunciados que
+  decían «en el segundo paso diga… con qué saldo» se ajustaron.
+- El docente revisó la tabla de las cuarenta antes de tocar `main`.
+
+**Verificado.**
+- **Las cuarenta afirmaciones, ejecutadas** contra el código de su ejercicio, por
+  ejemplo:
+  - la tabla de verdad del 1 en 24 combinaciones;
+  - la cascada del 4 en 48 casos;
+  - las once vueltas del plan del 5.
+
+  Las diez correctas salen ciertas y los treinta distractores, falsos. Hay
+  excepciones:
+  - tres distractores se descartan leyendo el código, no ejecutándolo: el
+    programa no bloquea, no hay registro, el ciclo no divide;
+  - en el primer E3 del 2 se ejecutó Python. Que R se detenga y que VBA informe
+    0 sale del `impacto` (Excel no se corrió).
+- **Pruebas negativas, nueve de nueve:**
+  - la regla 24 falla sin `consecuencias`, con dos opciones, con la clave fuera de
+    rango, sin clave y con una constante en vez de un arreglo;
+  - la 17 avisa de una consecuencia correcta larga y deja pasar unas parejas;
+  - la 16 cuenta la clave nueva.
+- **Por DOM, en un Chrome sin ventana,** los once E3 (los diez y el de la
+  demostración) pasan sus 8 comprobaciones:
+  - contador;
+  - consecuencia mal, y el veredicto la nombra;
+  - «Reintentar»;
+  - cambio de lenguaje;
+  - todo bien, y aparece el impacto;
+  - línea mal, y el veredicto la nombra.
+- **`verificar.py --con-salidas`:** los cinco pasan las 24.
+- **La sonda,** en sus cuatro modos.
+- **Las cifras de las opciones** llevan espacio duro, y `--corregir` no tocó
+  ninguna otra línea.
+
+**Un hallazgo aparte.** La demostración de `lp-base.html` tiene tres preguntas que
+se delatan por el tamaño: un `MCQ` E2, un `MCQ` E7 y una del `Quiz`. Nunca se
+midieron, porque `verificar.py` no revisa la plantilla. No llega a ningún capítulo,
+porque la demostración se sustituye al escribirlo.
+
+**Lo que queda.**
+- `not-prose` del todo.
+- Safari y Firefox.
+- Los `id` repetidos de los flujogramas del 5.
+- Las tres preguntas de la demostración.

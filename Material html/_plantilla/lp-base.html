@@ -1595,11 +1595,13 @@
 
         /* ============================================================
            E3 · DETECTA Y DIAGNOSTICA EL ERROR
-           Dos respuestas obligatorias: UBICAR la línea y CLASIFICAR el
-           tipo de error. La retroalimentación distingue el caso
-           "ubicó bien pero clasificó mal", que es el más informativo.
+           Tres respuestas obligatorias: UBICAR la línea, CLASIFICAR el
+           tipo de error y ANTICIPAR su consecuencia, que es lo que la
+           taxonomía E3 pide y lo que el `impacto` solo mostraba. La
+           retroalimentación nombra los pasos que fallan: «ubicó bien
+           pero clasificó mal» es el caso más informativo.
         ============================================================ */
-        const DetectaError = ({ titulo = 'Detecte y diagnostique el error', enunciado, lineas, lang = 'pseudo', lineaCorrecta, tipos, tipoCorrecto, explicacion, impacto }) => {
+        const DetectaError = ({ titulo = 'Detecte y diagnostique el error', enunciado, lineas, lang = 'pseudo', lineaCorrecta, tipos, tipoCorrecto, consecuencias, consecuenciaCorrecta, explicacion, impacto }) => {
             // OJO: `lineaCorrecta` también admite {pseudo, python, r, vba}. El
             // mismo fallo NO está en la misma línea en los cuatro lenguajes
             // (VBA añade Sub/Dim, Python no lleva declaraciones...). Darlo por
@@ -1622,26 +1624,74 @@
 
             const [linea, setLinea] = useState(null);
             const [tipo, setTipo] = useState(null);
+            const [consecuencia, setConsecuencia] = useState(null);
             const [comprobado, setComprobado] = useState(false);
             const ref = useRef(null);
             useTypeset(ref, [comprobado]);
 
-            // Al cambiar de lenguaje la selección previa deja de tener sentido.
+            // Al cambiar de lenguaje la selección de la línea deja de tener
+            // sentido; el tipo y la consecuencia son los mismos en los cuatro.
             useEffect(() => { setLinea(null); setComprobado(false); }, [langActivo]);
 
+            // Sin `consecuencias` el ejercicio se queda en dos pasos en vez de
+            // romperse: un `.map` sobre `undefined` dejaría el capítulo en
+            // blanco. Que todo E3 las traiga lo exige la regla 24 de verificar.py.
+            const conConsecuencia = Array.isArray(consecuencias) && consecuencias.length > 0;
+            const pasos = conConsecuencia ? 3 : 2;
             const lineaOk = linea === correctaAct;
             const tipoOk = tipo === tipoCorrecto;
-            // El botón exige las DOS respuestas. Un botón deshabilitado que no
+            const consecuenciaOk = !conConsecuencia || consecuencia === consecuenciaCorrecta;
+            // El botón exige TODAS las respuestas. Un botón deshabilitado que no
             // dice por qué se lee como roto: quien completó el Paso 1 pulsa y
             // no pasa nada. Se rotula el progreso —igual que `Emparejamiento`,
-            // que muestra «Comprobar (2/4)»— y se nombra el paso que falta.
-            const hechos = (linea !== null ? 1 : 0) + (tipo !== null ? 1 : 0);
-            const listo = hechos === 2;
-            const queFalta = linea === null && tipo === null
-                ? 'Señale la línea (Paso 1) y clasifique el error (Paso 2) para poder comprobar.'
-                : linea === null ? 'Falta el Paso 1: señale la línea que contiene el error.'
-                    : tipo === null ? 'Falta el Paso 2: clasifique el tipo de error.'
-                        : null;
+            // que muestra «Comprobar (2/4)»— y se nombran los pasos que faltan.
+            const pendientes = [
+                linea === null && 'señale la línea (Paso 1)',
+                tipo === null && 'clasifique el error (Paso 2)',
+                conConsecuencia && consecuencia === null && 'anticipe la consecuencia (Paso 3)',
+            ].filter(Boolean);
+            const hechos = pasos - pendientes.length;
+            const listo = pendientes.length === 0;
+            const unir = (partes) => partes.length < 2 ? partes.join('')
+                : `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}`;
+            const queFalta = listo ? null
+                : pendientes.length === 1 ? `Falta un paso: ${pendientes[0]}.`
+                    : `Para poder comprobar: ${unir(pendientes)}.`;
+            const fallados = [
+                !lineaOk && 'la línea',
+                !tipoOk && 'el tipo de error',
+                !consecuenciaOk && 'la consecuencia',
+            ].filter(Boolean);
+            const veredicto = fallados.length === 0 ? '¡Diagnóstico correcto!'
+                : fallados.length === pasos ? `No acertó ningún paso: revise ${unir(fallados)}.`
+                    : `Revise ${unir(fallados)}: lo demás está bien.`;
+            const reintentar = () => { setComprobado(false); setLinea(null); setTipo(null); setConsecuencia(null); };
+
+            // Los pasos 2 y 3 son la misma pieza: opciones con letra que se
+            // colorean al comprobar.
+            const opcionesDe = (lista, elegida, elegir, correcta) => (
+                <div className="space-y-1.5 mb-3">
+                    {lista.map((t, i) => {
+                        const sel = elegida === i;
+                        let cls = 'border-gray-200 bg-white hover:border-primary/40';
+                        if (comprobado) {
+                            if (i === correcta) cls = 'border-green-500 bg-green-50';
+                            else if (sel) cls = 'border-red-400 bg-red-50';
+                            else cls = 'border-gray-200 bg-white opacity-70';
+                        } else if (sel) cls = 'border-secondary bg-amber-50';
+                        return (
+                            <button key={i} onClick={() => !comprobado && elegir(i)} disabled={comprobado} aria-pressed={sel}
+                                className={`w-full text-left px-3 py-2 rounded-lg border text-[0.9rem] flex items-center gap-2.5 transition-all ${cls}`}>
+                                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[0.7rem] font-bold ${sel ? 'lp-gradient text-white' : 'bg-gray-100 text-gray-600'}`}>
+                                    {String.fromCharCode(97 + i)}
+                                </span>
+                                <span className="flex-1 text-gray-700">{t}</span>
+                                {comprobado && i === correcta && <i className="fas fa-check text-green-600 text-xs"></i>}
+                            </button>
+                        );
+                    })}
+                </div>
+            );
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 p-5 shadow-sm" style={{ borderColor: '#FCA5A5', background: '#FFFBFB' }}>
@@ -1677,35 +1727,20 @@
                     </div>
 
                     <p className="text-xs font-semibold text-gray-600 mb-1"><span className="text-red-700">Paso 2.</span> Clasifique el tipo de error:</p>
-                    <div className="space-y-1.5 mb-3">
-                        {tipos.map((t, i) => {
-                            const sel = tipo === i;
-                            let cls = 'border-gray-200 bg-white hover:border-primary/40';
-                            if (comprobado) {
-                                if (i === tipoCorrecto) cls = 'border-green-500 bg-green-50';
-                                else if (sel) cls = 'border-red-400 bg-red-50';
-                                else cls = 'border-gray-200 bg-white opacity-70';
-                            } else if (sel) cls = 'border-secondary bg-amber-50';
-                            return (
-                                <button key={i} onClick={() => !comprobado && setTipo(i)} disabled={comprobado}
-                                    className={`w-full text-left px-3 py-2 rounded-lg border text-[0.9rem] flex items-center gap-2.5 transition-all ${cls}`}>
-                                    <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[0.7rem] font-bold ${sel ? 'lp-gradient text-white' : 'bg-gray-100 text-gray-600'}`}>
-                                        {String.fromCharCode(97 + i)}
-                                    </span>
-                                    <span className="flex-1 text-gray-700">{t}</span>
-                                    {comprobado && i === tipoCorrecto && <i className="fas fa-check text-green-600 text-xs"></i>}
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {opcionesDe(tipos, tipo, setTipo, tipoCorrecto)}
+
+                    {conConsecuencia && <>
+                        <p className="text-xs font-semibold text-gray-600 mb-1"><span className="text-red-700">Paso 3.</span> Anticipe la consecuencia:</p>
+                        {opcionesDe(consecuencias, consecuencia, setConsecuencia, consecuenciaCorrecta)}
+                    </>}
 
                     <div className="flex items-center gap-3 flex-wrap">
                         {!comprobado
                             ? <button onClick={() => listo && setComprobado(true)} disabled={!listo}
                                 className="text-sm font-bold px-4 py-1.5 rounded-full text-white lp-gradient disabled:opacity-40">
-                                <i className="fas fa-magnifying-glass mr-1"></i>Comprobar diagnóstico ({hechos}/2)
+                                <i className="fas fa-magnifying-glass mr-1"></i>Comprobar diagnóstico ({hechos}/{pasos})
                             </button>
-                            : <button onClick={() => { setComprobado(false); setLinea(null); setTipo(null); }}
+                            : <button onClick={reintentar}
                                 className="text-sm font-bold px-4 py-1.5 rounded-full border border-primary text-primary hover:bg-primary/5">
                                 <i className="fas fa-rotate-right mr-1"></i>Reintentar
                             </button>}
@@ -1715,12 +1750,9 @@
                             </span>
                         )}
                         {comprobado && (
-                            <span className={`text-sm font-bold ${lineaOk && tipoOk ? 'text-green-600' : 'text-red-500'}`}>
-                                <i className={`fas ${lineaOk && tipoOk ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
-                                {lineaOk && tipoOk ? '¡Diagnóstico correcto!'
-                                    : lineaOk ? 'Ubicó bien la línea, pero el tipo de error no es ese.'
-                                        : tipoOk ? 'Clasificó bien el tipo, pero el error está en otra línea.'
-                                            : 'Ni la línea ni el tipo son correctos.'}
+                            <span className={`text-sm font-bold ${fallados.length === 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                <i className={`fas ${fallados.length === 0 ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
+                                {veredicto}
                             </span>
                         )}
                     </div>
@@ -2813,6 +2845,13 @@ Debug.Print saldo`,
                         'Error de alcance: la variable se usa fuera del bloque donde fue declarada.',
                     ]}
                     tipoCorrecto={1}
+                    consecuencias={[
+                        'Se detiene con un error: ningún lenguaje deja multiplicar un capital por un porcentaje.',
+                        'Sobre 10 000 000 informa un interés de 18 000 000: diez veces el correcto, sin avisar.',
+                        'Sobre 10 000 000 informa un interés de 1 800: mil veces menos que el correcto, sin avisar.',
+                        'Sobre 10 000 000 informa un interés de 180 000 000: cien veces el correcto, sin avisar.',
+                    ]}
+                    consecuenciaCorrecta={3}
                     explicacion={ERROR_EXPLICACION}
                     impacto={<>Sobre un capital de $10 000 000 el algoritmo reporta un interés de <strong>$180 000 000</strong> en vez de <strong>$1 800 000</strong>: cien veces más. Si esa cifra alimenta una liquidación o un reporte de cartera, el error es inmediato y visible; si alimenta una provisión contable promediada entre miles de créditos, puede pasar inadvertido durante meses.</>}
                 />

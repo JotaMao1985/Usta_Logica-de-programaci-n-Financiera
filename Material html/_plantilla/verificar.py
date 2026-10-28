@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y veintidós sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y veintitrés sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -54,6 +54,7 @@ Comprueba una cosa sobre la plantilla y veintidós sobre cada archivo HTML de ca
      dos varas: el doble que el distractor más largo, o —siendo la más larga de
      todas— vez y media la media de los suyos. Si alguna opción es corta
      (cifras, «RAM»), le tiene que sacar además 8 caracteres al más largo.
+     Mira también los `tipos` y las `consecuencias` de los `DetectaError`.
  18. PREGUNTA REPETIDA — que el cuestionario final no vuelva a plantear un
      ejercicio ya respondido, ni copiando una opción —también con un prefijo
      delante— ni reescribiéndola: si dos o más opciones dicen lo que decía un
@@ -85,6 +86,12 @@ Comprueba una cosa sobre la plantilla y veintidós sobre cada archivo HTML de ca
      tenía regla: un cambio hecho en el capítulo pasaba en verde y la siguiente
      reestampada lo deshacía. Le pasó al espacio duro de «{progreso} %», que se
      corrigió en los cinco capítulos y no en `lp-demo.jsx`.
+ 24. E3 COMPLETO — que todo `DetectaError` pida anticipar la consecuencia:
+     `consecuencias` con tres opciones o más y una `consecuenciaCorrecta` que
+     señale una de ellas. La taxonomía lo pide desde el principio y el
+     componente solo mostraba el `impacto`; ahora tiene un Paso 3, pero sin
+     `consecuencias` se queda en dos pasos en vez de romperse, y sin esta
+     regla un E3 a medias daba verde.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -212,7 +219,12 @@ def secciones_sin_motivacion(cuerpo):
 
 
 def bloques_de(cuerpo, componente):
-    """Devuelve el texto de cada `<Componente ... />` del cuerpo.
+    """Devuelve el texto de cada `<Componente ... />` del cuerpo."""
+    return [b for _i, b in bloques_con_posicion(cuerpo, componente)]
+
+
+def bloques_con_posicion(cuerpo, componente):
+    """(inicio, texto) de cada `<Componente ... />` del cuerpo.
 
     No se puede usar una expresión regular perezosa hasta `/>`: un fragmento
     JSX (`enunciado={<>...</>}`) termina en `</>`, que contiene `/>`, y el
@@ -237,7 +249,7 @@ def bloques_de(cuerpo, componente):
                 j += 1
                 break
             j += 1
-        salida.append(cuerpo[i:j])
+        salida.append((i, cuerpo[i:j]))
     return salida
 
 
@@ -896,20 +908,50 @@ def items_de_opciones(cuerpo):
     return items
 
 
+# Las dos preguntas de opción múltiple de un `DetectaError`, con su clave: el
+# Paso 2 (el tipo de error) y el Paso 3 (la consecuencia).
+PREGUNTAS_DE_DETECTAERROR = (("tipos", "tipoCorrecto"), ("consecuencias", "consecuenciaCorrecta"))
+
+
+def items_de_detectaerror(limpio):
+    """Los pasos 2 y 3 de cada `DetectaError`, como ítems de opción múltiple.
+
+    No se escriben con `opciones` —son cadenas sueltas y la clave va aparte,
+    como índice—, así que `items_de_opciones` no los ve. Hasta el 2026-10-27
+    la regla 16 los leía con su propia expresión y la 17 no los miraba: tres
+    E3 publicados delataban el tipo correcto por el tamaño y pasaban en verde.
+
+    Devuelve (inicio, [(texto, es_clave), ...]) por pregunta. Solo cuenta un
+    arreglo escrito en el propio ejercicio; si la clave no señala ninguna
+    opción, ninguna sale como clave (de eso avisa la regla 24).
+    """
+    items = []
+    for ini, bloque in bloques_con_posicion(limpio, "DetectaError"):
+        for prop, prop_clave in PREGUNTAS_DE_DETECTAERROR:
+            m = re.search(r"\b" + prop + r"\s*=\s*\{\s*\[", bloque)
+            if not m:
+                continue
+            textos = re.findall(r"'((?:[^'\\]|\\.)*)'", valor_de_prop(bloque, prop), re.S)
+            clave = (valor_de_prop(bloque, prop_clave) or "").strip()
+            k = int(clave) if clave.isdigit() else None
+            items.append((ini + m.start(), [(texto, n == k) for n, texto in enumerate(textos)]))
+    return items
+
+
 def claves_del_capitulo(cuerpo):
     """Posición de la clave en TODOS los ítems, en orden de lectura.
 
-    Incluye los `tipoCorrecto` de los `DetectaError`, que también son una
-    pregunta de opción múltiple aunque no se escriban con `opciones`.
+    Incluye los pasos 2 y 3 de los `DetectaError` —el tipo y la consecuencia—,
+    que también son preguntas de opción múltiple aunque no se escriban con
+    `opciones`.
     """
     limpio = _sin_comentarios(cuerpo)
     claves = []
-    for ini, _fin, opciones in items_de_opciones(limpio):
+    items = [(ini, opciones) for ini, _fin, opciones in items_de_opciones(limpio)]
+    for ini, opciones in items + items_de_detectaerror(limpio):
         primera = next((k for k, (_t, ok) in enumerate(opciones) if ok), None)
         if primera is not None:
             claves.append((ini, primera, len(opciones)))
-    for m in re.finditer(r"tipoCorrecto=\{(\d+)\}", limpio):
-        claves.append((m.start(), int(m.group(1)), 4))
     claves.sort()
     return claves
 
@@ -997,10 +1039,15 @@ def clave_mas_larga(texto, cuerpo, desplazamiento):
     `'21 (16 + 4 + 1 = 21)'` contra `'17'` y `'10101'`. El margen sale de lo
     medido: el caso real más ajustado le sacaba 9 (`'255 (2⁸ - 1).'` contra
     `'1024'`), y las listas de cifras se diferencian en 1 a 4.
+
+    Desde el 2026-10-27 mira también los `tipos` y las `consecuencias` de los
+    `DetectaError`, que antes no veía: dos E3 del capítulo 1 y uno del 3 se
+    delataban así.
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
-    for ini, _fin, opciones in items_de_opciones(limpio):
+    items = [(ini, opciones) for ini, _fin, opciones in items_de_opciones(limpio)]
+    for ini, opciones in items + items_de_detectaerror(limpio):
         largos = [len(t) for t, _ok in opciones]
         correctas = [k for k, (_t, ok) in enumerate(opciones) if ok]
         if len(correctas) != 1 or len(opciones) < 3:
@@ -1097,7 +1144,8 @@ def opcion_repetida(texto, cuerpo, desplazamiento):
        ruido.
 
     Se comparan las opciones del cuestionario contra las de todo lo anterior,
-    incluidos los `tipos` de los `DetectaError`, que también son opciones.
+    incluidos los `tipos` y las `consecuencias` de los `DetectaError`, que
+    también son opciones.
     """
     avisos = []
     limpio = _sin_comentarios(cuerpo)
@@ -1111,10 +1159,10 @@ def opcion_repetida(texto, cuerpo, desplazamiento):
             continue
         destino = despues if ini > q else antes
         destino.append((ini, [t for t, _ok in opciones if len(t) >= 25]))
-    for m in re.finditer(r"tipos=\{\[(.*?)\]\}", limpio, re.S):
-        tipos = [t for t in re.findall(r"'(.*?)'", m.group(1), re.S) if len(t) >= 25]
-        if tipos:
-            antes.append((m.start(), tipos))
+    for ini, opciones in items_de_detectaerror(limpio):
+        largas = [t for t, _ok in opciones if len(t) >= 25]
+        if largas:
+            antes.append((ini, largas))
 
     for ini, opciones in despues:
         linea_q = linea_de(texto, desplazamiento + ini)
@@ -1246,6 +1294,35 @@ def app_desactualizado(texto):
                     f"        el App es plantilla: se cambia en lp-demo.jsx, se ensambla y se "
                     f"reestampa con migrar.py; editado aquí, la próxima reestampada lo deshace")
     return None
+
+
+# ------------------------------------------------------------ 24 · E3 completo
+# La taxonomía pide al E3 nombrar el error y ANTICIPAR su consecuencia. Hasta el
+# 2026-10-27 `DetectaError` pedía la línea y el tipo y luego mostraba el
+# `impacto`, sin preguntarlo. Ahora tiene un Paso 3; sin `consecuencias` se
+# queda en dos pasos en vez de dejar el capítulo en blanco, y por eso hace
+# falta la regla: olvidarlas daba un ejercicio a medias en verde.
+def e3_sin_consecuencia(texto, cuerpo, desplazamiento):
+    fallos = []
+    for ini, bloque in bloques_con_posicion(_sin_comentarios(cuerpo), "DetectaError"):
+        donde = f"línea {linea_de(texto, desplazamiento + ini)}"
+        valor = valor_de_prop(bloque, "consecuencias")
+        clave = (valor_de_prop(bloque, "consecuenciaCorrecta") or "").strip()
+        if valor is None:
+            fallos.append(f"{donde}: sin `consecuencias`; el E3 pide anticipar la "
+                          f"consecuencia, no solo mostrarla en el `impacto`")
+            continue
+        if not re.match(r"\s*\[", valor):
+            fallos.append(f"{donde}: `consecuencias` no es un arreglo escrito en el "
+                          f"ejercicio; la regla no puede contar sus opciones")
+            continue
+        n = len(re.findall(r"'((?:[^'\\]|\\.)*)'", valor, re.S))
+        if n < 3:
+            fallos.append(f"{donde}: `consecuencias` trae {n} opciones; hacen falta al menos 3")
+        elif not clave.isdigit() or int(clave) >= n:
+            fallos.append(f"{donde}: `consecuenciaCorrecta` falta o no señala ninguna "
+                          f"de las {n} consecuencias")
+    return fallos
 
 
 def jsx_compila(ruta):
@@ -1424,6 +1501,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     desfase_app = app_desactualizado(texto)
     if desfase_app:
         problemas.append(f"App — {desfase_app}")
+
+    # 24 · todo E3 pide anticipar la consecuencia
+    for f in e3_sin_consecuencia(texto, cuerpo, desplazamiento):
+        problemas.append(f"E3 — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
