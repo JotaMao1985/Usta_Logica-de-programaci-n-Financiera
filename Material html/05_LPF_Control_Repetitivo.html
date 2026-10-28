@@ -4646,12 +4646,13 @@ Debug.Print cobrado`,
            SECCIÓN 4 — PARA: CUANDO SE SABE CUÁNTAS VECES
         ============================================================ */
         /* El plan de pagos del hilo del curso: 10 000 000 al 1,5 % mensual en
-           12 cuotas. La cuota va sin redondear (P6, H14), y por eso la última
-           fila sale con −0.00: el saldo que queda es −7,5 × 10⁻⁸, el residuo
-           de la sección 6. En R se usa 1:n a propósito: con n = 12 funciona, y
-           el recuadro de los cuatro lenguajes muestra cuándo no. Salidas de
-           Python y R ejecutadas el 2026-10-19. La de VBA no se ejecutó (R10
-           del plan), y el −0.00 de su última fila está sin cotejar en Excel. */
+           12 cuotas. La cuota va sin redondear (P6, H14), y por eso el saldo
+           que queda es −7,5 × 10⁻⁸, el residuo de la sección 6. Python y R
+           escriben la última fila con −0.00; el Format de VBA, con 0.00, sin
+           signo. En R se usa 1:n a propósito: con n = 12 funciona, y el
+           recuadro de los cuatro lenguajes muestra cuándo no. Salidas de Python
+           y R ejecutadas el 2026-10-19; la de VBA, en Excel el 2026-10-27, con
+           ejecutar_vba.py. */
         const EJ_PLAN_PAGOS = {
             pseudo: `Inicio
     // Plan de pagos: 10 000 000 al 1,5 % mensual en 12 cuotas
@@ -4804,7 +4805,7 @@ Sub PlanDePagos()
     '> 9  53005.49  863794.44  2669905.14
     '> 10  40048.58  876751.35  1793153.78
     '> 11  26897.31  889902.62  903251.16
-    '> 12  13548.77  903251.16  -0.00
+    '> 12  13548.77  903251.16  0.00
 
     Debug.Print "Intereses: " & Format(totalIntereses, "0.00")
     '> Intereses: 1001599.15
@@ -5172,7 +5173,7 @@ Loop`,
                 <CodeTabs
                     titulo="El plan de pagos del crédito de la motivación"
                     bloques={EJ_PLAN_PAGOS}
-                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. La última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
+                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. En pseudocódigo, Python y R, la última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. VBA guarda el mismo residuo, pero su Format escribe 0.00, sin el signo: que la tabla diga cero no quiere decir que el saldo lo sea. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
 
                 <Box type="info" label="Lo que hace un banco de verdad">
                     Un banco redondea la cuota al peso —aquí serían 916 800— y ajusta la última para que el saldo
@@ -6204,7 +6205,7 @@ End Sub`,
             <>
                 La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. En la aritmética del
                 contrato, la cuota está calculada para que doce cuotas dejen el saldo exactamente en cero. En la de
-                la máquina lo dejan en −7,5 × 10⁻⁸, el residuo que la sección 4 imprimió como −0.00. Ese número no es
+                la máquina lo dejan en −7,5 × 10⁻⁸, el mismo residuo de la última fila de la sección 4. Ese número no es
                 cero, así que la condición sigue verdadera y el ciclo da la vuelta 13: cobra otra cuota, y el saldo
                 queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
                 negativo el interés es negativo y el abono crece. La condición no vuelve a ser falsa: la salida de

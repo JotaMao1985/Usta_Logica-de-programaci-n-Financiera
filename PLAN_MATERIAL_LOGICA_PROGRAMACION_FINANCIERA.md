@@ -2125,6 +2125,35 @@ dentro del primero: «Ambiguous name detected».
     Excel». La `nota` del `CodeTabs` («La última fila sale con −0.00 y no con
     0.00») vale para tres lenguajes, no para VBA.
 
+**Corregidas el mismo día.** Con el visto bueno del docente, las cinco salidas
+declaradas dicen ahora lo que imprime Excel:
+- « 150» y « 3», con su espacio;
+- las dos del 3, con las zonas de 14 columnas;
+- la última fila del plan de pagos, con «0.00».
+
+En el 5 cambiaron además tres textos:
+- el comentario del bloque;
+- la `nota` del `CodeTabs`, que ahora dice que VBA guarda el mismo residuo y que
+  su `Format` lo escribe sin signo («que la tabla diga cero no quiere decir que
+  el saldo lo sea»);
+- una frase de la explicación del E3 de la sección 6, que decía que la sección 4
+  «imprimió» −0.00.
+
+*Cómo se comprobó sin volver a pegar los módulos:*
+- El arnés generado con el material corregido es, byte a byte, el que está
+  pegado en Excel: solo cambiaron líneas `'>` y prosa.
+- La salida de esa corrida, contra las salidas declaradas de hoy, da 32 bloques
+  exactos, 10 iguales salvo el separador decimal y ninguno que no cuadre.
+- `verificar.py --con-salidas` y la sonda en modo `file` pasan.
+
+El libro de Excel salió del repositorio: está en `Usta 2026II/Arnes_VBA_LPF.xlsm`,
+con los dos módulos de esta corrida.
+
 **Lo que queda.**
-- Corregir esas cinco salidas declaradas. Es contenido publicado, y espera
-  decisión del docente.
+- **El identificador del arnés incluye las salidas declaradas, y la hora.**
+  Corregir un `'>` obliga a preparar y pegar de nuevo los módulos aunque el
+  código VBA no haya cambiado. Si la huella mirara solo el código, `preparar`
+  daría el mismo identificador y `comparar` correría con el módulo ya pegado.
+- **El material no explica todavía ninguna de las dos rarezas de `Debug.Print`:**
+  el espacio que escribe delante de un número y las zonas de 14 columnas. Es
+  tema del capítulo 6.

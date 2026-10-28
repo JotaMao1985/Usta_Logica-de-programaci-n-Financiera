@@ -3,7 +3,7 @@
 **Rama:** `cap05/control-repetitivo`, en el *worktree* `.claude/worktrees/cap05` · **Base:** `main` (b4712a2) · **Fecha:** 2026-09-28
 **Encargo:** `PLAN_MATERIAL_LOGICA_PROGRAMACION_FINANCIERA.md` §5 (Capítulo 5) y §6 (Tarea 10)
 **Skill:** `lpf-capitulo`
-**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 21) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. El 2026-10-27 se comprobó la apertura desde `file://` y la rama recogió la del desborde del 2, con su regla 20 del `head`; la de las cifras pasó a ser la 21. El mismo día se pagaron las deudas de LP-CORE (P3) en su propia rama. Siguiente: la revisión del docente en el punto de control final.
+**Estado:** PC0 y PC1 aprobados el 2026-09-28 (§9); PC2 aprobado el 2026-10-18. El 2026-10-19 se trajo `main` y se escribieron las secciones 4 y 5 (Tareas 2.4 y 2.5); la 4 quedó aprobada ese día. El 2026-10-20 se revisó el contenido de los capítulos 4 y 5 y se corrigieron sus graves y medios (H18); el docente aprobó las correcciones y ese mismo día se escribió la sección 6 (Tarea 2.6). Al revisarla pidió tres cosas, hechas el mismo día: el centinela pasó a −1, las cifras ya no se parten en los cinco capítulos (H19, regla 21) y VBA se ejecuta en Excel con un arnés (R10), que falta correr. El docente aprobó las correcciones, y ese mismo día se escribió la sección 7 (Tarea 2.7). El 2026-10-21 se escribieron la evaluación y el glosario (Tarea 2.8), y con ellos se retiró la marca `BORRADOR-FASE1`: la Fase 2 está escrita. El docente aprobó el PC3 el 2026-10-21, y ese mismo día se hizo la Fase 3, la auditoría: un error y trece afirmaciones inexactas corregidos, y el PC4 listo para su revisión. El docente aprobó el PC4 ese mismo día, y se hizo la Fase 4: ocho cloze en el banco privado, la tarjeta del portal y el cierre. El 2026-10-27 se comprobó la apertura desde `file://` y la rama recogió la del desborde del 2, con su regla 20 del `head`; la de las cifras pasó a ser la 21. El mismo día se pagaron las deudas de LP-CORE (P3) en su propia rama. El 2026-10-27, además, el arnés de VBA corrió en Excel, y la última fila del plan de pagos pasó a «0.00» en VBA. Siguiente: la revisión del docente en el punto de control final.
 
 ---
 
@@ -856,7 +856,9 @@ ningún elemento fuera en ningún estado: bloque desplegado, tabla de 240 filas,
 cuarto panel de R, explicaciones abiertas y el E3 en los cuatro lenguajes. Y no
 hay ningún espacio comido en los 104 elementos en línea. Las dos pruebas se
 hicieron antes en negativo. *Sin cotejar:* el −0.00 de la última fila en VBA
-(R10), y si `Format` lo imprime con signo.
+(R10), y si `Format` lo imprime con signo. *Cotejado el 2026-10-27, en Excel:*
+`Format` lo escribe sin signo, «0.00»; la salida declarada, el comentario del
+bloque y la `nota` se corrigieron.
 
 *Cómo se probó en el navegador:* el servidor «portal» no se pudo arrancar,
 porque la tarea corrió programada y el arranque se rechazó. El archivo se abrió
@@ -1612,7 +1614,7 @@ que no para).
 | R7 | **Cloze intermitentes**, por la notación científica o por sorteos que no distinguen | Medio | `num()` desde el primer `.Rmd`, reglas de H3 y H4, y `--reps 1000` |
 | R8 | **Una pregunta imposible de acertar** en la evaluación | Alto | `multiple: true`, regla 12, y responder las diez |
 | R9 | **Choque con la sesión que revisa el capítulo 4** en la misma carpeta | Medio | Rama en un *worktree*; esta tarea no toca el capítulo 4 |
-| R10 | **El VBA no se puede ejecutar** en esta máquina (R2 del plan maestro) | Medio | `Do…Loop Until` y `For…Next` se escriben y se cotejan con la referencia; lo que el texto afirme del contador en VBA (H4) va con su fuente. **2026-10-20:** sí se puede: hay Excel para Mac (16.112), y `_plantilla/ejecutar_vba.py` arma un módulo de arnés con los bloques que declaran `'>`, lo corre por AppleScript y compara. Solo pegar el módulo en el editor de VBA es a mano. Sin probar todavía contra Excel; la lectura y la comparación, sí, con una salida simulada |
+| R10 | **El VBA no se puede ejecutar** en esta máquina (R2 del plan maestro) | Medio | `Do…Loop Until` y `For…Next` se escriben y se cotejan con la referencia; lo que el texto afirme del contador en VBA (H4) va con su fuente. **2026-10-20:** sí se puede: hay Excel para Mac (16.112), y `_plantilla/ejecutar_vba.py` arma un módulo de arnés con los bloques que declaran `'>`, lo corre por AppleScript y compara. Solo pegar el módulo en el editor de VBA es a mano. Sin probar todavía contra Excel; la lectura y la comparación, sí, con una salida simulada. **2026-10-27:** corrió en Excel: 42 bloques, y todos cuadran tras corregir cinco salidas declaradas (bitácora del plan maestro, §11) |
 
 ---
 

@@ -4168,7 +4168,7 @@ cat(mensual_a, mensual_b)
             vba: `mensualA = 0.018              ' oferta A, ya mensual
 mensualB = 0.24 / 12          ' oferta B, nominal anual / 12
 Debug.Print mensualA, mensualB
-'> 0.018  0.02`,
+'>  0.018         0.02`,
         };
         const CMP_EFECTIVAS = {
             pseudo: `efectivaA <- (1 + 0.018) ^ 12 - 1
@@ -4186,7 +4186,7 @@ cat(round(efectiva_a, 6), round(efectiva_b, 6))
             vba: `efectivaA = (1 + 0.018) ^ 12 - 1
 efectivaB = (1 + 0.24 / 12) ^ 12 - 1
 Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
-'> 0.238721  0.268242`,
+'>  0.238721      0.268242`,
         };
 
         /* --- Artefacto propio del capítulo: conversión de tasas en vivo.
