@@ -569,12 +569,34 @@ def contraste_dudoso(texto, _cuerpo, _desplazamiento):
 # ----------------------------------------------------------- 11 · enunciados
 
 PIDE_PROGRAMA = re.compile(
-    r"\b(?:escrib\w+|redact\w+|cree|creen|implement\w+|desarroll\w+|codifiqu\w+"
+    r"\b(?P<verbo>escrib\w+|redact\w+|cree|creen|implement\w+|desarroll\w+|codifiqu\w+"
     r"|construy\w+|elabor\w+|program(?:e|en))"
     r"\s+(?:un|una|el|la|los|las|su|sus)?\s*"
     r"(?:programas?|funci[oó]n|funciones|algoritmos?|scripts?|macros?"
     r"|procedimientos?|subrutinas?)\b",
     re.I)
+
+# «¿Qué escribe el programa?» no encarga nada: pregunta por lo que imprime, y el
+# programa es el sujeto. Solo «escribir» tiene los dos sentidos, y se distingue
+# del encargo por dos cosas a la vez:
+#   · el verbo va en tercera persona del indicativo: «escribe», «escriben»,
+#     «escribió», «escribirá»;
+#   · un interrogativo o un relativo va justo antes, a dos palabras como mucho y
+#     sin una conjunción de por medio: «¿qué…?», «¿qué cifra…?», «¿cuántas
+#     líneas…?», «lo que…».
+# «Escriba un programa que…» no tiene ninguna de las dos. «Escribe un programa
+# que…», en tuteo, tiene la primera y no la segunda, y la regla lo sigue cazando.
+ESCRIBE_INDICATIVO = re.compile(r"escrib(?:e|en|i[oó]|ieron|ir[aá]n?|ir[ií]an?)", re.I)
+PREGUNTA_ANTES = re.compile(
+    r"(?:^|[\s¿(«])(?:qu[eé]|cu[aá]nt[oa]s?|cu[aá]l(?:es)?)"
+    r"(?:\s+(?!(?:y|e|o|u|ni)\b)\w+){0,2}\s*$", re.I)
+
+
+def pregunta_por_la_salida(texto, m):
+    """True si `m` es «¿Qué escribe el programa?» y no un encargo."""
+    return bool(ESCRIBE_INDICATIVO.fullmatch(m.group("verbo"))
+                and PREGUNTA_ANTES.search(texto[:m.start()]))
+
 
 PROPS_ENUNCIADO = ("enunciado", "pregunta", "titulo")
 
@@ -622,12 +644,30 @@ def pide_escribir_programa(texto, cuerpo, desplazamiento):
     en la prosa de la exposición. Ahí la frase es legítima («en el taller se le
     pedirá escribir un programa que…») y marcarla como falla haría que el
     verificador mintiera, que es peor que no comprobar.
+
+    «¿Qué escribe el programa?» pregunta por la salida, no encarga nada, y
+    hasta el 2026-11-02 la regla lo tomaba por un encargo: el capítulo 5 tuvo
+    que redactar su pregunta de otro modo (H18). Ahora la deja pasar
+    (`pregunta_por_la_salida`). Prueba negativa del 2026-11-02, en los dos
+    sentidos:
+      · pasan «¿Qué escribe el programa?», «¿Qué escribe el programa al
+        terminar?», «Diga qué escribe la función con n = 0», «¿Qué cifra
+        escribe el programa?», «¿Cuántas líneas escriben los programas?» y
+        «Lo que escribe el programa no es la cuota»;
+      · siguen fallando «Escriba un programa que calcule la cuota», «Escribe
+        un programa que sume», «Escriba el programa que falta», «Lea el
+        código y escriba una función que…», «Implemente un algoritmo que…»,
+        «Diga qué hace y escriba un programa que…» y «¿Qué falta? Escriba el
+        programa».
+    Con la regla de antes, las seis primeras fallaban.
     """
     fallos = []
     trozos = [(p, v) for prop in PROPS_ENUNCIADO for p, v in valores_de(cuerpo, prop)]
     trozos += list(cuerpos_de_reto(cuerpo))
     for pos, valor in trozos:
-        m = PIDE_PROGRAMA.search(re.sub(r"<[^>]*>", " ", valor))
+        plano = re.sub(r"<[^>]*>", " ", valor)
+        m = next((m for m in PIDE_PROGRAMA.finditer(plano)
+                  if not pregunta_por_la_salida(plano, m)), None)
         if m:
             fallos.append(
                 f"línea {linea_de(texto, desplazamiento + pos)}: «{m.group(0)}» pide "
