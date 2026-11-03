@@ -33,10 +33,24 @@
  *   · la librería LP-CORE, que se estampa y no se edita a mano;
  *   · los comentarios, que Babel ni siquiera entrega como nodos.
  *
- *   node comprobar_cifras.js <archivo.html>…              informa
- *   node comprobar_cifras.js --corregir <archivo.html>…   cambia los espacios
+ * El `App` se informa pero `--corregir` no lo toca. Es plantilla, como LP-CORE:
+ * `migrar.py` lo estampa desde `lp-base.html`, que lo toma de `lp-demo.jsx`.
+ * El 2026-10-20 este guion le puso el espacio duro de «{progreso} %» en los
+ * cinco capítulos y no en su fuente, y la reestampada del 2026-10-27 se lo
+ * quitó (de ahí la regla 23). Su tramo se delimita con las mismas anclas que
+ * `tramo_app` de `migrar.py`, de la línea de `const App = () => {` a la de
+ * `root.render(<App />);`, y una cifra que caiga ahí sale con el aviso de que
+ * el cambio va en `lp-demo.jsx`. Prueba negativa del 2026-11-02, sobre una
+ * copia del capítulo 5 con un espacio normal en «{progreso} %» y otro en una
+ * cifra de la prosa: `--corregir` cambia solo el de la prosa, avisa del otro y
+ * sale con 1; el guion anterior cambiaba los dos y salía con 0.
  *
- *   0 = nada que partir (o corregido) · 1 = hay cifras partibles · 2 = falta Babel
+ *   node comprobar_cifras.js <archivo.html>…              informa
+ *   node comprobar_cifras.js --corregir <archivo.html>…   cambia los espacios,
+ *                                                         salvo los del App
+ *
+ *   0 = nada que partir (o corregido) · 1 = hay cifras partibles, o quedan en
+ *   el App · 2 = falta Babel
  */
 'use strict';
 const fs = require('fs');
@@ -60,6 +74,9 @@ try {
 
 const DURO = '\u00A0';
 const MARCA_FIN = '/* === LP-CORE FIN === */';
+// Las anclas del App, las de `migrar.py`.
+const ANCLA_APP_INICIO = 'const App = () => {';
+const ANCLA_APP_FIN = 'root.render(<App />);';
 const LENGUAJES = new Set(['pseudo', 'python', 'r', 'vba']);
 const ATRIBUTOS_SVG = new Set(['viewBox', 'points', 'd', 'transform', 'className', 'style', 'id', 'key',
     'href', 'src', 'fill', 'stroke', 'x', 'y', 'x1', 'x2', 'y1', 'y2', 'cx', 'cy', 'r', 'rx', 'ry',
@@ -171,22 +188,43 @@ function analizar(ruta) {
 
 function lineaDe(texto, pos) { return texto.slice(0, pos).split('\n').length; }
 
-let hallados = 0;
+// [inicio, fin) del tramo del App, de línea entera a línea entera, como lo
+// delimita `tramo_app` en `migrar.py`; null si no están las anclas.
+function tramoApp(texto) {
+    const i = texto.indexOf(ANCLA_APP_INICIO);
+    const j = i === -1 ? -1 : texto.indexOf(ANCLA_APP_FIN, i);
+    if (j === -1) return null;
+    const fin = texto.indexOf('\n', j);
+    return [texto.lastIndexOf('\n', i) + 1, fin === -1 ? texto.length : fin + 1];
+}
+
+let hallados = 0, enApp = 0;
 for (const ruta of rutas) {
-    const { texto, cambios } = analizar(ruta);
+    const { texto, cambios: todos } = analizar(ruta);
+    const nombre = ruta.split('/').pop();
+    const app = tramoApp(texto);
+    const delApp = ([a]) => app && a >= app[0] && a < app[1];
+    const cambios = todos.filter(c => !delApp(c));
+    for (const [a, b] of todos.filter(delApp)) {
+        enApp++;
+        const ctx = texto.slice(Math.max(0, a - 22), b + 12).replace(/\s+/g, ' ');
+        console.log(`${nombre}:${lineaDe(texto, a)}: «…${ctx}…» está en el App, que es plantilla: ` +
+            `el cambio va en _plantilla/lp-demo.jsx; después, ensamblar.py y migrar.py` +
+            (corregir ? '. No se tocó.' : ''));
+    }
     if (!cambios.length) continue;
     if (corregir) {
         let nuevo = '', desde = 0;
         for (const [a, b, c] of cambios) { nuevo += texto.slice(desde, a) + c; desde = b; }
         nuevo += texto.slice(desde);
         fs.writeFileSync(ruta, nuevo);
-        console.log(`${ruta.split('/').pop()}: ${cambios.length} espacios cambiados`);
+        console.log(`${nombre}: ${cambios.length} espacios cambiados`);
         continue;
     }
     hallados += cambios.length;
     for (const [a, b] of cambios) {
         const ctx = texto.slice(Math.max(0, a - 22), b + 12).replace(/\s+/g, ' ');
-        console.log(`${ruta.split('/').pop()}:${lineaDe(texto, a)}: «…${ctx}…»`);
+        console.log(`${nombre}:${lineaDe(texto, a)}: «…${ctx}…»`);
     }
 }
-process.exit(!corregir && hallados ? 1 : 0);
+process.exit((!corregir && hallados) || enApp ? 1 : 0);
