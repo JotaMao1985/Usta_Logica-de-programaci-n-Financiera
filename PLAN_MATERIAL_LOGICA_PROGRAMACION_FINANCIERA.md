@@ -2294,3 +2294,14 @@ Pages terminó bien en 25 s. El portal y los capítulos 1, 4 y 5 que sirve el
 sitio son, byte a byte, los de `main`. El 5 carga en el navegador sin errores
 de consola.
 
+**El arnés de VBA, al día.** El mismo día se pegó en `Arnes_VBA_LPF.xlsm` el arnés
+`a5ae0595b7`, el primero con el identificador nuevo, y `comparar` dio 42 bloques:
+- 32 exactos;
+- 10 iguales salvo la coma decimal;
+- ninguno que no cuadre.
+
+Desde ahora solo hay que pegarlo cuando cambie el código VBA de algún capítulo.
+Un tropiezo al pegar: el portapapeles ya no tenía el módulo que `preparar` dejó
+ahí, porque algo se copió después. Conviene copiar cada módulo con `pbcopy`
+justo antes de pegarlo.
+
