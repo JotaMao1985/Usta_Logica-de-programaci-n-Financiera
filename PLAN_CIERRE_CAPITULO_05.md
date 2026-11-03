@@ -233,3 +233,23 @@ lateral cerrada:
 
 **`verificar.py --con-salidas`:** los cinco pasan. **La sonda,** en sus cuatro
 modos: los cinco pasan. El 5 a 375 px tiene los mismos recortes que la línea base.
+
+### PC3 · Fase 3 · herramientas · 2026-11-02
+
+Un commit por punto. Cada prueba negativa está registrada donde vive la regla.
+
+| Punto | Commit | Qué se hizo | Prueba negativa |
+|---|---|---|---|
+| `regla11` | `785b15e` | «Escribir» en tercera persona del indicativo y precedido de un interrogativo o un relativo («¿qué…?», «¿cuántas líneas…?», «lo que…») es la salida del programa, no un encargo | 6 frases que pasan, y que la regla de antes daba por encargos; 7 encargos que siguen fallando, entre ellos «Escribe un programa…» en tuteo y «Diga qué hace y escriba un programa…» |
+| `cifras-app` | `adb9a31` | `--corregir` salta el tramo del `App` (las anclas de `tramo_app`), avisa que el cambio va en `lp-demo.jsx` y sale con 1 | Sobre una copia con un espacio normal en «{progreso} %» y otro en la prosa: el guion nuevo corrige solo el de la prosa; el de antes, los dos, y salía con 0 |
+| `demo-regla17` | `3a73313` | La regla 17 sobre `lp-base.html` dio 3 avisos: E2 (71 contra una media de 34), E7 (98 contra 49) y la primera del `Quiz` (71 contra 40). Se reescribieron en `lp-demo.jsx` sin cambiar la clave y ahora da 0 | El diff de `lp-base.html` cae solo en la demostración (líneas 2829–3034 de 2327–3095). Las reglas 1, 13 y 23 pasan en los cinco sin reestampar. Dos ensamblados dan el mismo SHA-256 (`1faf8f79…`) |
+| `cotejar` | `64d8ef9` | Regla 25, de aviso: `//>` contra `#>` de Python. Se normalizan la coma de miles, los espacios y `True`/`False`. `SUMA_DECIMAL` del 1 es una excepción declarada junto con su salida | Medido antes: 42 bloques, 11 exactos y 31 con solo esas tres diferencias. Sobre copias: «Meses: 14» avisa, un dígito cambiado en un saldo con miles avisa, solo espacios no, y si cambia la salida de `SUMA_DECIMAL`, la excepción deja de valer. De punta a punta, `verificar.py` sobre la copia da AVISO, no FALLA |
+
+**Hallazgo de paso, sin tocar.** La clave del E2 de la demostración (1 000 000) solo
+vale en VBA, porque `Dim` pone el interés en 0. En Python, intercambiar las líneas
+3 y 4 da `NameError`, y en R, «object 'interes' not found». La demostración se
+sustituye al escribir un capítulo, así que no llega a ninguno. Decide tú si se
+arregla.
+
+**`verificar.py --con-salidas`** al final de la fase: los cinco capítulos pasan, sin
+avisos de la regla 25.
