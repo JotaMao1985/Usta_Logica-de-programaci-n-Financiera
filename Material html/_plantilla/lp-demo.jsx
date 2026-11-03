@@ -498,10 +498,10 @@ Debug.Print saldo`,
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Si en el algoritmo anterior se intercambian las líneas 3 y 4, ¿qué imprime la línea 5?"
                     opciones={[
-                        { texto: '1 020 000, igual que antes.', correcta: false },
-                        { texto: '1 000 000, porque en la línea 4 la variable interes aún no tiene valor.', correcta: true, justificacion: 'Al ejecutarse total <- capital + interes antes de calcular interes, esa variable vale cero (o está indefinida). El total queda igual al capital: el interés se pierde. Es el error de orden más común en liquidaciones.' },
-                        { texto: '20 000, el valor del interés.', correcta: false },
-                        { texto: 'Un error de sintaxis: el programa no compila.', correcta: false },
+                        { texto: '1 020 000, igual que antes: el orden de las dos líneas no cambia nada.', correcta: false },
+                        { texto: '1 000 000: en la línea 4, interes todavía no tiene valor.', correcta: true, justificacion: 'Al ejecutarse total <- capital + interes antes de calcular interes, esa variable vale cero (o está indefinida). El total queda igual al capital: el interés se pierde. Es el error de orden más común en liquidaciones.' },
+                        { texto: '20 000: después del cambio, la línea 5 imprime el interés.', correcta: false },
+                        { texto: 'Un error de sintaxis: con ese orden, el programa no compila.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -568,10 +568,10 @@ Debug.Print saldo`,
                 <Ejercicio tipo="E7"><MCQ
                     pregunta="Un algoritmo liquida un crédito de $10 000 000 a 12 meses y arroja un total a pagar de $12 160 000. ¿Qué se puede afirmar?"
                     opciones={[
-                        { texto: 'El cliente pagará $2 160 000 por el uso del dinero, es decir un 21,6 % del capital durante el año.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para el cliente o para el negocio. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas.' },
-                        { texto: 'La tasa mensual del crédito es del 21,6 %.', correcta: false },
-                        { texto: 'El banco perdió dinero en la operación.', correcta: false },
-                        { texto: 'No puede afirmarse nada sin conocer la inflación.', correcta: false },
+                        { texto: 'El crédito le cuesta al cliente $2 160 000: el 21,6 % del capital en un año.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para el cliente o para el negocio. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas.' },
+                        { texto: 'La tasa mensual del crédito es del 21,6 %, porque eso suman los intereses del año.', correcta: false },
+                        { texto: 'El banco perdió dinero en la operación, porque cada cuota es menor que lo prestado.', correcta: false },
+                        { texto: 'No puede afirmarse nada del costo del crédito sin conocer la inflación del año.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -700,10 +700,10 @@ Debug.Print saldo`,
                     {
                         pregunta: 'En el material, ¿cuál es el lenguaje normativo, es decir, el que se evalúa?',
                         opciones: [
-                            { texto: 'VBA, porque es el que usa el sector financiero.', correcta: false },
-                            { texto: 'El pseudocódigo, porque expresa la lógica sin atarla a una herramienta.', correcta: true },
-                            { texto: 'Python, por ser el más legible.', correcta: false },
-                            { texto: 'R, por el perfil cuantitativo del programa.', correcta: false },
+                            { texto: 'VBA, porque es el que usa a diario el sector financiero, dentro de Excel.', correcta: false },
+                            { texto: 'El pseudocódigo, que expresa la lógica sin atarla a una herramienta.', correcta: true },
+                            { texto: 'Python, porque de los cuatro es el más parecido al pseudocódigo.', correcta: false },
+                            { texto: 'R, porque encaja mejor con el perfil cuantitativo del programa.', correcta: false },
                         ],
                         justificacion: 'El RA1 del syllabus evalúa la construcción de algoritmos, no el dominio de un lenguaje. Los otros tres son traducciones que muestran que la lógica es invariante.',
                     },
