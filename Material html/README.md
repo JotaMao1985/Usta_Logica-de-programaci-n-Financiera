@@ -8,6 +8,16 @@ CDN, de modo que **hace falta conexión a internet** la primera vez (después el
 navegador los cachea). Si se necesitara uso sin conexión, habría que descargar
 esas seis librerías al disco; hoy no está hecho.
 
+**Tailwind tiene respaldo.** El 2026-11-03, un iPhone que no resolvía
+`cdn.tailwindcss.com` mostraba los cinco capítulos desarmados: sin Tailwind, la
+barra lateral no se esconde y nada tiene su sitio. Desde ese día el `head` carga
+la versión fijada (`/3.4.17`) y, si no llega, la copia de
+`_vendor/tailwind-3.4.17.js`, que se publica junto a los capítulos. La copia solo
+está en el sitio y en el repositorio: un capítulo descargado como archivo suelto
+sigue necesitando el CDN. Para cambiar de versión hay que cambiar las tres
+cosas juntas: la URL del CDN, el archivo de `_vendor/` y su nombre en el
+respaldo.
+
 ## Estructura
 
 ```
@@ -48,10 +58,16 @@ node "Material html/_plantilla/sonda_navegador.mjs" # y en un Chrome de verdad
 Hasta el 2026-10-27 las ignoraba, y un `--help` estampaba los cinco capítulos.
 
 **`sonda_navegador.mjs`** abre cada capítulo como `file://` en un Chrome sin
-ventana y recorre todas sus lecciones. Tiene cuatro modos: `file` (el de
-omisión: monta, guarda y no da errores de JavaScript), `375` (nada se sale a
-375 px), `sin-almacen` (con `localStorage` lanzando, como en una ventana
-privada) y `sin-cdnjs`. Existe porque el panel de vista previa no sirve para
+ventana y recorre todas sus lecciones. Tiene cinco modos:
+- `file`, el de omisión: monta, guarda y no da errores de JavaScript;
+- `375`: nada se sale a 375 px;
+- `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
+- `sin-cdnjs`;
+- `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar
+  de `_vendor/`.
+
+En todos exige además que Tailwind haya aplicado sus estilos. Hasta el
+2026-11-03, un capítulo sin estilos pasaba la sonda. Existe porque el panel de vista previa no sirve para
 eso: abre los `file://` como URL `data:`, congela las animaciones, y en él
 `requestAnimationFrame` no corre y `ResizeObserver` no notifica. Cualquier
 componente que se mida a sí mismo da allí una medida vieja sin ningún error.

@@ -20,6 +20,14 @@
  *   sin-almacen   `localStorage` lanza `SecurityError`, como en una ventana
  *                 privada o con el almacenamiento bloqueado (H16 del capítulo 5).
  *   sin-cdnjs     cdnjs no resuelve: el capítulo carga sin color en el código.
+ *   sin-tailwind  cdn.tailwindcss.com no resuelve, como en un iPhone el
+ *                 2026-11-03: Tailwind tiene que llegar de la copia de
+ *                 `_vendor/`, que el `head` carga cuando el CDN no responde.
+ *
+ * En todos los modos se exige además que Tailwind haya aplicado sus estilos:
+ * sin ellos el capítulo monta, recorre y no da errores, pero la barra lateral
+ * no se esconde y nada tiene su sitio. Antes de esta comprobación, un capítulo
+ * sin estilos pasaba la sonda.
  *
  * Por qué hace falta: en el panel de vista previa `requestAnimationFrame` no
  * corre y `ResizeObserver` no notifica (se midió el 2026-10-27), las
@@ -36,7 +44,9 @@ import { join, resolve, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const MODOS = new Set(['file', '375', 'sin-almacen', 'sin-cdnjs']);
+const MODOS = new Set(['file', '375', 'sin-almacen', 'sin-cdnjs', 'sin-tailwind']);
+// El host que cada modo deja sin resolver, y que por eso no cuenta como error.
+const SIN_HOST = { 'sin-cdnjs': 'cdnjs.cloudflare.com', 'sin-tailwind': 'cdn.tailwindcss.com' };
 const espera = ms => new Promise(r => setTimeout(r, ms));
 
 const args = process.argv.slice(2);
@@ -56,7 +66,7 @@ const perfil = mkdtempSync(join(tmpdir(), 'lpf-sonda-'));
 const chrome = spawn(CHROME, [
     '--headless=new', `--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`,
     '--no-first-run', '--no-default-browser-check', '--window-size=1280,900',
-    ...(modo === 'sin-cdnjs' ? ['--host-resolver-rules=MAP cdnjs.cloudflare.com ~NOTFOUND'] : []),
+    ...(SIN_HOST[modo] ? [`--host-resolver-rules=MAP ${SIN_HOST[modo]} ~NOTFOUND`] : []),
     'about:blank',
 ], { stdio: 'ignore' });
 const cerrar = async () => { try { chrome.kill(); } catch { } await espera(300); rmSync(perfil, { recursive: true, force: true }); };
@@ -118,6 +128,8 @@ const MEDIR = `(() => {
 })()`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
 const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].find(b => /^\\s*Siguiente/i.test(b.innerText) && !b.disabled); if (b) b.click(); return !!b; })()`;
+// Tailwind aplicado: `max-w-4xl` solo tiene ancho máximo si Tailwind generó su regla.
+const ESTILOS = `(() => { const e = document.querySelector('.max-w-4xl'); return !!window.tailwind && !!e && getComputedStyle(e).maxWidth !== 'none'; })()`;
 
 let fallos = 0;
 for (const ruta of rutas) {
@@ -151,12 +163,14 @@ for (const ruta of rutas) {
     }
     const errores = eventos.filter(e => e.method === 'Runtime.exceptionThrown' ||
         (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error') ||
-        (e.method === 'Log.entryAdded' && e.params.entry.level === 'error' && !(modo === 'sin-cdnjs' && /cdnjs/.test(e.params.entry.url || ''))));
+        (e.method === 'Log.entryAdded' && e.params.entry.level === 'error' && !(SIN_HOST[modo] && (e.params.entry.url || '').includes(SIN_HOST[modo]))));
     const guardado = modo === 'sin-almacen' ? 'sin almacenamiento'
         : await evaluar(`(() => { try { return Object.keys(localStorage).filter(k => k.startsWith('lpf_')).length + ' claves lpf_'; } catch (e) { return 'error: ' + e.message; } })()`);
     const recorrio = lecciones.length === total;
-    if (errores.length || !recorrio) fallos++;
-    console.log(`${errores.length || !recorrio ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · errores de JS: ${errores.length}`);
+    const conEstilos = await evaluar(ESTILOS);
+    const mal = errores.length || !recorrio || !conEstilos;
+    if (mal) fallos++;
+    console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
     if (modo === '375') console.log(`    ${lecciones.join(' · ')}`);
     for (const e of errores.slice(0, 3)) {
         const t = e.method === 'Runtime.exceptionThrown' ? (e.params.exceptionDetails.exception?.description || e.params.exceptionDetails.text)

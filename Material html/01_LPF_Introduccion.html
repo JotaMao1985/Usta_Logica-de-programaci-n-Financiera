@@ -14,7 +14,13 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <!-- Si cdn.tailwindcss.com no responde (un bloqueador o un DNS que no lo
+         resuelve, como en un iPhone el 2026-11-03), sin Tailwind el capítulo se
+         desarma: la barra lateral no se esconde y nada tiene su sitio. Entonces
+         se carga la copia que se publica junto a los capítulos, la misma versión.
+         document.write la carga aquí mismo, antes de tailwind.config. -->
+    <script>window.tailwind || document.write('<script src="_vendor/tailwind-3.4.17.js"><\/script>')</script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 

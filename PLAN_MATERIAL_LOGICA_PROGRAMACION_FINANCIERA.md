@@ -2308,3 +2308,42 @@ justo antes de pegarlo.
 **La Tarea 10, cerrada.** El mismo día, el docente terminó su lectura completa
 del capítulo 5 y abrió el sitio publicado en Safari. Era la última casilla del
 punto de control final.
+
+### Tailwind con respaldo: el capítulo 5 en un iPhone · 2026-11-03
+
+**Qué pasó.** En Safari de un iPhone, el capítulo 5 publicado salía desarmado y
+con tramos en blanco. Para ver sus errores se le sirvió al teléfono, por la red
+local, una copia que los escribía en pantalla:
+- `cdn.tailwindcss.com` no cargaba, y por eso fallaba `tailwind.config`;
+- React y el contenido sí llegaban, a los ocho segundos;
+- sin Tailwind, la barra lateral no se esconde y nada tiene su sitio.
+
+Abierto directamente en el iPhone, `cdn.tailwindcss.com` daba «Safari can't open
+the page because the server can't be found». El Mac, en la misma Wi-Fi, lo
+resolvía. Es algo del teléfono (un bloqueador, un perfil de DNS o el Relay
+privado), pero un estudiante con lo mismo vería los cinco capítulos así.
+
+**El arreglo.** El `head` de los cinco capítulos y de la plantilla:
+- fija la versión: `cdn.tailwindcss.com/3.4.17`, a la que ya redirigía la URL
+  sin versión;
+- si no llega, carga `_vendor/tailwind-3.4.17.js` con `document.write`. Es el
+  mismo archivo, con el mismo SHA-256 en dos descargas, y se carga antes de
+  `tailwind.config`.
+
+Un capítulo descargado como archivo suelto sigue necesitando el CDN.
+
+**Un hueco de la sonda, cerrado.** La sonda no miraba los estilos. Un capítulo
+sin Tailwind montaba, recorría sus lecciones y no daba más error que el de
+`tailwind.config`. Ahora exige en todos sus modos que Tailwind haya aplicado su
+regla de `max-w-4xl`, y tiene un quinto modo, `sin-tailwind`, que deja sin
+resolver `cdn.tailwindcss.com`, como en el iPhone.
+
+**Verificación.**
+- **Pruebas negativas en `sin-tailwind`:**
+  - los capítulos publicados fallan con «SIN Tailwind» y
+    `tailwind is not defined`, lo mismo que en el iPhone;
+  - los nuevos, copiados a una carpeta sin `_vendor/`, también fallan.
+- **Los nuevos, en su carpeta,** pasan los cinco modos.
+- **`verificar.py --con-salidas`** pasa, con la regla 20 del `head` incluida.
+- **`ensamblar.py`** dos veces da el mismo SHA.
+
