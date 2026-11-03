@@ -24,6 +24,29 @@
 > - la librería (§1: L1 a L6), que espera a la tarea de deudas P3;
 > - los menores, salvo los que estaban en la misma frase que un medio.
 
+> **Estado al 2026-11-02** (rama `cap05/cierre05`, `PLAN_CIERRE_CAPITULO_05.md`).
+>
+> **Corregidos del capítulo 5 (§3, Menores):**
+> - las siete frases que seguían en el capítulo. «A sí misma» ya no estaba;
+> - tres ejercicios, sin cambiar su clave:
+>   - la glosa de la «a» del E2 de la sección 2;
+>   - la clave del E4 de la sección 4;
+>   - las variables en camelCase, que estaban en la justificación del E2 de la
+>     sección 1 y no en sus opciones;
+> - los dos flujogramas que contradecían su código, `FlujogramaMientras` y
+>   `FlujogramaPara`;
+> - los `id` repetidos de los marcadores (L6).
+>
+> **La decisión 4 (§4), para el capítulo 5:** el 0,9 % y el 2 % mensual quedan,
+> con una nota que los declara ilustrativos. **El recargo del 5 % del capítulo 4
+> sigue sin decidir:** el capítulo está publicado.
+>
+> **Esperan, a propósito:**
+> - los detalles de forma de los gráficos (`TresCiclosComparados`, la simbología,
+>   el terminal, los «—» de VBA en los `Trazador`);
+> - `not-prose` en párrafos y listas (L4), que el docente dejó para el rediseño
+>   de los componentes.
+
 **Alcance:**
 - capítulo 4 completo, que está publicado en `main` y entra en el parcial de hoy;
 - capítulo 5, secciones 1 a 5. La 6, la 7, la evaluación y el glosario son todavía andamio y no se revisaron.

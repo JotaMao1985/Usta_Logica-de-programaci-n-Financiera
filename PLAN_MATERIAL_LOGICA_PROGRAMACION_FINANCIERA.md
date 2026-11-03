@@ -2192,3 +2192,75 @@ repetitivo» y marcó cuáles hacer. Se hicieron por fases, en la rama
   los cinco capítulos.
 - **Las dos rarezas de `Debug.Print`** se explican en el capítulo 6. Quedó anotado
   en su plan (§5): el espacio del signo y las zonas de 14 columnas.
+
+**El capítulo 5.**
+- **Siete frases de la §3 de la revisión,** corregidas:
+  - «tres renglones», contado en los cuatro lenguajes;
+  - la portada, que ahora dice lo que enseña la sección 5;
+  - «La condición no está mal»;
+  - «El área de cobranza»;
+  - «la macro de Excel que lo calcula»;
+  - «el ciclo que acumula su variable»;
+  - el abono 0, que ahora está «mal registrado».
+
+  La octava, «a sí misma», ya no estaba.
+- **Tres ejercicios, sin cambiar su clave:**
+  - la glosa de la «a» del E2 de la sección 2 ya no delata la respuesta;
+  - la clave del E4 de la sección 4 ya no promete algo con n = 0, porque con
+    n = 0 la fórmula de la cuota divide entre cero;
+  - la justificación del E2 de la sección 1 nombra las variables por lo que
+    llevan, y vale en los cuatro lenguajes.
+- **Una nota en la sección 1:** el 0,9 % y el 2 % mensual son ilustrativos.
+  Equivalen al 11,35 % y al 26,82 % efectivo anual, ejecutado en Python y R. No
+  cita ninguna tasa de usura, porque no hay fuente verificada en el repositorio:
+  dice que la certifica la Superintendencia Financiera.
+- **Los flujogramas dibujan su código.**
+  - `FlujogramaMientras` asigna el saldo y el abono, como `EJ_ACUERDO`, y escribe
+    meses y saldo.
+  - `FlujogramaPara` dibuja el plan de pagos que sigue, y no el cobro.
+  - Cada flujograma tiene sus propias puntas de flecha: `flechaDefs(id)`, como en
+    el 4. La sección 2 tenía `lp-flecha5` dos veces.
+
+**Las herramientas.**
+- **Regla 11:** deja pasar «¿Qué escribe el programa?» y sigue cazando los
+  encargos.
+- **`comprobar_cifras.js --corregir`:** no toca el `App`, y avisa que el cambio va
+  en `lp-demo.jsx`.
+- **Las tres preguntas de la demostración** que se delataban por el tamaño, ya no
+  se delatan. Las encontró la función de la regla 17 aplicada a `lp-base.html`.
+- **Regla 25, nueva, de aviso:** las `//>` contra las `#>` de Python.
+  - Se midió antes de escribirla: de 42 bloques, 11 coincidían exactos y los
+    otros 31 diferían solo en la coma de miles de Python, en los espacios y en
+    `True`/`False`. Son las tres diferencias que se normalizan.
+  - `SUMA_DECIMAL`, del 1, es una excepción declarada, atada a su salida.
+
+**Medido.**
+- **Por DOM, en Chrome sin ventana:**
+  - los tres ejercicios, en los cuatro lenguajes, con una respuesta buena y una
+    mala: 123 comprobaciones;
+  - los ids de las nueve lecciones, a escritorio y a 375 px: ningún id
+    repetido, y los 39 `marker-end` encuentran su marcador;
+  - la nota de las tasas cabe a 375 px.
+- **`verificar.py --con-salidas`** y **la sonda** en sus cuatro modos, en los
+  cinco capítulos, al final de cada fase.
+
+**Pruebas negativas.**
+- **Regla 11:** seis frases que la regla de antes daba por encargos, y siete
+  encargos que siguen fallando.
+- **`--corregir`:** sobre una copia, el guion de antes cambiaba el `App`, y el
+  nuevo no.
+- **Regla 25:**
+  - un `//>` cambiado avisa, también dentro de una cifra con miles;
+  - solo espacios de más, no avisa;
+  - la excepción deja de valer si cambia la salida de `SUMA_DECIMAL`.
+- **Los ids:** un marcador clonado y una referencia rota salen.
+- **375 px:** un div de 600 px dentro de la nota sale.
+
+**Lo que no se hizo.**
+- **El arnés de VBA no se pegó en Excel.** El acceso al escritorio no se puede
+  aprobar en una corrida programada. Su huella cambia en una sola línea de
+  comentario del módulo 1. Hay que pegarlo igual, porque el libro tiene el
+  módulo de antes del 27 de octubre.
+
+**Un hallazgo, sin tocar.** La clave del E2 de la demostración (1 000 000) solo vale
+en VBA. En Python y R, intercambiar las líneas 3 y 4 da error.

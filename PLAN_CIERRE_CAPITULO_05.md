@@ -253,3 +253,32 @@ arregla.
 
 **`verificar.py --con-salidas`** al final de la fase: los cinco capítulos pasan, sin
 avisos de la regla 25.
+
+### PC4 · Fase 4 · anotaciones · 2026-11-02
+
+Commit `f741872`.
+- **`notprose`:** la decisión del docente quedó en el estado de L4 de la
+  revisión y en la bitácora.
+- **`debug-print`:** quedó en el plan del capítulo 6 (§5), para la sección 2, junto
+  a la ventana Inmediato. Nombra las cuatro salidas declaradas que ya muestran
+  las dos rarezas.
+
+### PC5 · Fase 5 · VBA en Excel · saltada
+
+El acceso a Excel no se puede aprobar durante una corrida programada:
+`request_access` respondió que hay que darlo desde la conversación o desde los
+ajustes de la tarea. No se corrió `preparar`, para no pisar el portapapeles sin
+pegar nada.
+
+Lo que sí se midió, sin portapapeles ni manifiesto, con `identificador()` de
+`ejecutar_vba.py`:
+
+| Versión | Huella | Bloques |
+|---|---|---|
+| Rama `cap05/cierre05` | `a5ae0595b7` | 42 |
+| `main` (`c21ad99`) | `8516a73413` | 42 |
+
+La única diferencia es una línea del módulo 1, el comentario de `EJ_AHORRO_MAL`
+(«tres renglones más abajo»). El módulo 2 no cambia. El libro tiene todavía el
+módulo de antes del 27 de octubre, así que hay que pegar de todos modos. Son tres
+pasos: `preparar`, pegar los dos módulos y `comparar`.
