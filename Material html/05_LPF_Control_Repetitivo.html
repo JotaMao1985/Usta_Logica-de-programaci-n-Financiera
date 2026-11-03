@@ -2975,14 +2975,15 @@ FinMientras`;
             );
         };
         // Proceso de una o más líneas: 36 de alto con una, y 18 más por cada
-        // una. `delCiclo` lo pinta con borde discontinuo teal: es lo que el
-        // `Para` hace por su cuenta.
+        // una. `delCiclo` lo pinta con borde discontinuo: es lo que el `Para`
+        // hace por su cuenta. Conserva el color de su forma, que es un proceso o
+        // una decisión; el teal es de Entrada y salida (revisión, §3).
         const fjProceso = (y, lineas, delCiclo) => {
             const alto = 18 + lineas.length * 18;
             return (
                 <g>
                     <rect x="24" y={y} width="200" height={alto} rx="6"
-                        fill={delCiclo ? '#E0F2F7' : '#F5F0FA'} stroke={delCiclo ? '#0E7490' : '#3D008D'}
+                        fill="#F5F0FA" stroke="#3D008D"
                         strokeWidth="1.5" strokeDasharray={delCiclo ? '5 3' : undefined} />
                     {lineas.map((l, i) => (
                         <text key={i} x={EJE} y={y + (lineas.length === 1 ? 23 : 22 + i * 18)} textAnchor="middle"
@@ -2994,7 +2995,7 @@ FinMientras`;
         const fjDecision = (y, texto, delCiclo) => (
             <g>
                 <polygon points={`${EJE},${y} 216,${y + 32} ${EJE},${y + 64} 32,${y + 32}`}
-                    fill={delCiclo ? '#E0F2F7' : '#F5F0FA'} stroke={delCiclo ? '#0E7490' : '#3D008D'}
+                    fill="#F5F0FA" stroke="#3D008D"
                     strokeWidth="1.8" strokeDasharray={delCiclo ? '5 3' : undefined} />
                 <text x={EJE} y={y + 37} textAnchor="middle" fontSize="13" fontFamily={MONO} fill="#001A4D">{texto}</text>
             </g>
@@ -3167,7 +3168,7 @@ FinMientras`;
                 return (
                     <g>
                         <rect x={x1} y={y} width={x2 - x1} height={alto} rx="6"
-                            fill={delCiclo ? '#E0F2F7' : '#F5F0FA'} stroke={delCiclo ? '#0E7490' : '#3D008D'}
+                            fill="#F5F0FA" stroke="#3D008D"
                             strokeWidth="1.5" strokeDasharray={delCiclo ? '5 3' : undefined} />
                         {lineas.map((l, i) => (
                             <text key={i} x={EJE} y={y + 22 + i * 17} textAnchor="middle"
@@ -3185,7 +3186,7 @@ FinMientras`;
             const rombo = (x1, x2, y, texto) => (
                 <g>
                     <polygon points={`${EJE},${y} ${x2},${y + 24} ${EJE},${y + 48} ${x1},${y + 24}`}
-                        fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.8" strokeDasharray="5 3" />
+                        fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.8" strokeDasharray="5 3" />
                     <text x={EJE} y={y + 29} textAnchor="middle" fontSize="12.5" fontFamily={MONO} fill="#001A4D">{texto}</text>
                 </g>
             );
@@ -4610,7 +4611,7 @@ Debug.Print cobrado`,
                             paga un precio. La de las <strong>dos lecturas</strong> duplica una instrucción: si mañana
                             cambia el mensaje o se agrega un tope al monto, hay dos sitios que mantener, y el día
                             que se actualice uno y no el otro la primera lectura y las siguientes se comportarán
-                            distinto. La del <strong>valor inicial falso</strong> —<span className="inline-code">monto &lt;- -1</span>—
+                            distinto. La del <strong>valor inicial falso</strong> —darle a <span className="inline-code">monto</span> un −1 antes del ciclo—
                             esconde la intención: quien lee tiene que descubrir que ese −1 no es un dato sino un
                             truco para forzar la entrada. Y es frágil: si la regla cambia y un día se admiten
                             montos negativos —una reversión, por ejemplo—, el −1 deja de forzar nada y el ciclo
@@ -4632,7 +4633,7 @@ Debug.Print cobrado`,
                         como en el primer bloque; con <span className="inline-code">Mientras</span> y dos lecturas,
                         como en el segundo; o con <span className="inline-code">Mientras</span> y una sola lectura,
                         dándole antes a <span className="inline-code">monto</span> un valor inválido a propósito
-                        —<span className="inline-code">monto &lt;- -1</span>— para obligar al ciclo a entrar. Las tres
+                        —<span className="inline-code">monto &lt;- -1</span> en pseudocódigo y R, <span className="inline-code">monto = -1</span> en Python y VBA— para obligar al ciclo a entrar. Las tres
                         funcionan. <strong>Argumente cuál elegiría y por qué</strong>, diga qué riesgo corre cada una
                         de las otras dos, y explique en qué situación ese mismo argumento lleva a elegir
                         {' '}<span className="inline-code">Mientras</span>.
@@ -5243,7 +5244,7 @@ Loop`,
 
                 <TablaTraza
                     titulo="Las cuatro primeras cuotas de otro crédito"
-                    enunciado={<>Un crédito de libre inversión de <strong>4 000 000</strong> al <strong>2 %</strong> mensual en <strong>12 cuotas</strong>: la fórmula da una cuota de 378 238,39. Complete <span className="inline-code">k</span>, <span className="inline-code">interes</span>, <span className="inline-code">abono</span> y <span className="inline-code">saldo</span> justo antes de que empiece el ciclo y al final de cada una de las cuatro primeras vueltas. Escriba las cifras con sus centavos, y <span className="inline-code">—</span> en las variables que en ese momento todavía no tengan valor.</>}
+                    enunciado={<>Un crédito de libre inversión de <strong>4 000 000</strong> al <strong>2 %</strong> mensual en <strong>12 cuotas</strong>: la fórmula da una cuota de 378 238,39. Complete <span className="inline-code">k</span>, <span className="inline-code">interes</span>, <span className="inline-code">abono</span> y <span className="inline-code">saldo</span> justo antes de que empiece el ciclo y al final del cuerpo de cada una de las cuatro primeras vueltas. Escriba las cifras con sus centavos, y <span className="inline-code">—</span> en las variables que en ese momento todavía no tengan valor.</>}
                     codigo={TRAZA_PLAN}
                     columnas={[
                         { clave: 'momento', titulo: 'Momento' },
@@ -5256,10 +5257,10 @@ Loop`,
                     exigeRespuesta
                     filas={[
                         { momento: 'Antes del ciclo', k: '—', interes: '—', abono: '—', saldo: '4000000' },
-                        { momento: 'Fin de la vuelta 1', k: '1', interes: '80000', abono: '298238,39', saldo: '3701761,61' },
-                        { momento: 'Fin de la vuelta 2', k: '2', interes: '74035,23', abono: '304203,15', saldo: '3397558,46' },
-                        { momento: 'Fin de la vuelta 3', k: '3', interes: '67951,17', abono: '310287,22', saldo: '3087271,24' },
-                        { momento: 'Fin de la vuelta 4', k: '4', interes: '61745,42', abono: '316492,96', saldo: '2770778,28' },
+                        { momento: 'Vuelta 1, al final del cuerpo', k: '1', interes: '80000', abono: '298238,39', saldo: '3701761,61' },
+                        { momento: 'Vuelta 2, al final del cuerpo', k: '2', interes: '74035,23', abono: '304203,15', saldo: '3397558,46' },
+                        { momento: 'Vuelta 3, al final del cuerpo', k: '3', interes: '67951,17', abono: '310287,22', saldo: '3087271,24' },
+                        { momento: 'Vuelta 4, al final del cuerpo', k: '4', interes: '61745,42', abono: '316492,96', saldo: '2770778,28' },
                     ]}
                     pista="Antes del ciclo solo tienen valor las variables que alguna línea ya asignó. Dentro de cada vuelta, el interés se calcula con el saldo que dejó la vuelta anterior, y el saldo es lo último que cambia."
                 />
@@ -5283,7 +5284,7 @@ Loop`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Para k &lt;- 1 Hasta n</span></td><td>Sí</td><td>0 vueltas</td><td>No se hace, por convención</td></tr>
-                            <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: <span className="inline-code">range(1, n)</span> da n − 1 vueltas</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: el tope es el n + 1, que queda fuera. Con <span className="inline-code">range(1, n)</span> da n − 1 vueltas</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
                             <tr><td>R</td><td><span className="inline-code">for (k in 1:n)</span></td><td>Sí</td><td><strong>2 vueltas</strong>, con k = 1 y luego k = 0. Con <span className="inline-code">seq_len(n)</span>, 0</td><td>No afecta: la vuelta siguiente toma el valor que sigue en la secuencia</td></tr>
                             <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: <span className="inline-code">Next</span> le suma 1 al valor ya cambiado</td></tr>
                         </tbody>
@@ -5307,7 +5308,7 @@ Loop`,
                     </p>
                     <p>
                         <strong>En VBA, el cuerpo puede cambiar el contador, y el cambio cuenta.</strong> Al final
-                        de cada vuelta, <span className="inline-code">Next</span> le suma el paso al valor que tenga
+                        de cada vuelta, <span className="inline-code">Next</span> le suma el paso (1, salvo que el <span className="inline-code">For</span> diga otro con <span className="inline-code">Step</span>) al valor que tenga
                         k en ese momento y vuelve a comparar, así que un <span className="inline-code">k = k + 1</span> dentro
                         del cuerpo hace que el ciclo cobre una cuota de cada dos. Así lo describe la referencia del
                         lenguaje, que desaconseja hacerlo (<a href="https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement" target="_blank" rel="noopener noreferrer">Instrucción For...Next</a>,
@@ -5337,7 +5338,7 @@ Loop`,
                     El <span className="inline-code">Para</span> existe para que nadie tenga que escribir a mano
                     las tres piezas del contador. Cuando se escriben con un <span className="inline-code">Mientras</span>,
                     cada una puede estar bien por separado y no casar con las otras, y el ciclo da una vuelta de
-                    más o de menos. Es un <Termino def="Un ciclo que da una vuelta de más o de menos porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En inglés se le dice off-by-one.">error de frontera</Termino>.
+                    más o de menos. Es un <Termino def="Una vuelta de más o de menos, porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En inglés se le dice off-by-one.">error de frontera</Termino>.
                     El capítulo 1 ya advirtió, con la meta de ahorro, que el signo de la condición produce «los
                     errores de un mes de diferencia en las proyecciones». En un plan de pagos, la misma frontera
                     vale una cuota.
@@ -5726,7 +5727,7 @@ End Sub`,
             { linea: TZC_RESTA, estado: { saldo: '2000000' },
                 nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
             { linea: TZC_SIGUE_K, estado: { k: '2' },
-                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido.' },
+                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido. En pseudocódigo, Python y R, quien aumenta k es la cabecera del Para, y por eso la traza vuelve a ella; en VBA lo hace el Next. El flujograma lo dibuja al final del cuerpo, que es cuando ocurre.' },
             { linea: TZC_SUMA, estado: { subtotal: '100000' },
                 nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1000000' },
@@ -5879,13 +5880,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
                     gancho="Cuando un ciclo va dentro de otro, el de dentro da todas sus vueltas en cada vuelta del de fuera. ¿Qué tiene que volver a empezar cada vez, y qué no?">
-                    El simulador de la oficina compara el mismo crédito de libre inversión —10 millones al
-                    1,5 % mensual— a uno, dos y tres años. Para un año informaba 1 001 599 pesos de intereses,
-                    lo mismo que el plan de pagos de la sección 4. Para tres años informaba 5 998 246, casi el
-                    doble de los 3 014 862 que el cliente pagaría de verdad. El acumulador de intereses nacía
-                    en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses de los
-                    anteriores. Durante un mes, cada cliente que comparó plazos vio, para el más largo, unos
-                    intereses que casi doblaban los reales.
+                    El simulador de la oficina compara un crédito de 10 millones al 1,5 % mensual a uno, dos
+                    y tres años. Para un año informaba 1 001 599 pesos de intereses, los mismos del plan de
+                    pagos de la sección 4. Para tres años, 5 998 246: casi el doble de los 3 014 862 reales. El
+                    acumulador nacía en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses
+                    de los anteriores. Durante un mes, todo cliente que comparó plazos vio esa cifra.
                 </Motivacion>
 
                 <h3>La estructura</h3>
