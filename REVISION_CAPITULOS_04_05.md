@@ -139,7 +139,7 @@ Todos estos se arreglan en `lp-core-extra.jsx` y obligan a volver a estampar los
 >   Hacerlo valer en párrafos y listas cambiaba cientos de medidas en los cinco
 >   capítulos, entre ellas las viñetas de los `CalloutPro`. **El 2026-11-02 el
 >   docente aprobó dejarlo así hasta que se rediseñen los componentes.**
-> - **Sin probar:** Safari y Firefox.
+> - **Safari:** el docente abrió el sitio publicado el 2026-11-03. **Firefox,** sin probar.
 
 Los defectos menores de L6 son estos:
 - `Pipeline` deja flechas sueltas cuando las etapas pasan a otra fila. En el capítulo 4, la sexta etapa queda sola.

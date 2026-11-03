@@ -2305,3 +2305,6 @@ Un tropiezo al pegar: el portapapeles ya no tenía el módulo que `preparar` dej
 ahí, porque algo se copió después. Conviene copiar cada módulo con `pbcopy`
 justo antes de pegarlo.
 
+**La Tarea 10, cerrada.** El mismo día, el docente terminó su lectura completa
+del capítulo 5 y abrió el sitio publicado en Safari. Era la última casilla del
+punto de control final.
