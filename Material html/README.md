@@ -71,7 +71,7 @@ regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.
 no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
 sean el del 1 salvo el `<title>` y la descripción.
 
-`verificar.py` comprueba veinticuatro cosas —la 13 sobre la plantilla, las demás
+`verificar.py` comprueba veinticinco cosas —la 13 sobre la plantilla, las demás
 sobre cada capítulo— y devuelve ≠ 0 si algo falla. Aquí van las doce primeras;
 la lista completa, con el porqué de cada una, es el docstring del guion:
 
@@ -126,8 +126,22 @@ diferencia que se perdona, y se informa, es el separador decimal: lo pone la
 configuración regional, y un Excel en español de Colombia escribe `916799,93`
 donde el material declara `916799.93`.
 
-**Lo que ninguna regla mira: las cifras fuera de los bloques.** Las reglas 9 y
-`ejecutar_vba.py` comprueban lo que va tras `#>` y `'>`. Nadie mira el número de
+**Las salidas del pseudocódigo se cotejan con las de Python** (regla 25, desde el
+2026-11-02). Las `//>` no las ejecuta nada; las `#>` de Python del mismo bloque sí,
+con la regla 9. La regla compara las dos listas después de quitar tres
+diferencias legítimas, y ninguna otra:
+- la coma de miles de Python;
+- los espacios de más, que esa coma y `print(a, b)` cambian;
+- `True` y `False` frente a `Verdadero` y `Falso`.
+
+Es un **aviso**. Un bloque que escribe otra cosa a propósito va en
+`COTEJO_DISTINTO`, con lo que declara su pseudocódigo: si eso cambia, vuelve a
+avisar. VBA queda fuera, porque imprime distinto a propósito (el espacio del
+signo y las zonas de 14 columnas de `Debug.Print`), y lo coteja
+`ejecutar_vba.py` en Excel.
+
+**Lo que ninguna regla mira: las cifras fuera de los bloques.** Las reglas 9 y 25 y
+`ejecutar_vba.py` comprueban lo que va tras `#>`, `//>` y `'>`. Nadie mira el número de
 vueltas que se dice en la prosa, el saldo de un distractor o la cifra de una
 justificación. En la auditoría del capítulo 5 se ejecutaron unas 240 de esas
 cifras en Python y en R, y salieron:
@@ -135,8 +149,7 @@ cifras en Python y en R, y salieron:
 - cuatro cifras calculadas con un valor distinto del que muestra el enunciado.
 
 Hasta que haya una regla, al cerrar cada capítulo se hace esa auditoría a mano
-(Tarea 3.3 de su plan). Otra cosa sí es automatizable: comparar las `//>` y las
-`'>` con las `#>` de R del mismo bloque.
+(Tarea 3.3 de su plan).
 
 `ensamblar.py` además **falla si Font Awesome es anterior a 6.5**: varios iconos
 del material (`fa-clipboard-question`, `fa-money-bill-trend-up`,

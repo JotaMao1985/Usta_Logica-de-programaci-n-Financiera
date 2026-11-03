@@ -2,7 +2,7 @@
 """
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
-Comprueba una cosa sobre la plantilla y veintitrés sobre cada archivo HTML de capítulo:
+Comprueba una cosa sobre la plantilla y veinticuatro sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -92,6 +92,12 @@ Comprueba una cosa sobre la plantilla y veintitrés sobre cada archivo HTML de c
      componente solo mostraba el `impacto`; ahora tiene un Paso 3, pero sin
      `consecuencias` se queda en dos pasos en vez de romperse, y sin esta
      regla un E3 a medias daba verde.
+ 25. COTEJO DEL PSEUDOCÓDIGO — que las salidas `//>` de un bloque digan lo
+     mismo que las `#>` de Python del mismo bloque. El pseudocódigo no se
+     ejecuta y nada miraba sus salidas; las de Python las ejecuta la regla 9.
+     Es un AVISO, no una falla. VBA queda fuera: imprime distinto a propósito
+     (el espacio del signo y las zonas de 14 columnas de `Debug.Print`), y lo
+     coteja `ejecutar_vba.py` en Excel.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -1365,6 +1371,78 @@ def e3_sin_consecuencia(texto, cuerpo, desplazamiento):
     return fallos
 
 
+# --------------------------------------------- 25 · cotejo del pseudocódigo
+# Las `//>` no las ejecuta nada: el pseudocódigo no es ejecutable. Las `#>` de
+# Python del mismo bloque sí (regla 9), así que cotejarlas con ellas comprueba
+# las del pseudocódigo. Medido el 2026-11-02, antes de escribir la regla: de 42
+# bloques que declaran salida en los dos, 11 coincidían exactos, y las otras 31
+# diferían solo en tres cosas, todas legítimas. Son las tres que normaliza
+# `_salida_comparable`, y ninguna otra:
+#   · la coma de miles de Python (`f"{x:,.0f}"`): «1,001,599.15» es 1001599.15.
+#     Se quita solo entre un dígito y tres dígitos que no siguen, así que una
+#     cifra distinta sigue siendo distinta;
+#   · los espacios: esa coma ensancha las columnas de la tabla de amortización,
+#     y `print(a, b)` separa con uno donde el pseudocódigo declara dos. Se
+#     reducen a uno;
+#   · el valor lógico: Python escribe True y False, y el pseudocódigo,
+#     Verdadero y Falso.
+# Normalizado así, quedaba un solo bloque, que difiere a propósito y está en
+# COTEJO_DISTINTO. Prueba negativa del 2026-11-02, sobre copias del capítulo 5:
+# «//> Meses: 14» en vez de 13 avisa, y también un dígito cambiado dentro de un
+# saldo con miles; solo espacios de más, no. Con «Iguales» en vez de
+# «Distintos», la excepción del capítulo 1 deja de valer y avisa.
+COMA_DE_MILES = re.compile(r"(?<=\d),(?=\d{3}(?!\d))")
+
+# Bloques que escriben cosas distintas a propósito, con lo que declara su
+# pseudocódigo: si eso cambia, la excepción deja de valer y la regla avisa.
+COTEJO_DISTINTO = {
+    ("01_LPF_Introduccion.html", "SUMA_DECIMAL"): (
+        ["Distintos"],
+        "el pseudocódigo escribe el resultado de la comparación; Python muestra "
+        "además la suma, 0.30000000000000004"),
+}
+
+
+def _salida_comparable(linea):
+    s = COMA_DE_MILES.sub("", linea)
+    s = re.sub(r"\bTrue\b", "Verdadero", s)
+    s = re.sub(r"\bFalse\b", "Falso", s)
+    return " ".join(s.split())
+
+
+def cotejo_del_pseudocodigo(ruta, texto):
+    """Las salidas `//>` de cada bloque contra las `#>` de Python (regla 25)."""
+    avisos = []
+    salidas = {}
+    for nombre, lang, codigo in ejecutar_salidas.bloques_de(ejecutar_salidas.cuerpo(texto)):
+        if lang in ("pseudo", "python"):
+            _, declaradas = ejecutar_salidas.separar(codigo, ejecutar_salidas.PREFIJO_SALIDA[lang])
+            salidas.setdefault(nombre, {})[lang] = declaradas
+    for nombre, d in salidas.items():
+        pseudo, python = d.get("pseudo", []), d.get("python", [])
+        if not pseudo:
+            continue
+        excepcion = COTEJO_DISTINTO.get((ruta.name, nombre))
+        if excepcion and excepcion[0] == pseudo:
+            continue
+        if not python:
+            avisos.append(f"{nombre}: el pseudocódigo declara salida y Python no; "
+                          f"no hay con qué cotejarla")
+            continue
+        a = [_salida_comparable(x) for x in pseudo]
+        b = [_salida_comparable(x) for x in python]
+        if a == b:
+            continue
+        detalle = [f"{nombre}: las salidas del pseudocódigo no son las de Python, que sí se ejecutan"]
+        for i in range(max(len(pseudo), len(python))):
+            x = pseudo[i] if i < len(pseudo) else "(nada)"
+            y = python[i] if i < len(python) else "(nada)"
+            if (a[i] if i < len(a) else None) != (b[i] if i < len(b) else None):
+                detalle.append(f"          //> «{x}»  ·  #> «{y}»")
+        avisos.append("\n".join(detalle))
+    return avisos
+
+
 def jsx_compila(ruta):
     """El bloque `text/babel` del capítulo compila de verdad.
 
@@ -1545,6 +1623,10 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False):
     # 24 · todo E3 pide anticipar la consecuencia
     for f in e3_sin_consecuencia(texto, cuerpo, desplazamiento):
         problemas.append(f"E3 — {f}")
+
+    # 25 · las salidas del pseudocódigo dicen lo mismo que las de Python (aviso)
+    for f in cotejo_del_pseudocodigo(ruta, texto):
+        avisos.append(f"cotejo — {f}")
 
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
