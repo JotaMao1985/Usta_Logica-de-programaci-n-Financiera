@@ -90,7 +90,8 @@ Todos estos se arreglan en `lp-core-extra.jsx` y obligan a volver a estampar los
 >   calificado, en los diez E3 del curso.
 > - **L4, a medias y a propósito:** `not-prose` vale ahora en títulos y tablas.
 >   Hacerlo valer en párrafos y listas cambiaba cientos de medidas en los cinco
->   capítulos, entre ellas las viñetas de los `CalloutPro`.
+>   capítulos, entre ellas las viñetas de los `CalloutPro`. **El 2026-11-02 el
+>   docente aprobó dejarlo así hasta que se rediseñen los componentes.**
 > - **Sin probar:** Safari y Firefox.
 
 Los defectos menores de L6 son estos:

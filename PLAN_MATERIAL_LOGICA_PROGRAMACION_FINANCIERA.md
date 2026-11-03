@@ -429,6 +429,12 @@ Cada capítulo produce: **1 archivo HTML** + **6–10 ejercicios cloze** + **1 s
 
 > **Nota de plataforma:** VBA para Mac difiere de VBA para Windows (no hay `ActiveX`, algunos objetos cambian). El material declarará **Excel 365 para Windows** como referencia y marcará con un aviso los puntos donde Mac difiere.
 
+> **Pendiente desde el cierre del capítulo 5 (2026-11-02): las dos rarezas de `Debug.Print`.** Van en la sección 2, con la ventana Inmediato, que es donde se ven:
+> - **El espacio del signo.** `Debug.Print` escribe un número positivo con un espacio delante, el que ocuparía el signo: « 150», no «150».
+> - **Las zonas de 14 columnas.** La coma entre dos valores no separa con un espacio: salta a la siguiente zona de 14 columnas. Excel escribe « 0.018         0.02».
+>
+> Desde el 2026-10-27, cuando el arnés de VBA corrió en Excel, las muestran salidas declaradas del material: `CICLO_INSTRUCCION` y `META_AHORRO` en el capítulo 1, y `CMP_MENSUALES` y `CMP_EFECTIVAS` en el 3. Ninguna parte del material las explica todavía, y un estudiante que compare la salida de VBA con la de Python las ve antes de llegar aquí. La regla 25 de `verificar.py` deja fuera a VBA por estas dos razones.
+
 ---
 
 ### Capítulo 7 — Arrays: unidimensionales y bidimensionales
@@ -2172,3 +2178,17 @@ próxima corrida pide pegar una última vez.
 - **El material no explica todavía ninguna de las dos rarezas de `Debug.Print`:**
   el espacio que escribe delante de un número y las zonas de 14 columnas. Es
   tema del capítulo 6.
+
+### El cierre del capítulo 5 · 2026-11-02
+
+El docente revisó en un artefacto los puntos que quedaban para cerrar «Control
+repetitivo» y marcó cuáles hacer. Se hicieron por fases, en la rama
+`cap05/cierre05`; el detalle de cada una está en `PLAN_CIERRE_CAPITULO_05.md`.
+
+**Dos decisiones, anotadas sin tocar código.**
+- **`not-prose` en párrafos y listas (L4)** se queda como está, a medias: vale en
+  títulos y tablas. El docente aprobó dejarlo para cuando se rediseñen los
+  componentes, porque llevarlo a párrafos y listas cambia cientos de medidas en
+  los cinco capítulos.
+- **Las dos rarezas de `Debug.Print`** se explican en el capítulo 6. Quedó anotado
+  en su plan (§5): el espacio del signo y las zonas de 14 columnas.
