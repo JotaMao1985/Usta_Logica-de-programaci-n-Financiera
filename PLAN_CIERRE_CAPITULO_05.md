@@ -190,3 +190,46 @@ actualizado.
 
 **Para la fase 5.** Cambió el comentario de una línea del VBA de `EJ_AHORRO_MAL`,
 y con él la huella del arnés: hay que pegar el módulo nuevo.
+
+### PC2 · Fase 2 · flujogramas · 2026-11-02
+
+**Hecho.**
+- **`FlujogramaMientras`** asigna lo que asigna `EJ_ACUERDO` (`saldo ← 2350000`,
+  `abono ← 400000`, `meses ← 0`, en un proceso de tres líneas) y escribe lo que
+  escribe: `meses, saldo`. Antes leía `saldo` y `abono` y escribía solo `meses`.
+  El pie de figura pasa a condicional («si el saldo ya fuera cero»), porque el
+  saldo ya no se lee.
+- **`FlujogramaPara`** dibuja el plan de pagos de `EJ_PLAN_PAGOS`, que viene
+  después:
+  - los datos;
+  - la cuota, partida en dos líneas;
+  - `Escribir cuota`;
+  - `saldo` y `totalIntereses`;
+  - el `Para` desarmado;
+  - el cuerpo de cuatro asignaciones;
+  - el `Escribir` de cada fila;
+  - el total de intereses.
+
+  Mide 893 unidades de alto y, como el anidado, tiene un ancho máximo de 300 px.
+- **`FlujogramaAnidado` y `FlujogramaRepita`** coinciden con su código y no
+  cambiaron de dibujo.
+- **`fjProceso` y `fjEntradaSalida`** aceptan más de dos líneas, con las mismas
+  medidas de antes para una y dos.
+- **Las dos `DESCRIPCION` nuevas** no llevan cifras: «saldo y abono reciben sus
+  valores».
+- **`flechaDefs(id)`, como en el capítulo 4:** cada flujograma define
+  `lp-flecha5-<Componente>` y `lp-flecha5-<Componente>-retorno`, y `fjFlecha` y
+  `fjRetorno` reciben ese id. Son cinco componentes: la simbología, el
+  `Mientras`, el `Repita`, el `Para` y el anidado.
+
+**Medido en el DOM**, en las nueve lecciones, a escritorio y a 375 px, con la barra
+lateral cerrada:
+- **Antes:** la lección 2 tenía `lp-flecha5`×2 y `lp-flecha5-retorno`×2.
+- **Ahora:** ningún id repetido en el documento, y los 39 `marker-end` de las
+  lecciones 2 a 5 (8 + 5 + 12 + 14) encuentran su `<marker>`.
+- **La prueba negativa:** un marcador clonado sale como repetido, y una
+  referencia a `#lp-flecha5-no-existe`, como rota.
+- **Las capturas,** a 375 px: las cinco figuras pintan sus puntas.
+
+**`verificar.py --con-salidas`:** los cinco pasan. **La sonda,** en sus cuatro
+modos: los cinco pasan. El 5 a 375 px tiene los mismos recortes que la línea base.

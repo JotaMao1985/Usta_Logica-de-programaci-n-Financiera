@@ -2929,16 +2929,24 @@ FinMientras`;
            La leyenda va en HTML y no en <text>, que no fluye y encoge con el
            viewBox (lección del capítulo 4).
         ------------------------------------------------------------ */
-        const FLECHA_DEFS = (
+        // Un `id` por flujograma, como en el capítulo 4 (L6). Con uno solo para
+        // todos, la sección 2 —la simbología y el flujograma del Mientras—
+        // tenía dos marcadores con cada `id`. Chrome pinta la punta igual, pero
+        // un `id` repetido es inválido y otro navegador puede tomar la de otro
+        // dibujo. Cada flujograma define dos: `id`, la punta del flujo, e
+        // `id-retorno`, la del retorno.
+        const flechaDefs = (id) => (
             <defs>
-                <marker id="lp-flecha5" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+                <marker id={id} markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
                     <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
                 </marker>
-                <marker id="lp-flecha5-retorno" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+                <marker id={`${id}-retorno`} markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
                     <path d="M0,0 L0,6 L7,3 z" fill="#ED1E79" />
                 </marker>
             </defs>
         );
+        const punta = (id) => `url(#${id})`;
+        const puntaRetorno = (id) => `url(#${id}-retorno)`;
 
         // Piezas comunes, en unidades del viewBox de 248 de ancho.
         const EJE = 124, CARRIL_IZQ = 14, CARRIL_DER = 234;
@@ -2952,16 +2960,25 @@ FinMientras`;
                 <text x={EJE} y={y + 24} textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">{texto}</text>
             </g>
         );
-        const fjEntradaSalida = (y, texto) => (
-            <g>
-                <polygon points={`38,${y} 224,${y} 210,${y + 38} 24,${y + 38}`} fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
-                <text x={EJE} y={y + 24} textAnchor="middle" fontSize="12.5" fontFamily={MONO} fill="#001A4D">{texto}</text>
-            </g>
-        );
-        // Proceso de una o dos líneas. `delCiclo` lo pinta con borde
-        // discontinuo teal: es lo que el `Para` hace por su cuenta.
+        // Una línea mide 38 de alto, y cada una más, 17.
+        const fjEntradaSalida = (y, texto) => {
+            const lineas = [].concat(texto);
+            const alto = 21 + lineas.length * 17;
+            return (
+                <g>
+                    <polygon points={`38,${y} 224,${y} 210,${y + alto} 24,${y + alto}`} fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
+                    {lineas.map((l, i) => (
+                        <text key={i} x={EJE} y={y + (lineas.length === 1 ? 24 : 23 + i * 17)} textAnchor="middle"
+                            fontSize="12.5" fontFamily={MONO} fill="#001A4D">{l}</text>
+                    ))}
+                </g>
+            );
+        };
+        // Proceso de una o más líneas: 36 de alto con una, y 18 más por cada
+        // una. `delCiclo` lo pinta con borde discontinuo teal: es lo que el
+        // `Para` hace por su cuenta.
         const fjProceso = (y, lineas, delCiclo) => {
-            const alto = lineas.length === 1 ? 36 : 54;
+            const alto = 18 + lineas.length * 18;
             return (
                 <g>
                     <rect x="24" y={y} width="200" height={alto} rx="6"
@@ -2982,20 +2999,20 @@ FinMientras`;
                 <text x={EJE} y={y + 37} textAnchor="middle" fontSize="13" fontFamily={MONO} fill="#001A4D">{texto}</text>
             </g>
         );
-        const fjFlecha = (y1, y2) => (
-            <line x1={EJE} y1={y1} x2={EJE} y2={y2} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha5)" />
+        const fjFlecha = (id, y1, y2) => (
+            <line x1={EJE} y1={y1} x2={EJE} y2={y2} stroke="#3D008D" strokeWidth="1.5" markerEnd={punta(id)} />
         );
         const fjLinea = (x1, y1, x2, y2, color = '#3D008D') => (
             <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={color === RETORNO ? 2 : 1.5} />
         );
         // El retorno: baja un poco desde `yDesde`, va al carril izquierdo, sube
         // hasta `yHasta` y entra por la izquierda al punto de unión del eje.
-        const fjRetorno = (yDesde, yHasta) => (
+        const fjRetorno = (id, yDesde, yHasta) => (
             <g>
                 {fjLinea(EJE, yDesde, EJE, yDesde + 14, RETORNO)}
                 {fjLinea(CARRIL_IZQ, yDesde + 14, EJE, yDesde + 14, RETORNO)}
                 {fjLinea(CARRIL_IZQ, yDesde + 14, CARRIL_IZQ, yHasta, RETORNO)}
-                <line x1={CARRIL_IZQ} y1={yHasta} x2={EJE - 5} y2={yHasta} stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
+                <line x1={CARRIL_IZQ} y1={yHasta} x2={EJE - 5} y2={yHasta} stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(id)} />
                 <circle cx={EJE} cy={yHasta} r="3.5" fill="#3D008D" />
             </g>
         );
@@ -3004,37 +3021,38 @@ FinMientras`;
         );
 
         const FlujogramaMientras = () => {
-            const DESCRIPCION = 'Flujograma de un ciclo Mientras. Inicio; se leen saldo y abono; meses se inicia en 0; un rombo pregunta si saldo es mayor que 0. Por la rama Sí se ejecuta el cuerpo —saldo menos abono y meses más uno— y una flecha de retorno sube por la izquierda hasta antes del rombo, que vuelve a preguntar. Por la rama No se sale del ciclo, se escribe meses y Fin. La pregunta va antes del cuerpo: si el saldo empieza en cero, el cuerpo no se ejecuta ninguna vez.';
-            const UNION = 190, ROMBO = 206, CUERPO = 290, SALIDA = 380;
+            const DESCRIPCION = 'Flujograma de un ciclo Mientras: el acuerdo de pago. Inicio; saldo y abono reciben sus valores y meses se inicia en 0; un rombo pregunta si saldo es mayor que 0. Por la rama Sí se ejecuta el cuerpo —saldo menos abono y meses más uno— y una flecha de retorno sube por la izquierda hasta antes del rombo, que vuelve a preguntar. Por la rama No se sale del ciclo, se escriben meses y saldo, y Fin. La pregunta va antes del cuerpo: si el saldo empezara en cero, el cuerpo no se ejecutaría ninguna vez.';
+            // El código de al lado, EJ_ACUERDO, asigna el saldo y el abono: no
+            // los lee. Hasta el 2026-11-02 el dibujo decía «Leer saldo, abono».
+            const ID = 'lp-flecha5-FlujogramaMientras';
+            const UNION = 162, ROMBO = 178, CUERPO = 262, SALIDA = 352;
             return (
                 <figure className="my-6 not-prose">
-                    <svg viewBox="0 0 248 516" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
-                        {FLECHA_DEFS}
+                    <svg viewBox="0 0 248 488" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
+                        {flechaDefs(ID)}
                         {fjTerminal(7, 'Inicio', '#3D008D')}
-                        {fjFlecha(45, 68)}
-                        {fjEntradaSalida(70, 'Leer saldo, abono')}
-                        {fjFlecha(108, 132)}
-                        {fjProceso(134, ['meses ← 0'])}
-                        {fjLinea(EJE, 170, EJE, UNION)}
-                        {fjFlecha(UNION, ROMBO - 2)}
+                        {fjFlecha(ID, 45, 68)}
+                        {fjProceso(70, ['saldo ← 2350000', 'abono ← 400000', 'meses ← 0'])}
+                        {fjLinea(EJE, 142, EJE, UNION)}
+                        {fjFlecha(ID, UNION, ROMBO - 2)}
                         {fjDecision(ROMBO, 'saldo > 0')}
-                        {fjFlecha(ROMBO + 64, CUERPO - 2)}
+                        {fjFlecha(ID, ROMBO + 64, CUERPO - 2)}
                         {fjRotulo(EJE + 8, ROMBO + 80, 'Sí')}
                         {fjProceso(CUERPO, ['saldo ← saldo - abono', 'meses ← meses + 1'])}
-                        {fjRetorno(CUERPO + 54, UNION)}
+                        {fjRetorno(ID, CUERPO + 54, UNION)}
                         {fjLinea(216, ROMBO + 32, CARRIL_DER, ROMBO + 32)}
                         {fjRotulo(221, ROMBO + 24, 'No')}
                         {fjLinea(CARRIL_DER, ROMBO + 32, CARRIL_DER, SALIDA)}
                         {fjLinea(CARRIL_DER, SALIDA, EJE, SALIDA)}
-                        {fjFlecha(SALIDA, SALIDA + 20)}
-                        {fjEntradaSalida(SALIDA + 22, 'Escribir meses')}
-                        {fjFlecha(SALIDA + 60, SALIDA + 84)}
+                        {fjFlecha(ID, SALIDA, SALIDA + 20)}
+                        {fjEntradaSalida(SALIDA + 22, 'Escribir meses, saldo')}
+                        {fjFlecha(ID, SALIDA + 60, SALIDA + 84)}
                         {fjTerminal(SALIDA + 86, 'Fin', '#001A4D')}
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
                         El rombo va <strong>antes</strong> del cuerpo. La flecha que sube devuelve el flujo a la
-                        pregunta, y se sale por el «No». Si el saldo ya es cero al llegar, el cuerpo no se
-                        ejecuta <strong>ninguna</strong> vez.
+                        pregunta, y se sale por el «No». Si el saldo ya fuera cero al llegar, el cuerpo no se
+                        ejecutaría <strong>ninguna</strong> vez.
                     </figcaption>
                 </figure>
             );
@@ -3042,26 +3060,27 @@ FinMientras`;
 
         const FlujogramaRepita = () => {
             const DESCRIPCION = 'Flujograma de un ciclo Repita…Hasta. Inicio; se entra directamente al cuerpo, que lee monto; después un rombo pregunta si monto es mayor que 0. Por la rama No una flecha de retorno sube por la izquierda hasta antes de Leer monto, que se vuelve a ejecutar. Por la rama Sí se sale del ciclo, se escribe monto y Fin. La pregunta va después del cuerpo: el cuerpo se ejecuta al menos una vez, y se sale por el Sí, al revés que en un Mientras.';
+            const ID = 'lp-flecha5-FlujogramaRepita';
             const UNION = 64, ROMBO = 152;
             return (
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 350" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
-                        {FLECHA_DEFS}
+                        {flechaDefs(ID)}
                         {fjTerminal(7, 'Inicio', '#3D008D')}
                         {fjLinea(EJE, 45, EJE, UNION)}
-                        {fjFlecha(UNION, 88)}
+                        {fjFlecha(ID, UNION, 88)}
                         <circle cx={EJE} cy={UNION} r="3.5" fill="#3D008D" />
                         {fjEntradaSalida(90, 'Leer monto')}
-                        {fjFlecha(128, ROMBO - 2)}
+                        {fjFlecha(ID, 128, ROMBO - 2)}
                         {fjDecision(ROMBO, 'monto > 0')}
                         {fjLinea(32, ROMBO + 32, CARRIL_IZQ, ROMBO + 32, RETORNO)}
                         {fjRotulo(18, ROMBO + 24, 'No')}
                         {fjLinea(CARRIL_IZQ, ROMBO + 32, CARRIL_IZQ, UNION, RETORNO)}
-                        <line x1={CARRIL_IZQ} y1={UNION} x2={EJE - 5} y2={UNION} stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
-                        {fjFlecha(ROMBO + 64, ROMBO + 86)}
+                        <line x1={CARRIL_IZQ} y1={UNION} x2={EJE - 5} y2={UNION} stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
+                        {fjFlecha(ID, ROMBO + 64, ROMBO + 86)}
                         {fjRotulo(EJE + 8, ROMBO + 80, 'Sí')}
                         {fjEntradaSalida(ROMBO + 88, 'Escribir monto')}
-                        {fjFlecha(ROMBO + 126, ROMBO + 150)}
+                        {fjFlecha(ID, ROMBO + 126, ROMBO + 150)}
                         {fjTerminal(ROMBO + 152, 'Fin', '#001A4D')}
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
@@ -3074,39 +3093,52 @@ FinMientras`;
             );
         };
 
+        /* El plan de pagos de EJ_PLAN_PAGOS, que viene justo después, con el
+           Para desarmado. Hasta el 2026-11-02 dibujaba otro programa, el del
+           cobro (`Leer n, cuota` y un acumulador `cobrado`). La fórmula de la
+           cuota y la suma de intereses no caben en una línea de 200 unidades,
+           y van partidas en dos; la del cuerpo, como en `FlujogramaAnidado`. */
         const FlujogramaPara = () => {
-            const DESCRIPCION = 'Flujograma de un ciclo Para, desarmado. Inicio; se leen n y cuota; cobrado se inicia en 0. Después vienen las tres piezas que el Para hace por su cuenta, dibujadas con borde discontinuo: k se inicia en 1; un rombo pregunta si k es menor o igual que n; y, al final del cuerpo, k aumenta en 1. Por la rama Sí se ejecuta el cuerpo, cobrado más cuota, luego k más uno, y una flecha de retorno sube por la izquierda hasta antes del rombo. Por la rama No se sale, se escribe cobrado y Fin.';
-            const UNION = 240, ROMBO = 256, CUERPO = 340, SALIDA = 470;
+            const DESCRIPCION = 'Flujograma del plan de pagos, con su ciclo Para desarmado. Inicio; capital, tasa y n reciben sus valores; se calcula la cuota con la fórmula de la amortización francesa y se escribe; saldo empieza en el capital y totalIntereses en 0. Después vienen las tres piezas que el Para hace por su cuenta, dibujadas con borde discontinuo: k se inicia en 1; un rombo pregunta si k es menor o igual que n; y, al final del cuerpo, k aumenta en 1. Por la rama Sí se ejecuta el cuerpo —el interés del mes, el abono, el saldo nuevo y la suma de los intereses—, se escriben k, interes, abono y saldo, k aumenta en uno y una flecha de retorno sube por la izquierda hasta antes del rombo. Por la rama No se sale, se escribe totalIntereses y Fin.';
+            const ID = 'lp-flecha5-FlujogramaPara';
+            const UNION = 396, ROMBO = 412, CUERPO = 496, SALIDA = 765;
             return (
                 <figure className="my-6 not-prose">
-                    <svg viewBox="0 0 248 596" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
-                        {FLECHA_DEFS}
+                    <svg viewBox="0 0 248 893" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
+                        {flechaDefs(ID)}
                         {fjTerminal(7, 'Inicio', '#3D008D')}
-                        {fjFlecha(45, 68)}
-                        {fjEntradaSalida(70, 'Leer n, cuota')}
-                        {fjFlecha(108, 132)}
-                        {fjProceso(134, ['cobrado ← 0'])}
-                        {fjFlecha(170, 186)}
-                        {fjProceso(188, ['k ← 1'], true)}
-                        {fjLinea(EJE, 224, EJE, UNION)}
-                        {fjFlecha(UNION, ROMBO - 2)}
+                        {fjFlecha(ID, 45, 60)}
+                        {fjProceso(62, ['capital ← 10000000', 'tasa ← 0.015', 'n ← 12'])}
+                        {fjFlecha(ID, 134, 148)}
+                        {fjProceso(150, ['cuota ← capital * tasa /', '(1 - (1 + tasa) ^ (-n))'])}
+                        {fjFlecha(ID, 204, 218)}
+                        {fjEntradaSalida(220, 'Escribir cuota')}
+                        {fjFlecha(ID, 258, 272)}
+                        {fjProceso(274, ['saldo ← capital', 'totalIntereses ← 0'])}
+                        {fjFlecha(ID, 328, 342)}
+                        {fjProceso(344, ['k ← 1'], true)}
+                        {fjLinea(EJE, 380, EJE, UNION)}
+                        {fjFlecha(ID, UNION, ROMBO - 2)}
                         {fjDecision(ROMBO, 'k <= n', true)}
-                        {fjFlecha(ROMBO + 64, CUERPO - 2)}
+                        {fjFlecha(ID, ROMBO + 64, CUERPO - 2)}
                         {fjRotulo(EJE + 8, ROMBO + 80, 'Sí')}
-                        {fjProceso(CUERPO, ['cobrado ← cobrado + cuota'])}
-                        {fjFlecha(CUERPO + 36, CUERPO + 52)}
-                        {fjProceso(CUERPO + 54, ['k ← k + 1'], true)}
-                        {fjRetorno(CUERPO + 90, UNION)}
+                        {fjProceso(CUERPO, ['interes ← saldo * tasa', 'abono ← cuota - interes', 'saldo ← saldo - abono', 'totalIntereses ←', 'totalIntereses + interes'])}
+                        {fjFlecha(ID, CUERPO + 108, CUERPO + 122)}
+                        {fjEntradaSalida(CUERPO + 124, ['Escribir k, interes,', 'abono, saldo'])}
+                        {fjFlecha(ID, CUERPO + 179, CUERPO + 193)}
+                        {fjProceso(CUERPO + 195, ['k ← k + 1'], true)}
+                        {fjRetorno(ID, CUERPO + 231, UNION)}
                         {fjLinea(216, ROMBO + 32, CARRIL_DER, ROMBO + 32)}
                         {fjRotulo(221, ROMBO + 24, 'No')}
                         {fjLinea(CARRIL_DER, ROMBO + 32, CARRIL_DER, SALIDA)}
                         {fjLinea(CARRIL_DER, SALIDA, EJE, SALIDA)}
-                        {fjFlecha(SALIDA, SALIDA + 20)}
-                        {fjEntradaSalida(SALIDA + 22, 'Escribir cobrado')}
-                        {fjFlecha(SALIDA + 60, SALIDA + 84)}
+                        {fjFlecha(ID, SALIDA, SALIDA + 20)}
+                        {fjEntradaSalida(SALIDA + 22, 'Escribir totalIntereses')}
+                        {fjFlecha(ID, SALIDA + 60, SALIDA + 84)}
                         {fjTerminal(SALIDA + 86, 'Fin', '#001A4D')}
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
+                        El plan de pagos de más abajo, con su <span className="inline-code">Para</span> desarmado.
                         Un <span className="inline-code">Para</span> es un <span className="inline-code">Mientras</span> con
                         tres piezas que usted no escribe: <strong>iniciar</strong> el contador, <strong>compararlo</strong> con
                         el tope y <strong>aumentarlo</strong> al final de cada vuelta. Son las de borde discontinuo. Cada
@@ -3127,6 +3159,7 @@ FinMientras`;
            revisión del 2026-10-20. */
         const FlujogramaAnidado = () => {
             const DESCRIPCION = 'Flujograma de dos ciclos Para, uno dentro de otro: el reporte de la cartera. tasa vale 0,02 y total se inicia en 0; i se inicia en 1 y un rombo pregunta si i es menor o igual que 2. Por el Sí se leen saldo y abono, subtotal se inicia en 0, k se inicia en 1 y un segundo rombo, más adentro, pregunta si k es menor o igual que 3. Por su Sí, subtotal suma el interés de la cuota, el saldo baja en el abono y k aumenta en 1, y un retorno interior sube por un carril de adentro hasta antes del segundo rombo. Por su No se vuelve al ciclo de fuera: total suma subtotal, se escriben i y subtotal, i aumenta en 1 y un retorno exterior sube por el carril de afuera hasta antes del primer rombo. Por el No del primer rombo se escribe total. subtotal ← 0 queda dentro del retorno exterior y fuera del interior: se ejecuta una vez por crédito.';
+            const ID = 'lp-flecha5-FlujogramaAnidado';
             const N1 = 44, N2 = 204, CARRIL_DENTRO = 34, SALIDA_DENTRO = 216;
             const UNION_I = 98, ROMBO_I = 110, UNION_K = 314, ROMBO_K = 326;
             const caja = (x1, x2, y, lineas, delCiclo, tam = 12) => {
@@ -3161,53 +3194,53 @@ FinMientras`;
                     {fjLinea(EJE, yDesde, EJE, yDesde + 12, RETORNO)}
                     {fjLinea(carril, yDesde + 12, EJE, yDesde + 12, RETORNO)}
                     {fjLinea(carril, yDesde + 12, carril, yHasta, RETORNO)}
-                    <line x1={carril} y1={yHasta} x2={EJE - 5} y2={yHasta} stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
+                    <line x1={carril} y1={yHasta} x2={EJE - 5} y2={yHasta} stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
                     <circle cx={EJE} cy={yHasta} r="3.5" fill="#3D008D" />
                 </g>
             );
             return (
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 761" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
-                        {FLECHA_DEFS}
+                        {flechaDefs(ID)}
                         {caja(24, 224, 4, ['tasa ← 0.02', 'total ← 0'])}
                         <g transform="translate(0, 17)">
-                        {fjFlecha(38, 50)}
+                        {fjFlecha(ID, 38, 50)}
                         {caja(24, 224, 52, ['i ← 1'], true)}
                         {fjLinea(EJE, 86, EJE, UNION_I)}
-                        {fjFlecha(UNION_I, ROMBO_I - 2)}
+                        {fjFlecha(ID, UNION_I, ROMBO_I - 2)}
                         {rombo(32, 216, ROMBO_I, 'i <= 2')}
                         {fjRotulo(EJE + 8, ROMBO_I + 60, 'Sí')}
-                        {fjFlecha(ROMBO_I + 48, 170)}
+                        {fjFlecha(ID, ROMBO_I + 48, 170)}
                         {es(172, 'Leer saldo, abono')}
-                        {fjFlecha(206, 218)}
+                        {fjFlecha(ID, 206, 218)}
                         {caja(24, 224, 220, ['subtotal ← 0'])}
-                        {fjFlecha(254, 266)}
+                        {fjFlecha(ID, 254, 266)}
                         {caja(N1, N2, 268, ['k ← 1'], true, 11.5)}
                         {fjLinea(EJE, 302, EJE, UNION_K)}
-                        {fjFlecha(UNION_K, ROMBO_K - 2)}
+                        {fjFlecha(ID, UNION_K, ROMBO_K - 2)}
                         {rombo(N1, N2, ROMBO_K, 'k <= 3')}
                         {fjRotulo(EJE + 8, ROMBO_K + 60, 'Sí')}
-                        {fjFlecha(ROMBO_K + 48, 386)}
+                        {fjFlecha(ID, ROMBO_K + 48, 386)}
                         {caja(N1, N2, 388, ['subtotal ← subtotal', '+ saldo * tasa', 'saldo ← saldo - abono'], false, 11)}
-                        {fjFlecha(456, 462)}
+                        {fjFlecha(ID, 456, 462)}
                         {caja(N1, N2, 464, ['k ← k + 1'], true, 11.5)}
                         {retorno(498, CARRIL_DENTRO, UNION_K)}
                         {fjLinea(N2, ROMBO_K + 24, SALIDA_DENTRO, ROMBO_K + 24)}
                         {fjRotulo(207, ROMBO_K + 17, 'No')}
                         {fjLinea(SALIDA_DENTRO, ROMBO_K + 24, SALIDA_DENTRO, 522)}
                         {fjLinea(SALIDA_DENTRO, 522, EJE, 522)}
-                        {fjFlecha(522, 534)}
+                        {fjFlecha(ID, 522, 534)}
                         {caja(24, 224, 536, ['total ← total + subtotal'])}
-                        {fjFlecha(570, 582)}
+                        {fjFlecha(ID, 570, 582)}
                         {es(584, 'Escribir i, subtotal')}
-                        {fjFlecha(618, 630)}
+                        {fjFlecha(ID, 618, 630)}
                         {caja(24, 224, 632, ['i ← i + 1'], true)}
                         {retorno(666, CARRIL_IZQ, UNION_I)}
                         {fjLinea(216, ROMBO_I + 24, CARRIL_DER, ROMBO_I + 24)}
                         {fjRotulo(221, ROMBO_I + 17, 'No')}
                         {fjLinea(CARRIL_DER, ROMBO_I + 24, CARRIL_DER, 690)}
                         {fjLinea(CARRIL_DER, 690, EJE, 690)}
-                        {fjFlecha(690, 702)}
+                        {fjFlecha(ID, 690, 702)}
                         {es(704, 'Escribir total')}
                         </g>
                     </svg>
@@ -3226,6 +3259,7 @@ FinMientras`;
         // La simbología de los flujogramas, con la única forma nueva de este
         // capítulo: el retorno. La forma va en SVG; el texto, en HTML.
         const SimbologiaFlujograma = () => {
+            const ID = 'lp-flecha5-SimbologiaFlujograma';
             const FILAS = [
                 ['Inicio y fin', 'Uno de cada uno, y el recorrido va del primero al segundo.',
                     <ellipse cx="38" cy="16" rx="34" ry="13" fill="#3D008D" />],
@@ -3236,10 +3270,10 @@ FinMientras`;
                 ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.',
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
-                    <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha5)" />],
+                    <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd={punta(ID)} />],
                 ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo.',
                     <g>
-                        <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd="url(#lp-flecha5-retorno)" />
+                        <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
                     </g>],
             ];
             return (
@@ -3247,7 +3281,7 @@ FinMientras`;
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
                         La simbología de los flujogramas
                     </figcaption>
-                    <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{FLECHA_DEFS}</svg>
+                    <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{flechaDefs(ID)}</svg>
                     <ul className="space-y-2.5" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
                         {FILAS.map(([nombre, que, forma], i) => (
                             <li key={i} className="flex items-start gap-3">
