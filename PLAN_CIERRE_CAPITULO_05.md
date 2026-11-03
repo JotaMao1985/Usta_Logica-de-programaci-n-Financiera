@@ -282,3 +282,22 @@ La única diferencia es una línea del módulo 1, el comentario de `EJ_AHORRO_MA
 («tres renglones más abajo»). El módulo 2 no cambia. El libro tiene todavía el
 módulo de antes del 27 de octubre, así que hay que pegar de todos modos. Son tres
 pasos: `preparar`, pegar los dos módulos y `comparar`.
+
+### PC6 · Fase 6 · cierre · 2026-11-02
+
+- **Documentación,** commit `ef3389a`:
+  - la bitácora (§11 del plan maestro);
+  - la línea de Estado de `PLAN_TAREA10_CAPITULO_05.md`;
+  - el «Estado al 2026-11-02» de la revisión.
+- **Verificación final en el worktree:**
+  - `verificar.py --con-salidas`: los cinco pasan, sin avisos, y sale con 0;
+  - la sonda en sus cuatro modos: cinco de cinco en cada uno, sale con 0;
+  - `git status`, limpio.
+
+  La rama no toca los capítulos 1 a 4, ni `Banco Moodle/`, ni ningún `.xlsm`.
+- **El artefacto,** en un `batch` atómico fijado a la versión 2 de cada documento:
+  - once puntos pasan a `hecho`, con su nota y su commit;
+  - `pegar-modulo` sigue en `hacer`, con el motivo;
+  - `ramas` lleva una nota sobre `cap05/cierre`, sin cambiar su estado;
+  - `revision-docente`, `safari` y `publicar` no se tocaron.
+- **Nada se fusionó en `main` ni se subió.**
