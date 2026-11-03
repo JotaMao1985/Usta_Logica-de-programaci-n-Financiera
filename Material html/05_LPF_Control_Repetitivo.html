@@ -3306,8 +3306,8 @@ FinMientras`;
                     Este es el capítulo donde una instrucción escrita una vez <strong>se ejecuta muchas
                     veces</strong>. Al terminarlo debería poder decir cuántas vueltas da un ciclo sin
                     ejecutarlo; elegir entre <span className="inline-code">Mientras</span>, <span className="inline-code">Repita</span> y <span className="inline-code">Para</span> según
-                    se sepa o no cuántas vueltas hacen falta, y según pueda o no ser ninguna; poner los
-                    valores iniciales fuera del ciclo y no dentro; reconocer que un <span className="inline-code">Para</span> no
+                    se sepa o no cuántas vueltas hacen falta, y según pueda o no ser ninguna; poner cada
+                    valor inicial justo antes del ciclo que lo acumula, y no dentro de él; reconocer que un <span className="inline-code">Para</span> no
                     significa lo mismo en R que en Python; y —sobre todo— anticipar <strong>cuándo
                     para</strong>: el ciclo que no termina nunca, y el que da una vuelta de más por un
                     residuo de cienmillonésimas.
@@ -3485,8 +3485,8 @@ Sub AhorroProgramado()
 End Sub`,
         };
 
-        /* El mismo programa con `intereses <- 0` un renglón más abajo: dentro
-           del ciclo. Es el extracto de la motivación. En las dos primeras
+        /* El mismo programa con `intereses <- 0` tres renglones más abajo:
+           dentro del ciclo. Es el extracto de la motivación. En las dos primeras
            vueltas coincide con el bueno —el interés del mes 1 es cero—, y por
            eso una traza de dos vueltas no lo delata. Salidas ejecutadas el
            2026-09-28. */
@@ -3500,7 +3500,7 @@ End Sub`,
     meses <- 0
 
     Mientras saldo < meta Hacer
-        intereses <- 0          // un renglón más abajo: dentro del ciclo
+        intereses <- 0          // tres renglones más abajo: dentro del ciclo
         interes   <- saldo * tasa
         intereses <- intereses + interes
         saldo     <- saldo + interes + aporte
@@ -3522,7 +3522,7 @@ saldo = 0
 meses = 0
 
 while saldo < meta:
-    intereses = 0          # un renglón más abajo: dentro del ciclo
+    intereses = 0          # tres renglones más abajo: dentro del ciclo
     interes   = saldo * tasa
     intereses = intereses + interes
     saldo     = saldo + interes + aporte
@@ -3542,7 +3542,7 @@ saldo <- 0
 meses <- 0
 
 while (saldo < meta) {
-  intereses <- 0          # un renglón más abajo: dentro del ciclo
+  intereses <- 0          # tres renglones más abajo: dentro del ciclo
   interes   <- saldo * tasa
   intereses <- intereses + interes
   saldo     <- saldo + interes + aporte
@@ -3570,7 +3570,7 @@ Sub AhorroProgramadoMal()
     meses = 0
 
     Do While saldo < meta
-        intereses = 0        ' un renglón más abajo: dentro del ciclo
+        intereses = 0        ' tres renglones más abajo: dentro del ciclo
         interes = saldo * tasa
         intereses = intereses + interes
         saldo = saldo + interes + aporte
@@ -3799,7 +3799,7 @@ End Sub`,
                     en la cuenta, y el extracto de cierre le informó 34 053 pesos de intereses ganados.
                     Había ganado 217 709. El ciclo dio sus trece vueltas y sumó el interés en cada una:
                     el defecto era una sola línea, <span className="inline-code">intereses &lt;- 0</span>, escrita
-                    un renglón más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
+                    tres renglones más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
                     a empezar.
                 </Motivacion>
 
@@ -3876,6 +3876,15 @@ End Sub`,
                     bloques={EJ_AHORRO}
                     nota="La forma del ciclo es la de la sección 2; aquí interesa lo que pasa dentro. meses suma siempre 1; intereses y saldo suman cada vez una cifra distinta, porque el interés de cada mes depende del saldo que dejó el anterior." />
 
+                <Box type="info" label="Las tasas de este capítulo">
+                    El 0,9 % mensual de este ahorro y el 2 % mensual de los créditos de las secciones 4
+                    y 5 son <strong>ilustrativos</strong>: se eligieron para que las cuentas se puedan
+                    seguir, no para describir un producto real. Llevados a un año, son el 11,35 % y el
+                    26,82 % efectivo anual: (1,009)<sup>12</sup> − 1 y (1,02)<sup>12</sup> − 1. En
+                    Colombia, la Superintendencia Financiera certifica la tasa de usura, el tope legal
+                    del interés de un crédito, y una tasa real se compara con la que esté vigente.
+                </Box>
+
                 <p>
                     Las tres variables reciben su valor <strong>antes</strong> del ciclo, y no es cuestión de
                     orden. Una línea escrita antes del ciclo se ejecuta una vez; una escrita dentro se
@@ -3900,7 +3909,7 @@ End Sub`,
                 <h3>La línea en el lugar equivocado</h3>
                 <p>
                     Este es el programa de la motivación. Es el de arriba con una sola diferencia: la
-                    línea <span className="inline-code">intereses &lt;- 0</span> bajó un renglón y quedó como la
+                    línea <span className="inline-code">intereses &lt;- 0</span> bajó tres renglones y quedó como la
                     primera instrucción del cuerpo.
                 </p>
 
@@ -3953,7 +3962,7 @@ End Sub`,
                     opciones={[
                         { texto: '3 créditos en mora por 1 500 000', correcta: false },
                         { texto: '2 créditos en mora por 500 000', correcta: false },
-                        { texto: '2 créditos en mora por 1 500 000', correcta: true, justificacion: 'revisados aumenta en todas las vueltas y llega a 3. enMora es un contador también, pero está dentro de la selectiva: solo aumenta en las vueltas en que la condición se cumple —45 > 30 y 31 > 30 sí, 10 > 30 no—, así que vale 2. saldoMora es un acumulador dentro de la misma selectiva: suma el saldo de esos dos créditos, 1 000 000 + 500 000 = 1 500 000. Tres créditos en mora sería un contador que aumenta en todas las vueltas, como revisados. 500 000 sería una variable que se reemplaza en vez de sumarse: el último saldo en mora, no el total. Y 3 500 000 sería la suma de todos los saldos, la de un acumulador que no está dentro de la selectiva. Fíjese, de paso, en diasMora: cambia en cada vuelta y no es ni contador ni acumulador, porque Leer le pone un dato nuevo sin mirar el anterior. Lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía. (En Python y R, las variables se llaman en_mora, saldo_mora y dias_mora.)' },
+                        { texto: '2 créditos en mora por 1 500 000', correcta: true, justificacion: 'El contador de créditos revisados aumenta en todas las vueltas y llega a 3. El de créditos en mora es un contador también, pero está dentro de la selectiva: solo aumenta en las vueltas en que la condición se cumple —45 > 30 y 31 > 30 sí, 10 > 30 no—, así que vale 2. El saldo en mora es un acumulador dentro de la misma selectiva: suma el saldo de esos dos créditos, 1 000 000 + 500 000 = 1 500 000. Tres créditos en mora sería un contador que aumenta en todas las vueltas, como el de revisados. 500 000 sería una variable que se reemplaza en vez de sumarse: el último saldo en mora, no el total. Y 3 500 000 sería la suma de todos los saldos, la de un acumulador que no está dentro de la selectiva. Fíjese, de paso, en los días de mora: cambian en cada vuelta y no son contador ni acumulador, porque cada lectura les pone un dato nuevo sin mirar el anterior. Lo que define a un contador o a un acumulador es que su valor nuevo se calcula a partir del que tenía.' },
                         { texto: '2 créditos en mora por 3 500 000', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -4173,7 +4182,8 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-handshake"
                     gancho="Un Mientras pregunta antes de cada vuelta. ¿Cuántas veces pregunta, y con qué valor sale del ciclo?">
-                    Cobranza ofrece un acuerdo: condona los intereses de mora y recibe la deuda, 2 350 000
+                    El área de cobranza le ofrece un acuerdo a un cliente: condona los intereses de mora y
+                    recibe la deuda, 2 350 000
                     pesos, en abonos mensuales de 400 000. El sistema calcula cuánto dura el acuerdo con
                     un ciclo que resta el abono mientras quede saldo, y responde seis meses, que es
                     correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
@@ -4196,7 +4206,7 @@ End Sub`,
                 <CodeTabs
                     titulo="El acuerdo de pago de la motivación"
                     bloques={EJ_ACUERDO}
-                    nota="Seis vueltas, y el saldo sale del ciclo en −50 000: el sexto abono cobró 400 000 cuando quedaban 350 000. El ciclo no tiene un error; hace exactamente lo que dice su condición." />
+                    nota="Seis vueltas, y el saldo sale del ciclo en −50 000: el sexto abono cobró 400 000 cuando quedaban 350 000. La condición no está mal: hace exactamente lo que dice. Lo que falta está en el cuerpo." />
 
                 <Box type="warn" label="El sexto abono">
                     La condición <span className="inline-code">saldo &gt; 0</span> decide <em>si</em> hay otra vuelta,
@@ -4300,9 +4310,9 @@ End Sub`,
                     multiple={true}
                     pregunta="¿Con cuáles de estos datos el ciclo del acuerdo de pago no da ninguna vuelta?"
                     opciones={[
-                        { texto: 'Saldo 400 000 y abono 400 000: la deuda se cubre justo con el primer abono', correcta: false },
+                        { texto: 'Saldo 400 000 y abono 400 000: la deuda es justo del tamaño de un abono', correcta: false },
                         { texto: 'Saldo 0 y abono 400 000: el cliente ya había pagado todo por otro canal', correcta: true, justificacion: 'Son el saldo 0 y el saldo −20 000. En los dos casos la primera evaluación de saldo > 0 da falso, antes de que exista ninguna vuelta, y el programa escribe meses = 0 con el saldo intacto: es lo correcto, porque no hay nada que cobrar. El saldo a favor muestra además que la condición no pregunta si el saldo es cero, sino si es positivo. Con saldo 400 000 y abono 400 000 sí hay una vuelta: la primera evaluación es 400 000 > 0, verdadera; después de restar, el saldo queda en 0 y la segunda evaluación da falso. Una vuelta y dos evaluaciones. Y con abono 0 pasa lo contrario de lo que pregunta el ejercicio: el ciclo entra, pero el saldo nunca baja, la condición nunca cambia y el ciclo no termina. Es el defecto de la tercera pieza —la actualización que no acerca la condición a ser falsa— y el tema de la sección 6.' },
-                        { texto: 'Saldo 500 000 y abono 0: el cliente no alcanza a abonar nada este mes', correcta: false },
+                        { texto: 'Saldo 500 000 y abono 0: el abono del acuerdo quedó mal registrado', correcta: false },
                         { texto: 'Saldo −20 000 y abono 400 000: el cliente quedó con un saldo a favor', correcta: true },
                     ]}
                 /></Ejercicio>
@@ -5039,7 +5049,9 @@ End Sub`,
         /* E4 (H8): no se pide reescribir, se decide. B no se parece a un Para
            —el contador nace en 0, aumenta al principio del cuerpo y la
            condición usa <— y aun así es equivalente con cualquier n, también
-           con 0 (ejecutado el 2026-10-19). Con n negativo coinciden en
+           con 0 (ejecutado el 2026-10-19). Con 0 se comparan solo los ciclos:
+           la fórmula de la cuota divide entre cero, y la clave no lo menciona
+           desde el 2026-11-02. Con n negativo coinciden en
            pseudocódigo, Python y VBA, pero en R `seq_len(n)` da error: la
            auditoría de la Fase 3 lo encontró, y el ejercicio no pregunta por
            negativos. Va justo después
@@ -5119,8 +5131,8 @@ Loop`,
                 <Motivacion icon="fa-calendar-days"
                     gancho="Si el número de vueltas se sabe desde la firma, ¿cómo puede un ciclo dar una de menos? Porque «de 1 hasta n» no significa lo mismo en los cuatro lenguajes.">
                     Un crédito de libre inversión de 10 millones al 1,5 % mensual se firma a doce cuotas, así
-                    que su plan de pagos tiene doce filas desde el día de la firma. Al migrarlo de Excel a
-                    Python, un analista tradujo <span className="inline-code">For k = 1 To 12</span> como
+                    que su plan de pagos tiene doce filas desde el día de la firma. Al pasar a Python la macro
+                    de Excel que lo calcula, un analista tradujo <span className="inline-code">For k = 1 To 12</span> como
                     {' '}<span className="inline-code">range(1, 12)</span>. El sistema emitió once cuotas, el
                     cliente las pagó y recibió su paz y salvo, y el banco dejó de recaudar la cuota doce:
                     916 799,93.
@@ -5334,7 +5346,7 @@ Loop`,
                     pregunta="¿Son equivalentes? Y si no lo son, ¿con qué valor de n escriben tablas distintas?"
                     opciones={[
                         { texto: 'No: B compara con k < n, como el plan de pagos del ejercicio anterior, y deja sin escribir la fila de la cuota n.', correcta: false },
-                        { texto: 'Sí: B empieza en 0 y aumenta k antes de usarlo, así que escribe las cuotas 1 a n, también con n igual a 0.', correcta: true, justificacion: 'B no se parece a un Para, pero da exactamente sus vueltas. Su contador nace en 0 y aumenta al principio del cuerpo, así que cuando llega a las líneas que lo usan ya vale 1 en la primera vuelta, 2 en la segunda y n en la última. La condición se evalúa con el valor que dejó la vuelta anterior: después de la vuelta n, k vale n y k < n es falso. Son n vueltas con k = 1, …, n, igual que A. El < no es un defecto aquí, aunque lo fuera en el ejercicio anterior: allí el contador nacía en 1 y aumentaba al final, y con esas dos piezas la condición tenía que ser <=. Lo que tiene que casar es el conjunto —valor inicial, sitio del aumento y condición—, no cada pieza por separado. Tampoco empieza la tabla en la cuota 0: el 0 es el valor de antes de la primera vuelta, y la primera fila ya se escribe con k = 1. Y con n = 0 no difieren: la primera evaluación de B es 0 < 0, falsa, y no escribe nada, igual que A. Difería el Repita de la sección 3, que pregunta después de cobrar. En R, A usa seq_len(n): con 1:n, las dos sí escribirían tablas distintas con n = 0.' },
+                        { texto: 'Sí: B empieza en 0 y aumenta k antes de usarlo, así que escribe las mismas filas que A, de la cuota 1 a la n.', correcta: true, justificacion: 'B no se parece a un Para, pero da exactamente sus vueltas. Su contador nace en 0 y aumenta al principio del cuerpo, así que cuando llega a las líneas que lo usan ya vale 1 en la primera vuelta, 2 en la segunda y n en la última. La condición se evalúa con el valor que dejó la vuelta anterior: después de la vuelta n, k vale n y k < n es falso. Son n vueltas con k = 1, …, n, igual que A. El < no es un defecto aquí, aunque lo fuera en el ejercicio anterior: allí el contador nacía en 1 y aumentaba al final, y con esas dos piezas la condición tenía que ser <=. Lo que tiene que casar es el conjunto —valor inicial, sitio del aumento y condición—, no cada pieza por separado. Tampoco empieza la tabla en la cuota 0: el 0 es el valor de antes de la primera vuelta, y la primera fila ya se escribe con k = 1. Y con n = 0 los ciclos tampoco difieren: la primera evaluación de B es 0 < 0, falsa, y no escribe nada, igual que A. Ese caso mira solo los ciclos, porque un plan de cero cuotas no tiene cuota: la fórmula dividiría entre cero. Difería el Repita de la sección 3, que pregunta después de cobrar. En R, A usa seq_len(n): con 1:n, las dos sí escribirían tablas distintas con n = 0.' },
                         { texto: 'No: B arranca el contador en 0, así que su tabla empieza en la cuota 0 y termina en la cuota n − 1.', correcta: false },
                         { texto: 'No: difieren con n igual a 0, porque A no escribe ninguna fila y B escribe una, la de la cuota 1.', correcta: false },
                     ]}
@@ -5967,7 +5979,7 @@ End Sub`,
                 <p>
                     La regla de la sección 1 sigue valiendo, con una respuesta más. Ante cada línea, la pregunta
                     es si se ejecuta una vez, una vez por crédito o una vez por cuota. Y cada inicialización va
-                    justo antes del ciclo que recorre su variable: el total, antes del de fuera; el subtotal,
+                    justo antes del ciclo que acumula su variable: el total, antes del de fuera; el subtotal,
                     dentro del de fuera y antes del de dentro.
                 </p>
 

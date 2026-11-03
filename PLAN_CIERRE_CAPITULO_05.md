@@ -145,4 +145,48 @@ actualizado.
 
 ## Puntos de control
 
-*(Se llenan al cerrar cada fase.)*
+### PC1 · Fase 1 · texto, ejercicios y tasas · 2026-11-02
+
+**Hecho.**
+- **Siete frases de la revisión**, corregidas: «tres renglones» en la motivación,
+  en «bajó tres renglones», en el comentario de `EJ_AHORRO_MAL` y en el
+  comentario de código de los cuatro lenguajes; la portada; «La condición no está
+  mal»; «El área de cobranza»; «la macro de Excel que lo calcula»; «el ciclo que
+  acumula su variable»; y el abono 0, ahora «mal registrado». La octava, «a sí
+  misma», ya no estaba (ver la tabla de la fase 1).
+- **Los tres detalles de ejercicios.**
+  - La glosa de la «a» del E2 de la sección 2: «la deuda es justo del tamaño de
+    un abono».
+  - La clave del E4 de la sección 4: «escribe las mismas filas que A, de la
+    cuota 1 a la n». La justificación aclara que n = 0 solo mira los ciclos.
+  - La justificación del E2 de la sección 1 nombra cada variable por lo que lleva
+    y ya no necesita el paréntesis de Python y R.
+- **La nota de las tasas,** un `Box` junto al ahorro programado de la sección 1.
+
+**Medido.**
+- **Las cifras, en Python y en R:**
+  - (1,02)¹² − 1 = 26,8242 % y (1,009)¹² − 1 = 11,3510 %;
+  - las versiones A y B del E4 escriben las mismas filas, de la 1 a la n, con
+    n de 0 a 24;
+  - con n = 0, la fórmula de la cuota: Python lanza `ZeroDivisionError` y R da
+    `Inf`;
+  - «tres renglones» en los cuatro lenguajes, contado sobre los bloques: la
+    línea pasa de 1 a 4 renglones debajo de `saldo <- 0`.
+- **Regla 17:** la clave del E4 mide 109 caracteres, y el distractor más largo,
+  113. El E2 de la sección 2 es de selección múltiple y la regla no lo mide.
+- **Por DOM, en Chrome sin ventana, 123 comprobaciones**, todas bien:
+  - los tres ejercicios, en los cuatro lenguajes;
+  - las opciones del DOM son las de las props, leídas por `__reactFiber$`;
+  - la respuesta buena da «¡Correcto!» y la mala, «Revisa la explicación»;
+  - la explicación trae el texto nuevo y ya no el viejo;
+  - en el `Comparador`, la pestaña activa muestra el código de su lenguaje.
+- **A 375 px,** con la barra lateral cerrada (0 px), la nota va de 24 a 343 px.
+  Ningún elemento sale; la prueba negativa (un div de 600 px dentro de la nota)
+  sí sale.
+- **La regla 21** cazó las cuatro cifras de la nota antes del espacio duro.
+  `--corregir` cambió esos cuatro espacios y ninguno más.
+- **`verificar.py --con-salidas`:** los cinco pasan. **La sonda,** en sus cuatro
+  modos: los cinco pasan, con los mismos recortes a 375 px que la línea base.
+
+**Para la fase 5.** Cambió el comentario de una línea del VBA de `EJ_AHORRO_MAL`,
+y con él la huella del arnés: hay que pegar el módulo nuevo.
