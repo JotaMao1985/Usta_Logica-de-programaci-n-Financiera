@@ -2264,3 +2264,27 @@ repetitivo» y marcó cuáles hacer. Se hicieron por fases, en la rama
 
 **Un hallazgo, sin tocar.** La clave del E2 de la demostración (1 000 000) solo vale
 en VBA. En Python y R, intercambiar las líneas 3 y 4 da error.
+
+### Los demás menores del capítulo 5 · 2026-11-03
+
+El docente pidió corregir también los menores de la revisión del 20 de octubre
+que no estaban en la lista del cierre. Con eso, la §3 de la revisión queda
+cerrada. El detalle está en el «Estado al 2026-11-03» de
+`REVISION_CAPITULOS_04_05.md`.
+- **Ocho correcciones,** commit `7dbc723`. Ninguna cambia una clave ni una cifra.
+- **Cinco ya estaban resueltas** por trabajo anterior, y una se queda a propósito:
+  el 0,00 de `AmortizacionPasoAPaso`.
+
+**Lo que enseñó.** Un flujograma puede dibujar con sus propias funciones.
+`FlujogramaAnidado` no usa `fjProceso` ni `fjDecision`: tiene `caja` y `rombo`.
+Cambiar el estilo en las funciones comunes dejaba el anidado como estaba, y solo
+lo cazó la prueba por DOM, que mira el color de cada pieza dibujada y no el
+código.
+
+**Verificación.**
+- 48 comprobaciones por DOM en los cuatro lenguajes, con la tabla de traza
+  hasta el veredicto.
+- Su negativa contra la copia de antes: fallan 36, nueve puntos en cada uno de
+  los cuatro lenguajes.
+- `verificar.py --con-salidas`, las cifras y la sonda en sus cuatro modos pasan.
+

@@ -24,6 +24,30 @@
 > - la librería (§1: L1 a L6), que espera a la tarea de deudas P3;
 > - los menores, salvo los que estaban en la misma frase que un medio.
 
+> **Estado al 2026-11-03** (misma rama, commit `7dbc723`): **la §3 del capítulo 5 queda cerrada.**
+>
+> **Corregidos los menores que quedaban:**
+> - «el paso» de `Next`, que ahora se presenta;
+> - «¿Incluye el tope? No» junto a `range(1, n + 1)`: la celda dice que el tope es el n + 1;
+> - el término «error de frontera», que definía un error como «un ciclo»;
+> - la motivación de la sección 5, de 101 a 80 palabras;
+> - «Fin de la vuelta n», que en VBA era ambiguo para `k`: ahora dice «Vuelta n, al final del cuerpo»;
+> - el `monto <- -1` del E8, que ahora va con la sintaxis de los cuatro lenguajes;
+> - las piezas implícitas del `Para`, que tenían el color de Entrada/Salida;
+> - el aumento de `k` en la traza del anidado: una nota explica por qué la traza
+>   vuelve a la cabecera y el flujograma lo dibuja al final.
+>
+> **Ya estaban resueltos antes:**
+> - «se detuvo a decir cómo se llamaban» y «a sí misma»;
+> - la frontera entre `<` y `<=`, que dice que reaparece en la sección 4;
+> - el «residuo» con otro sentido, que se fue con el E4 de la sección 3 rehecho (H18);
+> - la equivalencia «con negativos», en el comentario y en el plan.
+>
+> **Se queda como está, a propósito:** `AmortizacionPasoAPaso` muestra 0,00 donde
+> Python y R escriben −0.00. Su comentario lo explica: el signo de un residuo es
+> asunto de la sección 6, no de una tabla de pagos. Desde el 2026-10-27, VBA
+> también escribe 0.00.
+>
 > **Estado al 2026-11-02** (rama `cap05/cierre05`, `PLAN_CIERRE_CAPITULO_05.md`).
 >
 > **Corregidos del capítulo 5 (§3, Menores):**

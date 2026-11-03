@@ -301,3 +301,24 @@ pasos: `preparar`, pegar los dos módulos y `comparar`.
   - `ramas` lleva una nota sobre `cap05/cierre`, sin cambiar su estado;
   - `revision-docente`, `safari` y `publicar` no se tocaron.
 - **Nada se fusionó en `main` ni se subió.**
+
+### PC7 · Los demás menores de la revisión · 2026-11-03
+
+El docente pidió, al leer la lista de cambios, corregir también los menores de
+la §3 de la revisión que no estaban en el artefacto.
+- **Hechos,** commit `7dbc723`: los ocho que siguen en `REVISION_CAPITULOS_04_05.md`
+  («Estado al 2026-11-03»). El de las piezas implícitas tocó dos sitios:
+  `fjProceso` y `fjDecision`, y también `caja` y `rombo` de `FlujogramaAnidado`,
+  que dibuja con sus propias funciones. La primera prueba lo cazó: el Para ya
+  estaba bien y el anidado seguía en teal.
+- **Verificación:**
+  - 48 comprobaciones por DOM en los cuatro lenguajes (`prueba_menores.mjs`, en
+    el scratchpad de la sesión): los textos nuevos, la definición del término por
+    sus props, el color de cada pieza discontinua, la nota de la traza en el paso 10
+    y la tabla de traza hasta el veredicto (20/20 la buena, 19/20 la mala);
+  - la negativa, contra la copia de antes: fallan 36, los nueve puntos en cada
+    lenguaje, y la calificación y la consola siguen igual;
+  - `verificar.py --con-salidas`, `comprobar_cifras.js` y la sonda en sus cuatro
+    modos pasan; a 375 px, los recortados del 05 son los mismos que antes.
+- **Nada se fusionó en `main` ni se subió.**
+
