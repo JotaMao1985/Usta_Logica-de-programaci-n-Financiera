@@ -3177,7 +3177,12 @@ Debug.Print saldo`,
 
                         <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
-                                <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
+                                {/* Por debajo de `lg` el botón del menú, fijo arriba a la
+                                    izquierda, caía encima de esta fila y tapaba «Lección N
+                                    de M» y, en el teléfono, «Anterior» (medido de 320 a
+                                    900 px el 2026-11-03). La sangría la deja a su derecha;
+                                    desde `lg` el relleno del contenido ya basta. */}
+                                <div className="mb-6 pl-10 lg:pl-0 flex items-center justify-between flex-wrap gap-3">
                                     <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
                                         Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>

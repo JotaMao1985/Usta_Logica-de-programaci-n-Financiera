@@ -16,7 +16,10 @@
  *                 solo se admite dentro de un bloque de código plegado, que el
  *                 estudiante despliega: se cuenta aparte. Cualquier otro
  *                 recorte esconde contenido y falla. Antes de medir, una prueba
- *                 negativa: un div de 600 px tiene que salir.
+ *                 negativa: un div de 600 px tiene que salir. Y el botón
+ *                 flotante del menú no tapa la fila «Lección N de M» ni sus
+ *                 botones (los tapó de 320 a 900 px hasta el 2026-11-03); su
+ *                 prueba negativa: sin la sangría de esa fila, tiene que taparla.
  *   sin-almacen   `localStorage` lanza `SecurityError`, como en una ventana
  *                 privada o con el almacenamiento bloqueado (H16 del capítulo 5).
  *   sin-cdnjs     cdnjs no resuelve: el capítulo carga sin color en el código.
@@ -126,6 +129,15 @@ const MEDIR = `(() => {
     }
     return { vw, sw: document.documentElement.scrollWidth, fuera, recortados };
 })()`;
+// Lo que el botón flotante del menú tapa de la fila «Lección N de M»: la
+// etiqueta o sus botones. Es lo primero que se ve de cada lección.
+const TAPA = `(() => {
+    const toca = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    const menu = document.querySelector('button[aria-label$="menú"]').getBoundingClientRect();
+    const fila = document.querySelector('.max-w-4xl > div');
+    return [fila.querySelector('span'), ...fila.querySelectorAll('button')]
+        .filter(p => toca(menu, p.getBoundingClientRect())).map(p => p.innerText.trim().slice(0, 24));
+})()`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
 const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].find(b => /^\\s*Siguiente/i.test(b.innerText) && !b.disabled); if (b) b.click(); return !!b; })()`;
 // Tailwind aplicado: `max-w-4xl` solo tiene ancho máximo si Tailwind generó su regla.
@@ -146,18 +158,23 @@ for (const ruta of rutas) {
         const n = await evaluar(`(() => { const d = document.createElement('div'); d.style.cssText = 'width:600px;height:10px';
             document.querySelector('.max-w-4xl').appendChild(d); const r = ${MEDIR}; d.remove(); return r.fuera.length; })()`);
         if (!n) { console.log('✗ la prueba negativa no detectó un div de 600 px: la medida no sirve'); await cerrar(); process.exit(1); }
+        const t = await evaluar(`(() => { const f = document.querySelector('.max-w-4xl > div'); f.style.paddingLeft = '0px';
+            const t = ${TAPA}; f.style.paddingLeft = ''; return t.length; })()`);
+        if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre la fila sin sangría: la medida no sirve'); await cerrar(); process.exit(1); }
     }
     const lecciones = [];
-    let total = 0;
+    let total = 0, leccionesMal = 0;
     for (let k = 0; k < 20; k++) {
         await espera(900);
         const [n, t] = await evaluar(LECCION);
         total = t;
         if (modo === '375') {
             const m = await evaluar(MEDIR);
-            const bien = m.sw === m.vw && !m.fuera.length;
-            if (!bien) fallos++;
-            lecciones.push(bien ? `${n}${m.recortados ? `(${m.recortados} recortados)` : ''}` : `${n}: ✗ ${m.fuera.slice(0, 2).join(' | ')}`);
+            const tapa = await evaluar(TAPA);
+            const bien = m.sw === m.vw && !m.fuera.length && !tapa.length;
+            if (!bien) leccionesMal++;
+            const mal = [...m.fuera.slice(0, 2), ...(tapa.length ? [`el botón del menú tapa «${tapa.join('», «')}»`] : [])];
+            lecciones.push(bien ? `${n}${m.recortados ? `(${m.recortados} recortados)` : ''}` : `${n}: ✗ ${mal.join(' | ')}`);
         } else lecciones.push(String(n));
         if (n === t || !(await evaluar(SIGUIENTE))) break;
     }
@@ -168,7 +185,9 @@ for (const ruta of rutas) {
         : await evaluar(`(() => { try { return Object.keys(localStorage).filter(k => k.startsWith('lpf_')).length + ' claves lpf_'; } catch (e) { return 'error: ' + e.message; } })()`);
     const recorrio = lecciones.length === total;
     const conEstilos = await evaluar(ESTILOS);
-    const mal = errores.length || !recorrio || !conEstilos;
+    // Una lección que falla a 375 px marca también la línea del capítulo:
+    // antes del 2026-11-03 la sonda salía con 1 y la línea decía ✓.
+    const mal = errores.length || !recorrio || !conEstilos || leccionesMal;
     if (mal) fallos++;
     console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
     if (modo === '375') console.log(`    ${lecciones.join(' · ')}`);

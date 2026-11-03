@@ -60,7 +60,8 @@ Hasta el 2026-10-27 las ignoraba, y un `--help` estampaba los cinco capítulos.
 **`sonda_navegador.mjs`** abre cada capítulo como `file://` en un Chrome sin
 ventana y recorre todas sus lecciones. Tiene cinco modos:
 - `file`, el de omisión: monta, guarda y no da errores de JavaScript;
-- `375`: nada se sale a 375 px;
+- `375`: nada se sale a 375 px y el botón del menú no tapa la fila «Lección
+  N de M»;
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar

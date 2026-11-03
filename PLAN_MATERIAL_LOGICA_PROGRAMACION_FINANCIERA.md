@@ -2347,3 +2347,33 @@ resolver `cdn.tailwindcss.com`, como en el iPhone.
 - **`verificar.py --con-salidas`** pasa, con la regla 20 del `head` incluida.
 - **`ensamblar.py`** dos veces da el mismo SHA.
 
+### El botón del menú tapaba la cabecera de la lección · 2026-11-03
+
+**Qué pasó.** En el iPhone, el botón flotante del menú caía encima de «LECCIÓN N
+DE 9». No era del iPhone. Medido en Chrome, de 320 a 900 px el botón (fijo en
+`top-4 left-4`, 32 × 44 px) tapaba la etiqueta en los cinco capítulos, y en el
+teléfono también «Anterior», que pasa a la segunda línea. Desde 1000 px el
+contenido ya empieza a su derecha.
+
+**El arreglo.** En el `App` de `lp-demo.jsx`, la fila «Lección N de M» lleva
+`pl-10 lg:pl-0`. Por debajo de `lg` arranca 16 px a la derecha del botón, el
+mismo margen que lo separa del borde. La cabecera no gana altura. Se regeneró
+la plantilla y se reestamparon los cinco capítulos: el mismo cambio de 7 líneas
+en cada uno, y regenerar después de estampar el 01 da el mismo SHA.
+
+**Dos huecos de la sonda, cerrados.**
+- **No miraba el botón.** El modo `375` exige ahora, en cada lección, que el
+  botón del menú no toque la etiqueta ni los botones de esa fila. Su prueba
+  negativa corre antes de medir: sin la sangría, tiene que tocarla.
+- **La línea del capítulo no reflejaba las lecciones.** Con una lección mal a
+  375 px, la sonda salía con 1, pero la línea del capítulo decía ✓. Ahora dice ✗.
+
+**Verificación.**
+- **Prueba negativa:** la sonda nueva, en modo `375` sobre el capítulo 5 de
+  `main`, falla en las nueve lecciones («el botón del menú tapa «LECCIÓN 1 DE 9 ·
+  11 %», «Anterior»»).
+- **Barrido de anchos** (320, 360, 375, 414, 640, 768, 900, 1000, 1023, 1024 y
+  1280 px; desde 1024, también con la barra cerrada a mano), en los capítulos 1
+  y 5: nada tapado. Antes fallaban de 320 a 900.
+- **La sonda en sus cinco modos** y **`verificar.py --con-salidas`** pasan en los
+  cinco capítulos.
