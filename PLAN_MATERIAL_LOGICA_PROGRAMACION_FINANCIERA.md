@@ -2377,3 +2377,21 @@ en cada uno, y regenerar después de estampar el 01 da el mismo SHA.
   y 5: nada tapado. Antes fallaban de 320 a 900.
 - **La sonda en sus cinco modos** y **`verificar.py --con-salidas`** pasan en los
   cinco capítulos.
+
+### El recargo del 5 % del capítulo 4 queda como ilustrativo · 2026-11-03
+
+**La decisión.** El docente deja el recargo como está, declarado ilustrativo: un
+5 % sobre todo el saldo por un mes de mora equivale a un 79,6 % EA, por encima
+de la usura, y se cobra sobre lo vencido.
+
+**No hubo que tocar el capítulo.** La nota ya estaba desde el 2026-10-20
+(`b63f1f7`), en la del bloque «El recargo que no se cobró» de la sección 2: «El
+5 % sobre todo el saldo es ilustrativo: en Colombia, el cobro por mora está
+topado por la tasa de usura y se liquida sobre lo vencido». Es el primer bloque
+que usa el 5 %, y todas las apariciones del recargo están en esa sección. El
+estado del 2026-11-02 de `REVISION_CAPITULOS_04_05.md` la daba por pendiente sin
+haberla buscado; se corrigió.
+
+**Verificación.** En Chrome, la nota se ve en la lección 3 de 8 con las cuatro
+pestañas. La primera búsqueda no la encontró: buscaba «5 %» con un espacio
+normal, y la cifra lleva el espacio duro de la regla 21 de `verificar.py`.

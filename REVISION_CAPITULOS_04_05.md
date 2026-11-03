@@ -62,8 +62,11 @@
 > - los `id` repetidos de los marcadores (L6).
 >
 > **La decisión 4 (§4), para el capítulo 5:** el 0,9 % y el 2 % mensual quedan,
-> con una nota que los declara ilustrativos. **El recargo del 5 % del capítulo 4
-> sigue sin decidir:** el capítulo está publicado.
+> con una nota que los declara ilustrativos. **El recargo del 5 % del capítulo 4,
+> también:** el docente lo decidió el 2026-11-03. La nota ya estaba desde el
+> 2026-10-20 (commit `b63f1f7`), en la del bloque «El recargo que no se cobró» de
+> la sección 2, que es el primero que usa el 5 %. Este estado la dio por pendiente
+> sin buscarla.
 >
 > **Esperan, a propósito:**
 > - los detalles de forma de los gráficos (`TresCiclosComparados`, la simbología,
