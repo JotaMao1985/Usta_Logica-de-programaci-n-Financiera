@@ -2288,3 +2288,9 @@ código.
   los cuatro lenguajes.
 - `verificar.py --con-salidas`, las cifras y la sonda en sus cuatro modos pasan.
 
+**Publicado el mismo día.** Por decisión del docente, `main` avanzó hasta el
+cierre y se subió: `fec3737..ca7397f`, 44 commits. El despliegue de GitHub
+Pages terminó bien en 25 s. El portal y los capítulos 1, 4 y 5 que sirve el
+sitio son, byte a byte, los de `main`. El 5 carga en el navegador sin errores
+de consola.
+
