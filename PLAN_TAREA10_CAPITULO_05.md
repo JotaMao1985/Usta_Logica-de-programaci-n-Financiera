@@ -1169,6 +1169,11 @@ viene» anuncia el capítulo 6.
 
   Claves del capítulo: c b a b d b c a d c · b d a b c a d b c a. Son 20 ítems, con
   6 como máximo en una letra y sin rachas.
+
+  *Revisado el 2026-11-09:* la pregunta 7 ya no es la del saldo insoluto sino la
+  del cruce de los dos topes de la sección 7, y las opciones de las 1, 2, 5, 6, 8
+  y 10 dicen solo el resultado. Las claves no se movieron. El detalle, en la
+  bitácora del plan maestro.
 - **Glosario** `GLOSARIO_CAP05`, en orden alfabético, con veinte términos: los
   catorce de los `<Termino>` y seis más que el capítulo usa sin recuadro (las tres
   formas, la bisección, la tolerancia y el VPN).

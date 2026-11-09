@@ -74,6 +74,10 @@
 > - `not-prose` en párrafos y listas (L4), que el docente dejó para el rediseño
 >   de los componentes.
 
+> **Estado al 2026-11-09.** El cuestionario del capítulo 5, que esta revisión no
+> alcanzó, se revisó aparte y se corrigió. El detalle está en la bitácora del plan
+> maestro.
+
 **Alcance:**
 - capítulo 4 completo, que está publicado en `main` y entra en el parcial de hoy;
 - capítulo 5, secciones 1 a 5. La 6, la 7, la evaluación y el glosario son todavía andamio y no se revisaron.

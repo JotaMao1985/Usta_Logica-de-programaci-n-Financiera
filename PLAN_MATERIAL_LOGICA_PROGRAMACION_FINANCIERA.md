@@ -2395,3 +2395,51 @@ haberla buscado; se corrigió.
 **Verificación.** En Chrome, la nota se ve en la lección 3 de 8 con las cuatro
 pestañas. La primera búsqueda no la encontró: buscaba «5 %» con un espacio
 normal, y la cifra lleva el espacio duro de la regla 21 de `verificar.py`.
+
+### El cuestionario del capítulo 5, revisado · 2026-11-09
+
+**Por qué.** La revisión de contenido del 2026-10-19 no lo alcanzó, porque aún no
+estaba escrito, y la auditoría del 2026-10-21 miró que funcionara y que sus cifras
+fueran ciertas. Nadie había mirado si cada pregunta evalúa lo que dice. Las diez
+claves estaban bien.
+
+**Lo que se cambió, con el visto bueno del docente:**
+- **Pregunta 7.** Pedía un saldo insoluto, no evaluaba ningún ciclo y su clave
+  repetía casi literal la sección 7. Ahora pregunta qué pasa si se intercambian
+  los topes de los dos ciclos de esa sección: coinciden en 4 141 315,47, y eso es
+  lo que debía con 6 cuotas pagadas.
+- **Opciones de las preguntas 1, 2, 5, 6, 8 y 10.** Cada una traía su razón, así
+  que se elegía la explicación que sonaba bien, sin trazar. Pasaba en 31 de 40
+  opciones; en los capítulos 1 a 4, entre 5 de 26 y 17 de 36. Ahora dicen solo el
+  resultado, y las justificaciones refutan cada distractor.
+- **Pregunta 5.** Las cuatro opciones decían 10 en la segunda cifra. «10 y 10»
+  pasó a «5 y 11», el error de creer que el ciclo de dentro da al menos una vuelta.
+- **Pregunta 10.** Se resolvía por eliminación. El 170 pasó a 21, y el enunciado
+  da el ancho inicial.
+- **Pregunta 2.** `range(n)` con un solo número no se enseñaba. Lo dice ahora la
+  sección 4, sin dar la consecuencia, que es lo que se pregunta.
+- **Pregunta 4.** Se acertaba mirando dónde estaba la condición, sin leerla. Una
+  opción pasó a `Do … Loop Until saldo > 0`.
+- **Pregunta 9.** La justificación decía que el `Para` termina siempre, contra la
+  tabla de la sección 4. Ahora dice «siempre que el cuerpo no toque el contador».
+- **Pregunta 8.** El enunciado pide el resultado «redondeado al peso», porque la
+  opción ya no lo explica.
+
+Las claves no se movieron: b d a bd c a d b cd a.
+
+**Se queda:** el E6, justo encima del cuestionario, muestra que el `<> 0` no se
+detiene, y eso ayuda con una opción de la 9.
+
+**Verificación.**
+- Las cifras nuevas se ejecutaron en Python y en R.
+- En Chrome: 10/10 con las claves y las diez justificaciones visibles; 5/10 con
+  las preguntas 5, 7 y 10 malas y la 4 y la 9 incompletas; 9/10 eligiendo en la 4
+  la opción nueva.
+- `verificar.py --con-salidas` pasa en los cinco capítulos, y la sonda, en sus
+  cinco modos, en el capítulo 5.
+
+**Huecos de las herramientas.**
+- **`verificar.py`** no ve una opción que trae su razón, ni que las cuatro
+  opciones compartan una cifra. Las reglas 17 y 18 no miran eso.
+- **La sonda** espera 30 segundos a que el capítulo monte. Con cinco Chrome a la
+  vez dio «no montó» en todos los modos; de uno en uno, los cinco pasan.
