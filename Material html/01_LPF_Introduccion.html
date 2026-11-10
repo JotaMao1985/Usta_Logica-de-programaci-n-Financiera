@@ -890,13 +890,21 @@
         // no tiene texto alternativo propio. Sin ella se usa el pie (L6). Es
         // `figure` y no `img` porque `img` les quitaría a los botones de Plotly
         // que hubiera dentro su lugar en el árbol de accesibilidad.
-        const ChartFrame = ({ id, height = 'chart-h-360', caption, descripcion }) => (
+        //
+        // `fuente` dice de dónde salen los datos, debajo del pie: una clave
+        // (`fuente="clave"`), o las propiedades de `Fuente` —`{ k, loc }`,
+        // `{ propia: true }`, `{ ilustrativo: true }`—. `Fuente` se define más
+        // abajo, en `lp-core-extra.jsx`; aquí solo se nombra al pintar.
+        const ChartFrame = ({ id, height = 'chart-h-360', caption, descripcion, fuente }) => (
             <>
                 <div className="bg-white border border-gray-200 rounded-xl p-2 shadow-sm my-3">
                     <div id={id} className={height} style={{ width: '100%' }}
                         {...((descripcion || caption) ? { role: 'figure', 'aria-label': descripcion || caption } : {})}></div>
                 </div>
-                {caption && <p className="text-xs text-gray-500 italic text-center mb-4">{caption}</p>}
+                {caption && <p className="text-xs text-gray-500 italic text-center mb-4"
+                    {...(fuente ? { style: { marginBottom: '0.2rem' } } : {})}>{caption}</p>}
+                {fuente && (React.isValidElement(fuente) ? fuente
+                    : typeof fuente === 'string' ? <Fuente k={fuente} /> : <Fuente {...fuente} />)}
             </>
         );
 
@@ -2329,6 +2337,285 @@
         };
 
         [TablaTraza, DetectaError, Comparador, OrdenaPasos, Emparejamiento].forEach(c => AUTOETIQUETADOS.add(c));
+
+        /* ============================================================
+           FUENTES — citas, lista de referencias y procedencia de los datos
+
+           Nada de esto se teclea: las entradas salen de Zotero
+           (`exportar_zotero.py` → `_fuentes/referencias.json`) y llegan al
+           capítulo ya formateadas en APA 7, en una isla de JSON que estampa
+           `estampar_referencias.py` después del script, entre los centinelas
+           LP-REFS. Aquí solo se leen.
+
+             <Cita k="clave" />                    (Autor, 2024)
+             <Cita k="clave" loc="p. 12" />        (Autor, 2024, p. 12)
+             <Cita k="clave" narrativa />          Autor (2024)
+             <Cita k="a; b" pre="véase" />         (véase Autor, 2019; Otro, 2024)
+             <Referencias />                       la lista, al final de la última lección
+             <Fuente k="clave" />                  Fuente: Autor (2024).
+             <Fuente propia />                     Fuente: elaboración propia.
+             <Fuente ilustrativo />                Datos ilustrativos…
+             <Ilustrativo>…</Ilustrativo>          nota: estas cifras no describen un producto real
+
+           El `App` pinta una sola lección a la vez, así que un `href="#ref-…"`
+           no alcanza una lista que está en otra lección. La cita lanza el
+           evento `lp:ir-a`, que el `App` escucha: cambia de lección y lleva al
+           ancla. `LP_NAV` guarda de dónde se salió, para poder volver.
+
+           Una clave que no está en la isla se pinta como un chip rojo y escribe
+           en `console.error`: así la ve quien lee y la ve `sonda_navegador.mjs`,
+           que falla con cualquier error de consola.
+        ============================================================ */
+        const LP_NAV = { leccion: 0, retorno: null };
+        const LP_REFS = { leido: false, bloque: null };
+
+        const referenciasDelCapitulo = () => {
+            if (!LP_REFS.leido) {
+                LP_REFS.leido = true;
+                const isla = document.getElementById('lp-referencias');
+                if (isla) {
+                    try { LP_REFS.bloque = JSON.parse(isla.textContent); }
+                    catch (e) { console.error('[LP-REFS] la isla de referencias no es JSON válido:', e.message); }
+                }
+            }
+            return LP_REFS.bloque;
+        };
+
+        const entradaDe = (clave) => {
+            const bloque = referenciasDelCapitulo();
+            return (bloque && bloque.entradas && bloque.entradas[clave]) || null;
+        };
+
+        /* El HTML de una entrada trae solo `em`, `i`, `sup`, `sub` y `a[href]`:
+           lo garantiza el estampador y lo vuelve a exigir este lector, que no
+           usa `dangerouslySetInnerHTML`. Cualquier otra cosa que apareciera en
+           la isla se pinta como texto, no como etiqueta. */
+        const ENTIDADES_HTML = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#x27;': "'", '&#39;': "'" };
+        const quitarEntidades = (s) => s.replace(/&(?:amp|lt|gt|quot|#x27|#39);/g, m => ENTIDADES_HTML[m]);
+
+        const pintarEntrada = (html) => {
+            const raiz = { hijos: [] };
+            const pila = [raiz];
+            const etiqueta = /<(\/?)(em|i|sup|sub|a)(?:\s+href="(https?:\/\/[^"<>\s]+)")?>/g;
+            const texto = (t) => { if (t) pila[pila.length - 1].hijos.push(quitarEntidades(t)); };
+            let ultimo = 0, m;
+            while ((m = etiqueta.exec(html || '')) !== null) {
+                texto(html.slice(ultimo, m.index));
+                ultimo = etiqueta.lastIndex;
+                if (!m[1]) {
+                    const nodo = { tag: m[2], href: m[3] ? quitarEntidades(m[3]) : null, hijos: [] };
+                    pila[pila.length - 1].hijos.push(nodo);
+                    pila.push(nodo);
+                } else if (pila.length > 1 && pila[pila.length - 1].tag === m[2]) {
+                    pila.pop();
+                }
+            }
+            texto((html || '').slice(ultimo));
+            const aReact = (n, i) => {
+                if (typeof n === 'string') return n;
+                const hijos = n.hijos.map(aReact);
+                if (n.tag !== 'a') return React.createElement(n.tag, { key: i }, hijos);
+                if (!n.href) return <span key={i}>{hijos}</span>;
+                // `overflowWrap`: una URL es una sola palabra de 60 caracteres,
+                // y a 375 px se sale de la pantalla si no se la deja partir.
+                return <a key={i} href={n.href} target="_blank" rel="noopener noreferrer"
+                    className="text-primary underline" style={{ overflowWrap: 'anywhere' }}>{hijos}</a>;
+            };
+            return raiz.hijos.map(aReact);
+        };
+
+        /* Lleva al ancla de un `lp:ir-a`: un `id` (`ancla`) o la cita número
+           `cita` de la lección. Las citas se cuentan y no se numeran con un id
+           porque la lección se desmonta al salir de ella: un id generado al
+           montar sería otro a la vuelta.
+
+           Mueve el contenedor que hace scroll en vez de llamar a
+           `scrollIntoView`, que además de ese movería los que tienen
+           `overflow: hidden` —el marco del `App`—, y sin animación: el panel de
+           vista previa no corre `requestAnimationFrame`. */
+        const irAlAncla = (detalle, destacar = true) => {
+            const d = detalle || {};
+            const el = d.ancla ? document.getElementById(d.ancla)
+                : Number.isInteger(d.cita) ? document.querySelectorAll('a[data-cita]')[d.cita] : null;
+            if (!el) return false;
+            let cont = el.parentElement;
+            while (cont && !(/(auto|scroll)/.test(getComputedStyle(cont).overflowY) && cont.scrollHeight > cont.clientHeight)) {
+                cont = cont.parentElement;
+            }
+            if (cont) {
+                const r = el.getBoundingClientRect(), c = cont.getBoundingClientRect();
+                if (r.top < c.top + 8 || r.bottom > c.bottom - 8) cont.scrollTop += r.top - c.top - cont.clientHeight / 3;
+            } else {
+                el.scrollIntoView({ block: 'center' });
+            }
+            if (destacar) {
+                try { el.focus({ preventScroll: true }); } catch (e) { /* sin foco no pasa nada */ }
+                try {
+                    el.animate([{ backgroundColor: 'rgba(61,0,141,0.20)' }, { backgroundColor: 'rgba(61,0,141,0)' }],
+                        { duration: 1600, easing: 'ease-out' });
+                } catch (e) { /* sin Web Animations se queda sin el destello */ }
+            }
+            return true;
+        };
+
+        const ChipSinFuente = ({ children }) => (
+            <span data-cita-rota="" className="inline-block rounded px-1.5 text-[0.85em] font-semibold"
+                style={{ color: '#B91C1C', background: '#FEF2F2', border: '1px solid #FCA5A5' }}>{children}</span>
+        );
+
+        const Cita = ({ k, loc, narrativa = false, pre }) => {
+            const claves = String(k === undefined || k === null ? '' : k).split(';').map(c => c.trim()).filter(Boolean);
+            const faltan = claves.filter(c => !entradaDe(c));
+            const fallo = !claves.length ? 'no trae ninguna clave en `k`'
+                : faltan.length ? `la clave «${faltan.join('; ')}» no está en la isla de referencias del capítulo`
+                    : (loc && claves.length > 1) ? 'lleva `loc` y varias claves: no se sabe a cuál pertenece'
+                        : null;
+            useEffect(() => {
+                if (fallo) console.error(`[Cita] <Cita k="${k === undefined ? '' : k}">: ${fallo}. Revise la clave y ejecute estampar_referencias.py.`);
+            }, [fallo]);
+            if (fallo) return <ChipSinFuente>[¿cita «{faltan.length ? faltan.join('; ') : claves.join('; ')}»?]</ChipSinFuente>;
+
+            const irALista = (clave) => (e) => {
+                e.preventDefault();
+                const citas = Array.from(document.querySelectorAll('a[data-cita]'));
+                LP_NAV.retorno = { leccion: LP_NAV.leccion, cita: citas.indexOf(e.currentTarget), clave };
+                window.dispatchEvent(new CustomEvent('lp:ir-a', { detail: { leccion: 'ultima', ancla: `ref-${clave}` } }));
+            };
+            const enlace = (clave, contenido) => (
+                <a key={clave} href={`#ref-${clave}`} role="doc-biblioref" data-cita={clave}
+                    title={entradaDe(clave).plano} onClick={irALista(clave)}
+                    className="text-primary underline decoration-dotted underline-offset-2 hover:decoration-solid rounded-sm">
+                    {contenido}
+                </a>
+            );
+            // Dos obras seguidas del mismo autor comparten el nombre, como en
+            // la APA: «(Entidad, 2024a, 2024b)» y no «(Entidad, 2024a; Entidad, 2024b)».
+            const grupos = [];
+            claves.forEach(clave => {
+                const e = entradaDe(clave);
+                const ultimo = grupos[grupos.length - 1];
+                if (ultimo && ultimo.autor === e.autor) ultimo.obras.push({ clave, anio: e.anio });
+                else grupos.push({ autor: e.autor, obras: [{ clave, anio: e.anio }] });
+            });
+            const entre = (piezas, sep, ultimoSep = sep) => piezas.reduce((acc, p, i) =>
+                i === 0 ? [p] : [...acc, <React.Fragment key={`s${i}`}>{i === piezas.length - 1 ? ultimoSep : sep}</React.Fragment>, p], []);
+            const lugar = loc ? <>, {loc}</> : null;
+
+            if (narrativa) {
+                // Como pandoc: en la cita narrativa el nombre es prosa y el enlace es el año.
+                const piezas = grupos.map((g, i) => (
+                    <React.Fragment key={i}>
+                        {pintarEntrada(g.autor)} ({entre(g.obras.map(o => enlace(o.clave, pintarEntrada(o.anio))), ', ')}{lugar})
+                    </React.Fragment>
+                ));
+                return <span className="lp-cita">{pre ? <>{pre} </> : null}{entre(piezas, ', ', ' y ')}</span>;
+            }
+            const piezas = grupos.map((g, i) => (
+                <React.Fragment key={i}>
+                    {entre(g.obras.map((o, j) => enlace(o.clave,
+                        j === 0 ? <>{pintarEntrada(g.autor)}, {pintarEntrada(o.anio)}</> : pintarEntrada(o.anio))), ', ')}
+                </React.Fragment>
+            ));
+            return <span className="lp-cita">({pre ? <>{pre} </> : null}{entre(piezas, '; ')}{lugar})</span>;
+        };
+
+        const Referencias = ({ titulo = 'Referencias' }) => {
+            const bloque = referenciasDelCapitulo();
+            const orden = (bloque && Array.isArray(bloque.orden)) ? bloque.orden.filter(c => bloque.entradas && bloque.entradas[c]) : [];
+            const [destino, setDestino] = useState(() => (LP_NAV.retorno ? LP_NAV.retorno.clave : null));
+            const [retorno, setRetorno] = useState(() => LP_NAV.retorno);
+
+            useEffect(() => {
+                if (!orden.length) console.error('[Referencias] <Referencias /> no tiene nada que listar: el capítulo no trae isla de referencias. Ejecute estampar_referencias.py.');
+                // La lista ya estaba montada cuando se pulsó la cita (la cita
+                // está en esta misma lección): se entera por el evento.
+                const alIr = (e) => {
+                    const ancla = (e.detail && e.detail.ancla) || '';
+                    if (!ancla.startsWith('ref-')) return;
+                    setDestino(ancla.slice(4));
+                    setRetorno(LP_NAV.retorno);
+                };
+                window.addEventListener('lp:ir-a', alIr);
+                // Al salir de la lección se olvida el regreso: un «Volver al
+                // texto» que llevara a una cita de hace tres lecciones confunde.
+                return () => { window.removeEventListener('lp:ir-a', alIr); LP_NAV.retorno = null; };
+            }, []);
+
+            const volver = () => {
+                const r = retorno;
+                setRetorno(null); setDestino(null); LP_NAV.retorno = null;
+                if (r) window.dispatchEvent(new CustomEvent('lp:ir-a', { detail: { leccion: r.leccion, cita: r.cita } }));
+            };
+
+            if (!orden.length) return <p><ChipSinFuente>[¿referencias?]</ChipSinFuente></p>;
+            return (
+                <section role="doc-bibliography" aria-label={titulo} className="my-6">
+                    <h3>{titulo}</h3>
+                    <ul className="text-[0.92rem] text-gray-700" style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
+                        {orden.map(clave => {
+                            const aqui = destino === clave;
+                            return (
+                                // Sangría francesa: la primera línea sale al margen y las
+                                // demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
+                                <li key={clave} id={`ref-${clave}`} role="doc-biblioentry" tabIndex={-1}
+                                    className="rounded-md outline-none"
+                                    style={{
+                                        paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
+                                        paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
+                                        overflowWrap: 'anywhere',
+                                        borderLeft: `3px solid ${aqui ? '#ED1E79' : 'transparent'}`,
+                                        background: aqui ? '#F5F0FA' : 'transparent',
+                                    }}>
+                                    {pintarEntrada(bloque.entradas[clave].html)}
+                                    {aqui && retorno && (
+                                        <span className="block mt-1.5" style={{ textIndent: 0 }}>
+                                            <button type="button" onClick={volver}
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white lp-gradient hover:opacity-90">
+                                                <i className="fas fa-arrow-turn-up fa-flip-horizontal" aria-hidden="true"></i>Volver al texto
+                                            </button>
+                                        </span>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+            );
+        };
+
+        /* De dónde sale lo que muestra una figura o una tabla. Exactamente una
+           modalidad: una fuente citada (`k`), elaboración propia (`propia`) o
+           datos que no son de nadie (`ilustrativo`). Con ninguna o con dos, la
+           procedencia es justo lo que no se sabe, y se pinta como error. Los
+           hijos completan la frase: «Fuente: adaptado de Autor (2024).» */
+        const Fuente = ({ k, loc, propia, ilustrativo, children }) => {
+            const conClave = k !== undefined && k !== null && String(k).trim() !== '';
+            const modalidades = [conClave, !!propia, !!ilustrativo].filter(Boolean).length;
+            useEffect(() => {
+                if (modalidades !== 1) console.error(`[Fuente] <Fuente> necesita exactamente una modalidad —k, propia o ilustrativo— y trae ${modalidades}.`);
+            }, [modalidades]);
+            if (modalidades !== 1) return <p className="text-center"><ChipSinFuente>[¿fuente?]</ChipSinFuente></p>;
+            return (
+                <p className="text-xs text-gray-500 text-center" data-fuente={conClave ? 'cita' : propia ? 'propia' : 'ilustrativo'}
+                    {...(ilustrativo ? { 'data-ilustrativo': '' } : {})}>
+                    {conClave && <><span className="font-semibold">Fuente:</span> {children ? <>{children} </> : null}<Cita k={k} loc={loc} narrativa />.</>}
+                    {propia && <><span className="font-semibold">Fuente:</span> elaboración propia{children ? <> {children}</> : null}.</>}
+                    {ilustrativo && <><span className="font-semibold">Datos ilustrativos:</span> se eligieron para que la cuenta se pueda seguir, no describen un producto ni una entidad reales.{children ? <> {children}</> : null}</>}
+                </p>
+            );
+        };
+
+        /* Nota que declara ilustrativas las cifras de un pasaje. Lleva
+           `data-ilustrativo` para que se pueda contar qué cifras del capítulo
+           se declararon así y cuáles tienen fuente. */
+        const Ilustrativo = ({ children }) => (
+            <div data-ilustrativo="" className="rounded-xl px-5 py-4 my-4 border-l-4" style={{ borderColor: '#0E7490', background: '#F0F9FB' }}>
+                <span className="inline-flex items-center gap-2 text-[0.7rem] uppercase tracking-wider font-bold rounded mb-2 px-2 py-0.5 text-white" style={{ background: '#0E7490' }}>
+                    <i className="fas fa-flask"></i>Datos ilustrativos
+                </span>
+                <div className="text-gray-700 leading-relaxed text-[0.95rem]">{children}</div>
+            </div>
+        );
         /* === LP-CORE FIN === */
 
         /* ============================================================
@@ -4625,12 +4912,43 @@ End Sub`,
             const ActiveComponent = activeLesson.component;
             const progreso = Math.round(((safeIndex + 1) / curriculum.length) * 100);
 
+            // Una cita de la lección 2 enlaza con la lista de referencias, que
+            // está en la última: como solo se pinta una lección, un `href="#…"`
+            // no la alcanza. `Cita` y `Referencias` lanzan `lp:ir-a` con la
+            // lección (`'ultima'` o su número) y el ancla; aquí se cambia de
+            // lección y, ya pintada, se lleva al ancla en vez de al principio.
+            const anclaPendiente = useRef(null);
+
             useEffect(() => {
+                LP_NAV.leccion = safeIndex;
                 guardar(CONFIG.storageKey, String(safeIndex));
                 typesetMath();
+                const pendiente = anclaPendiente.current;
+                anclaPendiente.current = null;
+                if (pendiente && irAlAncla(pendiente)) {
+                    // MathJax y Plotly terminan de pintar después y mueven lo que
+                    // hay debajo: se vuelve a situar una vez, ya sin el destello.
+                    const t = setTimeout(() => irAlAncla(pendiente, false), 450);
+                    return () => clearTimeout(t);
+                }
                 const cont = document.getElementById('contenido-scroll');
                 if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });
             }, [safeIndex]);
+
+            useEffect(() => {
+                const alIr = (e) => {
+                    const d = (e && e.detail) || {};
+                    const ultima = curriculum.length - 1;
+                    const destino = d.leccion === 'ultima' ? ultima
+                        : Number.isInteger(d.leccion) ? Math.max(0, Math.min(d.leccion, ultima))
+                            : LP_NAV.leccion;
+                    if (destino === LP_NAV.leccion) { irAlAncla(d); return; }
+                    anclaPendiente.current = d;
+                    setActiveLessonIndex(destino);
+                };
+                window.addEventListener('lp:ir-a', alIr);
+                return () => window.removeEventListener('lp:ir-a', alIr);
+            }, []);
 
             const irA = (idx) => {
                 setActiveLessonIndex(idx);

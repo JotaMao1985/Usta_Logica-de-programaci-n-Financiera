@@ -628,7 +628,8 @@ Debug.Print saldo`,
                             aria-label="Cuota mensual del crédito" />
                     </div>
                     <ChartFrame id="chart-demo-saldo" height="chart-h-360"
-                        caption="Saldo de un crédito de $10 000 000 al 1,8 % mensual. Con una cuota baja el saldo casi no baja: los intereses se comen el abono." />
+                        caption="Saldo de un crédito de $10 000 000 al 1,8 % mensual. Con una cuota baja el saldo casi no baja: los intereses se comen el abono."
+                        fuente={{ ilustrativo: true }} />
                 </div>
             );
         };
@@ -666,6 +667,48 @@ Debug.Print saldo`,
                         </tbody>
                     </table>
                 </div>
+
+                <h3>Fuentes: citar, listar y decir de dónde sale un dato</h3>
+                <Box type="warn" label="Las fuentes de esta página son ficticias">
+                    Las cuatro obras que se citan aquí <strong>no existen</strong>: son el accesorio de pruebas de
+                    <span className="inline-code">_plantilla/pruebas_fuentes/</span>, y están para mostrar cómo se ve cada
+                    caso. En un capítulo, las entradas salen de Zotero y nunca se teclean.
+                </Box>
+                <p>
+                    Una afirmación que no es del autor se cita, y la cita lleva a su entrada en la lista de referencias,
+                    que va al final de la última lección. Entre paréntesis y con la página: la cartera se clasifica por
+                    altura de mora <Cita k="ficticio_autor2019" loc="p. 12" />. Dentro de la frase: según{' '}
+                    <Cita k="ficticio_ley2009" narrativa />, toda tasa se informa en términos efectivos anuales. Y varias
+                    a la vez, con dos obras del mismo autor y del mismo año, que la lista distingue con una letra{' '}
+                    <Cita k="ficticio_entidad2024_informe; ficticio_entidad2024_circular" pre="véase" />.
+                </p>
+                <p>
+                    Al pulsar una cita se abre la lista en su entrada, y <strong>Volver al texto</strong> regresa al
+                    renglón del que se salió. Debajo de una tabla o de una figura, <span className="inline-code">Fuente</span>{' '}
+                    dice de dónde salen los datos, en una de tres modalidades:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Producto</th><th>Tasa efectiva anual</th></tr></thead>
+                        <tbody>
+                            <tr><td>Crédito de consumo</td><td>26,82 %</td></tr>
+                            <tr><td>Ahorro programado</td><td>11,35 %</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente k="ficticio_entidad2024_circular" loc="cuadro 2">adaptado de</Fuente>
+                <Fuente propia>con base en <Cita k="ficticio_entidad2024_informe" narrativa /></Fuente>
+                <Fuente ilustrativo />
+                <p>
+                    La gráfica de arriba usa la tercera, con <span className="inline-code">fuente</span> en su{' '}
+                    <span className="inline-code">ChartFrame</span>. Y cuando lo ilustrativo es un pasaje entero, se dice
+                    una vez, con una nota:
+                </p>
+                <Ilustrativo>
+                    El 1,8 % mensual del crédito de esta página se eligió para que las cuentas se puedan seguir, no
+                    para describir un producto real. Una tasa real se compara con la que certifique la autoridad en la
+                    fecha del desembolso.
+                </Ilustrativo>
             </div>
         );
 
@@ -747,6 +790,12 @@ Debug.Print saldo`,
                         </ul>
                     },
                 ]} />
+
+                <p>
+                    La lista que sigue no se escribe: trae las obras que el capítulo cita, y ninguna más. Una cita de
+                    esta misma lección, como la de <Cita k="ficticio_autor2019" narrativa />, también lleva a su entrada.
+                </p>
+                <Referencias />
             </div>
         );
 
@@ -781,12 +830,43 @@ Debug.Print saldo`,
             const ActiveComponent = activeLesson.component;
             const progreso = Math.round(((safeIndex + 1) / curriculum.length) * 100);
 
+            // Una cita de la lección 2 enlaza con la lista de referencias, que
+            // está en la última: como solo se pinta una lección, un `href="#…"`
+            // no la alcanza. `Cita` y `Referencias` lanzan `lp:ir-a` con la
+            // lección (`'ultima'` o su número) y el ancla; aquí se cambia de
+            // lección y, ya pintada, se lleva al ancla en vez de al principio.
+            const anclaPendiente = useRef(null);
+
             useEffect(() => {
+                LP_NAV.leccion = safeIndex;
                 guardar(CONFIG.storageKey, String(safeIndex));
                 typesetMath();
+                const pendiente = anclaPendiente.current;
+                anclaPendiente.current = null;
+                if (pendiente && irAlAncla(pendiente)) {
+                    // MathJax y Plotly terminan de pintar después y mueven lo que
+                    // hay debajo: se vuelve a situar una vez, ya sin el destello.
+                    const t = setTimeout(() => irAlAncla(pendiente, false), 450);
+                    return () => clearTimeout(t);
+                }
                 const cont = document.getElementById('contenido-scroll');
                 if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });
             }, [safeIndex]);
+
+            useEffect(() => {
+                const alIr = (e) => {
+                    const d = (e && e.detail) || {};
+                    const ultima = curriculum.length - 1;
+                    const destino = d.leccion === 'ultima' ? ultima
+                        : Number.isInteger(d.leccion) ? Math.max(0, Math.min(d.leccion, ultima))
+                            : LP_NAV.leccion;
+                    if (destino === LP_NAV.leccion) { irAlAncla(d); return; }
+                    anclaPendiente.current = d;
+                    setActiveLessonIndex(destino);
+                };
+                window.addEventListener('lp:ir-a', alIr);
+                return () => window.removeEventListener('lp:ir-a', alIr);
+            }, []);
 
             const irA = (idx) => {
                 setActiveLessonIndex(idx);

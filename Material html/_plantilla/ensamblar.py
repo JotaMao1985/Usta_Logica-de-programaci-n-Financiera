@@ -18,6 +18,11 @@ Composición (los tramos se localizan por contenido, no por número de línea):
                                      5 componentes de ejercicio
     LP-CORE FIN
     lp-demo.jsx     capítulo de demostración + App
+    lp-demo-referencias.html         la isla de referencias de la demo, DESPUÉS
+                                     del script. La genera
+                                     `estampar_referencias.py --demo`, que usa
+                                     pandoc; aquí solo se copia, para que
+                                     ensamblar no dependa de él.
 
 Uso:
     python3 _plantilla/ensamblar.py
@@ -33,6 +38,7 @@ MATERIAL = AQUI.parent
 FUENTE = MATERIAL / "01_LPF_Introduccion.html"
 EXTRA = AQUI / "lp-core-extra.jsx"
 DEMO = AQUI / "lp-demo.jsx"
+DEMO_REFS = AQUI / "lp-demo-referencias.html"
 SALIDA = AQUI / "lp-base.html"
 
 # Los cortes se localizan POR CONTENIDO, no por número de línea: el `head`
@@ -129,9 +135,12 @@ def construir():
     material corre la librería vieja —pasó al escribir el `Trazador`, y el
     síntoma fue una pantalla en blanco con un error de React sin traducir—.
     """
-    for f in (FUENTE, EXTRA, DEMO):
+    for f in (FUENTE, EXTRA, DEMO, DEMO_REFS):
         if not f.exists():
             print(f"ERROR: no se encuentra {f}", file=sys.stderr)
+            if f == DEMO_REFS:
+                print("       Genérela con: python3 _plantilla/estampar_referencias.py --demo",
+                      file=sys.stderr)
             sys.exit(1)
 
     lineas = FUENTE.read_text(encoding="utf-8").splitlines()
@@ -200,6 +209,9 @@ def construir():
         "",
         DEMO.read_text(encoding="utf-8").rstrip("\n"),
         "    </script>",
+        # La isla de referencias va fuera del script Babel: dentro, las reglas
+        # de texto de `verificar.py` la leerían como prosa del capítulo.
+        DEMO_REFS.read_text(encoding="utf-8").rstrip("\n"),
         "</body>",
         "",
         "</html>",
