@@ -8,8 +8,14 @@ de la lista blanca de `fuentes.py`. Los resúmenes, las notas y las rutas de los
 adjuntos no salen: el repositorio es público.
 
 La clave de cada entrada es el campo nativo «Clave de cita» de Zotero
-(`data.citationKey`), que se escribe a mano en el panel del ítem. Es la que
-después va en `<Cita k="…"/>`.
+(`data.citationKey`). Si está vacío, se toma de una línea `Citation Key: clave`
+del campo Extra: es donde queda la clave de una referencia importada de un
+archivo RIS, porque el traductor RIS de Zotero ignora la etiqueta `ID`. Es la
+clave que después va en `<Cita k="…"/>`.
+
+La colección se busca por nombre a cualquier profundidad —la del curso cuelga
+de «Docencia»— y se exportan sus ítems y los de TODAS sus subcolecciones
+(`1 Básica`, `2 Complementaria`…). Un ítem que está en varias sale una vez.
 
 Uso:
     python3 _plantilla/exportar_zotero.py --coleccion "LPF 2026-II"
@@ -19,14 +25,14 @@ Uso:
     python3 _plantilla/exportar_zotero.py --coleccion NOMBRE --api URL
                                           # otra dirección de la API (pruebas)
 
-Solo entran los ítems de la colección nombrada, no los de sus subcolecciones.
-
-Devuelve 0 si exportó; 1 si la colección no existe o hay ítems sin clave, con
-la clave repetida o con una clave que no cumple `^[a-z][a-z0-9_-]*$` (y entonces
-no escribe nada); 2 si Zotero no responde o se le pasó una opción que no existe.
+Devuelve 0 si exportó; 1 si la colección no existe, si hay dos con ese nombre,
+o si hay ítems sin clave, con la clave repetida o con una clave que no cumple
+`^[a-z][a-z0-9_-]*$` (y entonces no escribe nada); 2 si Zotero no responde o se
+le pasó una opción que no existe.
 """
 
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -42,6 +48,11 @@ API = "http://127.0.0.1:23119/api/users/0"
 PAGINA = 100
 # Lo que cuelga de un ítem y no es una fuente.
 NO_SON_FUENTES = {"attachment", "note", "annotation"}
+
+# La línea del campo Extra que lleva la clave. Es la misma expresión con la que
+# el traductor «CSL JSON» de Zotero la reconoce al exportar: la línea entera, sin
+# distinguir mayúsculas. Así «Citation Key: x» dentro de una frase no cuenta.
+CLAVE_EN_EXTRA = re.compile(r"(?:^|\n)citation key\s*:\s*([^\s]+)(?:\n|$)", re.I)
 
 ROJO, VERDE, AMAR, GRIS, FIN = "\033[31m", "\033[32m", "\033[33m", "\033[90m", "\033[0m"
 
@@ -99,26 +110,86 @@ def describir(item):
     return f"{titulo[:70]} [{item.get('key')}]"
 
 
+def clave_de(datos):
+    """(clave, origen) de un ítem: el campo «Clave de cita» y, si no, el Extra."""
+    clave = (datos.get("citationKey") or "").strip()
+    if clave:
+        return clave, "campo"
+    m = CLAVE_EN_EXTRA.search(datos.get("extra") or "")
+    return (m.group(1), "Extra") if m else ("", None)
+
+
+def arbol_de(colecciones):
+    """({clave: colección}, {clave del padre: [hijas]}, función ruta)."""
+    por_clave = {c["key"]: c for c in colecciones}
+    hijas = {}
+    for c in colecciones:
+        # En las de arriba, `parentCollection` es `false`, no una cadena vacía.
+        padre = c.get("data", {}).get("parentCollection") or None
+        hijas.setdefault(padre, []).append(c)
+
+    def ruta(c):
+        nombres, vistas = [], set()
+        while c is not None and c["key"] not in vistas:
+            vistas.add(c["key"])
+            nombres.append(c.get("data", {}).get("name", "?"))
+            c = por_clave.get(c.get("data", {}).get("parentCollection") or "")
+        return " › ".join(reversed(nombres))
+
+    return por_clave, hijas, ruta
+
+
+def con_descendientes(coleccion, hijas):
+    """La colección y todas las que cuelgan de ella, a cualquier profundidad."""
+    salida, pendientes, vistas = [], [coleccion], set()
+    while pendientes:
+        c = pendientes.pop(0)
+        if c["key"] in vistas:
+            continue
+        vistas.add(c["key"])
+        salida.append(c)
+        pendientes.extend(sorted(hijas.get(c["key"], []),
+                                 key=lambda h: h.get("data", {}).get("name", "")))
+    return salida
+
+
 def exportar(api, coleccion):
-    """(entradas, problemas) de la colección `coleccion`."""
-    colecciones = todo(api, "/collections")
+    """(entradas, problemas, resumen) de `coleccion` y de sus subcolecciones.
+
+    `resumen` es una lista de (ruta de la colección, ítems que aportó): dice de
+    dónde salió cada cosa, y deja ver una subcolección que se quedó vacía.
+    """
+    colecciones = todo(api, "/collections?format=json")
+    _por_clave, hijas, ruta = arbol_de(colecciones)
     con_ese_nombre = [c for c in colecciones if c.get("data", {}).get("name") == coleccion]
     if not con_ese_nombre:
-        nombres = sorted(c.get("data", {}).get("name", "") for c in colecciones)
+        rutas = sorted(ruta(c) for c in colecciones)
         return [], [f"no hay ninguna colección llamada «{coleccion}». Las que hay: "
-                    + (", ".join(f"«{n}»" for n in nombres) or "ninguna")]
+                    + ("; ".join(f"«{r}»" for r in rutas) or "ninguna")], ([], [])
     if len(con_ese_nombre) > 1:
-        return [], [f"hay {len(con_ese_nombre)} colecciones llamadas «{coleccion}»; "
-                    f"renombre una para que no haya duda de cuál se exporta"]
+        rutas = sorted(ruta(c) for c in con_ese_nombre)
+        return [], [f"hay {len(con_ese_nombre)} colecciones llamadas «{coleccion}»: "
+                    + "; ".join(f"«{r}»" for r in rutas)
+                    + ". Renombre una para que no haya duda de cuál se exporta"], ([], [])
 
-    clave_col = con_ese_nombre[0]["key"]
-    items = todo(api, f"/collections/{clave_col}/items/top?include=csljson,data")
-    entradas, problemas, vistas = [], [], {}
+    # Un ítem puede estar en varias subcolecciones: se queda con la primera vez
+    # que aparece. Se reconoce por su `key` de Zotero, no por su clave de cita:
+    # dos ítems DISTINTOS con la misma clave siguen siendo un error.
+    items, resumen, ya = [], [], set()
+    for c in con_descendientes(con_ese_nombre[0], hijas):
+        nuevos = 0
+        for item in todo(api, f"/collections/{c['key']}/items/top?include=csljson,data"):
+            if item.get("data", {}).get("itemType") in NO_SON_FUENTES or item.get("key") in ya:
+                continue
+            ya.add(item.get("key"))
+            items.append(item)
+            nuevos += 1
+        resumen.append((ruta(c), nuevos))
+
+    entradas, problemas, vistas, en_extra = [], [], {}, []
     for item in items:
         datos = item.get("data", {})
-        if datos.get("itemType") in NO_SON_FUENTES:
-            continue
-        clave = (datos.get("citationKey") or "").strip()
+        clave, origen = clave_de(datos)
         if not clave:
             problemas.append(f"sin clave de cita: {describir(item)}")
             continue
@@ -134,8 +205,12 @@ def exportar(api, coleccion):
             problemas.append(f"Zotero no entregó el CSL de {describir(item)}")
             continue
         csl = dict(csl, id=clave)
+        # `filtrar_entrada` deja fuera `note`, que es donde Zotero pone el
+        # Extra en el CSL: la línea «Citation Key: …» no se publica.
         entradas.append(fuentes.filtrar_entrada(csl))
-    return sorted(entradas, key=lambda e: e["id"]), problemas
+        if origen == "Extra":
+            en_extra.append(clave)
+    return sorted(entradas, key=lambda e: e["id"]), problemas, (resumen, en_extra)
 
 
 def main():
@@ -172,7 +247,7 @@ def main():
     dry_run = "--dry-run" in opciones
 
     try:
-        entradas, problemas = exportar(api, opciones["--coleccion"])
+        entradas, problemas, (resumen, en_extra) = exportar(api, opciones["--coleccion"])
     except SinZotero as e:
         print(f"{ROJO}ERROR{FIN}: Zotero no responde en {api} ({e}).\n"
               f"       Abra Zotero y active, en Ajustes › Avanzadas, «Permitir que otras "
@@ -185,8 +260,9 @@ def main():
         for p in problemas:
             print(f"        {ROJO}✗{FIN} {p}")
         print(f"\n{ROJO}No se escribió nada.{FIN}"
-              + (" La clave se pone en Zotero, en el campo «Clave de cita» del ítem."
-                 if any("clave" in p for p in problemas) else ""))
+              + (" La clave se pone en Zotero, en el campo «Clave de cita» del ítem, o en "
+                 "Extra\ncomo una línea «Citation Key: clave»."
+                 if any("clave" in p and "colecci" not in p for p in problemas) else ""))
         return 1
 
     texto = fuentes.serializar_referencias(entradas)
@@ -195,9 +271,12 @@ def main():
     avisos = fuentes.problemas_del_archivo(entradas)
     igual = destino.exists() and destino.read_text(encoding="utf-8") == texto
     print(f"{VERDE}OK   {FIN} colección «{opciones['--coleccion']}»: {len(entradas)} entradas")
+    for ruta, n in resumen:
+        print(f"        {GRIS}{ruta}: {n}{FIN}")
     for e in entradas:
         print(f"        {GRIS}·{FIN} {e['id']}  {GRIS}{e.get('type', '?')} · "
-              f"{str(e.get('title', ''))[:60]}{FIN}")
+              f"{str(e.get('title', ''))[:60]}"
+              f"{' · clave tomada de Extra' if e['id'] in en_extra else ''}{FIN}")
     for clave, p in avisos:
         print(f"        {AMAR}!{FIN} {clave}: {p}")
     if dry_run:

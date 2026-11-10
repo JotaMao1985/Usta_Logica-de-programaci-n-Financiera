@@ -300,11 +300,22 @@ python3 "Material html/_plantilla/verificar.py"                              # r
 ```
 
 `exportar_zotero.py` lee la API local de Zotero (solo lectura, sin plugins) y
-necesita Zotero abierto: sale con 2 si no responde. La clave de cada fuente es
-el campo «Clave de cita» del ítem, en minúsculas y sin espacios
-(`^[a-z][a-z0-9_-]*$`); un ítem sin clave, con la clave repetida o mal formada
-hace que salga con 1 sin escribir. Solo exporta los campos de una lista blanca:
-el resumen, las notas y las rutas de los adjuntos no salen del computador.
+necesita Zotero abierto: sale con 2 si no responde.
+
+- **La colección** se busca por nombre a cualquier profundidad —la del curso
+  cuelga de «Docencia»—, y se exportan sus ítems y los de todas sus
+  subcolecciones (`1 Básica`, `2 Complementaria`, `3 Fuentes primarias`,
+  `4 Datos y software`). Un ítem que está en varias sale una vez. Si hay dos
+  colecciones con ese nombre, sale con 1 y dice la ruta de cada una.
+- **La clave** de cada fuente es el campo «Clave de cita» del ítem, en
+  minúsculas y sin espacios (`^[a-z][a-z0-9_-]*$`). Si ese campo está vacío, se
+  toma de una línea `Citation Key: clave` del campo Extra: ahí queda la clave
+  de una referencia importada de un archivo RIS, porque el traductor RIS de
+  Zotero ignora la etiqueta `ID`. Un ítem sin clave en ninguno de los dos, con
+  la clave repetida o mal formada hace que salga con 1 sin escribir.
+- **Solo exporta los campos de una lista blanca**: el resumen, las notas —y con
+  ellas el Extra, con su línea `Citation Key:`— y las rutas de los adjuntos no
+  salen del computador.
 
 `estampar_referencias.py` necesita `pandoc`; por eso es un guion aparte de
 `migrar.py`. Acepta `--dry-run`, que muestra cada entrada como va a quedar —es
