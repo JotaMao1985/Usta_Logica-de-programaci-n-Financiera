@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Estampa en cada capítulo la isla de referencias que leen `Cita`, `Referencias`
-y `Fuente`: las entradas de `_fuentes/referencias.json` que el capítulo cita,
-ya formateadas en APA 7.
+Estampa en cada capítulo la isla de referencias que leen `Cita`, `Referencias`,
+`Fuente` y `ParaProfundizar`: las entradas de `_fuentes/referencias.json` que
+el capítulo cita y las que recomienda sin citarlas, ya formateadas en APA 7.
 
 Es un guion aparte de `migrar.py` a propósito: este necesita pandoc, y
 `migrar.py` —que estampa la librería y el `App`— tiene que seguir funcionando
@@ -15,10 +15,17 @@ Por cada capítulo:
      una depende de que la otra esté—;
   3. separa el autor y el año de la cita en el texto, y deja el HTML de cada
      entrada en `em`, `i`, `sup`, `sub` y `a[href]`, nada más;
-  4. escribe la isla entre `<!-- === LP-REFS INICIO … -->` y
+  4. lee las claves que recomienda (`<ParaProfundizar k="a; b" />`) y las
+     formatea APARTE, como otra bibliografía y sin cita en el texto: son otra
+     lista, y la letra de «2024a» se reparte dentro de cada una;
+  5. escribe la isla entre `<!-- === LP-REFS INICIO … -->` y
      `<!-- === LP-REFS FIN === -->`, después del `</script>` de Babel.
 
-Un capítulo que no cita nada se queda sin isla; si tenía una, se le quita.
+Una clave no puede estar citada y recomendada a la vez: citar es atribuirle
+una afirmación a la obra y recomendarla es no atribuirle ninguna.
+
+Un capítulo que no cita ni recomienda nada se queda sin isla; si tenía una, se
+le quita.
 
 Uso:
     python3 _plantilla/estampar_referencias.py                 # todos los capítulos
@@ -143,21 +150,8 @@ def version_de_pandoc():
     return r.stdout.splitlines()[0] if r.stdout else "pandoc"
 
 
-def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
-    """(orden, {clave: {autor, anio, html, plano}}) de las entradas dadas.
-
-    Un solo documento para pandoc: por cada clave, la cita narrativa (`@clave`,
-    «Autor (2024a)») y la que omite al autor (`[-@clave]`, «(2024a)»); al final,
-    la bibliografía. El autor es la narrativa sin su « (año)» final: si eso no
-    cuadra, se falla en vez de adivinar por dónde cortar.
-    """
-    claves = [e["id"] for e in entradas]
-    lineas = ["---", f"lang: {idioma}", "---", ""]
-    for n, clave in enumerate(claves):
-        lineas += [f"::: {{#lp-n-{n}}}", f"@{clave}", ":::", "",
-                   f"::: {{#lp-a-{n}}}", f"[-@{clave}]", ":::", ""]
-    lineas += ["::: {#refs}", ":::", ""]
-
+def _pandoc(lineas, entradas, ruta_csl):
+    """El HTML que da pandoc para el documento `lineas` con esa bibliografía."""
     with tempfile.TemporaryDirectory(prefix="lpf-refs-") as tmp:
         biblio = Path(tmp) / "referencias.json"
         biblio.write_text(json.dumps(entradas, ensure_ascii=False), encoding="utf-8")
@@ -176,17 +170,47 @@ def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
     # escribe «(clave?)». Aquí eso es un fallo.
     if "citeproc" in r.stderr and "not found" in r.stderr:
         raise Fallo(f"pandoc no encontró alguna clave: {r.stderr.strip()[:400]}")
+    return r.stdout
 
-    ids = [f"lp-n-{n}" for n in range(len(claves))] + [f"lp-a-{n}" for n in range(len(claves))] \
-        + [f"ref-{c}" for c in claves]
-    rec = _Recolector(ids)
-    rec.feed(r.stdout)
-    partes = rec.resultado()
 
-    orden = [m for m in re.findall(r'<div id="ref-([^"]+)"', r.stdout) if m in claves]
+def _orden_y_partes(html, claves, otros_ids=()):
+    """(orden de la bibliografía, {id: html saneado}) de lo que devolvió pandoc."""
+    rec = _Recolector(list(otros_ids) + [f"ref-{c}" for c in claves])
+    rec.feed(html)
+    orden = [m for m in re.findall(r'<div id="ref-([^"]+)"', html) if m in claves]
     if sorted(orden) != sorted(claves):
         faltan = sorted(set(claves) - set(orden))
         raise Fallo(f"pandoc no devolvió la entrada de: {', '.join(faltan)}")
+    return orden, rec.resultado()
+
+
+def _entrada_de_lista(clave, partes):
+    """El HTML saneado de la entrada `clave` de la bibliografía, comprobado."""
+    html = partes.get(f"ref-{clave}", "")
+    if not html or not fuentes.solo_etiquetas_permitidas(html):
+        raise Fallo(f"«{clave}»: la entrada formateada quedó vacía o con etiquetas que no "
+                    f"se admiten: {html[:120]}")
+    return html
+
+
+def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
+    """(orden, {clave: {autor, anio, html, plano}}) de las entradas CITADAS.
+
+    Un solo documento para pandoc: por cada clave, la cita narrativa (`@clave`,
+    «Autor (2024a)») y la que omite al autor (`[-@clave]`, «(2024a)»); al final,
+    la bibliografía. El autor es la narrativa sin su « (año)» final: si eso no
+    cuadra, se falla en vez de adivinar por dónde cortar.
+    """
+    claves = [e["id"] for e in entradas]
+    lineas = ["---", f"lang: {idioma}", "---", ""]
+    for n, clave in enumerate(claves):
+        lineas += [f"::: {{#lp-n-{n}}}", f"@{clave}", ":::", "",
+                   f"::: {{#lp-a-{n}}}", f"[-@{clave}]", ":::", ""]
+    lineas += ["::: {#refs}", ":::", ""]
+
+    orden, partes = _orden_y_partes(
+        _pandoc(lineas, entradas, ruta_csl), claves,
+        [f"lp-n-{n}" for n in range(len(claves))] + [f"lp-a-{n}" for n in range(len(claves))])
 
     salida = {}
     for n, clave in enumerate(claves):
@@ -208,10 +232,7 @@ def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
         if not narrativa.endswith(cola) or not narrativa[:-len(cola)].strip():
             raise Fallo(f"«{clave}»: la cita narrativa «{narrativa}» no termina en «{cola.strip()}»; "
                         f"no se pudo separar el autor del año")
-        html = partes.get(f"ref-{clave}", "")
-        if not html or not fuentes.solo_etiquetas_permitidas(html):
-            raise Fallo(f"«{clave}»: la entrada formateada quedó vacía o con etiquetas que no "
-                        f"se admiten: {html[:120]}")
+        html = _entrada_de_lista(clave, partes)
         autor = narrativa[:-len(cola)].strip()
         for campo, valor in (("autor", autor), ("año", anio)):
             if not fuentes.solo_etiquetas_permitidas(valor):
@@ -221,28 +242,69 @@ def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
     return orden, salida
 
 
+def formatear_lista(entradas, ruta_csl, idioma=fuentes.IDIOMA):
+    """(orden, {clave: {html, plano}}) de las entradas RECOMENDADAS.
+
+    Solo la bibliografía: las claves van en `nocite` y no hay cita en el texto
+    que formatear. Por eso aquí cabe una norma registrada como `legislation`,
+    que `formatear` rechaza por no tener autor y año separables.
+    """
+    claves = [e["id"] for e in entradas]
+    lineas = ["---", f"lang: {idioma}", "nocite: |", "  " + ", ".join(f"@{c}" for c in claves),
+              "---", "", "::: {#refs}", ":::", ""]
+    orden, partes = _orden_y_partes(_pandoc(lineas, entradas, ruta_csl), claves)
+    salida = {}
+    for clave in claves:
+        html = _entrada_de_lista(clave, partes)
+        salida[clave] = {"html": html, "plano": fuentes.texto_plano(html)}
+    return orden, salida
+
+
 def bloque_para(texto, referencias, directorio):
-    """(bloque o None, claves) que corresponde AHORA al capítulo `texto`."""
-    citas, problemas = fuentes.citas_de(texto)
+    """(bloque o None, claves citadas, claves recomendadas) que corresponde AHORA a `texto`."""
+    _citas, problemas = fuentes.citas_de(texto)
+    _listas, problemas_rec = fuentes.recomendadas_de(texto)
+    problemas = sorted(problemas + problemas_rec)
     if problemas:
         lineas = [f"línea {texto.count(chr(10), 0, pos) + 1}: {msg}" for pos, msg in problemas]
         raise Fallo("hay citas que no se pueden leer:\n            " + "\n            ".join(lineas))
     claves = fuentes.claves_citadas(texto)
-    if not claves:
-        return None, claves
+    recomendadas = fuentes.claves_recomendadas(texto)
+    if not claves and not recomendadas:
+        return None, claves, recomendadas
     indice = fuentes.por_clave(referencias)
     faltan = [c for c in claves if c not in indice]
     if faltan:
         raise Fallo(f"se citan claves que no están en {fuentes.ARCHIVO_REFERENCIAS}: "
                     f"{', '.join(faltan)}")
+    faltan = [c for c in recomendadas if c not in indice]
+    if faltan:
+        raise Fallo(f"<ParaProfundizar> recomienda claves que no están en "
+                    f"{fuentes.ARCHIVO_REFERENCIAS}: {', '.join(faltan)}")
+    en_las_dos = [c for c in recomendadas if c in claves]
+    if en_las_dos:
+        raise Fallo(f"«{'», «'.join(en_las_dos)}» está citada y además en <ParaProfundizar>: lo "
+                    f"citado ya sale en «Referencias». Quítela de `k`")
+    ruta_csl = fuentes.ruta_csl(directorio)
     entradas = [indice[c] for c in sorted(claves)]
-    orden, formateadas = formatear(entradas, fuentes.ruta_csl(directorio))
-    huella = fuentes.huella(entradas, fuentes.sha_csl(directorio))
-    return fuentes.componer_bloque(huella, orden, formateadas), claves
+    entradas_rec = [indice[c] for c in sorted(recomendadas)]
+    orden, formateadas = formatear(entradas, ruta_csl) if entradas else ([], {})
+    orden_rec, formateadas_rec = formatear_lista(entradas_rec, ruta_csl) if entradas_rec else ([], {})
+    huella = fuentes.huella(entradas, fuentes.sha_csl(directorio), entradas_recomendadas=entradas_rec)
+    bloque = fuentes.componer_bloque(huella, orden, formateadas, orden_rec, formateadas_rec)
+    return bloque, claves, recomendadas
+
+
+def resumen_de(bloque, claves, recomendadas):
+    """«16 fuentes citadas · 5 lecturas recomendadas · huella … · sello …»."""
+    partes = [f"{len(claves)} fuentes citadas"]
+    if recomendadas:
+        partes.append(f"{len(recomendadas)} lecturas recomendadas")
+    return " · ".join(partes + [f"huella {bloque['huella'][:12]}…", f"sello {bloque['sello'][:12]}…"])
 
 
 def detalle_de(bloque):
-    """La lista tal como quedaría, para cotejarla con la bibliografía de Zotero."""
+    """Las dos listas tal como quedarían, para cotejarlas con la bibliografía de Zotero."""
     lineas = []
     for clave in bloque["orden"]:
         e = bloque["entradas"][clave]
@@ -250,6 +312,10 @@ def detalle_de(bloque):
         lineas.append(f"{clave}\n"
                       f"            en el texto:  ({autor}, {e['anio']})  ·  {autor} ({e['anio']})\n"
                       f"            en la lista:  {e['plano']}")
+    orden_rec, recomendadas = fuentes.profundizar_de(bloque)
+    for clave in orden_rec:
+        lineas.append(f"{clave}  {GRIS}(para profundizar: no se cita){FIN}\n"
+                      f"            en la lista:  {recomendadas[clave]['plano']}")
     return lineas
 
 
@@ -257,7 +323,7 @@ def estampar(ruta, referencias, directorio, escribir, con_copia, detalle):
     """(notas, cambió) de estampar la isla en un capítulo."""
     texto = ruta.read_text(encoding="utf-8")
     try:
-        bloque, claves = bloque_para(texto, referencias, directorio)
+        bloque, claves, recomendadas = bloque_para(texto, referencias, directorio)
         nuevo = fuentes.poner_isla(texto, fuentes.texto_de_isla(bloque) if bloque else None)
         mal_puesta = fuentes.isla_bien_puesta(nuevo)
     except fuentes.ErrorFuentes as e:
@@ -266,12 +332,11 @@ def estampar(ruta, referencias, directorio, escribir, con_copia, detalle):
         raise Fallo(mal_puesta)
 
     if bloque is None:
-        notas = ["no cita ninguna fuente"]
+        notas = ["no cita ni recomienda ninguna fuente"]
         if nuevo != texto:
             notas.append("tenía una isla de referencias y se le quita")
     else:
-        notas = [f"{len(claves)} fuentes citadas · huella {bloque['huella'][:12]}… · "
-                 f"sello {bloque['sello'][:12]}…"]
+        notas = [resumen_de(bloque, claves, recomendadas)]
     if nuevo == texto:
         notas.append("ya estaba al día — no hubo cambios")
     if bloque is not None and (detalle or nuevo != texto):
@@ -292,13 +357,13 @@ def estampar_demo(referencias, directorio, escribir, detalle):
     fuentes de la plantilla. La regla 13 de `verificar.py` compara lo ensamblado
     con `lp-base.html`, y con eso este archivo queda vigilado también.
     """
-    bloque, claves = bloque_para(DEMO_FUENTE.read_text(encoding="utf-8"), referencias, directorio)
+    bloque, claves, recomendadas = bloque_para(DEMO_FUENTE.read_text(encoding="utf-8"),
+                                               referencias, directorio)
     if bloque is None:
         raise Fallo(f"{DEMO_FUENTE.name} no cita ninguna fuente: la demo se quedaría sin isla")
     nuevo = fuentes.texto_de_isla(bloque) + "\n"
     viejo = DEMO_ISLA.read_text(encoding="utf-8") if DEMO_ISLA.exists() else None
-    notas = [f"{len(claves)} fuentes citadas · huella {bloque['huella'][:12]}… · "
-             f"sello {bloque['sello'][:12]}…"]
+    notas = [resumen_de(bloque, claves, recomendadas)]
     if nuevo == viejo:
         notas.append("ya estaba al día — no hubo cambios")
     if detalle or nuevo != viejo:

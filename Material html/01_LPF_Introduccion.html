@@ -2377,6 +2377,8 @@
              <Cita k="clave" narrativa />          Autor (2024)
              <Cita k="a; b" pre="véase" />         (véase Autor, 2019; Otro, 2024)
              <Referencias />                       la lista, al final de la última lección
+             <ParaProfundizar k="a; b" />          lecturas recomendadas que el capítulo NO cita,
+                                                   después de <Referencias />
              <Fuente k="clave" />                  Fuente: Autor (2024).
              <Fuente propia />                     Fuente: elaboración propia.
              <Fuente ilustrativo />                Datos ilustrativos…
@@ -2544,6 +2546,14 @@
             return <span className="lp-cita">({pre ? <>{pre} </> : null}{entre(piezas, '; ')}{lugar})</span>;
         };
 
+        // Sangría francesa, la de las dos listas: la primera línea sale al margen
+        // y las demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
+        const ESTILO_ENTRADA = {
+            paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
+            paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
+            overflowWrap: 'anywhere', borderLeft: '3px solid transparent',
+        };
+
         const Referencias = ({ titulo = 'Referencias' }) => {
             const bloque = referenciasDelCapitulo();
             const orden = (bloque && Array.isArray(bloque.orden)) ? bloque.orden.filter(c => bloque.entradas && bloque.entradas[c]) : [];
@@ -2580,14 +2590,10 @@
                         {orden.map(clave => {
                             const aqui = destino === clave;
                             return (
-                                // Sangría francesa: la primera línea sale al margen y las
-                                // demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
                                 <li key={clave} id={`ref-${clave}`} role="doc-biblioentry" tabIndex={-1}
                                     className="rounded-md outline-none"
                                     style={{
-                                        paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
-                                        paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
-                                        overflowWrap: 'anywhere',
+                                        ...ESTILO_ENTRADA,
                                         borderLeft: `3px solid ${aqui ? '#ED1E79' : 'transparent'}`,
                                         background: aqui ? '#F5F0FA' : 'transparent',
                                     }}>
@@ -2604,6 +2610,46 @@
                             );
                         })}
                     </ul>
+                </section>
+            );
+        };
+
+        /* Lecturas recomendadas: obras que el capítulo NO cita. Van aparte de
+           «Referencias» porque esa lista dice «de aquí salió lo que se afirma»,
+           y esta no afirma nada de nadie; mezcladas, un libro que nadie abrió
+           para escribir el capítulo pasaría por fuente suya. Por eso el
+           título y la frase son fijos y no hay propiedad para cambiarlos.
+
+           Las claves se escriben en `k`, como en `Cita`, y las entradas llegan
+           formateadas en el campo `profundizar` de la isla. Se pintan en el
+           orden de la isla —el de la APA—, no en el de `k`. Ninguna cita lleva
+           aquí, así que las entradas no tienen `id="ref-…"`: una clave no
+           puede estar en las dos listas, y si lo estuviera no habría dos
+           elementos con el mismo id. Sin claves no pinta nada. */
+        const ParaProfundizar = ({ k }) => {
+            const claves = String(k === undefined || k === null ? '' : k).split(';').map(c => c.trim()).filter(Boolean);
+            const bloque = referenciasDelCapitulo();
+            const lecturas = (bloque && bloque.profundizar) || {};
+            const entradas = lecturas.entradas || {};
+            const faltan = claves.filter(c => !entradas[c]);
+            const queFalta = faltan.join('; ');
+            useEffect(() => {
+                if (queFalta) console.error(`[ParaProfundizar] <ParaProfundizar k="${k}">: la clave «${queFalta}» no está entre las lecturas recomendadas de la isla de referencias del capítulo. Revise la clave y ejecute estampar_referencias.py.`);
+            }, [queFalta]);
+            if (!claves.length) return null;
+            const orden = (Array.isArray(lecturas.orden) ? lecturas.orden : []).filter(c => claves.includes(c) && entradas[c]);
+            return (
+                <section aria-label="Para profundizar" data-para-profundizar="" className="my-6">
+                    <h3>Para profundizar</h3>
+                    <p>Lecturas recomendadas. El capítulo no les atribuye ninguna afirmación.</p>
+                    <ul className="text-[0.92rem] text-gray-700" style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
+                        {orden.map(clave => (
+                            <li key={clave} data-lectura={clave} className="rounded-md" style={ESTILO_ENTRADA}>
+                                {pintarEntrada(entradas[clave].html)}
+                            </li>
+                        ))}
+                    </ul>
+                    {queFalta && <p><ChipSinFuente>[¿lectura «{queFalta}»?]</ChipSinFuente></p>}
                 </section>
             );
         };
@@ -5297,6 +5343,8 @@ End Sub`,
 
                 <Referencias/>
 
+                <ParaProfundizar k="goldberg1991; ieee2019; vonneumann1993; joyanes2003; cairo2005" />
+
                 <h3>Para practicar</h3>
                 <p>Sitios para ejercitarse. No son las fuentes de este capítulo: esas están en «Referencias».</p>
                 <Accordion items={[
@@ -5549,9 +5597,9 @@ End Sub`,
     <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
     <script type="application/json" id="lp-referencias">
 {
-  "v": 1,
-  "huella": "ca1b46236e0b14c2741b10136c3cacfcc2e912462d899447770572e8133efe1f",
-  "sello": "fb6255cb5602eb8008d83aa5faed9b7bb62cfe896edf792cfd9833af1b236821",
+  "v": 2,
+  "huella": "a19cc7b3553afeba4569fb7e7bf9e636caa956fba51e108f14e98a572fd9674d",
+  "sello": "5c0ad373bb78cd92285ddf9716405b0bce84e84823eadfde3d4ebbf282562e2b",
   "orden": [
     "congreso2008ley1266",
     "hornik2026faq",
@@ -5666,6 +5714,37 @@ End Sub`,
       "anio": "s. f.",
       "html": "Swift. (s. f.). \u003cem>Who we are\u003c/em>. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://www.swift.com/about-us/who-we-are\">https://www.swift.com/about-us/who-we-are\u003c/a>",
       "plano": "Swift. (s. f.). Who we are. Recuperado 10 de noviembre de 2026, de https://www.swift.com/about-us/who-we-are"
+    }
+  },
+  "profundizar": {
+    "orden": [
+      "cairo2005",
+      "goldberg1991",
+      "ieee2019",
+      "joyanes2003",
+      "vonneumann1993"
+    ],
+    "entradas": {
+      "cairo2005": {
+        "html": "Cairó Battistutti, O. (2005). \u003cem>Metodología de la programación: algoritmos, diagramas de flujo y programas\u003c/em> (3.ª ed.). Alfaomega.",
+        "plano": "Cairó Battistutti, O. (2005). Metodología de la programación: algoritmos, diagramas de flujo y programas (3.ª ed.). Alfaomega."
+      },
+      "goldberg1991": {
+        "html": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. \u003cem>ACM Computing Surveys\u003c/em>, \u003cem>23\u003c/em>(1), 5-48. \u003ca href=\"https://doi.org/10.1145/103162.103163\">https://doi.org/10.1145/103162.103163\u003c/a>",
+        "plano": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. ACM Computing Surveys, 23(1), 5-48. https://doi.org/10.1145/103162.103163"
+      },
+      "ieee2019": {
+        "html": "IEEE. (2019). \u003cem>IEEE Standard for Floating-Point Arithmetic\u003c/em> (IEEE 754-2019). IEEE. \u003ca href=\"https://doi.org/10.1109/IEEESTD.2019.8766229\">https://doi.org/10.1109/IEEESTD.2019.8766229\u003c/a>",
+        "plano": "IEEE. (2019). IEEE Standard for Floating-Point Arithmetic (IEEE 754-2019). IEEE. https://doi.org/10.1109/IEEESTD.2019.8766229"
+      },
+      "joyanes2003": {
+        "html": "Joyanes Aguilar, L. (2003). \u003cem>Fundamentos de programación: algoritmos, estructuras de datos y objetos\u003c/em> (3.ª ed.). McGraw-Hill.",
+        "plano": "Joyanes Aguilar, L. (2003). Fundamentos de programación: algoritmos, estructuras de datos y objetos (3.ª ed.). McGraw-Hill."
+      },
+      "vonneumann1993": {
+        "html": "von Neumann, J. (1993). First draft of a report on the EDVAC. \u003cem>IEEE Annals of the History of Computing\u003c/em>, \u003cem>15\u003c/em>(4), 27-75. \u003ca href=\"https://doi.org/10.1109/85.238389\">https://doi.org/10.1109/85.238389\u003c/a>",
+        "plano": "von Neumann, J. (1993). First draft of a report on the EDVAC. IEEE Annals of the History of Computing, 15(4), 27-75. https://doi.org/10.1109/85.238389"
+      }
     }
   }
 }

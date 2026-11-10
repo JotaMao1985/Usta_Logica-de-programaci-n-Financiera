@@ -15,6 +15,21 @@
     "language": "es"
   },
   {
+    "id": "ficticio_clasico1991",
+    "type": "article-journal",
+    "author": [
+      { "family": "Clásico Imaginario", "given": "David" }
+    ],
+    "title": "Lo que todo analista de prueba debería saber de una aritmética que no existe",
+    "container-title": "Revista Ficticia de Regulación",
+    "volume": "23",
+    "issue": "1",
+    "page": "5-48",
+    "issued": { "date-parts": [[1991]] },
+    "DOI": "10.0000/ficticio.1991.0001",
+    "language": "es"
+  },
+  {
     "id": "ficticio_entidad2024_circular",
     "type": "webpage",
     "author": [
@@ -53,6 +68,20 @@
     "issued": { "date-parts": [[2009, 7, 15]] },
     "accessed": { "date-parts": [[2026, 11, 10]] },
     "URL": "https://example.org/normas/ley-0000-de-2009",
+    "language": "es"
+  },
+  {
+    "id": "ficticio_manual2003",
+    "type": "book",
+    "author": [
+      { "family": "Manualista Inventado", "given": "Luisa" }
+    ],
+    "title": "Fundamentos de una programación de prueba: un manual que no existe",
+    "edition": "3",
+    "publisher": "Editorial Inexistente",
+    "publisher-place": "Bogotá",
+    "issued": { "date-parts": [[2003]] },
+    "ISBN": "978-0-00-000003-3",
     "language": "es"
   }
 ]

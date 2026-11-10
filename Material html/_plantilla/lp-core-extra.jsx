@@ -1400,6 +1400,8 @@
              <Cita k="clave" narrativa />          Autor (2024)
              <Cita k="a; b" pre="véase" />         (véase Autor, 2019; Otro, 2024)
              <Referencias />                       la lista, al final de la última lección
+             <ParaProfundizar k="a; b" />          lecturas recomendadas que el capítulo NO cita,
+                                                   después de <Referencias />
              <Fuente k="clave" />                  Fuente: Autor (2024).
              <Fuente propia />                     Fuente: elaboración propia.
              <Fuente ilustrativo />                Datos ilustrativos…
@@ -1567,6 +1569,14 @@
             return <span className="lp-cita">({pre ? <>{pre} </> : null}{entre(piezas, '; ')}{lugar})</span>;
         };
 
+        // Sangría francesa, la de las dos listas: la primera línea sale al margen
+        // y las demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
+        const ESTILO_ENTRADA = {
+            paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
+            paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
+            overflowWrap: 'anywhere', borderLeft: '3px solid transparent',
+        };
+
         const Referencias = ({ titulo = 'Referencias' }) => {
             const bloque = referenciasDelCapitulo();
             const orden = (bloque && Array.isArray(bloque.orden)) ? bloque.orden.filter(c => bloque.entradas && bloque.entradas[c]) : [];
@@ -1603,14 +1613,10 @@
                         {orden.map(clave => {
                             const aqui = destino === clave;
                             return (
-                                // Sangría francesa: la primera línea sale al margen y las
-                                // demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
                                 <li key={clave} id={`ref-${clave}`} role="doc-biblioentry" tabIndex={-1}
                                     className="rounded-md outline-none"
                                     style={{
-                                        paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
-                                        paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
-                                        overflowWrap: 'anywhere',
+                                        ...ESTILO_ENTRADA,
                                         borderLeft: `3px solid ${aqui ? '#ED1E79' : 'transparent'}`,
                                         background: aqui ? '#F5F0FA' : 'transparent',
                                     }}>
@@ -1627,6 +1633,46 @@
                             );
                         })}
                     </ul>
+                </section>
+            );
+        };
+
+        /* Lecturas recomendadas: obras que el capítulo NO cita. Van aparte de
+           «Referencias» porque esa lista dice «de aquí salió lo que se afirma»,
+           y esta no afirma nada de nadie; mezcladas, un libro que nadie abrió
+           para escribir el capítulo pasaría por fuente suya. Por eso el
+           título y la frase son fijos y no hay propiedad para cambiarlos.
+
+           Las claves se escriben en `k`, como en `Cita`, y las entradas llegan
+           formateadas en el campo `profundizar` de la isla. Se pintan en el
+           orden de la isla —el de la APA—, no en el de `k`. Ninguna cita lleva
+           aquí, así que las entradas no tienen `id="ref-…"`: una clave no
+           puede estar en las dos listas, y si lo estuviera no habría dos
+           elementos con el mismo id. Sin claves no pinta nada. */
+        const ParaProfundizar = ({ k }) => {
+            const claves = String(k === undefined || k === null ? '' : k).split(';').map(c => c.trim()).filter(Boolean);
+            const bloque = referenciasDelCapitulo();
+            const lecturas = (bloque && bloque.profundizar) || {};
+            const entradas = lecturas.entradas || {};
+            const faltan = claves.filter(c => !entradas[c]);
+            const queFalta = faltan.join('; ');
+            useEffect(() => {
+                if (queFalta) console.error(`[ParaProfundizar] <ParaProfundizar k="${k}">: la clave «${queFalta}» no está entre las lecturas recomendadas de la isla de referencias del capítulo. Revise la clave y ejecute estampar_referencias.py.`);
+            }, [queFalta]);
+            if (!claves.length) return null;
+            const orden = (Array.isArray(lecturas.orden) ? lecturas.orden : []).filter(c => claves.includes(c) && entradas[c]);
+            return (
+                <section aria-label="Para profundizar" data-para-profundizar="" className="my-6">
+                    <h3>Para profundizar</h3>
+                    <p>Lecturas recomendadas. El capítulo no les atribuye ninguna afirmación.</p>
+                    <ul className="text-[0.92rem] text-gray-700" style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
+                        {orden.map(clave => (
+                            <li key={clave} data-lectura={clave} className="rounded-md" style={ESTILO_ENTRADA}>
+                                {pintarEntrada(entradas[clave].html)}
+                            </li>
+                        ))}
+                    </ul>
+                    {queFalta && <p><ChipSinFuente>[¿lectura «{queFalta}»?]</ChipSinFuente></p>}
                 </section>
             );
         };

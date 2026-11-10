@@ -2378,6 +2378,8 @@
              <Cita k="clave" narrativa />          Autor (2024)
              <Cita k="a; b" pre="véase" />         (véase Autor, 2019; Otro, 2024)
              <Referencias />                       la lista, al final de la última lección
+             <ParaProfundizar k="a; b" />          lecturas recomendadas que el capítulo NO cita,
+                                                   después de <Referencias />
              <Fuente k="clave" />                  Fuente: Autor (2024).
              <Fuente propia />                     Fuente: elaboración propia.
              <Fuente ilustrativo />                Datos ilustrativos…
@@ -2545,6 +2547,14 @@
             return <span className="lp-cita">({pre ? <>{pre} </> : null}{entre(piezas, '; ')}{lugar})</span>;
         };
 
+        // Sangría francesa, la de las dos listas: la primera línea sale al margen
+        // y las demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
+        const ESTILO_ENTRADA = {
+            paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
+            paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
+            overflowWrap: 'anywhere', borderLeft: '3px solid transparent',
+        };
+
         const Referencias = ({ titulo = 'Referencias' }) => {
             const bloque = referenciasDelCapitulo();
             const orden = (bloque && Array.isArray(bloque.orden)) ? bloque.orden.filter(c => bloque.entradas && bloque.entradas[c]) : [];
@@ -2581,14 +2591,10 @@
                         {orden.map(clave => {
                             const aqui = destino === clave;
                             return (
-                                // Sangría francesa: la primera línea sale al margen y las
-                                // demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
                                 <li key={clave} id={`ref-${clave}`} role="doc-biblioentry" tabIndex={-1}
                                     className="rounded-md outline-none"
                                     style={{
-                                        paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
-                                        paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
-                                        overflowWrap: 'anywhere',
+                                        ...ESTILO_ENTRADA,
                                         borderLeft: `3px solid ${aqui ? '#ED1E79' : 'transparent'}`,
                                         background: aqui ? '#F5F0FA' : 'transparent',
                                     }}>
@@ -2605,6 +2611,46 @@
                             );
                         })}
                     </ul>
+                </section>
+            );
+        };
+
+        /* Lecturas recomendadas: obras que el capítulo NO cita. Van aparte de
+           «Referencias» porque esa lista dice «de aquí salió lo que se afirma»,
+           y esta no afirma nada de nadie; mezcladas, un libro que nadie abrió
+           para escribir el capítulo pasaría por fuente suya. Por eso el
+           título y la frase son fijos y no hay propiedad para cambiarlos.
+
+           Las claves se escriben en `k`, como en `Cita`, y las entradas llegan
+           formateadas en el campo `profundizar` de la isla. Se pintan en el
+           orden de la isla —el de la APA—, no en el de `k`. Ninguna cita lleva
+           aquí, así que las entradas no tienen `id="ref-…"`: una clave no
+           puede estar en las dos listas, y si lo estuviera no habría dos
+           elementos con el mismo id. Sin claves no pinta nada. */
+        const ParaProfundizar = ({ k }) => {
+            const claves = String(k === undefined || k === null ? '' : k).split(';').map(c => c.trim()).filter(Boolean);
+            const bloque = referenciasDelCapitulo();
+            const lecturas = (bloque && bloque.profundizar) || {};
+            const entradas = lecturas.entradas || {};
+            const faltan = claves.filter(c => !entradas[c]);
+            const queFalta = faltan.join('; ');
+            useEffect(() => {
+                if (queFalta) console.error(`[ParaProfundizar] <ParaProfundizar k="${k}">: la clave «${queFalta}» no está entre las lecturas recomendadas de la isla de referencias del capítulo. Revise la clave y ejecute estampar_referencias.py.`);
+            }, [queFalta]);
+            if (!claves.length) return null;
+            const orden = (Array.isArray(lecturas.orden) ? lecturas.orden : []).filter(c => claves.includes(c) && entradas[c]);
+            return (
+                <section aria-label="Para profundizar" data-para-profundizar="" className="my-6">
+                    <h3>Para profundizar</h3>
+                    <p>Lecturas recomendadas. El capítulo no les atribuye ninguna afirmación.</p>
+                    <ul className="text-[0.92rem] text-gray-700" style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
+                        {orden.map(clave => (
+                            <li key={clave} data-lectura={clave} className="rounded-md" style={ESTILO_ENTRADA}>
+                                {pintarEntrada(entradas[clave].html)}
+                            </li>
+                        ))}
+                    </ul>
+                    {queFalta && <p><ChipSinFuente>[¿lectura «{queFalta}»?]</ChipSinFuente></p>}
                 </section>
             );
         };
@@ -3316,7 +3362,7 @@ Debug.Print saldo`,
 
                 <h3>Fuentes: citar, listar y decir de dónde sale un dato</h3>
                 <Box type="warn" label="Las fuentes de esta página son ficticias">
-                    Las cuatro obras que se citan aquí <strong>no existen</strong>: son el accesorio de pruebas de
+                    Las obras que se citan y se recomiendan aquí <strong>no existen</strong>: son el accesorio de pruebas de
                     <span className="inline-code">_plantilla/pruebas_fuentes/</span>, y están para mostrar cómo se ve cada
                     caso. En un capítulo, las entradas salen de Zotero y nunca se teclean.
                 </Box>
@@ -3442,6 +3488,12 @@ Debug.Print saldo`,
                     esta misma lección, como la de <Cita k="ficticio_autor2019" narrativa />, también lleva a su entrada.
                 </p>
                 <Referencias />
+                <p>
+                    Lo que se recomienda leer y el capítulo no cita va aparte, debajo, con{' '}
+                    <span className="inline-code">ParaProfundizar</span>: se escriben las claves y la lista sale de
+                    Zotero, igual que la anterior. Una obra no puede estar en las dos.
+                </p>
+                <ParaProfundizar k="ficticio_manual2003; ficticio_clasico1991" />
             </div>
         );
 
@@ -3658,9 +3710,9 @@ Debug.Print saldo`,
     <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
     <script type="application/json" id="lp-referencias">
 {
-  "v": 1,
-  "huella": "396f30459dc3a1a76170d612bbc618b23c01dd20bfc7ad4e10fe7dddcab6dab2",
-  "sello": "06eedb1c112c0885d866861721f7db076c22a9fd14467dd8040c29c8d10c75e0",
+  "v": 2,
+  "huella": "6f6b6c90b37e41b5d584e6ab0d75d1fbe9548c0beef6d6ca60e589370a04f3de",
+  "sello": "5e2dd98d51e94dfa969850b99e2ca8188eb5852663d2c78de2108ce8d76be8b8",
   "orden": [
     "ficticio_autor2019",
     "ficticio_ley2009",
@@ -3691,6 +3743,22 @@ Debug.Print saldo`,
       "anio": "2024b",
       "html": "Entidad Ficticia de Supervisión. (2024b, marzo 15). \u003cem>Tasas de referencia de prueba para el crédito de consumo (documento ficticio)\u003c/em>. \u003ca href=\"https://example.org/entidad-ficticia/tasas-de-prueba\">https://example.org/entidad-ficticia/tasas-de-prueba\u003c/a>",
       "plano": "Entidad Ficticia de Supervisión. (2024b, marzo 15). Tasas de referencia de prueba para el crédito de consumo (documento ficticio). https://example.org/entidad-ficticia/tasas-de-prueba"
+    }
+  },
+  "profundizar": {
+    "orden": [
+      "ficticio_clasico1991",
+      "ficticio_manual2003"
+    ],
+    "entradas": {
+      "ficticio_clasico1991": {
+        "html": "Clásico Imaginario, D. (1991). Lo que todo analista de prueba debería saber de una aritmética que no existe. \u003cem>Revista Ficticia de Regulación\u003c/em>, \u003cem>23\u003c/em>(1), 5-48. \u003ca href=\"https://doi.org/10.0000/ficticio.1991.0001\">https://doi.org/10.0000/ficticio.1991.0001\u003c/a>",
+        "plano": "Clásico Imaginario, D. (1991). Lo que todo analista de prueba debería saber de una aritmética que no existe. Revista Ficticia de Regulación, 23(1), 5-48. https://doi.org/10.0000/ficticio.1991.0001"
+      },
+      "ficticio_manual2003": {
+        "html": "Manualista Inventado, L. (2003). \u003cem>Fundamentos de una programación de prueba: un manual que no existe\u003c/em> (3.ª ed.). Editorial Inexistente.",
+        "plano": "Manualista Inventado, L. (2003). Fundamentos de una programación de prueba: un manual que no existe (3.ª ed.). Editorial Inexistente."
+      }
     }
   }
 }

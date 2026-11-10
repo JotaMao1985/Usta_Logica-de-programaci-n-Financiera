@@ -670,7 +670,7 @@ Debug.Print saldo`,
 
                 <h3>Fuentes: citar, listar y decir de dónde sale un dato</h3>
                 <Box type="warn" label="Las fuentes de esta página son ficticias">
-                    Las cuatro obras que se citan aquí <strong>no existen</strong>: son el accesorio de pruebas de
+                    Las obras que se citan y se recomiendan aquí <strong>no existen</strong>: son el accesorio de pruebas de
                     <span className="inline-code">_plantilla/pruebas_fuentes/</span>, y están para mostrar cómo se ve cada
                     caso. En un capítulo, las entradas salen de Zotero y nunca se teclean.
                 </Box>
@@ -796,6 +796,12 @@ Debug.Print saldo`,
                     esta misma lección, como la de <Cita k="ficticio_autor2019" narrativa />, también lleva a su entrada.
                 </p>
                 <Referencias />
+                <p>
+                    Lo que se recomienda leer y el capítulo no cita va aparte, debajo, con{' '}
+                    <span className="inline-code">ParaProfundizar</span>: se escriben las claves y la lista sale de
+                    Zotero, igual que la anterior. Una obra no puede estar en las dos.
+                </p>
+                <ParaProfundizar k="ficticio_manual2003; ficticio_clasico1991" />
             </div>
         );
 

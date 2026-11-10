@@ -22,17 +22,33 @@ que diga `</script>` cierre la isla ni la regla 3 tome un `<em>` por componente.
 
 Sus campos:
 
-    v         versión del formato (hoy 1)
-    huella    sha256 de lo que entró: las entradas citadas tal como están en
-              referencias.json, el sha256 de apa-es.csl y el idioma. Cambia si
-              cambia una fuente citada, el estilo o el conjunto de claves.
-    sello     sha256 de lo que salió: v, huella, orden y entradas. Cambia si
-              alguien edita la isla a mano.
-    orden     las claves en el orden de la lista de referencias (el de la APA)
-    entradas  {clave: {autor, anio, html, plano}}
+    v         versión del formato (hoy 2)
+    huella    sha256 de lo que entró: las entradas citadas y las recomendadas
+              tal como están en referencias.json, el sha256 de apa-es.csl y el
+              idioma. Cambia si cambia una de esas fuentes, el estilo o
+              cualquiera de los dos conjuntos de claves.
+    sello     sha256 de lo que salió: v, huella, orden, entradas y profundizar.
+              Cambia si alguien edita la isla a mano.
+    orden     las claves CITADAS en el orden de la lista de referencias (APA)
+    entradas  {clave: {autor, anio, html, plano}} de las citadas
+    profundizar   {orden, entradas}: las obras que el capítulo recomienda en
+              `<ParaProfundizar k="a; b" />` y NO cita. Sus entradas traen
+              solo {html, plano}: no se citan en el texto, así que no hay autor
+              ni año que separar. Siempre está, aunque sea vacío.
+
+Son dos listas y no una con una marca, por tres razones. Una clave no puede
+estar en las dos: citar es atribuir una afirmación, y recomendar es justo no
+atribuir ninguna. `Cita` busca en `entradas`, de modo que citar una obra que
+solo se recomienda sale como error en vez de pasar por buena. Y cada lista se
+formatea por separado, como dos bibliografías: la letra de «2024a» se reparte
+dentro de cada una, y «Referencias» no se queda con un «2024b» cuyo «2024a»
+está en la otra lista.
 
 `huella` responde «¿hay que volver a estampar?» y `sello` responde «¿alguien
 tocó lo estampado?». Ninguna de las dos necesita pandoc.
+
+La versión 1 no tenía `profundizar`. Una isla de la versión 1 se lee, pero la
+regla 28 la da por vieja y pide volver a estampar.
 """
 
 import hashlib
@@ -48,7 +64,7 @@ DIR_PRUEBAS = AQUI / "pruebas_fuentes"
 ARCHIVO_REFERENCIAS = "referencias.json"
 ARCHIVO_CSL = "apa-es.csl"
 IDIOMA = "es-CO"
-VERSION = 1
+VERSION = 2
 
 # La clave de cita: la que el docente pone en el campo nativo «Clave de cita» de
 # Zotero. Sin mayúsculas, espacios ni signos: va en un `id="ref-…"` del HTML y
@@ -475,32 +491,121 @@ def claves_citadas(texto):
     return vistas
 
 
+def recomendadas_de(texto):
+    """(listas, problemas) de los `<ParaProfundizar k="a; b" />` de un capítulo.
+
+    `listas` es una lista de (posición, [claves]) —una por componente, en el
+    orden en que se escribieron— y `problemas` una de (posición, mensaje). Las
+    claves van como en `Cita`: una cadena literal, separadas con «;».
+
+    Recomendar no es citar: estas claves no salen en `citas_de`, y por eso la
+    regla 31 no les pide una fila de afirmación. Nadie tiene que haber leído un
+    pasaje de una obra a la que el capítulo no le atribuye nada.
+    """
+    zona, base = zona_de_contenido(texto)
+    limpio = sin_comentarios(zona)
+    listas, problemas = [], []
+    for m in re.finditer(r"<ParaProfundizar(?=[\s/>])", limpio):
+        pos = base + m.start()
+        attrs = atributos(limpio, m.start())
+        de_mas = sorted(a for a in attrs if a != "k")
+        if de_mas:
+            problemas.append((pos, f"<ParaProfundizar> no admite `{'`, `'.join(de_mas)}`: solo `k`. "
+                                   f"Una lectura recomendada no lleva localizador ni título propio"))
+        if "k" not in attrs:
+            problemas.append((pos, "<ParaProfundizar> sin la propiedad `k`: no pinta nada; "
+                                   "quítelo o escriba sus claves"))
+            continue
+        texto_k = literal_de(attrs["k"])
+        if texto_k is None:
+            problemas.append((pos, "<ParaProfundizar> no escribe sus claves como cadena literal "
+                                   "(`k=\"a; b\"`); una clave que sale de una variable no se puede "
+                                   "comprobar ni estampar"))
+            continue
+        claves = [c for c in _claves_de(texto_k) if c]
+        if not claves:
+            problemas.append((pos, "<ParaProfundizar> con `k` vacío: no pinta nada; quítelo o "
+                                   "escriba sus claves"))
+            continue
+        malas = [c for c in claves if not CLAVE.match(c)]
+        if malas:
+            problemas.append((pos, f"<ParaProfundizar> recomienda «{'», «'.join(malas)}», que no es "
+                                   f"una clave válida ({CLAVE.pattern}); varias claves se separan "
+                                   f"con «;»"))
+        repetidas = sorted({c for c in claves if claves.count(c) > 1})
+        if repetidas:
+            problemas.append((pos, f"<ParaProfundizar> repite «{'», «'.join(repetidas)}»"))
+        buenas = []
+        for c in claves:
+            if CLAVE.match(c) and c not in buenas:
+                buenas.append(c)
+        if buenas:
+            listas.append((pos, buenas))
+    return listas, problemas
+
+
+def claves_recomendadas(texto):
+    """Las claves de «Para profundizar», sin repetir y en el orden en que se escribieron."""
+    listas, _ = recomendadas_de(texto)
+    vistas = []
+    for _pos, claves in listas:
+        for c in claves:
+            if c not in vistas:
+                vistas.append(c)
+    return vistas
+
+
 # ------------------------------------------------------------ huella y sello
 
-def huella(entradas_citadas, sha_del_csl, idioma=IDIOMA):
-    """Resumen de todo lo que decide cómo se ve la lista de referencias.
+def huella(entradas_citadas, sha_del_csl, idioma=IDIOMA, entradas_recomendadas=()):
+    """Resumen de todo lo que decide cómo se ven las dos listas del capítulo.
 
     Entra el CONJUNTO de entradas y no cada una por separado: con dos obras del
-    mismo autor y año, quitar una cambia la otra de «2024a» a «2024».
+    mismo autor y año, quitar una cambia la otra de «2024a» a «2024». Y entran
+    los dos conjuntos por separado: pasar una obra de citada a recomendada no
+    cambia ninguna entrada de referencias.json, pero sí cambia las dos listas.
     """
+    por_id = lambda e: str(e.get("id"))
     return sha256(canonico({
         "v": VERSION,
         "idioma": idioma,
         "csl": sha_del_csl,
-        "entradas": sorted(entradas_citadas, key=lambda e: str(e.get("id"))),
+        "entradas": sorted(entradas_citadas, key=por_id),
+        "recomendadas": sorted(entradas_recomendadas, key=por_id),
     }))
+
+
+CAMPOS_SELLADOS = ("v", "huella", "orden", "entradas", "profundizar")
 
 
 def sello(bloque):
     """Resumen de lo estampado: todo el bloque menos el propio sello."""
-    return sha256(canonico({k: bloque.get(k) for k in ("v", "huella", "orden", "entradas")}))
+    return sha256(canonico({k: bloque.get(k) for k in CAMPOS_SELLADOS}))
 
 
-def componer_bloque(huella_, orden, entradas):
+def componer_bloque(huella_, orden, entradas, orden_recomendadas=(), recomendadas=None):
+    recomendadas = recomendadas or {}
     bloque = {"v": VERSION, "huella": huella_, "sello": "", "orden": list(orden),
-              "entradas": {k: entradas[k] for k in orden}}
+              "entradas": {k: entradas[k] for k in orden},
+              "profundizar": {"orden": list(orden_recomendadas),
+                              "entradas": {k: recomendadas[k] for k in orden_recomendadas}}}
     bloque["sello"] = sello(bloque)
     return bloque
+
+
+def profundizar_de(bloque):
+    """(orden, entradas) de «Para profundizar» en una isla; vacíos si no las trae.
+
+    Tolera una isla de la versión 1, que no tenía el campo, y una retocada a
+    mano: quien llama no tiene que saber cuál de las dos es. Que el campo esté
+    y tenga su forma lo exige la regla 28.
+    """
+    p = bloque.get("profundizar") if isinstance(bloque, dict) else None
+    if not isinstance(p, dict):
+        return [], {}
+    orden = p.get("orden") if isinstance(p.get("orden"), list) else []
+    entradas = p.get("entradas") if isinstance(p.get("entradas"), dict) else {}
+    return orden, entradas
 
 
 # -------------------------------------------------------------------- la isla
