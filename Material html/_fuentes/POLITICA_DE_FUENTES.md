@@ -36,7 +36,8 @@ En este orden de preferencia:
 
 **No respaldan una afirmación**: Wikipedia, blogs, foros, sitios de tutoriales, videos,
 salidas de un modelo de IA ni lo que un modelo «recuerda». Pueden ayudar a encontrar la
-fuente y pueden recomendarse para practicar, en una lista aparte y sin atribuirles nada.
+fuente y pueden recomendarse para practicar, en una lista aparte («Para practicar») y sin
+atribuirles nada.
 
 ## 3. Cuándo se puede citar
 
@@ -49,8 +50,8 @@ Una fuente pasa por tres niveles:
 | `confirmada` | El docente cotejó el pasaje. |
 
 **Solo se cita una fuente en nivel `leida` o superior.** Una fuente a la que no se tuvo
-acceso puede figurar como lectura recomendada, pero no se le atribuye ninguna
-afirmación concreta.
+acceso puede figurar como lectura recomendada, en la lista «Para profundizar» del
+capítulo, pero no se le atribuye ninguna afirmación concreta.
 
 Cada cita lleva **localizador**: página, sección o artículo. «Según Joyanes» sin página
 no es una cita verificable.
@@ -61,6 +62,9 @@ muestra una salida ejecutada— va después de la cita o en otra oración. Así 
 atribuye a una fuente lo que no dice: «Dos números de punto flotante que deberían ser
 iguales pueden no serlo (cita). Por eso, nunca compare dinero con igualdad exacta», y no
 al revés.
+
+**Varias fuentes para una frase.** Cuando una frase habla de varias fuentes a la vez —«los
+tres lenguajes…»—, lleva una cita por fuente, seguidas, y cada una respalda su parte.
 
 **La fuente manda sobre la frase.** Si el pasaje dice menos que la afirmación, se cambia
 la afirmación, no se estira el pasaje. Una cifra, un «siempre», un «más lento» o una
@@ -73,7 +77,12 @@ redactarse como criterio del docente.
 - `Material html/_fuentes/referencias.json` es la exportación de esa biblioteca.
 - La lista «Referencias» de cada capítulo la genera `estampar_referencias.py` en
   APA 7, solo con las obras citadas en ese capítulo. **Nunca se escribe a mano.**
+- «Para profundizar» lista las obras que el capítulo recomienda y no cita. Se declara
+  con `<ParaProfundizar k="clave; otra" />` y la genera el mismo guion, también en
+  APA 7. Una obra no puede estar en las dos listas, y también necesita identificador.
 - Una URL lleva fecha de consulta. Una norma lleva número, año y entidad que la expide.
+- Un dato de una página sin fecha se presenta con su fecha de consulta: «según su
+  página, consultada el…», no «a tal fecha».
 
 ## 5. Datos, cifras y figuras
 
@@ -93,7 +102,9 @@ identificador y que cada cita tenga su fila en el registro de afirmaciones.
 
 No puede comprobar que el pasaje diga lo que el material le atribuye. Eso lo hace una
 lectura independiente: quien verifica recibe la afirmación y el pasaje, no el borrador
-ni el razonamiento de quien escribió.
+ni el razonamiento de quien escribió. Una frase que el verificador marca «parcial» se
+corrige y se vuelve a leer; antes de cerrar un capítulo se leen todas sus citas de una
+vez, sobre el texto final.
 
 ## 7. Registro
 

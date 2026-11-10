@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Comprobación 20 · ninguna cifra de la prosa se puede partir entre renglones.
+ * Comprobación 21 · ninguna cifra de la prosa se puede partir entre renglones.
  *
  * El material escribe los miles con un espacio («1 150 000»), y el navegador
  * puede cortar una línea en cualquier espacio normal. En la tabla del acuerdo

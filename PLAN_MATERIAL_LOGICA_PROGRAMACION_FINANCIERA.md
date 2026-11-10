@@ -2646,3 +2646,48 @@ Ramas `claude/cap01-fase7-figuras`, `claude/cap01-fase7-lpcore` y
   Cairó salen sin identificador a la vista.
 - `POLITICA_DE_FUENTES.md` y la skill `lpf-capitulo` no nombran «Para
   profundizar». Va al cierre.
+
+### Mejora de contenido · capítulo 1, fase 9 (cierre) · 2026-11-10
+
+Rama `claude/cap01-fase9-cierre`, sobre la de la fase 8; sin fusionar. Queda lo
+que es del docente: leer el capítulo completo, verlo en Safari y en un
+teléfono, y decidir la fusión en `main`.
+
+**Lo que se comprobó al cierre.**
+- `verificar.py --con-salidas --con-pandoc`: los cinco capítulos pasan; el 01
+  en «OK», sin avisos.
+- Sonda del navegador: 25 de 25 (cinco modos, cinco capítulos, de a uno).
+- Lectura independiente de las 51 citas del capítulo, sobre el texto final y
+  extraídas por guion del propio HTML. Primera pasada, dos verificadores: 38 y
+  46 respaldadas, ninguna sin respaldo. De las 13 objeciones, 8 eran al pasaje
+  copiado en la nota —resumido de más— y 5 a la frase. Se ampliaron los
+  pasajes, cotejados contra la fuente descargada, y se corrigieron las frases.
+  Segunda pasada: 46 respaldadas y 5 observaciones; dos se corrigieron y tres
+  son la misma frase con tres citas seguidas, una por lenguaje, que se dejó así.
+- Vault: 51 afirmaciones, todas resueltas o verificadas; 7 hilos cerrados; 13
+  de 14 conceptos coherentes. Queda abierto el índice de los arreglos en
+  pseudocódigo, que es del capítulo 7.
+
+**Criterios de aceptación del plan.** Se cumplen los ocho, con dos salvedades:
+el concepto que queda abierto, y que la última redacción de siete frases es la
+corrección que propuso un verificador y no se volvió a someter.
+
+**Lo que deja el capítulo para los siguientes.**
+- En la primera lectura de cada sección, una de cada tres frases decía más que
+  su pasaje (17 de 51). El método está en la skill `lpf-capitulo`, sección
+  «Las fuentes».
+- La política de fuentes nombra «Para profundizar», la cita por fuente cuando
+  una frase habla de varias, y la fecha de consulta para un dato sin fecha.
+
+**Huecos de las herramientas.**
+- **El pasaje de la nota tiene que bastarse solo.** Un extracto recortado con
+  «[…]» puede dejar fuera justo la línea que respalda la frase; el verificador
+  lo ve como «parcial» y tiene razón. El registro público guarda la huella del
+  extracto, no si alcanza.
+- **No hay guion que arme las parejas frase–pasaje.** Se hizo uno de usar y
+  tirar; convendría llevarlo a `_plantilla/`, porque la lectura final de un
+  capítulo lo necesita.
+- **Las salidas de VBA de la fase 2 siguen sin ejecutarse en Excel** (13 líneas
+  en tres bloques): falta pegar el módulo de `ejecutar_vba.py preparar`.
+- El README raíz decía «02–08 en preparación» y «once comprobaciones»; se
+  corrigió. `comprobar_cifras.js` se llamaba «Comprobación 20» y es la 21.

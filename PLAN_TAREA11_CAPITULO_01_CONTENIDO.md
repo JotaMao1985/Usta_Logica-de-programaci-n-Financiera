@@ -1,7 +1,29 @@
 # Plan · Tarea 11 — Mejora de contenido del capítulo 1
 
-**Fecha:** 2026-11-10. **Estado:** borrador para aprobación (punto de control 4 del plan de
-gestión documental). Nada de esto se ha ejecutado.
+**Fecha:** 2026-11-10. **Estado:** aprobado por el docente el 2026-11-10 con las siete
+recomendaciones (A–G) y **ejecutado** ese mismo día, fase por fase, con su visto bueno en
+cada punto de control. Falta lo que es del docente: leer el capítulo completo, verlo en
+Safari y en un teléfono, y decidir la fusión en `main`. El registro de cada fase está en
+la bitácora del plan maestro (§11).
+
+| Fase | Rama | Commit |
+|---|---|---|
+| 1 · Leer lo que falta | — (vault) | — |
+| 2 · Sección 3, Operadores | `claude/cap01-fase2-operadores` | `09813b9` |
+| 3 · Sección 4 | `claude/cap01-fase3-seccion4` | `b84d8ca` |
+| 4 · Sección 1 | `claude/cap01-fase4-seccion1` | `487b27d` |
+| 5 · Sección 2 | `claude/cap01-fase5-seccion2` | `12d9022` |
+| 6 · Portada, cierre y evaluación | `claude/cap01-fase6-portada-cierre` | `d7dc02b` |
+| 7 · Figuras · LP-CORE | `claude/cap01-fase7-figuras` · `claude/cap01-fase7-lpcore` | `51ca835` · `f0939eb` |
+| 8 · Coherencia hacia adelante | `claude/cap01-fase8-coherencia` | `0ec6c41` |
+| 9 · Cierre | `claude/cap01-fase9-cierre` | el de este cambio |
+
+Cada rama parte de la anterior: la última las contiene a todas.
+
+**Lo que el plan decía y no se hizo así.** La arquitectura Harvard y `MOV AL, 61h`
+salieron en vez de citarse (sus fuentes eran PDF de fabricante que no se descargaron). El
+reparto 1-11-52 sigue fuera del texto (decisión D: no hubo PDF de IEEE 754 ni de
+Goldberg). El convenio de índices del pseudocódigo quedó para el capítulo 7.
 
 **Archivo:** `Material html/01_LPF_Introduccion.html` (4 777 líneas en `main`, commit
 `6e5e8eb`). Todos los números de línea de este plan son de ese commit.

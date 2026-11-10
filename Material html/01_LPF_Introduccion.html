@@ -3149,7 +3149,7 @@
 
                 <Box type="warn" label="Prerrequisitos suaves">
                     No se requiere experiencia previa en programación. El <strong>pseudocódigo</strong> es el lenguaje
-                    de referencia del curso y no se ejecuta en ninguna parte: se lee. Los programas completos en
+                    normativo del curso —lo que se evalúa— y no se ejecuta en ninguna parte: se lee. Los programas completos en
                     <span className="inline-code">Python</span> y <span className="inline-code">R</span> —los que traen su
                     salida escrita debajo de cada instrucción— se pueden copiar y correr tal cual en Google Colab, VS Code o
                     RStudio. Los fragmentos de dos o tres líneas que acompañan un ejercicio usan variables que el enunciado ya
@@ -3346,7 +3346,9 @@ End Sub`,
 
                 <h3>El algoritmo de conversión, en los cuatro lenguajes</h3>
                 <p>
-                    Cada lenguaje trae su atajo: <span className="inline-code">bin()</span> convierte un entero a binario en Python <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />,
+                    Un algoritmo es una secuencia de pasos, y una variable, un nombre que guarda un valor; el capítulo 2
+                    define los dos con cuidado, y aquí basta con eso.
+                    Los tres lenguajes traen un atajo. En Python, <span className="inline-code">bin()</span> convierte un entero a binario <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />;
                     <span className="inline-code">Hex()</span> da el hexadecimal de un número en VBA <Cita k="microsoft2018hex" loc="descripción" /> y
                     <span className="inline-code">as.hexmode()</span> hace que R muestre un entero en hexadecimal <Cita k="rcoreteam-hexmode" loc="Description" />.
                     Pero el atajo esconde justamente lo que hay que ver. Escrito a mano, el método de divisiones sucesivas
@@ -3355,7 +3357,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Decimal a binario por divisiones sucesivas"
                     bloques={CONVERSION_BASES}
-                    nota="Fíjese en la concatenación: el residuo nuevo va DELANTE del resultado acumulado, nunca detrás."
+                    nota="Fíjese en la concatenación: el residuo nuevo va DELANTE del resultado acumulado, nunca detrás. En pseudocódigo, Concatenar(a, b) une dos textos en uno."
                 />
 
                 <h3>Ejercicios de la sección</h3>
@@ -3919,7 +3921,7 @@ Debug.Print total`,
                     <ul>
                         <li>La <strong>arquitectura de Von Neumann</strong> tiene cinco unidades —procesamiento, control, memoria, entrada y salida— conectadas por buses <Cita k="matthews2020" loc="§5.2" />.</li>
                         <li>Las cinco unidades ejecutan cada instrucción en un <strong>ciclo de cuatro pasos</strong>: captar, decodificar, ejecutar y almacenar <Cita k="matthews2020" loc="§5.2" />.</li>
-                        <li>Instrucciones y datos se guardan en la <strong>misma memoria</strong>: es el modelo de programa almacenado <Cita k="matthews2020" loc="§5.2" />.</li>
+                        <li>Instrucciones y datos se guardan en la <strong>misma memoria</strong>; guardar ahí las instrucciones es una pieza clave del modelo de programa almacenado <Cita k="matthews2020" loc="§5.2" />.</li>
                         <li>En una estación de trabajo típica de 2020, un dato tarda del orden de cien nanosegundos en llegar desde la memoria principal, y de décimas de milisegundo a cientos de milisegundos desde el disco o la red <Cita k="matthews2020" loc="§11.2" />. Por eso lo que no cambia dentro de un ciclo se lee una sola vez, fuera.</li>
                         <li>Un programa lento espera casi siempre por <strong>cálculo</strong>, por <strong>entrada y salida</strong> o por <strong>memoria</strong>. Saber por cuál dice qué arreglar.</li>
                     </ul>
@@ -4763,7 +4765,7 @@ End Sub`,
                         <li>Los <strong>operadores aritméticos</strong> hacen las cuentas. La suma, la resta, la multiplicación y la división se escriben igual en los cuatro lenguajes; la división entera, el residuo y la potencia cambian de símbolo.</li>
                         <li>Los <strong>operadores relacionales</strong> comparan y responden Verdadero o Falso. El pseudocódigo y VBA comparan con <span className="inline-code">=</span>; Python y R, con <span className="inline-code">==</span>.</li>
                         <li>Los <strong>operadores lógicos</strong> combinan condiciones: <span className="inline-code">Y / O / NO</span> en pseudocódigo, <span className="inline-code">and / or / not</span> en Python, <span className="inline-code">&amp;&amp; / || / !</span> en R y <span className="inline-code">And / Or / Not</span> en VBA.</li>
-                        <li>Aquí los cuatro <strong>no</strong> se comportan igual. Python deja de evaluar un <span className="inline-code">and</span> en cuanto el primer operando es falso <Cita k="psf2026expresiones" loc="§6.11" />, y R hace lo mismo con <span className="inline-code">&amp;&amp;</span> y <span className="inline-code">||</span> <Cita k="rcoreteam-logica" loc="Details" />: es la <strong>evaluación de cortocircuito</strong>. En VBA, los operandos de <span className="inline-code">And</span> y de <span className="inline-code">Or</span> se evalúan antes de aplicar el operador <Cita k="microsoft2026vbal" loc="§5.6.9.2 y §5.6.9.8" />: los dos lados, siempre.</li>
+                        <li>Aquí los cuatro <strong>no</strong> se comportan igual. Python deja de evaluar un <span className="inline-code">and</span> en cuanto el primer operando es falso <Cita k="psf2026expresiones" loc="§6.11" />, y R, con <span className="inline-code">&amp;&amp;</span> y <span className="inline-code">||</span>, también deja de evaluar en cuanto el resultado queda determinado <Cita k="rcoreteam-logica" loc="Details" />: es la <strong>evaluación de cortocircuito</strong>. En VBA, los operandos de <span className="inline-code">And</span> y de <span className="inline-code">Or</span> se evalúan antes de aplicar el operador <Cita k="microsoft2026vbal" loc="§5.6.9.2 y §5.6.9.8" />: los dos lados, siempre.</li>
                         <li>La <strong>precedencia</strong> fija el orden de evaluación, y no es idéntica en los cuatro: cambian el residuo y dos potencias seguidas (apartado 4). Ante la duda: <strong>paréntesis</strong>.</li>
                     </ul>
                 </Box>
@@ -4932,7 +4934,7 @@ End Sub`,
         const CONCILIA_LINEA_OK = { pseudo: 8, python: 6, r: 7, vba: 9 };
 
         const CONCILIA_EXPLICACION = {
-            pseudo: <>La <strong>línea 8</strong> compara dos decimales con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale 1,00 sino 1,0000000000000007, así que la igualdad da Falso y el programa reporta un descuadre que no existe. Se compara contra una tolerancia —<span className="inline-code">Si abs(suma - esperado) &lt; 0.001</span>— o, mejor, se trabaja en centavos enteros.</>,
+            pseudo: <>La <strong>línea 8</strong> compara dos decimales con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale 1,00 sino 1,0000000000000007, así que la igualdad da Falso y el programa reporta un descuadre que no existe. Se compara contra una tolerancia —<span className="inline-code">Si abs(suma - esperado) &lt; 0.001</span>, donde <span className="inline-code">abs</span> es el valor absoluto— o, mejor, se trabaja en centavos enteros.</>,
             python: <>La <strong>línea 6</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">False</span> y el programa reporta un descuadre que no existe. Se usa <span className="inline-code">math.isclose(suma, esperado)</span> o, mejor, se trabaja en centavos enteros con <span className="inline-code">Decimal</span>.</>,
             r: <>La <strong>línea 7</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">FALSE</span> y el programa reporta un descuadre que no existe. Se usa <span className="inline-code">isTRUE(all.equal(suma, esperado))</span> o se trabaja en centavos enteros.</>,
             vba: <>La <strong>línea 9</strong> compara dos <span className="inline-code">Double</span> con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale exactamente 1, así que la igualdad da False y el programa reporta un descuadre que no existe. En VBA la solución es directa: declarar los importes como <span className="inline-code">Currency</span>, que es punto fijo y no arrastra el error. Se verá en el capítulo 6.</>,
@@ -4951,8 +4953,7 @@ End Sub`,
                 <Box type="info" label="Idea central">
                     Un computador guarda los reales —los números de punto flotante— como fracciones en <strong>base 2</strong>. Y
                     así como en base 10 no se puede escribir <span className="inline-code">1/3</span> con un número finito de
-                    dígitos, en base 2 no se puede escribir <span className="inline-code">0,1</span>. La máquina guarda <strong>el
-                    número más cercano que sí puede representar</strong> <Cita k="psf2026flotante" loc="cap. 15"/>, y sigue
+                    dígitos, en base 2 no se puede escribir <span className="inline-code">0,1</span>. En su lugar, la máquina guarda <strong>el número más cercano que sí puede representar</strong> <Cita k="psf2026flotante" loc="cap. 15"/>, y sigue
                     adelante sin avisar de nada.
                 </Box>
 
@@ -5022,8 +5023,7 @@ End Sub`,
 
                 <CalloutPro tema="info" titulo="Por qué el capítulo 6 usará Currency" subtitulo="Y por qué no es un capricho de Excel" icon="fa-money-bill-trend-up">
                     Cuando en el capítulo 6 se declare <span className="inline-code">Dim cuota As Currency</span> en vez de
-                    <span className="inline-code"> As Double</span>, no será una convención de estilo. Es la decisión que se
-                    acaba de justificar aquí: <span className="inline-code">Currency</span> guarda los importes como enteros con escala
+                    <span className="inline-code"> As Double</span>, no será una convención de estilo. Es la decisión que se acaba de justificar aquí. <span className="inline-code">Currency</span> guarda los importes como enteros con escala
                     de 10 000 —punto fijo con cuatro decimales <Cita k="microsoft2018moneda"/>—, así que 0,1 es exactamente 0,1
                     y la suma de cien centavos es exactamente un peso.
                 </CalloutPro>
@@ -5136,7 +5136,7 @@ End Sub`,
                         <li>Un <span className="inline-code">double</span> —el real de 64 bits del estándar IEEE 754— tiene 53 bits de precisión <Cita k="psf2026flotante" loc="cap. 15"/>.</li>
                         <li>Dos números de punto flotante que deberían ser iguales pueden no serlo <Cita k="hornik2026faq" loc="pregunta 7.31"/>. Por eso, <strong>nunca compare dinero con igualdad exacta</strong>: use tolerancia, o mejor, no use flotantes para dinero.</li>
                         <li>Para importes: <strong>centavos enteros</strong>, <span className="inline-code">Currency</span> en VBA o <span className="inline-code">Decimal</span> en Python.</li>
-                        <li>Por defecto, R imprime 7 cifras significativas <Cita k="rcoreteam-opciones" loc="opción digits"/>: por eso <strong>esconde</strong> el problema. Que no se vea no significa que no esté.</li>
+                        <li>En R, la opción <span className="inline-code">digits</span>, que controla cuántas cifras significativas se imprimen, vale 7 por defecto <Cita k="rcoreteam-opciones" loc="opción digits"/>: por eso R <strong>esconde</strong> el problema. Que no se vea no significa que no esté.</li>
                     </ul>
                 </Box>
             </div>
@@ -5373,8 +5373,8 @@ End Sub`,
                 <Box type="tip" label="Lo que viene">
                     El capítulo 2, <em>Introducción a algoritmos</em>, pasa de la máquina al método: qué hace que una
                     secuencia de pasos sea un algoritmo, cómo se analiza un problema en entrada, proceso y salida, y cómo
-                    se guardan los valores en variables. Los operadores de la sección 3 y el cuidado con los reales de la
-                    sección 4 vuelven a usarse allí.
+                    se guardan los valores en variables, con los tipos de dato del pseudocódigo: Entero, Real, Moneda, Texto y
+                    Lógico. Los operadores de la sección 3 y el cuidado con los reales de la sección 4 vuelven a usarse allí.
                 </Box>
             </div>
         );

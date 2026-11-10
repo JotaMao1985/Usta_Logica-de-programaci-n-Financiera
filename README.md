@@ -24,8 +24,12 @@ según una taxonomía cerrada de ocho tipos (E1–E8) con cuota por capítulo.
 
 | Capítulo | Estado |
 |---|---|
-| 01 · Introducción | ✅ publicado — 13 ejercicios, 4 secciones |
-| 02–08 | en preparación |
+| 01 · Introducción | ✅ publicado — 13 ejercicios |
+| 02 · Introducción a algoritmos | ✅ publicado — 13 ejercicios |
+| 03 · Control secuencial | ✅ publicado — 18 ejercicios |
+| 04 · Control selectivo | ✅ publicado — 19 ejercicios |
+| 05 · Control repetitivo | ✅ publicado — 19 ejercicios |
+| 06–08 | en preparación |
 
 ## Estructura
 
@@ -40,7 +44,7 @@ según una taxonomía cerrada de ocho tipos (E1–E8) con cuota por capítulo.
 │       ├── lp-demo.jsx           capítulo de demostración + App (fuente)
 │       ├── ensamblar.py          fuentes  → lp-base.html
 │       ├── migrar.py             plantilla → capítulos
-│       ├── verificar.py          once comprobaciones estructurales
+│       ├── verificar.py          las comprobaciones del material (la lista, en su encabezado)
 │       └── ejecutar_salidas.py   ejecuta el código y contrasta lo que declara
 ├── PLAN_MATERIAL_…md             plan maestro y bitácora
 ├── PLAN_TAREA7_CAPITULO_01.md    registro de la adaptación del capítulo 1
