@@ -2576,3 +2576,38 @@ Rama `claude/cap01-fase5-seccion2`, sobre la de la fase 4; sin fusionar.
 - Quedan dos afirmaciones nuevas sin fuente, encontradas en esta fase: que un
   Excel con macros llega bloqueado (reto E8) y que la RAM pierde su contenido al
   apagar (cuestionario final). Van a la fase 6.
+
+### Mejora de contenido · capítulo 1, fase 6 · 2026-11-10
+
+Rama `claude/cap01-fase6-portada-cierre`, sobre la de la fase 5; sin fusionar.
+
+**Portada, cierre y evaluación.**
+- La portada cuenta el descuadre como su ejercicio final, y su ficha tiene el
+  formato de los capítulos 2 a 5 (falta la fila «Evaluación asociada»: no se
+  conoce el nombre del cuestionario de Moodle).
+- «Lo que viene» nombra el capítulo 2. El glosario pasó a tabla, con 19
+  términos puestos al día.
+- Todo el capítulo trata de usted, y lo interno se llama «sección».
+- El cuestionario final tiene 10 preguntas, y cada justificación dice por qué
+  fallan las otras opciones. Salió la pregunta de la memoria volátil, que no
+  tenía fuente.
+- Ejercicios heredados: las seis preguntas sueltas pasaron a los
+  minicuestionarios de sus secciones; el reto de conversión de la sección 1 se
+  retiró; el de la TIR quedó como exposición; la solución de la tabla de la
+  evaluación va en un acordeón. El capítulo queda con 13 ejercicios con tipo y
+  ninguno sin él, y la cuota sin avisos.
+- «Recursos complementarios» pasó a «Para practicar», sin la referencia que
+  estaba tecleada de memoria. Los siete enlaces responden (uno, con 403 a la
+  consulta automática).
+
+**Huecos de las herramientas.**
+- **`Quiz` no admite retroalimentación por opción**, solo por pregunta; `MCQ`
+  sí. En los cuestionarios la retroalimentación de los distractores va dentro
+  de la justificación de la pregunta.
+- **«Para profundizar» no se puede generar todavía**: `estampar_referencias.py`
+  solo estampa lo citado, y no hay componente para una lista de lecturas
+  recomendadas. Hacerlo toca LP-CORE; va con la fase 7.
+- **Un corte por sangría falló**: al reemplazar un bloque «hasta el primer
+  `</div>` con dieciséis espacios», el patrón casó con uno más sangrado y dejó
+  el JSX roto. La regla 1 lo vio al instante. Conviene cortar por líneas
+  completas, no por subcadenas.

@@ -3014,14 +3014,14 @@
                 <Motivacion icon="fa-coins"
                     gancho="Un centavo de diferencia por transacción, multiplicado por un millón de transacciones, es un descuadre contable que nadie sabe explicar.">
                     El cierre de mes no cuadra por $8 432. El sistema liquidó bien cada uno de los 840 000 pagos
-                    —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún error de
-                    cálculo: hay ochocientos cuarenta mil redondeos que la máquina hizo a su manera, porque
-                    así representa los números por dentro.
+                    —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún pago mal
+                    calculado: la máquina no guarda exactos los decimales, y el sistema redondeó ochocientos cuarenta
+                    mil veces, una por pago, en vez de una sola al final.
                 </Motivacion>
 
-                <Box type="tip" label="Cómo estudiar este material">
+                <Box type="tip" label="Cómo estudiar este capítulo">
                     Este material es <strong>autónomo</strong>: permite avanzar a ritmo propio con los botones <em>Anterior / Siguiente</em>.
-                    Cada capítulo combina teoría breve, ejemplos del sector financiero, diagramas, código comentado y práctica.
+                    Cada sección combina teoría breve, ejemplos financieros, diagramas, código comentado y práctica.
                     Todo el código va en <strong>cuatro lenguajes a la vez</strong> —pseudocódigo, Python, R y VBA— y cada bloque
                     tiene sus propias pestañas: se pueden comparar dos lenguajes en pantalla al mismo tiempo, y el material
                     recuerda el último que se eligió.
@@ -3029,34 +3029,35 @@
                     Se recomienda intentar las preguntas <em>antes</em> de ver la retroalimentación.
                 </Box>
 
-                <h3>Identificación del espacio académico</h3>
+                <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; sus datos son los del syllabus, que nombra */}
                     <table>
                         <tbody>
-                            <tr><th>Asignatura</th><td>Lógica de Programación Financiera</td></tr>
-                            <tr><th>Unidad</th><td>Unidad 1 — Fundamentos de Programación</td></tr>
+                            <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
+                            <tr><th>Capítulo</th><td>{CONFIG.numero} — {CONFIG.titulo}</td></tr>
+                            <tr><th>Contenido del syllabus</th><td>{CONFIG.contenidoSyllabus}</td></tr>
+                            <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra} — «Construye un algoritmo computacional incorporando variables de tipo financiero cuya solución lo pueda hacer una calculadora o una computadora»</td></tr>
+                            <tr><th>Tiempo estimado</th><td>{CONFIG.horas} horas</td></tr>
                             <tr><th>Naturaleza</th><td>Teórico-práctico</td></tr>
-                            <tr><th>Temas</th><td>Sistemas de numeración · Estructura del computador · Operadores · Representación de reales</td></tr>
                         </tbody>
                     </table>
                 </div>
-
                 <h3>Objetivo general</h3>
                 <p>
                     Comprender los fundamentos lógicos y estructurales de la programación, dominando los sistemas de
-                    numeración, la arquitectura del computador y los operadores, aplicados a contextos financieros reales.
+                    numeración, la arquitectura del computador y los operadores, aplicados a contextos financieros.
                 </p>
 
-                <Box type="info" label="Competencia de la unidad">
+                <Box type="info" label="Competencia">
                     Identifica y aplica los sistemas de numeración, la estructura del hardware y los operadores lógico-aritméticos
                     como base para el desarrollo de algoritmos financieros en un lenguaje de programación.
                 </Box>
 
                 <h3>Al terminar el capítulo, usted podrá</h3>
                 <p className="text-sm text-gray-600">
-                    Son los objetivos de este capítulo. Todos sirven al <strong>RA1 del syllabus</strong> —«construye un
-                    algoritmo computacional incorporando variables de tipo financiero cuya solución la pueda hacer una
-                    calculadora o una computadora»—, que es el resultado de aprendizaje que se evalúa.
+                    Son los objetivos de este capítulo. Todos sirven al <strong>RA1 del syllabus</strong>, que es el
+                    resultado de aprendizaje que se evalúa.
                 </p>
                 <div className="grid md:grid-cols-2 gap-3">
                     {[
@@ -3082,11 +3083,12 @@
 
                 <Box type="warn" label="Prerrequisitos suaves">
                     No se requiere experiencia previa en programación. El <strong>pseudocódigo</strong> es el lenguaje
-                    de referencia del curso y no se ejecuta en ninguna parte: se lee. Los ejemplos en
-                    <span className="inline-code">Python</span> y <span className="inline-code">R</span> son autocontenidos
-                    y corren en cualquier entorno (Google Colab, VS Code, RStudio); los de
-                    <span className="inline-code">VBA</span> van en el editor de Excel, que es donde vivirán a partir del
-                    capítulo 6.
+                    de referencia del curso y no se ejecuta en ninguna parte: se lee. Los programas completos en
+                    <span className="inline-code">Python</span> y <span className="inline-code">R</span> —los que traen su
+                    salida escrita debajo de cada instrucción— se pueden copiar y correr tal cual en Google Colab, VS Code o
+                    RStudio. Los fragmentos de dos o tres líneas que acompañan un ejercicio usan variables que el enunciado ya
+                    presentó. Los de <span className="inline-code">VBA</span> van en el editor de Excel, que es donde vivirán a
+                    partir del capítulo 6.
                 </Box>
             </div>
         );
@@ -3268,9 +3270,9 @@ End Sub`,
                     },
                 ]} />
 
-                <h3>Laboratorio interactivo: descompón un valor en bits</h3>
+                <h3>Laboratorio interactivo: un valor, bit por bit</h3>
                 <p>
-                    Mueve el deslizador y observa cómo un byte se descompone en potencias de 2. Cada casilla es un
+                    Mueva el deslizador y observe cómo un byte se descompone en potencias de 2. Cada casilla es un
                     <Termino def="Binary Digit. Unidad mínima de información: 0 o 1. Ocho bits forman un byte.">bit</Termino>; los pesos activados
                     suman exactamente el valor decimal, y las conversiones a binario, octal y hexadecimal se actualizan en vivo.
                 </p>
@@ -3317,17 +3319,6 @@ End Sub`,
                     ]}
                 /></Ejercicio>
 
-                <Reto titulo="Convierte el saldo de una cuenta" solucion={
-                    <div>
-                        <p><strong>255 en binario:</strong> 11111111₂</p>
-                        <p><strong>255 en octal:</strong> 377₈</p>
-                        <p><strong>255 en hexadecimal:</strong> FF₁₆</p>
-                        <p>Explicación: 255 = 128+64+32+16+8+4+2+1 → todos los bits encendidos. En hex, 15=F, por eso 255=FF.</p>
-                    </div>
-                }>
-                    El saldo máximo de una cuenta en un sistema legacy es 255 (un byte sin signo). Representa este valor en
-                    binario, octal y hexadecimal. ¿Por qué 255 es el máximo de un byte?
-                </Reto>
 
                 <CalloutPro tema="gold" titulo="El caso de la apertura, resuelto" subtitulo="Leer un código de estado bit a bit" icon="fa-credit-card">
                     <p>El manual de la pasarela guarda el motivo de un rechazo en un byte: cada bit es una bandera, y un 1 significa «sí».</p>
@@ -3351,35 +3342,10 @@ End Sub`,
                     <Fuente ilustrativo />
                 </CalloutPro>
 
-                <Ejercicio tipo="E7"><MCQ
-                    pregunta="Otra transacción vuelve rechazada con el código 0x05. Con el mismo manual, ¿qué hay que decirle al cliente?"
-                    opciones={[
-                        { texto: 'Supera el límite diario y el comercio no está habilitado: 5 es 0101, con los bits numerados desde la izquierda.', correcta: false, justificacion: 'Los bits se numeran desde la derecha. Leído desde la izquierda, 0101 da el significado de 0x0A, que es otro rechazo.' },
-                        { texto: 'Lo mismo que con 0x0A: los dos códigos tienen dos banderas encendidas, así que el rechazo es el mismo.', correcta: false, justificacion: 'Importa cuáles banderas están encendidas, no cuántas. 0x0A enciende la 1 y la 3; 0x05, la 0 y la 2.' },
-                        { texto: 'Fondos insuficientes y tarjeta vencida: 5 es 0101, con los bits 0 y 2 encendidos contando desde la derecha.', correcta: true, justificacion: '5 en binario es 0101. Los bits se numeran desde la derecha y empezando en 0: están encendidos el 0 y el 2, que el manual llama fondos insuficientes y tarjeta vencida. Al cliente hay que decirle las dos cosas, porque resolver una sola no hará pasar la transacción.' },
-                        { texto: 'Cinco motivos de rechazo a la vez: el dígito hexadecimal dice cuántas banderas del byte están encendidas.', correcta: false, justificacion: 'El dígito no cuenta banderas: su escritura en binario dice cuáles. Además, el manual solo define cuatro.' },
-                    ]}
-                /></Ejercicio>
 
-                <MCQ
-                    pregunta="El número hexadecimal 2F equivale en decimal a:"
-                    opciones={[
-                        { texto: '215', correcta: false },
-                        { texto: '42', correcta: false },
-                        { texto: '47', correcta: true, justificacion: '2F₁₆ = 2×16¹ + 15×16⁰ = 32 + 15 = 47.' },
-                        { texto: '25', correcta: false },
-                    ]} />
 
-                <MCQ
-                    pregunta="¿Cuántos valores distintos puede representar 1 byte (8 bits)?"
-                    opciones={[
-                        { texto: 'Infinitos, depende de la base.', correcta: false },
-                        { texto: '256 (de 0 a 255)', correcta: true, justificacion: 'Con n bits se representan 2ⁿ valores. Con 8 bits: 2⁸ = 256.' },
-                        { texto: '128', correcta: false },
-                        { texto: '8', correcta: false },
-                    ]} />
 
-                <Quiz titulo="Mini-cuestionario · Capítulo 1" preguntas={[
+                <Quiz titulo="Mini-cuestionario · Sección 1" preguntas={[
                     {
                         pregunta: 'El número 10101 en binario equivale en decimal a:',
                         opciones: [
@@ -3406,6 +3372,34 @@ End Sub`,
                             { texto: '8', correcta: true },
                         ],
                         justificacion: 'La base es igual al número de símbolos. Octal usa 8 símbolos (0-7), base 8.'
+                    },
+                    {
+                        pregunta: 'El número hexadecimal 2F equivale en decimal a:',
+                        opciones: [
+                            { texto: '35 (2 × 10 + 15 = 35)', correcta: false },
+                            { texto: '215 (el 2 seguido del 15)', correcta: false },
+                            { texto: '47 (2 × 16 + 15 = 47)', correcta: true },
+                        ],
+                        justificacion: 'En base 16 el primer dígito pesa 16: 2 × 16 + 15 = 47. Multiplicar por 10 es leer el número como si estuviera en base 10, y pegar el 2 con el 15 no es convertir.'
+                    },
+                    {
+                        pregunta: '¿Cuántos valores distintos puede representar un byte?',
+                        opciones: [
+                            { texto: '255, que es el mayor número que cabe en 8 bits.', correcta: false },
+                            { texto: '256, porque con 8 bits hay 2⁸ combinaciones.', correcta: true },
+                            { texto: '8, uno por cada uno de los bits que lo forman.', correcta: false },
+                        ],
+                        justificacion: 'Con n bits hay 2ⁿ combinaciones: con 8, son 256. El mayor número es 255 porque la cuenta empieza en 0, así que 255 es el último valor y no la cantidad de valores. Y ocho es la cantidad de bits, no de valores.'
+                    },
+                    {
+                        pregunta: 'Otra transacción vuelve rechazada con el código 0x05. Con el manual de la pasarela de esta sección, ¿qué hay que decirle al cliente?',
+                        opciones: [
+                            { texto: 'Fondos insuficientes y tarjeta vencida: 5 es 0101, con los bits 0 y 2 encendidos contando desde la derecha.', correcta: true },
+                            { texto: 'Supera el límite diario y el comercio no está habilitado: 5 es 0101, con los bits numerados desde la izquierda.', correcta: false },
+                            { texto: 'Lo mismo que con 0x0A: los dos códigos tienen dos banderas encendidas, así que el rechazo es el mismo.', correcta: false },
+                            { texto: 'Cinco motivos de rechazo a la vez: el dígito hexadecimal dice cuántas banderas del byte están encendidas.', correcta: false },
+                        ],
+                        justificacion: '5 en binario es 0101. Los bits se numeran desde la derecha y empezando en 0: están encendidos el 0 y el 2, que el manual llama fondos insuficientes y tarjeta vencida. Leído desde la izquierda sale el significado de 0x0A, que es otro rechazo. Importa cuáles banderas están encendidas, no cuántas: el dígito no las cuenta, su escritura en binario dice cuáles son.'
                     },
                 ]} />
 
@@ -3778,9 +3772,9 @@ Debug.Print total`,
                         </p>
                         <p>
                             Lo que se pierde es <strong>aislamiento</strong>. Si datos e instrucciones son indistinguibles para
-                            la máquina, un dato malicioso puede acabar ejecutándose. Por eso un archivo de Excel con macros
-                            llega bloqueado y hay que habilitarlo a mano: no es un capricho del área de seguridad, es la
-                            consecuencia directa de esta decisión de arquitectura, que se verá de cerca en el capítulo 6.
+                            la máquina, un dato malicioso puede acabar ejecutándose. Por eso conviene desconfiar de un archivo
+                            de Excel con macros que llega de fuera: una macro es un programa, y para la máquina es un dato
+                            más. El capítulo 6 lo mira de cerca.
                         </p>
                         <p>
                             De qué depende: de si el sistema necesita cargar o cambiar programas. Un equipo que va a correr
@@ -3805,27 +3799,11 @@ Debug.Print total`,
                     },
                 ]} />
 
-                <MCQ
-                    pregunta="En la arquitectura de Von Neumann, ¿dónde se almacenan las instrucciones del programa mientras se ejecuta?"
-                    opciones={[
-                        { texto: 'Directamente en los registros de la CPU.', correcta: false },
-                        { texto: 'En el disco duro, cargándose instrucción por instrucción.', correcta: false },
-                        { texto: 'En la misma memoria RAM donde están los datos.', correcta: true, justificacion: 'En el modelo de Von Neumann la memoria guarda tanto los datos como las instrucciones del programa: es lo que se llama programa almacenado.' },
-                        { texto: 'En una memoria ROM separada exclusiva para el programa.', correcta: false },
-                    ]} />
 
-                <MCQ
-                    pregunta="Un cajero automático tarda 15 segundos en autorizar un retiro. ¿Dónde es más probable que esté la espera?"
-                    opciones={[
-                        { texto: 'En la entrada y salida: el cajero espera la respuesta del sistema central del banco, que le llega por la red.', correcta: true, justificacion: 'El cajero casi no calcula: valida, consulta y espera la respuesta del sistema central. En la tabla de la sección, un servidor remoto es lo más lento de la lista: responde en 20 a 200 ms, contra 100 ns de la memoria principal.' },
-                        { texto: 'En el cálculo: el procesador del cajero no alcanza a hacer a tiempo las sumas y las restas del retiro.', correcta: false },
-                        { texto: 'En la memoria: la RAM del cajero está llena de transacciones anteriores y la nueva tiene que esperar turno.', correcta: false },
-                        { texto: 'En el teclado: las teclas registran la clave con retraso y el cajero se queda esperando cada dígito.', correcta: false },
-                    ]} />
 
-                <Quiz titulo="Mini-cuestionario · Capítulo 2" preguntas={[
+                <Quiz titulo="Mini-cuestionario · Sección 2" preguntas={[
                     {
-                        pregunta: 'La ALU (Unidad Aritmético-Lógica) es responsable de:',
+                        pregunta: 'La ALU (unidad aritmético-lógica) es la que se encarga de:',
                         opciones: [
                             { texto: 'Realizar las operaciones matemáticas y lógicas, como la suma, la resta y el O lógico.', correcta: true },
                             { texto: 'Leer la siguiente instrucción de la memoria y decidir qué operación representa.', correcta: false },
@@ -3850,6 +3828,24 @@ Debug.Print total`,
                             { texto: 'La ALU ejecuta la operación que pide la instrucción sobre los operandos.', correcta: false },
                         ],
                         justificacion: 'Decodificar es interpretar los bits de la instrucción: qué operación pide y dónde están sus operandos. Ejecutar y almacenar vienen después.'
+                    },
+                    {
+                        pregunta: 'En la arquitectura de Von Neumann, ¿dónde están las instrucciones del programa mientras se ejecuta?',
+                        opciones: [
+                            { texto: 'En el disco, de donde se van leyendo una por una a medida que hacen falta.', correcta: false },
+                            { texto: 'En una memoria aparte, exclusiva para el programa y separada de la de datos.', correcta: false },
+                            { texto: 'En la misma memoria principal donde están los datos con que trabaja.', correcta: true },
+                        ],
+                        justificacion: 'En el modelo de Von Neumann la memoria guarda tanto los datos como las instrucciones del programa: es lo que se llama programa almacenado. El disco conserva el archivo del programa, pero para ejecutarlo hay que cargarlo en la memoria. Y una memoria aparte para las instrucciones es justo lo que este modelo no tiene.'
+                    },
+                    {
+                        pregunta: 'Un cajero automático tarda 15 segundos en autorizar un retiro. ¿Dónde es más probable que esté la espera?',
+                        opciones: [
+                            { texto: 'En el cálculo: el procesador del cajero no alcanza a hacer a tiempo las sumas y las restas del retiro.', correcta: false },
+                            { texto: 'En la entrada y salida: el cajero espera la respuesta del sistema central del banco, que llega por la red.', correcta: true },
+                            { texto: 'En la memoria: la RAM del cajero está llena de transacciones anteriores y la nueva espera su turno.', correcta: false },
+                        ],
+                        justificacion: 'El cajero casi no calcula: valida, consulta y espera la respuesta del sistema central. En la tabla de la sección, un servidor remoto es lo más lento de la lista: responde en 20 a 200 ms, contra 100 ns de la memoria principal. Unas pocas sumas y restas no ocupan a un procesador durante segundos, y nada en el caso indica que la memoria esté llena.'
                     },
                 ]} />
 
@@ -4601,33 +4597,29 @@ End Sub`,
                     al cliente?
                 </Reto></Ejercicio>
 
-                <Reto titulo="La TIR, sin fórmulas nuevas" solucion={
-                    <div>
-                        <p>La TIR (tasa interna de retorno) es la tasa que deja el valor presente neto, el VPN, en cero:</p>
-                        <Eq>{String.raw`\( \sum_{t=0}^{n} \frac{F_t}{(1+\text{TIR})^t} = 0 \)`}</Eq>
-                        <p>
-                            El VPN del proyecto se escribe con operadores de esta sección —suma, división y potencia—, y
-                            basta evaluarlo a dos tasas:
-                        </p>
-                        <CodeTabs titulo="El VPN del proyecto, al 12 % y al 25 %" bloques={VPN_PROYECTO} />
-                        <p>
-                            Al 12 % el VPN es positivo: descontados a esa tasa, los flujos valen 32,39 millones más que
-                            la inversión. Al 25 % ya es negativo, por muy poco. La tasa que lo deja en cero —la TIR—
-                            está entre las dos, muy cerca del 25 %.
-                        </p>
-                        <p>
-                            Que la TIR supere el 12 % significa eso mismo: el proyecto rinde más de lo que cuesta el
-                            dinero con que se financia, y por eso su VPN al 12 % es positivo. A quien aprueba la
-                            inversión le dice que, con esos flujos, el proyecto paga su financiación y deja un excedente.
-                        </p>
-                    </div>
-                }>
-                    Un proyecto pide una inversión inicial de 100 millones y promete cuatro flujos anuales: 30, 40, 50 y
-                    60 millones. Quien lo financia descuenta al 12 % anual. Antes de abrir la solución, decida: si la TIR
-                    del proyecto resulta mayor que ese 12 %, ¿qué signo tiene el VPN calculado al 12 %, y qué le dice eso
-                    a quien debe aprobar la inversión?
-                </Reto>
-                <CalloutPro tema="gold" titulo="Aplicación financiera" subtitulo="Un modelo de scoring crediticio" icon="fa-chart-line">
+                <CalloutPro tema="info" titulo="Aplicación financiera" subtitulo="La TIR, sin fórmulas nuevas" icon="fa-percent">
+                    <p>
+                        Un proyecto pide una inversión inicial de 100 millones y promete cuatro flujos anuales: 30, 40, 50 y
+                        60 millones. Quien lo financia descuenta al 12 % anual. La TIR (tasa interna de retorno) es la tasa
+                        que deja el valor presente neto, el VPN, en cero:
+                    </p>
+                    <Eq>{String.raw`\( \sum_{t=0}^{n} \frac{F_t}{(1+\text{TIR})^t} = 0 \)`}</Eq>
+                    <p>
+                        El VPN se escribe con operadores de esta sección —suma, división y potencia—, y basta evaluarlo a
+                        dos tasas:
+                    </p>
+                    <CodeTabs titulo="El VPN del proyecto, al 12 % y al 25 %" bloques={VPN_PROYECTO} />
+                    <p>
+                        Al 12 % el VPN es positivo: descontados a esa tasa, los flujos valen 32,39 millones más que la
+                        inversión. Al 25 % ya es negativo, por muy poco. La tasa que lo deja en cero —la TIR— está entre las
+                        dos, muy cerca del 25 %.
+                    </p>
+                    <p>
+                        Que la TIR supere el 12 % significa eso mismo: el proyecto rinde más de lo que cuesta el dinero con
+                        que se financia, y por eso su VPN al 12 % es positivo.
+                    </p>
+                    <Fuente ilustrativo />
+                </CalloutPro>                <CalloutPro tema="gold" titulo="Aplicación financiera" subtitulo="Un modelo de scoring crediticio" icon="fa-chart-line">
                     <p>Un modelo de <Termino def="Sistema estadístico que asigna una puntuación numérica a un solicitante de crédito para estimar su probabilidad de incumplimiento.">credit scoring</Termino> se reduce
                     a una combinación de operadores sobre los datos del solicitante. La Ley 1266 de 2008 llama
                     <strong>operador de información</strong> a la persona, entidad u organización que recibe de la fuente
@@ -4641,23 +4633,9 @@ End Sub`,
                     <Fuente ilustrativo />
                 </CalloutPro>
 
-                <MCQ
-                    pregunta="¿Qué imprime: print(10 + 5 * 2)?"
-                    opciones={[
-                        { texto: '30 (se opera de izquierda a derecha: 10 + 5 = 15, luego 15 * 2 = 30).', correcta: false },
-                        { texto: 'Error de sintaxis: print recibe un valor, no una operación que haya que calcular.', correcta: false },
-                        { texto: '20 (la multiplicación tiene mayor precedencia: 5*2=10, luego 10+10=20).', correcta: true, justificacion: 'La multiplicación (*) tiene precedencia sobre la suma (+). Es equivalente a 10 + (5*2) = 20.' },
-                    ]} />
 
-                <MCQ
-                    pregunta="Para aprobar un crédito se requiere: score >= 680 Y (ingresos > 3M O tiene_codeudor). ¿Cuál expresión es correcta?"
-                    opciones={[
-                        { texto: 'score >= 680 and (ingresos > 3_000_000 or tiene_codeudor)', correcta: true, justificacion: 'Los paréntesis son necesarios porque and tiene mayor precedencia que or. Sin paréntesis, Python evaluaría (score>=680 and ingresos>3M) or tiene_codeudor, lo cual aprobaría a cualquiera con codeudor sin importar el score.' },
-                        { texto: 'score >= 680 and ingresos > 3_000_000 or tiene_codeudor', correcta: false },
-                        { texto: 'score >= 680 or ingresos > 3_000_000 and tiene_codeudor', correcta: false },
-                    ]} />
 
-                <Quiz titulo="Mini-cuestionario · Capítulo 3" preguntas={[
+                <Quiz titulo="Mini-cuestionario · Sección 3" preguntas={[
                     {
                         pregunta: '¿Cuál es el resultado de 17 % 5?',
                         opciones: [
@@ -4693,6 +4671,24 @@ End Sub`,
                             { texto: 'Multiplica por n, como el *, pero con más prioridad que la suma.', correcta: false },
                         ],
                         justificacion: '** es el operador de potencia en Python. (1 + i) ** n calcula (1 + i)^n, base del interés compuesto.'
+                    },
+                    {
+                        pregunta: '¿Cuánto vale 10 + 5 * 2 en los cuatro lenguajes del curso?',
+                        opciones: [
+                            { texto: '20, porque la multiplicación se resuelve primero: 5 * 2 = 10 y 10 + 10 = 20.', correcta: true },
+                            { texto: '30, porque se opera en el orden en que está escrito: 10 + 5 = 15 y 15 * 2 = 30.', correcta: false },
+                            { texto: 'Depende del lenguaje: esta es una de las filas en que no se ponen de acuerdo.', correcta: false },
+                        ],
+                        justificacion: 'La multiplicación va antes que la suma en el pseudocódigo, en Python, en R y en VBA: 5 * 2 = 10, y 10 + 10 = 20. Leer de izquierda a derecha daría 30, pero no es así como se evalúa. Las filas en que los lenguajes se apartan son otras dos: el residuo y dos potencias seguidas.'
+                    },
+                    {
+                        pregunta: 'La política dice: score de al menos 680 y, además, ingresos mayores a 3 000 000 o codeudor. ¿Cuál expresión la escribe bien?',
+                        opciones: [
+                            { texto: 'score >= 680 Y ingresos > 3000000 O tiene_codeudor', correcta: false },
+                            { texto: 'score >= 680 Y (ingresos > 3000000 O tiene_codeudor)', correcta: true },
+                            { texto: 'score >= 680 O ingresos > 3000000 Y tiene_codeudor', correcta: false },
+                        ],
+                        justificacion: 'Los paréntesis hacen falta porque Y se resuelve antes que O. Sin ellos, la primera se lee (score >= 680 Y ingresos > 3000000) O tiene_codeudor, y aprueba a cualquiera con codeudor: es el error del ejercicio «El crédito que se aprueba solo». La tercera pide una sola de dos cosas, y deja pasar a quien tenga el score sin nada más.'
                     },
                 ]} />
 
@@ -5084,23 +5080,26 @@ End Sub`,
            LECCIÓN FINAL — EVALUACIÓN, GLOSARIO Y RECURSOS
         ============================================================ */
         const GLOSARIO = [
-            ['ALU', 'Unidad Aritmético-Lógica de la CPU. Ejecuta operaciones matemáticas (suma, resta) y lógicas (AND, OR).'],
-            ['Base numérica', 'Cantidad de símbolos únicos que usa un sistema de numeración. Decimal=10, Binario=2, Octal=8, Hexadecimal=16.'],
-            ['Bit', 'Binary Digit. Unidad mínima de información: 0 o 1.'],
-            ['Byte', 'Conjunto de 8 bits. Puede representar 256 valores distintos (0 a 255).'],
-            ['Bus', 'Canal de comunicación que conecta los componentes del computador (datos, direcciones, control).'],
-            ['Cortocircuito', 'Evaluación lógica que se detiene en cuanto se conoce el resultado final (ej. False and X nunca evalúa X).'],
-            ['CPU', 'Central Processing Unit. Ejecuta las instrucciones de los programas. Contiene ALU, UC y registros.'],
-            ['Fetch-Decode-Execute', 'Ciclo continuo de la CPU: leer instrucción, decodificarla, ejecutarla, guardar resultado.'],
+            ['ALU', 'Unidad aritmético-lógica. Realiza las operaciones matemáticas y lógicas, como la suma, la resta y el O lógico.'],
+            ['Base numérica', 'Cantidad de símbolos distintos que usa un sistema de numeración: 10 el decimal, 2 el binario, 8 el octal y 16 el hexadecimal.'],
+            ['Bit', 'Dígito binario. Es la unidad mínima de información: vale 0 o 1.'],
+            ['Byte', 'Conjunto de 8 bits. Puede representar 256 valores distintos, de 0 a 255.'],
+            ['Bus', 'Canal por el que las unidades del computador se envían datos, direcciones y señales de control.'],
+            ['Caché', 'Memoria integrada en la CPU, más rápida que la memoria principal.'],
+            ['Ciclo de instrucción', 'Los cuatro pasos con que se ejecuta cada instrucción: captar, decodificar, ejecutar y almacenar.'],
+            ['Cortocircuito', 'Dejar de evaluar una condición compuesta en cuanto el resultado ya está decidido. Lo hacen el pseudocódigo, Python y R (este, con && y ||); VBA no.'],
+            ['CPU', 'Unidad central de procesamiento. La forman la unidad de procesamiento y la unidad de control; ejecuta las instrucciones del programa sobre sus datos.'],
             ['Hexadecimal', 'Sistema de base 16. Dígitos: 0-9 y A-F. Cada dígito equivale a cuatro bits; se ve, por ejemplo, en las direcciones de memoria.'],
-            ['Máscara de bits', 'Técnica para usar bits individuales de un entero como flags booleanos independientes.'],
-            ['Operador', 'Símbolo que indica una operación sobre operandos (aritméticos, relacionales o lógicos).'],
-            ['Precedencia', 'Orden en que se evalúan los operadores en una expresión. Los paréntesis tienen la máxima prioridad.'],
-            ['RAM', 'Memoria de acceso aleatorio, volátil. Aquí residen las variables del programa en ejecución.'],
-            ['Sistema posicional', 'Sistema donde cada dígito vale según su posición (potencia de la base).'],
-            ['Von Neumann', 'Arquitectura que almacena datos e instrucciones en la misma memoria, conectados por buses.'],
+            ['Latencia', 'Tiempo que tarda un dispositivo en responder con el dato después de que se le pide.'],
+            ['Máscara de bits', 'Uso de los bits de un entero como banderas de sí o no, independientes entre sí.'],
+            ['Operador', 'Símbolo que indica una operación sobre uno o más operandos. Hay aritméticos, relacionales y lógicos.'],
+            ['Precedencia', 'Orden en que se resuelven los operadores de una expresión. No es idéntica en los cuatro lenguajes: cambian el residuo y dos potencias seguidas.'],
+            ['Programa almacenado', 'Modelo en que la memoria guarda las instrucciones del programa junto a sus datos.'],
+            ['Punto flotante', 'Forma en que la máquina guarda los números reales, como fracciones en base 2. No puede guardar exacto un número como 0,1.'],
+            ['RAM', 'Memoria principal, de acceso aleatorio: cualquiera de sus posiciones se alcanza directamente. Aquí viven las variables del programa mientras corre.'],
+            ['Sistema posicional', 'Sistema en que cada dígito vale según su posición, que es una potencia de la base.'],
+            ['Von Neumann', 'Arquitectura de cinco unidades —procesamiento, control, memoria, entrada y salida— conectadas por buses, en la que datos e instrucciones se guardan en la misma memoria.'],
         ];
-
         const EvaluacionSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-clipboard-question"
@@ -5122,20 +5121,20 @@ End Sub`,
                     enunciado="Todo concepto de este capítulo tiene un lugar concreto en el trabajo con dinero. Relacione cada uno con el suyo."
                     etiquetaIzq="Concepto"
                     etiquetaDer="Dónde aparece"
-                    izquierda={['Bit', 'ALU', 'RAM', 'AND', 'Hexadecimal', 'Módulo (%)']}
+                    izquierda={['Bit', 'ALU', 'RAM', 'Y (conjunción)', 'Hexadecimal', 'Residuo (MOD)']}
                     derecha={[
                         'Aprobar el desembolso solo si el score supera 700 y la mora es cero.',
-                        'Escribir con cuatro caracteres las dieciséis banderas de estado de una transacción.',
+                        'Escribir con dos caracteres las ocho banderas de estado de una transacción.',
                         'El estado más pequeño que un sistema de pagos puede guardar: aprobado o no aprobado.',
                         'Repartir una cuota entre doce meses y saber cuántos pesos sobran.',
-                        'Donde vive el saldo mientras el programa corre, y que desaparece al apagar el equipo.',
+                        'Donde vive el saldo mientras el programa corre, antes de guardarse en el disco.',
                         'Donde ocurre físicamente el capital × tasa de cada liquidación.',
                     ]}
                     solucion={[2, 5, 4, 0, 1, 3]}
                 />
 
                 <h3>Parte 2 · Conversión entre bases</h3>
-                <p>Completa la tabla (respuestas en el reto desplegable):</p>
+                <p>Complete la tabla en un papel y compare después con la solución:</p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead><tr><th>Decimal</th><th>Binario</th><th>Octal</th><th>Hexadecimal</th></tr></thead>
@@ -5146,15 +5145,17 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
-                <Reto titulo="Ver solución (Parte 2)"
-                    solucion={<div>
-                        <p><strong>42:</strong> Binario = 101010, Octal = 52, Hex = 2A.</p>
-                        <p><strong>1101:</strong> Decimal = 13, Octal = 15, Hex = D.</p>
-                        <p><strong>A3:</strong> Decimal = 163 (10×16+3), Binario = 1010 0011, Octal = 243.</p>
-                    </div>}>
-                    Calcula cada celda antes de verificar.
-                </Reto>
-
+                <Fuente propia />
+                <Accordion items={[
+                    {
+                        titulo: 'Ver la solución',
+                        contenido: <div className="text-sm">
+                            <p><strong>42:</strong> binario 101010, octal 52, hexadecimal 2A.</p>
+                            <p><strong>1101:</strong> decimal 13, octal 15, hexadecimal D.</p>
+                            <p><strong>A3:</strong> decimal 163 (10 × 16 + 3), binario 1010 0011, octal 243.</p>
+                        </div>
+                    },
+                ]} />
                 <h3>Parte 3 · Cuestionario integrador</h3>
                 <Quiz titulo="Evaluación · Capítulo 01 — Introducción" preguntas={[
                     {
@@ -5165,7 +5166,7 @@ End Sub`,
                             { texto: '11 (1 + 2 + 0 + 8 = 11)', correcta: false },
                             { texto: '1101 (es el mismo número)', correcta: false },
                         ],
-                        justificacion: '1×8 + 1×4 + 0×2 + 1×1 = 13.'
+                        justificacion: '1×8 + 1×4 + 0×2 + 1×1 = 13. El 11 sale de leer los pesos al revés, empezando por la izquierda con el 1. Y 1101 en binario no es mil ciento uno: los mismos dígitos valen distinto en otra base.'
                     },
                     {
                         seccion: 'cap2',
@@ -5175,17 +5176,17 @@ End Sub`,
                             { texto: 'La memoria principal (RAM).', correcta: false },
                             { texto: 'La Unidad de Control (UC).', correcta: true },
                         ],
-                        justificacion: 'La UC es el "director de orquesta": lee la instrucción de memoria, la decodifica y coordina su ejecución.'
+                        justificacion: 'La unidad de control dirige la ejecución: carga cada instrucción desde la memoria y la hace pasar por la unidad de procesamiento. La ALU realiza las operaciones, pero no decide cuál sigue; y la memoria guarda datos e instrucciones, sin coordinar nada.'
                     },
                     {
                         seccion: 'cap3',
-                        pregunta: '¿Cuál es el resultado de: 2 ** 3 ** 2?',
+                        pregunta: 'En Python, ¿cuánto vale 2 ** 3 ** 2?',
                         opciones: [
-                            { texto: '512 (primero 3**2=9, luego 2**9=512).', correcta: true },
-                            { texto: '64 (primero 2**3=8, luego 8**2=64).', correcta: false },
-                            { texto: 'Error de sintaxis.', correcta: false },
+                            { texto: '64, porque primero se resuelve 2 ** 3 = 8 y después 8 ** 2 = 64.', correcta: false },
+                            { texto: '512, porque primero se resuelve 3 ** 2 = 9 y después 2 ** 9 = 512.', correcta: true },
+                            { texto: 'Nada: dos potencias seguidas sin paréntesis son un error de sintaxis.', correcta: false },
                         ],
-                        justificacion: 'El operador ** se evalúa de derecha a izquierda: primero 3**2=9, luego 2**9=512.'
+                        justificacion: 'En Python dos potencias seguidas se agrupan de derecha a izquierda: primero 3 ** 2 = 9 y luego 2 ** 9 = 512. El 64 sale de agrupar por la izquierda, que es lo que hace VBA con 2 ^ 3 ^ 2: la misma cuenta da otro resultado en otro lenguaje. Y no es un error: es una expresión válida, y por eso mismo conviene escribirla con paréntesis.'
                     },
                     {
                         seccion: 'cap1',
@@ -5195,7 +5196,7 @@ End Sub`,
                             { texto: '255 (2⁸ - 1).', correcta: true },
                             { texto: '128 (2⁷).', correcta: false },
                         ],
-                        justificacion: '8 bits → 2⁸ = 256 valores distintos, de 0 a 255.'
+                        justificacion: 'Con 8 bits hay 2⁸ = 256 valores distintos, y como el primero es el 0, el mayor es 255. El 256 es la cantidad de valores, no el más alto. Y 128 es 2⁷: el peso del bit más alto, no la suma de todos.'
                     },
                     {
                         seccion: 'cap3',
@@ -5205,7 +5206,7 @@ End Sub`,
                             { texto: 'El saldo NO es positivo O la cuenta está activa.', correcta: false },
                             { texto: 'El saldo NO es positivo Y la cuenta está activa.', correcta: true },
                         ],
-                        justificacion: 'not (saldo > 0) significa saldo <= 0. Con AND, ambas condiciones deben cumplirse.'
+                        justificacion: 'El not solo niega lo que tiene entre paréntesis: not (saldo > 0) es saldo <= 0. Después el and exige las dos cosas a la vez. La primera opción niega la condición que no era, y la segunda cambia el and por un «o».'
                     },
                     {
                         seccion: 'cap4',
@@ -5220,13 +5221,13 @@ End Sub`,
                     },
                     {
                         seccion: 'cap2',
-                        pregunta: '¿Qué tipo de memoria pierde su contenido al apagar el computador?',
+                        pregunta: 'A un reporte que tarda media hora le duplican la memoria RAM y sigue tardando media hora. ¿Qué indica eso?',
                         opciones: [
-                            { texto: 'RAM', correcta: true },
-                            { texto: 'Disco SSD', correcta: false },
-                            { texto: 'ROM', correcta: false },
+                            { texto: 'Que el programa no estaba esperando a la memoria: la espera hay que buscarla en otra parte, como el disco o la red.', correcta: true },
+                            { texto: 'Que el reporte ya corre tan rápido como es posible, y media hora es lo que cuesta calcular esa cantidad de datos.', correcta: false },
+                            { texto: 'Que hacía falta todavía más memoria: con el doble no alcanzó, pero con cuatro veces más el tiempo sí habría bajado.', correcta: false },
                         ],
-                        justificacion: 'La RAM es volátil. Disco SSD y ROM conservan los datos sin alimentación eléctrica.'
+                        justificacion: 'Si añadir memoria no cambia nada, la memoria no era el cuello de botella. Un programa lento espera por cálculo, por entrada y salida o por memoria, y descartar una dice dónde seguir buscando: en la tabla de latencias, el disco y la red responden miles de veces más despacio que la memoria principal. Nada indica que media hora sea el mínimo, ni que más de lo que no ayudó vaya a ayudar.'
                     },
                     {
                         seccion: 'cap4',
@@ -5239,21 +5240,45 @@ End Sub`,
                         ],
                         justificacion: 'En base 2 solo caben exactas las fracciones que se arman con mitades, cuartos, octavos…: 0,75 es 1/2 + 1/4. El 0,1 no se puede armar así con ningún número finito de cifras, igual que 1/3 en base 10, por corto que se vea: cuántas cifras decimales tiene un número no dice nada de cuántas binarias necesita. El 0,2 es la trampa fina. Multiplicar por dos sí es exacto en base 2 —solo corre la coma—, pero lo que se multiplica es un 0,1 que ya estaba aproximado, y el doble hereda el error, duplicado. Y «ninguno» es el error contrario: 0,5, 0,25 y 0,75 se guardan exactos, y el laboratorio de la sección lo muestra bit a bit.'
                     },
+                    {
+                        seccion: 'cap3',
+                        pregunta: 'En R, 2 * 7 %% 4 da 6. En Python, 2 * 7 % 4 da 2. ¿Qué explica la diferencia?',
+                        opciones: [
+                            { texto: 'R redondea el resultado de la multiplicación antes de calcular el residuo, y Python trabaja con el valor exacto.', correcta: false },
+                            { texto: 'El operador %% de R no calcula el residuo sino el cociente entero, que en Python se obtiene con otro operador.', correcta: false },
+                            { texto: 'En R el residuo se resuelve antes que la multiplicación; en Python tienen la misma prioridad y se va de izquierda a derecha.', correcta: true },
+                        ],
+                        justificacion: 'R resuelve %% antes que *: calcula 7 %% 4 = 3 y luego 2 * 3 = 6. Python les da la misma prioridad y va de izquierda a derecha: 2 * 7 = 14 y 14 % 4 = 2. Ninguno de los dos redondea nada, y %% sí es el residuo: el cociente entero de R es %/%. Por eso, cuando una expresión mezcla el residuo con la multiplicación, se escriben los paréntesis.'
+                    },
+                    {
+                        seccion: 'cap1',
+                        pregunta: 'Un sistema guarda ocho banderas de sí o no en un byte y devuelve el código 0xFF. ¿Qué dice ese código?',
+                        opciones: [
+                            { texto: 'Que hay 255 banderas encendidas: FF es 255 en decimal, y ese es el número de respuestas afirmativas.', correcta: false },
+                            { texto: 'Que las ocho banderas están encendidas: cada F es 1111, y los dos dígitos juntos dan ocho unos.', correcta: true },
+                            { texto: 'Que ninguna bandera está encendida: FF es el valor más alto del byte y se usa para decir «vacío».', correcta: false },
+                        ],
+                        justificacion: 'Cada dígito hexadecimal son cuatro bits, y F es 1111: FF es 1111 1111, los ocho bits en 1. Que FF valga 255 en decimal es cierto, pero el byte solo tiene ocho banderas: 255 es el valor del número, no una cuenta de respuestas. Y nada en el código dice «vacío»: un byte sin banderas encendidas es 0x00.'
+                    },
                 ]} />
 
-                <h3>Glosario de la Unidad 1</h3>
-                <div className="grid md:grid-cols-2 gap-2">
-                    {GLOSARIO.map(([t, d], i) => (
-                        <div key={i} className="border border-gray-200 rounded-lg p-3 bg-white">
-                            <span className="font-bold text-primary text-sm">{t}</span>
-                            <p className="text-xs text-gray-600 mt-0.5" style={{ margin: '2px 0 0' }}>{d}</p>
-                        </div>
-                    ))}
+                <h3>Glosario</h3>
+                <div className="overflow-x-auto">
+                    {/* fuente-ok: glosario; resume definiciones que el capítulo ya da con su fuente */}
+                    <table>
+                        <thead><tr><th>Término</th><th>Definición</th></tr></thead>
+                        <tbody>
+                            {GLOSARIO.map(([t, d], i) => (
+                                <tr key={i}><td><strong className="text-navy">{t}</strong></td><td>{d}</td></tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
                 <Referencias/>
 
-                <h3>Recursos complementarios</h3>
+                <h3>Para practicar</h3>
+                <p>Sitios para ejercitarse. No son las fuentes de este capítulo: esas están en «Referencias».</p>
                 <Accordion items={[
                     {
                         titulo: 'Sistemas de numeración', contenido: <ul className="text-sm">
@@ -5266,11 +5291,10 @@ End Sub`,
                         titulo: 'Estructura del computador', contenido: <ul className="text-sm">
                             <li>Crash Course Computer Science — <a className="text-primary underline" href="https://www.youtube.com/watch?v=OAxP6X8GxZg" target="_blank" rel="noopener noreferrer">The Central Processing Unit (CPU)</a>.</li>
                             <li>Nand2Tetris — <a className="text-primary underline" href="https://www.nand2tetris.org/" target="_blank" rel="noopener noreferrer">Curso gratuito para construir un computador desde cero</a>.</li>
-                            <li>Scott, J. C. (2009). <em>But How Do It Know?</em> — Explicación sencilla de cómo funciona un computador.</li>
                         </ul>
                     },
                     {
-                        titulo: 'Operadores y Python', contenido: <ul className="text-sm">
+                        titulo: 'Operadores', contenido: <ul className="text-sm">
                             <li>Python oficial — <a className="text-primary underline" href="https://docs.python.org/3/reference/expressions.html#operator-precedence" target="_blank" rel="noopener noreferrer">Precedencia de operadores</a>.</li>
                             <li>Real Python — <a className="text-primary underline" href="https://realpython.com/python-operators-expressions/" target="_blank" rel="noopener noreferrer">Operators and Expressions in Python</a>.</li>
                             <li>W3Schools — <a className="text-primary underline" href="https://www.w3schools.com/python/python_operators.asp" target="_blank" rel="noopener noreferrer">Python Operators</a>.</li>
@@ -5278,10 +5302,11 @@ End Sub`,
                     },
                 ]} />
 
-                <Box type="tip" label="¡Unidad 1 completada!">
-                    Si respondiste bien la evaluación integradora, dominas los fundamentos de sistemas de numeración,
-                    estructura del computador y operadores. Estás listo para abordar <strong>estructuras de control</strong>
-                    (condicionales, ciclos) y <strong>funciones</strong> en la siguiente unidad.
+                <Box type="tip" label="Lo que viene">
+                    El capítulo 2, <em>Introducción a algoritmos</em>, pasa de la máquina al método: qué hace que una
+                    secuencia de pasos sea un algoritmo, cómo se analiza un problema en entrada, proceso y salida, y cómo
+                    se guardan los valores en variables. Los operadores de la sección 3 y el cuidado con los reales de la
+                    sección 4 vuelven a usarse allí.
                 </Box>
             </div>
         );
