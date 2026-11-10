@@ -2679,65 +2679,70 @@
            SVG: Arquitectura de Von Neumann
         ============================================================ */
         const VonNeumannSVG = () => (
-            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm my-4 overflow-x-auto">
-                <svg viewBox="0 0 700 350" className="w-full" style={{ minWidth: 560 }} role="img" aria-label="Diagrama de la arquitectura de Von Neumann">
-                    <title>Arquitectura de Von Neumann: CPU (ALU + Unidad de Control), Memoria, Dispositivos de Entrada/Salida, conectados por buses</title>
-                    <defs>
-                        <marker id="vnArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94A3B8" /></marker>
-                    </defs>
-                    {/* Bus de datos (horizontal) */}
-                    <line x1="40" y1="275" x2="660" y2="275" stroke="#94A3B8" strokeWidth="3" strokeDasharray="8,4" markerEnd="url(#vnArrow)" />
-                    <text x="350" y="268" textAnchor="middle" fontSize="10" fill="#64748B">Bus de datos + direcciones + control</text>
+            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm my-4">
+                <div className="overflow-x-auto">
+                    <svg viewBox="0 0 700 340" className="w-full" style={{ minWidth: 560 }} role="img" aria-label="Diagrama de la arquitectura de Von Neumann">
+                        <title>Arquitectura de Von Neumann: la CPU —con la ALU, la unidad de control, los registros y la caché—, la memoria principal, la entrada, la salida y el almacenamiento, conectados por buses de doble sentido</title>
+                        <defs>
+                            <marker id="vnFin" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748B" /></marker>
+                            <marker id="vnIni" markerWidth="8" markerHeight="8" refX="0" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#64748B" /></marker>
+                        </defs>
 
-                    {/* CPU */}
-                    <rect x="250" y="20" width="200" height="140" rx="12" fill="#F5F0FA" stroke="#3D008D" strokeWidth="2.5" />
-                    <text x="350" y="50" textAnchor="middle" fontSize="15" fill="#3D008D" fontWeight="bold">CPU</text>
-                    <rect x="268" y="65" width="80" height="80" rx="8" fill="#fff" stroke="#0E7490" strokeWidth="1.5" />
-                    <text x="308" y="100" textAnchor="middle" fontSize="12" fill="#0E7490" fontWeight="bold">ALU</text>
-                    <text x="308" y="118" textAnchor="middle" fontSize="9" fill="#64748B">Unidad</text>
-                    <text x="308" y="131" textAnchor="middle" fontSize="9" fill="#64748B">Aritmético-</text>
-                    <text x="308" y="144" textAnchor="middle" fontSize="9" fill="#64748B">Lógica</text>
-                    <rect x="358" y="65" width="80" height="80" rx="8" fill="#fff" stroke="#0E7490" strokeWidth="1.5" />
-                    <text x="398" y="100" textAnchor="middle" fontSize="12" fill="#0E7490" fontWeight="bold">UC</text>
-                    <text x="398" y="118" textAnchor="middle" fontSize="9" fill="#64748B">Unidad</text>
-                    <text x="398" y="131" textAnchor="middle" fontSize="9" fill="#64748B">de</text>
-                    <text x="398" y="144" textAnchor="middle" fontSize="9" fill="#64748B">Control</text>
+                        {/* Buses: de doble sentido */}
+                        <line x1="46" y1="290" x2="654" y2="290" stroke="#64748B" strokeWidth="3" markerStart="url(#vnIni)" markerEnd="url(#vnFin)" />
+                        <text x="350" y="308" textAnchor="middle" fontSize="10" fill="#475569">Buses de datos, de direcciones y de control</text>
 
-                    {/* Memoria */}
-                    <rect x="250" y="175" width="200" height="80" rx="12" fill="#FEF3C7" stroke="#ED1E79" strokeWidth="2.5" />
-                    <text x="350" y="205" textAnchor="middle" fontSize="15" fill="#92400E" fontWeight="bold">MEMORIA PRINCIPAL</text>
-                    <text x="350" y="228" textAnchor="middle" fontSize="11" fill="#64748B">RAM · ROM · Caché</text>
-                    <text x="350" y="246" textAnchor="middle" fontSize="10" fill="#64748B">Almacena datos e instrucciones</text>
+                        {/* CPU: procesamiento y control, con sus registros y su caché */}
+                        <rect x="225" y="15" width="250" height="160" rx="12" fill="#F5F0FA" stroke="#3D008D" strokeWidth="2.5" />
+                        <text x="350" y="38" textAnchor="middle" fontSize="15" fill="#3D008D" fontWeight="bold">CPU</text>
+                        <rect x="240" y="50" width="105" height="62" rx="8" fill="#fff" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="292" y="76" textAnchor="middle" fontSize="12" fill="#0E7490" fontWeight="bold">ALU</text>
+                        <text x="292" y="94" textAnchor="middle" fontSize="9" fill="#475569">Aritmético-lógica</text>
+                        <rect x="355" y="50" width="105" height="62" rx="8" fill="#fff" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="407" y="76" textAnchor="middle" fontSize="12" fill="#0E7490" fontWeight="bold">UC</text>
+                        <text x="407" y="94" textAnchor="middle" fontSize="9" fill="#475569">Unidad de control</text>
+                        <rect x="240" y="122" width="220" height="40" rx="8" fill="#fff" stroke="#0E7490" strokeWidth="1.5" />
+                        <text x="350" y="147" textAnchor="middle" fontSize="11" fill="#0E7490" fontWeight="bold">Registros · Caché</text>
 
-                    {/* Entrada */}
-                    <rect x="30" y="55" width="130" height="80" rx="12" fill="#F0FDF4" stroke="#15803D" strokeWidth="2" />
-                    <text x="95" y="85" textAnchor="middle" fontSize="14" fill="#15803D" fontWeight="bold">ENTRADA</text>
-                    <text x="95" y="108" textAnchor="middle" fontSize="10" fill="#64748B">Teclado · Ratón</text>
-                    <text x="95" y="123" textAnchor="middle" fontSize="10" fill="#64748B">Escáner · Red</text>
+                        {/* Memoria principal */}
+                        <rect x="225" y="190" width="250" height="62" rx="12" fill="#FDF2F8" stroke="#ED1E79" strokeWidth="2.5" />
+                        <text x="350" y="215" textAnchor="middle" fontSize="14" fill="#001A4D" fontWeight="bold">MEMORIA PRINCIPAL (RAM)</text>
+                        <text x="350" y="236" textAnchor="middle" fontSize="10" fill="#475569">Guarda datos e instrucciones</text>
 
-                    {/* Salida */}
-                    <rect x="540" y="55" width="130" height="80" rx="12" fill="#FEE2E2" stroke="#B91C1C" strokeWidth="2" />
-                    <text x="605" y="85" textAnchor="middle" fontSize="14" fill="#B91C1C" fontWeight="bold">SALIDA</text>
-                    <text x="605" y="108" textAnchor="middle" fontSize="10" fill="#64748B">Monitor · Impresora</text>
-                    <text x="605" y="123" textAnchor="middle" fontSize="10" fill="#64748B">Almacenamiento</text>
+                        {/* Entrada */}
+                        <rect x="30" y="45" width="140" height="80" rx="12" fill="#F8FAFC" stroke="#001A4D" strokeWidth="2" />
+                        <text x="100" y="75" textAnchor="middle" fontSize="14" fill="#001A4D" fontWeight="bold">ENTRADA</text>
+                        <text x="100" y="98" textAnchor="middle" fontSize="10" fill="#475569">Teclado · Ratón</text>
+                        <text x="100" y="113" textAnchor="middle" fontSize="10" fill="#475569">Lector de tarjetas</text>
 
-                    {/* Conexiones al bus */}
-                    <line x1="160" y1="100" x2="160" y2="275" stroke="#94A3B8" strokeWidth="1.5" />
-                    <line x1="250" y1="100" x2="250" y2="275" stroke="#94A3B8" strokeWidth="1.5" />
-                    <line x1="450" y1="100" x2="450" y2="275" stroke="#94A3B8" strokeWidth="1.5" />
-                    <line x1="540" y1="100" x2="540" y2="275" stroke="#94A3B8" strokeWidth="1.5" />
+                        {/* Salida */}
+                        <rect x="530" y="45" width="140" height="80" rx="12" fill="#F8FAFC" stroke="#001A4D" strokeWidth="2" />
+                        <text x="600" y="75" textAnchor="middle" fontSize="14" fill="#001A4D" fontWeight="bold">SALIDA</text>
+                        <text x="600" y="98" textAnchor="middle" fontSize="10" fill="#475569">Monitor · Altavoces</text>
+                        <text x="600" y="113" textAnchor="middle" fontSize="10" fill="#475569">Impresora</text>
 
-                    {/* Ciclo fetch-decode-execute */}
-                    <text x="350" y="320" textAnchor="middle" fontSize="11" fill="#64748B" fontStyle="italic">
-                        Ciclo: Fetch (buscar instrucción) → Decode (decodificar) → Execute (ejecutar) → Store (guardar resultado)
-                    </text>
-                </svg>
-                <p className="text-xs text-gray-500 italic text-center">
-                    La CPU ejecuta instrucciones en un ciclo continuo: lee de la memoria, decodifica, ejecuta en la ALU y guarda el resultado.
-                </p>
+                        {/* Almacenamiento: entrada y salida a la vez */}
+                        <rect x="530" y="150" width="140" height="74" rx="12" fill="#F8FAFC" stroke="#001A4D" strokeWidth="2" strokeDasharray="6,3" />
+                        <text x="600" y="176" textAnchor="middle" fontSize="12" fill="#001A4D" fontWeight="bold">ALMACENAMIENTO</text>
+                        <text x="600" y="195" textAnchor="middle" fontSize="10" fill="#475569">Disco (HDD · SSD)</text>
+                        <text x="600" y="210" textAnchor="middle" fontSize="10" fill="#475569">Entrada y salida a la vez</text>
+
+                        {/* Conexiones a los buses */}
+                        <polyline points="170,85 185,85 185,290" fill="none" stroke="#64748B" strokeWidth="1.5" />
+                        <polyline points="225,95 205,95 205,290" fill="none" stroke="#64748B" strokeWidth="1.5" />
+                        <polyline points="475,221 495,221 495,290" fill="none" stroke="#64748B" strokeWidth="1.5" />
+                        <polyline points="530,85 515,85 515,290" fill="none" stroke="#64748B" strokeWidth="1.5" />
+                        <line x1="600" y1="224" x2="600" y2="290" stroke="#64748B" strokeWidth="1.5" />
+
+                        {/* El ciclo, con los nombres que usa el código del capítulo */}
+                        <text x="350" y="330" textAnchor="middle" fontSize="11" fill="#475569" fontStyle="italic">
+                            Ciclo de instrucción: captar → decodificar → ejecutar → almacenar
+                        </text>
+                    </svg>
+                </div>
+                <Fuente k="matthews2020" loc="§5.2">elaboración propia a partir de</Fuente>
             </div>
         );
-
         /* ============================================================
            SVG: Conversión entre sistemas de numeración
         ============================================================ */
@@ -3583,103 +3588,115 @@ Debug.Print total`,
                 <p>
                     Un programa financiero —por sofisticado que sea— es, en última instancia, una secuencia de
                     instrucciones que la <strong>CPU</strong> ejecuta sobre datos almacenados en <strong>memoria</strong>.
-                    Entender esta arquitectura es esencial para escribir código eficiente y diagnosticar problemas de rendimiento.
+                    Conocer esa arquitectura sirve para saber dónde se va el tiempo cuando un programa tarda.
                 </p>
 
                 <Box type="info" label="Idea central">
-                    La <strong>arquitectura de Von Neumann</strong> (1945) establece que tanto los <em>datos</em> como las
-                    <em>instrucciones</em> se almacenan en la misma memoria y se transmiten por los mismos buses.
-                    Es el modelo que usan prácticamente todos los computadores actuales.
+                    En 1945, John von Neumann publicó un informe que describe la arquitectura en que se basan los computadores modernos,
+                    y que hoy se conoce como <strong>arquitectura de Von Neumann</strong> <Cita k="matthews2020" loc="§5.1" />. En ese modelo no hay distinción entre
+                    <em>instrucciones</em> y <em>datos</em>: unas y otros se cargan en la misma memoria <Cita k="matthews2020" loc="§5.1" />.
+                    Todos los procesadores modernos siguen ese modelo <Cita k="matthews2020" loc="cap. 5, introducción" />.
                 </Box>
 
-                <h3>La arquitectura de Von Neumann: los cuatro componentes</h3>
+                <h3>La arquitectura de Von Neumann: sus componentes</h3>
+                <p>
+                    El modelo tiene cinco unidades: la de procesamiento y la de control, que juntas forman la CPU; la de
+                    memoria; la de entrada y la de salida. Las conectan los buses <Cita k="matthews2020" loc="§5.2" />.
+                </p>
                 <VonNeumannSVG />
 
                 <Tabs tabs={[
                     {
                         label: '1. CPU',
                         content: <div>
-                            <p>El <Termino def="Central Processing Unit. El 'cerebro' del computador. Ejecuta las instrucciones de los programas. Contiene la ALU, la Unidad de Control y registros.">procesador</Termino> ejecuta las instrucciones. Se compone de:</p>
+                            <p>La <Termino def="Central Processing Unit, o unidad central de procesamiento. La forman la unidad de procesamiento y la unidad de control.">CPU</Termino> es la parte del computador que ejecuta las instrucciones del programa sobre sus datos. Se compone de:</p>
                             <ul>
-                                <li><strong>ALU</strong> (Unidad Aritmético-Lógica): realiza operaciones matemáticas (suma, resta, comparaciones, AND, OR).</li>
-                                <li><strong>UC</strong> (Unidad de Control): coordina el flujo de instrucciones. Lee la siguiente instrucción de la memoria, la decodifica y orquesta su ejecución.</li>
-                                <li><strong>Registros</strong>: pequeñas memorias ultrarrápidas dentro de la CPU. Guardan operandos y resultados intermedios.</li>
+                                <li><strong>ALU</strong> (unidad aritmético-lógica): realiza operaciones matemáticas y lógicas, como la suma, la resta y el O lógico.</li>
+                                <li><strong>UC</strong> (unidad de control): dirige la ejecución. Carga cada instrucción desde la memoria y hace pasar por la unidad de procesamiento la operación y sus operandos.</li>
+                                <li><strong>Registros</strong>: unidades de almacenamiento pequeñas y rápidas que guardan los datos y las instrucciones que se están ejecutando.</li>
                             </ul>
+                            <Fuente k="matthews2020" loc="§5.2">adaptado de</Fuente>
                         </div>
                     },
                     {
                         label: '2. Memoria principal',
                         content: <div>
-                            <p>Almacena tanto los <strong>datos</strong> como el <strong>programa</strong> en ejecución:</p>
+                            <p>Guarda tanto los <strong>datos</strong> como las <strong>instrucciones</strong> del programa <Cita k="matthews2020" loc="§5.2" />:</p>
                             <ul>
-                                <li><strong>RAM</strong> (Random Access Memory): volátil, rápida. Aquí residen las variables de tu programa mientras se ejecuta.</li>
-                                <li><strong>ROM</strong> (Read-Only Memory): no volátil, contiene firmware esencial (BIOS/UEFI).</li>
-                                <li><strong>Caché</strong>: memoria intermedia entre RAM y CPU. Jerarquía L1, L2, L3.</li>
+                                <li><strong>RAM</strong> (memoria de acceso aleatorio): cualquiera de sus posiciones se puede alcanzar directamente <Cita k="matthews2020" loc="§5.2" />. Aquí viven las variables de su programa mientras corre.</li>
+                                <li><strong>La caché no está aquí.</strong> Es memoria integrada en la propia CPU, más rápida que la principal, y suele venir en niveles: L1 y L2 y, en muchas CPU de varios núcleos, un L3 compartido entre ellos <Cita k="matthews2020" loc="§11.1 y §11.2.1" />.</li>
+                                <li><strong>El almacenamiento secundario</strong> más conocido son los discos, que guardan los archivos de forma persistente <Cita k="matthews2020" loc="§11.2" />. Ahí va lo que debe conservarse.</li>
                             </ul>
                         </div>
                     },
                     {
                         label: '3. Dispositivos E/S',
                         content: <div>
-                            <p>Conectan el computador con el mundo exterior:</p>
+                            <p>Permiten que el computador se comunique con el mundo exterior:</p>
                             <ul>
-                                <li><strong>Entrada:</strong> teclado, ratón, escáner, lector de banda magnética, terminal POS.</li>
-                                <li><strong>Salida:</strong> monitor, impresora, altavoces.</li>
-                                <li><strong>Almacenamiento:</strong> disco duro (HDD/SSD), que es <em>persistente</em> (no se borra al apagar).</li>
+                                <li><strong>Entrada:</strong> traen datos al computador. Los más comunes son el teclado y el ratón.</li>
+                                <li><strong>Salida:</strong> devuelven los resultados. El monitor y los altavoces son ejemplos.</li>
+                                <li><strong>Almacenamiento:</strong> los discos hacen de entrada y de salida: de ellos se carga el programa y en ellos se escriben sus resultados.</li>
                             </ul>
+                            <Fuente k="matthews2020" loc="§5.2">adaptado de</Fuente>
+                            <p>En un banco, el lector de tarjetas de un datáfono es un dispositivo de entrada más.</p>
                         </div>
                     },
                     {
                         label: '4. Buses',
                         content: <div>
-                            <p>Los <strong>buses</strong> son las "autopistas" de datos que conectan todos los componentes:</p>
+                            <p>Los <strong>buses</strong> conectan las unidades, que los usan para enviarse datos y señales de control. Lo habitual es que haya buses separados para los datos, las direcciones y el control:</p>
                             <ul>
-                                <li><strong>Bus de datos:</strong> transporta los valores (números, instrucciones).</li>
-                                <li><strong>Bus de direcciones:</strong> indica <em>dónde</em> en la memoria leer o escribir.</li>
-                                <li><strong>Bus de control:</strong> señales de coordinación (leer, escribir, interrupción).</li>
+                                <li><strong>Bus de datos:</strong> transfiere los valores entre las unidades.</li>
+                                <li><strong>Bus de direcciones:</strong> lleva la dirección de memoria que se quiere leer o escribir.</li>
+                                <li><strong>Bus de control:</strong> lleva las señales con que una unidad le pide algo a otra o le avisa de algo.</li>
                             </ul>
+                            <Fuente k="matthews2020" loc="§5.2">adaptado de</Fuente>
                         </div>
                     },
                 ]} />
 
-                <h3>El ciclo de instrucción: fetch → decode → execute</h3>
+                <h3>El ciclo de instrucción: captar → decodificar → ejecutar → almacenar</h3>
                 <p>
-                    La CPU no "piensa": ejecuta mecánicamente un ciclo infinito. Cada instrucción sigue cuatro pasos:
+                    El computador no «piensa». Sus cinco unidades, trabajando juntas, repiten el mismo ciclo de cuatro pasos,
+                    instrucción tras instrucción, hasta que el programa termina <Cita k="matthews2020" loc="§5.2" />.
                 </p>
                 <Pipeline steps={[
-                    { num: 1, title: 'Fetch', desc: 'La CPU lee la siguiente instrucción de la memoria (usando el Program Counter).' },
-                    { num: 2, title: 'Decode', desc: 'La Unidad de Control interpreta qué operación realizar (suma, salto, comparación).' },
-                    { num: 3, title: 'Execute', desc: 'La ALU ejecuta la operación sobre los operandos.' },
-                    { num: 4, title: 'Store', desc: 'El resultado se guarda en un registro o en la memoria.' },
+                    { num: 1, title: 'Captar (fetch)', desc: 'La unidad de control lee de la memoria la siguiente instrucción. Un registro, el contador de programa, guarda su dirección.' },
+                    { num: 2, title: 'Decodificar (decode)', desc: 'La unidad de control interpreta los bits de la instrucción: qué operación es y dónde están sus operandos.' },
+                    { num: 3, title: 'Ejecutar (execute)', desc: 'La ALU realiza la operación sobre los operandos.' },
+                    { num: 4, title: 'Almacenar (store)', desc: 'La unidad de control escribe el resultado en la memoria.' },
                 ]} />
+                <Fuente k="matthews2020" loc="§5.2">adaptado de</Fuente>
 
-                <Box type="tip" label="Analogía: el cajero automático (ATM)">
-                    Un <Termino def="Automated Teller Machine. Dispositivo electrónico que permite a los clientes de una entidad financiera realizar transacciones sin necesidad de un cajero humano.">ATM</Termino> es una computadora con arquitectura de Von Neumann: el lector de tarjeta y el teclado son <strong>dispositivos de entrada</strong>; la pantalla y el dispensador de billetes,
-                    <strong> de salida</strong>; la RAM guarda temporalmente el saldo consultado durante la sesión; y la CPU
-                    ejecuta las instrucciones del software (validar PIN, consultar saldo, autorizar retiro). Las transacciones
-                    finales se persisten en el <strong>disco duro</strong> del servidor central del banco.
+                <Box type="tip" label="Una imagen: el cajero automático">
+                    Sirve de imagen un <Termino def="Automated Teller Machine. Dispositivo electrónico que permite a los clientes de una entidad financiera realizar transacciones sin necesidad de un cajero humano.">cajero automático</Termino>.
+                    El lector de tarjeta y el teclado son sus <strong>dispositivos de entrada</strong>; la pantalla y el
+                    dispensador de billetes, <strong>de salida</strong>. La memoria guarda el saldo consultado mientras dura la
+                    sesión, y la CPU ejecuta las instrucciones del programa: validar la clave, consultar el saldo, autorizar el
+                    retiro. Lo que debe conservarse no se queda en la memoria del cajero: se guarda en almacenamiento persistente.
                 </Box>
 
                 <h3>Del hardware al software: la jerarquía de abstracción</h3>
                 <div className="overflow-x-auto">
                     <table>
-                        <thead><tr><th>Nivel</th><th>Qué es</th><th>Ejemplo financiero</th></tr></thead>
+                        <thead><tr><th>Nivel</th><th>Qué es</th><th>Ejemplo</th></tr></thead>
                         <tbody>
-                            <tr><td><strong>Hardware</strong></td><td>Circuitos electrónicos, CPU, RAM</td><td>Servidor del banco, terminal POS</td></tr>
-                            <tr><td><strong>Lenguaje máquina</strong></td><td>Instrucciones binarias (códigos de operación)</td><td><span className="inline-code">10110000 01100001</span> → mover 97 al registro AL</td></tr>
-                            <tr><td><strong>Ensamblador</strong></td><td>Mnemónicos legibles (MOV, ADD, CMP)</td><td><span className="inline-code">MOV AL, 61h</span></td></tr>
-                            <tr><td><strong>Alto nivel</strong></td><td>Python, Java, C++</td><td><span className="inline-code">saldo -= monto_retiro</span></td></tr>
-                            <tr><td><strong>Aplicación</strong></td><td>Software financiero</td><td>Core bancario, app de trading, ERP</td></tr>
+                            <tr><td><strong>Hardware</strong></td><td>Los circuitos: CPU, memoria, discos</td><td>El servidor de un banco, un datáfono</td></tr>
+                            <tr><td><strong>Lenguaje máquina</strong></td><td>Instrucciones en binario: un código de operación y sus operandos</td><td>En la máquina de cuatro celdas de más abajo, el <span className="inline-code">42</span> que significa «sumar»</td></tr>
+                            <tr><td><strong>Ensamblador</strong></td><td>Un nombre legible en lugar de cada código</td><td><span className="inline-code">SUMAR 100, 50</span> en lugar de <span className="inline-code">42 100 50</span></td></tr>
+                            <tr><td><strong>Alto nivel</strong></td><td>Python, R, VBA</td><td><span className="inline-code">saldo = saldo - monto_retiro</span></td></tr>
+                            <tr><td><strong>Aplicación</strong></td><td>El programa que usa la gente</td><td>Un sistema de cartera, una hoja de cálculo</td></tr>
                         </tbody>
                     </table>
                 </div>
-
+                <Fuente propia>con ejemplos de lenguaje máquina y de ensamblador tomados de la máquina de cuatro celdas de esta sección, que es inventada</Fuente>
                 <h3>El ciclo de instrucción, escrito en los cuatro lenguajes</h3>
                 <p>
                     Una memoria de cuatro celdas basta para ver el ciclo completo. La celda 0 guarda el
                     <strong> código de operación</strong>; las dos siguientes, los operandos; la última espera el
-                    resultado. Que instrucciones y datos convivan en la misma memoria es <em>exactamente</em> lo que
-                    propuso Von Neumann.
+                    resultado. Guardar las instrucciones en la memoria, junto a los datos, es una pieza clave del modelo de
+                    programa almacenado <Cita k="matthews2020" loc="§5.2" />.
                 </p>
                 <CodeTabs
                     titulo="Captar → decodificar → ejecutar → almacenar"
@@ -3703,12 +3720,53 @@ Debug.Print total`,
                     b={{ etiqueta: 'Versión B · lee una sola vez', codigo: CMP_LEE_UNA_VEZ }}
                     pregunta="¿Qué diferencia hay entre las dos?"
                     opciones={[
-                        { texto: 'Son idénticas: el compilador las convierte en el mismo programa.', correcta: false },
-                        { texto: 'Dan el mismo total, pero la A cruza el bus de memoria doce veces más que la B.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es el número de accesos a memoria, y ahí está el cuello de botella de Von Neumann: la CPU calcula mucho más rápido de lo que el bus le trae los datos. Con doce cuotas la diferencia no se nota; recorriendo 40 000 filas de una hoja, es la diferencia entre segundos y minutos. De ahí viene la regla de sacar del ciclo todo lo que no cambia dentro de él.' },
-                        { texto: 'La B da un total distinto porque lee la tasa antes de empezar.', correcta: false },
-                        { texto: 'La A es más rápida porque no usa una variable adicional.', correcta: false },
+                        { texto: 'Hacen exactamente el mismo trabajo: da igual dónde se escriba la lectura de la tasa.', correcta: false, justificacion: 'Dan el mismo resultado, pero no hacen el mismo trabajo: la A repite doce veces una lectura que la B hace una sola vez.' },
+                        { texto: 'Dan el mismo total, pero la A lee doce veces un dato que la B lee una sola vez.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es cuántas veces se va a buscar: doce en la A, una en la B. Con el dato en la memoria principal y solo doce cuotas, la diferencia no se nota. La regla que deja el ejercicio —sacar del ciclo todo lo que no cambia dentro de él— pesa cuando el dato está más lejos, y la tabla que sigue dice cuánto.' },
+                        { texto: 'La B da un total distinto, porque lee la tasa antes de empezar y no en cada cuota.', correcta: false, justificacion: 'La tasa no cambia entre la primera vuelta y la última: leerla antes de empezar da el mismo valor.' },
+                        { texto: 'La A es la más rápida de las dos, porque se ahorra guardar una variable adicional.', correcta: false, justificacion: 'La variable adicional evita once lecturas y no añade ninguna.' },
                     ]}
                 />
+
+                <h3>Cuánto tarda en llegar un dato</h3>
+                <p>
+                    Depende de dónde esté. La latencia es el tiempo que tarda un dispositivo en responder con el dato después
+                    de que se le pide <Cita k="matthews2020" loc="§11.2" />. Estas son las latencias aproximadas de una estación de trabajo típica de 2020:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Dónde está el dato</th><th>Latencia aproximada</th></tr></thead>
+                        <tbody>
+                            <tr><td>Registro de la CPU</td><td>menos de 1 ns</td></tr>
+                            <tr><td>Caché de la CPU</td><td>5 ns</td></tr>
+                            <tr><td>Memoria principal</td><td>100 ns</td></tr>
+                            <tr><td>Disco flash (de estado sólido)</td><td>0,1 a 1 ms</td></tr>
+                            <tr><td>Disco duro tradicional</td><td>5 a 10 ms</td></tr>
+                            <tr><td>Servidor remoto, por la red</td><td>20 a 200 ms</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente k="matthews2020" loc="§11.2">adaptado de</Fuente>
+                <p>
+                    Un milisegundo son un millón de nanosegundos. Entre la memoria principal y un disco duro tradicional hay,
+                    según la tabla, una diferencia de 50 000 a 100 000 veces.
+                </p>
+
+                <CalloutPro tema="gold" titulo="El caso de la apertura, resuelto" subtitulo="Dónde estaban los cuarenta minutos" icon="fa-stopwatch">
+                    <p>
+                        El reporte recorría 240 000 créditos y, en cada fila, volvía a pedirle al disco la tasa del día: un dato
+                        que no cambiaba. Era la versión A del ejercicio, con el dato mucho más lejos.
+                    </p>
+                    <p>
+                        A unos 10 ms por lectura en un disco duro tradicional, son 240 000 × 0,01 s = 2 400 s: <strong>cuarenta
+                        minutos</strong>. Más RAM no cambió nada, porque el programa no esperaba a la RAM. Un equipo nuevo cambió
+                        poco, porque la CPU tampoco era la que esperaba.
+                    </p>
+                    <p>
+                        Con la tasa leída una sola vez, antes del ciclo —la versión B—, esa espera desaparece. No hizo falta
+                        comprar nada: hizo falta saber por dónde pasaban los datos.
+                    </p>
+                    <Fuente ilustrativo />
+                </CalloutPro>
 
                 <Ejercicio tipo="E8"><Reto
                     titulo="¿Por qué instrucciones y datos comparten la misma memoria?"
@@ -3725,9 +3783,9 @@ Debug.Print total`,
                             consecuencia directa de esta decisión de arquitectura, que se verá de cerca en el capítulo 6.
                         </p>
                         <p>
-                            La alternativa —memorias separadas para código y datos, la llamada arquitectura Harvard— existe y se
-                            usa en microcontroladores, donde el programa no cambia nunca. El criterio, entonces, no es cuál es
-                            «mejor», sino si el sistema necesita modificar su propio código.
+                            De qué depende: de si el sistema necesita cargar o cambiar programas. Un equipo que va a correr
+                            siempre el mismo programa puede renunciar a esa flexibilidad a cambio de aislamiento. El criterio,
+                            entonces, no es cuál decisión es «mejor», sino cuánto necesita el sistema tratar un programa como un dato.
                         </p>
                     </Box>}>
                     En la arquitectura de Von Neumann, las instrucciones y los datos viven en la misma memoria: la celda 0
@@ -3739,11 +3797,11 @@ Debug.Print total`,
                 <Accordion items={[
                     {
                         titulo: '¿Por qué un programa financiero a veces se siente lento?',
-                        contenido: <span>La latencia puede deberse a: (1) <strong>CPU-bound</strong>: el procesador está al 100% haciendo cálculos (ej. simulación de Montecarlo para riesgo de crédito); (2) <strong>I/O-bound</strong>: el programa espera lecturas de disco (consultas a base de datos de transacciones) o de red (llamadas a APIs de Burós de Crédito); (3) <strong>Memory-bound</strong>: los datos no caben en RAM y el sistema operativo usa swap en disco (lentísimo).</span>
+                        contenido: <span>Casi siempre por una de tres razones. (1) <strong>Cálculo</strong>: el procesador está ocupado todo el tiempo, como en una simulación con millones de escenarios. (2) <strong>Entrada y salida</strong>: el programa espera al disco o a la red, que en la tabla de arriba responden entre mil y dos millones de veces más despacio que la memoria principal. (3) <strong>Memoria</strong>: en un sistema con memoria virtual, cuando el programa necesita una página de su memoria que no está en la RAM, el sistema operativo tiene que leerla del disco antes de que el programa siga <Cita k="matthews2020" loc="§13.3.4" />.</span>
                     },
                     {
                         titulo: '¿Cuánta memoria necesita mi programa financiero?',
-                        contenido: <span>Una transacción bancaria típica ocupa ~200-500 bytes en memoria. Un millón de transacciones: ~200-500 MB. Una cartera de crédito con 100.000 clientes y 50 variables cada uno: ~40 MB (asumiendo 8 bytes por variable float64). Entender estos órdenes de magnitud evita diseñar sistemas que colapsan en producción.</span>
+                        contenido: <span>Depende de cuántos datos guarde y de cuánto ocupe cada uno. En VBA, por ejemplo, una variable Double ocupa 8 bytes <Cita k="microsoft2018doble" />. Una cartera de 100 000 clientes con 50 variables de ese tipo cada uno ocupa 100 000 × 50 × 8 = 40 000 000 bytes: unos 40 MB. Y si usted supone que cada transacción ocupa 300 bytes, un millón de transacciones son 300 MB. Hacer esa cuenta antes de cargar los datos dice si caben en la memoria del equipo.</span>
                     },
                 ]} />
 
@@ -3752,55 +3810,56 @@ Debug.Print total`,
                     opciones={[
                         { texto: 'Directamente en los registros de la CPU.', correcta: false },
                         { texto: 'En el disco duro, cargándose instrucción por instrucción.', correcta: false },
-                        { texto: 'En la misma memoria RAM donde están los datos.', correcta: true, justificacion: 'La característica definitoria de Von Neumann es que datos e instrucciones comparten la misma memoria. Esto permite que el programa se modifique a sí mismo (aunque en la práctica moderna está desaconsejado).' },
+                        { texto: 'En la misma memoria RAM donde están los datos.', correcta: true, justificacion: 'En el modelo de Von Neumann la memoria guarda tanto los datos como las instrucciones del programa: es lo que se llama programa almacenado.' },
                         { texto: 'En una memoria ROM separada exclusiva para el programa.', correcta: false },
                     ]} />
 
                 <MCQ
-                    pregunta="Un cajero automático que tarda 15 segundos en autorizar un retiro probablemente sufre de:"
+                    pregunta="Un cajero automático tarda 15 segundos en autorizar un retiro. ¿Dónde es más probable que esté la espera?"
                     opciones={[
-                        { texto: 'Un cuello de botella de I/O: está esperando la respuesta del servidor central del banco por la red.', correcta: true, justificacion: 'La validación de PIN, consulta de saldo y autorización requieren comunicación con el core bancario central. La red suele ser el eslabón más lento.' },
-                        { texto: 'Una CPU demasiado lenta: el procesador del cajero no alcanza a hacer las sumas y restas del retiro.', correcta: false },
-                        { texto: 'Falta de memoria: la RAM del cajero está llena de transacciones anteriores y no le cabe la nueva.', correcta: false },
-                        { texto: 'Un teclado defectuoso: las teclas registran la clave con retraso y el cajero espera cada dígito.', correcta: false },
+                        { texto: 'En la entrada y salida: el cajero espera la respuesta del sistema central del banco, que le llega por la red.', correcta: true, justificacion: 'El cajero casi no calcula: valida, consulta y espera la respuesta del sistema central. En la tabla de la sección, un servidor remoto es lo más lento de la lista: responde en 20 a 200 ms, contra 100 ns de la memoria principal.' },
+                        { texto: 'En el cálculo: el procesador del cajero no alcanza a hacer a tiempo las sumas y las restas del retiro.', correcta: false },
+                        { texto: 'En la memoria: la RAM del cajero está llena de transacciones anteriores y la nueva tiene que esperar turno.', correcta: false },
+                        { texto: 'En el teclado: las teclas registran la clave con retraso y el cajero se queda esperando cada dígito.', correcta: false },
                     ]} />
 
                 <Quiz titulo="Mini-cuestionario · Capítulo 2" preguntas={[
                     {
                         pregunta: 'La ALU (Unidad Aritmético-Lógica) es responsable de:',
                         opciones: [
-                            { texto: 'Ejecutar operaciones matemáticas y lógicas (suma, resta, AND, OR, comparaciones).', correcta: true },
+                            { texto: 'Realizar las operaciones matemáticas y lógicas, como la suma, la resta y el O lógico.', correcta: true },
                             { texto: 'Leer la siguiente instrucción de la memoria y decidir qué operación representa.', correcta: false },
                             { texto: 'Mostrar el resultado en la pantalla y en los demás dispositivos de salida.', correcta: false },
                         ],
-                        justificacion: 'La ALU es la "calculadora" de la CPU. La UC se encarga de leer y decodificar instrucciones.'
+                        justificacion: 'La ALU es la «calculadora» de la CPU. Leer y decodificar las instrucciones es trabajo de la unidad de control.'
                     },
                     {
-                        pregunta: '¿Qué tipo de memoria es volátil (pierde su contenido al apagar el computador)?',
+                        pregunta: 'El programa terminó y hay que conservar sus resultados. ¿Dónde quedan guardados de forma persistente?',
                         opciones: [
-                            { texto: 'ROM', correcta: false },
-                            { texto: 'SSD (disco de estado sólido)', correcta: false },
-                            { texto: 'RAM', correcta: true },
+                            { texto: 'En los registros de la CPU, que son el almacenamiento más rápido del equipo.', correcta: false },
+                            { texto: 'En la caché de la CPU, que es más rápida que la memoria principal del equipo.', correcta: false },
+                            { texto: 'En el disco, que es almacenamiento secundario y guarda los archivos del equipo.', correcta: true },
                         ],
-                        justificacion: 'La RAM es volátil. ROM y SSD/HDD conservan los datos sin energía.'
+                        justificacion: 'Los discos guardan los archivos de forma persistente. Los registros y la caché son memoria pequeña y rápida dentro de la CPU, para lo que se está usando en ese momento.'
                     },
                     {
-                        pregunta: 'En el ciclo fetch-decode-execute, ¿qué hace el paso "decode"?',
+                        pregunta: 'En el ciclo de instrucción, ¿qué pasa al decodificar?',
                         opciones: [
-                            { texto: 'Se guarda el resultado de la operación en un registro o en la memoria principal.', correcta: false },
-                            { texto: 'La Unidad de Control interpreta qué operación representa el código binario leído.', correcta: true },
+                            { texto: 'La unidad de control escribe en la memoria el resultado de la operación ejecutada.', correcta: false },
+                            { texto: 'La unidad de control interpreta qué operación es y dónde están sus operandos.', correcta: true },
                             { texto: 'La ALU ejecuta la operación que pide la instrucción sobre los operandos.', correcta: false },
                         ],
-                        justificacion: 'Decode = decodificar el código de operación (opcode) para saber si es MOV, ADD, CMP, JMP, etc.'
+                        justificacion: 'Decodificar es interpretar los bits de la instrucción: qué operación pide y dónde están sus operandos. Ejecutar y almacenar vienen después.'
                     },
                 ]} />
 
-                <Box type="tip" label="Puntos clave del Capítulo 2">
+                <Box type="tip" label="Puntos clave de la sección 2">
                     <ul>
-                        <li>La <strong>arquitectura de Von Neumann</strong> consta de CPU, memoria, dispositivos de E/S y buses que los interconectan.</li>
-                        <li>La <strong>CPU</strong> ejecuta instrucciones en un ciclo continuo: fetch → decode → execute → store.</li>
-                        <li>Todo programa, sin importar el lenguaje, termina reduciéndose a <strong>instrucciones máquina</strong> que la CPU entiende.</li>
-                        <li>Los problemas de rendimiento se diagnostican identificando si el cuello de botella está en <strong>CPU</strong>, <strong>memoria</strong> o <strong>I/O</strong>.</li>
+                        <li>La <strong>arquitectura de Von Neumann</strong> tiene cinco unidades —procesamiento, control, memoria, entrada y salida— conectadas por buses <Cita k="matthews2020" loc="§5.2" />.</li>
+                        <li>Las cinco unidades ejecutan cada instrucción en un <strong>ciclo de cuatro pasos</strong>: captar, decodificar, ejecutar y almacenar <Cita k="matthews2020" loc="§5.2" />.</li>
+                        <li>Instrucciones y datos se guardan en la <strong>misma memoria</strong>: es el modelo de programa almacenado <Cita k="matthews2020" loc="§5.2" />.</li>
+                        <li>En una estación de trabajo típica de 2020, un dato tarda del orden de cien nanosegundos en llegar desde la memoria principal, y de décimas de milisegundo a cientos de milisegundos desde el disco o la red <Cita k="matthews2020" loc="§11.2" />. Por eso lo que no cambia dentro de un ciclo se lee una sola vez, fuera.</li>
+                        <li>Un programa lento espera casi siempre por <strong>cálculo</strong>, por <strong>entrada y salida</strong> o por <strong>memoria</strong>. Saber por cuál dice qué arreglar.</li>
                     </ul>
                 </Box>
             </div>
@@ -5446,12 +5505,13 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 1,
-  "huella": "cb50d3d87e6f8b29576b3862f49130343290828c3db74e55214e8a3b8b521fb0",
-  "sello": "58ac8e9efa91ed4e2d5a82210f57ca010559b650cb024b08eddf6d429426b131",
+  "huella": "ca1b46236e0b14c2741b10136c3cacfcc2e912462d899447770572e8133efe1f",
+  "sello": "fb6255cb5602eb8008d83aa5faed9b7bb62cfe896edf792cfd9833af1b236821",
   "orden": [
     "congreso2008ley1266",
     "hornik2026faq",
     "matthews2020",
+    "microsoft2018doble",
     "microsoft2018moneda",
     "microsoft2018hex",
     "microsoft2026vbal",
@@ -5484,17 +5544,23 @@ End Sub`,
       "html": "Matthews, S. J., Newhall, T., y Webb, K. C. (2020). \u003cem>Dive into Systems\u003c/em> (Version 1.2). Dive into Systems, LLC. \u003ca href=\"https://diveintosystems.org/book/\">https://diveintosystems.org/book/\u003c/a>",
       "plano": "Matthews, S. J., Newhall, T., y Webb, K. C. (2020). Dive into Systems (Version 1.2). Dive into Systems, LLC. https://diveintosystems.org/book/"
     },
-    "microsoft2018moneda": {
+    "microsoft2018doble": {
       "autor": "Microsoft",
       "anio": "2018a",
-      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
-      "plano": "Microsoft. (2018a, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Tipo de datos doble\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/double-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/double-data-type\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 19). Tipo de datos doble. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/double-data-type"
+    },
+    "microsoft2018moneda": {
+      "autor": "Microsoft",
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018b, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
     },
     "microsoft2018hex": {
       "autor": "Microsoft",
-      "anio": "2018b",
-      "html": "Microsoft. (2018b, diciembre 12). \u003cem>Función hexadecimal\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\u003c/a>",
-      "plano": "Microsoft. (2018b, diciembre 12). Función hexadecimal. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function"
+      "anio": "2018c",
+      "html": "Microsoft. (2018c, diciembre 12). \u003cem>Función hexadecimal\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\u003c/a>",
+      "plano": "Microsoft. (2018c, diciembre 12). Función hexadecimal. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function"
     },
     "microsoft2026vbal": {
       "autor": "Microsoft",

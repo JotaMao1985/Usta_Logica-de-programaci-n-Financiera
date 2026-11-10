@@ -2546,3 +2546,33 @@ Rama `claude/cap01-fase4-seccion1`, sobre la de la fase 3; sin fusionar.
 - La primera cita elegida para «dos estados» no servía (hablaba solo de los
   dispositivos de almacenamiento): la lectura independiente lo vio; quien
   escribió, no.
+
+### Mejora de contenido · capítulo 1, fase 5 · 2026-11-10
+
+Rama `claude/cap01-fase5-seccion2`, sobre la de la fase 4; sin fusionar.
+
+**Sección 2, Estructura del computador.**
+- La historia, los componentes, el ciclo de instrucción y la memoria citan el
+  libro de arquitectura (*Dive into Systems*). Salieron «por los mismos buses»,
+  «exactamente lo que propuso Von Neumann», ROM/BIOS/UEFI, la arquitectura
+  Harvard, `MOV AL, 61h`, «memory-bound», «swap» y el programa que «se modifica
+  a sí mismo».
+- El diagrama se rehízo: la caché dentro de la CPU, el almacenamiento aparte,
+  el bus de doble sentido, rótulos en español y colores de la paleta.
+- Tabla nueva de latencias (registro, caché, memoria, disco, red), citada.
+- El E4 conserva su código y cambia su explicación; el caso del reporte de
+  cuarenta minutos se cierra con una cuenta a la vista (240 000 × 0,01 s).
+- 24 parejas frase–pasaje leídas por dos verificadores; ocho corregidas y
+  vueltas a leer. 29 filas en `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **`registrar_afirmaciones.py`** falla, con razón, si una nota `citada` no
+  trae ancla. Pero el esquema no dice qué clase lleva una frase que repite algo
+  ya citado desde un sitio donde no cabe un `<Cita>` (la justificación de una
+  pregunta, que es una cadena). Se resolvió dándole a la nota el mismo par y un
+  ancla dentro de la cadena.
+- **La regla 31 sí mira los `<Fuente k=… loc=…>`**, además de los `<Cita>`. El
+  README no lo dice.
+- Quedan dos afirmaciones nuevas sin fuente, encontradas en esta fase: que un
+  Excel con macros llega bloqueado (reto E8) y que la RAM pierde su contenido al
+  apagar (cuestionario final). Van a la fase 6.
