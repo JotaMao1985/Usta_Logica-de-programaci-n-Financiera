@@ -3166,10 +3166,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-credit-card"
                     gancho="Leer 0x0A no es un truco de examen: es saber qué le pasó a la transacción de un cliente que está esperando.">
-                    Una pasarela de pagos rechaza el 0,4 % de las transacciones con el código
-                    <span className="inline-code">0x0A</span> y nadie en el equipo sabe qué significa. El manual dice
-                    «estado en hexadecimal, dieciséis banderas». Son cuatro caracteres que guardan dieciséis respuestas
+                    Una pasarela de pagos devuelve algunas transacciones rechazadas con el código
+                    <span className="inline-code">0x0A</span>, y nadie en el equipo sabe qué significa. El manual dice
+                    «estado en hexadecimal, un byte, una bandera por bit». Son dos dígitos que guardan ocho respuestas
                     de sí o no, y mientras nadie sepa leerlos, cada rechazo se escala a soporte y se responde por teléfono.
+                    Al final de esta sección usted lo va a leer.
                 </Motivacion>
 
                 <p>
@@ -3186,7 +3187,7 @@ End Sub`,
 
                 <h3>El sistema decimal (base 10): nuestro punto de partida</h3>
                 <p>
-                    Usamos base 10 por razones históricas (diez dedos). Cualquier número se descompone como suma de
+                    Es el sistema que usamos a diario. Cualquier número se descompone como suma de
                     dígitos multiplicados por potencias de 10:
                 </p>
                 <Eq>{String.raw`\(49328_{(10)} = 4\times10^4 + 9\times10^3 + 3\times10^2 + 2\times10^1 + 8\times10^0\)`}</Eq>
@@ -3194,15 +3195,19 @@ End Sub`,
 
                 <h3>Sistema binario (base 2): el lenguaje nativo del hardware</h3>
                 <p>
-                    El computador usa <strong>dos estados</strong> (encendido/apagado, 5V/0V) que se corresponden naturalmente
-                    con los dígitos <strong>0 y 1</strong>. Cada dígito binario se llama <Termino def="Binary Digit. Es la unidad mínima de información en computación: un bit solo puede valer 0 o 1. Ocho bits forman un byte.">bit</Termino>.
+                    Las compuertas lógicas —los bloques con que se arman los circuitos digitales de un procesador— se construyen con
+                    transistores, que conmutan entre <strong>dos estados</strong>: encendido o apagado, voltaje alto o bajo.
+                    Con esos dos voltajes se codifican el 1 y el 0 <Cita k="matthews2020" loc="§5.3" />.
+                    Por eso la máquina cuenta con dos dígitos. Cada dígito binario se llama <Termino def="Binary Digit. Es la unidad mínima de información en computación: un bit solo puede valer 0 o 1. Ocho bits forman un byte.">bit</Termino>.
                 </p>
                 <Eq>{String.raw`\(10110_{(2)} = 1\times2^4 + 0\times2^3 + 1\times2^2 + 1\times2^1 + 0\times2^0 = 16 + 0 + 4 + 2 + 0 = 22_{(10)}\)`}</Eq>
 
                 <Box type="tip" label="¿Por qué importa en finanzas?">
-                    Muchos sistemas financieros usan <strong>máscaras de bits</strong> para representar estados de transacciones,
-                    permisos de usuario o flags de auditoría. Un solo entero puede codificar múltiples condiciones booleanas,
-                    ahorrando memoria y acelerando las verificaciones.
+                    Para dar una idea de escala: según su página «Who we are», consultada el 10 de noviembre de 2026, Swift
+                    —una cooperativa de mensajería financiera— informa más de 12 500 instituciones conectadas y, en promedio,
+                    más de 53 millones de mensajes FIN enviados al día <Cita k="swift-quienes" loc="Swift in numbers" />.
+                    Cada mensaje es, para la máquina, una fila de ceros y unos, y lleva códigos que alguien tiene que saber
+                    leer. El de la apertura de esta sección es inventado, para practicar esa lectura.
                 </Box>
 
                 <h3>Sistema octal (base 8) y hexadecimal (base 16)</h3>
@@ -3223,9 +3228,12 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia />
                 <p>
-                    El hexadecimal es ubicuo en programación: direcciones de memoria, códigos de color (<span className="inline-code">#FFD700</span> para el oro),
-                    y representación de datos binarios. Los dígitos extra A=10, B=11, C=12, D=13, E=14, F=15.
+                    El hexadecimal es compacto y, como 16 es una potencia de 2, es fácil pasarlo a binario y viceversa;
+                    para los valores del 10 al 15 usa las letras de la A a la F, y un lugar donde aparece es en las
+                    direcciones de memoria <Cita k="matthews2020" loc="§4.1.3" />. Cada dígito hexadecimal equivale a cuatro bits, como
+                    se ve en la tabla. Aquí va a servir para otra cosa: leer un código de estado.
                 </p>
 
                 <ConversionSVG />
@@ -3265,9 +3273,10 @@ End Sub`,
 
                 <h3>El algoritmo de conversión, en los cuatro lenguajes</h3>
                 <p>
-                    Cada lenguaje trae su atajo —<span className="inline-code">bin()</span> en Python,
-                    <span className="inline-code">Hex()</span> en VBA, <span className="inline-code">as.hexmode()</span> en R—,
-                    pero el atajo esconde justamente lo que hay que ver. Escrito a mano, el método de divisiones sucesivas
+                    Cada lenguaje trae su atajo: <span className="inline-code">bin()</span> convierte un entero a binario en Python <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />,
+                    <span className="inline-code">Hex()</span> da el hexadecimal de un número en VBA <Cita k="microsoft2018hex" loc="descripción" /> y
+                    <span className="inline-code">as.hexmode()</span> hace que R muestre un entero en hexadecimal <Cita k="rcoreteam-hexmode" loc="Description" />.
+                    Pero el atajo esconde justamente lo que hay que ver. Escrito a mano, el método de divisiones sucesivas
                     es el mismo en los cuatro: cambia la sintaxis, no la lógica.
                 </p>
                 <CodeTabs
@@ -3315,18 +3324,37 @@ End Sub`,
                     binario, octal y hexadecimal. ¿Por qué 255 es el máximo de un byte?
                 </Reto>
 
-                <CalloutPro tema="gold" titulo="Aplicación financiera real" subtitulo="Máscaras de bits en sistemas de pago" icon="fa-credit-card">
-                    <p>En sistemas de procesamiento de pagos, un solo entero de 16 bits puede codificar el estado de una transacción:</p>
+                <CalloutPro tema="gold" titulo="El caso de la apertura, resuelto" subtitulo="Leer un código de estado bit a bit" icon="fa-credit-card">
+                    <p>El manual de la pasarela guarda el motivo de un rechazo en un byte: cada bit es una bandera, y un 1 significa «sí».</p>
                     <ul>
-                        <li><strong>Bit 0:</strong> ¿Transacción iniciada? (1 = sí)</li>
-                        <li><strong>Bit 1:</strong> ¿Fondos verificados? (1 = sí)</li>
-                        <li><strong>Bit 2:</strong> ¿Riesgo aprobado? (1 = sí)</li>
-                        <li><strong>Bit 3:</strong> ¿Liquidada? (1 = sí)</li>
+                        <li><strong>Bit 0:</strong> fondos insuficientes</li>
+                        <li><strong>Bit 1:</strong> supera el límite diario</li>
+                        <li><strong>Bit 2:</strong> tarjeta vencida</li>
+                        <li><strong>Bit 3:</strong> comercio no habilitado</li>
                     </ul>
-                    <p>Con una sola operación <span className="inline-code">AND</span> se verifican todos los flags a la vez. Esto
-                        es exactamente lo que hace <Termino def="Society for Worldwide Interbank Financial Telecommunication. Red de mensajería financiera que conecta más de 11.000 instituciones en 200+ países. Procesa ~42 millones de mensajes al día.">SWIFT</Termino> en sus
-                        códigos de estado de mensajería interbancaria.</p>
+                    <p>
+                        En Python, <span className="inline-code">hex()</span> convierte un entero en una cadena hexadecimal con el prefijo <span className="inline-code">0x</span> <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />.
+                        En el código de la pasarela el prefijo cumple ese papel: avisa que lo que sigue está en hexadecimal.
+                        Quedan dos dígitos, y cada uno son cuatro bits: <span className="inline-code">0</span> es <span className="inline-code">0000</span> y <span className="inline-code">A</span> es <span className="inline-code">1010</span>.
+                        El byte completo es <span className="inline-code">0000 1010</span>.
+                    </p>
+                    <p>
+                        Los bits se numeran desde la derecha y empezando en 0, así que están encendidos el 1 y el 3: la
+                        transacción <strong>supera el límite diario</strong> y el <strong>comercio no está habilitado</strong>.
+                        Dos motivos en un solo código, y ninguna llamada a soporte.
+                    </p>
+                    <Fuente ilustrativo />
                 </CalloutPro>
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta="Otra transacción vuelve rechazada con el código 0x05. Con el mismo manual, ¿qué hay que decirle al cliente?"
+                    opciones={[
+                        { texto: 'Supera el límite diario y el comercio no está habilitado: 5 es 0101, con los bits numerados desde la izquierda.', correcta: false, justificacion: 'Los bits se numeran desde la derecha. Leído desde la izquierda, 0101 da el significado de 0x0A, que es otro rechazo.' },
+                        { texto: 'Lo mismo que con 0x0A: los dos códigos tienen dos banderas encendidas, así que el rechazo es el mismo.', correcta: false, justificacion: 'Importa cuáles banderas están encendidas, no cuántas. 0x0A enciende la 1 y la 3; 0x05, la 0 y la 2.' },
+                        { texto: 'Fondos insuficientes y tarjeta vencida: 5 es 0101, con los bits 0 y 2 encendidos contando desde la derecha.', correcta: true, justificacion: '5 en binario es 0101. Los bits se numeran desde la derecha y empezando en 0: están encendidos el 0 y el 2, que el manual llama fondos insuficientes y tarjeta vencida. Al cliente hay que decirle las dos cosas, porque resolver una sola no hará pasar la transacción.' },
+                        { texto: 'Cinco motivos de rechazo a la vez: el dígito hexadecimal dice cuántas banderas del byte están encendidas.', correcta: false, justificacion: 'El dígito no cuenta banderas: su escritura en binario dice cuáles. Además, el manual solo define cuatro.' },
+                    ]}
+                /></Ejercicio>
 
                 <MCQ
                     pregunta="El número hexadecimal 2F equivale en decimal a:"
@@ -3376,12 +3404,13 @@ End Sub`,
                     },
                 ]} />
 
-                <Box type="tip" label="Puntos clave del Capítulo 1">
+                <Box type="tip" label="Puntos clave de la sección 1">
                     <ul>
                         <li>Todo sistema de numeración posicional asigna un <strong>peso</strong> a cada dígito según la potencia de la base correspondiente a su posición.</li>
-                        <li>El computador opera en <strong>binario</strong> (base 2) porque el hardware distingue dos estados físicos (encendido/apagado).</li>
+                        <li>Los transistores de un computador conmutan entre dos estados, voltaje alto o bajo, y con ellos se codifican el 1 y el 0 <Cita k="matthews2020" loc="§5.3" />: de ahí que trabaje en <strong>binario</strong> (base 2).</li>
                         <li>El <strong>octal</strong> (base 8) agrupa 3 bits; el <strong>hexadecimal</strong> (base 16) agrupa 4 bits. Ambos compactan la notación binaria.</li>
-                        <li>Python ofrece funciones nativas (<span className="inline-code">bin()</span>, <span className="inline-code">oct()</span>, <span className="inline-code">hex()</span>, <span className="inline-code">int()</span>) para convertir entre bases.</li>
+                        <li>Python trae <span className="inline-code">bin()</span>, <span className="inline-code">oct()</span> y <span className="inline-code">hex()</span> para escribir un entero en binario, en octal y en hexadecimal <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />.</li>
+                        <li>Un código como <span className="inline-code">0x0A</span> se lee dígito por dígito: cada dígito hexadecimal son cuatro bits, y los bits se numeran desde la derecha y empezando en 0.</li>
                     </ul>
                 </Box>
             </div>
@@ -5004,7 +5033,7 @@ End Sub`,
             ['Cortocircuito', 'Evaluación lógica que se detiene en cuanto se conoce el resultado final (ej. False and X nunca evalúa X).'],
             ['CPU', 'Central Processing Unit. Ejecuta las instrucciones de los programas. Contiene ALU, UC y registros.'],
             ['Fetch-Decode-Execute', 'Ciclo continuo de la CPU: leer instrucción, decodificarla, ejecutarla, guardar resultado.'],
-            ['Hexadecimal', 'Sistema de base 16. Dígitos: 0-9 y A-F. Muy usado en direcciones de memoria y colores.'],
+            ['Hexadecimal', 'Sistema de base 16. Dígitos: 0-9 y A-F. Cada dígito equivale a cuatro bits; se ve, por ejemplo, en las direcciones de memoria.'],
             ['Máscara de bits', 'Técnica para usar bits individuales de un entero como flags booleanos independientes.'],
             ['Operador', 'Símbolo que indica una operación sobre operandos (aritméticos, relacionales o lógicos).'],
             ['Precedencia', 'Orden en que se evalúan los operadores en una expresión. Los paréntesis tienen la máxima prioridad.'],
@@ -5417,19 +5446,24 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 1,
-  "huella": "f21bf25d24ececff21b807b0a668e2c6be8d1872a559e90de2d2bec04efaadfd",
-  "sello": "192c57eac906938750e02a08f155a21b1a5b5e9e0be6b5a06a249038ea40662a",
+  "huella": "cb50d3d87e6f8b29576b3862f49130343290828c3db74e55214e8a3b8b521fb0",
+  "sello": "58ac8e9efa91ed4e2d5a82210f57ca010559b650cb024b08eddf6d429426b131",
   "orden": [
     "congreso2008ley1266",
     "hornik2026faq",
+    "matthews2020",
     "microsoft2018moneda",
+    "microsoft2018hex",
     "microsoft2026vbal",
+    "psf2026funciones",
     "psf2026decimal",
     "psf2026expresiones",
     "psf2026flotante",
+    "rcoreteam-hexmode",
     "rcoreteam-logica",
     "rcoreteam-sintaxis",
-    "rcoreteam-opciones"
+    "rcoreteam-opciones",
+    "swift-quienes"
   ],
   "entradas": {
     "congreso2008ley1266": {
@@ -5444,11 +5478,23 @@ End Sub`,
       "html": "Hornik, K., y R Core Team. (2026). \u003cem>R FAQ\u003c/em>. \u003ca href=\"https://CRAN.R-project.org/doc/manuals/R-FAQ.html\">https://CRAN.R-project.org/doc/manuals/R-FAQ.html\u003c/a>",
       "plano": "Hornik, K., y R Core Team. (2026). R FAQ. https://CRAN.R-project.org/doc/manuals/R-FAQ.html"
     },
+    "matthews2020": {
+      "autor": "Matthews et al.",
+      "anio": "2020",
+      "html": "Matthews, S. J., Newhall, T., y Webb, K. C. (2020). \u003cem>Dive into Systems\u003c/em> (Version 1.2). Dive into Systems, LLC. \u003ca href=\"https://diveintosystems.org/book/\">https://diveintosystems.org/book/\u003c/a>",
+      "plano": "Matthews, S. J., Newhall, T., y Webb, K. C. (2020). Dive into Systems (Version 1.2). Dive into Systems, LLC. https://diveintosystems.org/book/"
+    },
     "microsoft2018moneda": {
       "autor": "Microsoft",
-      "anio": "2018",
-      "html": "Microsoft. (2018, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
-      "plano": "Microsoft. (2018, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+      "anio": "2018a",
+      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+    },
+    "microsoft2018hex": {
+      "autor": "Microsoft",
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, diciembre 12). \u003cem>Función hexadecimal\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function\u003c/a>",
+      "plano": "Microsoft. (2018b, diciembre 12). Función hexadecimal. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function"
     },
     "microsoft2026vbal": {
       "autor": "Microsoft",
@@ -5456,41 +5502,59 @@ End Sub`,
       "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
       "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
     },
-    "psf2026decimal": {
+    "psf2026funciones": {
       "autor": "Python Software Foundation",
       "anio": "2026a",
-      "html": "Python Software Foundation. (2026a, noviembre 9). \u003cem>decimal — Decimal fixed-point and floating-point arithmetic\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/library/decimal.html\">https://docs.python.org/es/3/library/decimal.html\u003c/a>",
-      "plano": "Python Software Foundation. (2026a, noviembre 9). decimal — Decimal fixed-point and floating-point arithmetic. Documentación de Python 3.15.2. https://docs.python.org/es/3/library/decimal.html"
+      "html": "Python Software Foundation. (2026a, noviembre 9). \u003cem>Built-in functions\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/builtins/functions.html\">https://docs.python.org/es/3/builtins/functions.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026a, noviembre 9). Built-in functions. Documentación de Python 3.15.2. https://docs.python.org/es/3/builtins/functions.html"
+    },
+    "psf2026decimal": {
+      "autor": "Python Software Foundation",
+      "anio": "2026b",
+      "html": "Python Software Foundation. (2026b, noviembre 9). \u003cem>decimal — Decimal fixed-point and floating-point arithmetic\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/library/decimal.html\">https://docs.python.org/es/3/library/decimal.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026b, noviembre 9). decimal — Decimal fixed-point and floating-point arithmetic. Documentación de Python 3.15.2. https://docs.python.org/es/3/library/decimal.html"
     },
     "psf2026expresiones": {
       "autor": "Python Software Foundation",
-      "anio": "2026b",
-      "html": "Python Software Foundation. (2026b, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
-      "plano": "Python Software Foundation. (2026b, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
+      "anio": "2026c",
+      "html": "Python Software Foundation. (2026c, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026c, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
     },
     "psf2026flotante": {
       "autor": "Python Software Foundation",
-      "anio": "2026c",
-      "html": "Python Software Foundation. (2026c, noviembre 9). \u003cem>Floating-Point Arithmetic: Issues and Limitations\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/tutorial/floatingpoint.html\">https://docs.python.org/es/3/tutorial/floatingpoint.html\u003c/a>",
-      "plano": "Python Software Foundation. (2026c, noviembre 9). Floating-Point Arithmetic: Issues and Limitations. Documentación de Python 3.15.2. https://docs.python.org/es/3/tutorial/floatingpoint.html"
+      "anio": "2026d",
+      "html": "Python Software Foundation. (2026d, noviembre 9). \u003cem>Floating-Point Arithmetic: Issues and Limitations\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/tutorial/floatingpoint.html\">https://docs.python.org/es/3/tutorial/floatingpoint.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026d, noviembre 9). Floating-Point Arithmetic: Issues and Limitations. Documentación de Python 3.15.2. https://docs.python.org/es/3/tutorial/floatingpoint.html"
+    },
+    "rcoreteam-hexmode": {
+      "autor": "R Core Team",
+      "anio": "s. f.-a",
+      "html": "R Core Team. (s. f.-a). \u003cem>Integer Numbers Displayed in Hexadecimal\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/hexmode.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/hexmode.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-a). Integer Numbers Displayed in Hexadecimal. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/hexmode.html"
     },
     "rcoreteam-logica": {
       "autor": "R Core Team",
-      "anio": "s. f.-a",
-      "html": "R Core Team. (s. f.-a). \u003cem>Logical Operators\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\u003c/a>",
-      "plano": "R Core Team. (s. f.-a). Logical Operators. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html"
+      "anio": "s. f.-b",
+      "html": "R Core Team. (s. f.-b). \u003cem>Logical Operators\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-b). Logical Operators. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html"
     },
     "rcoreteam-sintaxis": {
       "autor": "R Core Team",
-      "anio": "s. f.-b",
-      "html": "R Core Team. (s. f.-b). \u003cem>Operator Syntax and Precedence\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\u003c/a>",
-      "plano": "R Core Team. (s. f.-b). Operator Syntax and Precedence. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html"
+      "anio": "s. f.-c",
+      "html": "R Core Team. (s. f.-c). \u003cem>Operator Syntax and Precedence\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-c). Operator Syntax and Precedence. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html"
     },
     "rcoreteam-opciones": {
       "autor": "R Core Team",
-      "anio": "s. f.-c",
-      "html": "R Core Team. (s. f.-c). \u003cem>Options Settings\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\u003c/a>",
-      "plano": "R Core Team. (s. f.-c). Options Settings. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html"
+      "anio": "s. f.-d",
+      "html": "R Core Team. (s. f.-d). \u003cem>Options Settings\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-d). Options Settings. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html"
+    },
+    "swift-quienes": {
+      "autor": "Swift",
+      "anio": "s. f.",
+      "html": "Swift. (s. f.). \u003cem>Who we are\u003c/em>. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://www.swift.com/about-us/who-we-are\">https://www.swift.com/about-us/who-we-are\u003c/a>",
+      "plano": "Swift. (s. f.). Who we are. Recuperado 10 de noviembre de 2026, de https://www.swift.com/about-us/who-we-are"
     }
   }
 }

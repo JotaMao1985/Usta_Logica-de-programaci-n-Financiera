@@ -2517,3 +2517,32 @@ Rama `claude/cap01-fase3-seccion4`, sobre la de la fase 2; sin fusionar.
   guion.
 - Los rótulos «signo (1) · exponente (11) · mantisa (52)» del laboratorio siguen
   sin fuente leída (decisión D).
+
+### Mejora de contenido · capítulo 1, fase 4 · 2026-11-10
+
+Rama `claude/cap01-fase4-seccion1`, sobre la de la fase 3; sin fusionar.
+
+**Sección 1, Sistemas de numeración.**
+- El caso `0x0A` queda bien planteado (un byte, ocho banderas) y resuelto en la
+  sección: `0000 1010`, bits 1 y 3. Un ejercicio E7 lo hace practicar con `0x05`.
+  La pasarela, el manual y las banderas se declaran ilustrativos.
+- Las cifras de Swift se actualizaron (más de 12 500 instituciones, más de
+  53 millones de mensajes FIN al día), con cita y fecha de consulta. Salió
+  «Esto es exactamente lo que hace SWIFT».
+- Salieron «diez dedos», «5V/0V», «ubicuo» y el código de color; entraron las
+  citas del libro de arquitectura y de la documentación de `bin()`, `Hex()` y
+  `as.hexmode()`.
+- Nueve parejas frase–pasaje leídas por dos verificadores, que coincidieron en
+  cinco «parcial»; se corrigieron y pasaron una segunda lectura. 21 filas en
+  `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **La etiqueta del tipo de ejercicio tapa el enunciado** cuando este ocupa dos
+  renglones (`Ejercicio` sobre un `MCQ`). Pasa en el E2 que ya existía y en el
+  E7 nuevo. Es de LP-CORE: arreglarlo obliga a reestampar los cinco capítulos.
+- **La cuota** avisa «E7: hay 3, la cuota sugiere máximo 2» en el capítulo 1.
+  El ejercicio nuevo es de interpretación; queda a decisión del docente dejarlo
+  como E7, cambiarle el tipo o subir el tope.
+- La primera cita elegida para «dos estados» no servía (hablaba solo de los
+  dispositivos de almacenamiento): la lectura independiente lo vio; quien
+  escribió, no.
