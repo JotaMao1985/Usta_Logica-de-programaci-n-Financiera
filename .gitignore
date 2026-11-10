@@ -109,3 +109,16 @@ parcial/app/datos/
 
 # Simulacro: mismos motivos que la salida del parcial.
 parcial/salida_simulacro/
+
+# ---------------------------------------------------------------------------
+# Vault de Obsidian del curso. La carpeta principal del curso es el vault;
+# `Vault/` guarda las notas de fuentes y de afirmaciones, con extractos
+# literales de libros, y `.obsidian/` la configuración local. GitHub Pages
+# publica la raíz tal cual, así que nada de esto puede versionarse aquí.
+#
+# Lo que el material necesita para verificarse sí está en el repositorio:
+# `Material html/_fuentes/` (referencias exportadas de Zotero y registro de
+# afirmaciones SIN el texto de los extractos).
+# ---------------------------------------------------------------------------
+Vault/
+.obsidian/
