@@ -1402,6 +1402,42 @@
                 : <span className={className} style={style}>{texto}</span>;
         };
 
+        /* La etiqueta va A CABALLO del borde superior de la tarjeta: la mitad
+           por encima, en el margen, y la mitad dentro, en el relleno. Dentro
+           del todo no cabe: el envoltorio no sabe qué componente lleva, y un
+           enunciado de dos renglones le pasa por debajo.
+
+           Eso se quiso desde el principio y no se cumplía. La etiqueta estaba
+           a 0,55 rem del borde del envoltorio, contando con que la tarjeta
+           empezara más abajo, tras su margen; pero ese margen se colapsa con
+           el del envoltorio, la tarjeta empieza donde él, y la etiqueta caía
+           8,8 px DENTRO, sobre el primer renglón. Medido el 2026-11-10 en los
+           cinco capítulos: se cruzaba con el enunciado en todo `MCQ` que
+           llegara al borde derecho y, a 375 px, también con el título de los
+           `Reto`.
+
+           Por eso ahora no se supone dónde empieza la tarjeta: se mide
+           (`offsetTop`, que no se altera con una animación en curso) y la
+           etiqueta se centra en ese borde. Va después de los hijos para que
+           `firstElementChild` sea la tarjeta. */
+        const EjercicioEtiquetado = ({ t, children }) => {
+            const caja = useRef(null);
+            const [borde, setBorde] = useState(0);
+            React.useLayoutEffect(() => {
+                const tarjeta = caja.current && caja.current.firstElementChild;
+                if (tarjeta) setBorde(tarjeta.offsetTop);
+            }, []);
+            return (
+                <div ref={caja} className="relative">
+                    {children}
+                    <span data-tipo-ejercicio="" className="absolute z-10 text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5 shadow-sm whitespace-nowrap"
+                        style={{ background: t.color, top: borde, right: '1rem', transform: 'translateY(-50%)' }}>
+                        {t.etiqueta}
+                    </span>
+                </div>
+            );
+        };
+
         const Ejercicio = ({ tipo, children }) => {
             const t = TIPOS_EJERCICIO[tipo];
             if (!t) return children;
@@ -1409,18 +1445,7 @@
             if (hijos.length === 1 && AUTOETIQUETADOS.has(hijos[0].type)) {
                 return <TipoDeEjercicio.Provider value={t}>{children}</TipoDeEjercicio.Provider>;
             }
-            // La etiqueta se ancla SOBRE el borde superior de la tarjeta, no
-            // dentro: si se superpone al contenido, un enunciado de dos líneas
-            // le pasa por debajo y queda ilegible.
-            return (
-                <div className="relative">
-                    <span className="absolute z-10 text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5 shadow-sm"
-                        style={{ background: t.color, top: '0.55rem', right: '1rem' }}>
-                        {t.etiqueta}
-                    </span>
-                    {children}
-                </div>
-            );
+            return <EjercicioEtiquetado t={t}>{children}</EjercicioEtiquetado>;
         };
 
         /* ============================================================

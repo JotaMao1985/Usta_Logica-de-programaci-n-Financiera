@@ -569,7 +569,11 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   `<Ejercicio tipo="E7">`, para que el tipo sea visible y contable. Si lo que se
   envuelve es un componente que ya se etiqueta solo (`TablaTraza`,
   `DetectaError`, `Comparador`, `OrdenaPasos`, `Emparejamiento`), la etiqueta
-  sale una vez, en su sitio, y dice el tipo del envoltorio.
+  sale una vez, en su sitio, y dice el tipo del envoltorio. En los demás, la
+  etiqueta del envoltorio va a caballo del borde superior de la tarjeta —mitad
+  en el margen, mitad en el relleno—, para que ningún enunciado le pase por
+  debajo; por eso lo que se envuelve necesita unos 10 px de relleno arriba,
+  que `MCQ` y `Reto` tienen de sobra.
 - En `MCQ`, cada opción puede llevar su `justificacion`. Al comprobar se muestra
   la de cada opción mal elegida y después la de las correctas. Hasta el
   2026-10-27 solo se veía la de la correcta (H9 del capítulo 4), y por eso las
