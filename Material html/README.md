@@ -25,7 +25,8 @@ Material html/
 ├── 01_LPF_Introduccion.html      … 08_LPF_Funciones.html
 ├── _fuentes/
 │   ├── referencias.json          las fuentes del curso, exportadas de Zotero (CSL-JSON)
-│   └── apa-es.csl                APA 7 con «y» en vez de «&» entre autores
+│   ├── apa-es.csl                APA 7 con «y» en vez de «&» entre autores
+│   └── afirmaciones/NN.yaml      qué pasaje se apoya en qué fuente, y quién la leyó (GENERADO)
 └── _plantilla/
     ├── lp-base.html              PLANTILLA GENERADA — no se edita a mano
     ├── lp-core-extra.jsx         componentes nuevos (fuente)
@@ -37,6 +38,8 @@ Material html/
     ├── fuentes.py                lo que comparten los tres guiones de fuentes
     ├── exportar_zotero.py        Zotero → _fuentes/referencias.json
     ├── estampar_referencias.py   referencias.json → isla LP-REFS del capítulo
+    ├── registrar_afirmaciones.py notas del vault → _fuentes/afirmaciones/NN.yaml
+    ├── comprobar_fuentes.js      reglas 30 y 32: figuras y menciones sin fuente
     ├── pruebas_fuentes/          cuatro fuentes ficticias, para la demo y las pruebas
     ├── ejecutar_salidas.py       ejecuta el código y contrasta lo que declara
     ├── ejecutar_vba.py           lo mismo para VBA, en Excel
@@ -103,12 +106,12 @@ regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.
 no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
 sean el del 1 salvo el `<title>` y la descripción.
 
-`verificar.py` comprueba veintinueve cosas —la 13 sobre la plantilla, la 29
+`verificar.py` comprueba treinta y dos cosas —la 13 sobre la plantilla, la 29
 sobre `_fuentes/referencias.json`, las demás sobre cada capítulo— y devuelve ≠ 0
 si algo falla. Una opción que no conoce lo hace salir con 2, sin verificar
 nada: hasta el 2026-11-10 la ignoraba, y un `--con-salida` sin la ese daba verde
-sin ejecutar el código. Aquí van las doce primeras; las cuatro de las fuentes
-(26 a 29) están más abajo, y la lista completa, con el porqué de cada una, es
+sin ejecutar el código. Aquí van las doce primeras; las siete de las fuentes
+(26 a 32) están más abajo, y la lista completa, con el porqué de cada una, es
 el docstring del guion:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte
@@ -294,9 +297,11 @@ ahí a cada capítulo, ya formateadas en APA 7, en una **isla**: un
 de Babel. Ni la lista ni la isla se editan a mano.
 
 ```bash
-python3 "Material html/_plantilla/exportar_zotero.py" --coleccion "NOMBRE"   # Zotero → referencias.json
+python3 "Material html/_plantilla/exportar_zotero.py" --coleccion "LPF Lógica de Programación Financiera"
+                                                                             # Zotero → referencias.json
+python3 "Material html/_plantilla/registrar_afirmaciones.py"                 # vault → afirmaciones/NN.yaml
 python3 "Material html/_plantilla/estampar_referencias.py"                   # referencias.json → capítulos
-python3 "Material html/_plantilla/verificar.py"                              # reglas 26 a 29
+python3 "Material html/_plantilla/verificar.py"                              # reglas 26 a 32
 ```
 
 `exportar_zotero.py` lee la API local de Zotero (solo lectura, sin plugins) y
@@ -324,6 +329,17 @@ escribe y sale con 1 si algo cambiaría, y `--sin-copia`. Como `migrar.py`, sale
 con 2 ante una opción que no conoce. `--demo` regenera la isla de la plantilla
 (`lp-demo-referencias.html`) con las fuentes ficticias de `pruebas_fuentes/`;
 después hay que ensamblar.
+
+`registrar_afirmaciones.py` escribe `_fuentes/afirmaciones/NN.yaml`, la parte
+pública de las notas de afirmación del vault (`Vault/Afirmaciones/`, en la
+carpeta principal del repositorio; el guion la encuentra aunque se ejecute
+desde un worktree, y solo la lee). Entran las notas del capítulo con
+`clase: citada` y `estado: verificada`, y de cada una sale una fila: `id`,
+`seccion`, `ancla`, `clave`, `loc`, `tema`, quién leyó el pasaje, cuándo y por
+qué medio, y el sha256 del extracto de la fuente. **El extracto no se copia
+nunca**: es de una obra ajena y el repositorio es público. Sale con 2 si no
+alcanza el vault, y con 1, sin escribir ese capítulo, si una nota verificada
+está incompleta. El archivo no se edita a mano.
 
 En el capítulo:
 
@@ -354,11 +370,16 @@ Según <Cita k="clave" narrativa />, …                                        
   regresa a la cita de la que se salió.
 - **Después de añadir, quitar o cambiar una cita se vuelve a estampar.** También
   después de exportar de Zotero o de tocar `apa-es.csl`.
+- **Toda cita tiene su nota de afirmación.** La clave y el `loc` de la cita son
+  los de la nota, y el `ancla` de la nota es un trozo literal del texto que se
+  respalda, de 80 caracteres como mucho. Cambiar ese texto obliga a volver a
+  leerlo contra la fuente: la regla 31 falla hasta que la nota se actualiza.
+  Por dónde se parta el renglón no importa.
 
 Una clave que no está en la isla se pinta como un chip rojo, `[¿cita «clave»?]`,
 y escribe en `console.error`: `sonda_navegador.mjs` falla con eso.
 
-Las vigilan cuatro reglas:
+Las vigilan siete reglas:
 
 26. **Clave citada existe** — literal, en `referencias.json` y en la isla.
 27. **Referencias exactas** — la isla trae lo que el capítulo cita y nada más;
@@ -371,7 +392,32 @@ Las vigilan cuatro reglas:
     mano con el sello recalculado.
 29. **Entrada verificable** — autor y título; DOI, ISBN o URL; si solo hay URL,
     fecha de consulta; ningún campo fuera de la lista blanca. Una sola vez,
-    sobre `referencias.json`.
+    sobre `referencias.json`. La lista blanca, la clave, el orden y los
+    repetidos fallan siempre. Lo demás falla en una entrada que algún capítulo
+    cita y **avisa** en una que nadie cita: la bibliografía puede traer un
+    libro impreso sin ISBN que todavía no respalda nada.
+30. **Figura sin fuente** (aviso) — cada `ChartFrame` trae `fuente`, y a cada
+    `<table>`, `<figure>` o `<svg>` suelto le sigue un `<Fuente>`.
+31. **Afirmación leída** — cada par clave–localizador que el capítulo cita tiene
+    su fila en `afirmaciones/NN.yaml`, con quién lo leyó, cuándo y por qué
+    medio, y el `ancla` de cada fila sigue en el capítulo. Un `loc` vacío es
+    válido. Una fila que respalda algo que el capítulo ya no cita es un aviso.
+32. **Entidad o norma sin cita** (aviso) — el texto nombra una entidad o una
+    norma sin un `<Cita>` en el mismo párrafo ni un `<Ilustrativo>` alrededor.
+    El léxico es la lista `ENTIDADES_Y_NORMAS` de `comprobar_fuentes.js`.
+
+La 30 y la 32 viven en `comprobar_fuentes.js` y salen resumidas, una línea por
+regla y capítulo. Lo ya revisado se calla con `fuente-ok` y el motivo en un
+comentario, en su línea o en la anterior, como `contraste-ok` en la regla 10:
+
+```jsx
+{/* fuente-ok: la tabla resume el bloque de código de arriba */}
+<table>…
+```
+
+El 2026-11-10, al escribirlas, avisaban de 67 figuras y 8 menciones en los
+cinco capítulos. No se migró ninguna: solo el capítulo 1 cita, y solo en su
+sección 4.
 
 `verificar.py --fuentes DIR` usa otra carpeta de fuentes: es como se prueban las
 reglas sobre una copia, y como se verifica `lp-base.html`, cuya demo cita las

@@ -3,7 +3,7 @@
 Verificador estructural de los capítulos de Lógica de Programación Financiera.
 
 Comprueba dos cosas una sola vez —la 13 sobre la plantilla y la 29 sobre
-`_fuentes/referencias.json`— y veintisiete sobre cada archivo HTML de capítulo:
+`_fuentes/referencias.json`— y treinta sobre cada archivo HTML de capítulo:
 
   1. DERIVA — que el bloque LP-CORE (la librería de componentes) sea
      byte a byte idéntico al de `_plantilla/lp-base.html`.
@@ -117,7 +117,24 @@ Comprueba dos cosas una sola vez —la 13 sobre la plantilla y la 29 sobre
      título, y un DOI, un ISBN o una URL; que la que solo tiene URL traiga la
      fecha de consulta; y que ninguna traiga campos fuera de la lista blanca
      (`abstract`, `note`…): el repositorio es público. Se comprueba una sola
-     vez, como la 13, pero no aborta.
+     vez, como la 13, pero no aborta. Lo de la lista blanca, la clave, el orden
+     y los repetidos falla siempre; lo demás falla en una entrada que algún
+     capítulo cita y es un AVISO en una que nadie cita todavía.
+ 30. FIGURA SIN FUENTE — que cada gráfica, tabla o diagrama diga de dónde salen
+     sus datos: `fuente` en el `ChartFrame`, o un `<Fuente>` a continuación. Es
+     un AVISO. Vive en `comprobar_fuentes.js`, con la 32.
+ 31. AFIRMACIÓN LEÍDA — que cada par clave–localizador que el capítulo cita
+     tenga su fila en `_fuentes/afirmaciones/NN.yaml`, con quién leyó el pasaje,
+     cuándo y por qué medio; y que el `ancla` de cada fila —un trozo literal del
+     texto— siga en el capítulo. Una cita dice «esto lo afirma esa fuente, en
+     ese lugar»: la fila es la constancia de que alguien fue a mirarlo, y el
+     ancla, de que el texto que se respaldó sigue siendo el que se publica. Un
+     `loc` vacío es válido: se cita la obra entera. Que el capítulo ya no cite
+     lo que respalda una fila es un AVISO.
+ 32. ENTIDAD O NORMA SIN CITA — que el texto no nombre una entidad (la
+     Superintendencia, el Banco de la República…) o una norma (una ley, una
+     circular, un estándar) sin citarla ni declararla ilustrativa. Es un AVISO:
+     nombrarla no siempre es afirmar algo de ella, y eso no lo decide una regla.
 
 Uso:
     python3 _plantilla/verificar.py                 # todos los capítulos
@@ -1503,7 +1520,7 @@ def _citas_del_capitulo(texto):
     """(claves en orden, {clave: línea de su primera cita}, problemas de lectura)."""
     citas, problemas = fuentes.citas_de(texto)
     lineas = {}
-    for pos, _componente, claves in citas:
+    for pos, _componente, claves, _loc in citas:
         for c in claves:
             lineas.setdefault(c, linea_de(texto, pos))
     return list(lineas), lineas, [f"línea {linea_de(texto, pos)}: {msg}" for pos, msg in problemas]
@@ -1702,10 +1719,187 @@ def bloque_desactualizado(ruta, texto, fnt, con_pandoc=False):
 # las entradas falla; y sin `referencias.json` en la carpeta, también. La isla
 # de la demo se probó igual: cambiar un año del accesorio sin volver a ejecutar
 # `estampar_referencias.py --demo` falla aquí, antes de mirar ningún capítulo.
-def entradas_no_verificables(fnt):
+#
+# Desde ese mismo día, con la bibliografía del curso ya exportada, lo que falta
+# para verificar una entrada —autor, título, identificador, fecha de consulta—
+# solo falla si algún capítulo la cita. `becerra1996` es un libro impreso sin
+# ISBN que está en el syllabus y que nadie cita: bloquear por él era obligar a
+# sacarlo de la bibliografía o a inventarle un identificador. Lo que se publica
+# tal cual —la clave, la lista blanca, el orden, los repetidos— falla siempre.
+# Negativas del 2026-11-10: `becerra1996` sin citar avisa y no falla; citado en
+# una copia del capítulo 1, falla; un `abstract` en esa misma entrada, sin
+# citarla, falla igual; `psf2026flotante`, que sí se cita, falla al quitarle el
+# autor; y una página web que nadie cita avisa al quitarle la fecha de consulta.
+def claves_citadas_en_el_material(rutas):
+    """Las claves que cita algún capítulo: los del material y los que se verifican."""
+    citadas = set()
+    for ruta in set(MATERIAL.glob("[0-9][0-9]_LPF_*.html")) | set(rutas):
+        try:
+            citadas.update(fuentes.claves_citadas(Path(ruta).read_text(encoding="utf-8")))
+        except OSError:
+            pass
+    return citadas
+
+
+def entradas_no_verificables(fnt, citadas=frozenset()):
+    """(problemas, avisos) de `referencias.json`."""
     if fnt.error:
-        return [fnt.error]
-    return [f"{clave}: {problema}" for clave, problema in fuentes.problemas_del_archivo(fnt.entradas)]
+        return [fnt.error], []
+    problemas, avisos = [], []
+    for clave, problema, clase in fuentes.problemas_del_archivo(fnt.entradas):
+        if clase == "forma" or clave in citadas:
+            problemas.append(f"{clave}: {problema}" + (" — y se cita" if clase != "forma" else ""))
+        else:
+            avisos.append(f"{clave}: {problema} (nadie la cita todavía)")
+    return problemas, avisos
+
+
+# ------------------------------------------------------------ 31 · afirmación leída
+# La isla dice cómo se escribe una referencia; no dice que alguien haya leído lo
+# que se le atribuye. Eso está en el vault, que es privado: una nota por
+# afirmación, con el pasaje de la fuente. `registrar_afirmaciones.py` saca de
+# ahí lo que puede publicarse —qué pasaje del capítulo, qué fuente, qué lugar
+# de ella, quién lo leyó y cuándo, y el sha256 del extracto— a
+# `_fuentes/afirmaciones/NN.yaml`, y esta regla lo cruza con el capítulo.
+#
+# Negativas del 2026-11-10, sobre una copia del capítulo 1 con sus seis citas,
+# la isla y una copia del registro: cambiar `loc="cap. 15"` por `loc="cap. 14"`
+# falla, porque nadie leyó ese capítulo; una séptima cita, a una fuente que
+# está en referencias.json y estampada, falla por no tener fila; cambiar en el
+# texto «tiene 53 bits de precisión» por «tiene 52…» falla, porque el ancla ya
+# no está; vaciar `leido.fecha` de una fila falla; borrar el registro falla;
+# añadirle a una fila un campo `extracto` falla, y con razón: es lo único que
+# no puede publicarse. Quitar una cita y dejar su fila avisa y no falla. Y
+# `loc` con espacio duro pasa contra el «cap. 15» del registro. Un registro
+# retocado a mano —un valor sin comillas— falla diciendo en qué línea; y un
+# ancla que solo queda dentro de un comentario del capítulo no cuenta.
+#
+# La regla nació fallando: al escribir el piloto, un salto de renglón quedó en
+# medio de «guarda los importes como enteros con escala» y el ancla dejó de
+# encontrarse, con el texto intacto. Por eso los saltos se igualan a un espacio
+# antes de buscar, y un ancla partida entre dos renglones pasa.
+def afirmaciones_sin_registro(ruta, texto, fnt):
+    """(problemas, avisos) del cruce entre las citas del capítulo y su registro."""
+    citas, ilegibles = fuentes.citas_de(texto)
+    pares = {}
+    for pos, _componente, claves, loc in citas:
+        for c in claves:
+            pares.setdefault((c, fuentes.sin_espacio_duro(loc)), linea_de(texto, pos))
+    nn = fuentes.numero_de_capitulo(ruta.name)
+    if nn is None:
+        return [], ([f"afirmaciones — «{ruta.name}» no empieza por el número del capítulo: no "
+                     f"se sabe qué registro le corresponde y no se comprobó"] if pares else [])
+    try:
+        filas = fuentes.leer_registro(nn, fnt.directorio)
+    except fuentes.ErrorFuentes as e:
+        return [str(e)], []
+    nombre = f"{fuentes.DIR_AFIRMACIONES}/{nn}.yaml"
+    if filas is None:
+        if not pares:
+            return [], []
+        return [f"el capítulo cita {len(pares)} pasajes y no existe {nombre}: no hay constancia "
+                f"de que nadie los haya leído. Ejecute registrar_afirmaciones.py"], []
+
+    problemas, avisos = [], []
+    zona, _ = fuentes.zona_de_contenido(texto)
+    # El ancla es texto literal del capítulo, salvo por dónde se parte el
+    # renglón: eso no lo ve quien lee (ver `sin_saltos`).
+    limpio = fuentes.sin_saltos(fuentes.sin_comentarios(zona))
+    permitidos = set(fuentes.CAMPOS_FILA) | {"leido", "extracto_sha256"}
+    respaldados, vistos = set(), set()
+    for f in filas:
+        ident = f.get("id") or "(sin id)"
+        if ident in vistos:
+            problemas.append(f"{nombre}: el id «{ident}» está repetido")
+        vistos.add(ident)
+        de_mas = sorted(set(f) - permitidos)
+        if de_mas:
+            problemas.append(f"{nombre}, fila {ident}: trae campos que el registro no lleva "
+                             f"({', '.join(de_mas)}). El extracto de la fuente no se publica: "
+                             f"vuelva a generarlo con registrar_afirmaciones.py")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(f.get("extracto_sha256", ""))):
+            problemas.append(f"{nombre}, fila {ident}: `extracto_sha256` no es un sha256")
+        leido = f.get("leido") if isinstance(f.get("leido"), dict) else {}
+        leida = all(str(leido.get(c, "")).strip() for c in fuentes.CAMPOS_LEIDO)
+        if not leida:
+            problemas.append(f"{nombre}, fila {ident}: no dice quién leyó el pasaje, cuándo y "
+                             f"por qué medio (`leido`)")
+        ancla = str(f.get("ancla", ""))
+        if not ancla.strip():
+            problemas.append(f"{nombre}, fila {ident}: no tiene `ancla`")
+        elif fuentes.sin_saltos(ancla) not in limpio:
+            problemas.append(f"{nombre}, fila {ident}: su ancla «{ancla}» ya no está en el "
+                             f"capítulo. El texto que se respaldó con «{f.get('clave')}» cambió: "
+                             f"hay que volver a leerlo contra la fuente y actualizar la nota")
+        par = (f.get("clave"), fuentes.sin_espacio_duro(f.get("loc", "")))
+        if par in pares:
+            if leida:
+                respaldados.add(par)
+        else:
+            avisos.append(f"afirmaciones — {nombre}, fila {ident}: respalda «{par[0]}"
+                          f"{', ' + par[1] if par[1] else ''}», que el capítulo ya no cita")
+    for (clave, loc), linea in sorted(pares.items(), key=lambda x: x[1]):
+        if (clave, loc) not in respaldados:
+            problemas.append(f"línea {linea}: se cita «{clave}{', ' + loc if loc else ''}» y ninguna "
+                             f"fila leída de {nombre} lo respalda: no hay constancia de que "
+                             f"alguien haya ido a ese pasaje")
+    return problemas, avisos
+
+
+# ----------------------------------- 30 y 32 · figuras y menciones sin fuente
+# Las dos viven en `comprobar_fuentes.js`, por lo mismo que la 21: hay que saber
+# qué es texto y qué es código, y qué elemento envuelve a cuál. Y las dos son
+# avisos resumidos en una línea por capítulo: el día que se escribieron había
+# 67 figuras sin fuente y 8 menciones en los cinco capítulos, y ochenta líneas
+# de aviso son ochenta líneas que nadie lee. Lo revisado se calla con
+# `fuente-ok` y el motivo, en su línea o en la anterior.
+#
+# Negativas del 2026-11-10, sobre una copia del capítulo 1: su `ChartFrame` sin
+# `fuente` avisa y con `fuente={{ propia: true }}` deja de avisar; una tabla
+# avisa y con un `<Fuente propia />` detrás de su envoltorio deja de avisar;
+# «La Superintendencia Financiera certifica la tasa de usura» en un párrafo
+# avisa dos veces, con un `<Cita>` en el mismo párrafo no avisa, dentro de un
+# `<Ilustrativo>` tampoco, y con `fuente-ok` en la línea anterior tampoco;
+# «mediante» y «aviso» no cuentan como DIAN ni ISO.
+NOMBRES_DE_FIGURA = {"ChartFrame": "gráficas", "table": "tablas", "figure": "figuras", "svg": "diagramas"}
+
+
+def fuentes_sin_declarar(ruta):
+    """Los avisos de las reglas 30 y 32, una línea por regla."""
+    guion = Path(__file__).resolve().parent / "comprobar_fuentes.js"
+    if not guion.exists():
+        return ["fuentes — falta _plantilla/comprobar_fuentes.js, no se comprobaron las reglas 30 y 32"]
+    try:
+        r = subprocess.run(["node", str(guion), str(ruta)], capture_output=True, text=True, timeout=180)
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return ["fuentes — no se pudo ejecutar Node, no se comprobaron las reglas 30 y 32"]
+    if r.returncode == 0:
+        return []
+    if r.returncode == 2:
+        return [f"fuentes — no se pudieron comprobar las reglas 30 y 32: {(r.stderr or r.stdout).strip()[:200]}"]
+    figuras, menciones = [], []
+    for linea in r.stdout.splitlines():
+        partes = linea.split(":", 4)
+        if len(partes) == 5 and partes[2] == "30":
+            figuras.append((partes[1], partes[3]))
+        elif len(partes) == 5 and partes[2] == "32":
+            menciones.append((partes[1], partes[4]))
+    avisos = []
+    if figuras:
+        por_clase = {}
+        for _linea, clase in figuras:
+            por_clase[clase] = por_clase.get(clase, 0) + 1
+        desglose = ", ".join(f"{n} {NOMBRES_DE_FIGURA.get(c, c)}" for c, n in sorted(por_clase.items()))
+        lineas = ", ".join(l for l, _ in figuras[:12]) + (f" y {len(figuras) - 12} más" if len(figuras) > 12 else "")
+        avisos.append(f"figura sin fuente — {len(figuras)} no dicen de dónde salen sus datos "
+                      f"({desglose}), en las líneas {lineas}. Va `fuente` en el ChartFrame o un "
+                      f"<Fuente> a continuación; lo revisado se calla con «fuente-ok»")
+    if menciones:
+        lista = "; ".join(f"línea {l}, «{t}»" for l, t in menciones[:8]) \
+            + (f"; y {len(menciones) - 8} más" if len(menciones) > 8 else "")
+        avisos.append(f"entidad o norma sin cita — {len(menciones)} menciones sin <Cita> en su "
+                      f"párrafo ni <Ilustrativo>: {lista}")
+    return avisos
 
 
 def isla_de_la_demo():
@@ -1923,6 +2117,14 @@ def verificar(ruta, hash_base, revisar_cuota=True, con_salidas=False, fnt=None, 
     problemas += [f"referencias — {f}" for f in p28]
     avisos += a28
 
+    # 31 · cada pasaje citado tiene constancia de lectura, y su ancla sigue ahí
+    p31, a31 = afirmaciones_sin_registro(ruta, texto, fnt)
+    problemas += [f"afirmaciones — {f}" for f in p31]
+    avisos += a31
+
+    # 30 y 32 · figuras sin fuente, y entidades o normas sin cita (avisos)
+    avisos += fuentes_sin_declarar(ruta)
+
     total = sum(conteo.values())
     resumen = " ".join(f"{t}:{conteo[t]}" for t in sorted(conteo))
     return problemas, avisos, total, resumen
@@ -1992,15 +2194,6 @@ def main():
               f"&& python3 _plantilla/ensamblar.py{FIN}\n")
         fallos_previos += 1
 
-    # 29 · las entradas de referencias.json se pueden verificar. Una vez.
-    no_verificables = entradas_no_verificables(fnt)
-    if no_verificables:
-        print(f"{ROJO}FALLA{FIN} {fnt.directorio.name}/{fuentes.ARCHIVO_REFERENCIAS}")
-        for p in no_verificables:
-            print(f"        {ROJO}✗{FIN} {p}")
-        print()
-        fallos_previos += 1
-
     if args:
         rutas = []
         for a in args:
@@ -2008,6 +2201,18 @@ def main():
             rutas.extend(sorted(MATERIAL.glob(a)) if not p.exists() else [p])
     else:
         rutas = sorted(MATERIAL.glob("[0-9][0-9]_LPF_*.html"))
+
+    # 29 · las entradas de referencias.json se pueden verificar. Una vez.
+    no_verificables, sin_citar = entradas_no_verificables(fnt, claves_citadas_en_el_material(rutas))
+    if no_verificables or sin_citar:
+        estado = f"{ROJO}FALLA{FIN}" if no_verificables else f"{AMAR}AVISO{FIN}"
+        print(f"{estado} {fnt.directorio.name}/{fuentes.ARCHIVO_REFERENCIAS}")
+        for p in no_verificables:
+            print(f"        {ROJO}✗{FIN} {p}")
+        for a in sin_citar:
+            print(f"        {AMAR}!{FIN} {a}")
+        print()
+        fallos_previos += 1 if no_verificables else 0
 
     if not rutas:
         print(f"{AMAR}Sin capítulos que verificar todavía.{FIN}")

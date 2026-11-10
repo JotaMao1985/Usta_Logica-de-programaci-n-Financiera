@@ -177,7 +177,20 @@ def _con_fecha(valor):
     return con_partes or _con_texto(valor.get("raw")) or _con_texto(valor.get("literal"))
 
 
-def problemas_de_entrada(csl):
+def problemas_de_forma(csl):
+    """Lo que hace que una entrada no pueda estar en el archivo, se cite o no."""
+    problemas = []
+    clave = csl.get("id")
+    if not isinstance(clave, str) or not CLAVE.match(clave):
+        problemas.append(f"la clave «{clave}» no cumple {CLAVE.pattern}")
+    privados = sorted(c for c in csl if c not in CAMPOS_PERMITIDOS)
+    if privados:
+        problemas.append("campos fuera de la lista blanca: " + ", ".join(privados)
+                         + " — el repositorio es público; vuelva a exportar con exportar_zotero.py")
+    return problemas
+
+
+def problemas_de_verificacion(csl):
     """Lo que le falta a una entrada para poder verificarse (regla 29).
 
     Verificable quiere decir que un lector puede llegar a la fuente: sabe quién
@@ -186,9 +199,6 @@ def problemas_de_entrada(csl):
     página cambia o desaparece, y sin fecha no se sabe qué versión se citó.
     """
     problemas = []
-    clave = csl.get("id")
-    if not isinstance(clave, str) or not CLAVE.match(clave):
-        problemas.append(f"la clave «{clave}» no cumple {CLAVE.pattern}")
     if not _tiene_autor(csl):
         problemas.append("sin autor (`author` con `family` o `literal`)")
     if not _con_texto(csl.get("title")):
@@ -198,28 +208,31 @@ def problemas_de_entrada(csl):
         problemas.append("sin DOI, ISBN ni URL: no hay cómo llegar a la fuente")
     elif url and not (doi or isbn) and not _con_fecha(csl.get("accessed")):
         problemas.append("solo tiene URL y le falta la fecha de consulta (`accessed`)")
-    privados = sorted(c for c in csl if c not in CAMPOS_PERMITIDOS)
-    if privados:
-        problemas.append("campos fuera de la lista blanca: " + ", ".join(privados)
-                         + " — el repositorio es público; vuelva a exportar con exportar_zotero.py")
     return problemas
 
 
 def problemas_del_archivo(entradas):
-    """[(clave, problema)] de todo `referencias.json`, más su orden y sus repetidos."""
+    """[(clave, problema, clase)] de todo `referencias.json`.
+
+    `clase` es 'forma' —la clave, la lista blanca, el orden, los repetidos:
+    falla siempre, porque es lo que se publica— o 'verificable' —autor, título,
+    identificador, fecha de consulta—, que solo es grave en una entrada que
+    algún capítulo cita. La bibliografía del curso puede traer un libro
+    impreso sin ISBN que nadie cita todavía: eso se avisa, no se bloquea.
+    """
     salida = []
     ids = [e.get("id") for e in entradas]
     vistos = set()
     for i in ids:
         if i in vistos:
-            salida.append((str(i), "la clave está repetida"))
+            salida.append((str(i), "la clave está repetida", "forma"))
         vistos.add(i)
     if [str(i) for i in ids] != sorted(str(i) for i in ids):
         salida.append(("(archivo)", "las entradas no están ordenadas por id; "
-                                    "vuelva a exportar con exportar_zotero.py"))
+                                    "vuelva a exportar con exportar_zotero.py", "forma"))
     for e in entradas:
-        for p in problemas_de_entrada(e):
-            salida.append((str(e.get("id")), p))
+        salida += [(str(e.get("id")), p, "forma") for p in problemas_de_forma(e)]
+        salida += [(str(e.get("id")), p, "verificable") for p in problemas_de_verificacion(e)]
     return salida
 
 
@@ -360,9 +373,10 @@ def _claves_de(texto_k):
 def citas_de(texto):
     """(citas, problemas) de un capítulo, por orden de aparición.
 
-    `citas` es una lista de (posición, componente, [claves]) y `problemas` una
-    de (posición, mensaje); la posición es la del archivo completo. Se cita de
-    tres maneras, y las tres cuentan:
+    `citas` es una lista de (posición, componente, [claves], loc) y `problemas`
+    una de (posición, mensaje); la posición es la del archivo completo y `loc`
+    es '' si la cita no trae localizador. Se cita de tres maneras, y las tres
+    cuentan:
 
         <Cita k="a; b" loc="p. 12" />
         <Fuente k="a" />
@@ -376,7 +390,7 @@ def citas_de(texto):
     limpio = sin_comentarios(zona)
     citas, problemas = [], []
 
-    def anotar(pos, componente, texto_k):
+    def anotar(pos, componente, texto_k, loc=""):
         claves = _claves_de(texto_k)
         malas = [c for c in claves if not CLAVE.match(c)]
         if malas:
@@ -384,7 +398,17 @@ def citas_de(texto):
                                    f"clave válida ({CLAVE.pattern}); varias claves se separan con «;»"))
         buenas = [c for c in claves if CLAVE.match(c)]
         if buenas:
-            citas.append((pos, componente, buenas))
+            citas.append((pos, componente, buenas, loc))
+
+    def loc_de(pos, componente, attrs):
+        """El `loc` de la cita: '' si no hay, None si no es una cadena literal."""
+        if "loc" not in attrs:
+            return ""
+        loc = literal_de(attrs["loc"])
+        if loc is None:
+            problemas.append((pos, f"<{componente}> no escribe su `loc` como cadena literal: el "
+                                   f"registro de afirmaciones no puede saber qué pasaje se cita"))
+        return loc
 
     for m in re.finditer(r"<(Cita|Fuente|ChartFrame)(?=[\s/>])", limpio):
         componente, pos = m.group(1), base + m.start()
@@ -400,7 +424,10 @@ def citas_de(texto):
                                        f"(`k=\"clave\"`); una clave que sale de una variable no se "
                                        f"puede comprobar ni estampar"))
                 continue
-            anotar(pos, componente, texto_k)
+            loc = loc_de(pos, componente, attrs)
+            if loc is None:
+                continue
+            anotar(pos, componente, texto_k, loc)
             if componente == "Cita" and "loc" in attrs and len(_claves_de(texto_k)) > 1:
                 problemas.append((pos, "<Cita> con varias claves y un `loc`: no se sabe a cuál de "
                                        "ellas pertenece; escriba una <Cita> por fuente"))
@@ -416,9 +443,15 @@ def citas_de(texto):
             con_k = re.search(r"(?<![\w$])k\s*:\s*", valor)
             if not con_k:
                 continue                          # { propia: true } o { ilustrativo: true }
-            lit = re.compile(r"""(['"])((?:(?!\1)[^\\\n])*)\1""").match(valor, con_k.end())
-            if lit:
-                anotar(pos, "ChartFrame fuente", lit.group(2))
+            cadena = re.compile(r"""(['"])((?:(?!\1)[^\\\n])*)\1""")
+            lit = cadena.match(valor, con_k.end())
+            con_loc = re.search(r"(?<![\w$])loc\s*:\s*", valor)
+            lit_loc = cadena.match(valor, con_loc.end()) if con_loc else None
+            if con_loc and not lit_loc:
+                problemas.append((pos, "<ChartFrame> no escribe el `loc` de su `fuente` como "
+                                       "cadena literal"))
+            elif lit:
+                anotar(pos, "ChartFrame fuente", lit.group(2), lit_loc.group(2) if lit_loc else "")
             else:
                 problemas.append((pos, "<ChartFrame> no escribe la clave de su `fuente` como "
                                        "cadena literal (`fuente={{ k: 'clave' }}`)"))
@@ -435,7 +468,7 @@ def claves_citadas(texto):
     """Las claves citadas, sin repetir y en orden de primera aparición."""
     citas, _ = citas_de(texto)
     vistas = []
-    for _pos, _comp, claves in citas:
+    for _pos, _comp, claves, _loc in citas:
         for c in claves:
             if c not in vistas:
                 vistas.append(c)
@@ -603,3 +636,100 @@ def texto_plano(html):
     """El texto de una entrada sin etiquetas: va en el `title` de la cita."""
     import html as _html
     return " ".join(_html.unescape(re.sub(r"<[^>]*>", "", html)).split())
+
+
+# ------------------------------------------------- registro de afirmaciones
+# `_fuentes/afirmaciones/NN.yaml` es la parte PÚBLICA de las notas de afirmación
+# del vault: qué pasaje del capítulo se apoya en qué fuente y en qué lugar de
+# ella, y quién la leyó, cuándo y por qué medio. Lo genera
+# `registrar_afirmaciones.py` y lo lee la regla 31 de `verificar.py`. El
+# extracto de la fuente no sale del vault: aquí va solo su sha256, que deja
+# comprobar que la nota sigue diciendo lo mismo sin publicar lo que dice.
+#
+# El archivo es YAML, pero de una sola forma: una lista de filas con sus
+# valores entre comillas dobles, que es JSON. Así se escribe y se lee aquí sin
+# PyYAML, que el Python del sistema no trae.
+
+DIR_AFIRMACIONES = "afirmaciones"
+CAMPOS_FILA = ("id", "seccion", "ancla", "clave", "loc", "tema")
+CAMPOS_LEIDO = ("fecha", "medio", "por")
+CABECERA_REGISTRO = (
+    "# Registro público de las afirmaciones citadas del capítulo {nn}.\n"
+    "# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.\n"
+    "# No lleva el extracto de la fuente, solo su sha256.\n")
+
+
+def ruta_registro(nn, directorio=None):
+    return Path(directorio or DIR_FUENTES) / DIR_AFIRMACIONES / f"{nn}.yaml"
+
+
+def numero_de_capitulo(nombre):
+    """'01' de `01_LPF_Introduccion.html`, de `01` o de `1`; None si no hay número."""
+    m = re.match(r"(\d{1,2})(?:_|$)", Path(str(nombre)).name)
+    return f"{int(m.group(1)):02d}" if m else None
+
+
+def sin_espacio_duro(s):
+    """Para comparar localizadores: «cap. 15» es el mismo con espacio duro o normal."""
+    return " ".join(str(s).replace("\u00a0", " ").split())
+
+
+def sin_saltos(s):
+    """Un texto con cada tramo de espacios, tabuladores y saltos como un espacio.
+
+    Es como JSX pinta la prosa: un salto de renglón con su sangría, entre dos
+    palabras, se ve como un espacio. Sin esto, volver a partir los renglones
+    de un párrafo —sin cambiarle una letra— haría desaparecer su ancla. El
+    espacio duro NO se toca: «10\u00a0000» y «10 000» son textos distintos.
+    """
+    return re.sub(r"[ \t\r\n]+", " ", str(s))
+
+
+def texto_de_registro(nn, filas):
+    lineas = [CABECERA_REGISTRO.format(nn=nn).rstrip("\n")]
+    q = lambda v: json.dumps(str(v), ensure_ascii=False)
+    for f in sorted(filas, key=lambda f: f["id"]):
+        lineas.append(f"- id: {q(f['id'])}")
+        lineas += [f"  {c}: {q(f[c])}" for c in CAMPOS_FILA[1:]]
+        lineas.append("  leido:")
+        lineas += [f"    {c}: {q(f['leido'][c])}" for c in CAMPOS_LEIDO]
+        lineas.append(f"  extracto_sha256: {q(f['extracto_sha256'])}")
+    return "\n".join(lineas) + "\n"
+
+
+def leer_registro(nn, directorio=None):
+    """Las filas de `afirmaciones/NN.yaml`; None si el archivo no existe."""
+    ruta = ruta_registro(nn, directorio)
+    if not ruta.exists():
+        return None
+    filas, fila, dentro_de_leido = [], None, False
+    for n, linea in enumerate(ruta.read_text(encoding="utf-8").split("\n"), 1):
+        if not linea.strip() or linea.lstrip().startswith("#"):
+            continue
+        m = re.match(r"^(- |  |    )([A-Za-z_0-9]+):(?: (.*))?$", linea)
+        if not m:
+            raise ErrorFuentes(f"{ruta.name}, línea {n}: no tiene la forma que escribe "
+                               f"registrar_afirmaciones.py; vuelva a generarlo")
+        sangria, campo, valor = m.groups()
+        try:
+            valor = json.loads(valor) if valor is not None else None
+        except json.JSONDecodeError:
+            raise ErrorFuentes(f"{ruta.name}, línea {n}: el valor de `{campo}` no va entre "
+                               f"comillas dobles; vuelva a generarlo")
+        if sangria == "- ":
+            fila = {campo: valor}
+            filas.append(fila)
+            dentro_de_leido = False
+        elif fila is None:
+            raise ErrorFuentes(f"{ruta.name}, línea {n}: hay un campo antes de la primera fila")
+        elif sangria == "    ":
+            if not dentro_de_leido:
+                raise ErrorFuentes(f"{ruta.name}, línea {n}: sangría de más fuera de `leido`")
+            fila["leido"][campo] = valor
+        elif campo == "leido" and valor is None:
+            fila["leido"] = {}
+            dentro_de_leido = True
+        else:
+            fila[campo] = valor
+            dentro_de_leido = False
+    return filas

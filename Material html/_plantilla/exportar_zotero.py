@@ -277,7 +277,7 @@ def main():
         print(f"        {GRIS}·{FIN} {e['id']}  {GRIS}{e.get('type', '?')} · "
               f"{str(e.get('title', ''))[:60]}"
               f"{' · clave tomada de Extra' if e['id'] in en_extra else ''}{FIN}")
-    for clave, p in avisos:
+    for clave, p, _clase in avisos:
         print(f"        {AMAR}!{FIN} {clave}: {p}")
     if dry_run:
         print(f"{AMAR}--dry-run: no se escribió {destino}.{FIN}")
@@ -289,8 +289,9 @@ def main():
         print(f"{VERDE}Escrito {destino}{FIN}")
         print(f"{GRIS}Siguiente: estampar_referencias.py{FIN}")
     if avisos:
-        print(f"{AMAR}{len(avisos)} entradas no pasarían la regla 29 de verificar.py: "
-              f"complételas en Zotero y vuelva a exportar.{FIN}")
+        print(f"{AMAR}{len(avisos)} avisos de la regla 29 de verificar.py: es un aviso mientras "
+              f"ningún capítulo cite\nesa entrada, y una falla en cuanto se cite. Se completan en "
+              f"Zotero y se vuelve a exportar.{FIN}")
     return 0
 
 
