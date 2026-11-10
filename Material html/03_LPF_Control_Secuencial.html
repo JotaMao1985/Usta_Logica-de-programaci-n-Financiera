@@ -3496,9 +3496,9 @@ End Sub`,
                     que interesa ahora no es memorizarla, sino una consecuencia práctica: una expresión
                     con varios operadores <strong>no se evalúa en el orden en que está escrita</strong>, sino
                     en el orden que fija la precedencia. Ese orden —qué operador va antes que cuál— es el
-                    mismo en los cuatro lenguajes del curso; lo que no coincide en los cuatro es el
-                    desempate entre dos potencias seguidas, y de eso se ocupa el aviso que sigue a la
-                    tabla.
+                    mismo en los cuatro lenguajes del curso salvo en dos puntos, que el capítulo 1 muestra
+                    en su sección 3: el desempate entre dos potencias seguidas, del que se ocupa el aviso
+                    que sigue a la tabla, y la prioridad del residuo y de la división entera.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -3508,21 +3508,21 @@ End Sub`,
                         <tbody>
                             <tr><td>1.ª</td><td><span className="inline-code">( )</span></td><td>Primero, siempre. De dentro hacia fuera</td></tr>
                             <tr><td>2.ª</td><td><span className="inline-code">^</span> · <span className="inline-code">**</span> (potencia)</td><td><strong>De derecha a izquierda</strong>, salvo en VBA (ver aviso)</td></tr>
-                            <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha</td></tr>
+                            <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha. En R y en VBA, <span className="inline-code">MOD</span> y <span className="inline-code">DIV</span> tienen otra prioridad (capítulo 1, sección 3)</td></tr>
                             <tr><td>4.ª</td><td><span className="inline-code">+</span> <span className="inline-code">-</span></td><td>De izquierda a derecha</td></tr>
                             <tr><td>5.ª</td><td>Relacionales y lógicos</td><td>Al final (capítulo 4)</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <Box type="warn" label="Dos potencias seguidas: el único desempate que no es igual en los cuatro">
+                <Box type="warn" label="Dos potencias seguidas: un desempate que no es igual en los cuatro">
                     <span className="inline-code">2 ^ 3 ^ 2</span> vale <strong>512</strong> en pseudocódigo,
                     Python y R, que resuelven la potencia de derecha a izquierda —primero
                     <span className="inline-code"> 3 ^ 2</span>, después <span className="inline-code">2 ^ 9</span>—, y
                     vale <strong>64</strong> en VBA, que la resuelve de izquierda a derecha como a cualquier
-                    otro operador de su misma prioridad. Es la única discrepancia de evaluación entre los
-                    cuatro lenguajes en todo el curso, y el remedio es el mismo que para todo lo demás en
-                    esta sección: <strong>escribir el paréntesis</strong>. Una fórmula financiera con dos
+                    otro operador de su misma prioridad. Es una de las dos discrepancias de precedencia entre
+                    los cuatro lenguajes —la otra es la del residuo y la división entera—, y el remedio es el
+                    mismo que para todo lo demás en esta sección: <strong>escribir el paréntesis</strong>. Una fórmula financiera con dos
                     potencias encadenadas —una capitalización dentro de otra— es justo donde aparece.
                 </Box>
 

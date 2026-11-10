@@ -2611,3 +2611,38 @@ Rama `claude/cap01-fase6-portada-cierre`, sobre la de la fase 5; sin fusionar.
   `</div>` con dieciséis espacios», el patrón casó con uno más sangrado y dejó
   el JSX roto. La regla 1 lo vio al instante. Conviene cortar por líneas
   completas, no por subcadenas.
+
+### Mejora de contenido · capítulo 1, fases 7 y 8 · 2026-11-10
+
+Ramas `claude/cap01-fase7-figuras`, `claude/cap01-fase7-lpcore` y
+`claude/cap01-fase8-coherencia`, una sobre otra; sin fusionar.
+
+**Fase 7 — figuras y LP-CORE.**
+- Las seis figuras del capítulo 1 llevan fuente, usan solo la paleta y se
+  vieron a 375 px. «Una cantidad, cuatro bases» muestra el 22 en las cuatro; la
+  gráfica de interés sombrea la franja entre las curvas y usa punto de miles.
+- LP-CORE, hecho por la subsesión de citas y revisado aquí: la etiqueta del
+  tipo de ejercicio ya no se cruza con el enunciado (17 de 33 en escritorio y
+  31 de 33 a 375 px, antes), y existe `<ParaProfundizar k="…" />`, estampado
+  desde Zotero. Los cinco capítulos se reestamparon.
+
+**Fase 8 — coherencia hacia adelante.**
+- Se revisaron las 17 menciones del capítulo 1 en los capítulos 2 a 5.
+- Capítulo 3: ya no dice que el orden de los operadores es el mismo en los
+  cuatro lenguajes ni que la potencia en VBA es la única discrepancia.
+- Capítulo 2: ya no remite a una medición del capítulo 1 que no existe.
+- Capítulos 4 y 5: lo que dicen del 1 es cierto ahora, sin tocarlos.
+- Se entregó al docente la lista de preguntas del banco de evaluación del
+  capítulo 1 que el cambio deja desfasadas (el banco no se tocó).
+
+**Huecos de las herramientas.**
+- **Nada vigilaba el solape de la etiqueta.** Estaba en los cinco capítulos
+  con todas las reglas y la sonda en verde. Falta un modo de solapes en la
+  sonda.
+- **Nada vigila lo que un capítulo dice de otro.** Las frases del capítulo 3
+  eran falsas desde antes y solo se vieron al leer. El vault lleva esas
+  remisiones a mano, en sus notas de hilo.
+- **La APA no imprime el ISBN de un libro**: en «Para profundizar», Joyanes y
+  Cairó salen sin identificador a la vista.
+- `POLITICA_DE_FUENTES.md` y la skill `lpf-capitulo` no nombran «Para
+  profundizar». Va al cierre.
