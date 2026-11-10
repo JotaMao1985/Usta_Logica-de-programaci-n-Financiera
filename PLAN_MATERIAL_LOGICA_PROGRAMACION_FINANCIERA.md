@@ -2443,3 +2443,46 @@ detiene, y eso ayuda con una opción de la 9.
   opciones compartan una cifra. Las reglas 17 y 18 no miran eso.
 - **La sonda** espera 30 segundos a que el capítulo monte. Con cinco Chrome a la
   vez dio «no montó» en todos los modos; de uno en uno, los cinco pasan.
+
+### Mejora de contenido · capítulo 1, fases 1 y 2 · 2026-11-10
+
+Plan: `PLAN_TAREA11_CAPITULO_01_CONTENIDO.md` (aprobado el 2026-11-10). Rama
+`claude/cap01-fase2-operadores`, sin fusionar.
+
+**Fase 1 — leer lo que falta.** Siete fuentes ya registradas pasaron a «leída» y
+entraron seis nuevas a Zotero (tanda 02): la especificación del lenguaje VBA
+(MS-VBAL), *Dive into Systems*, la página de cifras de Swift, la Ley 1266 de 2008
+y las ayudas de `Hex` y de `as.hexmode`. Las 30 afirmaciones pendientes del
+capítulo quedaron con decisión escrita en el vault. Sin acceso: Goldberg 1991,
+IEEE 754 y el informe de Von Neumann.
+
+**Fase 2 — sección 3, Operadores.**
+- Las tablas de aritméticos, relacionales y lógicos van en los cuatro lenguajes.
+- La tabla de precedencia es la del pseudocódigo, y una segunda tabla dice dónde
+  se apartan R y VBA: dos potencias seguidas (VBA agrupa por la izquierda) y el
+  residuo y la división entera (antes que `*` y `/` en R, después en VBA).
+  `2 * 7 MOD 4 * 3` da 6 en Python, 18 en R y 2 en VBA.
+- El cortocircuito se dice por lenguaje, con cita: en R es de `&&` y `||`; en
+  VBA lo respalda la especificación, no la ayuda de `And`.
+- Siete pares clave–localizador nuevos en `afirmaciones/01.yaml` (13 en total).
+- Dos verificadores sin contexto leyeron 16 parejas frase–pasaje: 13 respaldadas
+  a la primera y tres corregidas hasta quedar respaldadas.
+
+**Huecos de las herramientas.**
+- **`registrar_afirmaciones.py`** solo admitía notas en `estado: verificada`. El
+  esquema del vault sigue con `resuelta` cuando el HTML ya quedó bien, y al
+  marcar así las seis notas del piloto el registro salía vacío («ninguna nota
+  citada y verificada»). Ahora admite `verificada` y `resuelta`. Prueba: con las
+  seis notas en `resuelta`, `--dry-run` daba 0 filas antes del cambio y 6 después.
+- **La regla de cotejo** exige que las salidas del pseudocódigo sean las de
+  Python. Obligó a cambiar dos ejemplos de la tabla de aritméticos (`60000` frente
+  a `60000.0`): la regla hizo su trabajo, pero el README no la menciona junto a
+  la convención de salidas.
+- **VBA.** Los tres bloques nuevos declaran 13 salidas de VBA que no se han
+  ejecutado en Excel: `ejecutar_vba.py preparar` deja el módulo en el
+  portapapeles y falta pegarlo y correr `comparar`.
+- **`generar_tanda.py`** (vault) no añade pasajes a una nota que ya existe.
+- **Nombre repetido.** Este plan llama «Tarea 11» al capítulo 6, y el plan de
+  contenido del capítulo 1 también se llama «Tarea 11».
+- El capítulo 3 dice que el orden de los operadores «es el mismo en los cuatro
+  lenguajes del curso» (`03…:3427`): ya no es cierto. Se corrige en la fase 8.

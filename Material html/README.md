@@ -334,7 +334,7 @@ después hay que ensamblar.
 pública de las notas de afirmación del vault (`Vault/Afirmaciones/`, en la
 carpeta principal del repositorio; el guion la encuentra aunque se ejecute
 desde un worktree, y solo la lee). Entran las notas del capítulo con
-`clase: citada` y `estado: verificada`, y de cada una sale una fila: `id`,
+`clase: citada` y `estado: verificada` o `resuelta`, y de cada una sale una fila: `id`,
 `seccion`, `ancla`, `clave`, `loc`, `tema`, quién leyó el pasaje, cuándo y por
 qué medio, y el sha256 del extracto de la fuente. **El extracto no se copia
 nunca**: es de una obra ajena y el repositorio es público. Sale con 2 si no

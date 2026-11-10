@@ -4014,6 +4014,182 @@ End Sub`,
             vba: <>La <strong>línea 8</strong> combina <span className="inline-code">And</span> y <span className="inline-code">Or</span> sin paréntesis. Como <span className="inline-code">And</span> se evalúa antes que <span className="inline-code">Or</span>, VBA lee <span className="inline-code">(score &gt;= 680 And ingresos &gt; 5000000) Or codeudor</span>: el codeudor, por su cuenta, aprueba el crédito. Debe ser <span className="inline-code">score &gt;= 680 And (ingresos &gt; 5000000 Or codeudor)</span>.</>,
         };
 
+        /* Las siete filas de la tabla de operadores aritmeticos, ejecutadas.
+           Los ejemplos se eligieron con resultado exacto, para que ningun
+           lenguaje muestre un residuo de punto flotante antes de la seccion 4. */
+        const OPERADORES_ARITMETICOS = {
+            pseudo: `Inicio
+    // Las siete operaciones aritmeticas
+    Escribir 50000 + 12500
+    //> 62500
+    Escribir 100000 - 19000
+    //> 81000
+    Escribir 12 * 85000
+    //> 1020000
+    Escribir 12500 / 8
+    //> 1562.5
+    Escribir 100000 DIV 3
+    //> 33333
+    Escribir 100000 MOD 3
+    //> 1
+    Escribir (1 + 0.5) ^ 2
+    //> 2.25
+Fin`,
+            python: `# Las siete operaciones aritmeticas
+print(50000 + 12500)
+#> 62500
+print(100000 - 19000)
+#> 81000
+print(12 * 85000)
+#> 1020000
+print(12500 / 8)
+#> 1562.5
+print(100000 // 3)
+#> 33333
+print(100000 % 3)
+#> 1
+print((1 + 0.5) ** 2)
+#> 2.25`,
+            r: `# Las siete operaciones aritmeticas
+cat(50000 + 12500, "\\n")
+#> 62500
+cat(100000 - 19000, "\\n")
+#> 81000
+cat(12 * 85000, "\\n")
+#> 1020000
+cat(12500 / 8, "\\n")
+#> 1562.5
+cat(100000 %/% 3, "\\n")
+#> 33333
+cat(100000 %% 3, "\\n")
+#> 1
+cat((1 + 0.5) ^ 2, "\\n")
+#> 2.25`,
+            vba: `Sub OperadoresAritmeticos()
+    ' Las siete operaciones aritmeticas
+    Debug.Print 50000 + 12500
+    '>  62500
+    Debug.Print 100000 - 19000
+    '>  81000
+    Debug.Print 12 * 85000
+    '>  1020000
+    Debug.Print 12500 / 8
+    '>  1562.5
+    Debug.Print 100000 \\ 3
+    '>  33333
+    Debug.Print 100000 Mod 3
+    '>  1
+    Debug.Print (1 + 0.5) ^ 2
+    '>  2.25
+End Sub`,
+        };
+
+        /* Las dos filas de la tabla de precedencia en que los lenguajes no
+           coinciden: el residuo frente a la multiplicacion, y dos potencias
+           seguidas. El pseudocodigo sigue la convencion del curso, que es la
+           de Python. */
+        const PRECEDENCIA_POR_LENGUAJE = {
+            pseudo: `Inicio
+    // Sin parentesis: el resultado depende del lenguaje
+    Escribir 2 * 7 MOD 4 * 3
+    //> 6
+    Escribir 2 ^ 3 ^ 2
+    //> 512
+
+    // Con parentesis: el mismo en los cuatro
+    Escribir (2 * 7) MOD (4 * 3)
+    //> 2
+    Escribir 2 ^ (3 ^ 2)
+    //> 512
+Fin`,
+            python: `# Sin parentesis: el resultado depende del lenguaje
+print(2 * 7 % 4 * 3)
+#> 6
+print(2 ** 3 ** 2)
+#> 512
+
+# Con parentesis: el mismo en los cuatro
+print((2 * 7) % (4 * 3))
+#> 2
+print(2 ** (3 ** 2))
+#> 512`,
+            r: `# Sin parentesis: el resultado depende del lenguaje
+cat(2 * 7 %% 4 * 3, "\\n")
+#> 18
+cat(2 ^ 3 ^ 2, "\\n")
+#> 512
+
+# Con parentesis: el mismo en los cuatro
+cat((2 * 7) %% (4 * 3), "\\n")
+#> 2
+cat(2 ^ (3 ^ 2), "\\n")
+#> 512`,
+            vba: `Sub PrecedenciaPorLenguaje()
+    ' Sin parentesis: el resultado depende del lenguaje
+    Debug.Print 2 * 7 Mod 4 * 3
+    '>  2
+    Debug.Print 2 ^ 3 ^ 2
+    '>  64
+
+    ' Con parentesis: el mismo en los cuatro
+    Debug.Print (2 * 7) Mod (4 * 3)
+    '>  2
+    Debug.Print 2 ^ (3 ^ 2)
+    '>  512
+End Sub`,
+        };
+
+        /* Solucion del reto de la TIR: el VPN evaluado a dos tasas. Usa solo
+           operadores de la seccion; la TIR queda acotada por el cambio de signo. */
+        const VPN_PROYECTO = {
+            pseudo: `Inicio
+    // Valor presente neto del proyecto, en millones, a dos tasas
+    tasa <- 0.12
+    vpn  <- -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+    Escribir vpn
+    //> 32.39
+
+    tasa <- 0.25
+    vpn  <- -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+    Escribir vpn
+    //> -0.22
+Fin`,
+            python: `# Valor presente neto del proyecto, en millones, a dos tasas
+tasa = 0.12
+vpn  = -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ** 2 + 50 / (1 + tasa) ** 3 + 60 / (1 + tasa) ** 4
+print(round(vpn, 2))
+#> 32.39
+
+tasa = 0.25
+vpn  = -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ** 2 + 50 / (1 + tasa) ** 3 + 60 / (1 + tasa) ** 4
+print(round(vpn, 2))
+#> -0.22`,
+            r: `# Valor presente neto del proyecto, en millones, a dos tasas
+tasa <- 0.12
+vpn  <- -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+cat(round(vpn, 2), "\\n")
+#> 32.39
+
+tasa <- 0.25
+vpn  <- -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+cat(round(vpn, 2), "\\n")
+#> -0.22`,
+            vba: `Sub VpnProyecto()
+    ' Valor presente neto del proyecto, en millones, a dos tasas
+    Dim tasa As Double, vpn As Double
+
+    tasa = 0.12
+    vpn = -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+    Debug.Print Round(vpn, 2)
+    '>  32.39
+
+    tasa = 0.25
+    vpn = -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
+    Debug.Print Round(vpn, 2)
+    '> -0.22
+End Sub`,
+        };
+
         const Cap3Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
@@ -4037,140 +4213,218 @@ End Sub`,
                 </Box>
 
                 <h3>1. Operadores aritméticos</h3>
-                <p>Realizan cálculos matemáticos. Son la base de cualquier fórmula financiera: interés compuesto, amortización, VPN, TIR.</p>
+                <p>
+                    Hacen las cuentas: con ellos se escribe cualquier fórmula financiera. La suma, la resta, la
+                    multiplicación y la división llevan el mismo símbolo en los cuatro lenguajes del curso. La
+                    división entera, el residuo y la potencia no, y por eso la tabla trae una columna por lenguaje.
+                </p>
                 <div className="overflow-x-auto">
                     <table>
-                        <thead><tr><th>Operador</th><th>Nombre</th><th>Ejemplo</th><th>Resultado</th><th>Uso financiero</th></tr></thead>
+                        <thead><tr><th>Operación</th><th>Pseudocódigo</th><th>Python</th><th>R</th><th>VBA</th><th>Ejemplo en pseudocódigo</th><th>Resultado</th></tr></thead>
                         <tbody>
-                            <tr><td><span className="inline-code">+</span></td><td>Suma</td><td><span className="inline-code">50000 + 12500</span></td><td>62500</td><td>Sumar IVA, comisiones</td></tr>
-                            <tr><td><span className="inline-code">-</span></td><td>Resta</td><td><span className="inline-code">100000 - 19000</span></td><td>81000</td><td>Retención en la fuente</td></tr>
-                            <tr><td><span className="inline-code">*</span></td><td>Multiplicación</td><td><span className="inline-code">1500000 * 0.04</span></td><td>60000</td><td>Comisión del 4%</td></tr>
-                            <tr><td><span className="inline-code">/</span></td><td>División (float)</td><td><span className="inline-code">100000 / 3</span></td><td>33333.33...</td><td>Cuota mensual</td></tr>
-                            <tr><td><span className="inline-code">//</span></td><td>División entera</td><td><span className="inline-code">100000 // 3</span></td><td>33333</td><td>Billetes por denominación</td></tr>
-                            <tr><td><span className="inline-code">%</span></td><td>Módulo (residuo)</td><td><span className="inline-code">100000 % 3</span></td><td>1</td><td>Saldo residual, par/impar</td></tr>
-                            <tr><td><span className="inline-code">**</span></td><td>Potencia</td><td><span className="inline-code">(1.01) ** 12</span></td><td>1.1268...</td><td>Interés compuesto</td></tr>
+                            <tr><td>Suma</td><td><span className="inline-code">+</span></td><td><span className="inline-code">+</span></td><td><span className="inline-code">+</span></td><td><span className="inline-code">+</span></td><td><span className="inline-code">50000 + 12500</span></td><td>62500</td></tr>
+                            <tr><td>Resta</td><td><span className="inline-code">-</span></td><td><span className="inline-code">-</span></td><td><span className="inline-code">-</span></td><td><span className="inline-code">-</span></td><td><span className="inline-code">100000 - 19000</span></td><td>81000</td></tr>
+                            <tr><td>Multiplicación</td><td><span className="inline-code">*</span></td><td><span className="inline-code">*</span></td><td><span className="inline-code">*</span></td><td><span className="inline-code">*</span></td><td><span className="inline-code">12 * 85000</span></td><td>1020000</td></tr>
+                            <tr><td>División</td><td><span className="inline-code">/</span></td><td><span className="inline-code">/</span></td><td><span className="inline-code">/</span></td><td><span className="inline-code">/</span></td><td><span className="inline-code">12500 / 8</span></td><td>1562.5</td></tr>
+                            <tr><td>División entera</td><td><span className="inline-code">DIV</span></td><td><span className="inline-code">//</span></td><td><span className="inline-code">%/%</span></td><td><span className="inline-code">\</span></td><td><span className="inline-code">100000 DIV 3</span></td><td>33333</td></tr>
+                            <tr><td>Residuo (módulo)</td><td><span className="inline-code">MOD</span></td><td><span className="inline-code">%</span></td><td><span className="inline-code">%%</span></td><td><span className="inline-code">Mod</span></td><td><span className="inline-code">100000 MOD 3</span></td><td>1</td></tr>
+                            <tr><td>Potencia</td><td><span className="inline-code">^</span></td><td><span className="inline-code">**</span></td><td><span className="inline-code">^</span></td><td><span className="inline-code">^</span></td><td><span className="inline-code">(1 + 0.5) ^ 2</span></td><td>2.25</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje; el bloque que sigue ejecuta las siete filas</Fuente>
+                <p>
+                    En una hoja de liquidación, esas siete filas son un recargo que se suma, un descuento que se resta,
+                    doce cuotas iguales, un saldo repartido entre ocho, los billetes enteros que caben en un retiro,
+                    lo que sobra, y un capital que crece dos periodos al 50 %.
+                </p>
+                <CodeTabs
+                    titulo="Las siete operaciones, ejecutadas"
+                    bloques={OPERADORES_ARITMETICOS}
+                    nota="Las siete filas de la tabla, en el mismo orden."
+                />
 
-                <Box type="tip" label="El módulo (%) en finanzas">
-                    El operador módulo es sorprendentemente útil: <span className="inline-code">n % 2 == 0</span> detecta
-                    números pares (para asignar turnos de atención), <span className="inline-code">monto % 10000</span> calcula
-                    el residuo al dispensar billetes de $10.000 en un ATM, y <span className="inline-code">día % 30</span> sirve
-                    para ciclos de facturación mensual.
+                <Box type="tip" label="El residuo, en la práctica">
+                    El residuo sirve más de lo que parece: <span className="inline-code">n MOD 2 = 0</span> dice si un número es par,
+                    <span className="inline-code">monto MOD 10000</span> es lo que sobra al entregar un retiro en billetes de $10 000, y
+                    <span className="inline-code">dia MOD 30</span> da el día dentro de un ciclo de facturación de treinta días.
                 </Box>
 
-                <Eq>{String.raw`$$\text{VF} = \text{VP} \times (1 + i)^n \quad \rightarrow \quad \texttt{vf = vp * (1 + i) ** n}$$`}</Eq>
+                <Eq>{String.raw`$$\text{VF} = \text{VP} \times (1 + i)^n \quad \rightarrow \quad \texttt{vf <- vp * (1 + i) \textasciicircum{} n}$$`}</Eq>
 
                 <h3>Laboratorio interactivo: interés simple vs. compuesto</h3>
                 <p>
-                    Ajusta el capital, la tasa efectiva anual y el plazo, y compara cómo crece tu inversión con
-                    <span className="inline-code">*</span> (simple) frente a <span className="inline-code">**</span> (compuesto).
-                    La "ganancia extra" es el interés que genera el interés: el poder de la exponenciación.
+                    Ajuste el capital, la tasa efectiva anual y el plazo, y compare cómo crece la inversión con
+                    <span className="inline-code">*</span> (interés simple) frente a <span className="inline-code">^</span> (interés compuesto).
+                    La «ganancia extra» es el interés que genera el interés.
                 </p>
                 <InteresCompuestoChart />
 
                 <h3>2. Operadores relacionales (de comparación)</h3>
-                <p>Comparan dos valores y devuelven <strong>verdadero</strong> (<span className="inline-code">True</span>) o <strong>falso</strong> (<span className="inline-code">False</span>). Son esenciales para tomar decisiones.</p>
+                <p>
+                    Comparan dos valores y responden <strong>Verdadero</strong> o <strong>Falso</strong>. De esa respuesta
+                    depende cada decisión de un programa. Cuatro se escriben igual en los cuatro lenguajes; «igual a» y
+                    «distinto de», no.
+                </p>
                 <div className="overflow-x-auto">
                     <table>
-                        <thead><tr><th>Operador</th><th>Significado</th><th>Ejemplo financiero</th></tr></thead>
+                        <thead><tr><th>Significado</th><th>Pseudocódigo</th><th>Python</th><th>R</th><th>VBA</th><th>Ejemplo en pseudocódigo</th></tr></thead>
                         <tbody>
-                            <tr><td><span className="inline-code">==</span></td><td>Igual a</td><td><span className="inline-code">tipo_tx == "RETIRO"</span></td></tr>
-                            <tr><td><span className="inline-code">!=</span></td><td>Distinto de</td><td><span className="inline-code">moneda != "COP"</span></td></tr>
-                            <tr><td><span className="inline-code">&gt;</span></td><td>Mayor que</td><td><span className="inline-code">score &gt; 700</span></td></tr>
-                            <tr><td><span className="inline-code">&lt;</span></td><td>Menor que</td><td><span className="inline-code">saldo &lt; 0</span> (sobregiro)</td></tr>
-                            <tr><td><span className="inline-code">&gt;=</span></td><td>Mayor o igual</td><td><span className="inline-code">ingresos &gt;= salario_mínimo</span></td></tr>
-                            <tr><td><span className="inline-code">&lt;=</span></td><td>Menor o igual</td><td><span className="inline-code">cuota &lt;= capacidad_pago</span></td></tr>
+                            <tr><td>Igual a</td><td><span className="inline-code">=</span></td><td><span className="inline-code">==</span></td><td><span className="inline-code">==</span></td><td><span className="inline-code">=</span></td><td><span className="inline-code">tipo_tx = "RETIRO"</span></td></tr>
+                            <tr><td>Distinto de</td><td><span className="inline-code">&lt;&gt;</span></td><td><span className="inline-code">!=</span></td><td><span className="inline-code">!=</span></td><td><span className="inline-code">&lt;&gt;</span></td><td><span className="inline-code">moneda &lt;&gt; "COP"</span></td></tr>
+                            <tr><td>Mayor que</td><td><span className="inline-code">&gt;</span></td><td><span className="inline-code">&gt;</span></td><td><span className="inline-code">&gt;</span></td><td><span className="inline-code">&gt;</span></td><td><span className="inline-code">score &gt; 700</span></td></tr>
+                            <tr><td>Menor que</td><td><span className="inline-code">&lt;</span></td><td><span className="inline-code">&lt;</span></td><td><span className="inline-code">&lt;</span></td><td><span className="inline-code">&lt;</span></td><td><span className="inline-code">saldo &lt; 0</span></td></tr>
+                            <tr><td>Mayor o igual</td><td><span className="inline-code">&gt;=</span></td><td><span className="inline-code">&gt;=</span></td><td><span className="inline-code">&gt;=</span></td><td><span className="inline-code">&gt;=</span></td><td><span className="inline-code">ingresos &gt;= salario_minimo</span></td></tr>
+                            <tr><td>Menor o igual</td><td><span className="inline-code">&lt;=</span></td><td><span className="inline-code">&lt;=</span></td><td><span className="inline-code">&lt;=</span></td><td><span className="inline-code">&lt;=</span></td><td><span className="inline-code">cuota &lt;= capacidad_pago</span></td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje</Fuente>
 
-                <Box type="warn" label="¡Cuidado! = no es ==">
-                    Un error clásico de principiante: <span className="inline-code">=</span> es <strong>asignación</strong> (guardar un valor en una variable),
-                    mientras <span className="inline-code">==</span> es <strong>comparación</strong> (preguntar si dos valores son iguales).
-                    <span className="inline-code">saldo = 0</span> pone el saldo en cero; <span className="inline-code">saldo == 0</span> pregunta si ya está en cero.
+                <Box type="warn" label="El signo = no significa lo mismo en los cuatro">
+                    En el pseudocódigo del curso, <span className="inline-code">&lt;-</span> <strong>asigna</strong> (guarda un valor en una variable)
+                    y <span className="inline-code">=</span> <strong>compara</strong> (pregunta si dos valores son iguales). En Python y en R se compara
+                    con <span className="inline-code">==</span>, y un solo <span className="inline-code">=</span> asigna. En VBA el mismo <span className="inline-code">=</span> hace las dos cosas: asigna cuando
+                    abre una instrucción y compara cuando está dentro de una condición. Conviene vigilarlo desde el primer
+                    día: <span className="inline-code">saldo = 0</span> pone el saldo en cero en Python, y en pseudocódigo pregunta si ya está en cero.
                 </Box>
-
                 <h3>3. Operadores lógicos</h3>
-                <p>Combinan condiciones booleanas para expresar reglas de negocio complejas:</p>
+                <p>Combinan condiciones para expresar una regla de negocio completa. Aquí cada lenguaje tiene sus palabras:</p>
                 <div className="overflow-x-auto">
                     <table>
-                        <thead><tr><th>Operador</th><th>Significado</th><th>Verdadero cuando…</th><th>Ejemplo financiero</th></tr></thead>
+                        <thead><tr><th>Operación</th><th>Pseudocódigo</th><th>Python</th><th>R</th><th>VBA</th><th>Verdadero cuando…</th><th>Ejemplo en pseudocódigo</th></tr></thead>
                         <tbody>
-                            <tr><td><span className="inline-code">and</span></td><td>Y lógico (conjunción)</td><td>AMBAS condiciones son verdaderas</td><td><span className="inline-code">score &gt;= 680 and ingresos &gt; 2_SMMLV</span></td></tr>
-                            <tr><td><span className="inline-code">or</span></td><td>O lógico (disyunción)</td><td>AL MENOS UNA es verdadera</td><td><span className="inline-code">tiene_codeudor or tiene_garantia</span></td></tr>
-                            <tr><td><span className="inline-code">not</span></td><td>NO lógico (negación)</td><td>La condición es FALSA</td><td><span className="inline-code">not esta_en_lista_clinton</span></td></tr>
+                            <tr><td>Conjunción</td><td><span className="inline-code">Y</span></td><td><span className="inline-code">and</span></td><td><span className="inline-code">&amp;&amp;</span></td><td><span className="inline-code">And</span></td><td>las dos condiciones son verdaderas</td><td><span className="inline-code">score &gt;= 680 Y ingresos &gt; 2 * smmlv</span></td></tr>
+                            <tr><td>Disyunción</td><td><span className="inline-code">O</span></td><td><span className="inline-code">or</span></td><td><span className="inline-code">||</span></td><td><span className="inline-code">Or</span></td><td>al menos una es verdadera</td><td><span className="inline-code">tiene_codeudor O tiene_garantia</span></td></tr>
+                            <tr><td>Negación</td><td><span className="inline-code">NO</span></td><td><span className="inline-code">not</span></td><td><span className="inline-code">!</span></td><td><span className="inline-code">Not</span></td><td>la condición es falsa</td><td><span className="inline-code">NO en_lista_restrictiva</span></td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje</Fuente>
+                <Ilustrativo>
+                    Las reglas de esta sección —el score mínimo de 680, los dos salarios mínimos, el codeudor, la lista
+                    restrictiva— se inventaron para practicar los operadores. No son la política de crédito de ninguna
+                    entidad.
+                </Ilustrativo>
 
                 <Tabs tabs={[
                     {
-                        label: 'Tabla de verdad: AND',
-                        content: <div className="overflow-x-auto"><table>
-                            <thead><tr><th>A</th><th>B</th><th>A and B</th></tr></thead>
+                        label: 'Tabla de verdad: Y',
+                        content: <div className="overflow-x-auto">
+                            {/* fuente-ok: tabla de verdad; es la definición del operador, no un dato */}
+                            <table>
+                            <thead><tr><th>A</th><th>B</th><th>A Y B</th></tr></thead>
                             <tbody>
-                                <tr><td>True</td><td>True</td><td><strong>True</strong></td></tr>
-                                <tr><td>True</td><td>False</td><td>False</td></tr>
-                                <tr><td>False</td><td>True</td><td>False</td></tr>
-                                <tr><td>False</td><td>False</td><td>False</td></tr>
+                                <tr><td>Verdadero</td><td>Verdadero</td><td><strong>Verdadero</strong></td></tr>
+                                <tr><td>Verdadero</td><td>Falso</td><td>Falso</td></tr>
+                                <tr><td>Falso</td><td>Verdadero</td><td>Falso</td></tr>
+                                <tr><td>Falso</td><td>Falso</td><td>Falso</td></tr>
                             </tbody>
                         </table></div>
                     },
                     {
-                        label: 'Tabla de verdad: OR',
-                        content: <div className="overflow-x-auto"><table>
-                            <thead><tr><th>A</th><th>B</th><th>A or B</th></tr></thead>
+                        label: 'Tabla de verdad: O',
+                        content: <div className="overflow-x-auto">
+                            {/* fuente-ok: tabla de verdad; es la definición del operador, no un dato */}
+                            <table>
+                            <thead><tr><th>A</th><th>B</th><th>A O B</th></tr></thead>
                             <tbody>
-                                <tr><td>True</td><td>True</td><td><strong>True</strong></td></tr>
-                                <tr><td>True</td><td>False</td><td><strong>True</strong></td></tr>
-                                <tr><td>False</td><td>True</td><td><strong>True</strong></td></tr>
-                                <tr><td>False</td><td>False</td><td>False</td></tr>
+                                <tr><td>Verdadero</td><td>Verdadero</td><td><strong>Verdadero</strong></td></tr>
+                                <tr><td>Verdadero</td><td>Falso</td><td><strong>Verdadero</strong></td></tr>
+                                <tr><td>Falso</td><td>Verdadero</td><td><strong>Verdadero</strong></td></tr>
+                                <tr><td>Falso</td><td>Falso</td><td>Falso</td></tr>
                             </tbody>
                         </table></div>
                     },
                     {
-                        label: 'Cortocircuito (short-circuit)',
+                        label: 'Cortocircuito',
                         content: <div>
-                            <p>Python evalúa de izquierda a derecha y <strong>se detiene en cuanto conoce el resultado</strong>:</p>
+                            <p>
+                                Algunos lenguajes dejan de evaluar una condición compuesta <strong>en cuanto el resultado ya
+                                está decidido</strong>. Eso es la evaluación de cortocircuito, y los cuatro no la hacen igual:
+                            </p>
                             <ul>
-                                <li><span className="inline-code">False and (costosa_consulta_bd())</span> → nunca ejecuta la consulta (el AND ya es falso).</li>
-                                <li><span className="inline-code">True or (llamada_api_riesgosa())</span> → nunca llama la API (el OR ya es verdadero).</li>
+                                <li><strong>Python:</strong> en <span className="inline-code">x and y</span>, si <span className="inline-code">x</span> es falso, <span className="inline-code">y</span> no se evalúa <Cita k="psf2026expresiones" loc="§6.11" />.</li>
+                                <li><strong>R:</strong> las formas largas <span className="inline-code">&amp;&amp;</span> y <span className="inline-code">||</span> evalúan de izquierda a derecha y solo hasta que el resultado queda determinado; las cortas <span className="inline-code">&amp;</span> y <span className="inline-code">|</span> comparan elemento a elemento <Cita k="rcoreteam-logica" loc="Details" />. En una condición van las largas.</li>
+                                <li><strong>VBA:</strong> los operandos de <span className="inline-code">And</span> y de <span className="inline-code">Or</span> se evalúan antes de aplicar el operador <Cita k="microsoft2026vbal" loc="§5.6.9.2 y §5.6.9.8" />. No hay cortocircuito: los dos lados se evalúan siempre.</li>
+                                <li><strong>Pseudocódigo:</strong> en este curso, <span className="inline-code">Y</span> y <span className="inline-code">O</span> se leen con cortocircuito, como en Python y en R.</li>
                             </ul>
-                            <p>Esto es útil para validar primero lo barato y solo después lo costoso.</p>
+                            <p>
+                                La diferencia importa cuando el segundo operando solo tiene sentido si el primero se cumple.
+                                <span className="inline-code">cuenta &lt;&gt; 0 Y saldo / cuenta &gt; 1</span> es segura con cortocircuito; en VBA, la división
+                                se intenta aunque <span className="inline-code">cuenta</span> valga 0. El capítulo 4 enseña a escribirla para los cuatro.
+                            </p>
                         </div>
                     },
                 ]} />
-
-                <h3>4. Precedencia de operadores: ¿quién se ejecuta primero?</h3>
+                <h3>4. Precedencia de operadores: ¿cuál se resuelve primero?</h3>
                 <p>
-                    Cuando una expresión tiene varios operadores, Python sigue un orden de precedencia.
-                    Si hay empate, se evalúa de <strong>izquierda a derecha</strong> (excepto <span className="inline-code">**</span> que va de derecha a izquierda).
+                    Una expresión con varios operadores no se evalúa en el orden en que está escrita, sino en el que
+                    fija la <strong>precedencia</strong>. Esta es la tabla del pseudocódigo del curso, de la prioridad
+                    más alta a la más baja. Los operadores de una misma fila se resuelven de izquierda a derecha, salvo
+                    dos potencias seguidas, que van de derecha a izquierda.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead><tr><th>Prioridad</th><th>Operadores</th><th>Descripción</th></tr></thead>
                         <tbody>
-                            <tr><td>1 (máxima)</td><td><span className="inline-code">()</span></td><td>Paréntesis</td></tr>
-                            <tr><td>2</td><td><span className="inline-code">**</span></td><td>Potencia</td></tr>
-                            <tr><td>3</td><td><span className="inline-code">+x, -x</span></td><td>Signo (unario)</td></tr>
-                            <tr><td>4</td><td><span className="inline-code">*, /, //, %</span></td><td>Multiplicación, división, módulo</td></tr>
-                            <tr><td>5</td><td><span className="inline-code">+, -</span></td><td>Suma, resta</td></tr>
-                            <tr><td>6</td><td><span className="inline-code">&lt;, &lt;=, &gt;, &gt;=, !=, ==</span></td><td>Comparaciones</td></tr>
-                            <tr><td>7</td><td><span className="inline-code">not</span></td><td>Negación lógica</td></tr>
-                            <tr><td>8</td><td><span className="inline-code">and</span></td><td>Conjunción lógica</td></tr>
-                            <tr><td>9 (mínima)</td><td><span className="inline-code">or</span></td><td>Disyunción lógica</td></tr>
+                            <tr><td>1 (máxima)</td><td><span className="inline-code">( )</span></td><td>Paréntesis</td></tr>
+                            <tr><td>2</td><td><span className="inline-code">^</span></td><td>Potencia</td></tr>
+                            <tr><td>3</td><td><span className="inline-code">-x</span></td><td>Signo</td></tr>
+                            <tr><td>4</td><td><span className="inline-code">*, /, DIV, MOD</span></td><td>Multiplicación, división, división entera y residuo</td></tr>
+                            <tr><td>5</td><td><span className="inline-code">+, -</span></td><td>Suma y resta</td></tr>
+                            <tr><td>6</td><td><span className="inline-code">=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=</span></td><td>Comparaciones</td></tr>
+                            <tr><td>7</td><td><span className="inline-code">NO</span></td><td>Negación</td></tr>
+                            <tr><td>8</td><td><span className="inline-code">Y</span></td><td>Conjunción</td></tr>
+                            <tr><td>9 (mínima)</td><td><span className="inline-code">O</span></td><td>Disyunción</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>según la convención de este curso para el pseudocódigo</Fuente>
+
+                <p>
+                    Para los operadores de esa tabla, Python sigue el mismo orden, salvo que un signo escrito a la derecha de
+                    una potencia se aplica antes que ella <Cita k="psf2026expresiones" loc="§6.17" />: <span className="inline-code">2 ** -1</span> da 0.5.
+                    R y VBA se apartan en dos filas, y son dos que una fórmula financiera usa a diario:
+                </p>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Qué cambia</th><th>Python</th><th>R</th><th>VBA</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>Dos potencias seguidas, como <span className="inline-code">2 ^ 3 ^ 2</span> en pseudocódigo</td>
+                                <td>Se agrupan de derecha a izquierda <Cita k="psf2026expresiones" loc="§6.17" />: <span className="inline-code">2 ** (3 ** 2)</span> da 512.</td>
+                                <td>Se agrupan de derecha a izquierda <Cita k="rcoreteam-sintaxis" loc="Details" />: <span className="inline-code">2 ^ (3 ^ 2)</span> da 512.</td>
+                                <td>Se agrupan de izquierda a derecha, como todo operador binario <Cita k="microsoft2026vbal" loc="§5.6.9.1" />: <span className="inline-code">(2 ^ 3) ^ 2</span> da 64.</td>
+                            </tr>
+                            <tr>
+                                <td>El residuo y la división entera, junto a <span className="inline-code">*</span> y <span className="inline-code">/</span></td>
+                                <td>Tienen la misma prioridad que <span className="inline-code">*</span> y <span className="inline-code">/</span> <Cita k="psf2026expresiones" loc="§6.17" />.</td>
+                                <td>Se resuelven <strong>antes</strong> que <span className="inline-code">*</span> y <span className="inline-code">/</span> <Cita k="rcoreteam-sintaxis" loc="Details" />.</td>
+                                <td>Se resuelven <strong>después</strong> de <span className="inline-code">*</span> y <span className="inline-code">/</span> <Cita k="microsoft2026vbal" loc="§5.6.9.1" />.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente propia>a partir de la documentación citada en cada celda</Fuente>
+                <p>
+                    En lo demás los tres siguen la tabla: la potencia antes que el signo que lleva delante, la multiplicación antes que
+                    la suma, las comparaciones antes que <span className="inline-code">NO</span>, <span className="inline-code">NO</span> antes que <span className="inline-code">Y</span>, e <span className="inline-code">Y</span> antes
+                    que <span className="inline-code">O</span> <Cita k="psf2026expresiones" loc="§6.17" /> <Cita k="rcoreteam-sintaxis" loc="Details" /> <Cita k="microsoft2026vbal" loc="§5.6.9.1" />.
+                </p>
+                <CodeTabs
+                    titulo="Una expresión, tres respuestas"
+                    bloques={PRECEDENCIA_POR_LENGUAJE}
+                    nota="Cambie de pestaña. Sin paréntesis, la primera expresión da 6 en Python, 18 en R y 2 en VBA, y la segunda da 512 en Python y en R y 64 en VBA. Con paréntesis, los cuatro coinciden."
+                />
 
                 <Box type="warn" label="Regla de oro">
-                    Cuando tengas duda sobre la precedencia, <strong>usa paréntesis</strong>. Son gratis, hacen el código
-                    más legible y eliminan cualquier ambigüedad. <span className="inline-code">(a + b) * c</span> es
-                    inequívoco; <span className="inline-code">a + b * c</span> requiere conocer las reglas.
+                    Ante la duda, <strong>paréntesis</strong>: no cuestan nada, hacen la expresión más legible y quitan la
+                    ambigüedad. <span className="inline-code">(a + b) * c</span> se lee de una sola manera; <span className="inline-code">a + b * c</span> obliga a recordar la
+                    tabla. En este curso se escriben siempre en dos casos: cuando una expresión mezcla el residuo o la
+                    división entera con <span className="inline-code">*</span> o <span className="inline-code">/</span>, y cuando encadena dos potencias. Son los dos casos en que
+                    los lenguajes no se ponen de acuerdo.
                 </Box>
-
                 <h3>Ejemplo completo: los tres tipos de operador a la vez</h3>
                 <p>
                     Un aritmético calcula la cuota estimada, dos relacionales comparan contra los umbrales y tres
@@ -4212,7 +4466,7 @@ End Sub`,
 
                 <DetectaError
                     titulo="El crédito que se aprueba solo"
-                    enunciado={<>Este algoritmo debe aprobar un crédito cuando el score alcanza el mínimo <strong>y además</strong> hay respaldo: ingresos altos o un codeudor. Probado con un score de 300 y un codeudor, <strong>aprueba</strong>. ¿En qué línea está el error?</>}
+                    enunciado={<>Este es el algoritmo que desembolsó los once créditos con que abre la sección. Debía aprobar un crédito cuando el score alcanza el mínimo <strong>y además</strong> hay respaldo: ingresos altos o un codeudor. Probado con un score de 300 y un codeudor, <strong>aprueba</strong>. ¿En qué línea está el error?</>}
                     lineas={PRECEDENCIA_LINEAS}
                     lineaCorrecta={PRECEDENCIA_LINEA_OK}
                     tipos={[
@@ -4230,7 +4484,7 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={3}
                     explicacion={PRECEDENCIA_EXPLICACION}
-                    impacto={<>La política de riesgo queda anulada sin que nadie toque la política. Cualquier solicitud con codeudor se aprueba, con score 300 o con score 800, y el sistema no reporta nada: devuelve un <span className="inline-code">Verdadero</span> perfectamente válido. El defecto solo aparece cuando alguien audita la cartera y encuentra desembolsos que ninguna regla escrita permitía.</>}
+                    impacto={<>La política de riesgo queda anulada sin que nadie toque la política. Cualquier solicitud con codeudor se aprueba, con score 300 o con score 800, y el sistema no reporta nada: devuelve un <span className="inline-code">Verdadero</span> perfectamente válido. El defecto solo aparece cuando alguien audita la cartera y encuentra desembolsos que ninguna regla escrita permitía: los once créditos de la apertura.</>}
                 />
 
                 <Ejercicio tipo="E7"><Reto
@@ -4255,27 +4509,44 @@ End Sub`,
                     al cliente?
                 </Reto></Ejercicio>
 
-                <Reto titulo="Calcula la TIR de un proyecto" solucion={
+                <Reto titulo="La TIR, sin fórmulas nuevas" solucion={
                     <div>
-                        <p>La fórmula de la TIR (Tasa Interna de Retorno) iguala el VPN a cero:</p>
+                        <p>La TIR (tasa interna de retorno) es la tasa que deja el valor presente neto, el VPN, en cero:</p>
                         <Eq>{String.raw`\( \sum_{t=0}^{n} \frac{F_t}{(1+\text{TIR})^t} = 0 \)`}</Eq>
-                        <p>En Python se puede aproximar con el método de Newton-Raphson, pero bibliotecas como <span className="inline-code">numpy_financial.irr()</span> ya lo implementan.</p>
-                        <p>Para el flujo dado: -100, 30, 40, 50, 60 → TIR ≈ 24.9%.</p>
+                        <p>
+                            El VPN del proyecto se escribe con operadores de esta sección —suma, división y potencia—, y
+                            basta evaluarlo a dos tasas:
+                        </p>
+                        <CodeTabs titulo="El VPN del proyecto, al 12 % y al 25 %" bloques={VPN_PROYECTO} />
+                        <p>
+                            Al 12 % el VPN es positivo: descontados a esa tasa, los flujos valen 32,39 millones más que
+                            la inversión. Al 25 % ya es negativo, por muy poco. La tasa que lo deja en cero —la TIR—
+                            está entre las dos, muy cerca del 25 %.
+                        </p>
+                        <p>
+                            Que la TIR supere el 12 % significa eso mismo: el proyecto rinde más de lo que cuesta el
+                            dinero con que se financia, y por eso su VPN al 12 % es positivo. A quien aprueba la
+                            inversión le dice que, con esos flujos, el proyecto paga su financiación y deja un excedente.
+                        </p>
                     </div>
                 }>
-                    Un proyecto requiere inversión inicial de 100 millones y promete los siguientes flujos: año 1: 30M,
-                    año 2: 40M, año 3: 50M, año 4: 60M. Plantea la ecuación de la TIR usando operadores. ¿Qué significa
-                    si la TIR es mayor que la tasa de descuento del banco (12%)?
+                    Un proyecto pide una inversión inicial de 100 millones y promete cuatro flujos anuales: 30, 40, 50 y
+                    60 millones. Quien lo financia descuenta al 12 % anual. Antes de abrir la solución, decida: si la TIR
+                    del proyecto resulta mayor que ese 12 %, ¿qué signo tiene el VPN calculado al 12 %, y qué le dice eso
+                    a quien debe aprobar la inversión?
                 </Reto>
-
-                <CalloutPro tema="gold" titulo="Aplicación financiera real" subtitulo="Sistema de scoring crediticio" icon="fa-chart-line">
-                    <p>Un modelo de <Termino def="Sistema estadístico que asigna una puntuación numérica a un solicitante de crédito para predecir su probabilidad de incumplimiento. En Colombia, DataCrédito y CIFIN proveen scores.">credit scoring</Termino> se reduce a una
-                    combinación de operadores:</p>
+                <CalloutPro tema="gold" titulo="Aplicación financiera" subtitulo="Un modelo de scoring crediticio" icon="fa-chart-line">
+                    <p>Un modelo de <Termino def="Sistema estadístico que asigna una puntuación numérica a un solicitante de crédito para estimar su probabilidad de incumplimiento.">credit scoring</Termino> se reduce
+                    a una combinación de operadores sobre los datos del solicitante. La Ley 1266 de 2008 llama
+                    <strong>operador de información</strong> a la persona, entidad u organización que recibe de la fuente
+                    datos personales sobre varios titulares de la información, los administra y los pone en conocimiento de los usuarios
+                    bajo los parámetros de esa ley <Cita k="congreso2008ley1266" loc="art. 3, lit. c" />.</p>
                     <ul>
-                        <li><strong>Aritméticos:</strong> <span className="inline-code">score = 0.3 * historial + 0.25 * ingresos + 0.2 * endeudamiento + 0.15 * antiguedad + 0.1 * garantias</span></li>
-                        <li><strong>Relacionales:</strong> <span className="inline-code">if score &gt;= umbral_aprobacion: ...</span></li>
-                        <li><strong>Lógicos:</strong> <span className="inline-code">if score &gt;= 680 and not en_mora and (ingresos &gt; cuota * 2.5 or tiene_garantia_real): APROBAR</span></li>
+                        <li><strong>Aritméticos:</strong> <span className="inline-code">score &lt;- 0.3 * historial + 0.25 * ingresos + 0.2 * endeudamiento + 0.15 * antiguedad + 0.1 * garantias</span></li>
+                        <li><strong>Relacionales:</strong> <span className="inline-code">score &gt;= umbral_aprobacion</span></li>
+                        <li><strong>Lógicos:</strong> <span className="inline-code">score &gt;= 680 Y NO en_mora Y (ingresos &gt; cuota * 2.5 O tiene_garantia_real)</span></li>
                     </ul>
+                    <Fuente ilustrativo />
                 </CalloutPro>
 
                 <MCQ
@@ -4305,13 +4576,13 @@ End Sub`,
                         justificacion: 'El módulo (%) devuelve el residuo de la división entera: 17 = 5×3 + 2.'
                     },
                     {
-                        pregunta: 'El operador == significa:',
+                        pregunta: 'En Python y en R, el operador == significa:',
                         opciones: [
                             { texto: 'Asignación: guardar un valor en una variable.', correcta: false },
                             { texto: 'Igualdad aproximada.', correcta: false },
                             { texto: 'Comparación: ¿son iguales estos dos valores?', correcta: true },
                         ],
-                        justificacion: '== compara, = asigna. Es uno de los errores más comunes al empezar.'
+                        justificacion: 'En Python y en R, == compara. El = solo asigna en Python; en el pseudocódigo del curso y en VBA, en cambio, = también compara.'
                     },
                     {
                         pregunta: '¿Cuál es el resultado de: True or True and False?',
@@ -4333,13 +4604,13 @@ End Sub`,
                     },
                 ]} />
 
-                <Box type="tip" label="Puntos clave del Capítulo 3">
+                <Box type="tip" label="Puntos clave de la sección 3">
                     <ul>
-                        <li>Los <strong>operadores aritméticos</strong> (+, -, *, /, //, %, **) realizan cálculos matemáticos. El módulo (%) y la potencia (**) son particularmente útiles en finanzas.</li>
-                        <li>Los <strong>operadores relacionales</strong> (==, !=, &gt;, &lt;, &gt;=, &lt;=) comparan valores y producen booleanos. No confundir = (asignación) con == (comparación).</li>
+                        <li>Los <strong>operadores aritméticos</strong> hacen las cuentas. La suma, la resta, la multiplicación y la división se escriben igual en los cuatro lenguajes; la división entera, el residuo y la potencia cambian de símbolo.</li>
+                        <li>Los <strong>operadores relacionales</strong> comparan y responden Verdadero o Falso. El pseudocódigo y VBA comparan con <span className="inline-code">=</span>; Python y R, con <span className="inline-code">==</span>.</li>
                         <li>Los <strong>operadores lógicos</strong> combinan condiciones: <span className="inline-code">Y / O / NO</span> en pseudocódigo, <span className="inline-code">and / or / not</span> en Python, <span className="inline-code">&amp;&amp; / || / !</span> en R y <span className="inline-code">And / Or / Not</span> en VBA.</li>
-                        <li>Aquí los cuatro <strong>no</strong> se comportan igual. Python y R hacen <strong>evaluación de cortocircuito</strong>: si la primera condición de un <span className="inline-code">Y</span> ya es falsa, la segunda ni se evalúa. <strong>VBA no</strong>: <span className="inline-code">And</span> y <span className="inline-code">Or</span> evalúan siempre los dos lados. Por eso una condición como <span className="inline-code">cuenta &lt;&gt; 0 And saldo / cuenta &gt; 1</span> funciona en Python y revienta en VBA con división por cero.</li>
-                        <li>La <strong>precedencia</strong> determina el orden de evaluación: <span className="inline-code">Y</span> se resuelve antes que <span className="inline-code">O</span> en los cuatro. Ante la duda: <strong>paréntesis</strong>.</li>
+                        <li>Aquí los cuatro <strong>no</strong> se comportan igual. Python deja de evaluar un <span className="inline-code">and</span> en cuanto el primer operando es falso <Cita k="psf2026expresiones" loc="§6.11" />, y R hace lo mismo con <span className="inline-code">&amp;&amp;</span> y <span className="inline-code">||</span> <Cita k="rcoreteam-logica" loc="Details" />: es la <strong>evaluación de cortocircuito</strong>. En VBA, los operandos de <span className="inline-code">And</span> y de <span className="inline-code">Or</span> se evalúan antes de aplicar el operador <Cita k="microsoft2026vbal" loc="§5.6.9.2 y §5.6.9.8" />: los dos lados, siempre.</li>
+                        <li>La <strong>precedencia</strong> fija el orden de evaluación, y no es idéntica en los cuatro: cambian el residuo y dos potencias seguidas (apartado 4). Ante la duda: <strong>paréntesis</strong>.</li>
                     </ul>
                 </Box>
             </div>
@@ -5100,16 +5371,27 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 1,
-  "huella": "833e451ac9e2beef61d1dc30edf6592a4a7fa47d0de33a7ea06daddcbe121009",
-  "sello": "56814f2a2fc9be9b7232d3c9a2c0be8a1f4591f335319fa390313e564d823a81",
+  "huella": "f21bf25d24ececff21b807b0a668e2c6be8d1872a559e90de2d2bec04efaadfd",
+  "sello": "192c57eac906938750e02a08f155a21b1a5b5e9e0be6b5a06a249038ea40662a",
   "orden": [
+    "congreso2008ley1266",
     "hornik2026faq",
     "microsoft2018moneda",
+    "microsoft2026vbal",
     "psf2026decimal",
+    "psf2026expresiones",
     "psf2026flotante",
+    "rcoreteam-logica",
+    "rcoreteam-sintaxis",
     "rcoreteam-opciones"
   ],
   "entradas": {
+    "congreso2008ley1266": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "2008",
+      "html": "Congreso de la República de Colombia. (2008). \u003cem>Ley 1266 de 2008, por la cual se dictan las disposiciones generales del hábeas data y se regula el manejo de la información contenida en bases de datos personales, en especial la financiera, crediticia, comercial, de servicios y la proveniente de terceros países y se dictan otras disposiciones\u003c/em>. Diario Oficial 47.219. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (2008). Ley 1266 de 2008, por la cual se dictan las disposiciones generales del hábeas data y se regula el manejo de la información contenida en bases de datos personales, en especial la financiera, crediticia, comercial, de servicios y la proveniente de terceros países y se dictan otras disposiciones. Diario Oficial 47.219. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488"
+    },
     "hornik2026faq": {
       "autor": "Hornik y R Core Team",
       "anio": "2026",
@@ -5122,23 +5404,47 @@ End Sub`,
       "html": "Microsoft. (2018, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
       "plano": "Microsoft. (2018, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
     },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026",
+      "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    },
     "psf2026decimal": {
       "autor": "Python Software Foundation",
       "anio": "2026a",
       "html": "Python Software Foundation. (2026a, noviembre 9). \u003cem>decimal — Decimal fixed-point and floating-point arithmetic\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/library/decimal.html\">https://docs.python.org/es/3/library/decimal.html\u003c/a>",
       "plano": "Python Software Foundation. (2026a, noviembre 9). decimal — Decimal fixed-point and floating-point arithmetic. Documentación de Python 3.15.2. https://docs.python.org/es/3/library/decimal.html"
     },
-    "psf2026flotante": {
+    "psf2026expresiones": {
       "autor": "Python Software Foundation",
       "anio": "2026b",
-      "html": "Python Software Foundation. (2026b, noviembre 9). \u003cem>Floating-Point Arithmetic: Issues and Limitations\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/tutorial/floatingpoint.html\">https://docs.python.org/es/3/tutorial/floatingpoint.html\u003c/a>",
-      "plano": "Python Software Foundation. (2026b, noviembre 9). Floating-Point Arithmetic: Issues and Limitations. Documentación de Python 3.15.2. https://docs.python.org/es/3/tutorial/floatingpoint.html"
+      "html": "Python Software Foundation. (2026b, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026b, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
+    },
+    "psf2026flotante": {
+      "autor": "Python Software Foundation",
+      "anio": "2026c",
+      "html": "Python Software Foundation. (2026c, noviembre 9). \u003cem>Floating-Point Arithmetic: Issues and Limitations\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/tutorial/floatingpoint.html\">https://docs.python.org/es/3/tutorial/floatingpoint.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026c, noviembre 9). Floating-Point Arithmetic: Issues and Limitations. Documentación de Python 3.15.2. https://docs.python.org/es/3/tutorial/floatingpoint.html"
+    },
+    "rcoreteam-logica": {
+      "autor": "R Core Team",
+      "anio": "s. f.-a",
+      "html": "R Core Team. (s. f.-a). \u003cem>Logical Operators\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-a). Logical Operators. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html"
+    },
+    "rcoreteam-sintaxis": {
+      "autor": "R Core Team",
+      "anio": "s. f.-b",
+      "html": "R Core Team. (s. f.-b). \u003cem>Operator Syntax and Precedence\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-b). Operator Syntax and Precedence. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html"
     },
     "rcoreteam-opciones": {
       "autor": "R Core Team",
-      "anio": "s. f.",
-      "html": "R Core Team. (s. f.). \u003cem>Options Settings\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\u003c/a>",
-      "plano": "R Core Team. (s. f.). Options Settings. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html"
+      "anio": "s. f.-c",
+      "html": "R Core Team. (s. f.-c). \u003cem>Options Settings\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\u003c/a>",
+      "plano": "R Core Team. (s. f.-c). Options Settings. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html"
     }
   }
 }

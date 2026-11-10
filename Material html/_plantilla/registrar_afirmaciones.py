@@ -12,8 +12,12 @@ vault— y de cada una sale una fila con lo que sí puede ser público:
     leido: {fecha, medio, por}      de leido_fecha, leido_medio y leido_por
     extracto_sha256                 sha256 del texto de «## Extracto de la fuente»
 
-Solo entran las notas del capítulo con `clase: citada` y `estado: verificada`:
-las que ya leyó alguien y aprobó el verificador. El extracto no se copia nunca:
+Solo entran las notas del capítulo con `clase: citada` y `estado: verificada` o
+`resuelta`: las que ya leyó alguien y aprobó el verificador. `resuelta` es el
+estado que sigue a `verificada` en el esquema del vault —el HTML ya quedó como
+debe—, y la cita sigue en el capítulo: si esas notas no entraran, el registro
+se vaciaría al cerrar cada afirmación (pasó el 2026-11-10, con las seis del
+piloto). El extracto no se copia nunca:
 el resumen deja comprobar más tarde que la nota sigue diciendo lo mismo sin
 decir qué dice.
 
@@ -140,7 +144,7 @@ def fila_de(ruta, nn):
 
 
 def filas_del_capitulo(carpeta, nn):
-    """(filas, problemas) de las notas `clase: citada`, `estado: verificada` del capítulo."""
+    """(filas, problemas) de las notas `clase: citada`, `estado: verificada` o `resuelta`."""
     filas, problemas, vistos = [], [], {}
     for ruta in sorted(carpeta.glob("*.md")):
         props, _ = leer_nota(ruta)
@@ -149,7 +153,7 @@ def filas_del_capitulo(carpeta, nn):
         capitulo = str(props.get("capitulo", "")).strip()
         if not capitulo.isdigit() or f"{int(capitulo):02d}" != nn:
             continue
-        if props.get("clase") != "citada" or props.get("estado") != "verificada":
+        if props.get("clase") != "citada" or props.get("estado") not in ("verificada", "resuelta"):
             continue
         fila, mal = fila_de(ruta, nn)
         problemas += [f"{ruta.name}: {p}" for p in mal]
