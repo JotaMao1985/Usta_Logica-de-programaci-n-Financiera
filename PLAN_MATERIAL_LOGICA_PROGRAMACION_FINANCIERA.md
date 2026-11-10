@@ -2486,3 +2486,34 @@ IEEE 754 y el informe de Von Neumann.
   contenido del capítulo 1 también se llama «Tarea 11».
 - El capítulo 3 dice que el orden de los operadores «es el mismo en los cuatro
   lenguajes del curso» (`03…:3427`): ya no es cierto. Se corrige en la fase 8.
+
+### Mejora de contenido · capítulo 1, fase 3 · 2026-11-10
+
+Rama `claude/cap01-fase3-seccion4`, sobre la de la fase 2; sin fusionar.
+
+**Sección 4, lo que el piloto dejó fuera.**
+- «El problema tampoco es el tamaño del error» pasó a decir lo que dice su
+  fuente: el error es diminuto, impide confiar en la igualdad y puede acumularse.
+  Con eso deja de contradecir el caso del descuadre.
+- «La solución de la banca» pasó a ser una recomendación del curso, en la tabla
+  y en la justificación del cuestionario final.
+- «Los enteros no tienen este problema» pasó a citar lo que dice la R FAQ.
+- El laboratorio de bits: la leyenda lleva los colores de los bits que nombra,
+  el rótulo dice «(20 decimales)» y tiene pie con su procedencia.
+- La sección tiene minicuestionario (cuatro preguntas).
+- La apertura dice que el descuadre lo produjeron la representación **y el
+  momento en que se redondea**, como su ejercicio final. La portada se alinea
+  en la fase 6.
+- Dos pares frase–pasaje leídos por dos verificadores; uno objetó la frase de
+  los enteros y quedó su corrección. 15 filas en `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **La regla 9 no ejecuta las `lineas` de un `DetectaError`.** La explicación de
+  «La conciliación que siempre reporta descuadre» da `1.0000000000000007`; se
+  comprobó a mano en Python y en R, y ninguna regla lo vigila.
+- **Los guiones de sustitución tropiezan con el espacio duro** que pone
+  `comprobar_cifras.js`: un patrón escrito con espacio normal no casa con
+  «$8 432». No es un defecto del corrector, pero conviene saberlo al editar por
+  guion.
+- Los rótulos «signo (1) · exponente (11) · mantisa (52)» del laboratorio siguen
+  sin fuente leída (decisión D).

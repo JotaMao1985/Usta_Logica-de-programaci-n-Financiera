@@ -2931,15 +2931,18 @@
                                 <div className="text-[0.65rem] uppercase tracking-wider text-gray-400 font-bold mb-1.5">
                                     Los 64 bits, tal como están en memoria
                                 </div>
-                                <div className="font-mono text-[0.7rem] leading-relaxed break-all bg-navy rounded-lg p-3 text-white/90">
-                                    <span style={{ color: '#FDB913', fontWeight: 700 }}>{bits.signo}</span>{/* contraste-ok: 9.66:1 medido sobre el navy #001A4D del contenedor */}
-                                    <span className="mx-1" style={{ color: '#7DD3FC' }}>{bits.exponente}</span>{/* contraste-ok: 10.04:1 sobre el mismo navy */}
-                                    <span style={{ color: '#F9A8D4' }}>{bits.mantisa}</span>{/* contraste-ok: 9.23:1 sobre el mismo navy */}
-                                </div>
-                                <div className="flex flex-wrap gap-4 mt-1.5 text-[0.65rem] font-bold">
-                                    <span style={{ color: '#B45309' }}>■ signo (1)</span>
-                                    <span style={{ color: '#0E7490' }}>■ exponente (11)</span>
-                                    <span style={{ color: '#BE185D' }}>■ mantisa (52)</span>
+                                <div className="bg-navy rounded-lg p-3 text-white/90">
+                                    <div className="font-mono text-[0.7rem] leading-relaxed break-all">
+                                        <span style={{ color: '#FDB913', fontWeight: 700 }}>{bits.signo}</span>{/* contraste-ok: 9.66:1 medido sobre el navy #001A4D del contenedor */}
+                                        <span className="mx-1" style={{ color: '#7DD3FC' }}>{bits.exponente}</span>{/* contraste-ok: 10.04:1 sobre el mismo navy */}
+                                        <span style={{ color: '#F9A8D4' }}>{bits.mantisa}</span>{/* contraste-ok: 9.23:1 sobre el mismo navy */}
+                                    </div>
+                                    {/* La leyenda va dentro del mismo recuadro para llevar los colores de los bits que nombra. */}
+                                    <div className="flex flex-wrap gap-4 mt-2 text-[0.65rem] font-bold">
+                                        <span style={{ color: '#FDB913' }}>■ signo (1)</span>{/* contraste-ok: 9.66:1 sobre el navy #001A4D del contenedor */}
+                                        <span style={{ color: '#7DD3FC' }}>■ exponente (11)</span>{/* contraste-ok: 10.04:1 sobre el mismo navy */}
+                                        <span style={{ color: '#F9A8D4' }}>■ mantisa (52)</span>{/* contraste-ok: 9.23:1 sobre el mismo navy */}
+                                    </div>
                                 </div>
                             </div>
 
@@ -2949,7 +2952,7 @@
                                     <div className="font-mono font-bold text-navy text-lg break-all">{texto}</div>
                                 </div>
                                 <div className={`rounded-xl border-2 p-3 ${exacto ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'}`}>
-                                    <div className="text-[0.65rem] uppercase tracking-wider text-gray-500 font-bold">La máquina guarda</div>
+                                    <div className="text-[0.65rem] uppercase tracking-wider text-gray-500 font-bold">La máquina guarda (20 decimales)</div>
                                     <div className="font-mono font-bold text-navy text-sm break-all">{guardado}</div>
                                     <div className={`text-xs font-bold mt-1 ${exacto ? 'text-green-700' : 'text-red-700'}`}>
                                         {exacto ? '✓ exacto' : '✗ no es el número que escribió'}
@@ -2984,8 +2987,9 @@
                                     {!iguales && (
                                         <div className="text-xs text-gray-700 mt-1">
                                             Diferencia: <span className="font-mono font-bold">{diferencia.toExponential(4)}</span>.
-                                            Es minúscula, y ese no es el punto: el punto es que la comparación
-                                            responde <strong>Falso</strong>. Una conciliación que valide saldos
+                                            Es minúscula, pero basta para que la comparación responda
+                                            <strong> Falso</strong>, y cambia con el número de sumas: pruebe los cuatro
+                                            botones. Una conciliación que valide saldos
                                             con <span className="inline-code">==</span> reportará un descuadre que no existe.
                                         </div>
                                     )}
@@ -4787,7 +4791,7 @@ End Sub`,
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
-                    gancho="El descuadre de $8 432 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjo la forma en que la máquina guarda los decimales.">
+                    gancho="El descuadre de $8 432 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjeron la forma en que la máquina guarda los decimales y el momento en que el sistema redondea.">
                     Un analista revisa 840 000 pagos buscando el que está mal. No lo va a encontrar, porque no
                     existe: cada uno está bien calculado. Lo que falla es más profundo y más incómodo de aceptar:
                     la máquina no puede guardar exactamente 0,1, igual que usted no puede escribir un tercio
@@ -4819,10 +4823,11 @@ End Sub`,
                         <span className="inline-code">0.1</span>, por sí solo, no es 0,1 dentro de la máquina.
                     </p>
                     <p>
-                        Y el problema tampoco es el <em>tamaño</em> del error, que es ridículo. El problema es que
-                        <span className="inline-code"> ==</span> responde <strong>Falso</strong>. Una conciliación que
-                        valide con igualdad exacta reporta un descuadre que no existe; y una que compense el desfase
-                        redondeando en el sitio equivocado, esconde uno que sí.
+                        El error es diminuto —0,1 + 0,1 + 0,1 − 0,3 da 5,55 × 10⁻¹⁷ en vez de cero—, pero impide confiar
+                        en una prueba de igualdad y puede acumularse <Cita k="psf2026decimal" loc="introducción"/>. Por eso
+                        <span className="inline-code"> ==</span> responde <strong>Falso</strong>. Una conciliación que valide con igualdad exacta
+                        reporta un descuadre que no existe; y una que compense el desfase redondeando en el sitio
+                        equivocado, esconde uno que sí.
                     </p>
                 </Box>
 
@@ -4833,6 +4838,7 @@ End Sub`,
                     después <strong>0,1</strong> y <strong>0,07</strong>.
                 </p>
                 <FlotanteVisualizer />
+                <Fuente propia>con valores que se calculan en su navegador al escribir el número</Fuente>
 
                 <h3>Cómo se resuelve</h3>
                 <div className="overflow-x-auto">
@@ -4841,8 +4847,8 @@ End Sub`,
                         <tbody>
                             <tr>
                                 <td><strong>Centavos enteros</strong></td>
-                                <td>Guardar 150 000 en vez de 1 500,00. Los enteros no tienen este problema.</td>
-                                <td>La solución de la banca y de casi todo sistema de pagos.</td>
+                                <td>Guardar 150 000 en vez de 1 500,00. En el tipo numérico de R, por ejemplo, los únicos números que pueden representarse exactos son los enteros y las fracciones cuyo denominador es una potencia de 2 <Cita k="hornik2026faq" loc="pregunta 7.31"/>.</td>
+                                <td>En este curso, es la opción recomendada para guardar dinero.</td>
                             </tr>
                             <tr>
                                 <td><strong>Punto fijo</strong></td>
@@ -4862,6 +4868,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la documentación citada en la tabla</Fuente>
 
                 <CalloutPro tema="info" titulo="Por qué el capítulo 6 usará Currency" subtitulo="Y por qué no es un capricho de Excel" icon="fa-money-bill-trend-up">
                     Cuando en el capítulo 6 se declare <span className="inline-code">Dim cuota As Currency</span> en vez de
@@ -4934,7 +4941,46 @@ End Sub`,
                     esa cifra sobre <em>dónde</em> está el problema, y qué haría usted primero?
                 </Reto></Ejercicio>
 
-                <Box type="tip" label="Puntos clave del Capítulo 4">
+                <Quiz titulo="Mini-cuestionario · Sección 4" preguntas={[
+                    {
+                        pregunta: 'En base 10, un tercio no se puede escribir con un número finito de decimales. ¿Por qué le pasa lo mismo a 0,1 dentro de la máquina?',
+                        opciones: [
+                            { texto: 'Porque 0,1 es muy pequeño, y la máquina redondea los valores que quedan cerca de cero.', correcta: false },
+                            { texto: 'Porque la máquina guarda los reales en base 2, y en base 2 un décimo no termina.', correcta: true },
+                            { texto: 'Porque un real solo guarda siete cifras significativas, y a 0,1 no le alcanzan.', correcta: false },
+                        ],
+                        justificacion: 'El tamaño no tiene que ver: 0,5 y 0,25 también son menores que uno y se guardan exactos, porque en base 2 son fracciones que terminan. Un décimo no termina en base 2, y la máquina guarda el número más cercano que sí puede representar. Las siete cifras son las que R muestra por defecto, no las que guarda.'
+                    },
+                    {
+                        pregunta: 'En R, 0.1 + 0.2 se muestra como 0.3 y, sin embargo, 0.1 + 0.2 == 0.3 responde FALSE. ¿Qué explica las dos cosas a la vez?',
+                        opciones: [
+                            { texto: 'R redondea el resultado a 0.3 al guardarlo, y la comparación usa el valor de antes del redondeo.', correcta: false },
+                            { texto: 'El valor guardado es 0.3; lo que falla es la comparación de R cuando los operandos tienen decimales.', correcta: false },
+                            { texto: 'El valor guardado no es 0.3; R lo muestra con siete cifras significativas, y con esas se ve 0.3.', correcta: true },
+                        ],
+                        justificacion: 'Mostrar y guardar son dos cosas. R guarda el resultado de la suma, que no es 0.3, y al imprimirlo usa por defecto siete cifras significativas: con siete, se ve 0.3. La comparación trabaja con lo guardado, no con lo que se muestra, y por eso responde FALSE. Ni R redondea al guardar ni su comparación tiene un defecto.'
+                    },
+                    {
+                        pregunta: 'El capítulo 6 declarará los importes como Currency y no como Double. ¿Qué cambia por dentro?',
+                        opciones: [
+                            { texto: 'Currency guarda el importe como un entero con escala de 10 000: 0,1 es el entero 1 000, que es exacto.', correcta: true },
+                            { texto: 'Currency guarda más bits que Double, y con más bits el error de representar 0,1 deja de existir.', correcta: false },
+                            { texto: 'Currency redondea cada resultado a dos decimales, que son los que usa el dinero en la práctica.', correcta: false },
+                        ],
+                        justificacion: 'Currency es punto fijo: por dentro guarda un entero y recuerda que va dividido entre 10 000. Así 0,1 es el entero 1 000, y los enteros se guardan exactos. No es cuestión de tener más bits —con cualquier cantidad finita de bits, un décimo sigue sin terminar en base 2—, y Currency no trabaja con dos decimales sino con cuatro.'
+                    },
+                    {
+                        pregunta: 'Dos cierres no cuadran. En el primero faltan $1 250 000 en una sola cuenta. En el segundo, el total difiere del esperado en el decimosexto decimal. ¿Cuál apunta a un problema de representación?',
+                        opciones: [
+                            { texto: 'El primero: una diferencia tan grande indica que la máquina perdió precisión al sumar importes altos.', correcta: false },
+                            { texto: 'El segundo: una diferencia del tamaño del último dígito guardado es la huella de la representación.', correcta: true },
+                            { texto: 'Los dos: en un cierre, cualquier descuadre termina viniendo de cómo se guardan los decimales.', correcta: false },
+                        ],
+                        justificacion: 'Un error de representación es diminuto: vive en los últimos dígitos que la máquina guarda, como el 1.0000000000000007 de la conciliación de esta sección. Un faltante de $1 250 000 en una sola cuenta no se parece a eso: es un dato o un cálculo equivocado, y se busca en esa cuenta. Atribuirle todo descuadre a los decimales lleva a revisar lo que no es.'
+                    },
+                ]} />
+
+                <Box type="tip" label="Puntos clave de la sección 4">
                     <ul>
                         <li>La máquina guarda los reales en <strong>base 2</strong>: <span className="inline-code">0,1</span> no cabe exacto, igual que <span className="inline-code">1/3</span> no cabe en base 10.</li>
                         <li>Un <span className="inline-code">double</span> —el real de 64 bits del estándar IEEE 754— tiene 53 bits de precisión <Cita k="psf2026flotante" loc="cap. 15"/>.</li>
@@ -5082,7 +5128,7 @@ End Sub`,
                             { texto: 'Mostrar los importes con menos cifras, como hace R por defecto, para que el desfase no aparezca.', correcta: false },
                             { texto: 'Guardar los importes en centavos enteros —o en Currency o Decimal—, para que la igualdad sea exacta.', correcta: true },
                         ],
-                        justificacion: 'Es la solución que la tabla de la sección atribuye a la banca: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
+                        justificacion: 'Es la opción que la tabla de la sección recomienda para guardar dinero: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
                     },
                     {
                         seccion: 'cap2',
