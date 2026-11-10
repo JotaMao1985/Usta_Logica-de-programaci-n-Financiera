@@ -23,13 +23,21 @@ respaldo.
 ```
 Material html/
 ├── 01_LPF_Introduccion.html      … 08_LPF_Funciones.html
+├── _fuentes/
+│   ├── referencias.json          las fuentes del curso, exportadas de Zotero (CSL-JSON)
+│   └── apa-es.csl                APA 7 con «y» en vez de «&» entre autores
 └── _plantilla/
     ├── lp-base.html              PLANTILLA GENERADA — no se edita a mano
     ├── lp-core-extra.jsx         componentes nuevos (fuente)
     ├── lp-demo.jsx               capítulo de demostración + App (fuente)
+    ├── lp-demo-referencias.html  isla de referencias de la demo (GENERADA)
     ├── ensamblar.py              genera lp-base.html
     ├── migrar.py                 estampa la librería y el App en un capítulo
     ├── verificar.py              comprueba los capítulos
+    ├── fuentes.py                lo que comparten los tres guiones de fuentes
+    ├── exportar_zotero.py        Zotero → _fuentes/referencias.json
+    ├── estampar_referencias.py   referencias.json → isla LP-REFS del capítulo
+    ├── pruebas_fuentes/          cuatro fuentes ficticias, para la demo y las pruebas
     ├── ejecutar_salidas.py       ejecuta el código y contrasta lo que declara
     ├── ejecutar_vba.py           lo mismo para VBA, en Excel
     └── sonda_navegador.mjs       lo que el panel de vista previa no puede medir
@@ -46,6 +54,13 @@ por el contenido real. El bloque delimitado por
 regenerar, y volver a estampar el bloque en los capítulos ya escritos con
 `migrar.py`. Estampar a mano es justo lo que la comprobación 1 existe para
 detectar.
+
+No todos están ahí. `Box`, `CalloutPro`, `Eq`, `Pipeline`, `Tabs`, `Accordion`,
+`Reto`, `MCQ`, `Quiz`, `usePlotly`, `ChartFrame` y `Termino` viven en el bloque
+LP-CORE de `01_LPF_Introduccion.html`, de donde `ensamblar.py` los toma: se
+editan ahí, entre los centinelas, y después se regenera y se reestampa igual.
+Es el único caso en que se toca un bloque LP-CORE a mano. Así se le añadió
+`fuente` a `ChartFrame` el 2026-11-10.
 
 ```bash
 python3 "Material html/_plantilla/ensamblar.py"     # fuentes  → lp-base.html
@@ -88,9 +103,13 @@ regenerar, y copiar el mismo cambio al `head` de los demás capítulos: `migrar.
 no lo estampa. La comprobación 20 de `verificar.py` exige que todos los `head`
 sean el del 1 salvo el `<title>` y la descripción.
 
-`verificar.py` comprueba veinticinco cosas —la 13 sobre la plantilla, las demás
-sobre cada capítulo— y devuelve ≠ 0 si algo falla. Aquí van las doce primeras;
-la lista completa, con el porqué de cada una, es el docstring del guion:
+`verificar.py` comprueba veintinueve cosas —la 13 sobre la plantilla, la 29
+sobre `_fuentes/referencias.json`, las demás sobre cada capítulo— y devuelve ≠ 0
+si algo falla. Una opción que no conoce lo hace salir con 2, sin verificar
+nada: hasta el 2026-11-10 la ignoraba, y un `--con-salida` sin la ese daba verde
+sin ejecutar el código. Aquí van las doce primeras; las cuatro de las fuentes
+(26 a 29) están más abajo, y la lista completa, con el porqué de cada una, es
+el docstring del guion:
 
 1. **Deriva** — el bloque LP-CORE de cada capítulo debe coincidir byte a byte
    con el de `lp-base.html` (comparación SHA-256).
@@ -265,6 +284,94 @@ anterior, con el motivo:
 
 Sin esa válvula el aviso saldría en cada ejecución para siempre, y un aviso que
 siempre está ahí deja de leerse.
+
+### Las fuentes: se citan con una clave y nunca se teclean
+
+Las fuentes viven en Zotero. De ahí salen a `_fuentes/referencias.json`, y de
+ahí a cada capítulo, ya formateadas en APA 7, en una **isla**: un
+`<script type="application/json" id="lp-referencias">` entre los centinelas
+`<!-- === LP-REFS INICIO … -->` y `<!-- === LP-REFS FIN === -->`, después del script
+de Babel. Ni la lista ni la isla se editan a mano.
+
+```bash
+python3 "Material html/_plantilla/exportar_zotero.py" --coleccion "NOMBRE"   # Zotero → referencias.json
+python3 "Material html/_plantilla/estampar_referencias.py"                   # referencias.json → capítulos
+python3 "Material html/_plantilla/verificar.py"                              # reglas 26 a 29
+```
+
+`exportar_zotero.py` lee la API local de Zotero (solo lectura, sin plugins) y
+necesita Zotero abierto: sale con 2 si no responde. La clave de cada fuente es
+el campo «Clave de cita» del ítem, en minúsculas y sin espacios
+(`^[a-z][a-z0-9_-]*$`); un ítem sin clave, con la clave repetida o mal formada
+hace que salga con 1 sin escribir. Solo exporta los campos de una lista blanca:
+el resumen, las notas y las rutas de los adjuntos no salen del computador.
+
+`estampar_referencias.py` necesita `pandoc`; por eso es un guion aparte de
+`migrar.py`. Acepta `--dry-run`, que muestra cada entrada como va a quedar —es
+lo que se coteja con la bibliografía que da Zotero—, `--comprobar`, que no
+escribe y sale con 1 si algo cambiaría, y `--sin-copia`. Como `migrar.py`, sale
+con 2 ante una opción que no conoce. `--demo` regenera la isla de la plantilla
+(`lp-demo-referencias.html`) con las fuentes ficticias de `pruebas_fuentes/`;
+después hay que ensamblar.
+
+En el capítulo:
+
+```jsx
+…la cartera se clasifica por altura de mora <Cita k="clave" loc="p. 12" />.   {/* (Autor, 2024, p. 12) */}
+Según <Cita k="clave" narrativa />, …                                         {/* Autor (2024) */}
+<Cita k="una; otra" pre="véase" />                                            {/* (véase Autor, 2019; Otro, 2024) */}
+
+<ChartFrame id="…" caption="…" fuente="clave" />
+<ChartFrame id="…" caption="…" fuente={{ k: 'clave', loc: 'cuadro 2' }} />
+<ChartFrame id="…" caption="…" fuente={{ ilustrativo: true }} />
+
+<Fuente k="clave" loc="cuadro 2">adaptado de</Fuente>   {/* debajo de una tabla */}
+<Fuente propia />
+<Fuente ilustrativo />
+
+<Referencias />        {/* una sola vez, al final de la ÚLTIMA lección */}
+```
+
+- **La clave se escribe como cadena literal.** `k={clave}` no lo puede leer ni
+  el estampador ni el verificador.
+- **`loc` es de una sola fuente.** Con varias claves no se sabe de cuál es la
+  página: se escribe una `<Cita>` por fuente.
+- **`Fuente` lleva exactamente una modalidad:** `k`, `propia` o `ilustrativo`.
+- **`<Referencias />` va en la última lección** porque el `App` pinta una sola
+  lección a la vez: la cita no es un enlace `#ref-…`, lanza el evento `lp:ir-a`,
+  y el `App` cambia a la última lección y lleva a la entrada. «Volver al texto»
+  regresa a la cita de la que se salió.
+- **Después de añadir, quitar o cambiar una cita se vuelve a estampar.** También
+  después de exportar de Zotero o de tocar `apa-es.csl`.
+
+Una clave que no está en la isla se pinta como un chip rojo, `[¿cita «clave»?]`,
+y escribe en `console.error`: `sonda_navegador.mjs` falla con eso.
+
+Las vigilan cuatro reglas:
+
+26. **Clave citada existe** — literal, en `referencias.json` y en la isla.
+27. **Referencias exactas** — la isla trae lo que el capítulo cita y nada más;
+    si hay citas, un único `<Referencias />` en la última lección. Un capítulo
+    sin citas y sin isla pasa.
+28. **Bloque al día** — la isla es la que el estampador escribiría hoy. La
+    `huella` resume lo que entró (las fuentes citadas, el estilo y el idioma) y
+    el `sello` lo que salió; los dos se recalculan sin pandoc. `--con-pandoc`
+    vuelve a formatear y compara entero: es lo único que ve una isla retocada a
+    mano con el sello recalculado.
+29. **Entrada verificable** — autor y título; DOI, ISBN o URL; si solo hay URL,
+    fecha de consulta; ningún campo fuera de la lista blanca. Una sola vez,
+    sobre `referencias.json`.
+
+`verificar.py --fuentes DIR` usa otra carpeta de fuentes: es como se prueban las
+reglas sobre una copia, y como se verifica `lp-base.html`, cuya demo cita las
+fuentes ficticias (`--fuentes _plantilla/pruebas_fuentes`).
+
+**Lo que el estilo no hace bien, visto el 2026-11-10.** Con `lang: es-CO`,
+`apa.csl` escribe la fecha completa como «(2024b, marzo 15)» y el rango de
+páginas con guion corto, «45-67»; y el tipo `legislation` no sale en formato
+APA, así que una norma se registra en Zotero como informe con autor
+institucional. Lo primero no lo arregla `apa-es.csl`, que solo cambia «&» por
+«y».
 
 ### La salida va DENTRO del bloque
 
@@ -499,7 +606,9 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `Box` · `CalloutPro` | Avisos (`info`, `tip`, `warn`, `danger`) y destacados |
 | `Eq` · `Termino` | Fórmula destacada · término con definición emergente |
 | `Pipeline` · `Timeline` · `Tabs` · `Accordion` | Estructuras de contenido |
-| `ChartFrame` + `usePlotly` | Gráficas interactivas. `descripcion` es lo que oye un lector de pantalla (sin ella, el pie) |
+| `ChartFrame` + `usePlotly` | Gráficas interactivas. `descripcion` es lo que oye un lector de pantalla (sin ella, el pie). `fuente` dice de dónde salen los datos |
+| `Cita` · `Referencias` | Cita autor-año con enlace a su entrada · la lista, al final de la última lección |
+| `Fuente` · `Ilustrativo` | Procedencia de una tabla o figura (`k`, `propia` o `ilustrativo`) · nota de cifras ilustrativas |
 | `Trazador` | Traza guiada, instrucción por instrucción. Es exposición: no califica y no cuenta en la cuota |
 | `TablaTraza` | **E1** prueba de escritorio |
 | `DetectaError` | **E3** ubicar la línea + clasificar el error + anticipar la consecuencia |

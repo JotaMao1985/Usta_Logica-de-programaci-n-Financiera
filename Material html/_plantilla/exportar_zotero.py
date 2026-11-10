@@ -29,7 +29,6 @@ no escribe nada); 2 si Zotero no responde o se le pasó una opción que no exist
 import json
 import sys
 import urllib.error
-import urllib.parse
 import urllib.request
 from pathlib import Path
 

@@ -194,6 +194,15 @@ def formatear(entradas, ruta_csl, idioma=fuentes.IDIOMA):
         m = re.fullmatch(r"\((.+)\)", solo_anio)
         if not m:
             raise Fallo(f"«{clave}»: no se pudo leer el año de la cita «{solo_anio}»")
+        # Con el tipo `legislation`, apa.csl no separa autor y año: `@clave`
+        # y `[-@clave]` dan lo mismo, «(Ley 1328 de 2009, 2009)». No hay
+        # cita narrativa que partir, y se dice así en vez de fallar más abajo
+        # con un mensaje que no se entiende.
+        if narrativa == solo_anio:
+            tipo = next((e.get("type") for e in entradas if e["id"] == clave), "?")
+            raise Fallo(f"«{clave}» (tipo `{tipo}`): el estilo no le da una cita con autor y "
+                        f"año por separado, sino «{narrativa}». Una norma se registra en Zotero "
+                        f"como informe, con autor institucional")
         anio = m.group(1)
         cola = f" ({anio})"
         if not narrativa.endswith(cola) or not narrativa[:-len(cola)].strip():
