@@ -55,6 +55,18 @@ afirmación concreta.
 Cada cita lleva **localizador**: página, sección o artículo. «Según Joyanes» sin página
 no es una cita verificable.
 
+**Dónde va la cita.** La cita respalda lo que está **antes de ella dentro de su oración**,
+y nada más. Lo que el material añade por su cuenta —una recomendación, una regla, lo que
+muestra una salida ejecutada— va después de la cita o en otra oración. Así no se le
+atribuye a una fuente lo que no dice: «Dos números de punto flotante que deberían ser
+iguales pueden no serlo (cita). Por eso, nunca compare dinero con igualdad exacta», y no
+al revés.
+
+**La fuente manda sobre la frase.** Si el pasaje dice menos que la afirmación, se cambia
+la afirmación, no se estira el pasaje. Una cifra, un «siempre», un «más lento» o una
+consecuencia práctica que el pasaje no trae necesitan otra fuente, una ejecución o
+redactarse como criterio del docente.
+
 ## 4. De dónde sale la lista de referencias
 
 - La biblioteca del curso está en Zotero. Una referencia solo existe si está allí.
