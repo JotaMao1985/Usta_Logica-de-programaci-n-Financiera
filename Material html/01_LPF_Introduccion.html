@@ -4524,10 +4524,11 @@ End Sub`,
                 </Motivacion>
 
                 <Box type="info" label="Idea central">
-                    Un computador guarda los reales en <strong>base 2</strong>. Y así como en base 10 no se puede
-                    escribir <span className="inline-code">1/3</span> con un número finito de dígitos, en base 2 no se puede
-                    escribir <span className="inline-code">0,1</span>. La máquina guarda <strong>el número más cercano que
-                    sí puede representar</strong>, y sigue adelante sin avisar de nada.
+                    Un computador guarda los reales —los números de punto flotante— como fracciones en <strong>base 2</strong>. Y
+                    así como en base 10 no se puede escribir <span className="inline-code">1/3</span> con un número finito de
+                    dígitos, en base 2 no se puede escribir <span className="inline-code">0,1</span>. La máquina guarda <strong>el
+                    número más cercano que sí puede representar</strong> <Cita k="psf2026flotante" loc="cap. 15"/>, y sigue
+                    adelante sin avisar de nada.
                 </Box>
 
                 <h3>El error que no se ve</h3>
@@ -4556,8 +4557,9 @@ End Sub`,
 
                 <h3>Laboratorio: qué guarda la máquina de verdad</h3>
                 <p>
-                    Escriba un número y mire sus 64 bits. Pruebe <strong>0,25</strong> y <strong>0,5</strong>: son
-                    potencias de dos y se guardan exactos. Pruebe después <strong>0,1</strong> y <strong>0,07</strong>.
+                    Escriba un número y mire sus 64 bits. Pruebe <strong>0,25</strong> y <strong>0,5</strong>: en base 2
+                    son 0,01 y 0,1 —un cuarto y un medio—, fracciones que terminan, y por eso se guardan exactas. Pruebe
+                    después <strong>0,1</strong> y <strong>0,07</strong>.
                 </p>
                 <FlotanteVisualizer />
 
@@ -4578,7 +4580,7 @@ End Sub`,
                             </tr>
                             <tr>
                                 <td><strong>Decimal exacto</strong></td>
-                                <td>Aritmética en base 10 por software: exacta, pero más lenta.</td>
+                                <td>Aritmética en base 10: guarda 0,1 exacto, y la exactitud se conserva al sumar <Cita k="psf2026decimal" loc="introducción"/>.</td>
                                 <td><span className="inline-code">decimal.Decimal</span> en Python.</td>
                             </tr>
                             <tr>
@@ -4593,8 +4595,9 @@ End Sub`,
                 <CalloutPro tema="info" titulo="Por qué el capítulo 6 usará Currency" subtitulo="Y por qué no es un capricho de Excel" icon="fa-money-bill-trend-up">
                     Cuando en el capítulo 6 se declare <span className="inline-code">Dim cuota As Currency</span> en vez de
                     <span className="inline-code"> As Double</span>, no será una convención de estilo. Es la decisión que se
-                    acaba de justificar aquí: <span className="inline-code">Currency</span> guarda cuatro decimales en punto
-                    fijo, así que 0,1 es exactamente 0,1 y la suma de cien centavos es exactamente un peso.
+                    acaba de justificar aquí: <span className="inline-code">Currency</span> guarda los importes como enteros con escala
+                    de 10 000 —punto fijo con cuatro decimales <Cita k="microsoft2018moneda"/>—, así que 0,1 es exactamente 0,1
+                    y la suma de cien centavos es exactamente un peso.
                 </CalloutPro>
 
                 <h3>Ejercicios de la sección</h3>
@@ -4663,10 +4666,10 @@ End Sub`,
                 <Box type="tip" label="Puntos clave del Capítulo 4">
                     <ul>
                         <li>La máquina guarda los reales en <strong>base 2</strong>: <span className="inline-code">0,1</span> no cabe exacto, igual que <span className="inline-code">1/3</span> no cabe en base 10.</li>
-                        <li>Un <span className="inline-code">double</span> son <strong>64 bits</strong>: 1 de signo, 11 de exponente y 52 de mantisa.</li>
-                        <li><strong>Nunca compare dinero con igualdad exacta.</strong> Use tolerancia, o mejor, no use flotantes para dinero.</li>
+                        <li>Un <span className="inline-code">double</span> —el real de 64 bits del estándar IEEE 754— tiene 53 bits de precisión <Cita k="psf2026flotante" loc="cap. 15"/>.</li>
+                        <li>Dos números de punto flotante que deberían ser iguales pueden no serlo <Cita k="hornik2026faq" loc="pregunta 7.31"/>. Por eso, <strong>nunca compare dinero con igualdad exacta</strong>: use tolerancia, o mejor, no use flotantes para dinero.</li>
                         <li>Para importes: <strong>centavos enteros</strong>, <span className="inline-code">Currency</span> en VBA o <span className="inline-code">Decimal</span> en Python.</li>
-                        <li>R <strong>esconde</strong> el problema al mostrar solo 7 cifras. Que no se vea no significa que no esté.</li>
+                        <li>Por defecto, R imprime 7 cifras significativas <Cita k="rcoreteam-opciones" loc="opción digits"/>: por eso <strong>esconde</strong> el problema. Que no se vea no significa que no esté.</li>
                     </ul>
                 </Box>
             </div>
@@ -4842,6 +4845,8 @@ End Sub`,
                         </div>
                     ))}
                 </div>
+
+                <Referencias/>
 
                 <h3>Recursos complementarios</h3>
                 <Accordion items={[
@@ -5091,6 +5096,54 @@ End Sub`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 1,
+  "huella": "833e451ac9e2beef61d1dc30edf6592a4a7fa47d0de33a7ea06daddcbe121009",
+  "sello": "56814f2a2fc9be9b7232d3c9a2c0be8a1f4591f335319fa390313e564d823a81",
+  "orden": [
+    "hornik2026faq",
+    "microsoft2018moneda",
+    "psf2026decimal",
+    "psf2026flotante",
+    "rcoreteam-opciones"
+  ],
+  "entradas": {
+    "hornik2026faq": {
+      "autor": "Hornik y R Core Team",
+      "anio": "2026",
+      "html": "Hornik, K., y R Core Team. (2026). \u003cem>R FAQ\u003c/em>. \u003ca href=\"https://CRAN.R-project.org/doc/manuals/R-FAQ.html\">https://CRAN.R-project.org/doc/manuals/R-FAQ.html\u003c/a>",
+      "plano": "Hornik, K., y R Core Team. (2026). R FAQ. https://CRAN.R-project.org/doc/manuals/R-FAQ.html"
+    },
+    "microsoft2018moneda": {
+      "autor": "Microsoft",
+      "anio": "2018",
+      "html": "Microsoft. (2018, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+    },
+    "psf2026decimal": {
+      "autor": "Python Software Foundation",
+      "anio": "2026a",
+      "html": "Python Software Foundation. (2026a, noviembre 9). \u003cem>decimal — Decimal fixed-point and floating-point arithmetic\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/library/decimal.html\">https://docs.python.org/es/3/library/decimal.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026a, noviembre 9). decimal — Decimal fixed-point and floating-point arithmetic. Documentación de Python 3.15.2. https://docs.python.org/es/3/library/decimal.html"
+    },
+    "psf2026flotante": {
+      "autor": "Python Software Foundation",
+      "anio": "2026b",
+      "html": "Python Software Foundation. (2026b, noviembre 9). \u003cem>Floating-Point Arithmetic: Issues and Limitations\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/tutorial/floatingpoint.html\">https://docs.python.org/es/3/tutorial/floatingpoint.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026b, noviembre 9). Floating-Point Arithmetic: Issues and Limitations. Documentación de Python 3.15.2. https://docs.python.org/es/3/tutorial/floatingpoint.html"
+    },
+    "rcoreteam-opciones": {
+      "autor": "R Core Team",
+      "anio": "s. f.",
+      "html": "R Core Team. (s. f.). \u003cem>Options Settings\u003c/em>. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de \u003ca href=\"https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\">https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html\u003c/a>",
+      "plano": "R Core Team. (s. f.). Options Settings. R Documentation, Package Base. Recuperado 10 de noviembre de 2026, de https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html"
+    }
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

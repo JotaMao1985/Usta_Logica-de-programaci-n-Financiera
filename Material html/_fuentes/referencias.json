@@ -1,1 +1,762 @@
-[]
+[
+  {
+    "id": "alvarez2006",
+    "type": "book",
+    "author": [
+      {
+        "family": "Álvarez Martínez",
+        "given": "Carlos Eduardo"
+      },
+      {
+        "family": "Gallo Montenegro",
+        "given": "Mariela"
+      }
+    ],
+    "title": "Guía lógica de programación",
+    "publisher": "Universidad Santo Tomás, Departamento de Ciencias Básicas",
+    "issued": {
+      "date-parts": [
+        [
+          "2006"
+        ]
+      ]
+    },
+    "ISBN": "978-958-631-375-9",
+    "language": "es"
+  },
+  {
+    "id": "amelot2007",
+    "type": "book",
+    "author": [
+      {
+        "family": "Amelot",
+        "given": "Michèle"
+      }
+    ],
+    "title": "VBA Excel 2007: Programar en Excel: macros y lenguaje VBA",
+    "publisher": "Ediciones ENI",
+    "issued": {
+      "date-parts": [
+        [
+          "2007"
+        ]
+      ]
+    },
+    "ISBN": "978-2-7460-3915-5",
+    "language": "es"
+  },
+  {
+    "id": "barco1998",
+    "type": "book",
+    "author": [
+      {
+        "family": "Barco Gómez",
+        "given": "Carlos"
+      },
+      {
+        "family": "Barco Gómez",
+        "given": "Germán"
+      },
+      {
+        "family": "Aristizábal Botero",
+        "given": "William"
+      }
+    ],
+    "title": "Matemática digital",
+    "publisher": "McGraw-Hill",
+    "publisher-place": "Bogotá",
+    "issued": {
+      "date-parts": [
+        [
+          "1998"
+        ]
+      ]
+    },
+    "ISBN": "978-958-600-821-1",
+    "language": "es"
+  },
+  {
+    "id": "becerra1996",
+    "type": "book",
+    "author": [
+      {
+        "family": "Becerra Santamaría",
+        "given": "César A."
+      }
+    ],
+    "title": "Algoritmos: conceptos básicos",
+    "publisher": "Kimpres",
+    "publisher-place": "Santafé de Bogotá",
+    "issued": {
+      "date-parts": [
+        [
+          "1996"
+        ]
+      ]
+    },
+    "edition": "3",
+    "language": "es"
+  },
+  {
+    "id": "cairo2005",
+    "type": "book",
+    "author": [
+      {
+        "family": "Cairó Battistutti",
+        "given": "Osvaldo"
+      }
+    ],
+    "title": "Metodología de la programación: algoritmos, diagramas de flujo y programas",
+    "publisher": "Alfaomega",
+    "publisher-place": "México",
+    "issued": {
+      "date-parts": [
+        [
+          "2005"
+        ]
+      ]
+    },
+    "edition": "3",
+    "ISBN": "978-970-15-1100-8",
+    "language": "es"
+  },
+  {
+    "id": "goldberg1991",
+    "type": "article-journal",
+    "author": [
+      {
+        "family": "Goldberg",
+        "given": "David"
+      }
+    ],
+    "title": "What every computer scientist should know about floating-point arithmetic",
+    "container-title": "ACM Computing Surveys",
+    "issued": {
+      "date-parts": [
+        [
+          "1991",
+          3
+        ]
+      ]
+    },
+    "volume": "23",
+    "issue": "1",
+    "page": "5-48",
+    "DOI": "10.1145/103162.103163",
+    "ISSN": "0360-0300",
+    "language": "en"
+  },
+  {
+    "id": "hornik2026faq",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Hornik",
+        "given": "Kurt"
+      },
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "title": "R FAQ",
+    "issued": {
+      "date-parts": [
+        [
+          "2026"
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://CRAN.R-project.org/doc/manuals/R-FAQ.html",
+    "language": "en"
+  },
+  {
+    "id": "ieee2019",
+    "type": "report",
+    "author": [
+      {
+        "literal": "IEEE"
+      }
+    ],
+    "title": "IEEE Standard for Floating-Point Arithmetic",
+    "publisher": "IEEE",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          7,
+          22
+        ]
+      ]
+    },
+    "number": "IEEE 754-2019",
+    "DOI": "10.1109/IEEESTD.2019.8766229",
+    "ISBN": "978-1-5044-5924-2",
+    "URL": "https://standards.ieee.org/ieee/754/6210/",
+    "language": "en"
+  },
+  {
+    "id": "joyanes1996",
+    "type": "book",
+    "author": [
+      {
+        "family": "Joyanes Aguilar",
+        "given": "Luis"
+      }
+    ],
+    "title": "Fundamentos de programación: algoritmos y estructuras de datos",
+    "publisher": "McGraw-Hill",
+    "publisher-place": "Madrid",
+    "issued": {
+      "date-parts": [
+        [
+          "1996"
+        ]
+      ]
+    },
+    "edition": "2",
+    "ISBN": "84-481-0603-2",
+    "language": "es"
+  },
+  {
+    "id": "joyanes2003",
+    "type": "book",
+    "author": [
+      {
+        "family": "Joyanes Aguilar",
+        "given": "Luis"
+      }
+    ],
+    "title": "Fundamentos de programación: algoritmos, estructuras de datos y objetos",
+    "publisher": "McGraw-Hill",
+    "publisher-place": "Madrid",
+    "issued": {
+      "date-parts": [
+        [
+          "2003"
+        ]
+      ]
+    },
+    "edition": "3",
+    "ISBN": "978-84-481-3664-2",
+    "language": "es"
+  },
+  {
+    "id": "lopez2003",
+    "type": "book",
+    "author": [
+      {
+        "family": "López Román",
+        "given": "Leobardo"
+      }
+    ],
+    "title": "Programación estructurada: un enfoque algorítmico",
+    "publisher": "Alfaomega",
+    "publisher-place": "México",
+    "issued": {
+      "date-parts": [
+        [
+          "2003"
+        ]
+      ]
+    },
+    "edition": "2",
+    "ISBN": "978-970-15-0856-5",
+    "language": "es"
+  },
+  {
+    "id": "lopez2011",
+    "type": "book",
+    "author": [
+      {
+        "family": "López Román",
+        "given": "Leobardo"
+      }
+    ],
+    "title": "Programación estructurada y orientada a objetos: un enfoque algorítmico",
+    "publisher": "Alfaomega Grupo Editor",
+    "publisher-place": "México",
+    "issued": {
+      "date-parts": [
+        [
+          "2011"
+        ]
+      ]
+    },
+    "edition": "3",
+    "ISBN": "978-607-707-211-9",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018and",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Operador AND",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/and-operator",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018doble",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Tipo de datos doble",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/double-data-type",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018moneda",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Tipo de datos Moneda",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018prioridad",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Prioridad de operador",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/operator-precedence",
+    "language": "es"
+  },
+  {
+    "id": "oviedo2005",
+    "type": "book",
+    "author": [
+      {
+        "family": "Oviedo Regino",
+        "given": "Efraín M."
+      }
+    ],
+    "title": "Lógica de programación",
+    "publisher": "Ecoe Ediciones",
+    "publisher-place": "Bogotá",
+    "issued": {
+      "date-parts": [
+        [
+          "2005"
+        ]
+      ]
+    },
+    "edition": "2",
+    "ISBN": "978-958-648-308-7",
+    "language": "es"
+  },
+  {
+    "id": "psf2026decimal",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "decimal — Decimal fixed-point and floating-point arithmetic",
+    "container-title": "Documentación de Python 3.15.2",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          9
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/es/3/library/decimal.html",
+    "language": "es"
+  },
+  {
+    "id": "psf2026expresiones",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "Expresiones",
+    "container-title": "Documentación de Python 3.15.2",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          9
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/es/3/reference/expressions.html",
+    "language": "es"
+  },
+  {
+    "id": "psf2026flotante",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "Floating-Point Arithmetic: Issues and Limitations",
+    "container-title": "Documentación de Python 3.15.2",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          9
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/es/3/tutorial/floatingpoint.html",
+    "language": "es"
+  },
+  {
+    "id": "psf2026funciones",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "Built-in functions",
+    "container-title": "Documentación de Python 3.15.2",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          9
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/es/3/builtins/functions.html",
+    "language": "es"
+  },
+  {
+    "id": "rcoreteam-logica",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "title": "Logical Operators",
+    "container-title": "R Documentation, package base",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html",
+    "language": "en"
+  },
+  {
+    "id": "rcoreteam-opciones",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "title": "Options Settings",
+    "container-title": "R Documentation, package base",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html",
+    "language": "en"
+  },
+  {
+    "id": "rcoreteam-sintaxis",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "title": "Operator Syntax and Precedence",
+    "container-title": "R Documentation, package base",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Syntax.html",
+    "language": "en"
+  },
+  {
+    "id": "rcoreteam2026lenguaje",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "title": "The R Language Definition (version 4.6.2)",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          10,
+          29
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "URL": "https://cran.r-project.org/doc/manuals/r-release/R-lang.html",
+    "language": "en"
+  },
+  {
+    "id": "reddy2010",
+    "type": "book",
+    "author": [
+      {
+        "family": "Reddy",
+        "given": "Rama N."
+      },
+      {
+        "family": "Ziegler",
+        "given": "Carol A."
+      }
+    ],
+    "title": "C programming for scientists and engineers with applications",
+    "publisher": "Jones and Bartlett Publishers",
+    "publisher-place": "Sudbury, MA",
+    "issued": {
+      "date-parts": [
+        [
+          "2010"
+        ]
+      ]
+    },
+    "ISBN": "978-0-7637-3952-2",
+    "language": "en"
+  },
+  {
+    "id": "roman2002",
+    "type": "book",
+    "author": [
+      {
+        "family": "Roman",
+        "given": "Steven"
+      }
+    ],
+    "title": "Writing Excel macros with VBA",
+    "publisher": "O'Reilly",
+    "publisher-place": "Sebastopol, CA",
+    "issued": {
+      "date-parts": [
+        [
+          "2002"
+        ]
+      ]
+    },
+    "edition": "2",
+    "ISBN": "978-0-596-00359-3",
+    "language": "en"
+  },
+  {
+    "id": "vonneumann1993",
+    "type": "article-journal",
+    "author": [
+      {
+        "family": "Neumann",
+        "given": "J.",
+        "non-dropping-particle": "von"
+      }
+    ],
+    "title": "First draft of a report on the EDVAC",
+    "container-title": "IEEE Annals of the History of Computing",
+    "issued": {
+      "date-parts": [
+        [
+          "1993"
+        ]
+      ]
+    },
+    "volume": "15",
+    "issue": "4",
+    "page": "27-75",
+    "DOI": "10.1109/85.238389",
+    "ISSN": "1058-6180",
+    "language": "en"
+  },
+  {
+    "id": "walkenbach2010",
+    "type": "book",
+    "author": [
+      {
+        "family": "Walkenbach",
+        "given": "John"
+      }
+    ],
+    "title": "Excel 2010 power programming with VBA",
+    "publisher": "Wiley",
+    "publisher-place": "Hoboken, NJ",
+    "issued": {
+      "date-parts": [
+        [
+          "2010"
+        ]
+      ]
+    },
+    "ISBN": "978-0-470-47535-5",
+    "language": "en"
+  }
+]
