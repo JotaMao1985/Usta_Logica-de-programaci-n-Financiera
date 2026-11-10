@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ficticio_autor2019",
+    "type": "book",
+    "author": [
+      { "family": "Autora Ficticia", "given": "Ana María" },
+      { "family": "Coautor Inventado", "given": "Luis" }
+    ],
+    "title": "Algoritmia financiera de prueba: una obra que no existe",
+    "edition": "2",
+    "publisher": "Editorial Inexistente",
+    "publisher-place": "Bogotá",
+    "issued": { "date-parts": [[2019]] },
+    "ISBN": "978-0-00-000000-2",
+    "language": "es"
+  },
+  {
+    "id": "ficticio_entidad2024_circular",
+    "type": "webpage",
+    "author": [
+      { "literal": "Entidad Ficticia de Supervisión" }
+    ],
+    "title": "Tasas de referencia de prueba para el crédito de consumo (documento ficticio)",
+    "issued": { "date-parts": [[2024, 3, 15]] },
+    "accessed": { "date-parts": [[2026, 11, 10]] },
+    "URL": "https://example.org/entidad-ficticia/tasas-de-prueba",
+    "language": "es"
+  },
+  {
+    "id": "ficticio_entidad2024_informe",
+    "type": "article-journal",
+    "author": [
+      { "literal": "Entidad Ficticia de Supervisión" }
+    ],
+    "title": "Cartera vencida en un sistema financiero inventado",
+    "container-title": "Revista Ficticia de Regulación",
+    "volume": "12",
+    "issue": "3",
+    "page": "45-67",
+    "issued": { "date-parts": [[2024]] },
+    "DOI": "10.0000/ficticio.2024.0001",
+    "language": "es"
+  },
+  {
+    "id": "ficticio_ley2009",
+    "type": "report",
+    "author": [
+      { "literal": "Congreso de la República Ficticia" }
+    ],
+    "title": "Ley 0000 de 2009, por la cual se dictan normas de prueba en materia financiera (norma ficticia)",
+    "genre": "Diario Oficial Ficticio",
+    "number": "00.000",
+    "issued": { "date-parts": [[2009, 7, 15]] },
+    "accessed": { "date-parts": [[2026, 11, 10]] },
+    "URL": "https://example.org/normas/ley-0000-de-2009",
+    "language": "es"
+  }
+]
