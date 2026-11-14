@@ -2691,3 +2691,53 @@ corrección que propuso un verificador y no se volvió a someter.
   en tres bloques): falta pegar el módulo de `ejecutar_vba.py preparar`.
 - El README raíz decía «02–08 en preparación» y «once comprobaciones»; se
   corrigió. `comprobar_cifras.js` se llamaba «Comprobación 20» y es la 21.
+
+### Auditoría del capítulo 1 después de la fusión · 2026-11-14
+
+La fusión de las nueve fases quedó en `main` (`a4aa899`). Después se auditó el
+capítulo completo, en la rama `claude/cap01-auditoria`.
+
+**Qué se comprobó.**
+- `verificar.py --con-salidas --con-pandoc`: los cinco capítulos pasan; el 1,
+  sin avisos. Sonda de navegador del capítulo 1, en escritorio y a 375 px.
+- Los pasajes del vault, cotejados contra las fuentes vueltas a descargar: 89
+  fragmentos literales y tres notas con transcripción no literal, que se
+  corrigieron. Una había enmendado sin decirlo una errata de la fuente.
+- Una lectura crítica del capítulo entero por un lector sin contexto, que
+  ejecutó las cuentas en Python y en R: 3 hallazgos altos, 21 medios y 26 bajos.
+
+**Qué se corrigió (29 frases).** El ejemplo de los tres tipos de operador
+contaba dos relacionales y son tres. «Reconstruya el ciclo» pedía «un orden que
+funcione» y solo acepta uno: ahora lo dice. El reto del descuadre daba por
+descartada una hipótesis que la división no descarta, y llamaba «de
+representación» a un desvío de centavos, contra lo que enseña el cuestionario
+de la misma sección. La tolerancia se recomendaba para conciliar un saldo en
+dos sitios y se prohibía en otros dos. El comparador recorría en Python una
+lista de doce con índices de 1 a 12. Y varias frases que hablaban de «los
+lenguajes» con sintaxis de uno solo.
+
+**Qué queda para el docente.**
+- **La cifra del descuadre no sale del mecanismo que se le atribuye.** 840 000
+  pagos redondeados al centavo se desvían a lo sumo 4 200 pesos; truncados,
+  menos de 8 400. El caso se declaró inventado, pero la cifra o el mecanismo
+  hay que cambiarlos.
+- El laboratorio de bits rotula «mantisa (52)» y los puntos clave dicen «53
+  bits de precisión»; explicar el bit implícito pide leer IEEE 754.
+- Afirmaciones sin clase que son de criterio o de ambiente (la entrevista
+  técnica, «la línea más famosa», los compiladores en la solución de E8) y el
+  `round(2.675, 2)` del cuestionario final, que es cierto y no está ni citado
+  ni en un bloque ejecutado.
+- El comparador mezcla en pseudocódigo y VBA `memoria[0]` con `cuota[1..12]`:
+  depende de la decisión D09 sobre el índice de los arreglos.
+
+**Huecos de las herramientas.**
+- **Ninguna regla lee el capítulo como lo lee un estudiante.** El verificador
+  estaba en verde con tres errores altos dentro. La lectura crítica sin
+  contexto debería ser un paso fijo del cierre de cada capítulo, antes de la
+  fusión y no después.
+- **`OrdenaPasos` solo acepta un orden**, aunque haya varios válidos. O el
+  enunciado fija el orden, o el componente aprende dependencias.
+- **El contador «Lección N de M»** de LP-CORE cuenta la portada: la sección 1
+  aparece como «Lección 2 de 6».
+- **El cotejo de pasajes contra la fuente** se hizo con un guion de usar y
+  tirar; es el mismo hueco del guion de parejas frase–pasaje.
