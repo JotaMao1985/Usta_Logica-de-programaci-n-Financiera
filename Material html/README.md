@@ -40,7 +40,7 @@ Material html/
     ├── estampar_referencias.py   referencias.json → isla LP-REFS del capítulo
     ├── registrar_afirmaciones.py notas del vault → _fuentes/afirmaciones/NN.yaml
     ├── comprobar_fuentes.js      reglas 30 y 32: figuras y menciones sin fuente
-    ├── pruebas_fuentes/          cuatro fuentes ficticias, para la demo y las pruebas
+    ├── pruebas_fuentes/          seis fuentes ficticias, para la demo y las pruebas
     ├── ejecutar_salidas.py       ejecuta el código y contrasta lo que declara
     ├── ejecutar_vba.py           lo mismo para VBA, en Excel
     └── sonda_navegador.mjs       lo que el panel de vista previa no puede medir
@@ -334,7 +334,7 @@ después hay que ensamblar.
 pública de las notas de afirmación del vault (`Vault/Afirmaciones/`, en la
 carpeta principal del repositorio; el guion la encuentra aunque se ejecute
 desde un worktree, y solo la lee). Entran las notas del capítulo con
-`clase: citada` y `estado: verificada`, y de cada una sale una fila: `id`,
+`clase: citada` y `estado: verificada` o `resuelta`, y de cada una sale una fila: `id`,
 `seccion`, `ancla`, `clave`, `loc`, `tema`, quién leyó el pasaje, cuándo y por
 qué medio, y el sha256 del extracto de la fuente. **El extracto no se copia
 nunca**: es de una obra ajena y el repositorio es público. Sale con 2 si no
@@ -357,6 +357,7 @@ Según <Cita k="clave" narrativa />, …                                        
 <Fuente ilustrativo />
 
 <Referencias />        {/* una sola vez, al final de la ÚLTIMA lección */}
+<ParaProfundizar k="otra; una-mas" />   {/* lo que se recomienda y NO se cita; después de <Referencias /> */}
 ```
 
 - **La clave se escribe como cadena literal.** `k={clave}` no lo puede leer ni
@@ -368,40 +369,65 @@ Según <Cita k="clave" narrativa />, …                                        
   lección a la vez: la cita no es un enlace `#ref-…`, lanza el evento `lp:ir-a`,
   y el `App` cambia a la última lección y lleva a la entrada. «Volver al texto»
   regresa a la cita de la que se salió.
-- **Después de añadir, quitar o cambiar una cita se vuelve a estampar.** También
-  después de exportar de Zotero o de tocar `apa-es.csl`.
+- **`<ParaProfundizar>` lista lo que se recomienda leer y el capítulo no
+  cita.** Solo lleva `k`, con las claves como en `Cita`; el título, «Para
+  profundizar», y la frase «Lecturas recomendadas. El capítulo no les atribuye
+  ninguna afirmación.» son fijos. Va una vez, en la última lección y después de
+  `<Referencias />`, y pinta las obras en el orden de la APA, no en el de `k`.
+  **Una clave no puede estar citada y recomendada**: citar es atribuirle una
+  afirmación a la obra, y lo citado ya sale en «Referencias». Las recomendadas
+  no necesitan nota de afirmación —nadie les atribuye nada—, pero sí DOI, ISBN
+  o URL: recomendar una obra es mandar a buscarla. No lleva enlaces de práctica
+  ni sitios web sueltos: lo que no está en Zotero no entra.
+- **Después de añadir, quitar o cambiar una cita o una lectura recomendada se
+  vuelve a estampar.** También después de exportar de Zotero o de tocar
+  `apa-es.csl`.
 - **Toda cita tiene su nota de afirmación.** La clave y el `loc` de la cita son
   los de la nota, y el `ancla` de la nota es un trozo literal del texto que se
   respalda, de 80 caracteres como mucho. Cambiar ese texto obliga a volver a
   leerlo contra la fuente: la regla 31 falla hasta que la nota se actualiza.
   Por dónde se parta el renglón no importa.
 
-Una clave que no está en la isla se pinta como un chip rojo, `[¿cita «clave»?]`,
-y escribe en `console.error`: `sonda_navegador.mjs` falla con eso.
+Una clave que no está en la isla se pinta como un chip rojo, `[¿cita «clave»?]`
+o `[¿lectura «clave»?]`, y escribe en `console.error`: `sonda_navegador.mjs`
+falla con eso.
+
+La isla lleva las dos listas por separado —`orden` y `entradas` para lo citado,
+`profundizar` para lo recomendado— y cada una se formatea como una bibliografía
+aparte: la letra de «2024a» se reparte dentro de cada lista. Desde que existe
+`profundizar` el formato es la versión 2; una isla de la versión 1 falla la
+regla 28 hasta que se vuelve a estampar.
 
 Las vigilan siete reglas:
 
-26. **Clave citada existe** — literal, en `referencias.json` y en la isla.
-27. **Referencias exactas** — la isla trae lo que el capítulo cita y nada más;
-    si hay citas, un único `<Referencias />` en la última lección. Un capítulo
-    sin citas y sin isla pasa.
+26. **Clave citada existe** — literal, en `referencias.json` y en la isla, en
+    su lista. Vale igual para las claves de `<ParaProfundizar>`, que además no
+    pueden estar citadas.
+27. **Referencias exactas** — la isla trae lo que el capítulo cita, lo que
+    recomienda, y nada más; si hay citas, un único `<Referencias />` en la
+    última lección; y `<ParaProfundizar>`, si lo hay, uno solo, en esa lección
+    y después de `<Referencias />`. Un capítulo sin citas, sin lecturas y sin
+    isla pasa.
 28. **Bloque al día** — la isla es la que el estampador escribiría hoy. La
-    `huella` resume lo que entró (las fuentes citadas, el estilo y el idioma) y
-    el `sello` lo que salió; los dos se recalculan sin pandoc. `--con-pandoc`
+    `huella` resume lo que entró (las fuentes citadas, las recomendadas, el
+    estilo y el idioma) y el `sello` lo que salió; los dos se recalculan sin
+    pandoc. `--con-pandoc`
     vuelve a formatear y compara entero: es lo único que ve una isla retocada a
     mano con el sello recalculado.
 29. **Entrada verificable** — autor y título; DOI, ISBN o URL; si solo hay URL,
     fecha de consulta; ningún campo fuera de la lista blanca. Una sola vez,
     sobre `referencias.json`. La lista blanca, la clave, el orden y los
     repetidos fallan siempre. Lo demás falla en una entrada que algún capítulo
-    cita y **avisa** en una que nadie cita: la bibliografía puede traer un
-    libro impreso sin ISBN que todavía no respalda nada.
+    cita o recomienda en «Para profundizar», y **avisa** en una que nadie usa:
+    la bibliografía puede traer un libro impreso sin ISBN que todavía no
+    respalda nada, pero ese libro no se puede citar ni recomendar.
 30. **Figura sin fuente** (aviso) — cada `ChartFrame` trae `fuente`, y a cada
     `<table>`, `<figure>` o `<svg>` suelto le sigue un `<Fuente>`.
 31. **Afirmación leída** — cada par clave–localizador que el capítulo cita tiene
     su fila en `afirmaciones/NN.yaml`, con quién lo leyó, cuándo y por qué
     medio, y el `ancla` de cada fila sigue en el capítulo. Un `loc` vacío es
     válido. Una fila que respalda algo que el capítulo ya no cita es un aviso.
+    Una obra que solo se recomienda no necesita fila.
 32. **Entidad o norma sin cita** (aviso) — el texto nombra una entidad o una
     norma sin un `<Cita>` en el mismo párrafo ni un `<Ilustrativo>` alrededor.
     El léxico es la lista `ENTIDADES_Y_NORMAS` de `comprobar_fuentes.js`.
@@ -569,7 +595,11 @@ Usar el ayudante `ins(pseudo, python, r, vba)` para las instrucciones cortas:
   `<Ejercicio tipo="E7">`, para que el tipo sea visible y contable. Si lo que se
   envuelve es un componente que ya se etiqueta solo (`TablaTraza`,
   `DetectaError`, `Comparador`, `OrdenaPasos`, `Emparejamiento`), la etiqueta
-  sale una vez, en su sitio, y dice el tipo del envoltorio.
+  sale una vez, en su sitio, y dice el tipo del envoltorio. En los demás, la
+  etiqueta del envoltorio va a caballo del borde superior de la tarjeta —mitad
+  en el margen, mitad en el relleno—, para que ningún enunciado le pase por
+  debajo; por eso lo que se envuelve necesita unos 10 px de relleno arriba,
+  que `MCQ` y `Reto` tienen de sobra.
 - En `MCQ`, cada opción puede llevar su `justificacion`. Al comprobar se muestra
   la de cada opción mal elegida y después la de las correctas. Hasta el
   2026-10-27 solo se veía la de la correcta (H9 del capítulo 4), y por eso las
@@ -665,6 +695,7 @@ cuestionario final: los minicuestionarios de sección no se etiquetan.
 | `Pipeline` · `Timeline` · `Tabs` · `Accordion` | Estructuras de contenido |
 | `ChartFrame` + `usePlotly` | Gráficas interactivas. `descripcion` es lo que oye un lector de pantalla (sin ella, el pie). `fuente` dice de dónde salen los datos |
 | `Cita` · `Referencias` | Cita autor-año con enlace a su entrada · la lista, al final de la última lección |
+| `ParaProfundizar` | Lecturas recomendadas que el capítulo no cita (`k="a; b"`), después de `Referencias` |
 | `Fuente` · `Ilustrativo` | Procedencia de una tabla o figura (`k`, `propia` o `ilustrativo`) · nota de cifras ilustrativas |
 | `Trazador` | Traza guiada, instrucción por instrucción. Es exposición: no califica y no cuenta en la cuota |
 | `TablaTraza` | **E1** prueba de escritorio |

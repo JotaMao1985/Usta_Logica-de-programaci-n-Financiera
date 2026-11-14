@@ -2443,3 +2443,251 @@ detiene, y eso ayuda con una opción de la 9.
   opciones compartan una cifra. Las reglas 17 y 18 no miran eso.
 - **La sonda** espera 30 segundos a que el capítulo monte. Con cinco Chrome a la
   vez dio «no montó» en todos los modos; de uno en uno, los cinco pasan.
+
+### Mejora de contenido · capítulo 1, fases 1 y 2 · 2026-11-10
+
+Plan: `PLAN_TAREA11_CAPITULO_01_CONTENIDO.md` (aprobado el 2026-11-10). Rama
+`claude/cap01-fase2-operadores`, sin fusionar.
+
+**Fase 1 — leer lo que falta.** Siete fuentes ya registradas pasaron a «leída» y
+entraron seis nuevas a Zotero (tanda 02): la especificación del lenguaje VBA
+(MS-VBAL), *Dive into Systems*, la página de cifras de Swift, la Ley 1266 de 2008
+y las ayudas de `Hex` y de `as.hexmode`. Las 30 afirmaciones pendientes del
+capítulo quedaron con decisión escrita en el vault. Sin acceso: Goldberg 1991,
+IEEE 754 y el informe de Von Neumann.
+
+**Fase 2 — sección 3, Operadores.**
+- Las tablas de aritméticos, relacionales y lógicos van en los cuatro lenguajes.
+- La tabla de precedencia es la del pseudocódigo, y una segunda tabla dice dónde
+  se apartan R y VBA: dos potencias seguidas (VBA agrupa por la izquierda) y el
+  residuo y la división entera (antes que `*` y `/` en R, después en VBA).
+  `2 * 7 MOD 4 * 3` da 6 en Python, 18 en R y 2 en VBA.
+- El cortocircuito se dice por lenguaje, con cita: en R es de `&&` y `||`; en
+  VBA lo respalda la especificación, no la ayuda de `And`.
+- Siete pares clave–localizador nuevos en `afirmaciones/01.yaml` (13 en total).
+- Dos verificadores sin contexto leyeron 16 parejas frase–pasaje: 13 respaldadas
+  a la primera y tres corregidas hasta quedar respaldadas.
+
+**Huecos de las herramientas.**
+- **`registrar_afirmaciones.py`** solo admitía notas en `estado: verificada`. El
+  esquema del vault sigue con `resuelta` cuando el HTML ya quedó bien, y al
+  marcar así las seis notas del piloto el registro salía vacío («ninguna nota
+  citada y verificada»). Ahora admite `verificada` y `resuelta`. Prueba: con las
+  seis notas en `resuelta`, `--dry-run` daba 0 filas antes del cambio y 6 después.
+- **La regla de cotejo** exige que las salidas del pseudocódigo sean las de
+  Python. Obligó a cambiar dos ejemplos de la tabla de aritméticos (`60000` frente
+  a `60000.0`): la regla hizo su trabajo, pero el README no la menciona junto a
+  la convención de salidas.
+- **VBA.** Los tres bloques nuevos declaran 13 salidas de VBA que no se han
+  ejecutado en Excel: `ejecutar_vba.py preparar` deja el módulo en el
+  portapapeles y falta pegarlo y correr `comparar`.
+- **`generar_tanda.py`** (vault) no añade pasajes a una nota que ya existe.
+- **Nombre repetido.** Este plan llama «Tarea 11» al capítulo 6, y el plan de
+  contenido del capítulo 1 también se llama «Tarea 11».
+- El capítulo 3 dice que el orden de los operadores «es el mismo en los cuatro
+  lenguajes del curso» (`03…:3427`): ya no es cierto. Se corrige en la fase 8.
+
+### Mejora de contenido · capítulo 1, fase 3 · 2026-11-10
+
+Rama `claude/cap01-fase3-seccion4`, sobre la de la fase 2; sin fusionar.
+
+**Sección 4, lo que el piloto dejó fuera.**
+- «El problema tampoco es el tamaño del error» pasó a decir lo que dice su
+  fuente: el error es diminuto, impide confiar en la igualdad y puede acumularse.
+  Con eso deja de contradecir el caso del descuadre.
+- «La solución de la banca» pasó a ser una recomendación del curso, en la tabla
+  y en la justificación del cuestionario final.
+- «Los enteros no tienen este problema» pasó a citar lo que dice la R FAQ.
+- El laboratorio de bits: la leyenda lleva los colores de los bits que nombra,
+  el rótulo dice «(20 decimales)» y tiene pie con su procedencia.
+- La sección tiene minicuestionario (cuatro preguntas).
+- La apertura dice que el descuadre lo produjeron la representación **y el
+  momento en que se redondea**, como su ejercicio final. La portada se alinea
+  en la fase 6.
+- Dos pares frase–pasaje leídos por dos verificadores; uno objetó la frase de
+  los enteros y quedó su corrección. 15 filas en `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **La regla 9 no ejecuta las `lineas` de un `DetectaError`.** La explicación de
+  «La conciliación que siempre reporta descuadre» da `1.0000000000000007`; se
+  comprobó a mano en Python y en R, y ninguna regla lo vigila.
+- **Los guiones de sustitución tropiezan con el espacio duro** que pone
+  `comprobar_cifras.js`: un patrón escrito con espacio normal no casa con
+  «$8 432». No es un defecto del corrector, pero conviene saberlo al editar por
+  guion.
+- Los rótulos «signo (1) · exponente (11) · mantisa (52)» del laboratorio siguen
+  sin fuente leída (decisión D).
+
+### Mejora de contenido · capítulo 1, fase 4 · 2026-11-10
+
+Rama `claude/cap01-fase4-seccion1`, sobre la de la fase 3; sin fusionar.
+
+**Sección 1, Sistemas de numeración.**
+- El caso `0x0A` queda bien planteado (un byte, ocho banderas) y resuelto en la
+  sección: `0000 1010`, bits 1 y 3. Un ejercicio E7 lo hace practicar con `0x05`.
+  La pasarela, el manual y las banderas se declaran ilustrativos.
+- Las cifras de Swift se actualizaron (más de 12 500 instituciones, más de
+  53 millones de mensajes FIN al día), con cita y fecha de consulta. Salió
+  «Esto es exactamente lo que hace SWIFT».
+- Salieron «diez dedos», «5V/0V», «ubicuo» y el código de color; entraron las
+  citas del libro de arquitectura y de la documentación de `bin()`, `Hex()` y
+  `as.hexmode()`.
+- Nueve parejas frase–pasaje leídas por dos verificadores, que coincidieron en
+  cinco «parcial»; se corrigieron y pasaron una segunda lectura. 21 filas en
+  `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **La etiqueta del tipo de ejercicio tapa el enunciado** cuando este ocupa dos
+  renglones (`Ejercicio` sobre un `MCQ`). Pasa en el E2 que ya existía y en el
+  E7 nuevo. Es de LP-CORE: arreglarlo obliga a reestampar los cinco capítulos.
+- **La cuota** avisa «E7: hay 3, la cuota sugiere máximo 2» en el capítulo 1.
+  El ejercicio nuevo es de interpretación; queda a decisión del docente dejarlo
+  como E7, cambiarle el tipo o subir el tope.
+- La primera cita elegida para «dos estados» no servía (hablaba solo de los
+  dispositivos de almacenamiento): la lectura independiente lo vio; quien
+  escribió, no.
+
+### Mejora de contenido · capítulo 1, fase 5 · 2026-11-10
+
+Rama `claude/cap01-fase5-seccion2`, sobre la de la fase 4; sin fusionar.
+
+**Sección 2, Estructura del computador.**
+- La historia, los componentes, el ciclo de instrucción y la memoria citan el
+  libro de arquitectura (*Dive into Systems*). Salieron «por los mismos buses»,
+  «exactamente lo que propuso Von Neumann», ROM/BIOS/UEFI, la arquitectura
+  Harvard, `MOV AL, 61h`, «memory-bound», «swap» y el programa que «se modifica
+  a sí mismo».
+- El diagrama se rehízo: la caché dentro de la CPU, el almacenamiento aparte,
+  el bus de doble sentido, rótulos en español y colores de la paleta.
+- Tabla nueva de latencias (registro, caché, memoria, disco, red), citada.
+- El E4 conserva su código y cambia su explicación; el caso del reporte de
+  cuarenta minutos se cierra con una cuenta a la vista (240 000 × 0,01 s).
+- 24 parejas frase–pasaje leídas por dos verificadores; ocho corregidas y
+  vueltas a leer. 29 filas en `afirmaciones/01.yaml`.
+
+**Huecos de las herramientas.**
+- **`registrar_afirmaciones.py`** falla, con razón, si una nota `citada` no
+  trae ancla. Pero el esquema no dice qué clase lleva una frase que repite algo
+  ya citado desde un sitio donde no cabe un `<Cita>` (la justificación de una
+  pregunta, que es una cadena). Se resolvió dándole a la nota el mismo par y un
+  ancla dentro de la cadena.
+- **La regla 31 sí mira los `<Fuente k=… loc=…>`**, además de los `<Cita>`. El
+  README no lo dice.
+- Quedan dos afirmaciones nuevas sin fuente, encontradas en esta fase: que un
+  Excel con macros llega bloqueado (reto E8) y que la RAM pierde su contenido al
+  apagar (cuestionario final). Van a la fase 6.
+
+### Mejora de contenido · capítulo 1, fase 6 · 2026-11-10
+
+Rama `claude/cap01-fase6-portada-cierre`, sobre la de la fase 5; sin fusionar.
+
+**Portada, cierre y evaluación.**
+- La portada cuenta el descuadre como su ejercicio final, y su ficha tiene el
+  formato de los capítulos 2 a 5 (falta la fila «Evaluación asociada»: no se
+  conoce el nombre del cuestionario de Moodle).
+- «Lo que viene» nombra el capítulo 2. El glosario pasó a tabla, con 19
+  términos puestos al día.
+- Todo el capítulo trata de usted, y lo interno se llama «sección».
+- El cuestionario final tiene 10 preguntas, y cada justificación dice por qué
+  fallan las otras opciones. Salió la pregunta de la memoria volátil, que no
+  tenía fuente.
+- Ejercicios heredados: las seis preguntas sueltas pasaron a los
+  minicuestionarios de sus secciones; el reto de conversión de la sección 1 se
+  retiró; el de la TIR quedó como exposición; la solución de la tabla de la
+  evaluación va en un acordeón. El capítulo queda con 13 ejercicios con tipo y
+  ninguno sin él, y la cuota sin avisos.
+- «Recursos complementarios» pasó a «Para practicar», sin la referencia que
+  estaba tecleada de memoria. Los siete enlaces responden (uno, con 403 a la
+  consulta automática).
+
+**Huecos de las herramientas.**
+- **`Quiz` no admite retroalimentación por opción**, solo por pregunta; `MCQ`
+  sí. En los cuestionarios la retroalimentación de los distractores va dentro
+  de la justificación de la pregunta.
+- **«Para profundizar» no se puede generar todavía**: `estampar_referencias.py`
+  solo estampa lo citado, y no hay componente para una lista de lecturas
+  recomendadas. Hacerlo toca LP-CORE; va con la fase 7.
+- **Un corte por sangría falló**: al reemplazar un bloque «hasta el primer
+  `</div>` con dieciséis espacios», el patrón casó con uno más sangrado y dejó
+  el JSX roto. La regla 1 lo vio al instante. Conviene cortar por líneas
+  completas, no por subcadenas.
+
+### Mejora de contenido · capítulo 1, fases 7 y 8 · 2026-11-10
+
+Ramas `claude/cap01-fase7-figuras`, `claude/cap01-fase7-lpcore` y
+`claude/cap01-fase8-coherencia`, una sobre otra; sin fusionar.
+
+**Fase 7 — figuras y LP-CORE.**
+- Las seis figuras del capítulo 1 llevan fuente, usan solo la paleta y se
+  vieron a 375 px. «Una cantidad, cuatro bases» muestra el 22 en las cuatro; la
+  gráfica de interés sombrea la franja entre las curvas y usa punto de miles.
+- LP-CORE, hecho por la subsesión de citas y revisado aquí: la etiqueta del
+  tipo de ejercicio ya no se cruza con el enunciado (17 de 33 en escritorio y
+  31 de 33 a 375 px, antes), y existe `<ParaProfundizar k="…" />`, estampado
+  desde Zotero. Los cinco capítulos se reestamparon.
+
+**Fase 8 — coherencia hacia adelante.**
+- Se revisaron las 17 menciones del capítulo 1 en los capítulos 2 a 5.
+- Capítulo 3: ya no dice que el orden de los operadores es el mismo en los
+  cuatro lenguajes ni que la potencia en VBA es la única discrepancia.
+- Capítulo 2: ya no remite a una medición del capítulo 1 que no existe.
+- Capítulos 4 y 5: lo que dicen del 1 es cierto ahora, sin tocarlos.
+- Se entregó al docente la lista de preguntas del banco de evaluación del
+  capítulo 1 que el cambio deja desfasadas (el banco no se tocó).
+
+**Huecos de las herramientas.**
+- **Nada vigilaba el solape de la etiqueta.** Estaba en los cinco capítulos
+  con todas las reglas y la sonda en verde. Falta un modo de solapes en la
+  sonda.
+- **Nada vigila lo que un capítulo dice de otro.** Las frases del capítulo 3
+  eran falsas desde antes y solo se vieron al leer. El vault lleva esas
+  remisiones a mano, en sus notas de hilo.
+- **La APA no imprime el ISBN de un libro**: en «Para profundizar», Joyanes y
+  Cairó salen sin identificador a la vista.
+- `POLITICA_DE_FUENTES.md` y la skill `lpf-capitulo` no nombran «Para
+  profundizar». Va al cierre.
+
+### Mejora de contenido · capítulo 1, fase 9 (cierre) · 2026-11-10
+
+Rama `claude/cap01-fase9-cierre`, sobre la de la fase 8; sin fusionar. Queda lo
+que es del docente: leer el capítulo completo, verlo en Safari y en un
+teléfono, y decidir la fusión en `main`.
+
+**Lo que se comprobó al cierre.**
+- `verificar.py --con-salidas --con-pandoc`: los cinco capítulos pasan; el 01
+  en «OK», sin avisos.
+- Sonda del navegador: 25 de 25 (cinco modos, cinco capítulos, de a uno).
+- Lectura independiente de las 51 citas del capítulo, sobre el texto final y
+  extraídas por guion del propio HTML. Primera pasada, dos verificadores: 38 y
+  46 respaldadas, ninguna sin respaldo. De las 13 objeciones, 8 eran al pasaje
+  copiado en la nota —resumido de más— y 5 a la frase. Se ampliaron los
+  pasajes, cotejados contra la fuente descargada, y se corrigieron las frases.
+  Segunda pasada: 46 respaldadas y 5 observaciones; dos se corrigieron y tres
+  son la misma frase con tres citas seguidas, una por lenguaje, que se dejó así.
+- Vault: 51 afirmaciones, todas resueltas o verificadas; 7 hilos cerrados; 13
+  de 14 conceptos coherentes. Queda abierto el índice de los arreglos en
+  pseudocódigo, que es del capítulo 7.
+
+**Criterios de aceptación del plan.** Se cumplen los ocho, con dos salvedades:
+el concepto que queda abierto, y que la última redacción de siete frases es la
+corrección que propuso un verificador y no se volvió a someter.
+
+**Lo que deja el capítulo para los siguientes.**
+- En la primera lectura de cada sección, una de cada tres frases decía más que
+  su pasaje (17 de 51). El método está en la skill `lpf-capitulo`, sección
+  «Las fuentes».
+- La política de fuentes nombra «Para profundizar», la cita por fuente cuando
+  una frase habla de varias, y la fecha de consulta para un dato sin fecha.
+
+**Huecos de las herramientas.**
+- **El pasaje de la nota tiene que bastarse solo.** Un extracto recortado con
+  «[…]» puede dejar fuera justo la línea que respalda la frase; el verificador
+  lo ve como «parcial» y tiene razón. El registro público guarda la huella del
+  extracto, no si alcanza.
+- **No hay guion que arme las parejas frase–pasaje.** Se hizo uno de usar y
+  tirar; convendría llevarlo a `_plantilla/`, porque la lectura final de un
+  capítulo lo necesita.
+- **Las salidas de VBA de la fase 2 siguen sin ejecutarse en Excel** (13 líneas
+  en tres bloques): falta pegar el módulo de `ejecutar_vba.py preparar`.
+- El README raíz decía «02–08 en preparación» y «once comprobaciones»; se
+  corrigió. `comprobar_cifras.js` se llamaba «Comprobación 20» y es la 21.

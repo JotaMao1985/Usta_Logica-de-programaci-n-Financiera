@@ -424,6 +424,42 @@
                 : <span className={className} style={style}>{texto}</span>;
         };
 
+        /* La etiqueta va A CABALLO del borde superior de la tarjeta: la mitad
+           por encima, en el margen, y la mitad dentro, en el relleno. Dentro
+           del todo no cabe: el envoltorio no sabe qué componente lleva, y un
+           enunciado de dos renglones le pasa por debajo.
+
+           Eso se quiso desde el principio y no se cumplía. La etiqueta estaba
+           a 0,55 rem del borde del envoltorio, contando con que la tarjeta
+           empezara más abajo, tras su margen; pero ese margen se colapsa con
+           el del envoltorio, la tarjeta empieza donde él, y la etiqueta caía
+           8,8 px DENTRO, sobre el primer renglón. Medido el 2026-11-10 en los
+           cinco capítulos: se cruzaba con el enunciado en todo `MCQ` que
+           llegara al borde derecho y, a 375 px, también con el título de los
+           `Reto`.
+
+           Por eso ahora no se supone dónde empieza la tarjeta: se mide
+           (`offsetTop`, que no se altera con una animación en curso) y la
+           etiqueta se centra en ese borde. Va después de los hijos para que
+           `firstElementChild` sea la tarjeta. */
+        const EjercicioEtiquetado = ({ t, children }) => {
+            const caja = useRef(null);
+            const [borde, setBorde] = useState(0);
+            React.useLayoutEffect(() => {
+                const tarjeta = caja.current && caja.current.firstElementChild;
+                if (tarjeta) setBorde(tarjeta.offsetTop);
+            }, []);
+            return (
+                <div ref={caja} className="relative">
+                    {children}
+                    <span data-tipo-ejercicio="" className="absolute z-10 text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5 shadow-sm whitespace-nowrap"
+                        style={{ background: t.color, top: borde, right: '1rem', transform: 'translateY(-50%)' }}>
+                        {t.etiqueta}
+                    </span>
+                </div>
+            );
+        };
+
         const Ejercicio = ({ tipo, children }) => {
             const t = TIPOS_EJERCICIO[tipo];
             if (!t) return children;
@@ -431,18 +467,7 @@
             if (hijos.length === 1 && AUTOETIQUETADOS.has(hijos[0].type)) {
                 return <TipoDeEjercicio.Provider value={t}>{children}</TipoDeEjercicio.Provider>;
             }
-            // La etiqueta se ancla SOBRE el borde superior de la tarjeta, no
-            // dentro: si se superpone al contenido, un enunciado de dos líneas
-            // le pasa por debajo y queda ilegible.
-            return (
-                <div className="relative">
-                    <span className="absolute z-10 text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5 shadow-sm"
-                        style={{ background: t.color, top: '0.55rem', right: '1rem' }}>
-                        {t.etiqueta}
-                    </span>
-                    {children}
-                </div>
-            );
+            return <EjercicioEtiquetado t={t}>{children}</EjercicioEtiquetado>;
         };
 
         /* ============================================================
@@ -1375,6 +1400,8 @@
              <Cita k="clave" narrativa />          Autor (2024)
              <Cita k="a; b" pre="véase" />         (véase Autor, 2019; Otro, 2024)
              <Referencias />                       la lista, al final de la última lección
+             <ParaProfundizar k="a; b" />          lecturas recomendadas que el capítulo NO cita,
+                                                   después de <Referencias />
              <Fuente k="clave" />                  Fuente: Autor (2024).
              <Fuente propia />                     Fuente: elaboración propia.
              <Fuente ilustrativo />                Datos ilustrativos…
@@ -1542,6 +1569,14 @@
             return <span className="lp-cita">({pre ? <>{pre} </> : null}{entre(piezas, '; ')}{lugar})</span>;
         };
 
+        // Sangría francesa, la de las dos listas: la primera línea sale al margen
+        // y las demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
+        const ESTILO_ENTRADA = {
+            paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
+            paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
+            overflowWrap: 'anywhere', borderLeft: '3px solid transparent',
+        };
+
         const Referencias = ({ titulo = 'Referencias' }) => {
             const bloque = referenciasDelCapitulo();
             const orden = (bloque && Array.isArray(bloque.orden)) ? bloque.orden.filter(c => bloque.entradas && bloque.entradas[c]) : [];
@@ -1578,14 +1613,10 @@
                         {orden.map(clave => {
                             const aqui = destino === clave;
                             return (
-                                // Sangría francesa: la primera línea sale al margen y las
-                                // demás entran 1,5 rem, que a 375 px aún deja 44 caracteres.
                                 <li key={clave} id={`ref-${clave}`} role="doc-biblioentry" tabIndex={-1}
                                     className="rounded-md outline-none"
                                     style={{
-                                        paddingLeft: '2rem', textIndent: '-1.5rem', paddingRight: '0.5rem',
-                                        paddingTop: '0.3rem', paddingBottom: '0.3rem', marginBottom: '0.3rem', lineHeight: 1.6,
-                                        overflowWrap: 'anywhere',
+                                        ...ESTILO_ENTRADA,
                                         borderLeft: `3px solid ${aqui ? '#ED1E79' : 'transparent'}`,
                                         background: aqui ? '#F5F0FA' : 'transparent',
                                     }}>
@@ -1602,6 +1633,46 @@
                             );
                         })}
                     </ul>
+                </section>
+            );
+        };
+
+        /* Lecturas recomendadas: obras que el capítulo NO cita. Van aparte de
+           «Referencias» porque esa lista dice «de aquí salió lo que se afirma»,
+           y esta no afirma nada de nadie; mezcladas, un libro que nadie abrió
+           para escribir el capítulo pasaría por fuente suya. Por eso el
+           título y la frase son fijos y no hay propiedad para cambiarlos.
+
+           Las claves se escriben en `k`, como en `Cita`, y las entradas llegan
+           formateadas en el campo `profundizar` de la isla. Se pintan en el
+           orden de la isla —el de la APA—, no en el de `k`. Ninguna cita lleva
+           aquí, así que las entradas no tienen `id="ref-…"`: una clave no
+           puede estar en las dos listas, y si lo estuviera no habría dos
+           elementos con el mismo id. Sin claves no pinta nada. */
+        const ParaProfundizar = ({ k }) => {
+            const claves = String(k === undefined || k === null ? '' : k).split(';').map(c => c.trim()).filter(Boolean);
+            const bloque = referenciasDelCapitulo();
+            const lecturas = (bloque && bloque.profundizar) || {};
+            const entradas = lecturas.entradas || {};
+            const faltan = claves.filter(c => !entradas[c]);
+            const queFalta = faltan.join('; ');
+            useEffect(() => {
+                if (queFalta) console.error(`[ParaProfundizar] <ParaProfundizar k="${k}">: la clave «${queFalta}» no está entre las lecturas recomendadas de la isla de referencias del capítulo. Revise la clave y ejecute estampar_referencias.py.`);
+            }, [queFalta]);
+            if (!claves.length) return null;
+            const orden = (Array.isArray(lecturas.orden) ? lecturas.orden : []).filter(c => claves.includes(c) && entradas[c]);
+            return (
+                <section aria-label="Para profundizar" data-para-profundizar="" className="my-6">
+                    <h3>Para profundizar</h3>
+                    <p>Lecturas recomendadas. El capítulo no les atribuye ninguna afirmación.</p>
+                    <ul className="text-[0.92rem] text-gray-700" style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
+                        {orden.map(clave => (
+                            <li key={clave} data-lectura={clave} className="rounded-md" style={ESTILO_ENTRADA}>
+                                {pintarEntrada(entradas[clave].html)}
+                            </li>
+                        ))}
+                    </ul>
+                    {queFalta && <p><ChipSinFuente>[¿lectura «{queFalta}»?]</ChipSinFuente></p>}
                 </section>
             );
         };
