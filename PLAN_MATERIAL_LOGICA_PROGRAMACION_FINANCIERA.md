@@ -2790,3 +2790,23 @@ Rama `claude/cap01-pendientes`. Lo que la auditoría había dejado para decidir.
   pasajes no ve los caracteres que la extracción se come.
 - **`estampar_referencias.py 01` no encuentra el capítulo**; hay que pasarle la
   ruta del archivo. `registrar_afirmaciones.py` sí acepta el número.
+
+### Lo que seguía abierto del capítulo 1 · 2026-11-14
+
+Rama `claude/cap01-comparador`.
+
+- **Comparador de la sección 2.** El enunciado dice ahora que cada lenguaje
+  numera las posiciones a su modo y que eso se explica más adelante. Con eso el
+  capítulo 1 deja de depender de la decisión D09, que sigue abierta para el
+  capítulo 7.
+- **Banco Moodle.** Las tres preguntas desfasadas tienen borrador corregido y
+  compilado con R/exams (tres variantes cada una). Los borradores están en el
+  vault; el banco, que es un repositorio aparte, no se tocó.
+- **No se pudo desde esta sesión.** Ejecutar el VBA en Excel (el docente no dio
+  acceso a la aplicación), ver el capítulo en Safari de iPhone (el simulador
+  pide Xcode completo) y leer a Goldberg en el original de ACM (la página pone
+  una verificación de navegador que no se salta).
+
+**Hueco de las herramientas.** La sonda de navegador solo corre en Chrome. En
+el equipo hay un WebKit de Playwright, pero no el paquete que lo maneja: con él,
+la sonda podría tener un modo «webkit» que haga de Safari.
