@@ -2810,3 +2810,17 @@ Rama `claude/cap01-comparador`.
 **Hueco de las herramientas.** La sonda de navegador solo corre en Chrome. En
 el equipo hay un WebKit de Playwright, pero no el paquete que lo maneja: con él,
 la sonda podría tener un modo «webkit» que haga de Safari.
+
+### Las salidas de VBA del capítulo 1, ejecutadas en Excel · 2026-11-14
+
+`ejecutar_vba.py comparar` corrió en Excel para Mac los nueve bloques de VBA del
+capítulo 1 que declaran salida (arnés `1b7a15d46a`, 20 líneas): **todas
+coinciden**. En dos bloques, `OPERADORES_ARITMETICOS` y `VPN_PROYECTO`, la única
+diferencia es el separador regional: este Excel escribe coma decimal y el
+capítulo declara punto, como ya advierte el guion. Queda cerrado el pendiente de
+las 13 salidas de la fase 2.
+
+**Hueco de las herramientas.** El editor de Visual Basic no acepta texto ni
+pegado desde una sesión que trabaja en segundo plano: el pegado del módulo
+necesitó control de pantalla, aprobado por el docente. Sigue siendo el único
+paso manual de la comprobación.
