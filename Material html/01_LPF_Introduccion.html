@@ -3348,7 +3348,7 @@ End Sub`,
                 <p>
                     Un algoritmo es una secuencia de pasos, y una variable, un nombre que guarda un valor; el capítulo 2
                     define los dos con cuidado, y aquí basta con eso.
-                    Los tres lenguajes traen un atajo. En Python, <span className="inline-code">bin()</span> convierte un entero a binario <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />;
+                    Los tres lenguajes traen atajos para cambiar de base. En Python, <span className="inline-code">bin()</span> convierte un entero a binario <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />;
                     <span className="inline-code">Hex()</span> da el hexadecimal de un número en VBA <Cita k="microsoft2018hex" loc="descripción" /> y
                     <span className="inline-code">as.hexmode()</span> hace que R muestre un entero en hexadecimal <Cita k="rcoreteam-hexmode" loc="Description" />.
                     Pero el atajo esconde justamente lo que hay que ver. Escrito a mano, el método de divisiones sucesivas
@@ -3597,7 +3597,7 @@ Para i <- 1 Hasta 12 Hacer
 FinPara
 Escribir total`,
             python: `total = 0
-for i in range(1, 13):
+for i in range(12):
     total = total + cuota[i] * memoria[0]
 print(total)`,
             r: `total <- 0
@@ -3620,7 +3620,7 @@ FinPara
 Escribir total`,
             python: `tasa  = memoria[0]
 total = 0
-for i in range(1, 13):
+for i in range(12):
     total = total + cuota[i] * tasa
 print(total)`,
             r: `tasa  <- memoria[1]
@@ -3763,21 +3763,21 @@ Debug.Print total`,
                 <CodeTabs
                     titulo="Captar → decodificar → ejecutar → almacenar"
                     bloques={CICLO_INSTRUCCION}
-                    nota="En R los vectores empiezan en 1 y no en 0: la misma celda se llama memoria[0] en tres lenguajes y memoria[1] en el cuarto."
+                    nota="En R los vectores empiezan en 1 y no en 0: la misma celda es la 0 en tres lenguajes y la 1 en el cuarto."
                 />
 
                 <h3>Ejercicios de la sección</h3>
 
                 <OrdenaPasos
                     titulo="Reconstruya el ciclo de instrucción"
-                    enunciado="Estas seis instrucciones cargan una operación en memoria y la ejecutan. Póngalas en un orden que funcione."
+                    enunciado="Estas seis instrucciones cargan una operación en memoria y la ejecutan. Póngalas en el orden en que corren: primero se carga la memoria, celda por celda de la primera a la tercera, y después la máquina capta, ejecuta y almacena."
                     pasos={PASOS_CICLO}
                     pista="La CPU no puede captar una instrucción de una celda que todavía no se ha escrito, ni ejecutar con operandos que aún no existen."
                 />
 
                 <Comparador
                     titulo="Dos formas de leer la misma tasa"
-                    enunciado="Las dos versiones liquidan los intereses de las doce cuotas de un crédito. La tasa está guardada en una celda de memoria."
+                    enunciado="Las dos versiones liquidan los intereses de las doce cuotas de un crédito, guardadas en cuota. La tasa está guardada en una celda de memoria."
                     a={{ etiqueta: 'Versión A · lee en cada vuelta', codigo: CMP_LEE_SIEMPRE }}
                     b={{ etiqueta: 'Versión B · lee una sola vez', codigo: CMP_LEE_UNA_VEZ }}
                     pregunta="¿Qué diferencia hay entre las dos?"
@@ -3785,7 +3785,7 @@ Debug.Print total`,
                         { texto: 'Hacen exactamente el mismo trabajo: da igual dónde se escriba la lectura de la tasa.', correcta: false, justificacion: 'Dan el mismo resultado, pero no hacen el mismo trabajo: la A repite doce veces una lectura que la B hace una sola vez.' },
                         { texto: 'Dan el mismo total, pero la A lee doce veces un dato que la B lee una sola vez.', correcta: true, justificacion: 'El resultado es idéntico: la tasa no cambia dentro del ciclo. Lo que cambia es cuántas veces se va a buscar: doce en la A, una en la B. Con el dato en la memoria principal y solo doce cuotas, la diferencia no se nota. La regla que deja el ejercicio —sacar del ciclo todo lo que no cambia dentro de él— pesa cuando el dato está más lejos, y la tabla que sigue dice cuánto.' },
                         { texto: 'La B da un total distinto, porque lee la tasa antes de empezar y no en cada cuota.', correcta: false, justificacion: 'La tasa no cambia entre la primera vuelta y la última: leerla antes de empezar da el mismo valor.' },
-                        { texto: 'La A es la más rápida de las dos, porque se ahorra guardar una variable adicional.', correcta: false, justificacion: 'La variable adicional evita once lecturas y no añade ninguna.' },
+                        { texto: 'La A es la más rápida de las dos, porque se ahorra guardar una variable adicional.', correcta: false, justificacion: 'Guardar la tasa en una variable cuesta una lectura y evita once: la A no gana nada con ahorrársela.' },
                     ]}
                 />
 
@@ -4299,7 +4299,7 @@ End Sub`,
            operadores de la seccion; la TIR queda acotada por el cambio de signo. */
         const VPN_PROYECTO = {
             pseudo: `Inicio
-    // Valor presente neto del proyecto, en millones, a dos tasas
+    // Valor presente neto del proyecto, en millones, a dos tasas (salida con dos decimales)
     tasa <- 0.12
     vpn  <- -100 + 30 / (1 + tasa) + 40 / (1 + tasa) ^ 2 + 50 / (1 + tasa) ^ 3 + 60 / (1 + tasa) ^ 4
     Escribir vpn
@@ -4391,7 +4391,7 @@ End Sub`,
                 <Fuente propia>con la notación de cada lenguaje; el bloque que sigue ejecuta las siete filas</Fuente>
                 <p>
                     En una hoja de liquidación, esas siete filas son un recargo que se suma, un descuento que se resta,
-                    doce cuotas iguales, un saldo repartido entre ocho, los billetes enteros que caben en un retiro,
+                    doce cuotas iguales, un saldo repartido entre ocho, las partes enteras que salen al repartir entre tres,
                     lo que sobra, y un capital que crece dos periodos al 50 %.
                 </p>
                 <CodeTabs
@@ -4403,7 +4403,7 @@ End Sub`,
                 <Box type="tip" label="El residuo, en la práctica">
                     El residuo sirve más de lo que parece: <span className="inline-code">n MOD 2 = 0</span> dice si un número es par,
                     <span className="inline-code">monto MOD 10000</span> es lo que sobra al entregar un retiro en billetes de $10 000, y
-                    <span className="inline-code">dia MOD 30</span> da el día dentro de un ciclo de facturación de treinta días.
+                    <span className="inline-code">dia MOD 30</span> da la posición del día, de 0 a 29, dentro de un ciclo de facturación de treinta días.
                 </Box>
 
                 <Eq>{String.raw`$$\text{VF} = \text{VP} \times (1 + i)^n \quad \rightarrow \quad \texttt{vf <- vp * (1 + i) \textasciicircum{} n}$$`}</Eq>
@@ -4441,7 +4441,7 @@ End Sub`,
                     En el pseudocódigo del curso, <span className="inline-code">&lt;-</span> <strong>asigna</strong> (guarda un valor en una variable)
                     y <span className="inline-code">=</span> <strong>compara</strong> (pregunta si dos valores son iguales). En Python y en R se compara
                     con <span className="inline-code">==</span>, y un solo <span className="inline-code">=</span> asigna. En VBA el mismo <span className="inline-code">=</span> hace las dos cosas: asigna cuando
-                    abre una instrucción y compara cuando está dentro de una condición. Conviene vigilarlo desde el primer
+                    abre una instrucción y compara cuando aparece dentro de una expresión, sea o no una condición. Conviene vigilarlo desde el primer
                     día: <span className="inline-code">saldo = 0</span> pone el saldo en cero en Python, y en pseudocódigo pregunta si ya está en cero.
                 </Box>
                 <h3>3. Operadores lógicos</h3>
@@ -4583,7 +4583,7 @@ End Sub`,
                 </Box>
                 <h3>Ejemplo completo: los tres tipos de operador a la vez</h3>
                 <p>
-                    Un aritmético calcula la cuota estimada, dos relacionales comparan contra los umbrales y tres
+                    Un aritmético calcula la cuota estimada, tres relacionales comparan contra los umbrales y tres
                     lógicos combinan el veredicto. Mire el resultado antes de seguir: se cumplen dos condiciones de
                     tres, y el crédito se niega.
                 </p>
@@ -4692,7 +4692,7 @@ End Sub`,
                     a una combinación de operadores sobre los datos del solicitante. La Ley 1266 de 2008 llama
                     <strong>operador de información</strong> a la persona, entidad u organización que recibe de la fuente
                     datos personales sobre varios titulares de la información, los administra y los pone en conocimiento de los usuarios
-                    bajo los parámetros de esa ley <Cita k="congreso2008ley1266" loc="art. 3, lit. c" />.</p>
+                    bajo los parámetros de esa ley <Cita k="congreso2008ley1266" loc="art. 3, lit. c" />. Ese operador es una entidad, no un símbolo como los de esta sección: coincide la palabra, no el concepto.</p>
                     <ul>
                         <li><strong>Aritméticos:</strong> <span className="inline-code">score &lt;- 0.3 * historial + 0.25 * ingresos + 0.2 * endeudamiento + 0.15 * antiguedad + 0.1 * garantias</span></li>
                         <li><strong>Relacionales:</strong> <span className="inline-code">score &gt;= umbral_aprobacion</span></li>
@@ -4705,7 +4705,7 @@ End Sub`,
 
                 <Quiz titulo="Mini-cuestionario · Sección 3" preguntas={[
                     {
-                        pregunta: '¿Cuál es el resultado de 17 % 5?',
+                        pregunta: 'En Python, ¿cuál es el resultado de 17 % 5?',
                         opciones: [
                             { texto: '3.4 (% divide: 17 entre 5 da 3,4).', correcta: false },
                             { texto: '2 (17 dividido entre 5 da 3, sobra 2).', correcta: true },
@@ -4720,10 +4720,10 @@ End Sub`,
                             { texto: 'Igualdad aproximada.', correcta: false },
                             { texto: 'Comparación: ¿son iguales estos dos valores?', correcta: true },
                         ],
-                        justificacion: 'En Python y en R, == compara. El = solo asigna en Python; en el pseudocódigo del curso y en VBA, en cambio, = también compara.'
+                        justificacion: 'En Python y en R, == compara. Un solo = asigna en Python y en R; en el pseudocódigo del curso = compara, y en VBA hace las dos cosas.'
                     },
                     {
-                        pregunta: '¿Cuál es el resultado de: True or True and False?',
+                        pregunta: 'En Python, ¿cuál es el resultado de: True or True and False?',
                         opciones: [
                             { texto: 'True (and primero: True and False → False; luego True or False → True).', correcta: true },
                             { texto: 'False (de izquierda a derecha: True or True → True; luego True and False → False).', correcta: false },
@@ -4732,7 +4732,7 @@ End Sub`,
                         justificacion: 'and tiene precedencia sobre or aunque esté a la derecha: True or True and False se lee True or (True and False), que es True or False → True. Leída de izquierda a derecha daría (True or True) and False → False, y por eso esta expresión sí distingue las dos lecturas.'
                     },
                     {
-                        pregunta: 'En la expresión (1 + tasa) ** n, ¿qué hace **?',
+                        pregunta: 'En la expresión de Python (1 + tasa) ** n, ¿qué hace **?',
                         opciones: [
                             { texto: 'Eleva al cuadrado (1 + tasa) y después multiplica el resultado por n.', correcta: false },
                             { texto: 'Eleva (1 + tasa) a la potencia n: es el operador de exponenciación.', correcta: true },
@@ -4934,9 +4934,9 @@ End Sub`,
         const CONCILIA_LINEA_OK = { pseudo: 8, python: 6, r: 7, vba: 9 };
 
         const CONCILIA_EXPLICACION = {
-            pseudo: <>La <strong>línea 8</strong> compara dos decimales con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale 1,00 sino 1,0000000000000007, así que la igualdad da Falso y el programa reporta un descuadre que no existe. Se compara contra una tolerancia —<span className="inline-code">Si abs(suma - esperado) &lt; 0.001</span>, donde <span className="inline-code">abs</span> es el valor absoluto— o, mejor, se trabaja en centavos enteros.</>,
-            python: <>La <strong>línea 6</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">False</span> y el programa reporta un descuadre que no existe. Se usa <span className="inline-code">math.isclose(suma, esperado)</span> o, mejor, se trabaja en centavos enteros con <span className="inline-code">Decimal</span>.</>,
-            r: <>La <strong>línea 7</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">FALSE</span> y el programa reporta un descuadre que no existe. Se usa <span className="inline-code">isTRUE(all.equal(suma, esperado))</span> o se trabaja en centavos enteros.</>,
+            pseudo: <>La <strong>línea 8</strong> compara dos decimales con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale 1,00 sino 1,0000000000000007, así que la igualdad da Falso y el programa reporta un descuadre que no existe. La comparación deja de fallar con una tolerancia —<span className="inline-code">Si abs(suma - esperado) &lt; 0.001</span>, donde <span className="inline-code">abs</span> es el valor absoluto—; lo que quita la causa es trabajar en centavos enteros.</>,
+            python: <>La <strong>línea 6</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">False</span> y el programa reporta un descuadre que no existe. La comparación deja de fallar con <span className="inline-code">math.isclose(suma, esperado)</span>; lo que quita la causa es trabajar en centavos enteros con <span className="inline-code">Decimal</span>.</>,
+            r: <>La <strong>línea 7</strong> compara dos decimales con <span className="inline-code">==</span>. Tras las cien sumas, <span className="inline-code">suma</span> vale 1.0000000000000007, así que la igualdad da <span className="inline-code">FALSE</span> y el programa reporta un descuadre que no existe. La comparación deja de fallar con <span className="inline-code">isTRUE(all.equal(suma, esperado))</span>; lo que quita la causa es trabajar en centavos enteros.</>,
             vba: <>La <strong>línea 9</strong> compara dos <span className="inline-code">Double</span> con <span className="inline-code">=</span>. Tras las cien sumas, <span className="inline-code">suma</span> no vale exactamente 1, así que la igualdad da False y el programa reporta un descuadre que no existe. En VBA la solución es directa: declarar los importes como <span className="inline-code">Currency</span>, que es punto fijo y no arrastra el error. Se verá en el capítulo 6.</>,
         };
 
@@ -4970,7 +4970,7 @@ End Sub`,
 
                 <Box type="warn" label="Dos cosas que conviene separar">
                     <p>
-                        El error <strong>no es de la suma</strong>: es de la <em>representación</em>. Ya
+                        El error <strong>no nace en la suma</strong>: nace antes, en la <em>representación</em>. Ya
                         <span className="inline-code">0.1</span>, por sí solo, no es 0,1 dentro de la máquina.
                     </p>
                     <p>
@@ -5032,7 +5032,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="¿En qué vuelta se rompe?"
-                    enunciado={<>El ciclo acumula 0,1 tres veces. En cada vuelta se compara la suma con el valor que <em>debería</em> tener (0,1 · 0,2 · 0,3). Complete la suma redondeada a dos decimales y el resultado de esa comparación.</>}
+                    enunciado={<>El ciclo acumula 0,1 tres veces. En cada vuelta se compara la suma con el valor que <em>debería</em> tener (0,1 · 0,2 · 0,3). La suma ya aparece, redondeada a dos decimales: complete el resultado de la comparación.</>}
                     codigo={ACUMULA_DECIMOS}
                     columnas={[
                         { clave: 'paso', titulo: 'Vuelta' },
@@ -5041,7 +5041,7 @@ End Sub`,
                     ]}
                     ocultas={['comparacion']}
                     filas={TRAZA_DECIMOS}
-                    pista="No se rompe de entrada: 0,1 + 0,1 da exactamente 0,2. El error se cuela en una sola de las tres vueltas."
+                    pista="No se rompe de entrada: 0,1 + 0,1 coincide con el 0,2 que la máquina guarda. El error se cuela en una sola de las tres vueltas."
                 />
 
                 <DetectaError
@@ -5072,12 +5072,10 @@ End Sub`,
                     solucion={<Box type="tip" label="Qué dice realmente esa cifra">
                         <p>
                             Lo primero es dividir: 8 432 ÷ 840 000 ≈ <strong>0,01 pesos por pago</strong>. Un centavo cada
-                            uno. Eso descarta de entrada la hipótesis de «un pago mal calculado»: un error puntual daría un
-                            descuadre grande en un registro, no uno diminuto en todos.
+                            uno. La división sola no prueba nada —un único registro errado en esa suma daría el mismo promedio—, pero el enunciado ya dijo que cada pago está bien calculado. Queda la otra lectura: un desvío diminuto repartido entre todos.
                         </p>
                         <p>
-                            Un desvío constante y del tamaño del último dígito representable es la firma de un problema
-                            <strong> sistemático de representación o de redondeo</strong>, no de un dato equivocado.
+                            Un desvío del orden de un centavo por operación es la firma de un problema <strong> sistemático de redondeo</strong>, no de un dato equivocado. La representación en base 2, por sí sola, deja diferencias en el decimosexto decimal, no de centavos: los centavos se pierden al redondear cada resultado intermedio.
                         </p>
                         <p>
                             Y de ahí sale la acción, que es lo que se le pedía: <strong>no</strong> hay que auditar los
@@ -5088,7 +5086,7 @@ End Sub`,
                     </Box>}>
                     Vuelva al descuadre con el que abre el capítulo: el cierre de mes no cuadra por $8 432 sobre
                     840 000 pagos, y cada pago está bien calculado. Antes de tocar una línea de código: ¿qué le dice
-                    esa cifra sobre <em>dónde</em> está el problema, y qué haría usted primero?
+                    esa cifra sobre <em>dónde</em> está el problema, y qué haría usted primero? El caso es inventado, y sus cifras también.
                 </Reto></Ejercicio>
 
                 <Quiz titulo="Mini-cuestionario · Sección 4" preguntas={[
@@ -5134,7 +5132,7 @@ End Sub`,
                     <ul>
                         <li>La máquina guarda los reales en <strong>base 2</strong>: <span className="inline-code">0,1</span> no cabe exacto, igual que <span className="inline-code">1/3</span> no cabe en base 10.</li>
                         <li>Un <span className="inline-code">double</span> —el real de 64 bits del estándar IEEE 754— tiene 53 bits de precisión <Cita k="psf2026flotante" loc="cap. 15"/>.</li>
-                        <li>Dos números de punto flotante que deberían ser iguales pueden no serlo <Cita k="hornik2026faq" loc="pregunta 7.31"/>. Por eso, <strong>nunca compare dinero con igualdad exacta</strong>: use tolerancia, o mejor, no use flotantes para dinero.</li>
+                        <li>Dos números de punto flotante que deberían ser iguales pueden no serlo <Cita k="hornik2026faq" loc="pregunta 7.31"/>. Por eso, <strong>nunca compare con igualdad exacta dinero guardado en flotantes</strong>: guarde los importes en centavos enteros, y deje la tolerancia para los cálculos intermedios.</li>
                         <li>Para importes: <strong>centavos enteros</strong>, <span className="inline-code">Currency</span> en VBA o <span className="inline-code">Decimal</span> en Python.</li>
                         <li>En R, la opción <span className="inline-code">digits</span>, que controla cuántas cifras significativas se imprimen, vale 7 por defecto <Cita k="rcoreteam-opciones" loc="opción digits"/>: por eso R <strong>esconde</strong> el problema. Que no se vea no significa que no esté.</li>
                     </ul>
@@ -5192,7 +5190,7 @@ End Sub`,
                         'Aprobar el desembolso solo si el score supera 700 y la mora es cero.',
                         'Escribir con dos caracteres las ocho banderas de estado de una transacción.',
                         'El estado más pequeño que un sistema de pagos puede guardar: aprobado o no aprobado.',
-                        'Repartir una cuota entre doce meses y saber cuántos pesos sobran.',
+                        'Repartir un monto entre doce cuotas y saber cuántos pesos sobran.',
                         'Donde vive el saldo mientras el programa corre, antes de guardarse en el disco.',
                         'Donde ocurre físicamente el capital × tasa de cada liquidación.',
                     ]}
@@ -5266,7 +5264,7 @@ End Sub`,
                     },
                     {
                         seccion: 'cap3',
-                        pregunta: 'La expresión: not (saldo > 0) and cuenta_activa, significa:',
+                        pregunta: 'La expresión de Python: not (saldo > 0) and cuenta_activa, significa:',
                         opciones: [
                             { texto: 'El saldo es positivo Y la cuenta NO está activa.', correcta: false },
                             { texto: 'El saldo NO es positivo O la cuenta está activa.', correcta: false },
