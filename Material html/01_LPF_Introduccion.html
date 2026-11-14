@@ -3078,11 +3078,10 @@
         const PortadaSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
-                    gancho="Un centavo de diferencia por transacción, multiplicado por un millón de transacciones, es un descuadre contable que nadie sabe explicar.">
-                    El cierre de mes no cuadra por $8 432. El sistema liquidó bien cada uno de los 840 000 pagos
+                    gancho="Medio centavo de diferencia por transacción, multiplicado por un millón de transacciones, es un descuadre contable que nadie sabe explicar.">
+                    El cierre de mes no cuadra por $4 187. El sistema liquidó bien cada uno de los 840 000 pagos
                     —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún pago mal
-                    calculado: la máquina no guarda exactos los decimales, y el sistema redondeó ochocientos cuarenta
-                    mil veces, una por pago, en vez de una sola al final.
+                    calculado: la máquina no guarda exactos los decimales, y el sistema recortó lo que sobraba del centavo ochocientos cuarenta mil veces, una por pago, en vez de redondear una sola vez al final.
                 </Motivacion>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
@@ -4943,7 +4942,7 @@ End Sub`,
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
-                    gancho="El descuadre de $8 432 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjeron la forma en que la máquina guarda los decimales y el momento en que el sistema redondea.">
+                    gancho="El descuadre de $4 187 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjeron la forma en que la máquina guarda los decimales y el momento en que el sistema los recorta.">
                     Un analista revisa 840 000 pagos buscando el que está mal. No lo va a encontrar, porque no
                     existe: cada uno está bien calculado. Lo que falla es más profundo y más incómodo de aceptar:
                     la máquina no puede guardar exactamente 0,1, igual que usted no puede escribir un tercio
@@ -5068,23 +5067,21 @@ End Sub`,
                 />
 
                 <Ejercicio tipo="E7"><Reto
-                    titulo="$8 432 sobre 840 000 pagos"
+                    titulo="$4 187 sobre 840 000 pagos"
                     solucion={<Box type="tip" label="Qué dice realmente esa cifra">
                         <p>
-                            Lo primero es dividir: 8 432 ÷ 840 000 ≈ <strong>0,01 pesos por pago</strong>. Un centavo cada
-                            uno. La división sola no prueba nada —un único registro errado en esa suma daría el mismo promedio—, pero el enunciado ya dijo que cada pago está bien calculado. Queda la otra lectura: un desvío diminuto repartido entre todos.
+                            Lo primero es dividir: 4 187 ÷ 840 000 ≈ <strong>0,005 pesos por pago</strong>. Medio centavo cada uno. La división sola no prueba nada —un único registro errado en esa suma daría el mismo promedio—, pero el enunciado ya dijo que cada pago está bien calculado. Queda la otra lectura: un desvío diminuto repartido entre todos.
                         </p>
                         <p>
-                            Un desvío del orden de un centavo por operación es la firma de un problema <strong> sistemático de redondeo</strong>, no de un dato equivocado. La representación en base 2, por sí sola, deja diferencias en el decimosexto decimal, no de centavos: los centavos se pierden al redondear cada resultado intermedio.
+                            Medio centavo por operación es lo que se pierde, en promedio, al recortar los decimales que sobran del centavo en vez de redondearlos: 840 000 × 0,005 = 4 200, casi la cifra del cierre. Es la firma de un problema <strong> sistemático de redondeo</strong>, no de un dato equivocado. La representación en base 2, por sí sola, deja diferencias en el decimosexto decimal, no de centavos.
                         </p>
                         <p>
                             Y de ahí sale la acción, que es lo que se le pedía: <strong>no</strong> hay que auditar los
-                            840 000 registros. Hay que revisar cómo se guardan los importes y en qué momento se redondea
-                            —una sola vez al final, o en cada operación intermedia—. Buscar el registro culpable habría
+                            840 000 registros. Hay que revisar cómo se guardan los importes y en qué momento se redondea —si se recorta en cada pago, o se redondea una sola vez al final—. Buscar el registro culpable habría
                             costado semanas y no habría encontrado nada, porque no existe.
                         </p>
                     </Box>}>
-                    Vuelva al descuadre con el que abre el capítulo: el cierre de mes no cuadra por $8 432 sobre
+                    Vuelva al descuadre con el que abre el capítulo: el cierre de mes no cuadra por $4 187 sobre
                     840 000 pagos, y cada pago está bien calculado. Antes de tocar una línea de código: ¿qué le dice
                     esa cifra sobre <em>dónde</em> está el problema, y qué haría usted primero? El caso es inventado, y sus cifras también.
                 </Reto></Ejercicio>

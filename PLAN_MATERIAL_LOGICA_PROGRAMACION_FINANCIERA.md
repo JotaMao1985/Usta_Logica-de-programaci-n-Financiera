@@ -2741,3 +2741,14 @@ lenguajes» con sintaxis de uno solo.
   aparece como «Lección 2 de 6».
 - **El cotejo de pasajes contra la fuente** se hizo con un guion de usar y
   tirar; es el mismo hueco del guion de parejas frase–pasaje.
+
+### El descuadre del capítulo 1 pasa a $4 187 · 2026-11-14
+
+La auditoría dejó dicho que $8 432 sobre 840 000 pagos no podía salir de
+redondear al centavo. El docente aprobó cambiar la cifra y el mecanismo: el
+sistema **recorta** los decimales de cada pago en vez de redondear, lo que
+pierde en promedio medio centavo por pago, y 840 000 × 0,005 = 4 200. El
+descuadre queda en $4 187 y la cuenta está a la vista en la solución del reto.
+Cambian la portada, la apertura de la sección 4 y el reto; ningún otro capítulo
+nombraba la cifra. `PLAN_TAREA11_CAPITULO_01_CONTENIDO.md` conserva la vieja
+como registro de lo que se planeó.
