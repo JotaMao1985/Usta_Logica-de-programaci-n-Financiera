@@ -2752,3 +2752,41 @@ descuadre queda en $4 187 y la cuenta está a la vista en la solución del reto.
 Cambian la portada, la apertura de la sección 4 y el reto; ningún otro capítulo
 nombraba la cifra. `PLAN_TAREA11_CAPITULO_01_CONTENIDO.md` conserva la vieja
 como registro de lo que se planeó.
+
+### Cierre de los pendientes del capítulo 1 · 2026-11-14
+
+Rama `claude/cap01-pendientes`. Lo que la auditoría había dejado para decidir.
+
+**Cerrado.**
+- **La causa del descuadre.** La portada y la apertura de la sección 4 culpaban
+  también a la representación de los decimales. Ahora nombran solo el recorte, y
+  la representación queda como lo que la sección enseña después.
+- **«Mantisa (52)» frente a «53 bits».** Un párrafo tras el laboratorio explica
+  el reparto con tres citas de Goldberg (1991), leído en la reimpresión abierta
+  que aloja Oracle: 64 bits, 11 de exponente y 53 de precisión; un bit de signo;
+  y el bit oculto. La cuenta 64 − 1 − 11 = 52 va a la vista. Goldberg pasa de
+  «Para profundizar» a «Referencias».
+- **Afirmaciones sin clase.** La entrevista técnica se presenta como escena; «la
+  línea más famosa» y «casi siempre por una de tres razones» se quitaron; los
+  compiladores de E8 son ahora un ejemplo y no una historia; `round(2.675, 2)`
+  salió de la justificación; los once créditos quedaron declarados inventados.
+- **Menores.** Dos distractores que se delataban solos, una pregunta del
+  cuestionario final que repetía la tabla de encima, «opcode», el glosario sin
+  «Máscara de bits» (el capítulo no usa el término) y el título de E5.
+
+**Sigue abierto.**
+- El comparador de la sección 2 mezcla `memoria[0]` con `cuota[1..12]` en
+  pseudocódigo y VBA: es la decisión D09, del capítulo 7.
+- Las 13 salidas de VBA sin ejecutar en Excel, las tres preguntas desfasadas del
+  banco Moodle y la revisión en Safari y teléfono: son del docente.
+- La figura de Von Neumann cita solo §5.2 y dibuja también la caché, que el
+  texto cita en §11.
+
+**Huecos de las herramientas.**
+- **El verificador de citas volvió a tener razón a la primera.** La frase del
+  bit oculto decía del formato doble lo que el artículo solo dice en general.
+  Confirma que la lectura sin contexto va antes de registrar la nota, no después.
+- **El texto extraído de la fuente perdió la letra β.** El cotejo mecánico de
+  pasajes no ve los caracteres que la extracción se come.
+- **`estampar_referencias.py 01` no encuentra el capítulo**; hay que pasarle la
+  ruta del archivo. `registrar_afirmaciones.py` sí acepta el número.

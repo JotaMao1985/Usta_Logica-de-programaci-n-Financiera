@@ -3080,8 +3080,7 @@
                 <Motivacion icon="fa-coins"
                     gancho="Medio centavo de diferencia por transacción, multiplicado por un millón de transacciones, es un descuadre contable que nadie sabe explicar.">
                     El cierre de mes no cuadra por $4 187. El sistema liquidó bien cada uno de los 840 000 pagos
-                    —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún pago mal
-                    calculado: la máquina no guarda exactos los decimales, y el sistema recortó lo que sobraba del centavo ochocientos cuarenta mil veces, una por pago, en vez de redondear una sola vez al final.
+                    —nadie encuentra el pago equivocado— y sin embargo el dinero falta. No hay ningún pago mal calculado: el sistema recortó lo que sobraba del centavo ochocientos cuarenta mil veces, una por pago, en vez de redondear una sola vez al final. Y antes de decidir cómo redondear hay que saber algo más incómodo, que ocupa la última sección: la máquina ni siquiera guarda exactos los decimales.
                 </Motivacion>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
@@ -3356,7 +3355,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Decimal a binario por divisiones sucesivas"
                     bloques={CONVERSION_BASES}
-                    nota="Fíjese en la concatenación: el residuo nuevo va DELANTE del resultado acumulado, nunca detrás. En pseudocódigo, Concatenar(a, b) une dos textos en uno."
+                    nota="Fíjese en la concatenación: el residuo nuevo va DELANTE del resultado acumulado, nunca detrás. En pseudocódigo, Concatenar(a, b) une dos valores en un solo texto."
                 />
 
                 <h3>Ejercicios de la sección</h3>
@@ -3432,13 +3431,13 @@ End Sub`,
                         justificacion: 'A=10, B=11, C=12, D=13, E=14, F=15. No existe el dígito para 16 en hexadecimal.'
                     },
                     {
-                        pregunta: 'El sistema octal usa los dígitos del 0 al 7. ¿Cuál es su base?',
+                        pregunta: 'Un sistema de numeración usa solo los dígitos del 0 al 7. ¿Cuál es su base?',
                         opciones: [
                             { texto: '7', correcta: false },
                             { texto: '10', correcta: false },
                             { texto: '8', correcta: true },
                         ],
-                        justificacion: 'La base es igual al número de símbolos. Octal usa 8 símbolos (0-7), base 8.'
+                        justificacion: 'La base es igual al número de símbolos: del 0 al 7 hay ocho, así que es base 8, el sistema octal.'
                     },
                     {
                         pregunta: 'El número hexadecimal 2F equivale en decimal a:',
@@ -3508,7 +3507,7 @@ End Sub`,
     //> 150
 Fin`,
             python: `# Una memoria de cuatro celdas y un ciclo de instruccion
-memoria = [42, 100, 50, 0]   # opcode SUMAR, dos operandos, resultado
+memoria = [42, 100, 50, 0]   # codigo SUMAR, dos operandos, resultado
 
 instruccion = memoria[0]                   # CAPTAR
 if instruccion == 42:                      # DECODIFICAR
@@ -3519,7 +3518,7 @@ print(memoria[3])
 #> 150`,
             r: `# Una memoria de cuatro celdas y un ciclo de instruccion
 # OJO: en R los vectores empiezan en 1, no en 0.
-memoria <- c(42, 100, 50, 0)   # opcode SUMAR, dos operandos, resultado
+memoria <- c(42, 100, 50, 0)   # codigo SUMAR, dos operandos, resultado
 
 instruccion <- memoria[1]                   # CAPTAR
 if (instruccion == 42) {                    # DECODIFICAR
@@ -3744,7 +3743,7 @@ Debug.Print total`,
                         <thead><tr><th>Nivel</th><th>Qué es</th><th>Ejemplo</th></tr></thead>
                         <tbody>
                             <tr><td><strong>Hardware</strong></td><td>Los circuitos: CPU, memoria, discos</td><td>El servidor de un banco, un datáfono</td></tr>
-                            <tr><td><strong>Lenguaje máquina</strong></td><td>Instrucciones en binario: un código de operación y sus operandos</td><td>En la máquina de cuatro celdas de más abajo, el <span className="inline-code">42</span> que significa «sumar»</td></tr>
+                            <tr><td><strong>Lenguaje máquina</strong></td><td>Instrucciones en binario: un código de operación y sus operandos</td><td>En la máquina de cuatro celdas de más abajo, el <span className="inline-code">42</span> que significa «sumar», escrito aquí en decimal para que se lea</td></tr>
                             <tr><td><strong>Ensamblador</strong></td><td>Un nombre legible en lugar de cada código</td><td><span className="inline-code">SUMAR 100, 50</span> en lugar de <span className="inline-code">42 100 50</span></td></tr>
                             <tr><td><strong>Alto nivel</strong></td><td>Python, R, VBA</td><td><span className="inline-code">saldo = saldo - monto_retiro</span></td></tr>
                             <tr><td><strong>Aplicación</strong></td><td>El programa que usa la gente</td><td>Un sistema de cartera, una hoja de cálculo</td></tr>
@@ -3768,7 +3767,7 @@ Debug.Print total`,
                 <h3>Ejercicios de la sección</h3>
 
                 <OrdenaPasos
-                    titulo="Reconstruya el ciclo de instrucción"
+                    titulo="Cargue la memoria y ejecute la instrucción"
                     enunciado="Estas seis instrucciones cargan una operación en memoria y la ejecutan. Póngalas en el orden en que corren: primero se carga la memoria, celda por celda de la primera a la tercera, y después la máquina capta, ejecuta y almacena."
                     pasos={PASOS_CICLO}
                     pista="La CPU no puede captar una instrucción de una celda que todavía no se ha escrito, ni ejecutar con operandos que aún no existen."
@@ -3834,8 +3833,7 @@ Debug.Print total`,
                     solucion={<Box type="tip" label="Criterio de diseño">
                         <p>
                             Lo que se gana es <strong>flexibilidad</strong>: si el programa es un dato más, un programa puede
-                            cargar, generar o modificar otro. De ahí salen los compiladores, los intérpretes y —en el mundo
-                            de la hoja de cálculo— las macros que escriben fórmulas.
+                            cargar, generar o modificar otro. Eso es lo que hacen un compilador, un intérprete y —en el mundo de la hoja de cálculo— una macro que escribe fórmulas: tratan a otro programa como un dato.
                         </p>
                         <p>
                             Lo que se pierde es <strong>aislamiento</strong>. Si datos e instrucciones son indistinguibles para
@@ -3858,7 +3856,7 @@ Debug.Print total`,
                 <Accordion items={[
                     {
                         titulo: '¿Por qué un programa financiero a veces se siente lento?',
-                        contenido: <span>Casi siempre por una de tres razones. (1) <strong>Cálculo</strong>: el procesador está ocupado todo el tiempo, como en una simulación con millones de escenarios. (2) <strong>Entrada y salida</strong>: el programa espera al disco o a la red, que en la tabla de arriba responden entre mil y dos millones de veces más despacio que la memoria principal. (3) <strong>Memoria</strong>: en un sistema con memoria virtual, cuando el programa necesita una página de su memoria que no está en la RAM, el sistema operativo tiene que leerla del disco antes de que el programa siga <Cita k="matthews2020" loc="§13.3.4" />.</span>
+                        contenido: <span>Conviene buscar en tres sitios. (1) <strong>Cálculo</strong>: el procesador está ocupado todo el tiempo, como en una simulación con millones de escenarios. (2) <strong>Entrada y salida</strong>: el programa espera al disco o a la red, que en la tabla de arriba responden entre mil y dos millones de veces más despacio que la memoria principal. (3) <strong>Memoria</strong>: en un sistema con memoria virtual, cuando el programa necesita una página de su memoria que no está en la RAM, el sistema operativo tiene que leerla del disco antes de que el programa siga <Cita k="matthews2020" loc="§13.3.4" />.</span>
                     },
                     {
                         titulo: '¿Cuánta memoria necesita mi programa financiero?',
@@ -3922,7 +3920,7 @@ Debug.Print total`,
                         <li>Las cinco unidades ejecutan cada instrucción en un <strong>ciclo de cuatro pasos</strong>: captar, decodificar, ejecutar y almacenar <Cita k="matthews2020" loc="§5.2" />.</li>
                         <li>Instrucciones y datos se guardan en la <strong>misma memoria</strong>; guardar ahí las instrucciones es una pieza clave del modelo de programa almacenado <Cita k="matthews2020" loc="§5.2" />.</li>
                         <li>En una estación de trabajo típica de 2020, un dato tarda del orden de cien nanosegundos en llegar desde la memoria principal, y de décimas de milisegundo a cientos de milisegundos desde el disco o la red <Cita k="matthews2020" loc="§11.2" />. Por eso lo que no cambia dentro de un ciclo se lee una sola vez, fuera.</li>
-                        <li>Un programa lento espera casi siempre por <strong>cálculo</strong>, por <strong>entrada y salida</strong> o por <strong>memoria</strong>. Saber por cuál dice qué arreglar.</li>
+                        <li>Un programa lento puede estar esperando por <strong>cálculo</strong>, por <strong>entrada y salida</strong> o por <strong>memoria</strong>. Saber por cuál dice qué arreglar.</li>
                     </ul>
                 </Box>
             </div>
@@ -4457,9 +4455,7 @@ End Sub`,
                 </div>
                 <Fuente propia>con la notación de cada lenguaje</Fuente>
                 <Ilustrativo>
-                    Las reglas de esta sección —el score mínimo de 680, los dos salarios mínimos, el codeudor, la lista
-                    restrictiva— se inventaron para practicar los operadores. No son la política de crédito de ninguna
-                    entidad.
+                    Las reglas de esta sección —el score mínimo de 680, los dos salarios mínimos, el codeudor, la lista restrictiva— y el caso de los once créditos con que abre se inventaron para practicar los operadores. No son la política de crédito ni la historia de ninguna entidad.
                 </Ilustrativo>
 
                 <Tabs tabs={[
@@ -4613,7 +4609,7 @@ End Sub`,
                     pregunta="En ese mismo algoritmo, si la meta fuera $1 020 000 en lugar de $1 050 000, ¿qué imprimiría?"
                     opciones={[
                         { texto: 'Nada: el ciclo no termina.', correcta: false },
-                        { texto: '1 — entra una sola vez y sale.', correcta: true, justificacion: 'Con saldo inicial 1 000 000 la condición 1 000 000 < 1 020 000 se cumple, así que entra. Dentro, el saldo pasa a 1 020 000 exactos y mes a 1. Al volver a comprobar, 1 020 000 < 1 020 000 es Falso —el operador es «menor que», no «menor o igual»— y el ciclo termina. Alcanzar la meta exacta no da una vuelta más: ese detalle del signo es el que produce los errores de un mes de diferencia en las proyecciones.' },
+                        { texto: '1 — entra una sola vez y sale.', correcta: true, justificacion: 'Con saldo inicial 1 000 000 la condición 1 000 000 < 1 020 000 se cumple, así que entra. Dentro, el saldo pasa a 1 020 000 exactos y mes a 1. Al volver a comprobar, 1 020 000 < 1 020 000 es Falso —el operador es «menor que», no «menor o igual»— y el ciclo termina. Alcanzar la meta exacta no da una vuelta más: cambiar < por <= mueve la cuenta en una vuelta, que en una proyección es un mes.' },
                         { texto: '0 — la condición no se cumple nunca.', correcta: false },
                         { texto: '2 — hace falta superar la meta, no solo igualarla.', correcta: false },
                     ]}
@@ -4751,11 +4747,11 @@ End Sub`,
                     {
                         pregunta: 'La política dice: score de al menos 680 y, además, ingresos mayores a 3 000 000 o codeudor. ¿Cuál expresión la escribe bien?',
                         opciones: [
-                            { texto: 'score >= 680 Y ingresos > 3000000 O tiene_codeudor', correcta: false },
+                            { texto: '(score >= 680 Y ingresos > 3000000) O tiene_codeudor', correcta: false },
                             { texto: 'score >= 680 Y (ingresos > 3000000 O tiene_codeudor)', correcta: true },
                             { texto: 'score >= 680 O ingresos > 3000000 Y tiene_codeudor', correcta: false },
                         ],
-                        justificacion: 'Los paréntesis hacen falta porque Y se resuelve antes que O. Sin ellos, la primera se lee (score >= 680 Y ingresos > 3000000) O tiene_codeudor, y aprueba a cualquiera con codeudor: es el error del ejercicio «El crédito que se aprueba solo». La tercera pide una sola de dos cosas, y deja pasar a quien tenga el score sin nada más.'
+                        justificacion: 'Los paréntesis tienen que rodear la O, porque Y se resuelve antes. La primera los pone donde la precedencia ya agrupaba sin ellos, y aprueba a cualquiera con codeudor: es el error del ejercicio «El crédito que se aprueba solo». La tercera pide una sola de dos cosas, y deja pasar a quien tenga el score sin nada más.'
                     },
                 ]} />
 
@@ -4942,10 +4938,9 @@ End Sub`,
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-coins"
-                    gancho="El descuadre de $4 187 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjeron la forma en que la máquina guarda los decimales y el momento en que el sistema los recorta.">
+                    gancho="El descuadre de $4 187 del inicio del capítulo no lo produjo ningún pago mal calculado. Lo produjo el recorte de decimales que el sistema hace en cada uno. Y con los decimales la máquina guarda otra sorpresa.">
                     Un analista revisa 840 000 pagos buscando el que está mal. No lo va a encontrar, porque no
-                    existe: cada uno está bien calculado. Lo que falla es más profundo y más incómodo de aceptar:
-                    la máquina no puede guardar exactamente 0,1, igual que usted no puede escribir un tercio
+                    existe: cada uno está bien calculado, y lo que se pierde es el pedazo de centavo que el sistema recorta en cada uno. Debajo hay algo más incómodo de aceptar: aun antes de recortar, la máquina no puede guardar exactamente 0,1, igual que usted no puede escribir un tercio
                     con decimales sin cortarlo en algún punto.
                 </Motivacion>
 
@@ -4958,8 +4953,7 @@ End Sub`,
 
                 <h3>El error que no se ve</h3>
                 <p>
-                    Esta es, seguramente, la línea de código más famosa de la computación: tres números que
-                    cualquiera sumaría de memoria y una máquina que responde que no.
+                    Esta suma parece no tener nada que enseñar: tres números que cualquiera sumaría de memoria, y una máquina que responde que no.
                 </p>
                 <CodeTabs
                     titulo="0,1 + 0,2 y la igualdad que falla"
@@ -4989,6 +4983,15 @@ End Sub`,
                 </p>
                 <FlotanteVisualizer />
                 <Fuente propia>con valores que se calculan en su navegador al escribir el número</Fuente>
+                <p>
+                    El reparto que colorea el laboratorio sale de tres datos del formato doble de IEEE 754: ocupa 64 bits,
+                    11 de ellos son del exponente y su precisión es de 53 bits <Cita k="goldberg1991" loc="The IEEE Standard › Formats and Operations › Precision, tabla de parámetros" />.
+                    En los formatos de IEEE, el signo ocupa un bit <Cita k="goldberg1991" loc="The IEEE Standard › Formats and Operations › Exponent" />.
+                    Quitados ese y los 11 del exponente quedan 64 − 1 − 11 = 52 para la mantisa: uno menos que la precisión.
+                    La diferencia se explica con un recurso de los formatos en base 2: como el bit más significativo de un número
+                    normalizado siempre es 1, no hace falta gastar espacio en guardarlo, y de un formato que se lo ahorra se dice
+                    que tiene un bit oculto <Cita k="goldberg1991" loc="The IEEE Standard › Formats and Operations › Base" />.
+                </p>
 
                 <h3>Cómo se resuelve</h3>
                 <div className="overflow-x-auto">
@@ -5152,7 +5155,6 @@ End Sub`,
             ['CPU', 'Unidad central de procesamiento. La forman la unidad de procesamiento y la unidad de control; ejecuta las instrucciones del programa sobre sus datos.'],
             ['Hexadecimal', 'Sistema de base 16. Dígitos: 0-9 y A-F. Cada dígito equivale a cuatro bits; se ve, por ejemplo, en las direcciones de memoria.'],
             ['Latencia', 'Tiempo que tarda un dispositivo en responder con el dato después de que se le pide.'],
-            ['Máscara de bits', 'Uso de los bits de un entero como banderas de sí o no, independientes entre sí.'],
             ['Operador', 'Símbolo que indica una operación sobre uno o más operandos. Hay aritméticos, relacionales y lógicos.'],
             ['Precedencia', 'Orden en que se resuelven los operadores de una expresión. No es idéntica en los cuatro lenguajes: cambian el residuo y dos potencias seguidas.'],
             ['Programa almacenado', 'Modelo en que la memoria guarda las instrucciones del programa junto a sus datos.'],
@@ -5165,8 +5167,7 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-clipboard-question"
                     gancho="Reconocer la respuesta correcta cuando ya está escrita es fácil. Producirla sin haberla visto es otra cosa, y es la que se evalúa.">
-                    En la entrevista técnica de un banco nadie pregunta qué es un bit. Ponen en pantalla un
-                    algoritmo de siete líneas y preguntan qué imprime. Quien estudió releyendo apuntes se queda
+                    Imagine una entrevista técnica en la que nadie pregunta qué es un bit: ponen en pantalla un algoritmo de siete líneas y preguntan qué imprime. Quien estudió releyendo apuntes se queda
                     mirando la pantalla; quien estudió trazando a mano pide un papel y empieza a escribir la
                     tabla de variables.
                 </Motivacion>
@@ -5221,13 +5222,13 @@ End Sub`,
                 <Quiz titulo="Evaluación · Capítulo 01 — Introducción" preguntas={[
                     {
                         seccion: 'cap1',
-                        pregunta: 'El número binario 1101 equivale en decimal a:',
+                        pregunta: 'El número binario 1011 equivale en decimal a:',
                         opciones: [
-                            { texto: '13 (8 + 4 + 0 + 1 = 13)', correcta: true },
-                            { texto: '11 (1 + 2 + 0 + 8 = 11)', correcta: false },
-                            { texto: '1101 (es el mismo número)', correcta: false },
+                            { texto: '11 (8 + 0 + 2 + 1 = 11)', correcta: true },
+                            { texto: '13 (1 + 0 + 4 + 8 = 13)', correcta: false },
+                            { texto: '1011 (es el mismo número)', correcta: false },
                         ],
-                        justificacion: '1×8 + 1×4 + 0×2 + 1×1 = 13. El 11 sale de leer los pesos al revés, empezando por la izquierda con el 1. Y 1101 en binario no es mil ciento uno: los mismos dígitos valen distinto en otra base.'
+                        justificacion: '1×8 + 0×4 + 1×2 + 1×1 = 11. El 13 sale de leer los pesos al revés, empezando por la izquierda con el 1. Y 1011 en binario no es mil once: los mismos dígitos valen distinto en otra base.'
                     },
                     {
                         seccion: 'cap2',
@@ -5278,7 +5279,7 @@ End Sub`,
                             { texto: 'Mostrar los importes con menos cifras, como hace R por defecto, para que el desfase no aparezca.', correcta: false },
                             { texto: 'Guardar los importes en centavos enteros —o en Currency o Decimal—, para que la igualdad sea exacta.', correcta: true },
                         ],
-                        justificacion: 'Es la opción que la tabla de la sección recomienda para guardar dinero: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio —en Python, round(2.675, 2) da 2.67, porque ese 2,675 está guardado como 2,67499…—. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
+                        justificacion: 'Es la opción que la tabla de la sección recomienda para guardar dinero: 150 000 centavos son exactamente 150 000, y la igualdad vuelve a significar lo que dice. Currency —un entero escalado— y Decimal —aritmética en base 10— llegan a lo mismo por otro camino. La tolerancia arregla la comparación, no la causa: los importes siguen mal guardados y el error reaparece en otro sitio. Por eso la sección la reserva para cálculos intermedios y nunca para decidir un saldo. Pasar a 64 bits no cambia nada: el 0,1 no cabe en base 2 con ningún número de cifras, y el laboratorio muestra sus 64 bits sin que sea exacto. Y mostrar menos cifras es lo que hace R: esconde el error, no lo quita.'
                     },
                     {
                         seccion: 'cap2',
@@ -5338,7 +5339,7 @@ End Sub`,
 
                 <Referencias/>
 
-                <ParaProfundizar k="goldberg1991; ieee2019; vonneumann1993; joyanes2003; cairo2005" />
+                <ParaProfundizar k="ieee2019; vonneumann1993; joyanes2003; cairo2005" />
 
                 <h3>Para practicar</h3>
                 <p>Sitios para ejercitarse. No son las fuentes de este capítulo: esas están en «Referencias».</p>
@@ -5593,10 +5594,11 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "a19cc7b3553afeba4569fb7e7bf9e636caa956fba51e108f14e98a572fd9674d",
-  "sello": "5c0ad373bb78cd92285ddf9716405b0bce84e84823eadfde3d4ebbf282562e2b",
+  "huella": "5773fa611f6374d0a075e8ea7a2bb24d72e1aac43a6d4183290e2ac968fb8505",
+  "sello": "f8ff710cd823f3a6c2fd4e1a9815a379fedfbd1e9de12260c1970d1c72bf29dd",
   "orden": [
     "congreso2008ley1266",
+    "goldberg1991",
     "hornik2026faq",
     "matthews2020",
     "microsoft2018doble",
@@ -5619,6 +5621,12 @@ End Sub`,
       "anio": "2008",
       "html": "Congreso de la República de Colombia. (2008). \u003cem>Ley 1266 de 2008, por la cual se dictan las disposiciones generales del hábeas data y se regula el manejo de la información contenida en bases de datos personales, en especial la financiera, crediticia, comercial, de servicios y la proveniente de terceros países y se dictan otras disposiciones\u003c/em>. Diario Oficial 47.219. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488\u003c/a>",
       "plano": "Congreso de la República de Colombia. (2008). Ley 1266 de 2008, por la cual se dictan las disposiciones generales del hábeas data y se regula el manejo de la información contenida en bases de datos personales, en especial la financiera, crediticia, comercial, de servicios y la proveniente de terceros países y se dictan otras disposiciones. Diario Oficial 47.219. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488"
+    },
+    "goldberg1991": {
+      "autor": "Goldberg",
+      "anio": "1991",
+      "html": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. \u003cem>ACM Computing Surveys\u003c/em>, \u003cem>23\u003c/em>(1), 5-48. \u003ca href=\"https://doi.org/10.1145/103162.103163\">https://doi.org/10.1145/103162.103163\u003c/a>",
+      "plano": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. ACM Computing Surveys, 23(1), 5-48. https://doi.org/10.1145/103162.103163"
     },
     "hornik2026faq": {
       "autor": "Hornik y R Core Team",
@@ -5714,7 +5722,6 @@ End Sub`,
   "profundizar": {
     "orden": [
       "cairo2005",
-      "goldberg1991",
       "ieee2019",
       "joyanes2003",
       "vonneumann1993"
@@ -5723,10 +5730,6 @@ End Sub`,
       "cairo2005": {
         "html": "Cairó Battistutti, O. (2005). \u003cem>Metodología de la programación: algoritmos, diagramas de flujo y programas\u003c/em> (3.ª ed.). Alfaomega.",
         "plano": "Cairó Battistutti, O. (2005). Metodología de la programación: algoritmos, diagramas de flujo y programas (3.ª ed.). Alfaomega."
-      },
-      "goldberg1991": {
-        "html": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. \u003cem>ACM Computing Surveys\u003c/em>, \u003cem>23\u003c/em>(1), 5-48. \u003ca href=\"https://doi.org/10.1145/103162.103163\">https://doi.org/10.1145/103162.103163\u003c/a>",
-        "plano": "Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. ACM Computing Surveys, 23(1), 5-48. https://doi.org/10.1145/103162.103163"
       },
       "ieee2019": {
         "html": "IEEE. (2019). \u003cem>IEEE Standard for Floating-Point Arithmetic\u003c/em> (IEEE 754-2019). IEEE. \u003ca href=\"https://doi.org/10.1109/IEEESTD.2019.8766229\">https://doi.org/10.1109/IEEESTD.2019.8766229\u003c/a>",
