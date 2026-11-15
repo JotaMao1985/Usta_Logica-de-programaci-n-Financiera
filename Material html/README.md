@@ -78,8 +78,9 @@ Hasta el 2026-10-27 las ignoraba, y un `--help` estampaba los cinco capítulos.
 **`sonda_navegador.mjs`** abre cada capítulo como `file://` en un Chrome sin
 ventana y recorre todas sus lecciones. Tiene seis modos:
 - `file`, el de omisión: monta, guarda y no da errores de JavaScript;
-- `375`: nada se sale a 375 px y el botón del menú no tapa la fila «Lección
-  N de M»;
+- `375`: nada se sale a 375 px y el botón del menú no queda encima de lo que se
+  desplaza: por debajo de `lg` vive sobre una barra fija (`#barra-movil`) que
+  lleva «Lección N de M»;
 - `320`: lo mismo a 320 px. Es el ancho al que Safari dibuja la página en un
   iPhone con el zoom de pantalla activado («Texto más grande»); el 2026-11-15 se
   comparó con un iPhone 15 Pro y coincide línea por línea. A 375 px pasaban

@@ -5265,7 +5265,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             return (
                 <div className="flex h-screen overflow-hidden relative">
                     <button onClick={() => setSidebarOpen(p => !p)}
-                        className="fixed top-4 left-4 z-50 p-2.5 rounded-full shadow-lg text-white transition-all hover:scale-110 lp-gradient"
+                        className="fixed top-2 lg:top-4 left-4 z-50 p-2.5 rounded-full shadow-lg text-white transition-all hover:scale-110 lp-gradient"
                         title={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'} aria-label={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'}>
                         <i className={`fas ${sidebarOpen ? 'fa-times' : 'fa-bars'} text-sm`}></i>
                     </button>
@@ -5310,15 +5310,24 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             <div className="h-full lp-gradient transition-all duration-500" style={{ width: `${progreso}%` }}></div>
                         </div>
 
+                        {/* Por debajo de `lg` el botón del menú, fijo arriba a la
+                            izquierda, flotaba sobre el contenido: al desplazarse tapaba
+                            las primeras letras de la línea que pasaba por debajo (visto
+                            en un iPhone el 2026-11-15). Esta barra no se desplaza y es
+                            opaca: el botón queda sobre ella y el texto pasa por debajo
+                            de la barra, no del botón. Lleva «Lección N de M», que así
+                            sigue a la vista. Desde `lg` no hace falta: el relleno del
+                            contenido deja libre el sitio del botón. */}
+                        <div id="barra-movil" className="lg:hidden flex-shrink-0 h-12 flex items-center pl-16 pr-4 bg-bg border-b border-gray-200">
+                            <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
+                                Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
+                            </span>
+                        </div>
+
                         <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
-                                {/* Por debajo de `lg` el botón del menú, fijo arriba a la
-                                    izquierda, caía encima de esta fila y tapaba «Lección N
-                                    de M» y, en el teléfono, «Anterior» (medido de 320 a
-                                    900 px el 2026-11-03). La sangría la deja a su derecha;
-                                    desde `lg` el relleno del contenido ya basta. */}
-                                <div className="mb-6 pl-10 lg:pl-0 flex items-center justify-between flex-wrap gap-3">
-                                    <span className="text-xs font-bold tracking-wider text-secondary-texto uppercase">
+                                <div className="mb-6 flex items-center justify-end lg:justify-between flex-wrap gap-3">
+                                    <span className="hidden lg:inline text-xs font-bold tracking-wider text-secondary-texto uppercase">
                                         Lección {safeIndex + 1} de {curriculum.length} · {progreso} %
                                     </span>
                                     <div className="flex gap-2">

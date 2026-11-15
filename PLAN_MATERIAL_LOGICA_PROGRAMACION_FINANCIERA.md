@@ -3498,3 +3498,30 @@ son glosas nuevas, y no pasaron por el verificador independiente: el inciso de
 la norma dice dónde se leyó, no qué dice. Las líneas de VBA que cambiaron en el
 ejercicio de ordenar no se ejecutaron en Excel.
 
+### 2026-11-15 — El botón del menú ya no flota sobre el texto
+
+Visto en el iPhone del docente: por debajo de 1024 px el botón del menú era fijo
+y quedaba encima del contenido; al desplazarse tapaba las dos primeras letras de
+la línea que pasaba por debajo. Rama `claude/boton-menu`.
+
+**Lo que se hizo.** Por debajo de `lg`, el contenido empieza bajo una barra fija
+y opaca de 48 px (`#barra-movil`), que lleva el botón encima y, a su derecha,
+«Lección N de M · %». El texto pasa por debajo de la barra, no del botón. La
+fila de arriba de cada lección conserva «Anterior» y «Siguiente». Desde 1024 px
+todo queda como estaba. El cambio está en `lp-demo.jsx` (la plantilla del
+`App`), regenerado y reestampado en los cinco capítulos.
+
+**Lo que cuesta.** 48 px de alto en el teléfono, siempre. A cambio, «Lección N
+de M» queda a la vista durante toda la lectura.
+
+**La sonda.** La comprobación del botón cambió de sentido: antes miraba que no
+tapara la primera fila; ahora exige que su rectángulo no toque el del contenido
+que se desplaza y que la barra traiga el rótulo. Prueba negativa: sin la barra,
+el botón tiene que tocar el contenido. Los cinco capítulos pasan a 320, a 375 y
+en escritorio.
+
+**Lo que no se hizo.** No se comprobó en el iPhone: se verá cuando se publique.
+Entre 1024 px y el ancho en que el contenido queda centrado, con el menú
+cerrado, el botón sigue siendo flotante; el relleno de 48 px lo deja fuera del
+texto, pero la sonda no mide ese tramo.
+
