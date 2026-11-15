@@ -183,6 +183,22 @@ const PEGADAS = `(() => {
     }
     return out;
 })()`;
+// La etiqueta del tipo de ejercicio («E7 · Interpretación») va centrada en el
+// borde de arriba de su tarjeta. Se coloca midiendo, y la medida se tomaba
+// antes de que Tailwind generara los estilos cuando el capítulo se abría
+// DIRECTAMENTE en una lección guardada: la etiqueta caía miles de píxeles más
+// abajo y la lección ganaba un tramo vacío al final (visto en un iPhone el
+// 2026-11-15; pasaba igual en Chrome). Entrando por «Siguiente» no ocurre, y
+// por eso la sonda, además de mirar cada lección al pasar, vuelve a cada una
+// que tenga etiquetas, recarga la página y mira otra vez.
+const SUELTAS = `(() => [...document.querySelectorAll('[data-tipo-ejercicio]')].map(e => {
+    const t = e.parentElement.firstElementChild;
+    if (!t || t === e) return null;
+    const d = Math.round(e.getBoundingClientRect().top - t.getBoundingClientRect().top);
+    return Math.abs(d) > 40 ? '«' + e.textContent.trim() + '» a ' + d + ' px de su tarjeta' : null;
+}).filter(Boolean))()`;
+const IR_A = k => `(() => { const b = document.querySelectorAll('aside nav button')[${k}]; if (b) b.click(); return !!b; })()`;
+const MONTADO = `!!document.querySelector('#root') && document.querySelector('#root').innerText.length > 200`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
 const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].find(b => /^\\s*Siguiente/i.test(b.innerText) && !b.disabled); if (b) b.click(); return !!b; })()`;
 // Tailwind aplicado: `max-w-4xl` solo tiene ancho máximo si Tailwind generó su regla.
@@ -207,12 +223,14 @@ for (const ruta of rutas) {
             const t = ${TAPA}; b.style.display = ''; return t.length; })()`);
         if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre el contenido al quitar la barra: la medida no sirve'); await cerrar(); process.exit(1); }
     }
-    const lecciones = [], pegadas = [];
+    const lecciones = [], pegadas = [], sueltas = [], conEtiquetas = [];
     let total = 0, leccionesMal = 0;
     for (let k = 0; k < 20; k++) {
         await espera(900);
         const [n, t] = await evaluar(LECCION);
         total = t;
+        if (await evaluar(`document.querySelectorAll('[data-tipo-ejercicio]').length`)) conEtiquetas.push(n);
+        for (const x of await evaluar(SUELTAS)) sueltas.push(`lección ${n}: ${x}`);
         for (const x of await evaluar(PEGADAS)) pegadas.push(`lección ${n}: «${x.t}»${x.sinAire ? '' : ' (código en línea)'}`);
         if (ancho) {
             const m = await evaluar(MEDIR);
@@ -224,6 +242,17 @@ for (const ruta of rutas) {
         } else lecciones.push(String(n));
         if (n === t || !(await evaluar(SIGUIENTE))) break;
     }
+    // Otra vez, pero recién cargada en cada lección que tenga etiquetas.
+    if (modo !== 'sin-almacen') for (const n of conEtiquetas) {
+        await evaluar(IR_A(n - 1)); await espera(700);
+        await cdp('Page.reload');
+        let listo = false;
+        for (let i = 0; i < 120 && !listo; i++) { await espera(250); listo = await evaluar(MONTADO).catch(() => false); }
+        await espera(1200);
+        const [donde] = await evaluar(LECCION).catch(() => [0]);
+        if (donde !== n) { sueltas.push(`lección ${n}: al recargar no volvió a ella (quedó en la ${donde})`); continue; }
+        for (const x of await evaluar(SUELTAS)) sueltas.push(`lección ${n}, recién cargada: ${x}`);
+    }
     const errores = eventos.filter(e => e.method === 'Runtime.exceptionThrown' ||
         (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error') ||
         (e.method === 'Log.entryAdded' && e.params.entry.level === 'error' && !(SIN_HOST[modo] && (e.params.entry.url || '').includes(SIN_HOST[modo]))));
@@ -233,10 +262,12 @@ for (const ruta of rutas) {
     const conEstilos = await evaluar(ESTILOS);
     // Una lección que falla a 375 px marca también la línea del capítulo:
     // antes del 2026-11-03 la sonda salía con 1 y la línea decía ✓.
-    const mal = errores.length || !recorrio || !conEstilos || leccionesMal || pegadas.length;
+    const mal = errores.length || !recorrio || !conEstilos || leccionesMal || pegadas.length || sueltas.length;
     if (mal) fallos++;
     console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
     if (ancho) console.log(`    ${lecciones.join(' · ')}`);
+    if (sueltas.length) console.log(`    ✗ ${sueltas.length} etiquetas de ejercicio fuera de su tarjeta:`);
+    for (const x of sueltas.slice(0, 6)) console.log(`      ${x}`);
     if (pegadas.length) console.log(`    ✗ ${pegadas.length} palabras pegadas (falta un espacio entre el texto y la etiqueta):`);
     for (const x of pegadas.slice(0, process.env.LPF_TODAS ? 999 : 6)) console.log(`      ${x}`);
     for (const e of errores.slice(0, 3)) {

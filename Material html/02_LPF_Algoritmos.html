@@ -1424,12 +1424,28 @@
         const EjercicioEtiquetado = ({ t, children }) => {
             const caja = useRef(null);
             const [borde, setBorde] = useState(0);
+            // `offsetTop` se mide respecto del ancestro posicionado más cercano, y ese
+            // tiene que ser el envoltorio. Con solo la clase `relative` no lo era
+            // cuando el capítulo se abría directamente en una lección guardada: en
+            // el primer pintado Tailwind todavía no ha generado sus estilos, el
+            // envoltorio no está posicionado y la medida salía respecto de la página
+            // (miles de píxeles). La etiqueta caía muy abajo y alargaba la lección
+            // con un tramo vacío (visto en un iPhone el 2026-11-15). Por eso la
+            // posición va también en `style`, que no espera a nadie, y se vuelve a
+            // medir cuando el envoltorio cambia de tamaño, que es lo que pasa al
+            // llegar los estilos.
             React.useLayoutEffect(() => {
-                const tarjeta = caja.current && caja.current.firstElementChild;
-                if (tarjeta) setBorde(tarjeta.offsetTop);
+                const el = caja.current;
+                if (!el) return;
+                const medir = () => { const tarjeta = el.firstElementChild; if (tarjeta) setBorde(tarjeta.offsetTop); };
+                medir();
+                if (typeof ResizeObserver === 'undefined') return;
+                const ro = new ResizeObserver(medir);
+                ro.observe(el);
+                return () => ro.disconnect();
             }, []);
             return (
-                <div ref={caja} className="relative">
+                <div ref={caja} className="relative" style={{ position: 'relative' }}>
                     {children}
                     <span data-tipo-ejercicio="" className="absolute z-10 text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5 shadow-sm whitespace-nowrap"
                         style={{ background: t.color, top: borde, right: '1rem', transform: 'translateY(-50%)' }}>

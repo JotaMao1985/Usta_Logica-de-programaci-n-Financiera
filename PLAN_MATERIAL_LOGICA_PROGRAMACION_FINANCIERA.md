@@ -3573,3 +3573,50 @@ la configuración nueva; si el del worktree tenía algo propio, se perdió.
 - La detección de palabras pegadas solo mira lo pintado. Lo plegado se buscó
   con una expresión regular sobre el código, que no quedó en el repositorio.
 
+### 2026-11-15 — Un tramo en blanco al final de la lección, y de dónde salía
+
+Revisando en el iPhone la versión publicada, la lección 4 del capítulo 1
+terminaba en varias pantallas en blanco, con una etiqueta «E7 · Interpretación»
+suelta abajo. Rama `claude/etiqueta-ejercicio`.
+
+**La causa.** La etiqueta del tipo de ejercicio se coloca midiendo con
+`offsetTop` dónde empieza su tarjeta, respecto de un envoltorio que debía estar
+posicionado por la clase `relative`. Cuando el capítulo se abre directamente en
+una lección guardada, ese primer pintado ocurre antes de que Tailwind genere
+sus estilos: el envoltorio aún no está posicionado y la medida sale respecto de
+la página. La etiqueta queda miles de píxeles por debajo de su tarjeta y alarga
+la lección con un tramo vacío. Pasa en cualquier navegador; entrando por
+«Siguiente» no pasa. El defecto venía del 2026-11-10, cuando se empezó a medir.
+
+**El arreglo.** El envoltorio lleva `position: relative` también en `style`, y
+la medida se repite con un `ResizeObserver`. Librería regenerada y reestampada.
+
+**La sonda.** No lo veía porque siempre entra por la lección 1 y avanza. Ahora
+comprueba que cada etiqueta esté junto a su tarjeta y, además, vuelve a cada
+lección con etiquetas, recarga la página y lo comprueba recién cargada. Antes
+del arreglo falló en los capítulos 1 y 4 con etiquetas a entre 2 900 y 6 700 px
+de su tarjeta; después pasa en los cinco, a 320, a 375 y en escritorio.
+
+**En el teléfono**, por la red local: la lección 4 abierta directamente mide
+18 943 px en vez de 23 815, las dos etiquetas quedan en 0 px y el final muestra
+el pie.
+
+**Cómo se llegó, y lo que se descartó.** Primero se creyó que Safari dejaba de
+pintar contenido muy alto. Se probaron en el teléfono, con copias temporales
+que recorrían la lección solas y mostraban sus medidas en pantalla: el código
+anterior a los cambios de hoy (fallaba igual: no lo habían causado), sin la
+animación de entrada, con el documento entero desplazándose en vez de una caja
+interna, sin transformaciones ni animaciones, y sin gráficas. Solo cambió el
+resultado al fijar la etiqueta. Las medidas en pantalla mostraron que el
+desplazamiento sí llegaba al final: lo que había era alto de más.
+
+**Dos tropiezos en el teléfono.** Para reproducir el fallo se subió el zoom de
+página de Safari en la dirección local de prueba y se devolvió al 100 %. Y al
+buscar ese control se tocó «Hide Distracting Items»; se canceló sin ocultar
+nada.
+
+**Lo que no se hizo.** No se revisó en el teléfono la versión publicada con
+este arreglo; se verá al publicar. Al elegir una lección desde el menú estando
+al final de otra, la vista quedó una vez al final de la nueva en vez de al
+principio: visto una sola vez, sin investigar.
+
