@@ -3209,9 +3209,11 @@ capítulos; sonda del capítulo 5 en verde.
 **Huecos de las herramientas.**
 
 - El módulo 2 del arnés llegó a Excel con los comentarios en caracteres rotos
-  (acentos y rayas): `pbcopy` sin configuración regional UTF-8. No afecta lo que
-  se ejecuta, porque el código y las cadenas son ASCII, pero un bloque con tildes
-  en una cadena saldría mal. Queda por arreglar en `ejecutar_vba.py`.
+  (acentos y rayas). El guion copia bien el primer módulo, pero para el segundo
+  daba la orden `pbcopy < archivo`, que sin configuración regional UTF-8 rompe
+  esos caracteres. No afectó lo ejecutado, porque el código y las cadenas eran
+  ASCII; un bloque con tildes en una cadena habría salido mal. **Cerrado:** la
+  orden que imprime `ejecutar_vba.py` lleva ahora `LC_ALL=en_US.UTF-8`.
 - Un error de compilación no se puede comprobar con el arnés: no deja correr
   nada. Lo que el material diga de «VBA no deja compilar…» hay que mirarlo a mano.
 - Pegar en el editor de Visual Basic sigue necesitando control de pantalla.
