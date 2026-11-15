@@ -3103,3 +3103,34 @@ reparto con `Currency`, `Option Compare` y qué pasa al reasignar un `Const`.
 
 Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
 capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 7: portada, evaluación y cierre · 2026-11-14
+
+Rama `claude/cap02-fase7`.
+
+- **La clave que sumaba el seguro al «uso del dinero»** (hallazgo alto de la
+  línea base). La opción correcta dice ahora que el cliente devuelve 17 529 600,
+  que son 5 529 600 más de lo recibido —el 46,1 % del capital—, y que de esa
+  diferencia 5 184 000 son intereses y 345 600 son seguro. La justificación
+  muestra la cuenta entera y ya no invoca «la norma de transparencia»: remite a
+  la sección 2, donde está la cita.
+- **La ficha de la portada**, cotejada celda por celda con el syllabus:
+  contenido, 4 horas, cuestionario «Algoritmos» y naturaleza coinciden.
+- **La rúbrica.** El criterio va con su nombre completo, y «más difícil» pasó a
+  «que este curso considera más exigente».
+- **Distractores sin hechos sin respaldo:** fuera «Python […] el más usado hoy»
+  y «el lenguaje que usa el sector financiero».
+- **Opiniones como opiniones:** el gancho de la evaluación ya no cuenta «diez
+  respuestas»; «el algoritmo rápido de este capítulo supone algo», no «suele
+  suponer»; la prueba de escritorio es «una forma», no «la forma».
+- El paso 5 del recorrido de la portada dice «contar vueltas».
+
+Con esta fase quedan corregidos los tres hallazgos altos de la línea base, salvo
+la parte del ejercicio de ordenar que depende del componente (fase 8).
+
+Sin tocar, a la espera del libro impreso (fase 4): toda la sección 1 y tres
+entradas del glosario (Definición «también se le llama determinismo»,
+pseudocódigo, prueba de escritorio).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.

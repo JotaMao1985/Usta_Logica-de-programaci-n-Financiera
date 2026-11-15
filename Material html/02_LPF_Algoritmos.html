@@ -2767,7 +2767,7 @@
                     { num: 2, title: 'Cómo se analiza', desc: 'Entrada, proceso y salida antes de escribir' },
                     { num: 3, title: 'Cómo se escribe', desc: 'Cuatro representaciones de una misma lógica' },
                     { num: 4, title: 'Con qué se escribe', desc: 'Variables, tipos y asignación' },
-                    { num: 5, title: 'Cuál conviene', desc: 'Contar operaciones para poder elegir' },
+                    { num: 5, title: 'Cuál conviene', desc: 'Contar vueltas para poder elegir' },
                 ]} />
 
                 <h3>Los cuatro lenguajes</h3>
@@ -2785,8 +2785,9 @@
                     talleres evaluables. Aquí se ejercita otra cosa —<strong>leer</strong> un algoritmo
                     ajeno, <strong>trazarlo</strong> a mano, <strong>diagnosticar</strong> por qué falla,
                     <strong> compararlo</strong> con otro e <strong>interpretar</strong> qué significa el
-                    resultado para el negocio— que es más difícil y es lo que la rúbrica del syllabus
-                    llama <em>dominio de algoritmos y procedimientos</em>.
+                    resultado para el negocio—, que este curso considera más exigente y que es como
+                    entiende el criterio de la rúbrica del syllabus <em>Dominio de algoritmos y
+                    procedimientos propios del pensamiento matemático</em>.
                 </CalloutPro>
             </div>
         );
@@ -4472,16 +4473,16 @@ Debug.Print vueltas`,
             ['Asignación', 'Operación que evalúa una expresión y guarda el resultado en una variable, borrando lo que hubiera. No es una igualdad matemática: saldo <- saldo + cuota es válido.'],
             ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. En este curso se inicializa siempre antes del primer uso.'],
             ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. En el algoritmo de intercambio de este capítulo es la que evita perder uno de los dos valores.'],
-            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es la forma de encontrar un fallo que la máquina no reporta.'],
+            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es una forma de encontrar un fallo que la máquina no reporta.'],
             ['Eficiencia', 'Costo de un algoritmo medido en cuántas operaciones hace; en este capítulo, en cuántas vueltas da su ciclo. Ese número no depende de la máquina, a diferencia del tiempo de reloj.'],
         ];
 
         const EvaluacionSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-flag-checkered" etiqueta="Antes de responder"
-                    gancho="Un error propio, cometido antes de ver la clave, enseña más que diez respuestas correctas leídas.">
-                    La tentación es mirar la respuesta, reconocerla y seguir: «claro, eso ya lo sabía». Es
-                    también la manera más rápida de salir del capítulo creyendo que se entendió algo que
+                    gancho="Vale más un error propio, cometido antes de ver la clave, que una respuesta correcta leída.">
+                    La tentación es mirar la respuesta, reconocerla y seguir: «claro, eso ya lo sabía». Así
+                    es fácil salir del capítulo creyendo que se entendió algo que
                     no. Equivocarse aquí es barato; en el parcial cuesta una nota, y en producción cuesta
                     dinero de alguien.
                 </Motivacion>
@@ -4499,7 +4500,7 @@ Debug.Print vueltas`,
                     opciones={[
                         { texto: 'El seguro de vida deudor explica la mayor parte del sobrecosto, porque se cobra en cada una de las 24 cuotas.', correcta: false },
                         { texto: 'No puede afirmarse nada todavía: cualquier cifra depende de la inflación que haya en los dos años del crédito.', correcta: false },
-                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
+                        { texto: 'Devolverá $17 529 600 en total: $5 529 600 más de lo que recibió, el 46,1 % del capital. De esa diferencia, $5 184 000 son intereses y $345 600 son seguro.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve: 24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos, da 5 529 600, y 5 529 600 ÷ 12 000 000 = 46,1 %. Esa diferencia no es toda interés: el algoritmo de la sección 2 ya la entrega separada, 5 184 000 de intereses y 345 600 de seguro. Decirlo así, y no solo «su cuota es de 730 400», va en la línea de lo que la ley obliga a informar, como se vio en la sección 2.' },
                         { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -4526,7 +4527,7 @@ Debug.Print vueltas`,
                             { texto: 'La finitud: nada garantiza que la condición se cumpla alguna vez.', correcta: true },
                             { texto: 'La entrada: no dice con qué valor empezar a iterar.', correcta: false },
                         ],
-                        justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. La definición también queda tocada —dos personas pararían en puntos distintos—, pero decir que ambas pararían es suponer justo lo que falta. En un cierre diario eso no se manifiesta como un error: se manifiesta como un proceso que sigue corriendo a medianoche.',
+                        justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. La definición también queda tocada —dos personas pararían en puntos distintos—, pero decir que ambas pararían es suponer justo lo que falta. En un cierre diario eso no se vería como un error, sino como un proceso que sigue corriendo a medianoche.',
                     },
                     {
                         seccion: 'cap2',
@@ -4551,8 +4552,8 @@ Debug.Print vueltas`,
                         opciones: [
                             { texto: 'El diagrama de flujo, porque se entiende de un vistazo y lo puede leer quien no programa.', correcta: false },
                             { texto: 'El pseudocódigo, porque expresa la lógica completa sin atarla a ninguna herramienta.', correcta: true },
-                            { texto: 'VBA, porque es el lenguaje que usa el sector financiero en sus hojas de cálculo.', correcta: false },
-                            { texto: 'Python, porque es el más legible de los tres lenguajes y el más usado hoy.', correcta: false },
+                            { texto: 'VBA, porque es el lenguaje de las hojas de cálculo de Excel.', correcta: false },
+                            { texto: 'Python, porque sus bloques se pueden ejecutar y comprobar de inmediato.', correcta: false },
                         ],
                         justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el flujograma para acordarla con quien no programa, el código para ejecutarla y comprobarla.',
                     },
@@ -4600,7 +4601,7 @@ Debug.Print vueltas`,
                             { texto: 'Los dos pueden ser correctos y costar cantidades de operaciones muy distintas.', correcta: true },
                             { texto: 'El número de operaciones depende del algoritmo, no de la máquina donde corra.', correcta: true },
                         ],
-                        justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido suele suponer algo —que la cartera está ordenada, por ejemplo— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
+                        justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido de este capítulo supone algo —que la cartera está ordenada— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
                     },
                     {
                         seccion: 'cap5',
