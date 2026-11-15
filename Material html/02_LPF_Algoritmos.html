@@ -3824,13 +3824,13 @@ End Sub`,
 
         const TIPOS_DATO = [
             { tipo: 'Entero', guarda: 'Números sin parte decimal', ejemplo: 'plazo en meses, número de cuotas, días de mora',
-                malo: 'Guardar dinero aquí pierde los centavos, y en un reparto el faltante no cuadra con nada.' },
+                malo: 'Guardar aquí un valor con decimales le quita la parte decimal: es lo que pasa en el reparto del último ejercicio.' },
             { tipo: 'Real', guarda: 'Números con decimales', ejemplo: 'tasas, porcentajes, factores',
-                malo: 'Usarlo para dinero arrastra el error de redondeo binario del capítulo 1.' },
-            { tipo: 'Moneda', guarda: 'Valores monetarios con decimales exactos', ejemplo: 'capital, cuota, saldo',
-                malo: 'Es el tipo Currency de VBA. No usarlo es la causa más común de descuadres de un peso.' },
-            { tipo: 'Texto', guarda: 'Cadenas de caracteres', ejemplo: 'nombre, cédula, número de obligación',
-                malo: 'Guardar una cédula como número borra los ceros a la izquierda y le cambia la identidad al cliente.' },
+                malo: 'Usarlo para dinero arrastra el error de redondeo binario del capítulo 1. Los bloques de Python y R de este capítulo guardan así el dinero y redondean al mostrarlo.' },
+            { tipo: 'Moneda', guarda: 'Valores monetarios con un número fijo de decimales', ejemplo: 'capital, cuota, saldo',
+                malo: <>En VBA es el tipo <span className="inline-code">Currency</span>, que guarda el número como un entero con escala de 10 000: punto fijo con cuatro decimales <Cita k="microsoft2018moneda" />. Guardar dinero en otro tipo obliga a decidir a mano cuándo y cómo se redondea.</> },
+            { tipo: 'Texto', guarda: 'Cadenas de caracteres', ejemplo: 'nombre, cédula, código de oficina',
+                malo: 'Guardar como número un código que empieza por cero —la oficina 0045— borra esos ceros: queda 45, que ya no es el mismo código.' },
             { tipo: 'Lógico', guarda: 'Verdadero o falso', ejemplo: '¿está en mora?, ¿tiene codeudor?',
                 malo: 'Sustituirlo por un texto «SI»/«NO» obliga a comparar cadenas, y «Si» ya no es igual a «SI».' },
         ];
@@ -3839,7 +3839,7 @@ End Sub`,
 
         const PASOS_ASIGNACION = [
             { instruccion: null, a: '—', b: '—', aux: '—', cambia: null,
-                nota: 'Antes de empezar, las tres casillas están vacías. Una variable no tiene valor hasta que una instrucción se lo da.' },
+                nota: 'Antes de empezar, el algoritmo no le ha asignado nada a ninguna de las tres casillas.' },
             { instruccion: ins('a <- 500000', 'a = 500_000', 'a <- 500000', 'a = 500000'),
                 a: '500000', b: '—', aux: '—', cambia: 'a',
                 nota: 'La cuenta A tiene $500 000. Solo cambia la casilla de la izquierda de la flecha.' },
@@ -3851,7 +3851,7 @@ End Sub`,
                 nota: 'aux COPIA lo que hay en a. Copiar no es mover: a conserva su valor. Es el punto donde falla la intuición.' },
             { instruccion: ins('a <- b', 'a = b', 'a <- b', 'a = b'),
                 a: '800000', b: '800000', aux: '500000', cambia: 'a',
-                nota: 'a recibe lo de b y pierde lo que tenía. Si no lo hubiéramos copiado en aux, ya no habría forma de recuperarlo.' },
+                nota: 'a recibe lo de b y pierde lo que tenía. Si no se hubiera copiado en aux, este algoritmo ya no tendría de dónde recuperarlo.' },
             { instruccion: ins('b <- aux', 'b = aux', 'b <- aux', 'b = aux'),
                 a: '800000', b: '500000', aux: '500000', cambia: 'b',
                 nota: 'b recibe el valor original de a. El intercambio está hecho, y aux se queda con una copia que ya no hace falta.' },
@@ -4003,10 +4003,10 @@ End Sub`,
         const ERROR_TIPO_OK = { pseudo: 4, python: 3, r: 3, vba: 4 };
 
         const ERROR_TIPO_EXPL = {
-            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Debe declararse como un tipo con decimales —moneda, idealmente—.</>,
-            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta = rendimiento / 3</span>.</>,
-            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span>.</>,
-            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Debe ser <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3.</>,
+            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Con un tipo con decimales la pérdida se achica, pero no desaparece: 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
+            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta = rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
+            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
+            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Con <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3, se conservan cuatro decimales y la pérdida se achica; no desaparece, porque 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
         };
 
         const Cap4Section = () => (
@@ -4014,24 +4014,34 @@ End Sub`,
                 <Motivacion icon="fa-layer-group"
                     gancho="«saldo <- saldo + cuota» es falso como ecuación y correcto como instrucción. Entender por qué es entender qué es una variable.">
                     En clase de matemáticas, <em>x = x + 1</em> no tiene solución: se cancela la x y queda
-                    0 = 1. En un algoritmo, esa misma línea es la instrucción más común que existe: es la
-                    que suma una cuota al saldo, un día a la mora, un registro al conteo. Quien arrastra
-                    la lectura matemática se queda atascado en la tercera línea de su primer programa.
+                    0 = 1. En un algoritmo, esa misma línea es de las que más se repiten: es la que suma
+                    una cuota al saldo, un día a la mora, un registro al conteo. Quien la lee como una
+                    ecuación no la entiende; hay que leerla como una orden.
                 </Motivacion>
 
                 <h3>Variable y constante</h3>
                 <p>
                     Una <Termino def="Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.">variable</Termino> es
                     una casilla con nombre. Una <Termino def="Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución.">constante</Termino> es
-                    una casilla con nombre que nadie vuelve a tocar. La diferencia no es técnica sino de
-                    <strong> intención</strong>: se declara constante lo que no debe cambiar, para que el
-                    lenguaje avise si alguien lo intenta.
+                    una casilla con nombre que nadie vuelve a tocar. La diferencia es de
+                    <strong> intención</strong>: se declara constante lo que no debe cambiar, para que
+                    quien lea el algoritmo lo sepa.
+                </p>
+                <p>
+                    Los lenguajes no la tratan igual. El pseudocódigo del curso y VBA tienen una palabra
+                    para declararla, <span className="inline-code">Constante</span> y
+                    <span className="inline-code"> Const</span>. Python y R no: el nombre en mayúsculas
+                    —<span className="inline-code">SEGURO_MENSUAL</span> en la sección 2— es un
+                    acuerdo entre personas, y si una línea posterior le asigna otro valor, ninguno de los
+                    dos protesta. En esos dos lenguajes la constante la protege quien revisa el código,
+                    no la máquina.
                 </p>
 
                 <h3>Tipos de datos, con criterio financiero</h3>
                 <p>
                     El tipo dice qué cabe en la casilla y qué operaciones tienen sentido. Elegirlo mal no
-                    produce un error visible: produce cifras equivocadas.
+                    siempre produce un error visible; a veces produce cifras equivocadas, como en el
+                    último ejercicio de esta sección.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -4048,6 +4058,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>criterio del curso</Fuente>
 
                 <h3>La asignación no es una igualdad</h3>
                 <p>
@@ -4061,7 +4072,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Un acumulador: tres aportes a una cuenta de ahorro programado"
                     bloques={EJ_ACUMULA}
-                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia, la operación es la misma, y en ninguno de los cuatro significa «es igual a».</>}
+                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia y la operación es la misma: en una asignación no se pregunta si los dos lados son iguales, se ordena guardar. Para preguntar, Python y R tienen otro símbolo, <span className="inline-code">==</span>; el pseudocódigo y VBA usan el mismo <span className="inline-code">=</span>, y es el lugar que ocupa en la línea lo que dice cuál de las dos cosas hace.</>}
                 />
 
                 <h3>La memoria, paso a paso</h3>
@@ -4072,10 +4083,14 @@ End Sub`,
                 <AsignacionPasoAPaso />
 
                 <h3>Ejercicios</h3>
+                <Ilustrativo>
+                    Los saldos, los aportes, las comisiones y el rendimiento de esta sección son cifras
+                    inventadas para practicar.
+                </Ilustrativo>
 
                 <TablaTraza
                     titulo="Traza del intercambio de saldos"
-                    enunciado={<>Complete el valor de las tres variables después de cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor.</>}
+                    enunciado={<>Complete el valor de las tres variables después de cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta.</>}
                     codigo={TRAZA_INTERCAMBIO}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -4085,6 +4100,7 @@ End Sub`,
                         { clave: 'aux', titulo: 'aux' },
                     ]}
                     ocultas={['a', 'b', 'aux']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('a <- 500000', 'a = 500_000', 'a <- 500000', 'a = 500000'), a: '500000', b: '—', aux: '—' },
                         { paso: 2, instruccion: ins('b <- 800000', 'b = 800_000', 'b <- 800000', 'b = 800000'), a: '500000', b: '800000', aux: '—' },
@@ -4097,7 +4113,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Traza de un acumulador de comisiones"
-                    enunciado="Tres operaciones dejan comisión en el mismo día. Complete el valor de la variable después de cada instrucción."
+                    enunciado={<>Tres operaciones dejan comisión en el mismo día. Complete el valor de la variable después de cada instrucción, y escriba <span className="inline-code">—</span> en la salida mientras no se haya mostrado nada; una celda en blanco no cuenta.</>}
                     codigo={TRAZA_COMISIONES}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -4106,6 +4122,7 @@ End Sub`,
                         { clave: 'salida', titulo: 'Salida' },
                     ]}
                     ocultas={['total', 'salida']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('total <- 0', 'total = 0', 'total <- 0', 'total = 0'), total: '0', salida: '—' },
                         { paso: 2, instruccion: ins('total <- total + 12000', 'total = total + 12_000', 'total <- total + 12000', 'total = total + 12000'), total: '12000', salida: '—' },
@@ -4113,7 +4130,7 @@ End Sub`,
                         { paso: 4, instruccion: ins('total <- total + 15300', 'total = total + 15_300', 'total <- total + 15300', 'total = total + 15300'), total: '35800', salida: '—' },
                         { paso: 5, instruccion: ins('Escribir total', 'print(total)', 'cat(total)', 'Debug.Print total'), total: '35800', salida: '35800' },
                     ]}
-                    pista="El acumulador arranca en cero a propósito: si no se inicializa, la primera suma no tiene con qué sumar."
+                    pista="El acumulador arranca en cero a propósito: la primera suma necesita un valor de partida, y escribirlo deja a la vista cuál es."
                 />
 
                 <Ejercicio tipo="E2"><MCQ
@@ -4122,7 +4139,7 @@ End Sub`,
                         { texto: 'a = 500 000 y b = 500 000: se pierde el saldo de la cuenta B.', correcta: false },
                         { texto: 'a = 500 000 y b = 800 000: no cambia nada, las dos instrucciones se anulan.', correcta: false },
                         { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
-                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
+                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: en este algoritmo es el sitio donde el valor sobrevive. Y ningún lenguaje reporta un error, porque las dos asignaciones son válidas: el saldo de una cuenta se pierde en silencio.' },
                     ]}
                 /></Ejercicio>
 
@@ -4145,7 +4162,7 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={3}
                     explicacion={ERROR_TIPO_EXPL}
-                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso no le importa a nadie hasta que se repara en que este reparto corre para cada rendimiento, de cada producto, todos los días. Ese peso diario no desaparece del mundo: queda en una cuenta de descuadre que alguien tiene que explicar a fin de mes. Es el mismo problema del capítulo 1 llegando por otra puerta —allí por el binario, aquí por el tipo elegido—.</>}
+                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso parece nada; repetido en muchos repartos se vuelve una diferencia que alguien tiene que explicar. Es el mecanismo del descuadre con que abre el capítulo 1: allí el sistema recortaba decimales en cada pago; aquí los recorta el tipo elegido.</>}
                 />
             </div>
         );
@@ -4453,8 +4470,8 @@ Debug.Print vueltas`,
             ['Variable', 'Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.'],
             ['Constante', 'Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución. Las políticas del negocio se escriben así.'],
             ['Asignación', 'Operación que evalúa una expresión y guarda el resultado en una variable, borrando lo que hubiera. No es una igualdad matemática: saldo <- saldo + cuota es válido.'],
-            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. Debe inicializarse antes del primer uso.'],
-            ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. Es lo que hace posible intercambiar dos valores sin perder ninguno.'],
+            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. En este curso se inicializa siempre antes del primer uso.'],
+            ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. En el algoritmo de intercambio de este capítulo es la que evita perder uno de los dos valores.'],
             ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es la forma de encontrar un fallo que la máquina no reporta.'],
             ['Eficiencia', 'Costo de un algoritmo medido en cuántas operaciones hace; en este capítulo, en cuántas vueltas da su ciclo. Ese número no depende de la máquina, a diferencia del tiempo de reloj.'],
         ];
@@ -4554,18 +4571,18 @@ Debug.Print vueltas`,
                         seccion: 'cap4',
                         pregunta: 'La instrucción saldo <- saldo + cuota es incorrecta porque una misma variable no puede aparecer a ambos lados. (Verdadero/Falso)',
                         opciones: [{ texto: 'Verdadero', correcta: false }, { texto: 'Falso', correcta: true }],
-                        justificacion: 'Falso, y es el punto donde más se atasca quien viene de matemáticas. La asignación no es una ecuación: primero se evalúa la expresión de la derecha con el valor que ahora tiene saldo, y después el resultado se guarda en saldo. Es el patrón del acumulador, la instrucción más común que existe.',
+                        justificacion: 'Falso. La asignación no es una ecuación: primero se evalúa la expresión de la derecha con el valor que ahora tiene saldo, y después el resultado se guarda en saldo. Es el patrón del acumulador.',
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'Un sistema guarda el número de cédula de los clientes en una variable de tipo entero. ¿Qué problema aparece?',
+                        pregunta: 'Un sistema guarda el código de oficina —por ejemplo 0045— en una variable de tipo entero. ¿Qué problema aparece?',
                         opciones: [
-                            { texto: 'Se pierden los ceros a la izquierda, y el identificador deja de coincidir con el documento real.', correcta: true },
-                            { texto: 'Ocupa más memoria que un texto, y en una base de millones de clientes eso encarece el sistema.', correcta: false },
+                            { texto: 'Se pierden los ceros a la izquierda: queda 45, que ya no coincide con el código real.', correcta: true },
+                            { texto: 'Ocupa más memoria que un texto, y eso encarece el sistema.', correcta: false },
                             { texto: 'No se pueden hacer sumas ni promedios con ella, y el sistema necesita esos totales.', correcta: false },
-                            { texto: 'Ninguno: una cédula está hecha solo de dígitos, así que el tipo entero es el que le corresponde.', correcta: false },
+                            { texto: 'Ninguno: el código está hecho solo de dígitos, así que el tipo entero es el que le corresponde.', correcta: false },
                         ],
-                        justificacion: 'Una cédula se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarla como entero borra los ceros iniciales y convierte a dos personas distintas en la misma. El criterio general: si no tiene sentido hacer aritmética con ello, es texto.',
+                        justificacion: 'Un código se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarlo como entero borra los ceros iniciales, y 0045 y 45 pasan a ser lo mismo. El criterio del curso: si no tiene sentido hacer aritmética con ello, es texto.',
                     },
                     {
                         seccion: 'cap5',
@@ -4840,10 +4857,11 @@ Debug.Print vueltas`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "4dd6ca5ec2bd3523fc70afcdb381f2a1a01ca8d305840773bdffff377f66f0cb",
-  "sello": "a6bd678a79e294813f52afed8be144d550832fe8204484abe1df81c53b871674",
+  "huella": "d9a7bb6ddf29af28bc2959126ed2d94fae2390ec99a9a6b28c6e44d2de154c9f",
+  "sello": "35feee79ac0a9d6ba07dc645239af1a2576ded21f2e7ca64d9624940e1cdd6cf",
   "orden": [
     "congreso2014ley1748",
+    "microsoft2018moneda",
     "nbs1973"
   ],
   "entradas": {
@@ -4852,6 +4870,12 @@ Debug.Print vueltas`,
       "anio": "2014",
       "html": "Congreso de la República de Colombia. (2014). \u003cem>Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones\u003c/em>. Diario Oficial 49.376. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\u003c/a>",
       "plano": "Congreso de la República de Colombia. (2014). Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones. Diario Oficial 49.376. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402"
+    },
+    "microsoft2018moneda": {
+      "autor": "Microsoft",
+      "anio": "2018",
+      "html": "Microsoft. (2018, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
     },
     "nbs1973": {
       "autor": "National Bureau of Standards",

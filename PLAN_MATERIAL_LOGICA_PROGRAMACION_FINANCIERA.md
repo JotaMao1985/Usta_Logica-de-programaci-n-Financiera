@@ -3058,3 +3058,48 @@ dice de sus propios documentos: las remisiones a otros capítulos y las mencione
 del syllabus. Están comprobadas y quedan `sin-clasificar` (nueve notas en el
 capítulo 2). Decidirlo es del docente: una sexta clase, o tratarlas como
 derivadas.
+
+### Capítulo 2, fase 6: la sección 4 dice de cada lenguaje lo que ese lenguaje hace · 2026-11-14
+
+Rama `claude/cap02-fase6`.
+
+- **La constante.** Ya no se declara «para que el lenguaje avise»: se declara
+  «para que quien lea el algoritmo lo sepa». Un párrafo nuevo —el que la sección
+  2 prometía— dice que el pseudocódigo y VBA tienen palabra para declararla y que
+  en Python y R el nombre en mayúsculas es un acuerdo entre personas: si se
+  reasigna, ninguno protesta (ejecutado). No se afirma qué hace VBA ante el
+  intento; se comprueba en Excel en la fase 9.
+- **La tabla de tipos.** Fuera «la causa más común de descuadres de un peso». La
+  fila Moneda cita la ayuda de VBA: entero con escala de 10 000, punto fijo con
+  cuatro decimales (verificador: respalda). «Decimales exactos» pasó a «un
+  número fijo de decimales». La fila Real reconoce que los bloques de Python y R
+  del capítulo guardan así el dinero y redondean al mostrarlo. El ejemplo de los
+  ceros a la izquierda ya no es la cédula —no consta que empiecen por cero— sino
+  un código de oficina inventado, 0045, también en el cuestionario. La tabla lleva
+  `<Fuente propia>`.
+- **Asignar y comparar.** La nota del acumulador decía que `=` no significa «es
+  igual a» en ninguno de los cuatro. En VBA y en el pseudocódigo el mismo `=`
+  compara. Ahora dice que Python y R tienen `==` para preguntar y que en los otros
+  dos lo distingue el lugar en la línea.
+- **El reparto.** Las explicaciones prometían que declarar la variable como
+  moneda arreglaba el error. No lo arregla: 100 000 no es divisible entre 3. Ahora
+  dicen que con decimales la pérdida se achica y que el peso que no se puede
+  partir necesita una regla escrita. En Python y R, sin `int` el total vuelve a
+  dar 100 000 (ejecutado), pero queda una fracción de peso por cuenta.
+- **La remisión al capítulo 1 estaba desfasada.** Decía que allí el descuadre
+  venía «por el binario»; desde la auditoría del capítulo 1 viene del recorte de
+  decimales en cada pago. Corregida.
+- **Trazas.** Las dos llevan `exigeRespuesta` y piden la raya «donde el algoritmo
+  todavía no le haya asignado nada», que vale también en VBA.
+- **Opiniones como opiniones:** «la instrucción más común que existe», «el único
+  sitio donde el valor sobrevive», «debe inicializarse».
+- Un `<Ilustrativo>` declara inventadas las cifras de los ejercicios.
+
+Sin tocar: las definiciones de variable y constante como «espacio de memoria con
+nombre», que esperan con las de la sección 1 el pasaje del libro impreso.
+
+Para la fase 9, en Excel: el redondeo de VBA al guardar en `Long`, el valor del
+reparto con `Currency`, `Option Compare` y qué pasa al reasignar un `Const`.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
