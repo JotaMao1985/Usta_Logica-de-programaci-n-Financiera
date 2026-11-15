@@ -3175,3 +3175,43 @@ capítulos (regla 1, deriva, incluida); sonda en verde en los cinco.
 
 Sin hacer, anotado: el texto de 12,5 px del flujograma del ejemplo en pantallas
 estrechas y el foco de teclado de sus bloques.
+
+### Capítulo 2, fase 9: los demás capítulos, el banco y VBA en Excel · 2026-11-14
+
+Rama `claude/cap02-fase9`.
+
+**Lo que los demás capítulos dicen del 2.** Se leyeron todas las menciones del
+capítulo 2 en el 1, el 3, el 4 y el 5. Solo el 5 quedaba desfasado: decía tres
+veces que la búsqueda encontró el crédito «en 12 comparaciones». Ahora dice
+vueltas, y el comentario que anotaba «en el peor caso harían falta 16, aunque el
+capítulo 2 no lo dice» recoge que ya lo dice. Ningún otro capítulo usa las cifras
+del caso de la cuota. Una dependencia que hay que cuidar en la fase 4: el
+capítulo 5 cita literal la frase del 2 sobre la TIR que no converge.
+
+**VBA en Excel.** `ejecutar_vba.py comparar`, arnés `2c921dca6a`: los cinco
+bloques que declaran salida **coinciden**. Con `--incluir` se mostraron además los
+dos ejercicios de detectar el error: «Interes: 0» al usar la variable antes de
+asignarla, y 33333 y 99999 en el reparto, como dice el capítulo. Un módulo aparte
+comprobó lo que la fase 6 dejó pendiente: con `Currency` el reparto da 33333,3333
+y 99999,9999; `Long` redondea al guardar (2,5 → 2; 3,5 → 4; 33333,5 → 33334);
+`"Si" = "SI"` es falso; una variable `Currency` sin asignar vale 0. **Sin
+comprobar:** qué pasa al reasignar un `Const`, que es un error de compilación e
+impediría correr lo demás; el capítulo no afirma nada sobre eso.
+
+**Banco Moodle.** Las seis preguntas del capítulo 2 se revisaron contra el
+capítulo corregido, solo leyendo el banco: una sigue vigente y cinco tienen
+borrador en el vault. El detalle y las dudas que decide el docente están en la
+nota del vault. Nada se copió al banco.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 5 en verde.
+
+**Huecos de las herramientas.**
+
+- El módulo 2 del arnés llegó a Excel con los comentarios en caracteres rotos
+  (acentos y rayas): `pbcopy` sin configuración regional UTF-8. No afecta lo que
+  se ejecuta, porque el código y las cadenas son ASCII, pero un bloque con tildes
+  en una cadena saldría mal. Queda por arreglar en `ejecutar_vba.py`.
+- Un error de compilación no se puede comprobar con el arnés: no deja correr
+  nada. Lo que el material diga de «VBA no deja compilar…» hay que mirarlo a mano.
+- Pegar en el editor de Visual Basic sigue necesitando control de pantalla.
