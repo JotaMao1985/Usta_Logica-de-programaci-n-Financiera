@@ -736,8 +736,23 @@ pueden intercambiarse entre sí, por lenguaje como `pasos`:
 Un grupo mal escrito (una posición fuera de rango, o en dos grupos) sale por
 `console.error`, y la sonda de navegador lo cuenta como error. Lo que ninguna
 regla puede saber es si a un ejercicio le **falta** `libres`: eso lo ve quien lo
-resuelve de otra manera válida. El ejercicio del capítulo 1 se dejó con un solo
-orden y lo dice en el título; los de los capítulos 3, 4 y 5 están sin revisar.
+resuelve de otra manera válida.
+
+`libres` solo expresa grupos de posiciones que se barajan entre sí. No expresa un
+orden parcial —una lectura que podría ir después de un cálculo que no la usa— ni
+el intercambio de bloques de dos líneas, como los casos de un `Segun`. Lo que
+queda fuera se cierra en el **enunciado**, con una convención dicha en voz alta
+(«las lecturas van antes de los cálculos», «la vuelta se cuenta al final del
+cuerpo», «los casos, en orden alfabético»). La regla de autoría es esa: todo
+orden que dé el mismo resultado, o lo acepta `libres` o lo excluye una frase del
+enunciado.
+
+Los ocho ejercicios de los capítulos 1 a 5 se revisaron así el 2026-11-15. La
+prueba fue ejecutar la versión de Python de cada uno en todos los órdenes
+posibles y comparar salida y variables con el orden canónico: ningún orden
+aceptado cambia el resultado, y cada orden válido que el ejercicio rechaza
+incumple una convención escrita en su enunciado. Es una prueba que conviene
+repetir al escribir un `OrdenaPasos` nuevo; no está en `verificar.py`.
 
 Una variable del `Trazador` con `efimera: true` vale solo en el paso que la
 escribe, sin arrastrarse a los siguientes. Es para las condiciones evaluadas:

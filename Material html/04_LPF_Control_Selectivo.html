@@ -4080,6 +4080,9 @@ total = saldo + recargo
 Debug.Print total`,
         };
 
+        /* Órdenes libres del ejercicio de ordenar: grupos de posiciones (desde 0)
+           cuyos pasos no dependen unos de otros. Ver `libres` en OrdenaPasos. */
+        const LIBRES_MORA = { pseudo: [[1, 2]], python: [[0, 1, 2]], r: [[0, 1, 2]] };   // lecturas y valor por defecto
         const ORDENA_MORA = {
             pseudo: ['Inicio', 'Leer saldo, diasMora', 'recargo <- 0',
                 'Si diasMora > 30 Entonces', 'recargo <- saldo * 0.05', 'FinSi',
@@ -4192,8 +4195,9 @@ Debug.Print total`,
                     nota="Ninguno imprime nada con compras = 0, que es justo lo que se busca. La diferencia está en el motivo: los tres primeros no llegan a dividir; VBA no dividiría tampoco, pero solo porque el Si exterior le impide entrar." />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Para que tenga una sola respuesta, siga una convención que no cambia el resultado: las lecturas van primero, y el saldo se lee antes que los días de mora."
+                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Las lecturas y el valor por defecto del recargo van antes de la condición; no dependen unos de otros, así que entre ellos vale cualquier orden."
                     pasos={ORDENA_MORA}
+                    libres={LIBRES_MORA}
                     pista="Pregúntese qué necesita cada línea para poder ejecutarse. Una de ellas suma una variable que, si la rama no entra, nadie habrá asignado."
                 />
 

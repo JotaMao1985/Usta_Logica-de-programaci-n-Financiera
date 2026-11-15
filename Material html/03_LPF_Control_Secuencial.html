@@ -3019,6 +3019,9 @@ cat(sprintf("Total: %.0f\\n", total))`,
 End Sub`,
         };
 
+        /* Órdenes libres del ejercicio de ordenar: grupos de posiciones (desde 0)
+           cuyos pasos no dependen unos de otros. Ver `libres` en OrdenaPasos. */
+        const LIBRES_LECTURAS = { python: [[0, 1, 2]], r: [[0, 1, 2]] };   // tres lecturas, una por línea
         const ORDENA_FACTURA = {
             pseudo: ['Inicio', 'Leer valorFactura, descuento, tasaIva',
                 'base  <- valorFactura - descuento', 'iva   <- base * tasaIva',
@@ -3122,8 +3125,9 @@ End Sub`,
                 /></Ejercicio>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida una factura de proveedor con descuento por pronto pago e IVA sobre la base gravable."
+                    enunciado="Reconstruya el algoritmo que liquida una factura de proveedor con descuento por pronto pago e IVA sobre la base gravable. Las lecturas van antes de los cálculos; donde cada dato se lee en su propia línea, esas lecturas no dependen una de otra y entre ellas vale cualquier orden."
                     pasos={ORDENA_FACTURA}
+                    libres={LIBRES_LECTURAS}
                     pista="Ninguna variable puede leerse antes de que alguna instrucción le haya dado valor. Empiece por preguntarse qué necesita cada línea para poder ejecutarse."
                 />
             </div>
@@ -4323,8 +4327,9 @@ total = base + iva - retencion`,
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida un CDT al vencimiento: sobre el interés bruto se practica una retención en la fuente del 7 % y se informa el interés neto que recibe el ahorrador."
+                    enunciado="Reconstruya el algoritmo que liquida un CDT al vencimiento: sobre el interés bruto se practica una retención en la fuente del 7 % y se informa el interés neto que recibe el ahorrador. Las lecturas van antes de los cálculos; donde cada dato se lee en su propia línea, entre esas lecturas vale cualquier orden."
                     pasos={ORDENA_CDT}
+                    libres={LIBRES_LECTURAS}
                     pista="Tres cálculos encadenados: cada uno necesita el resultado del anterior. Pregúntese, para cada línea, qué variables tienen que existir ya para que esa línea pueda ejecutarse."
                 />
             </div>

@@ -3581,6 +3581,9 @@ End Sub`,
 
         /* E5 · los mismos pasos, desordenados. La cadena de dependencias es
            real: no se puede captar de una celda que aún no se escribió. */
+        /* Órdenes libres del ejercicio de ordenar: grupos de posiciones (desde 0)
+           cuyos pasos no dependen unos de otros. Ver `libres` en OrdenaPasos. */
+        const LIBRES_CICLO = [[0, 1, 2]];   // las tres cargas de memoria, en los cuatro lenguajes
         const PASOS_CICLO = {
             pseudo: [
                 'memoria[0] <- 42                        // codigo SUMAR',
@@ -3798,8 +3801,9 @@ Debug.Print total`,
 
                 <OrdenaPasos
                     titulo="Cargue la memoria y ejecute la instrucción"
-                    enunciado="Estas seis instrucciones cargan una operación en memoria y la ejecutan. Póngalas en el orden en que corren: primero se carga la memoria, celda por celda de la primera a la tercera, y después la máquina capta, ejecuta y almacena."
+                    enunciado="Estas seis instrucciones cargan una operación en memoria y la ejecutan. Póngalas en el orden en que corren: primero se carga la memoria y después la máquina capta, ejecuta y almacena. Las tres cargas no dependen una de otra: entre ellas vale cualquier orden."
                     pasos={PASOS_CICLO}
+                    libres={LIBRES_CICLO}
                     pista="La CPU no puede captar una instrucción de una celda que todavía no se ha escrito, ni ejecutar con operandos que aún no existen."
                 />
 

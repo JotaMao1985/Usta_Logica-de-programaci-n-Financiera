@@ -3351,3 +3351,48 @@ Después el docente decidió lo que estaba abierto. Rama `claude/cap02-decisione
   importación en UTC y no la del archivo RIS; hay que revisarla después de cada
   tanda. Y al editar por la interfaz hay que apuntar al campo por su
   elemento de accesibilidad, no por coordenada, y comprobar después por la API.
+
+### 2026-11-15 — Los ejercicios de ordenar de los capítulos 1 a 5
+
+Quedaba abierto desde la fase 8 del capítulo 2: `OrdenaPasos` aprendió a aceptar
+más de un orden (`libres`), pero solo el capítulo 2 lo declaraba. Rama
+`claude/ordenar-pasos`. Se revisaron los ocho ejercicios.
+
+**Lo que estaba mal.** Los dos del capítulo 3 (la factura y el CDT) leen tres
+datos en tres líneas en Python y en R, y solo aceptaban un orden, sin decirlo. La
+sección 1 de ese capítulo enseña que esas tres lecturas «se pueden barajar como
+se quiera»: el ejercicio castigaba lo que el texto acababa de afirmar.
+
+**Lo que estaba resuelto con convenciones.** Los de los capítulos 1, 4 y 5 ya
+tenían una sola respuesta porque el enunciado imponía un orden «que no cambia el
+resultado». Era la salida disponible antes de `libres`. Ahora el ejercicio acepta
+lo que es libre y el enunciado solo fija lo que `libres` no puede expresar:
+
+| Ejercicio | Libre ahora | Convención que queda |
+|---|---|---|
+| Cap. 1, ciclo de la máquina | las tres cargas de memoria | primero cargar; después captar, ejecutar y almacenar |
+| Cap. 3, factura y CDT | las tres lecturas (Python y R) | las lecturas, antes de los cálculos |
+| Cap. 4, recargo por mora | lecturas y valor por defecto | van antes de la condición |
+| Cap. 4, `Segun` | nada | casos en orden alfabético y el caso por defecto al final (son bloques de dos líneas) |
+| Cap. 5, recaudo | lo de antes del ciclo | la vuelta se cuenta al final del cuerpo |
+| Cap. 5, oficinas | tres parejas de líneas vecinas | ninguna |
+
+**Cómo se comprobó.** Con la versión de Python de cada ejercicio: se ejecutaron
+todos los órdenes posibles (hasta nueve pasos; el de oficinas, de once, solo los
+aceptados) con dos juegos de datos, comparando lo impreso y las variables con el
+orden canónico. Ningún orden aceptado cambia el resultado. Cada orden válido que
+un ejercicio rechaza incumple una convención escrita en su enunciado, incluido el
+del capítulo 2. Pseudocódigo, R y VBA se revisaron leyendo qué líneas cae en
+cada grupo. Verificador y sonda (capítulos 1, 3, 4 y 5), en verde.
+
+**Huecos de las herramientas.**
+
+- La prueba de «todos los órdenes» vive en un guion temporal; no está en
+  `verificar.py`. Solo ejecuta Python: R y VBA se revisaron a ojo.
+- No se probó la calificación con clics en el navegador. La lógica de `libres`
+  no cambió desde la fase 8, donde sí se probó; la sonda confirma que ningún
+  grupo declarado está mal formado.
+- `libres` no expresa órdenes parciales ni intercambio de bloques. El README lo
+  dice ahora, con la regla de autoría: lo que `libres` no cubre lo excluye el
+  enunciado.
+
