@@ -3009,3 +3009,52 @@ que atribuye un dibujo no se puede comprobar así. Aquí se resolvió con un lec
 que abrió las páginas escaneadas y comparó forma por forma, pero nada en
 `verificar.py` distingue una fila del registro respaldada por texto de una
 respaldada por una imagen.
+
+### Capítulo 2: lo que quedó abierto de la fase 5, y el hueco del respaldo por imagen · 2026-11-14
+
+Rama `claude/cap02-abiertos`, sobre la fase 5.
+
+**Lo abierto.**
+
+- *Vigencia de la norma.* La lista oficial del NIST de publicaciones FIPS
+  retiradas trae FIPS 24 como publicada el 30 de junio de 1973 y **retirada el
+  23 de agosto de 1988**. De la norma ANSI misma no se halló aviso oficial de
+  retiro. El capítulo la sigue citando con su año y sin decir que sea la
+  vigente; el dato queda en la nota de la fuente.
+- *El syllabus y el RA1.* Lo que el capítulo le atribuye se cotejó contra el
+  documento: el RA1 dice «Construye un algoritmo computacional…», los entregables
+  incluyen el «Formato Definición y Análisis» y la rúbrica trae «Dominio de
+  algoritmos y procedimientos propios del pensamiento matemático». Como en el
+  capítulo 1, el syllabus se nombra y no se cita: es un documento propio del
+  curso y no está en Zotero. La ficha de la portada lleva su `fuente-ok`.
+- *Las formas del widget.* Redibujadas con la proporción de la norma (1:2/3 para
+  entrada/salida, proceso y decisión; 1:3/8 para el terminal) y con la punta de
+  flecha abierta. El pie dice ahora «formas y proporciones de». La ficha de cada
+  símbolo muestra el rótulo de ejemplo, que antes no se pintaba.
+
+Sigue abierto: el flujograma del ejemplo (`BloqueFlujo`) no usa esas
+proporciones porque sus cajas llevan texto largo —el pie del widget no se refiere
+a él—; su texto de 12,5 px y el foco de teclado van en la fase 8. La fase 4
+espera el pasaje del libro impreso.
+
+**El hueco, cerrado.** El registro no distinguía una fila respaldada por un
+pasaje de una respaldada por un dibujo, que el verificador de citas no puede
+leer. Ahora:
+
+- la nota del vault lleva `respaldo: imagen` y `cotejado_por` (quién miró la
+  página); el esquema y la plantilla los traen;
+- `registrar_afirmaciones.py` escribe `respaldo: "imagen"` en la fila y se niega
+  a escribir el registro si falta `cotejado_por`; las filas de texto no cambian
+  (`01.yaml` quedó idéntico);
+- la regla 31 falla si un `<Cita>` —una frase— se apoya en una fila de imagen:
+  eso solo sirve para la procedencia de una figura (`<Fuente>`).
+
+Pruebas negativas, sobre copias: marcar como imagen la fila de una frase falla;
+un valor distinto de `texto` o `imagen` falla; una nota de imagen sin
+`cotejado_por` no se registra. README y cabecera de `verificar.py` al día.
+
+**Hueco que sigue abierto, y es de política.** No hay clase para lo que el curso
+dice de sus propios documentos: las remisiones a otros capítulos y las menciones
+del syllabus. Están comprobadas y quedan `sin-clasificar` (nueve notas en el
+capítulo 2). Decidirlo es del docente: una sexta clase, o tratarlas como
+derivadas.

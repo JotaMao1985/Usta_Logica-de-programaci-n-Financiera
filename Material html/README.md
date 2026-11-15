@@ -428,6 +428,12 @@ Las vigilan siete reglas:
     medio, y el `ancla` de cada fila sigue en el capítulo. Un `loc` vacío es
     válido. Una fila que respalda algo que el capítulo ya no cita es un aviso.
     Una obra que solo se recomienda no necesita fila.
+    Una fila puede decir `respaldo: "imagen"`: lo que se cotejó es un dibujo de la
+    fuente —la forma de un símbolo, una gráfica—, que el verificador de citas no
+    puede leer. Vale solo para la procedencia de una figura (`<Fuente>`); si una
+    frase con `<Cita>` se apoya en una fila así, la regla falla. En el vault la
+    nota lleva `respaldo: imagen` y `cotejado_por`, con quién miró la página; sin
+    lo segundo, `registrar_afirmaciones.py` no escribe el registro.
 32. **Entidad o norma sin cita** (aviso) — el texto nombra una entidad o una
     norma sin un `<Cita>` en el mismo párrafo ni un `<Ilustrativo>` alrededor.
     El léxico es la lista `ENTIDADES_Y_NORMAS` de `comprobar_fuentes.js`.

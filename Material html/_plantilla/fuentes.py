@@ -758,6 +758,12 @@ def texto_plano(html):
 DIR_AFIRMACIONES = "afirmaciones"
 CAMPOS_FILA = ("id", "seccion", "ancla", "clave", "loc", "tema")
 CAMPOS_LEIDO = ("fecha", "medio", "por")
+# Con qué se cotejó la afirmación. Casi siempre es un pasaje de texto, y entonces
+# la fila no lleva el campo. `imagen` es para lo que la fuente dibuja y no dice
+# —la forma de un símbolo, una gráfica—: el verificador de citas, que lee texto,
+# no pudo comprobarlo, y alguien tuvo que mirar la página. Solo vale para la
+# procedencia de una figura (`<Fuente>`), nunca para una frase (`<Cita>`).
+RESPALDOS = ("texto", "imagen")
 CABECERA_REGISTRO = (
     "# Registro público de las afirmaciones citadas del capítulo {nn}.\n"
     "# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.\n"
@@ -799,6 +805,8 @@ def texto_de_registro(nn, filas):
         lineas.append("  leido:")
         lineas += [f"    {c}: {q(f['leido'][c])}" for c in CAMPOS_LEIDO]
         lineas.append(f"  extracto_sha256: {q(f['extracto_sha256'])}")
+        if f.get("respaldo", "texto") != "texto":
+            lineas.append(f"  respaldo: {q(f['respaldo'])}")
     return "\n".join(lineas) + "\n"
 
 

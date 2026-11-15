@@ -91,7 +91,7 @@
   extracto_sha256: "bb811039611aa466e7d981d4ef9ea46a7c2e8e1a942445834f165f1a990a96f2"
 - id: "c02-s3-a18"
   seccion: "3. Representaciones"
-  ancla: "formas adaptadas de"
+  ancla: "formas y proporciones de"
   clave: "nbs1973"
   loc: "§3.2 a §3.4"
   tema: "norma"
@@ -100,3 +100,4 @@
     medio: "acceso-abierto"
     por: "Claude (sesión maestra)"
   extracto_sha256: "bbe510a21fca9d085491c29c1bdd523303d6bbc5b9283861227bcc60d760f92e"
+  respaldo: "imagen"

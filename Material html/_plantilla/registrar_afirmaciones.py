@@ -9,6 +9,7 @@ afirmación, y ese pasaje no se publica. Aquí se LEEN —nunca se escribe en el
 vault— y de cada una sale una fila con lo que sí puede ser público:
 
     id, seccion, ancla, clave, loc, tema
+    respaldo                        solo si es `imagen`: la fuente lo dibuja, no lo dice
     leido: {fecha, medio, por}      de leido_fecha, leido_medio y leido_por
     extracto_sha256                 sha256 del texto de «## Extracto de la fuente»
 
@@ -131,9 +132,16 @@ def fila_de(ruta, nn):
         problemas.append(f"su `clave` («{props['clave']}») no cumple {fuentes.CLAVE.pattern}")
     if not extracto:
         problemas.append(f"no tiene texto en «## {SECCION_EXTRACTO}»: está verificada sin pasaje")
+    respaldo = str(props.get("respaldo", "")).strip() or "texto"
+    if respaldo not in fuentes.RESPALDOS:
+        problemas.append(f"su `respaldo` («{respaldo}») no es ninguno de {', '.join(fuentes.RESPALDOS)}")
+    elif respaldo == "imagen" and not str(props.get("cotejado_por", "")).strip():
+        problemas.append("dice `respaldo: imagen` y no dice quién miró la página (`cotejado_por`): "
+                         "el verificador de citas lee texto y no pudo comprobarla")
     if problemas:
         return None, problemas
     return {
+        "respaldo": respaldo,
         "id": ident, "seccion": props["seccion"], "ancla": props["ancla"],
         "clave": props["clave"], "loc": props.get("loc", ""), "tema": props["tema"],
         "leido": {"fecha": props["leido_fecha"], "medio": props["leido_medio"],
