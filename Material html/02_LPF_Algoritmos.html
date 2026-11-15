@@ -2751,7 +2751,7 @@
         const PortadaSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-money-bill-trend-up"
-                    gancho="Dos algoritmos correctos para el mismo problema, y uno repite su trabajo tres mil veces más que el otro. ¿Qué los diferencia, si los dos dan el resultado bueno?">
+                    gancho="Dos algoritmos correctos para el mismo problema, y, para el mismo dato, uno repite su trabajo tres mil veces más que el otro. ¿Qué los diferencia, si los dos dan el resultado bueno?">
                     A dos analistas les encargan lo mismo: encontrar un crédito dentro de una cartera de
                     40 000. El primero escribe una rutina que los revisa uno por uno y funciona. El
                     segundo aprovecha que la cartera ya viene ordenada y escribe otra que también
@@ -2963,7 +2963,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Descuento por pronto pago sobre una factura de $8 000 000"
                     bloques={EJ_DESCUENTO}
-                    nota={<>Las líneas que empiezan por <span className="inline-code">#&gt;</span> son la <strong>salida</strong> de la máquina, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
+                    nota={<>Las líneas que empiezan por <span className="inline-code">//&gt;</span>, <span className="inline-code">#&gt;</span> o <span className="inline-code">'&gt;</span>, según el lenguaje, son la <strong>salida</strong>, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
                 />
 
                 <CalloutPro tema="warn" titulo="Lo que parece un algoritmo y no lo es" subtitulo="Tres frases inventadas, del tipo que trae un instructivo" icon="fa-triangle-exclamation">
@@ -2972,7 +2972,7 @@ End Sub`,
                     <strong>«Repita hasta obtener un resultado razonable.»</strong> Puede no terminar
                     nunca. Falla la <strong>finitud</strong>.<br />
                     <strong>«Aplique el criterio del analista senior.»</strong> Dos analistas, dos
-                    resultados. Falla la <strong>definición</strong>.
+                    resultados. Falla la <strong>precisión</strong> y, con ella, la <strong>definición</strong>.
                 </CalloutPro>
 
                 <h3>Ejercicios</h3>
@@ -2983,7 +2983,9 @@ End Sub`,
                         <p style={{ marginTop: 0 }}>
                             <strong>La receta</strong> falla la <strong>precisión</strong> en el paso 4
                             («sal al gusto» delega la cantidad en quien cocina) y también en el 3
-                            («al dente» no es una condición medible). No falla la finitud: termina.
+                            («al dente» no es una condición medible). Con la precisión caen otras dos: una
+                            condición de parada que no se puede medir no garantiza que la cocción
+                            termine, ni que dos cocineros obtengan lo mismo.
                         </p>
                         <p>
                             <strong>El manual</strong> falla la <strong>precisión</strong> en el paso 2
@@ -3011,9 +3013,9 @@ End Sub`,
                 </Reto></Ejercicio>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En el algoritmo del descuento, alguien cambia la línea de la tasa y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
+                    pregunta="En el algoritmo del descuento, alguien cambia el dato del porcentaje y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
                     opciones={[
-                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. La entrada estaba mal declarada, no el proceso.' },
+                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. El dato se dio en otra unidad de la que el algoritmo espera; el proceso hizo lo que dice.' },
                         { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
                         { texto: 'El programa se detiene con un error: 0.03 no es un porcentaje válido.', correcta: false },
                         { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
@@ -3240,17 +3242,18 @@ End Sub`,
                 <CodeTabs
                     titulo="Liquidación de la cuota — el análisis EPS convertido en algoritmo"
                     bloques={EJ_LIQUIDACION}
-                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio. El pseudocódigo y VBA tienen una palabra para declararla (<span className="inline-code">Constante</span>, <span className="inline-code">Const</span>); en Python y en R es una variable como las demás, y el nombre en mayúsculas es un aviso para quien lee. La sección 4 vuelve sobre esa diferencia.</>}
+                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio. El pseudocódigo y VBA tienen una palabra para declararla (<span className="inline-code">Constante</span>, <span className="inline-code">Const</span>); en los bloques de Python y de R es una variable como las demás, y el nombre en mayúsculas es un aviso para quien lee. La sección 4 vuelve sobre esa diferencia.</>}
                 />
 
                 <Box type="warn" label="La salida también se diseña">
                     Un algoritmo que solo devuelve <span className="inline-code">730400</span> obliga a
                     quien lo recibe a confiar. Uno que devuelve el interés, el seguro y la cuota permite
-                    verificar. En un producto financiero eso no es solo cortesía. En Colombia, la ley
-                    obliga a las entidades vigiladas a informar a sus clientes el Valor Total Unificado
-                    de lo que pagan por todos los conceptos —intereses y seguros incluidos—, siempre
-                    que la naturaleza del producto lo permita, y a diferenciar dentro de ese total lo
-                    que corresponde a la tasa de interés <Cita k="congreso2014ley1748" loc="art. 1.º" />.
+                    verificar. En un producto financiero eso no es solo cortesía. En Colombia, la Ley
+                    1748 de 2014 estableció para las entidades vigiladas la obligación de informar a
+                    sus clientes el Valor Total Unificado, que incluye todos los conceptos que pagan
+                    —intereses y seguros incluidos— siempre que la naturaleza del producto lo permita,
+                    y de diferenciar dentro de ese total lo que corresponde a la tasa de
+                    interés <Cita k="congreso2014ley1748" loc="art. 1.º" />.
                 </Box>
 
                 <h3>Ejercicios</h3>
@@ -3283,7 +3286,7 @@ End Sub`,
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. El orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos. Donde dos líneas no dependen una de otra, cualquiera puede ir primero."
+                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. El orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos. Como en todo el capítulo, la constante y las lecturas van antes de los cálculos; dentro de cada uno de esos dos grupos, las líneas que no dependen una de otra pueden ir en cualquier orden."
                     pasos={PASOS_LIQUIDACION}
                     libres={LIBRES_LIQUIDACION}
                     pista="Empiece por lo que no depende de nada: la constante del negocio y los datos que se leen. El cálculo de la cuota necesita el interés y el seguro ya calculados."
@@ -3720,7 +3723,7 @@ End Sub`,
                     sin traducción.
                 </p>
                 <SimbologiaANSI />
-                <Fuente k="nbs1973" loc="§3.2 a §3.4">formas y proporciones de</Fuente>
+                <Fuente k="nbs1973" loc="§3.2 a §3.4; punta de flecha, §4.4.1">formas y proporciones de</Fuente>
 
                 <p>
                     Las fichas mezclan dos cosas que conviene separar: lo que dice la norma y lo que este
@@ -3730,8 +3733,8 @@ End Sub`,
                     <li>
                         <strong>Entrada y salida.</strong> Un mismo símbolo representa tanto poner
                         información a disposición para su procesamiento como registrar la información ya
-                        procesada <Cita k="nbs1973" loc="§3.2.1" />. Lo que las distingue en el diagrama
-                        es el verbo que va escrito dentro.
+                        procesada <Cita k="nbs1973" loc="§3.2.1" />. En este curso, lo que las distingue
+                        en el diagrama es el verbo que va escrito dentro.
                     </li>
                     <li>
                         <strong>Decisión.</strong> El símbolo representa una operación que determina
@@ -3762,8 +3765,8 @@ End Sub`,
                 <h3>El mismo algoritmo, cuatro veces</h3>
                 <p>
                     El interés simple de un microcrédito, en las cuatro representaciones a la vez. Al
-                    señalar un paso en cualquiera de ellas, los demás resaltan el suyo: es lo que hace
-                    visible que se trata de una sola cosa escrita de cuatro maneras.
+                    señalar un paso del pseudocódigo, el lenguaje natural y el flujograma resaltan el
+                    suyo: es lo que hace visible que se trata de una sola cosa escrita de varias maneras.
                 </p>
                 <CuatroRepresentaciones />
                 <Ilustrativo>
@@ -3796,7 +3799,7 @@ End Sub`,
                 <Box type="info" label="Sobre el ejercicio anterior">
                     Dos de las cuatro respuestas son el <strong>mismo símbolo</strong>, el
                     paralelogramo, y eso no es un descuido del enunciado: como se vio arriba, la entrada
-                    y la salida comparten símbolo. Lo que las distingue es el verbo que va escrito dentro;
+                    y la salida comparten símbolo. En este curso, lo que las distingue es el verbo que va escrito dentro;
                     con los paralelogramos vacíos no se sabría cuál es cuál.
                 </Box>
 
@@ -3870,11 +3873,11 @@ End Sub`,
 
         const TIPOS_DATO = [
             { tipo: 'Entero', guarda: 'Números sin parte decimal', ejemplo: 'plazo en meses, número de cuotas, días de mora',
-                malo: 'Guardar aquí un valor con decimales le quita la parte decimal: es lo que pasa en el reparto del último ejercicio.' },
+                malo: 'Guardar aquí un valor con decimales le quita la parte decimal: Python y R la cortan, y VBA redondea al entero más cercano.' },
             { tipo: 'Real', guarda: 'Números con decimales', ejemplo: 'tasas, porcentajes, factores',
                 malo: 'Usarlo para dinero arrastra el error de redondeo binario del capítulo 1. Los bloques de Python y R de este capítulo guardan así el dinero y redondean al mostrarlo.' },
             { tipo: 'Moneda', guarda: 'Valores monetarios con un número fijo de decimales', ejemplo: 'capital, cuota, saldo',
-                malo: <>En VBA es el tipo <span className="inline-code">Currency</span>, que guarda el número como un entero con escala de 10 000: punto fijo con cuatro decimales <Cita k="microsoft2018moneda" />. Guardar dinero en otro tipo obliga a decidir a mano cuándo y cómo se redondea.</> },
+                malo: <>En VBA es el tipo <span className="inline-code">Currency</span>, que guarda el número como un entero con escala de 10 000: punto fijo con cuatro decimales <Cita k="microsoft2018moneda" />. Con otro tipo, ni siquiera esos cuatro decimales los fija el lenguaje: cuándo y cómo se redondea queda por decidir a mano.</> },
             { tipo: 'Texto', guarda: 'Cadenas de caracteres', ejemplo: 'nombre, cédula, código de oficina',
                 malo: 'Guardar como número un código que empieza por cero —la oficina 0045— borra esos ceros: queda 45, que ya no es el mismo código.' },
             { tipo: 'Lógico', guarda: 'Verdadero o falso', ejemplo: '¿está en mora?, ¿tiene codeudor?',
@@ -4049,7 +4052,7 @@ End Sub`,
         const ERROR_TIPO_OK = { pseudo: 4, python: 3, r: 3, vba: 4 };
 
         const ERROR_TIPO_EXPL = {
-            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Con un tipo con decimales la pérdida se achica, pero no desaparece: 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
+            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Con el tipo Moneda la pérdida se achica y no desaparece; con el tipo Real el total vuelve a dar 100 000, pero cada cuenta queda con una fracción de peso que no se puede pagar. En los dos casos el fondo es el mismo: 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
             python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta = rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
             r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
             vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Con <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3, se conservan cuatro decimales y la pérdida se achica; no desaparece, porque 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
@@ -4076,18 +4079,18 @@ End Sub`,
                 <p>
                     Los lenguajes no la tratan igual. El pseudocódigo del curso y VBA tienen una palabra
                     para declararla, <span className="inline-code">Constante</span> y
-                    <span className="inline-code"> Const</span>. Python y R no: el nombre en mayúsculas
+                    <span className="inline-code"> Const</span>. Los bloques de Python y de R de este
+                    capítulo no la declaran con ninguna palabra: el nombre en mayúsculas
                     —<span className="inline-code">SEGURO_MENSUAL</span> en la sección 2— es un
                     acuerdo entre personas, y si una línea posterior le asigna otro valor, ninguno de los
-                    dos protesta. En esos dos lenguajes la constante la protege quien revisa el código,
-                    no la máquina.
+                    dos protesta. En esos bloques la constante la protege quien revisa el código, no
+                    la máquina.
                 </p>
 
                 <h3>Tipos de datos, con criterio financiero</h3>
                 <p>
                     El tipo dice qué cabe en la casilla y qué operaciones tienen sentido. Elegirlo mal no
-                    siempre produce un error visible; a veces produce cifras equivocadas, como en el
-                    último ejercicio de esta sección.
+                    siempre produce un error visible; a veces produce cifras equivocadas sin avisar.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -4118,7 +4121,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Un acumulador: tres aportes a una cuenta de ahorro programado"
                     bloques={EJ_ACUMULA}
-                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia y la operación es la misma: en una asignación no se pregunta si los dos lados son iguales, se ordena guardar. Para preguntar, Python y R tienen otro símbolo, <span className="inline-code">==</span>; el pseudocódigo y VBA usan el mismo <span className="inline-code">=</span>, y es el lugar que ocupa en la línea lo que dice cuál de las dos cosas hace.</>}
+                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia y la operación es la misma: en una asignación no se pregunta si los dos lados son iguales, se ordena guardar. Para preguntar, Python y R tienen otro símbolo, <span className="inline-code">==</span>, y el pseudocódigo usa <span className="inline-code">=</span>, que en él nunca asigna. Solo en VBA el mismo <span className="inline-code">=</span> hace las dos cosas, y es el lugar que ocupa en la línea lo que dice cuál.</>}
                 />
 
                 <h3>La memoria, paso a paso</h3>
@@ -4196,7 +4199,7 @@ End Sub`,
                     tipos={[
                         'Error de orden: se usa una variable antes de que ninguna instrucción le haya dado valor.',
                         'Error de unidades: se opera con un porcentaje sin convertirlo a tasa decimal.',
-                        'Error de tipo: se guarda un valor con decimales en una variable que solo admite enteros.',
+                        'Error de tipo: se guarda como entero, o se convierte a entero, un valor que tenía decimales.',
                         'Error de sintaxis: falta una palabra clave o un delimitador.',
                     ]}
                     tipoCorrecto={2}
@@ -4221,6 +4224,7 @@ End Sub`,
         const EJ_CONTEO = {
             pseudo: `// Cuantas vueltas da cada algoritmo
 // sobre 40 000 creditos ORDENADOS por numero de obligacion
+// (numerados del 1 al 40 000: cartera[i] = i)
 buscado <- 39814
 
 // A: recorrer uno por uno
@@ -4437,13 +4441,16 @@ Debug.Print vueltas`,
                     <span className="inline-code"> Mientras</span>, que son las estructuras repetitivas del
                     <strong> capítulo 5</strong>. Aquí no hay que saber escribirlas: basta con leerlas y
                     entender que repiten lo de dentro. Lo que se estudia en esta sección es
-                    <strong> cuántas veces</strong> lo repiten.
+                    <strong> cuántas veces</strong> lo repiten. Usan además tres cosas que tampoco hay que
+                    saber escribir todavía: una lista de la que se pide el elemento de una posición
+                    (<span className="inline-code">cartera[i]</span>), la división entera del capítulo 1 y
+                    una orden para salir del ciclo en cuanto aparece el dato.
                 </Box>
 
                 <h3>El mismo problema, dos maneras</h3>
                 <p>
-                    Buscar el crédito número 39 814 en una cartera de 40 000, ordenada por número de
-                    obligación. El algoritmo <strong>A</strong> empieza por el primero y avanza. El
+                    Buscar el crédito número 39 814 en una cartera de 40 000 créditos, numerados del 1
+                    al 40 000 y ordenados por ese número. El algoritmo <strong>A</strong> empieza por el primero y avanza. El
                     algoritmo <strong>B</strong> mira el del medio: si el buscado es mayor, descarta de
                     golpe la mitad de abajo; si es menor, la de arriba; y repite. Los dos encuentran el
                     mismo crédito.
@@ -4496,7 +4503,7 @@ Debug.Print vueltas`,
                 <Ejercicio tipo="E7"><MCQ
                     pregunta="Suponga que el cierre diario hace 5 000 búsquedas como esa: 39 814 vueltas cada una con el algoritmo A y 12 con el B. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
                     opciones={[
-                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de vueltas a 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 = 199 070 000 frente a 5 000 × 12 = 60 000: unas 3 318 veces menos. Y el argumento que le sirve a un comité no es la elegancia del algoritmo sino que el ahorro no pide inversión. Por eso conviene mirar el código antes de pedir más máquina.' },
+                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de vueltas a 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 = 199 070 000 frente a 5 000 × 12 = 60 000: unas 3 318 veces menos. Y el argumento que le sirve a un comité no es la elegancia del algoritmo sino que el ahorro no pide inversión. Por eso conviene mirar el código antes de pedir más máquina. La cuenta vale con el supuesto del enunciado: 39 814 es casi lo peor que le puede pasar a A, y 12 no es lo peor de B, que puede llegar a 16. Con otros créditos la proporción cambia; lo que no cambia es que A puede dar hasta 40 000 vueltas y B nunca más de 16.' },
                         { texto: 'El algoritmo B es preferible porque ocupa menos memoria: carga 12 registros por búsqueda en vez de 39 814.', correcta: false },
                         { texto: 'La diferencia desaparece con un servidor más rápido: una máquina mejor reduce las vueltas que da el algoritmo A.', correcta: false },
                         { texto: 'El algoritmo B entrega un resultado más preciso: con 12 vueltas hay menos pasos en los que equivocarse.', correcta: false },
@@ -4545,8 +4552,8 @@ Debug.Print vueltas`,
                     opciones={[
                         { texto: 'El seguro de vida deudor explica la mayor parte del sobrecosto, porque se cobra en cada una de las 24 cuotas.', correcta: false },
                         { texto: 'No puede afirmarse nada todavía: cualquier cifra depende de la inflación que haya en los dos años del crédito.', correcta: false },
-                        { texto: 'Devolverá $17 529 600 en total: $5 529 600 más de lo que recibió, el 46,1 % del capital. De esa diferencia, $5 184 000 son intereses y $345 600 son seguro.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve: 24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos, da 5 529 600, y 5 529 600 ÷ 12 000 000 = 46,1 %. Esa diferencia no es toda interés: el algoritmo de la sección 2 ya la entrega separada, 5 184 000 de intereses y 345 600 de seguro. Decirlo así, y no solo «su cuota es de 730 400», va en la línea de lo que la ley obliga a informar, como se vio en la sección 2.' },
-                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false },
+                        { texto: 'Devolverá $17 529 600 en total: $5 529 600 más de lo que recibió, el 46,1 % del capital. De esa diferencia, $5 184 000 son intereses y $345 600 son seguro.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve: 24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos, da 5 529 600, y 5 529 600 ÷ 12 000 000 = 46,1 %. Esa diferencia no es toda interés: el algoritmo de la sección 2 ya la entrega separada, 5 184 000 de intereses y 345 600 de seguro. Decirlo así, y no solo «su cuota es de 730 400», va en la línea de lo que dispuso la ley que se cita en la sección 2.' },
+                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false, justificacion: 'El 46,1 % es lo que se paga de más en los 24 meses, frente al capital recibido. No es una tasa anual, y además incluye el seguro.' },
                     ]}
                 /></Ejercicio>
 
@@ -4600,7 +4607,7 @@ Debug.Print vueltas`,
                             { texto: 'VBA, porque es el lenguaje de las hojas de cálculo de Excel.', correcta: false },
                             { texto: 'Python, porque sus bloques se pueden ejecutar y comprobar de inmediato.', correcta: false },
                         ],
-                        justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el flujograma para acordarla con quien no programa, el código para ejecutarla y comprobarla.',
+                        justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el lenguaje natural para acordarla con quien no programa, el flujograma para verla de un vistazo, el código para ejecutarla y comprobarla.',
                     },
                     {
                         seccion: 'cap3',
@@ -4611,7 +4618,7 @@ Debug.Print vueltas`,
                             { texto: 'Una entrada y exactamente dos salidas rotuladas.', correcta: true },
                             { texto: 'Dos entradas y una salida.', correcta: false },
                         ],
-                        justificacion: 'En este curso la condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos salidas, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. La norma que se cita en la sección 3 admite más de dos; el curso se queda con dos porque así el rombo corresponde a Si … Entonces … Sino. Un rombo con una sola salida no decide nada.',
+                        justificacion: 'En este curso la condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos salidas, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. La norma que se cita en la sección 3 prevé que de un símbolo salgan varias líneas de flujo; el curso se queda con dos porque así el rombo corresponde a Si … Entonces … Sino. Un rombo con una sola salida no decide nada.',
                     },
                     {
                         seccion: 'cap4',

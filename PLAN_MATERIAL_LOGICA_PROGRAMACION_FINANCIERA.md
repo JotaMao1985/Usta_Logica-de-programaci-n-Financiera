@@ -3245,3 +3245,68 @@ fuente y ninguna entidad o norma sin cita. Sonda en verde, en escritorio y a
 375 px.
 
 Queda la fase 10: lectura crítica final y verificación de todas las citas.
+
+### Capítulo 2, fase 10: lectura crítica final y verificación de las citas · 2026-11-14
+
+Rama `claude/cap02-fase10`. Dos lectores sin contexto sobre el capítulo ya
+corregido, antes de fusionar, como pedía la lección del capítulo 1.
+
+**El lector del capítulo entero** encontró 2 hallazgos altos, 12 medios y 17
+bajos. Todas las salidas declaradas de Python y R coinciden con la ejecución y
+todas las claves son correctas.
+
+- *Alto 1, un error introducido en esta misma mejora.* En la fase 6 se escribió
+  que «el pseudocódigo y VBA usan el mismo `=`» para asignar y para comparar. Es
+  falso para el pseudocódigo, que asigna con `<-`. Corregido: solo VBA usa el
+  mismo símbolo para las dos cosas.
+- *Alto 2.* El ejercicio de ordenar decía que dos líneas que no dependen una de
+  otra pueden ir en cualquier orden, y rechazaba órdenes que cumplían esa regla
+  (la constante declarada justo antes de usarla). `libres` no expresa órdenes
+  parciales, así que se acotó el enunciado: la constante y las lecturas van antes
+  de los cálculos, y dentro de cada grupo el orden es libre. Con esa regla los
+  grupos declarados cubren todos los órdenes válidos.
+- *Los doce medios, corregidos.* Entre ellos: la solución de la receta decía que
+  no fallaba la finitud, con la misma forma de condición que el capítulo pone como
+  ejemplo de falla; el reparto decía que con cualquier tipo con decimales la
+  pérdida no desaparece, y con Real el total vuelve a 100 000; dos frases le
+  anunciaban al estudiante la respuesta de un ejercicio; el pseudocódigo de la
+  búsqueda no decía que los créditos van numerados del 1 al 40 000.
+- De los bajos se corrigieron cuatro; los demás quedan listados en la nota del
+  capítulo en el vault.
+
+**El verificador de las diez citas** comprobó, una por una, que la frase del
+capítulo es la de la nota, que el ancla está en la oración citada y que clave y
+localizador coinciden con la fila. Las diez respaldan. Señaló ocho ajustes
+alrededor de ellas, todos aplicados:
+
+- dos frases contiguas a una cita eran convención del curso y no lo decían;
+- la justificación del cuestionario decía que la norma «admite más de dos»
+  salidas, que solo sale de un dibujo;
+- «la ley obliga», en presente, daba por vigente una norma cuya vigencia no se
+  comprobó: ahora «la Ley 1748 de 2014 estableció […] la obligación». Esa frase
+  se volvió a someter y salió *parcial* por una razón que los verificadores
+  anteriores dejaron pasar —la condición «siempre que la naturaleza del producto
+  lo permita» limitaba la obligación y en la ley solo limita qué conceptos
+  entran—; se adoptó la redacción que el verificador dio por respaldada;
+- el pie del widget localiza ahora la punta de flecha en §4.4.1, que es de donde
+  sale. Un lector independiente cotejó el redibujado midiendo los dibujos de la
+  norma: formas y proporciones coinciden.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos y el 2 queda sin avisos; sonda del capítulo 2 en verde, en escritorio
+y a 375 px.
+
+**Lo que esta fase enseña sobre el método.**
+
+- La lectura final encontró un error alto que la propia mejora había metido. El
+  verificador automático estaba en verde. La lectura independiente antes de
+  fusionar no es un trámite.
+- Cuatro verificadores leyeron la frase de la ley; los tres primeros no vieron
+  lo que vio el cuarto. Un «respalda» no es definitivo: depende de quién lee.
+- Tres borradores del banco Moodle copiaron frases que esta fase volvió a
+  cambiar. Hay que realinearlos antes de copiarlos; está anotado en el vault.
+
+**Criterios de aceptación del plan.** 1, parcial: nueve afirmaciones
+comprobadas quedan sin clase porque la política no tiene una para remisiones y
+menciones del syllabus. 2 a 7, cumplidos (las salidas de VBA, en Excel). 8,
+cumplido: sin hallazgos altos abiertos y los medios corregidos. 9, cumplido.

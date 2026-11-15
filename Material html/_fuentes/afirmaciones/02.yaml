@@ -22,7 +22,7 @@
     fecha: "2026-11-14"
     medio: "acceso-abierto"
     por: "Claude (sesión maestra)"
-  extracto_sha256: "09bd86850212b4c907bbf07a2adb4af8a29e6de7f306afa3cb2d179629aee567"
+  extracto_sha256: "69fd4f50010447d3c293764cc1a4e7dd3b5efa3ddfbb0c4568abd588a535b736"
 - id: "c02-s3-a05"
   seccion: "3. Representaciones"
   ancla: "inicio, la parada o una interrupción"
@@ -93,7 +93,7 @@
   seccion: "3. Representaciones"
   ancla: "formas y proporciones de"
   clave: "nbs1973"
-  loc: "§3.2 a §3.4"
+  loc: "§3.2 a §3.4; punta de flecha, §4.4.1"
   tema: "norma"
   leido:
     fecha: "2026-11-14"
