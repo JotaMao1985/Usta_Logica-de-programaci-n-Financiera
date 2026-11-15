@@ -3855,7 +3855,7 @@ End Sub`,
                 <p>
                     Una regla de rechazo suele nacer como la negación de una de aprobación, y ahí aparece
                     el error: se niegan los operandos y se deja el conector como estaba. No funciona así.
-                    Al negar, <strong>el conector también cambia</strong> —son las
+                    Al negar, <strong>el conector también cambia</strong> —son las{' '}
                     <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. Deben su nombre a Augustus De Morgan (1806-1871).">leyes de De Morgan</Termino>—:
                 </p>
                 <div className="overflow-x-auto">
@@ -3881,7 +3881,7 @@ End Sub`,
                     Con cifras: la política de aprobación exige <span className="inline-code">score &gt;= 680
                     Y endeudamiento &lt; 40</span>. La de rechazo es su negación, y bien escrita queda
                     <span className="inline-code"> score &lt; 680 O endeudamiento &gt;= 40</span>. Quien deja el
-                    conector y escribe <span className="inline-code">score &lt; 680 Y endeudamiento &gt;= 40</span>
+                    conector y escribe <span className="inline-code">score &lt; 680 Y endeudamiento &gt;= 40</span>{' '}
                     solo rechaza a quien falla <strong>en las dos cosas a la vez</strong>:
                 </p>
                 <div className="overflow-x-auto">
@@ -4500,7 +4500,7 @@ Debug.Print tarifa`,
                         <span className="inline-code"> Si</span> seguidos son equivalentes, y que usar uno u otro es
                         cuestión de gusto. <strong>Argumente por qué no lo es</strong>, apoyándose en los dos casos
                         concretos que han aparecido en esta sección, y enuncie el criterio que usaría para
-                        decidir. Diga también en qué situación dos <span className="inline-code">Si</span>
+                        decidir. Diga también en qué situación dos <span className="inline-code">Si</span>{' '}
                         independientes serían la opción correcta.
                     </p>
                 </Reto></Ejercicio>
@@ -5138,7 +5138,7 @@ End Sub`,
                     las ramas de otro: la condición interior solo se plantea si el flujo entra en la rama
                     que la contiene —la del <span className="inline-code">Entonces</span> o la del
                     <span className="inline-code"> Sino</span>—. Así se escribió la guardia de VBA en la
-                    sección 2. <strong>Encadenar</strong> —la
+                    sección 2. <strong>Encadenar</strong> —la{' '}
                     <Termino def="Serie de condiciones alternativas evaluadas en orden: la primera que resulta verdadera ejecuta su bloque, y ninguna de las siguientes se evalúa.">cascada</Termino>—
                     es poner una alternativa detrás de otra con
                     <span className="inline-code"> Sino Si</span>, de modo que se evalúan por turnos hasta que
@@ -5713,7 +5713,7 @@ End If`,
                     </>}
                 >
                     <p>
-                        Le pasan una rutina de doce tramos escrita como doce <span className="inline-code">Si</span>
+                        Le pasan una rutina de doce tramos escrita como doce <span className="inline-code">Si</span>{' '}
                         anidados y le piden reescribirla. <strong>Enuncie el criterio</strong> que usaría para decidir
                         entre <span className="inline-code">Segun</span> y cascada, aplíquelo a los dos ejemplos que
                         ha visto en el capítulo —la cuota por tipo de cuenta y la política de originación de la
@@ -6285,8 +6285,14 @@ neto = pago - retencion`,
                 if (window.innerWidth < 1024) setSidebarOpen(false);
             };
 
+            // `100dvh`, no `100vh`: en Safari de iPhone `100vh` mide la pantalla sin
+            // las barras del navegador, así que el documento quedaba unos 30 px más
+            // alto que lo visible y se desplazaba entero. Con eso la barra de arriba
+            // se iba bajo la muesca y el botón del menú, que es fijo, volvía a quedar
+            // sobre el texto (visto el 2026-11-15). Donde `dvh` no existe, el estilo
+            // se ignora y manda `h-screen`.
             return (
-                <div className="flex h-screen overflow-hidden relative">
+                <div className="flex h-screen overflow-hidden relative" style={{ height: '100dvh' }}>
                     <button onClick={() => setSidebarOpen(p => !p)}
                         className="fixed top-2 lg:top-4 left-4 z-50 p-2.5 rounded-full shadow-lg text-white transition-all hover:scale-110 lp-gradient"
                         title={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'} aria-label={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'}>
@@ -6347,7 +6353,7 @@ neto = pago - retencion`,
                             </span>
                         </div>
 
-                        <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
+                        <div id="contenido-scroll" className="flex-1 overflow-y-auto overscroll-contain p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-end lg:justify-between flex-wrap gap-3">
                                     <span className="hidden lg:inline text-xs font-bold tracking-wider text-secondary-texto uppercase">

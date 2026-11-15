@@ -10,9 +10,10 @@
  *
  *   file          (por omisión) monta, recorre, guarda en localStorage y no da
  *                 errores de JavaScript.
- *   320           lo mismo que 375, a 320 px: un iPhone con el zoom de pantalla
- *                 activado dibuja la página a ese ancho (comprobado el 2026-11-15
- *                 en Safari de un iPhone 15 Pro, línea por línea).
+ *   320           lo mismo que 375, a 320 px: Safari de iPhone con la página
+ *                 ampliada dibuja a ese ancho (comprobado el 2026-11-15 en un
+ *                 iPhone 15 Pro: el sitio publicado tenía el zoom de página
+ *                 cerca del 125 % y coincidía línea por línea).
  *   375           además, a 375 px de ancho desde la carga (con la barra lateral
  *                 cerrada), nada se sale del viewport sin un contenedor con
  *                 `overflow-x: auto|scroll`. Recortar con `overflow-x: hidden`
@@ -59,8 +60,8 @@ const espera = ms => new Promise(r => setTimeout(r, ms));
 
 const args = process.argv.slice(2);
 const modo = MODOS.has(args[0]) ? args.shift() : 'file';
-// Los modos numéricos son un ancho de pantalla en px. 320 es un iPhone con el
-// zoom de pantalla activado («Texto más grande»): el teléfono del docente.
+// Los modos numéricos son un ancho de pantalla en px. 320 es un iPhone con la
+// página ampliada en Safari: así la veía el teléfono del docente.
 const ancho = /^\d+$/.test(modo) ? Number(modo) : 0;
 const desconocidas = args.filter(a => a.startsWith('--'));
 if (desconocidas.length) { console.error(`opción desconocida: ${desconocidas.join(', ')}`); process.exit(2); }
@@ -155,6 +156,33 @@ const TAPA = `(() => {
     else if (toca(menu, rotulo.getBoundingClientRect())) mal.push(rotulo.innerText.trim().slice(0, 24));
     return mal;
 })()`;
+// Palabras pegadas. JSX borra el salto de línea entre un texto y una etiqueta:
+//     …la Ley 1266 de 2008 llama
+//     <strong>operador de información</strong>
+// se pinta «llamaoperador de información». No es un error de JavaScript ni se
+// sale de nada: solo se ve leyendo (visto en un iPhone el 2026-11-15). Se mide
+// en el DOM: una etiqueta en línea cuyo texto empieza o termina en letra o
+// cifra, pegada a un texto vecino que también. `sinAire` son las que además
+// no tienen relleno ni margen de ese lado y se ven pegadas; las otras (el
+// código en línea, que trae su relleno) se ven separadas, pero se copian y se
+// leen en voz alta pegadas, y cuentan igual. `data-pegado-ok` lo calla.
+const PEGADAS = `(() => {
+    const panel = document.querySelector('.max-w-4xl');
+    const L = /[\\p{L}\\p{N}]/u, out = [];
+    for (const el of panel.querySelectorAll('strong, em, a, b, i, span, code, button, sup, sub')) {
+        if (el.closest('pre, svg, select, textarea, mjx-container, .katex, [data-pegado-ok]')) continue;
+        if (!getComputedStyle(el).display.startsWith('inline')) continue;
+        const txt = el.textContent;
+        if (!txt.trim() || el.tagName === 'SUP' || el.tagName === 'SUB') continue;
+        const cs = getComputedStyle(el);
+        const a = el.previousSibling, d = el.nextSibling;
+        if (a && a.nodeType === 3 && L.test(a.textContent.slice(-1)) && L.test(txt[0]))
+            out.push({ t: a.textContent.slice(-18) + '▌' + txt.slice(0, 18), sinAire: parseFloat(cs.paddingLeft) + parseFloat(cs.marginLeft) < 2 });
+        if (d && d.nodeType === 3 && L.test(d.textContent[0]) && L.test(txt.slice(-1)))
+            out.push({ t: txt.slice(-18) + '▌' + d.textContent.slice(0, 18), sinAire: parseFloat(cs.paddingRight) + parseFloat(cs.marginRight) < 2 });
+    }
+    return out;
+})()`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
 const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].find(b => /^\\s*Siguiente/i.test(b.innerText) && !b.disabled); if (b) b.click(); return !!b; })()`;
 // Tailwind aplicado: `max-w-4xl` solo tiene ancho máximo si Tailwind generó su regla.
@@ -179,12 +207,13 @@ for (const ruta of rutas) {
             const t = ${TAPA}; b.style.display = ''; return t.length; })()`);
         if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre el contenido al quitar la barra: la medida no sirve'); await cerrar(); process.exit(1); }
     }
-    const lecciones = [];
+    const lecciones = [], pegadas = [];
     let total = 0, leccionesMal = 0;
     for (let k = 0; k < 20; k++) {
         await espera(900);
         const [n, t] = await evaluar(LECCION);
         total = t;
+        for (const x of await evaluar(PEGADAS)) pegadas.push(`lección ${n}: «${x.t}»${x.sinAire ? '' : ' (código en línea)'}`);
         if (ancho) {
             const m = await evaluar(MEDIR);
             const tapa = await evaluar(TAPA);
@@ -204,10 +233,12 @@ for (const ruta of rutas) {
     const conEstilos = await evaluar(ESTILOS);
     // Una lección que falla a 375 px marca también la línea del capítulo:
     // antes del 2026-11-03 la sonda salía con 1 y la línea decía ✓.
-    const mal = errores.length || !recorrio || !conEstilos || leccionesMal;
+    const mal = errores.length || !recorrio || !conEstilos || leccionesMal || pegadas.length;
     if (mal) fallos++;
     console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
     if (ancho) console.log(`    ${lecciones.join(' · ')}`);
+    if (pegadas.length) console.log(`    ✗ ${pegadas.length} palabras pegadas (falta un espacio entre el texto y la etiqueta):`);
+    for (const x of pegadas.slice(0, process.env.LPF_TODAS ? 999 : 6)) console.log(`      ${x}`);
     for (const e of errores.slice(0, 3)) {
         const t = e.method === 'Runtime.exceptionThrown' ? (e.params.exceptionDetails.exception?.description || e.params.exceptionDetails.text)
             : e.method === 'Log.entryAdded' ? `${e.params.entry.text} ${e.params.entry.url || ''}` : e.params.args.map(a => a.value ?? a.description).join(' ');

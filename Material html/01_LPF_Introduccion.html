@@ -3178,7 +3178,7 @@
 
                 <Box type="warn" label="Prerrequisitos suaves">
                     No se requiere experiencia previa en programación. El <strong>pseudocódigo</strong> es el lenguaje
-                    normativo del curso —lo que se evalúa— y no se ejecuta en ninguna parte: se lee. Los programas completos en
+                    normativo del curso —lo que se evalúa— y no se ejecuta en ninguna parte: se lee. Los programas completos en{' '}
                     <span className="inline-code">Python</span> y <span className="inline-code">R</span> —los que traen su
                     salida escrita debajo de cada instrucción— se pueden copiar y correr tal cual en Google Colab, VS Code o
                     RStudio. Los fragmentos de dos o tres líneas que acompañan un ejercicio usan variables que el enunciado ya
@@ -3268,7 +3268,7 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-credit-card"
                     gancho="Leer 0x0A no es un truco de examen: es saber qué le pasó a la transacción de un cliente que está esperando.">
-                    Una pasarela de pagos devuelve algunas transacciones rechazadas con el código
+                    Una pasarela de pagos devuelve algunas transacciones rechazadas con el código{' '}
                     <span className="inline-code">0x0A</span>, y nadie en el equipo sabe qué significa. El manual dice
                     «estado en hexadecimal, un byte, una bandera por bit». Son dos dígitos que guardan ocho respuestas
                     de sí o no, y mientras nadie sepa leerlos, cada rechazo se escala a soporte y se responde por teléfono.
@@ -3367,7 +3367,7 @@ End Sub`,
 
                 <h3>Laboratorio interactivo: un valor, bit por bit</h3>
                 <p>
-                    Mueva el deslizador y observe cómo un byte se descompone en potencias de 2. Cada casilla es un
+                    Mueva el deslizador y observe cómo un byte se descompone en potencias de 2. Cada casilla es un{' '}
                     <Termino def="Binary Digit. Unidad mínima de información: 0 o 1. Ocho bits forman un byte.">bit</Termino>; los pesos activados
                     suman exactamente el valor decimal, y las conversiones a binario, octal y hexadecimal se actualizan en vivo.
                 </p>
@@ -3378,7 +3378,7 @@ End Sub`,
                     Un algoritmo es una secuencia de pasos, y una variable, un nombre que guarda un valor; el capítulo 2
                     define los dos con cuidado, y aquí basta con eso.
                     Los tres lenguajes traen atajos para cambiar de base. En Python, <span className="inline-code">bin()</span> convierte un entero a binario <Cita k="psf2026funciones" loc="bin(), hex() y oct()" />;
-                    <span className="inline-code">Hex()</span> da el hexadecimal de un número en VBA <Cita k="microsoft2018hex" loc="descripción" /> y
+                    <span className="inline-code">Hex()</span> da el hexadecimal de un número en VBA <Cita k="microsoft2018hex" loc="descripción" /> y{' '}
                     <span className="inline-code">as.hexmode()</span> hace que R muestre un entero en hexadecimal <Cita k="rcoreteam-hexmode" loc="Description" />.
                     Pero el atajo esconde justamente lo que hay que ver. Escrito a mano, el método de divisiones sucesivas
                     es el mismo en los cuatro: cambia la sintaxis, no la lógica.
@@ -3687,7 +3687,7 @@ Debug.Print total`,
 
                 <Box type="info" label="Idea central">
                     En 1945, John von Neumann publicó un informe que describe la arquitectura en que se basan los computadores modernos,
-                    y que hoy se conoce como <strong>arquitectura de Von Neumann</strong> <Cita k="matthews2020" loc="§5.1" />. En ese modelo no hay distinción entre
+                    y que hoy se conoce como <strong>arquitectura de Von Neumann</strong> <Cita k="matthews2020" loc="§5.1" />. En ese modelo no hay distinción entre{' '}
                     <em>instrucciones</em> y <em>datos</em>: unas y otros se cargan en la misma memoria <Cita k="matthews2020" loc="§5.1" />.
                     Todos los procesadores modernos siguen ese modelo <Cita k="matthews2020" loc="cap. 5, introducción" />.
                 </Box>
@@ -4434,7 +4434,7 @@ End Sub`,
 
                 <Box type="tip" label="El residuo, en la práctica">
                     El residuo sirve más de lo que parece: <span className="inline-code">n MOD 2 = 0</span> dice si un número es par,
-                    <span className="inline-code">monto MOD 10000</span> es lo que sobra al entregar un retiro en billetes de $10 000, y
+                    <span className="inline-code">monto MOD 10000</span> es lo que sobra al entregar un retiro en billetes de $10 000, y{' '}
                     <span className="inline-code">dia MOD 30</span> da la posición del día, de 0 a 29, dentro de un ciclo de facturación de treinta días.
                 </Box>
 
@@ -4442,7 +4442,7 @@ End Sub`,
 
                 <h3>Laboratorio interactivo: interés simple vs. compuesto</h3>
                 <p>
-                    Ajuste el capital, la tasa anual y el plazo, y compare cómo crece la inversión con
+                    Ajuste el capital, la tasa anual y el plazo, y compare cómo crece la inversión con{' '}
                     <span className="inline-code">*</span> (interés simple) frente a <span className="inline-code">^</span> (interés compuesto).
                     La «ganancia extra» es el interés que genera el interés.
                 </p>
@@ -4536,7 +4536,7 @@ End Sub`,
                                 <li><strong>Pseudocódigo:</strong> en este curso, <span className="inline-code">Y</span> y <span className="inline-code">O</span> se leen con cortocircuito, como en Python y en R.</li>
                             </ul>
                             <p>
-                                La diferencia importa cuando el segundo operando solo tiene sentido si el primero se cumple.
+                                La diferencia importa cuando el segundo operando solo tiene sentido si el primero se cumple.{' '}
                                 <span className="inline-code">cuenta &lt;&gt; 0 Y saldo / cuenta &gt; 1</span> es segura con cortocircuito; en VBA, la división
                                 se intenta aunque <span className="inline-code">cuenta</span> valga 0. El capítulo 4 enseña a escribirla para los cuatro.
                             </p>
@@ -4685,7 +4685,7 @@ End Sub`,
                         <p>
                             Traducido a algo accionable: <strong>este cliente se aprueba si presenta un codeudor</strong>. Esa
                             frase —y no el «Falso»— es lo que el asesor necesita. Un sistema que solo devuelve el booleano
-                            obliga a que alguien sepa leer la expresión para poder decírselo al cliente; un sistema que informa
+                            obliga a que alguien sepa leer la expresión para poder decírselo al cliente; un sistema que informa{' '}
                             <em>cuál</em> condición falló convierte un rechazo en una venta.
                         </p>
                     </Box>}>
@@ -4719,7 +4719,7 @@ End Sub`,
                     <Fuente ilustrativo />
                 </CalloutPro>                <CalloutPro tema="gold" titulo="Aplicación financiera" subtitulo="Un modelo de scoring crediticio" icon="fa-chart-line">
                     <p>Un modelo de <Termino def="Sistema estadístico que asigna una puntuación numérica a un solicitante de crédito para estimar su probabilidad de incumplimiento.">credit scoring</Termino> se reduce
-                    a una combinación de operadores sobre los datos del solicitante. La Ley 1266 de 2008 llama
+                    a una combinación de operadores sobre los datos del solicitante. La Ley 1266 de 2008 llama{' '}
                     <strong>operador de información</strong> a la persona, entidad u organización que recibe de la fuente
                     datos personales sobre varios titulares de la información, los administra y los pone en conocimiento de los usuarios
                     bajo los parámetros de esa ley <Cita k="congreso2008ley1266" loc="art. 3, lit. c" />. Ese operador es una entidad, no un símbolo como los de esta sección: coincide la palabra, no el concepto.</p>
@@ -4998,7 +4998,7 @@ End Sub`,
 
                 <Box type="warn" label="Dos cosas que conviene separar">
                     <p>
-                        El error <strong>no nace en la suma</strong>: nace antes, en la <em>representación</em>. Ya
+                        El error <strong>no nace en la suma</strong>: nace antes, en la <em>representación</em>. Ya{' '}
                         <span className="inline-code">0.1</span>, por sí solo, no es 0,1 dentro de la máquina.
                     </p>
                     <p>
@@ -5489,8 +5489,14 @@ End Sub`,
                 if (window.innerWidth < 1024) setSidebarOpen(false);
             };
 
+            // `100dvh`, no `100vh`: en Safari de iPhone `100vh` mide la pantalla sin
+            // las barras del navegador, así que el documento quedaba unos 30 px más
+            // alto que lo visible y se desplazaba entero. Con eso la barra de arriba
+            // se iba bajo la muesca y el botón del menú, que es fijo, volvía a quedar
+            // sobre el texto (visto el 2026-11-15). Donde `dvh` no existe, el estilo
+            // se ignora y manda `h-screen`.
             return (
-                <div className="flex h-screen overflow-hidden relative">
+                <div className="flex h-screen overflow-hidden relative" style={{ height: '100dvh' }}>
                     <button onClick={() => setSidebarOpen(p => !p)}
                         className="fixed top-2 lg:top-4 left-4 z-50 p-2.5 rounded-full shadow-lg text-white transition-all hover:scale-110 lp-gradient"
                         title={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'} aria-label={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'}>
@@ -5551,7 +5557,7 @@ End Sub`,
                             </span>
                         </div>
 
-                        <div id="contenido-scroll" className="flex-1 overflow-y-auto p-6 lg:p-12">
+                        <div id="contenido-scroll" className="flex-1 overflow-y-auto overscroll-contain p-6 lg:p-12">
                             <div className="max-w-4xl mx-auto w-full">
                                 <div className="mb-6 flex items-center justify-end lg:justify-between flex-wrap gap-3">
                                     <span className="hidden lg:inline text-xs font-bold tracking-wider text-secondary-texto uppercase">

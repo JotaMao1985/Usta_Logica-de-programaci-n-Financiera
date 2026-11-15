@@ -3525,3 +3525,51 @@ Entre 1024 px y el ancho en que el contenido queda centrado, con el menú
 cerrado, el botón sigue siendo flotante; el relleno de 48 px lo deja fuera del
 texto, pero la sonda no mide ese tramo.
 
+### 2026-11-15 — Lo que el iPhone mostró y la sonda no veía
+
+Revisión de la barra del menú en el iPhone del docente, ya publicada. Rama
+`claude/alto-iphone`.
+
+**1. La página entera se desplazaba.** El `App` medía su alto con `100vh`. En
+Safari de iPhone eso es la pantalla sin las barras del navegador: el documento
+quedaba unos 30 px más alto que lo visible y se movía entero. La barra nueva se
+iba bajo la muesca y el botón del menú, que es fijo, volvía a quedar sobre el
+texto; además, desplazar hacia arriba llegó a recargar la página. El defecto
+era anterior a la barra; la barra lo hizo visible. Ahora el alto es `100dvh` y
+el contenido lleva `overscroll-contain`.
+
+Se probó en el teléfono **antes de publicar**, sirviendo la rama por la red
+local: la barra no se mueve aunque se siga desplazando al llegar al final, el
+pie se ve completo sobre la barra de Safari y subir no recarga.
+
+**2. Palabras pegadas.** En el teléfono se leyó «llamaoperador de información».
+JSX borra el salto de línea entre un texto y una etiqueta. Había diecisiete
+casos: once en el capítulo 1, uno en el 2 y cinco en el 4; siete se veían
+pegados (negrita, cursiva, términos con definición) y el resto era código en
+línea, que se ve separado por su relleno pero se copia y se lee en voz alta
+pegado. Corregidos con `{' '}`. La sonda los busca ahora en el DOM, en todos
+sus modos, y falla si encuentra uno.
+
+**3. Una corrección a lo dicho antes.** Los 320 px no venían de un ajuste del
+teléfono («zoom de pantalla»), como se anotó: en otra dirección el mismo
+teléfono dibuja a tamaño normal. Era el zoom de página de Safari para el sitio
+publicado, cerca del 125 %. El modo `320` de la sonda sigue valiendo, por esa
+razón y no por la otra. README, sonda y memoria corregidos.
+
+**Lo que no se hizo.** La prueba en el teléfono fue al 100 % de zoom, no al
+125 % del sitio publicado: habría que haber cambiado un ajuste de Safari del
+docente. Del teléfono no se abrió el menú lateral con la barra nueva ni se vio
+«Mostrar» en un bloque de código; lo segundo lo mide la sonda a 320 px.
+
+**Un tropiezo.** Para el servidor de la red local se escribió
+`.claude/launch.json` en el worktree sin mirar que ya existía, y se
+sobrescribió. No está versionado. Se rehízo con el de la carpeta principal más
+la configuración nueva; si el del worktree tenía algo propio, se perdió.
+
+**Huecos de las herramientas.**
+
+- La sonda no puede ver el desplazamiento del documento en Safari de iPhone:
+  Chrome no tiene barras que cambien el alto. Solo se ve en el aparato.
+- La detección de palabras pegadas solo mira lo pintado. Lo plegado se buscó
+  con una expresión regular sobre el código, que no quedó en el repositorio.
+
