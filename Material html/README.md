@@ -82,13 +82,29 @@ ventana y recorre todas sus lecciones. Tiene seis modos:
   desplaza: por debajo de `lg` vive sobre una barra fija (`#barra-movil`) que
   lleva «Lección N de M»;
 - `320`: lo mismo a 320 px. Es el ancho al que Safari dibuja la página en un
-  iPhone con el zoom de pantalla activado («Texto más grande»); el 2026-11-15 se
-  comparó con un iPhone 15 Pro y coincide línea por línea. A 375 px pasaban
-  cosas que a 320 se cortaban: se corre en los dos anchos;
+  iPhone cuando está ampliada: el 2026-11-15 el sitio publicado tenía el zoom de
+  página de Safari cerca del 125 % en un iPhone 15 Pro, y coincidía línea por
+  línea con la emulación a 320. A 375 px pasaban cosas que a 320 se cortaban: se
+  corre en los dos anchos;
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar
   de `_vendor/`.
+
+En todos busca además **palabras pegadas**. JSX borra el salto de línea entre un
+texto y una etiqueta: `…2008 llama` seguido en la línea siguiente de
+`<strong>operador…` se pinta «llamaoperador». No da error ni se sale de nada;
+solo se ve leyendo. La sonda mira en el DOM cada etiqueta en línea pegada a una
+letra o una cifra del texto vecino, y falla. El arreglo es `{' '}` al final de
+la línea de texto; `data-pegado-ok` calla un caso buscado. Solo ve lo que está
+pintado: lo que hay dentro de una solución plegada se revisa en el código.
+
+**Lo que la sonda no ve, y solo se vio en un teléfono** (2026-11-15): con
+`100vh`, Safari de iPhone deja el documento más alto que la pantalla y lo
+desplaza entero; el `App` usa `100dvh`. Y el contenido que se desplaza lleva
+`overscroll-contain`, para que llegar a su tope no arrastre la página ni la
+recargue. Para probar en el teléfono antes de publicar: un servidor de archivos
+en la red local (`python3 -m http.server --bind 0.0.0.0`) y la IP del Mac.
 
 En todos exige además que Tailwind haya aplicado sus estilos. Hasta el
 2026-11-03, un capítulo sin estilos pasaba la sonda. Existe porque el panel de vista previa no sirve para
