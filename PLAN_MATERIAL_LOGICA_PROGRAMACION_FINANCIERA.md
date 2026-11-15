@@ -3466,3 +3466,35 @@ adjunto al ítem en Zotero; las notas y el registro dicen `pdf-zotero`.
 - La página del PDF no es la de la revista (n + 4). Hay que leer el encabezado
   impreso antes de escribir un localizador.
 
+### 2026-11-15 — Capítulo 2: los trece hallazgos bajos que quedaban
+
+La lectura crítica final (fase 10) dejó anotados trece hallazgos bajos sin
+corregir. El docente pidió cerrarlos. Rama `claude/cap02-bajos`.
+
+| Hallazgo | Cómo quedó |
+|---|---|
+| La salida del pseudocódigo dependía de entradas que no se veían | cada `Leer` dice en un comentario qué valores se leen |
+| Una opción mezclaba coma de miles y coma decimal | las opciones dicen «un descuento de 2 400 pesos» |
+| «TIR que no converge», sin definir | la frase sigue igual (el capítulo 5 la cita) y lleva una glosa que remite al capítulo 5 |
+| `Entero porCuenta` sin presentar | comentario en la propia línea |
+| La constante, dentro de la columna Entrada | la celda dice que va aparte, porque no entra |
+| «Los otros tres», «esta columna» | «Python, R y VBA», «el pseudocódigo» |
+| «Se actualiza sumándose a sí misma» | «sumándole un valor a lo que ya tenía: total <- total + pago» |
+| El glosario sin Entrada, Salida ni traza | dos entradas nuevas y «Prueba de escritorio o traza» |
+| Flujograma del ejemplo con puntas rellenas y otras proporciones | punta abierta; el pie declara que los símbolos van más anchos que en la norma |
+| El ejercicio de ordenar solo escribía la cuota | escribe interés, seguro y cuota, como pide el recuadro de la salida |
+| «Recorría los 40 000 créditos uno por uno» | «miraba los créditos uno por uno hasta dar con el que buscaba» |
+| Las lecturas no decían la unidad de la tasa; Python da 5183999.999999999 | «Tasa mensual, en decimal»; el enunciado de la traza avisa de la cifra |
+| La norma ANSI citada con una referencia que se llama FIPS PUB 24 | la oración dice que se lee en esa publicación, donde está reproducida |
+
+Comprobado: verificador completo, sonda del capítulo 2 a 320, a 375 y en
+escritorio, y la prueba de todos los órdenes del ejercicio de ordenar en Python
+(48 aceptados, ninguno cambia el resultado).
+
+**Lo que no se hizo.** El flujograma del ejemplo no se redibujó con las
+proporciones de la norma: con ellas el texto de cada paso no cabe; se declara la
+diferencia. Dos frases tocadas quedan junto a una cita (la de la norma, §3.1) o
+son glosas nuevas, y no pasaron por el verificador independiente: el inciso de
+la norma dice dónde se leyó, no qué dice. Las líneas de VBA que cambiaron en el
+ejercicio de ordenar no se ejecutaron en Excel.
+
