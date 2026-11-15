@@ -3438,3 +3438,31 @@ línea.
 - La sonda mide que nada se salga, no que algo quede tapado por el botón
   flotante fuera de la fila «Lección N de M».
 
+### 2026-11-15 — Capítulo 1: las tres citas de Goldberg, con página
+
+El docente aportó el PDF del artículo de la revista (Goldberg 1991, *ACM
+Computing Surveys* 23(1), pp. 5-48). Rama `claude/cap01-goldberg`.
+
+Las tres afirmaciones de la sección 4 que lo citan se habían leído el 14 de
+noviembre en una reimpresión editada de acceso abierto, y por eso se localizaban
+por apartado. Cotejadas con la revista, llevan página impresa:
+
+| Afirmación | Antes | Ahora |
+|---|---|---|
+| El doble ocupa 64 bits, 11 de exponente y 53 de precisión | apartado «Precision», tabla | p. 18, tabla 1 |
+| En los formatos de IEEE el signo ocupa un bit | apartado «Exponent» | p. 18, §2.1.3 |
+| El bit oculto de los formatos en base 2 | apartado «Base» | p. 16, §2.1.1 |
+
+El pasaje de la revista dice lo mismo que el de la reimpresión, con dos
+diferencias de redacción que no cambian el sentido, y el texto del capítulo no
+se tocó: no se volvió a someter al verificador independiente. El PDF quedó
+adjunto al ítem en Zotero; las notas y el registro dicen `pdf-zotero`.
+
+**Huecos y avisos.**
+
+- El PDF está suelto en la raíz de la carpeta del curso, que es el repositorio
+  público. No está versionado ni ignorado: un `git add` sin rutas lo publicaría.
+  Queda a decisión del docente moverlo o borrarlo; la copia de Zotero basta.
+- La página del PDF no es la de la revista (n + 4). Hay que leer el encabezado
+  impreso antes de escribir un localizador.
+
