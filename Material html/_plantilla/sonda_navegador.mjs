@@ -20,9 +20,11 @@
  *                 estudiante despliega: se cuenta aparte. Cualquier otro
  *                 recorte esconde contenido y falla. Antes de medir, una prueba
  *                 negativa: un div de 600 px tiene que salir. Y el botón
- *                 flotante del menú no tapa la fila «Lección N de M» ni sus
- *                 botones (los tapó de 320 a 900 px hasta el 2026-11-03); su
- *                 prueba negativa: sin la sangría de esa fila, tiene que taparla.
+ *                 del menú no queda encima de lo que se desplaza: vive sobre
+ *                 `#barra-movil`, que no se desplaza y lleva «Lección N de M»
+ *                 (hasta el 2026-11-15 flotaba sobre el texto y tapaba las
+ *                 primeras letras de la línea que pasaba debajo); su prueba
+ *                 negativa: sin la barra, tiene que tocar el contenido.
  *   sin-almacen   `localStorage` lanza `SecurityError`, como en una ventana
  *                 privada o con el almacenamiento bloqueado (H16 del capítulo 5).
  *   sin-cdnjs     cdnjs no resuelve: el capítulo carga sin color en el código.
@@ -139,14 +141,19 @@ const MEDIR = `(() => {
     }
     return { vw, sw: document.documentElement.scrollWidth, fuera, recortados };
 })()`;
-// Lo que el botón flotante del menú tapa de la fila «Lección N de M»: la
-// etiqueta o sus botones. Es lo primero que se ve de cada lección.
+// El botón del menú no puede quedar encima de lo que se desplaza: taparía la
+// línea que pase por debajo. Por debajo de `lg` vive sobre `#barra-movil`, que
+// no se desplaza; si su rectángulo toca el de `#contenido-scroll`, tapa texto.
+// La barra, además, tiene que traer «Lección N de M» a la derecha del botón.
 const TAPA = `(() => {
     const toca = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
     const menu = document.querySelector('button[aria-label$="menú"]').getBoundingClientRect();
-    const fila = document.querySelector('.max-w-4xl > div');
-    return [fila.querySelector('span'), ...fila.querySelectorAll('button')]
-        .filter(p => toca(menu, p.getBoundingClientRect())).map(p => p.innerText.trim().slice(0, 24));
+    const mal = [];
+    if (toca(menu, document.getElementById('contenido-scroll').getBoundingClientRect())) mal.push('el contenido que se desplaza');
+    const rotulo = document.querySelector('#barra-movil span');
+    if (!rotulo || !rotulo.getBoundingClientRect().width) mal.push('(falta «Lección N de M» en la barra)');
+    else if (toca(menu, rotulo.getBoundingClientRect())) mal.push(rotulo.innerText.trim().slice(0, 24));
+    return mal;
 })()`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
 const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].find(b => /^\\s*Siguiente/i.test(b.innerText) && !b.disabled); if (b) b.click(); return !!b; })()`;
@@ -168,9 +175,9 @@ for (const ruta of rutas) {
         const n = await evaluar(`(() => { const d = document.createElement('div'); d.style.cssText = 'width:600px;height:10px';
             document.querySelector('.max-w-4xl').appendChild(d); const r = ${MEDIR}; d.remove(); return r.fuera.length; })()`);
         if (!n) { console.log('✗ la prueba negativa no detectó un div de 600 px: la medida no sirve'); await cerrar(); process.exit(1); }
-        const t = await evaluar(`(() => { const f = document.querySelector('.max-w-4xl > div'); f.style.paddingLeft = '0px';
-            const t = ${TAPA}; f.style.paddingLeft = ''; return t.length; })()`);
-        if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre la fila sin sangría: la medida no sirve'); await cerrar(); process.exit(1); }
+        const t = await evaluar(`(() => { const b = document.getElementById('barra-movil'); b.style.display = 'none';
+            const t = ${TAPA}; b.style.display = ''; return t.length; })()`);
+        if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre el contenido al quitar la barra: la medida no sirve'); await cerrar(); process.exit(1); }
     }
     const lecciones = [];
     let total = 0, leccionesMal = 0;
