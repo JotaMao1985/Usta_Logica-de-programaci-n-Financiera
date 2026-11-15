@@ -2807,7 +2807,7 @@
                     pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos a la vez y
                     compararlos; el material <strong>recuerda la última elección</strong> —también entre
                     visitas— y con ella abre los bloques que aún no se han tocado. En este capítulo el
-                    peso está en el <strong>pseudocódigo y el flujograma</strong>: los otros tres
+                    peso está en el <strong>pseudocódigo y el flujograma</strong>: Python, R y VBA
                     acompañan para mostrar que la lógica no cambia al cambiar de acento.
                 </p>
 
@@ -2833,7 +2833,7 @@
         const EJ_DESCUENTO = {
             pseudo: `Inicio
     // Descuento por pronto pago sobre una factura de proveedor
-    Leer valorFactura, porcentaje
+    Leer valorFactura, porcentaje    // se leen 8000000 y 3
 
     descuento <- valorFactura * (porcentaje / 100)
     aPagar    <- valorFactura - descuento
@@ -2899,7 +2899,7 @@ End Sub`,
             {
                 nombre: 'Finitud',
                 exige: 'Termina después de un número limitado de pasos.',
-                falta: 'Un cálculo de TIR que no converge deja el cierre diario bloqueado a las once de la noche.',
+                falta: 'Un cálculo de TIR que no converge deja el cierre diario bloqueado a las once de la noche. La TIR es una tasa que se busca por aproximaciones; si el procedimiento no se acerca a ella —no converge—, nunca para. El capítulo 5 la calcula.',
             },
             {
                 nombre: 'Entrada',
@@ -3014,12 +3014,12 @@ End Sub`,
                 </Reto></Ejercicio>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En el algoritmo del descuento, alguien cambia el dato del porcentaje y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
+                    pregunta="En el algoritmo del descuento, alguien cambia el dato del porcentaje y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué descuento informa la primera línea de salida?"
                     opciones={[
-                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. El dato se dio en otra unidad de la que el algoritmo espera; el proceso hizo lo que dice.' },
-                        { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
+                        { texto: 'Un descuento de 2 400 pesos: el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. El dato se dio en otra unidad de la que el algoritmo espera; el proceso hizo lo que dice.' },
+                        { texto: 'Un descuento de 24 000 pesos: el 0.03 se redondea a 0,3 %.', correcta: false },
                         { texto: 'El programa se detiene con un error: 0.03 no es un porcentaje válido.', correcta: false },
-                        { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
+                        { texto: 'Un descuento de 240 000 pesos: la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
                     ]}
                 /></Ejercicio>
             </div>
@@ -3034,7 +3034,7 @@ End Sub`,
     // Cuota de un credito de libre inversion, con interes simple
     Constante SEGURO_MENSUAL <- 0.0012    // 0,12 % mensual: politica del banco
 
-    Leer capital, tasa, plazo
+    Leer capital, tasa, plazo    // se leen 12000000, 0.018 y 24
 
     interes <- capital * tasa * plazo
     seguro  <- capital * SEGURO_MENSUAL * plazo
@@ -3142,20 +3142,20 @@ End Sub`,
         const PASOS_LIQUIDACION = {
             pseudo: ['Inicio', 'Constante SEGURO_MENSUAL <- 0.0012', 'Leer capital, tasa, plazo',
                 'interes <- capital * tasa * plazo', 'seguro <- capital * SEGURO_MENSUAL * plazo',
-                'cuota <- (capital + interes + seguro) / plazo', 'Escribir cuota', 'Fin'],
+                'cuota <- (capital + interes + seguro) / plazo', 'Escribir interes, seguro, cuota', 'Fin'],
             python: ['SEGURO_MENSUAL = 0.0012', 'capital = float(input("Capital: "))',
-                'tasa = float(input("Tasa: "))', 'plazo = int(input("Plazo: "))',
+                'tasa = float(input("Tasa mensual, en decimal: "))', 'plazo = int(input("Plazo en meses: "))',
                 'interes = capital * tasa * plazo', 'seguro = capital * SEGURO_MENSUAL * plazo',
-                'cuota = (capital + interes + seguro) / plazo', 'print(cuota)'],
+                'cuota = (capital + interes + seguro) / plazo', 'print(interes, seguro, cuota)'],
             r: ['SEGURO_MENSUAL <- 0.0012', 'capital <- as.numeric(readline("Capital: "))',
-                'tasa <- as.numeric(readline("Tasa: "))', 'plazo <- as.integer(readline("Plazo: "))',
+                'tasa <- as.numeric(readline("Tasa mensual, en decimal: "))', 'plazo <- as.integer(readline("Plazo en meses: "))',
                 'interes <- capital * tasa * plazo', 'seguro <- capital * SEGURO_MENSUAL * plazo',
-                'cuota <- (capital + interes + seguro) / plazo', 'cat(cuota)'],
+                'cuota <- (capital + interes + seguro) / plazo', 'cat(interes, seguro, cuota)'],
             vba: ['Sub LiquidarCuota()', 'Const SEGURO_MENSUAL As Double = 0.0012',
-                'capital = CCur(InputBox("Capital"))', 'tasa = CDbl(InputBox("Tasa"))',
-                'plazo = CInt(InputBox("Plazo"))',
+                'capital = CCur(InputBox("Capital"))', 'tasa = CDbl(InputBox("Tasa mensual, en decimal"))',
+                'plazo = CInt(InputBox("Plazo en meses"))',
                 'interes = capital * tasa * plazo', 'seguro = capital * SEGURO_MENSUAL * plazo',
-                'cuota = (capital + interes + seguro) / plazo', 'MsgBox cuota', 'End Sub'],
+                'cuota = (capital + interes + seguro) / plazo', 'MsgBox interes & " · " & seguro & " · " & cuota', 'End Sub'],
         };
 
         // Lo que puede cambiar de lugar sin cambiar el algoritmo: la constante y
@@ -3229,7 +3229,7 @@ End Sub`,
                                     <strong>capital</strong> — lo que el cliente recibe<br />
                                     <strong>tasa</strong> — mensual, en decimal<br />
                                     <strong>plazo</strong> — en meses<br />
-                                    <span className="text-gray-500 text-sm">Constante: <span className="inline-code">SEGURO_MENSUAL = 0.0012</span></span>
+                                    <span className="text-gray-500 text-sm">Aparte, porque no entra: lo fija el banco. Constante <span className="inline-code">SEGURO_MENSUAL = 0.0012</span></span>
                                 </td>
                                 <td>
                                     1. interés = capital × tasa × plazo<br />
@@ -3268,7 +3268,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Traza de la liquidación"
-                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta. Esta versión omite el seguro para que la tabla quepa en pantalla.</>}
+                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta. Esta versión omite el seguro para que la tabla quepa en pantalla. Python muestra el interés como 5183999.999999999 y no como 5184000, por el error de representación del capítulo 1; la tabla acepta las dos cifras.</>}
                     codigo={TRAZA_CUOTA}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -3441,7 +3441,7 @@ End Sub`,
         const EJ_INTERES_MICRO = {
             pseudo: `Inicio
     // Interes simple de un microcredito
-    Leer capital, tasa, plazo
+    Leer capital, tasa, plazo    // se leen 6000000, 0.021 y 18
 
     interes <- capital * tasa * plazo
     total   <- capital + interes
@@ -3523,8 +3523,8 @@ End Sub`,
                     </text>
                     {paso.id < PASOS_REPR.length && (
                         <g>
-                            <line x1="160" y1={y + 40} x2="160" y2={y + 62} stroke="#94A3B8" strokeWidth="2" />
-                            <polygon points={`160,${y + 70} 154,${y + 58} 166,${y + 58}`} fill="#94A3B8" />
+                            <line x1="160" y1={y + 40} x2="160" y2={y + 70} stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
+                            <polyline points={`154,${y + 60} 160,${y + 70} 166,${y + 60}`} fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </g>
                     )}
                 </g>
@@ -3608,7 +3608,8 @@ End Sub`,
                     <p className="text-xs text-gray-500 italic text-center mt-2 mb-3">
                         Señale un paso del pseudocódigo —con el cursor, con la tecla de tabulación o
                         tocándolo— y los otros dos paneles resaltan el suyo. Un toque lo deja fijo;
-                        otro lo suelta.
+                        otro lo suelta. En este diagrama los símbolos van más anchos que en la norma,
+                        para que quepa el texto de cada paso: la forma es la misma.
                     </p>
 
                     <div className="lp-card p-4">
@@ -3723,7 +3724,8 @@ End Sub`,
 
                 <h3>Los símbolos del flujograma</h3>
                 <p>
-                    La norma ANSI X3.5 de 1970 establece un símbolo básico para cada una de cuatro
+                    La norma ANSI X3.5 de 1970 —que este capítulo lee en la publicación FIPS PUB 24
+                    del NBS, donde está reproducida— establece un símbolo básico para cada una de cuatro
                     funciones —entrada y salida, proceso, dirección del flujo y anotación— y símbolos
                     especializados que pueden usarse en lugar de uno básico para dar más
                     información <Cita k="nbs1973" loc="§3.1" />. Este curso usa seis de sus símbolos. Dibujar
@@ -3784,8 +3786,8 @@ End Sub`,
                 <Box type="tip" label="Por qué el pseudocódigo es el lenguaje normativo del curso">
                     Este curso lo eligió porque fija la lógica completa <em>y</em> no depende de
                     ninguna herramienta. El RA1 pide construir un algoritmo,
-                    no programar en un lenguaje: por eso lo que se evalúa es esta columna, y las otras
-                    tres están para mostrar que la lógica no cambia al cambiar de acento.
+                    no programar en un lenguaje: por eso lo que se evalúa es el pseudocódigo, y Python, R y
+                    VBA están para mostrar que la lógica no cambia al cambiar de acento.
                 </Box>
 
                 <h3>Ejercicios</h3>
@@ -4025,7 +4027,7 @@ End Sub`,
                 'Inicio',
                 '    // Reparto de un rendimiento entre tres cuentas de ahorro',
                 '    rendimiento <- 100000',
-                '    Entero porCuenta',
+                '    Entero porCuenta                    // declara la variable, de tipo entero',
                 '    porCuenta <- rendimiento / 3',
                 '    Escribir "Cada cuenta recibe: ", porCuenta',
                 '    Escribir "Total repartido: ", porCuenta * 3',
@@ -4431,7 +4433,7 @@ Debug.Print vueltas`,
                     gancho="Contar cuántas veces repite un algoritmo su trabajo permite saber, antes de ejecutarlo, si va a costar poco o mucho.">
                     El cierre diario de cartera tardaba cada vez más a medida que crecía el negocio, y
                     el equipo pidió un servidor más grande. Alguien miró el código antes de firmar la
-                    compra: la rutina de búsqueda recorría los 40 000 créditos uno por uno, y la cartera
+                    compra: la rutina de búsqueda miraba los créditos uno por uno hasta dar con el que buscaba, entre 40 000, y la cartera
                     ya estaba ordenada por número de obligación. Había otra manera de buscar.
                 </Motivacion>
 
@@ -4525,15 +4527,17 @@ Debug.Print vueltas`,
             ['Precisión', 'Propiedad por la cual cada paso dice exactamente qué hacer, sin dejar nada al criterio de quien lo ejecuta.'],
             ['Finitud', 'Propiedad por la cual el algoritmo termina después de un número limitado de pasos.'],
             ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado.'],
+            ['Entrada', 'Dato que el algoritmo recibe de fuera y que cambia de una ejecución a otra. En este curso se declara cuál es y en qué unidad llega.'],
+            ['Salida', 'Resultado que el algoritmo entrega. En este curso se declara cuál es y a quién va.'],
             ['Análisis EPS', 'Método para pasar del enunciado al algoritmo respondiendo tres preguntas: qué datos entran, qué operaciones los transforman y qué resultado sale.'],
             ['Pseudocódigo', 'Notación intermedia entre el lenguaje natural y un lenguaje de programación. Es el lenguaje normativo del curso: lo que se evalúa.'],
             ['Flujograma', 'Representación gráfica de un algoritmo mediante símbolos normalizados, unidos por líneas de flujo que fijan el orden.'],
             ['Variable', 'Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.'],
             ['Constante', 'Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución. Las políticas del negocio se escriben así.'],
             ['Asignación', 'Operación que evalúa una expresión y guarda el resultado en una variable, borrando lo que hubiera. No es una igualdad matemática: saldo <- saldo + cuota es válido.'],
-            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. En este curso se inicializa siempre antes del primer uso.'],
+            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándole un valor a lo que ya tenía: total <- total + pago. En este curso se inicializa siempre antes del primer uso.'],
             ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. En el algoritmo de intercambio de este capítulo es la que evita perder uno de los dos valores.'],
-            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es una forma de encontrar un fallo que la máquina no reporta.'],
+            ['Prueba de escritorio o traza', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es una forma de encontrar un fallo que la máquina no reporta.'],
             ['Eficiencia', 'Costo de un algoritmo medido en cuántas operaciones hace; en este capítulo, en cuántas vueltas da su ciclo. Ese número no depende de la máquina, a diferencia del tiempo de reloj.'],
         ];
 
@@ -4695,7 +4699,7 @@ Debug.Print vueltas`,
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 3 toma el análisis EPS de aquí y lo convierte en el entregable
-                    <em> Formato Definición y Análisis</em>, y convierte la traza de escritorio en el
+                    <em> Formato Definición y Análisis</em>, y convierte la traza —la prueba de escritorio— en el
                     método formal para encontrar fallos que la máquina no reporta. Todo lo de este
                     capítulo se usa allí.
                 </Box>
