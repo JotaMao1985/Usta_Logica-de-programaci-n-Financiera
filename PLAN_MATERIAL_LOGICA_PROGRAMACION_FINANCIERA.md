@@ -2824,3 +2824,53 @@ las 13 salidas de la fase 2.
 pegado desde una sesión que trabaja en segundo plano: el pegado del módulo
 necesitó control de pantalla, aprobado por el docente. Sigue siendo el único
 paso manual de la comprobación.
+
+### Capítulo 2, fase 1: línea base y fuentes · 2026-11-14
+
+El docente aprobó `PLAN_TAREA12_CAPITULO_02_CONTENIDO.md` con las ocho
+recomendaciones (A–H). La fase 1 no toca el capítulo: deja la línea base en el vault
+y las fuentes leídas.
+
+**Línea base** (sobre `c82fc71`). Un lector sin contexto inventarió 90 afirmaciones
+y 26 figuras y tablas; un guion comprobó que el ancla de cada una aparece una sola
+vez en el archivo. Por clase: 33 piden cita, 19 son ejecutadas, 17 de criterio, 10
+ilustrativas, 8 derivadas y 3 son remisiones a otros capítulos. 68 de las 90 no se
+presentan hoy como lo que son. De las 33 que piden cita, 9 tienen fuente leída, 7
+esperan un libro impreso del syllabus y 17 no tienen ninguna: se reescriben como
+criterio, se demuestran ejecutando o se quitan.
+
+**Fuentes leídas.**
+
+- *Símbolos del flujograma (decisión C).* La norma ANSI X3.5-1970 está reproducida
+  entera en FIPS PUB 24 del National Bureau of Standards, abierta en el NIST. Se
+  leyó sobre las páginas escaneadas. Contradice al capítulo en dos puntos: la
+  decisión «determina cuál de varios caminos alternativos se sigue» y la norma
+  dibuja rombos con tres salidas y más, así que «exactamente dos salidas» es
+  convención del curso; y no son «unos pocos símbolos» sino 28, de los que el curso
+  usa seis. Respalda que entrada y salida compartan símbolo. No nombra las formas:
+  las dibuja. Su vigencia no se verificó.
+- *Norma de transparencia (decisión D).* Ley 1748 de 2014, leída completa en el
+  Gestor Normativo de Función Pública. Obliga a informar el Valor Total Unificado,
+  que incluye intereses, seguros, gastos y comisiones, y a diferenciar dentro de él
+  el componente de la tasa de interés. No dice que la cuota deba desglosarse.
+- *Cinco propiedades (decisión B).* No se encontró ninguna fuente abierta que la
+  política admita: lo que aparece son apuntes de clase, blogs y Wikilibros. Queda a
+  la espera del pasaje de un libro impreso del syllabus.
+
+La tanda 03 de Zotero (las dos fuentes) está preparada en el vault y **no se ha
+importado**: espera la aprobación del docente.
+
+**Huecos de las herramientas.**
+
+- La política de fuentes no tiene clase para una remisión a otro capítulo («el
+  capítulo 3 toma…»). Las tres del capítulo 2 quedaron sin clasificar; se comprueban
+  a mano contra el otro capítulo en la fase 9.
+- El esquema del vault numeraba la evaluación como `s5`, que en un capítulo de cinco
+  secciones choca con la quinta. Se corrigió: la evaluación es la sección siguiente
+  a la última (`s6` en el capítulo 2). También se añadió `tabla` a las clases de
+  figura.
+- La lectura automática de páginas falló en las dos fuentes: el PDF del NIST es un
+  escaneo que hubo que extraer con `pdftotext` y mirar página por página, y los
+  sitios `.gov.co` dan error de certificado fuera del navegador.
+- El inventario sale de un lector, no de una regla: nada garantiza que no se le haya
+  escapado una afirmación. La lectura crítica de la fase 10 es la segunda red.
