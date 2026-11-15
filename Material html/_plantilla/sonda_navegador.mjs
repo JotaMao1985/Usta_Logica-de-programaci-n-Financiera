@@ -10,6 +10,9 @@
  *
  *   file          (por omisión) monta, recorre, guarda en localStorage y no da
  *                 errores de JavaScript.
+ *   320           lo mismo que 375, a 320 px: un iPhone con el zoom de pantalla
+ *                 activado dibuja la página a ese ancho (comprobado el 2026-11-15
+ *                 en Safari de un iPhone 15 Pro, línea por línea).
  *   375           además, a 375 px de ancho desde la carga (con la barra lateral
  *                 cerrada), nada se sale del viewport sin un contenedor con
  *                 `overflow-x: auto|scroll`. Recortar con `overflow-x: hidden`
@@ -47,13 +50,16 @@ import { join, resolve, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const MODOS = new Set(['file', '375', 'sin-almacen', 'sin-cdnjs', 'sin-tailwind']);
+const MODOS = new Set(['file', '375', '320', 'sin-almacen', 'sin-cdnjs', 'sin-tailwind']);
 // El host que cada modo deja sin resolver, y que por eso no cuenta como error.
 const SIN_HOST = { 'sin-cdnjs': 'cdnjs.cloudflare.com', 'sin-tailwind': 'cdn.tailwindcss.com' };
 const espera = ms => new Promise(r => setTimeout(r, ms));
 
 const args = process.argv.slice(2);
 const modo = MODOS.has(args[0]) ? args.shift() : 'file';
+// Los modos numéricos son un ancho de pantalla en px. 320 es un iPhone con el
+// zoom de pantalla activado («Texto más grande»): el teléfono del docente.
+const ancho = /^\d+$/.test(modo) ? Number(modo) : 0;
 const desconocidas = args.filter(a => a.startsWith('--'));
 if (desconocidas.length) { console.error(`opción desconocida: ${desconocidas.join(', ')}`); process.exit(2); }
 const MATERIAL = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -107,7 +113,7 @@ if (modo === 'sin-almacen') {
     await cdp('Page.addScriptToEvaluateOnNewDocument', { source:
         `Object.defineProperty(window, 'localStorage', { configurable: true, get() { throw new DOMException('almacenamiento bloqueado', 'SecurityError'); } });` });
 }
-if (modo === '375') await cdp('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 1, mobile: true });
+if (ancho) await cdp('Emulation.setDeviceMetricsOverride', { width: ancho, height: ancho === 320 ? 693 : 812, deviceScaleFactor: 1, mobile: true });
 
 // Mide desde el panel de la lección, que es el padre de `.max-w-4xl`: subir más
 // allá encontraría su propio `overflow-y-auto` y daría todo por contenido.
@@ -158,7 +164,7 @@ for (const ruta of rutas) {
         montado = await evaluar(`!!document.querySelector('#root') && document.querySelector('#root').innerText.length > 200`).catch(() => false);
     }
     if (!montado) { console.log(`✗ ${nombre}: no montó`); fallos++; continue; }
-    if (modo === '375' && ruta === rutas[0]) {
+    if (ancho && ruta === rutas[0]) {
         const n = await evaluar(`(() => { const d = document.createElement('div'); d.style.cssText = 'width:600px;height:10px';
             document.querySelector('.max-w-4xl').appendChild(d); const r = ${MEDIR}; d.remove(); return r.fuera.length; })()`);
         if (!n) { console.log('✗ la prueba negativa no detectó un div de 600 px: la medida no sirve'); await cerrar(); process.exit(1); }
@@ -172,7 +178,7 @@ for (const ruta of rutas) {
         await espera(900);
         const [n, t] = await evaluar(LECCION);
         total = t;
-        if (modo === '375') {
+        if (ancho) {
             const m = await evaluar(MEDIR);
             const tapa = await evaluar(TAPA);
             const bien = m.sw === m.vw && !m.fuera.length && !tapa.length;
@@ -194,7 +200,7 @@ for (const ruta of rutas) {
     const mal = errores.length || !recorrio || !conEstilos || leccionesMal;
     if (mal) fallos++;
     console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
-    if (modo === '375') console.log(`    ${lecciones.join(' · ')}`);
+    if (ancho) console.log(`    ${lecciones.join(' · ')}`);
     for (const e of errores.slice(0, 3)) {
         const t = e.method === 'Runtime.exceptionThrown' ? (e.params.exceptionDetails.exception?.description || e.params.exceptionDetails.text)
             : e.method === 'Log.entryAdded' ? `${e.params.entry.text} ${e.params.entry.url || ''}` : e.params.args.map(a => a.value ?? a.description).join(' ');

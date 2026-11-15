@@ -3396,3 +3396,45 @@ cada grupo. Verificador y sonda (capítulos 1, 3, 4 y 5), en verde.
   dice ahora, con la regla de autoría: lo que `libres` no cubre lo excluye el
   enunciado.
 
+### 2026-11-15 — El material en Safari de un iPhone, y la sonda a 320 px
+
+Pendiente desde el cierre del capítulo 1. Se abrió el capítulo 1 publicado en
+Safari de un iPhone 15 Pro, a través de la duplicación del iPhone en el Mac.
+
+**Lo que se vio.** El teléfono tiene activado el zoom de pantalla y Safari
+dibuja la página a **320 px** de ancho, no a 393. Se comparó con la misma página
+emulada a 320 px: los saltos de línea coinciden uno por uno. El menú lateral, el
+cambio de lección y las pestañas de código responden al toque, y las fórmulas
+se desplazan dentro de su caja.
+
+**Lo que estaba roto a 320 px**, y la sonda no veía porque mide a 375:
+
+- la cabecera de los bloques de código que se pliegan: el título y los botones
+  «Copiar» y «Mostrar» no caben en una fila, y «Mostrar» salía cortado. Visto
+  también en el teléfono. Ahora la cabecera parte en dos filas;
+- la cabecera de los ejercicios: la etiqueta del tipo («E6 · Emparejar») se
+  salía 12 px. Ahora baja de fila si no cabe;
+- en el capítulo 2, el contador del paso a paso de la asignación se salía 13 px.
+
+El CSS se cambió en el `head` del capítulo 1 y se copió a los otros cuatro; lo
+demás, en `lp-core-extra.jsx`, regenerado y reestampado. La sonda tiene un modo
+nuevo, `320`. Los cinco capítulos pasan a 320, a 375 y en escritorio, y el
+verificador completo.
+
+**Lo que no se hizo.** No se recorrió el capítulo entero en el teléfono: se
+vieron la portada, la sección 3 y un bloque de código. Lo demás se apoya en que
+el teléfono y la emulación a 320 px dieron lo mismo. La versión publicada que
+vio el teléfono es la anterior a estas correcciones.
+
+**Queda a criterio del docente.** El botón flotante del menú tapa las dos
+primeras letras de la línea que pasa por debajo al desplazarse. A 320 px la
+tarjeta «Antes de empezar» deja 172 px para el texto: unas veinte letras por
+línea.
+
+**Huecos de las herramientas.**
+
+- La duplicación del iPhone no recibe teclado ni desplazamiento en segundo
+  plano: hay que tomar la pantalla del Mac. Los clics sí llegan.
+- La sonda mide que nada se salga, no que algo quede tapado por el botón
+  flotante fuera de la fila «Lección N de M».
+

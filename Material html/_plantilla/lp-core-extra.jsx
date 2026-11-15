@@ -560,7 +560,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-table-list"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E1 · Traza" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -756,7 +756,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 p-5 shadow-sm" style={{ borderColor: '#FCA5A5', background: '#FFFBFB' }}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#B91C1C 0%,#F59E0B 100%)' }}><i className="fas fa-bug"></i></span>
                         <h4 className="text-base font-bold text-navy" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E3 · Diagnóstico" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-red-700/80 rounded px-2 py-0.5" />
@@ -847,7 +847,7 @@
             );
             return (
                 <div className="my-6 rounded-2xl border-2 border-teal/30 bg-white p-5 shadow-sm" style={{ borderColor: 'rgba(14,116,144,0.3)' }}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#0E7490,#3D008D)' }}><i className="fas fa-code-compare"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E4 · Equivalencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5" style={{ background: '#0E7490' }} />
@@ -946,7 +946,7 @@
 
             return (
                 <div className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-list-ol"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E5 · Secuencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -1076,7 +1076,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-link"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E6 · Emparejar" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -1266,7 +1266,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-shoe-prints"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Traza guiada</span>
