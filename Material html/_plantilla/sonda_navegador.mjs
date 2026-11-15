@@ -59,6 +59,10 @@ if (desconocidas.length) { console.error(`opción desconocida: ${desconocidas.jo
 const MATERIAL = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const rutas = args.length ? args.map(a => resolve(a))
     : readdirSync(MATERIAL).filter(f => /^\d\d_LPF_.*\.html$/.test(f)).sort().map(f => join(MATERIAL, f));
+// Un número suelto («02») no es una ruta: sin esta comprobación Chrome carga una
+// página de error y la sonda dice «no montó», que parece un fallo del capítulo.
+const inexistentes = rutas.filter(r => !existsSync(r));
+if (inexistentes.length) { console.error(`no existe: ${inexistentes.join(', ')} — se pasa el nombre del archivo, p. ej. 02_LPF_Algoritmos.html`); process.exit(2); }
 if (!existsSync(CHROME)) { console.error(`no está Chrome en ${CHROME}`); process.exit(2); }
 
 // Un puerto por proceso: si una ejecución anterior murió sin cerrar su Chrome,

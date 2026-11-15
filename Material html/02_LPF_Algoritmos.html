@@ -2992,7 +2992,7 @@ End Sub`,
 
         const EJ_LIQUIDACION = {
             pseudo: `Inicio
-    // Liquidacion de la cuota de un credito de libre inversion
+    // Cuota de un credito de libre inversion, con interes simple
     Constante SEGURO_MENSUAL <- 0.0012    // 0,12 % mensual: politica del banco
 
     Leer capital, tasa, plazo
@@ -3008,7 +3008,7 @@ End Sub`,
     Escribir "Cuota mensual: ", cuota
     //> Cuota mensual: 730400
 Fin`,
-            python: `# Liquidacion de la cuota de un credito de libre inversion
+            python: `# Cuota de un credito de libre inversion, con interes simple
 SEGURO_MENSUAL = 0.0012       # constante del negocio: 0,12 % mensual
 
 capital = 12_000_000          # COP, lo que el cliente recibe
@@ -3025,7 +3025,7 @@ print(f"Seguro total: {seguro:,.0f}")
 #> Seguro total: 345,600
 print(f"Cuota mensual: {cuota:,.0f}")
 #> Cuota mensual: 730,400`,
-            r: `# Liquidacion de la cuota de un credito de libre inversion
+            r: `# Cuota de un credito de libre inversion, con interes simple
 SEGURO_MENSUAL <- 0.0012    # constante del negocio: 0,12 % mensual
 
 capital <- 12000000         # COP, lo que el cliente recibe
@@ -3045,7 +3045,7 @@ cat(sprintf("Cuota mensual: %.0f\\n", cuota))
             vba: `Option Explicit
 
 Sub LiquidarCuota()
-    ' Liquidacion de la cuota de un credito de libre inversion
+    ' Cuota de un credito de libre inversion, con interes simple
     Const SEGURO_MENSUAL As Double = 0.0012   ' politica del banco
 
     Dim capital As Currency, tasa As Double, plazo As Integer
@@ -3113,7 +3113,8 @@ End Sub`,
                 'interes <- capital * tasa * plazo', 'seguro <- capital * SEGURO_MENSUAL * plazo',
                 'cuota <- (capital + interes + seguro) / plazo', 'cat(cuota)'],
             vba: ['Sub LiquidarCuota()', 'Const SEGURO_MENSUAL As Double = 0.0012',
-                'Dim interes As Currency, seguro As Currency, cuota As Currency',
+                'capital = CCur(InputBox("Capital"))', 'tasa = CDbl(InputBox("Tasa"))',
+                'plazo = CInt(InputBox("Plazo"))',
                 'interes = capital * tasa * plazo', 'seguro = capital * SEGURO_MENSUAL * plazo',
                 'cuota = (capital + interes + seguro) / plazo', 'MsgBox cuota', 'End Sub'],
         };
@@ -3123,10 +3124,10 @@ End Sub`,
                 <Motivacion icon="fa-compass"
                     gancho="Antes de escribir la primera línea hay que responder tres preguntas: qué entra, qué sale y qué ocurre en medio.">
                     «Necesito que me saques la cuota de este crédito», dice el jefe de cartera, y se va.
-                    Empezar a escribir ahí mismo es la manera más rápida de entregar algo que hay que
-                    rehacer: falta saber si la tasa viene mensual o anual, si el seguro lo pone el banco o
-                    el cliente, y si lo que piden es la cuota o el total. Media hora de preguntas ahorra
-                    dos días de correcciones.
+                    Quien empieza a escribir ahí mismo se arriesga a rehacerlo todo: falta saber si la
+                    tasa viene mensual o anual, si el seguro lo pone el banco o el cliente, y si lo que
+                    piden es la cuota o el total. Conviene preguntar antes; corregir después sale más
+                    caro.
                 </Motivacion>
 
                 <p>
@@ -3144,14 +3145,22 @@ End Sub`,
 
                 <h3>El caso: la cuota de un crédito de libre inversión</h3>
                 <p>
-                    Un cliente solicita $12 000 000 a 24 meses. El banco cobra 1,8 % mensual de interés y
-                    un seguro de vida deudor del 0,12 % mensual. Se pide la cuota fija.
+                    Un cliente solicita $12 000 000 a 24 meses. El banco le liquida un interés
+                    simple del 1,8 % mensual sobre el capital prestado, le cobra un seguro de vida deudor
+                    del 0,12 % mensual sobre ese mismo capital y reparte el total en 24 cuotas iguales.
+                    Se pide la cuota mensual.
                 </p>
+                <Ilustrativo>
+                    El crédito, sus cifras y su regla de liquidación se inventaron para este capítulo.
+                    El interés se cobra durante todo el plazo sobre el capital inicial —interés
+                    simple— porque así la cuenta cabe en tres líneas y se puede seguir a mano. No
+                    pretende ser la liquidación de un crédito real ni la política de ninguna entidad.
+                </Ilustrativo>
 
                 <CalloutPro tema="tip" titulo="Un dato de entrada no es lo mismo que una constante del negocio" subtitulo="La distinción que decide qué se pregunta y qué se escribe" icon="fa-key">
                     El capital, la tasa y el plazo <strong>cambian en cada solicitud</strong>: son
-                    entradas, y el algoritmo las recibe. El 0,12 % del seguro <strong>lo fija la
-                    política del banco</strong>: es una constante, y va escrita en el algoritmo con un
+                    entradas, y el algoritmo las recibe. El 0,12 % del seguro, en este caso, <strong>lo
+                    fija la política del banco</strong>: es una constante, y va escrita en el algoritmo con un
                     nombre. Confundirlas tiene dos costos simétricos —pedirle al usuario un dato que él
                     no decide, o enterrar en el código un número que mañana cambia y nadie encuentra—.
                 </CalloutPro>
@@ -3173,33 +3182,37 @@ End Sub`,
                                     3. cuota = (capital + interés + seguro) ÷ plazo
                                 </td>
                                 <td>
-                                    <strong>cuota</strong> — valor fijo mensual, en pesos<br />
-                                    <span className="text-gray-500 text-sm">Se muestran también el interés y el seguro: el cliente tiene derecho a saber por qué paga lo que paga.</span>
+                                    <strong>cuota</strong> — valor mensual, en pesos<br />
+                                    <span className="text-gray-500 text-sm">Se muestran también el interés y el seguro, para que quien recibe la cuota pueda rehacer la cuenta.</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>análisis del caso ilustrativo de esta sección</Fuente>
 
                 <p>Con las tres columnas resueltas, escribir el algoritmo es transcripción:</p>
                 <CodeTabs
                     titulo="Liquidación de la cuota — el análisis EPS convertido en algoritmo"
                     bloques={EJ_LIQUIDACION}
-                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio.</>}
+                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio. El pseudocódigo y VBA tienen una palabra para declararla (<span className="inline-code">Constante</span>, <span className="inline-code">Const</span>); en Python y en R es una variable como las demás, y el nombre en mayúsculas es un aviso para quien lee. La sección 4 vuelve sobre esa diferencia.</>}
                 />
 
                 <Box type="warn" label="La salida también se diseña">
                     Un algoritmo que solo devuelve <span className="inline-code">730400</span> obliga a
                     quien lo recibe a confiar. Uno que devuelve el interés, el seguro y la cuota permite
-                    verificar. En un producto financiero eso no es cortesía: es lo que exige la norma de
-                    transparencia al informar el costo total del crédito.
+                    verificar. En un producto financiero eso no es solo cortesía. En Colombia, la ley
+                    obliga a las entidades vigiladas a informar a sus clientes el Valor Total Unificado
+                    de lo que pagan por todos los conceptos —intereses y seguros incluidos—, siempre
+                    que la naturaleza del producto lo permita, y a diferenciar dentro de ese total lo
+                    que corresponde a la tasa de interés <Cita k="congreso2014ley1748" loc="art. 1.º" />.
                 </Box>
 
                 <h3>Ejercicios</h3>
 
                 <TablaTraza
                     titulo="Traza de la liquidación"
-                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor. Esta versión omite el seguro para que la tabla quepa en pantalla.</>}
+                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta. Esta versión omite el seguro para que la tabla quepa en pantalla.</>}
                     codigo={TRAZA_CUOTA}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -3212,6 +3225,7 @@ End Sub`,
                         { clave: 'salida', titulo: 'Salida' },
                     ]}
                     ocultas={['interes', 'cuota', 'salida']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('capital <- 12000000', 'capital = 12_000_000', 'capital <- 12000000', 'capital = 12000000'), capital: '12000000', tasa: '—', plazo: '—', interes: '—', cuota: '—', salida: '—' },
                         { paso: 2, instruccion: ins('tasa <- 0.018', 'tasa = 0.018', 'tasa <- 0.018', 'tasa = 0.018'), capital: '12000000', tasa: '0.018', plazo: '—', interes: '—', cuota: '—', salida: '—' },
@@ -3220,11 +3234,11 @@ End Sub`,
                         { paso: 5, instruccion: ins('cuota <- (capital + interes) / plazo', 'cuota = (capital + interes) / plazo', 'cuota <- (capital + interes) / plazo', 'cuota = (capital + interes) / plazo'), capital: '12000000', tasa: '0.018', plazo: '24', interes: '5184000', cuota: '716000', salida: '—' },
                         { paso: 6, instruccion: ins('Escribir cuota', 'print(cuota)', 'cat(cuota)', 'Debug.Print cuota'), capital: '12000000', tasa: '0.018', plazo: '24', interes: '5184000', cuota: '716000', salida: '716000' },
                     ]}
-                    pista="Una asignación solo modifica la variable de la izquierda; las demás conservan el valor de la fila anterior. Y una variable no tiene valor hasta que alguna instrucción se lo da."
+                    pista="Una asignación solo modifica la variable de la izquierda; las demás conservan el valor de la fila anterior. Mientras ninguna instrucción le haya asignado algo a una variable, en su celda va la raya."
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. Recuerde que el orden no es una convención: una variable no puede usarse antes de tener valor."
+                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. Recuerde que el orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos."
                     pasos={PASOS_LIQUIDACION}
                     pista="Empiece por lo que no depende de nada: la constante del negocio y los datos que se leen. El cálculo de la cuota necesita el interés y el seguro ya calculados."
                 />
@@ -4535,6 +4549,8 @@ Debug.Print pasos`,
                     método formal para encontrar fallos que la máquina no reporta. Todo lo de este
                     capítulo se usa allí.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -4753,6 +4769,30 @@ Debug.Print pasos`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "397c1f2b34577eb88e653267582dc9401b87e8c34fd07295eecd59241b8f387a",
+  "sello": "f4c0121da3c58f2ac5cc3f9de92ef701d1dba59afc539e5b2787dfbda3483c95",
+  "orden": [
+    "congreso2014ley1748"
+  ],
+  "entradas": {
+    "congreso2014ley1748": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "2014",
+      "html": "Congreso de la República de Colombia. (2014). \u003cem>Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones\u003c/em>. Diario Oficial 49.376. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (2014). Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones. Diario Oficial 49.376. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

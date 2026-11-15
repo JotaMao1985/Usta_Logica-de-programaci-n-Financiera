@@ -1,0 +1,14 @@
+# Registro público de las afirmaciones citadas del capítulo 02.
+# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.
+# No lleva el extracto de la fuente, solo su sha256.
+- id: "c02-s2-a11"
+  seccion: "2. Entrada, proceso y salida"
+  ancla: "informar a sus clientes el Valor Total Unificado"
+  clave: "congreso2014ley1748"
+  loc: "art. 1.º"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-14"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "2f00875c091fe0b776b7380735bb00977634ef3bb16688667d01146da061a501"

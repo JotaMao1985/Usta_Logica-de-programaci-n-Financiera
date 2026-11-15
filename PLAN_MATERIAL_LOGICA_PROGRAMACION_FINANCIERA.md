@@ -2885,3 +2885,43 @@ quedó como estaba. Regla nueva para las tandas siguientes: comprobar el id de l
 colección seleccionada y su colección madre, no solo el nombre. Además, Zotero
 guardó la fecha de consulta en UTC y las dos dicen 2026-11-15; la lectura fue el
 14. Sin corregir.
+
+### Capítulo 2, fase 2: la sección 2 dice lo que calcula · 2026-11-14
+
+Rama `claude/cap02-fase2`. Decisiones A y D del plan.
+
+- **El caso (A).** Se conserva la cuenta y se dice lo que es: «interés simple del
+  1,8 % mensual sobre el capital prestado», repartido en 24 cuotas iguales. Se
+  pide «la cuota mensual»; «cuota fija» desaparece de la sección. Un
+  `<Ilustrativo>` declara que el crédito, sus cifras y su regla de liquidación
+  son inventados. El capítulo no afirma nada sobre cómo se liquida un crédito
+  real. Las salidas no cambian (5 184 000, 345 600, 730 400).
+- **La norma (D).** «La norma de transparencia» pasa a ser la Ley 1748 de 2014,
+  art. 1.º, citada: primera cita del capítulo, con su lista «Referencias» y su
+  registro `afirmaciones/02.yaml`. El verificador independiente calificó la
+  primera redacción de *parcial* (omitía «siempre que la naturaleza del producto
+  lo permita» y cambiaba «Valor Total Unificado» por «valor total»); se
+  reescribió y **la redacción final se volvió a someter: respalda**. La frase «el
+  cliente tiene derecho a saber por qué paga lo que paga» se quitó.
+- **La constante.** La nota del bloque dice que el pseudocódigo y VBA tienen
+  palabra para declararla y que en Python y R es una variable como las demás
+  (ejecutado: los dos reasignan sin error). Promete que la sección 4 vuelve sobre
+  ello: queda como obligación de la fase 6.
+- **La traza** lleva `exigeRespuesta` (en blanco ya no aprueba) y pide la raya
+  «donde el algoritmo todavía no le haya asignado nada», que vale también en VBA.
+- **Ordenar pasos.** El enunciado ya no dice que una variable no puede usarse sin
+  valor, y la lista de VBA lee las tres entradas. Sigue aceptando un solo orden
+  habiendo varios válidos: es del componente y va en la fase 8.
+- La motivación ya no da «media hora ahorra dos días» como regla.
+
+Sin tocar en esta fase: la mención del syllabus (fase 7, con la portada) y la
+clave de la evaluación que suma el seguro al «uso del dinero» (fase 7).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco capítulos;
+sonda de navegador del capítulo 2 en verde, en escritorio y a 375 px (7 de 7
+lecciones, 0 errores de JS).
+
+**Hueco de las herramientas, cerrado.** `sonda_navegador.mjs file 02` respondía
+«no montó», que parece un fallo del capítulo, cuando «02» no es un archivo: Chrome
+cargaba una página de error. Ahora la sonda comprueba que cada ruta exista y, si
+no, lo dice y sale con 2. Costó varias pruebas descubrirlo.
