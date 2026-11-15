@@ -2962,3 +2962,50 @@ Rama `claude/cap02-fase3`. Decisión E del plan.
 
 Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
 capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 5: la sección 3 cita la norma y separa lo que es del curso · 2026-11-14
+
+Rama `claude/cap02-fase5`. Decisión C del plan. Se adelantó a la fase 4, con
+permiso del docente, porque la 4 espera el pasaje de un libro impreso.
+
+- **La norma.** «El estándar ANSI fija unos pocos símbolos» pasa a decir lo que la
+  norma ANSI X3.5 de 1970 dice: un símbolo básico para cada una de cuatro
+  funciones y símbolos especializados (§3.1). Debajo del widget, una lista cita
+  la norma símbolo por símbolo —entrada y salida (§3.2.1), decisión (§3.3.2.1 y
+  §4.10.1), terminal (§3.4.2), conector (§3.4.1) y línea de flujo (§4.4.1)— y
+  dice en cada uno qué añade el curso.
+- **Convención del curso, y dicho así:** las dos salidas de la decisión, el único
+  Inicio y el único Fin, y la punta de flecha en todas las líneas. La norma
+  habla de «varios caminos alternativos». La pregunta del cuestionario que daba
+  por incorrecta esa lectura dice ahora «según la convención de este curso».
+- **El widget** lleva `<Fuente>`: «formas adaptadas de» la norma. Un lector
+  independiente comparó los seis dibujos con las páginas escaneadas: son
+  reconocibles, pero tres están aplanadas respecto a la proporción 1:2/3 que la
+  norma pide mantener y la punta de flecha es rellena donde la norma la dibuja
+  abierta. Por eso «adaptadas» y no «conformes». Queda para la fase 8 decidir si
+  se redibujan.
+- **Verificador independiente.** Siete frases contra sus pasajes: seis respaldan
+  y una, la de las puntas de flecha, salió *parcial* (sobraba «solo»: con flujo
+  bidireccional también son obligatorias). Se adoptó la redacción que el mismo
+  verificador dio por respaldada. Ocho filas nuevas en `afirmaciones/02.yaml`.
+- **Frases sin respaldo, fuera o reescritas:** «El lenguaje que más se usa en el
+  sector financiero es el que menos protege» (quitada); «es el símbolo más
+  frecuente» (quitada); el pseudocódigo «es la única» representación sin
+  ambigüedad (ahora, decisión del curso); los límites de la tabla de
+  representaciones (criterio del curso, con `<Fuente propia>`); la escena del
+  comité (supuesto).
+- **El ejercicio de detectar el error** ya no adelanta la consecuencia en el
+  enunciado. El microcrédito lleva `<Ilustrativo>`.
+
+Lo que no se afirma: que la norma siga vigente. No se comprobó.
+
+Sin tocar: la mención del RA1 (fase 7) y los defectos de las figuras (fase 8).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+**Hueco de las herramientas.** El verificador de citas lee texto; una `<Fuente>`
+que atribuye un dibujo no se puede comprobar así. Aquí se resolvió con un lector
+que abrió las páginas escaneadas y comparó forma por forma, pero nada en
+`verificar.py` distingue una fila del registro respaldada por texto de una
+respaldada por una imagen.

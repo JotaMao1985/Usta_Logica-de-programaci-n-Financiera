@@ -3259,7 +3259,7 @@ End Sub`,
             {
                 id: 'terminal', nombre: 'Terminal', forma: 'terminal',
                 etiqueta: 'Inicio',
-                funcion: 'Marca dónde empieza y dónde termina el algoritmo. Siempre hay exactamente uno de cada.',
+                funcion: 'Marca dónde empieza y dónde termina el algoritmo. En este curso hay exactamente uno de cada.',
                 pseudo: 'Inicio  …  Fin',
                 nota: 'Si un flujograma no tiene un Fin alcanzable, el algoritmo no cumple la propiedad de finitud.',
             },
@@ -3275,14 +3275,14 @@ End Sub`,
                 etiqueta: 'interes ← capital × tasa',
                 funcion: 'Una operación transforma datos y guarda el resultado en una variable.',
                 pseudo: 'interes <- capital * tasa * plazo',
-                nota: 'Es el símbolo más frecuente. La flecha ← recuerda que la asignación tiene dirección.',
+                nota: 'La flecha ← recuerda que la asignación tiene dirección.',
             },
             {
                 id: 'decision', nombre: 'Decisión', forma: 'rombo',
                 etiqueta: '¿mora > 90?',
                 funcion: 'El flujo se bifurca: una condición se evalúa y el camino continúa por Sí o por No.',
                 pseudo: 'Si mora > 90 Entonces … Sino … FinSi',
-                nota: 'Tiene una entrada y exactamente dos salidas rotuladas. Un rombo con una sola salida es un error de dibujo.',
+                nota: 'En este curso tiene una entrada y dos salidas rotuladas, Sí y No. Un rombo con una sola salida no decide nada.',
             },
             {
                 id: 'conector', nombre: 'Conector', forma: 'circulo',
@@ -3296,7 +3296,7 @@ End Sub`,
                 etiqueta: '',
                 funcion: 'Indica en qué orden se ejecutan los pasos. Es lo que convierte los símbolos en una secuencia.',
                 pseudo: '(el orden de las líneas, de arriba abajo)',
-                nota: 'Sin flechas hay un conjunto de cajas, no un algoritmo: se pierde justamente el orden.',
+                nota: 'En este curso todas llevan punta de flecha: sin ellas se pierde justamente el orden.',
             },
         ];
 
@@ -3346,7 +3346,7 @@ End Sub`,
                         <p className="text-xs text-gray-500 italic mt-2 mb-0">{activo.nota}</p>
                     </div>
                     <p className="text-xs text-gray-500 italic text-center mt-2 mb-0">
-                        Seis símbolos del estándar ANSI. Toque uno para ver qué representa y cómo se escribe en pseudocódigo.
+                        Seis símbolos, con las reglas de uso de este curso. Toque uno para ver qué representa y cómo se escribe en pseudocódigo.
                     </p>
                 </div>
             );
@@ -3631,11 +3631,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-code-compare"
                     gancho="El mismo algoritmo se escribe de cuatro maneras. La pregunta no es cuál es la buena, sino con quién se va a hablar.">
-                    El comité aprueba un cambio en la liquidación y pide verlo antes de que se programe.
-                    Si se les lleva código, la reunión se va en explicar qué significa cada línea. Si se
-                    les lleva un diagrama de una página, discuten lo que hay que discutir —dónde se
-                    bifurca la decisión, qué pasa con los casos de borde— y firman. El algoritmo es el
-                    mismo; lo que cambió fue en qué idioma se presentó.
+                    Suponga que el comité aprueba un cambio en la liquidación y pide verlo antes de que
+                    se programe. Si se les lleva código, es fácil que la reunión se vaya en explicar qué
+                    significa cada línea. Con un diagrama de una página es más fácil discutir lo que hay
+                    que discutir: dónde se bifurca la decisión, qué pasa con los casos de borde. El
+                    algoritmo es el mismo; lo que cambia es en qué idioma se presenta.
                 </Motivacion>
 
                 <p>
@@ -3650,19 +3650,62 @@ End Sub`,
                         <thead><tr><th>Representación</th><th>Para qué sirve</th><th>Su límite</th></tr></thead>
                         <tbody>
                             <tr><td><strong>Lenguaje natural</strong></td><td>Acordar con quien no programa qué debe hacer el algoritmo</td><td>Admite ambigüedad: es donde nacen los «mora considerable»</td></tr>
-                            <tr><td><strong>Pseudocódigo</strong></td><td>Fijar la lógica sin atarla a ninguna herramienta. <strong>Es lo que se evalúa</strong></td><td>No se ejecuta: nadie comprueba si funciona</td></tr>
-                            <tr><td><strong>Diagrama de flujo</strong></td><td>Ver de un vistazo por dónde se bifurca y por dónde se repite</td><td>Crece rápido: más de una página y deja de ayudar</td></tr>
+                            <tr><td><strong>Pseudocódigo</strong></td><td>Fijar la lógica sin atarla a ninguna herramienta. <strong>Es lo que se evalúa</strong></td><td>El de este curso no se ejecuta: hay que comprobarlo a mano, con la traza</td></tr>
+                            <tr><td><strong>Diagrama de flujo</strong></td><td>Ver de un vistazo por dónde se bifurca y por dónde se repite</td><td>Crece rápido: con muchas bifurcaciones cuesta seguirlo</td></tr>
                             <tr><td><strong>Código</strong></td><td>Ejecutar, medir y comprobar de verdad</td><td>Mezcla la lógica con detalles de la herramienta</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>criterio del curso</Fuente>
 
                 <h3>Los símbolos del flujograma</h3>
                 <p>
-                    El estándar ANSI fija unos pocos símbolos, y la disciplina de usarlos bien es lo que
-                    permite que el diagrama de una persona lo lea otra sin traducción.
+                    La norma ANSI X3.5 de 1970 establece un símbolo básico para cada una de cuatro
+                    funciones —entrada y salida, proceso, dirección del flujo y anotación— y símbolos
+                    especializados que pueden usarse en lugar de uno básico para dar más
+                    información <Cita k="nbs1973" loc="§3.1" />. Este curso usa seis de sus símbolos. Dibujar
+                    todos con los mismos es lo que permite que el diagrama de una persona lo lea otra
+                    sin traducción.
                 </p>
                 <SimbologiaANSI />
+                <Fuente k="nbs1973" loc="§3.2 a §3.4">formas adaptadas de</Fuente>
+
+                <p>
+                    Las fichas mezclan dos cosas que conviene separar: lo que dice la norma y lo que este
+                    curso añade para dibujar siempre igual.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Entrada y salida.</strong> Un mismo símbolo representa tanto poner
+                        información a disposición para su procesamiento como registrar la información ya
+                        procesada <Cita k="nbs1973" loc="§3.2.1" />. Lo que las distingue en el diagrama
+                        es el verbo que va escrito dentro.
+                    </li>
+                    <li>
+                        <strong>Decisión.</strong> El símbolo representa una operación que determina
+                        cuál de varios caminos alternativos se sigue <Cita k="nbs1973" loc="§3.3.2.1" />,
+                        y la norma prevé que de un símbolo salgan varias líneas de
+                        flujo <Cita k="nbs1973" loc="§4.10.1" />. En este curso toda decisión se dibuja con
+                        dos salidas, Sí y No, porque así corresponde a
+                        <span className="inline-code"> Si … Entonces … Sino</span>.
+                    </li>
+                    <li>
+                        <strong>Terminal.</strong> Representa un punto terminal del diagrama, como el
+                        inicio, la parada o una interrupción <Cita k="nbs1973" loc="§3.4.2" />. Que haya
+                        exactamente un Inicio y un Fin es convención de este curso.
+                    </li>
+                    <li>
+                        <strong>Conector.</strong> Representa una salida hacia otra parte del diagrama o
+                        una entrada desde ella, y se usa en pareja para continuar un flujo que se
+                        interrumpe por alguna limitación del diagrama <Cita k="nbs1973" loc="§3.4.1" />.
+                    </li>
+                    <li>
+                        <strong>Línea de flujo.</strong> La dirección normal es de izquierda a derecha y
+                        de arriba abajo, y cuando el flujo va en otro sentido las puntas de flecha son
+                        obligatorias <Cita k="nbs1973" loc="§4.4.1" />. En este curso todas las líneas
+                        llevan punta de flecha.
+                    </li>
+                </ul>
 
                 <h3>El mismo algoritmo, cuatro veces</h3>
                 <p>
@@ -3671,10 +3714,13 @@ End Sub`,
                     visible que se trata de una sola cosa escrita de cuatro maneras.
                 </p>
                 <CuatroRepresentaciones />
+                <Ilustrativo>
+                    El microcrédito de esta sección y sus cifras se inventaron para el ejemplo.
+                </Ilustrativo>
 
                 <Box type="tip" label="Por qué el pseudocódigo es el lenguaje normativo del curso">
-                    De las cuatro, es la única que expresa la lógica completa sin ambigüedad
-                    <em> y</em> sin depender de ninguna herramienta. El RA1 pide construir un algoritmo,
+                    Este curso lo eligió porque fija la lógica completa <em>y</em> no depende de
+                    ninguna herramienta. El RA1 pide construir un algoritmo,
                     no programar en un lenguaje: por eso lo que se evalúa es esta columna, y las otras
                     tres están para mostrar que la lógica no cambia al cambiar de acento.
                 </Box>
@@ -3697,13 +3743,13 @@ End Sub`,
 
                 <Box type="info" label="Sobre el ejercicio anterior">
                     Dos de las cuatro respuestas son el <strong>mismo símbolo</strong>, el
-                    paralelogramo, y eso no es un descuido del enunciado: en el estándar ANSI la entrada
-                    y la salida comparten forma. Lo que las distingue es el verbo que va escrito dentro,
-                    y por eso un flujograma con paralelogramos vacíos no se puede leer.
+                    paralelogramo, y eso no es un descuido del enunciado: como se vio arriba, la entrada
+                    y la salida comparten símbolo. Lo que las distingue es el verbo que va escrito dentro;
+                    con los paralelogramos vacíos no se sabría cuál es cuál.
                 </Box>
 
                 <DetectaError
-                    enunciado={<>El siguiente algoritmo debe informar el interés y el total a pagar de un microcrédito. Al ejecutarlo, o bien se detiene con un error, o bien informa un interés de cero. <strong>¿En qué línea está la instrucción que provoca el fallo?</strong></>}
+                    enunciado={<>El siguiente algoritmo debe informar el interés y el total a pagar de un microcrédito, y no lo hace bien. <strong>¿En qué línea está la instrucción que provoca el fallo?</strong></>}
                     lineas={ERROR_ORDEN_LINEAS}
                     lineaCorrecta={ERROR_ORDEN_OK}
                     tipos={[
@@ -3721,7 +3767,7 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={0}
                     explicacion={ERROR_ORDEN_EXPL}
-                    impacto={<>Es el fallo que mejor ilustra por qué un algoritmo es una secuencia <em>ordenada</em> y no un conjunto de instrucciones. Y note la asimetría: Python y R <strong>se detienen</strong>, así que el error se descubre en la primera prueba. VBA <strong>no</strong>: la variable declarada vale cero, el mensaje sale, nadie se entera, y el cliente recibe una liquidación que dice que su microcrédito no causa intereses. El lenguaje que más se usa en el sector financiero es el que menos protege.</>}
+                    impacto={<>Es el fallo que mejor ilustra por qué un algoritmo es una secuencia <em>ordenada</em> y no un conjunto de instrucciones. Y note la asimetría: Python y R <strong>se detienen</strong>, así que el error se descubre en la primera prueba. VBA <strong>no</strong>: la variable declarada vale cero, el mensaje sale y dice que el microcrédito no causa intereses. De los tres, es el único que deja pasar este error sin avisar.</>}
                 />
             </div>
         );
@@ -4397,7 +4443,7 @@ Debug.Print vueltas`,
             ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado. También se le llama determinismo.'],
             ['Análisis EPS', 'Método para pasar del enunciado al algoritmo respondiendo tres preguntas: qué datos entran, qué operaciones los transforman y qué resultado sale.'],
             ['Pseudocódigo', 'Notación intermedia entre el lenguaje natural y un lenguaje de programación. Es el lenguaje normativo del curso: lo que se evalúa.'],
-            ['Flujograma', 'Representación gráfica de un algoritmo mediante los símbolos del estándar ANSI, unidos por líneas de flujo que fijan el orden.'],
+            ['Flujograma', 'Representación gráfica de un algoritmo mediante símbolos normalizados, unidos por líneas de flujo que fijan el orden.'],
             ['Variable', 'Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.'],
             ['Constante', 'Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución. Las políticas del negocio se escriben así.'],
             ['Asignación', 'Operación que evalúa una expresión y guarda el resultado en una variable, borrando lo que hubiera. No es una igualdad matemática: saldo <- saldo + cuota es válido.'],
@@ -4489,14 +4535,14 @@ Debug.Print vueltas`,
                     },
                     {
                         seccion: 'cap3',
-                        pregunta: 'En un flujograma correctamente dibujado, el rombo de decisión tiene:',
+                        pregunta: 'Según la convención de este curso, el rombo de decisión de un flujograma tiene:',
                         opciones: [
                             { texto: 'Tantas salidas como condiciones se quieran evaluar.', correcta: false },
                             { texto: 'Una entrada y una salida.', correcta: false },
                             { texto: 'Una entrada y exactamente dos salidas rotuladas.', correcta: true },
                             { texto: 'Dos entradas y una salida.', correcta: false },
                         ],
-                        justificacion: 'La condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. Un rombo con una sola salida es un error de dibujo, no una variante.',
+                        justificacion: 'En este curso la condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos salidas, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. La norma que se cita en la sección 3 admite más de dos; el curso se queda con dos porque así el rombo corresponde a Si … Entonces … Sino. Un rombo con una sola salida no decide nada.',
                     },
                     {
                         seccion: 'cap4',
@@ -4788,10 +4834,11 @@ Debug.Print vueltas`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "397c1f2b34577eb88e653267582dc9401b87e8c34fd07295eecd59241b8f387a",
-  "sello": "f4c0121da3c58f2ac5cc3f9de92ef701d1dba59afc539e5b2787dfbda3483c95",
+  "huella": "4dd6ca5ec2bd3523fc70afcdb381f2a1a01ca8d305840773bdffff377f66f0cb",
+  "sello": "a6bd678a79e294813f52afed8be144d550832fe8204484abe1df81c53b871674",
   "orden": [
-    "congreso2014ley1748"
+    "congreso2014ley1748",
+    "nbs1973"
   ],
   "entradas": {
     "congreso2014ley1748": {
@@ -4799,6 +4846,12 @@ Debug.Print vueltas`,
       "anio": "2014",
       "html": "Congreso de la República de Colombia. (2014). \u003cem>Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones\u003c/em>. Diario Oficial 49.376. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\u003c/a>",
       "plano": "Congreso de la República de Colombia. (2014). Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones. Diario Oficial 49.376. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402"
+    },
+    "nbs1973": {
+      "autor": "National Bureau of Standards",
+      "anio": "1973",
+      "html": "National Bureau of Standards. (1973). \u003cem>Flowchart symbols and their usage in information processing\u003c/em> (FIPS PUB 24). U.S. Department of Commerce, National Bureau of Standards. \u003ca href=\"https://doi.org/10.6028/NBS.FIPS.24\">https://doi.org/10.6028/NBS.FIPS.24\u003c/a>",
+      "plano": "National Bureau of Standards. (1973). Flowchart symbols and their usage in information processing (FIPS PUB 24). U.S. Department of Commerce, National Bureau of Standards. https://doi.org/10.6028/NBS.FIPS.24"
     }
   },
   "profundizar": {
