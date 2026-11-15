@@ -5,7 +5,7 @@ ellos. Su propósito es uno: que **cada afirmación del material pueda rastrears
 una fuente leída, una ejecución, una cuenta a la vista o una declaración expresa de que
 el dato es inventado.
 
-## 1. Las cinco clases de afirmación
+## 1. Las seis clases de afirmación
 
 Toda afirmación fáctica del material pertenece a una de estas clases. La clase se
 registra; no se supone.
@@ -17,6 +17,15 @@ registra; no se supone.
 | **Derivada** | Sale de una cuenta que el propio texto muestra. | La aritmética está a la vista y cuadra. |
 | **Ilustrativa** | Caso, cifra o regla de negocio inventados para enseñar. | `<Ilustrativo>` o `<Fuente ilustrativo/>`; el texto no los presenta como reales. |
 | **Criterio del docente** | Recomendación u opinión profesional. | Redactada como tal («conviene», «en este curso»), no como hecho. |
+| **Remisión** | Dice qué trata otro capítulo del material o qué pide el syllabus de la asignatura. | Nombra el destino («el capítulo 1», «el syllabus»); no lleva `<Cita>`, porque el destino es un documento del propio curso. |
+
+Una **remisión** no se respalda con una fuente: se **coteja con su destino**. Quien la
+escribe abre el capítulo o el syllabus, comprueba que diga lo que la frase le atribuye y
+deja en la nota de la afirmación la fecha y el lugar del cotejo. La clase cubre solo lo
+que el destino dice; un juicio añadido («que es más exigente») es criterio del docente y
+se redacta como tal. Cuando un capítulo cambia, se vuelven a cotejar las remisiones que
+apuntan a él: es el trabajo de la fase de coherencia de cada capítulo. La clase se añadió
+el 2026-11-15, por decisión del docente.
 
 Lo que no cabe en ninguna clase **se reescribe o se quita**. Una frase como «la mayoría
 de los bancos…» o «el error más común…» es una afirmación sobre el mundo: o se respalda,
