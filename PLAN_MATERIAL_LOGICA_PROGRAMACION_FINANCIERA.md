@@ -2874,3 +2874,14 @@ importado**: espera la aprobación del docente.
   sitios `.gov.co` dan error de certificado fuera del navegador.
 - El inventario sale de un lector, no de una regla: nada garantiza que no se le haya
   escapado una afirmación. La lectura crítica de la fase 10 es la segunda red.
+
+**Importación de la tanda 03 (aprobada por el docente el 2026-11-14).** Las dos
+referencias están en Zotero y en `referencias.json` (`nbs1973`,
+`congreso2014ley1748`). Hubo un error: entraron primero en «3 Fuentes primarias»
+de Teoría del Riesgo, porque hay seis colecciones con ese nombre y la comprobación
+previa miró el nombre y no el curso. Se movieron a la de LPF desde la ventana de
+Zotero, sin borrar nada, y la API confirma que la colección de Teoría del Riesgo
+quedó como estaba. Regla nueva para las tandas siguientes: comprobar el id de la
+colección seleccionada y su colección madre, no solo el nombre. Además, Zotero
+guardó la fecha de consulta en UTC y las dos dicen 2026-11-15; la lectura fue el
+14. Sin corregir.
