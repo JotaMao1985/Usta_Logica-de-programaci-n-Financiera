@@ -2893,7 +2893,7 @@ End Sub`,
             {
                 nombre: 'Definición',
                 exige: 'Con las mismas entradas produce siempre el mismo resultado.',
-                falta: 'Una liquidación cuyo resultado depende de quién la corra no se puede auditar ni reproducir ante la Superintendencia.',
+                falta: 'Una liquidación cuyo resultado depende de quién la corra no se puede auditar ni reproducir.',
             },
             {
                 nombre: 'Finitud',
@@ -2903,7 +2903,7 @@ End Sub`,
             {
                 nombre: 'Entrada',
                 exige: 'Recibe cero o más datos, y está escrito cuáles y en qué unidad.',
-                falta: 'Si no dice que la tasa entra en porcentaje, tarde o temprano alguien la digita en decimal, y el interés sale cien veces menor.',
+                falta: 'Si no dice que la tasa entra en porcentaje y alguien la digita en decimal, el interés sale cien veces menor.',
             },
             {
                 nombre: 'Salida',
@@ -2916,14 +2916,15 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-clipboard-question"
                     gancho="¿En qué momento una instrucción deja de ser una orden y se vuelve una interpretación de quien la lee?">
-                    Un proveedor radica la factura el día 2 y el instructivo interno dice: «si se paga
+                    Suponga que un proveedor radica la factura el día 2 y el instructivo interno dice: «si se paga
                     pronto, aplique el descuento acordado». El auxiliar de la mañana entiende cinco días;
-                    el de la tarde, quince. Ese mes dos facturas iguales se pagan por cifras distintas y la
-                    conciliación no cuadra. Nadie se equivocó: la instrucción admitía dos lecturas.
+                    el de la tarde, quince. Ese mes dos facturas iguales se pagarían por cifras distintas y
+                    la conciliación no cuadraría. Nadie se habría equivocado: la instrucción admitía dos
+                    lecturas.
                 </Motivacion>
 
                 <p>
-                    Un <Termino def="Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.">algoritmo</Termino> no
+                    En este curso, un <Termino def="Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.">algoritmo</Termino> no
                     es un programa, ni un lenguaje, ni un diagrama: es la <strong>lógica</strong> que
                     después se escribe en cualquiera de esas formas. Por eso el mismo algoritmo puede
                     aparecer en pseudocódigo, en Python, en R o en VBA sin dejar de ser el mismo, y por eso
@@ -2932,8 +2933,10 @@ End Sub`,
 
                 <h3>Las cinco propiedades</h3>
                 <p>
-                    Que un procedimiento «funcione» no lo convierte en algoritmo. Le faltan cinco
-                    exigencias, y la columna de la derecha es lo que cuesta cuando alguna no se cumple.
+                    Que un procedimiento «funcione» no lo convierte en algoritmo. Este curso le pide
+                    cinco cosas, con estos nombres, y son las que se usan para evaluar. Otros textos las
+                    agrupan o las llaman de otro modo; lo que importa aquí es poder reconocer cuándo falta
+                    cada una. La columna de la derecha da un ejemplo de lo que puede costar que falte.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -2949,6 +2952,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso; los ejemplos de la tercera columna son inventados</Fuente>
 
                 <h3>Un algoritmo que sí cumple las cinco</h3>
                 <p>
@@ -2962,7 +2966,7 @@ End Sub`,
                     nota={<>Las líneas que empiezan por <span className="inline-code">#&gt;</span> son la <strong>salida</strong> de la máquina, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
                 />
 
-                <CalloutPro tema="warn" titulo="Lo que parece un algoritmo y no lo es" subtitulo="Tres frases que aparecen en manuales reales" icon="fa-triangle-exclamation">
+                <CalloutPro tema="warn" titulo="Lo que parece un algoritmo y no lo es" subtitulo="Tres frases inventadas, del tipo que trae un instructivo" icon="fa-triangle-exclamation">
                     <strong>«Revise si el cliente tiene mora considerable.»</strong> ¿Cuántos días son
                     considerables? Falla la <strong>precisión</strong>.<br />
                     <strong>«Repita hasta obtener un resultado razonable.»</strong> Puede no terminar
@@ -2989,12 +2993,12 @@ End Sub`,
                             dice qué resultado ni dónde.
                         </p>
                         <p style={{ marginBottom: 0 }}>
-                            <strong>El manual es el peligroso.</strong> Una pasta blanda se nota al primer
-                            bocado y se corrige. Una política de recaudo aplicada de dos maneras produce
-                            cifras que parecen correctas —están en el sistema, suman, cuadran— y el error
-                            solo aparece cuando alguien audita la cartera meses después. La receta falla
-                            de forma visible; el manual, en silencio. Precisar cuesta una frase: «mora
-                            superior a 90 días».
+                            <strong>El manual es, a juicio de este curso, el peligroso.</strong> Una pasta
+                            blanda se nota al primer bocado y se corrige. Una política de recaudo aplicada
+                            de dos maneras produce cifras que parecen correctas —están en el sistema,
+                            suman, cuadran—, y el error puede pasar inadvertido hasta que alguien revise la
+                            cartera. La receta falla de forma visible; el manual, en silencio. Precisar
+                            cuesta una frase; por ejemplo, «mora superior a 90 días».
                         </p>
                     </Box>}>
                     <p style={{ marginTop: 0 }}>Dos textos, ambos con pasos numerados.</p>
@@ -4505,7 +4509,7 @@ Debug.Print vueltas`,
             ['Algoritmo', 'Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.'],
             ['Precisión', 'Propiedad por la cual cada paso dice exactamente qué hacer, sin dejar nada al criterio de quien lo ejecuta.'],
             ['Finitud', 'Propiedad por la cual el algoritmo termina después de un número limitado de pasos.'],
-            ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado. También se le llama determinismo.'],
+            ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado.'],
             ['Análisis EPS', 'Método para pasar del enunciado al algoritmo respondiendo tres preguntas: qué datos entran, qué operaciones los transforman y qué resultado sale.'],
             ['Pseudocódigo', 'Notación intermedia entre el lenguaje natural y un lenguaje de programación. Es el lenguaje normativo del curso: lo que se evalúa.'],
             ['Flujograma', 'Representación gráfica de un algoritmo mediante símbolos normalizados, unidos por líneas de flujo que fijan el orden.'],
@@ -4557,7 +4561,7 @@ Debug.Print vueltas`,
                             { texto: 'Ninguna: cualquier analista de cartera sabe qué mora es alta y escalaría el mismo caso.', correcta: false },
                             { texto: 'La finitud: no dice en qué momento se deja de revisar al cliente.', correcta: false },
                         ],
-                        justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase: «mora superior a 90 días».',
+                        justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase; por ejemplo, «mora superior a 90 días».',
                     },
                     {
                         seccion: 'cap1',
@@ -4658,6 +4662,10 @@ Debug.Print vueltas`,
                 ]} />
 
                 <h3>Glosario</h3>
+                <p>
+                    Las definiciones son las que usa este curso. Otros textos pueden dar las mismas ideas
+                    con otras palabras.
+                </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead><tr><th>Término</th><th>Definición</th></tr></thead>
@@ -4668,6 +4676,7 @@ Debug.Print vueltas`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 3 toma el análisis EPS de aquí y lo convierte en el entregable

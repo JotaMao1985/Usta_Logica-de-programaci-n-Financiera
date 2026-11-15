@@ -3217,3 +3217,31 @@ capítulos; sonda del capítulo 5 en verde.
 - Un error de compilación no se puede comprobar con el arnés: no deja correr
   nada. Lo que el material diga de «VBA no deja compilar…» hay que mirarlo a mano.
 - Pegar en el editor de Visual Basic sigue necesitando control de pantalla.
+
+### Capítulo 2, fase 4: las cinco propiedades son convención del curso · 2026-11-14
+
+Rama `claude/cap02-fase4`. Decisión B del plan, resuelta por el docente: en lugar
+de atribuir las propiedades y las definiciones a un libro, se presentan como lo
+que son, **convención del curso**.
+
+- **Las cinco propiedades.** «Este curso le pide cinco cosas, con estos nombres,
+  y son las que se usan para evaluar. Otros textos las agrupan o las llaman de
+  otro modo.» La tabla lleva `<Fuente propia>` y declara inventados los ejemplos
+  de su tercera columna.
+- **La definición de algoritmo** empieza por «En este curso…».
+- **El glosario** dice que sus definiciones son las del curso y lleva
+  `<Fuente propia>`. La entrada Definición ya no dice «también se le llama
+  determinismo».
+- **Fuera la Superintendencia**: una liquidación que depende de quién la corra «no
+  se puede auditar ni reproducir».
+- «Tres frases que aparecen en manuales reales» pasó a «Tres frases inventadas,
+  del tipo que trae un instructivo». La escena de la factura es un supuesto. «El
+  manual es, a juicio de este curso, el peligroso». Los 90 días de mora son «por
+  ejemplo».
+- La frase de la TIR que no converge no se tocó: el capítulo 5 la cita literal.
+
+Con esto el capítulo 2 pasa `verificar.py` **sin avisos**: ninguna figura sin
+fuente y ninguna entidad o norma sin cita. Sonda en verde, en escritorio y a
+375 px.
+
+Queda la fase 10: lectura crítica final y verificación de todas las citas.
