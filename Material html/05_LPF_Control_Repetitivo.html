@@ -1878,7 +1878,14 @@
             return mejor;
         };
 
-        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista }) => {
+        // `libres` declara los pasos que pueden cambiar de lugar entre sí sin que el
+        // algoritmo cambie: grupos de posiciones (desde 0) del orden canónico, por
+        // lenguaje como `pasos` —`{ pseudo: [[1, 2], [3, 4]], … }`— o una sola lista
+        // si vale para todos. Dentro de un grupo cualquier orden cuenta como bien.
+        // Sin `libres` se califica contra un único orden, como siempre; por eso un
+        // ejercicio con dos lecturas independientes, o dos cálculos que no dependen
+        // uno del otro, TIENE que declararlos: si no, castiga una respuesta correcta.
+        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista, libres }) => {
             const idiomas = lenguajesDe(pasos);
             const langs = idiomas.length ? idiomas : [lang];
             const [langActivo, cambiarLang] = useLenguajeActivo(langs, lang);
@@ -1893,8 +1900,25 @@
             const agregar = (i) => { if (!comprobado) setSecuencia(s => [...s, i]); };
             const quitar = (pos) => { if (!comprobado) setSecuencia(s => s.filter((_, k) => k !== pos)); };
             const completo = secuencia.length === pasosAct.length;
+            const gruposCrudos = libres ? porLenguaje(libres, langActivo) : [];
+            const grupos = Array.isArray(gruposCrudos) ? gruposCrudos : [];
+            useEffect(() => {
+                const usados = new Set();
+                grupos.forEach(g => {
+                    const mal = !Array.isArray(g) || g.length < 2 || g.some(k => !Number.isInteger(k) || k < 0 || k >= pasosAct.length || usados.has(k));
+                    if (mal) console.error(`[OrdenaPasos] \`libres\` (${langActivo}): el grupo ${JSON.stringify(g)} no vale. Cada grupo lleva dos o más posiciones entre 0 y ${pasosAct.length - 1}, y ninguna posición va en dos grupos.`);
+                    if (Array.isArray(g)) g.forEach(k => usados.add(k));
+                });
+            }, [langActivo]);
+            const grupoDe = (pos) => grupos.find(g => Array.isArray(g) && g.includes(pos));
             // Por texto, no por índice: dos pasos iguales intercambiados dan el mismo programa.
-            const posOk = (pos) => pasosAct[secuencia[pos]] === pasosAct[pos];
+            // Y un paso de un grupo libre vale en cualquier posición de su grupo.
+            const posOk = (pos) => {
+                const puesto = pasosAct[secuencia[pos]];
+                if (puesto === pasosAct[pos]) return true;
+                const g = grupoDe(pos);
+                return !!g && g.some(k => pasosAct[k] === puesto);
+            };
             const aciertos = secuencia.filter((_, pos) => posOk(pos)).length;
             const todoOk = completo && aciertos === pasosAct.length;
 
@@ -1962,13 +1986,19 @@
                                 </button>
                                 <span className={`text-sm font-bold ${todoOk ? 'text-green-600' : 'text-red-500'}`}>
                                     <i className={`fas ${todoOk ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
-                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en la posición correcta`}
+                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en ${grupos.length ? 'una posición válida' : 'la posición correcta'}`}
                                 </span>
                             </>}
                     </div>
+                    {comprobado && grupos.length > 0 && (
+                        <p className="text-xs text-gray-600 mt-2" data-orden-libre="">
+                            <i className="fas fa-shuffle mr-1 text-secondary"></i>
+                            Este ejercicio admite más de un orden: los pasos que no dependen unos de otros pueden intercambiarse.
+                        </p>
+                    )}
                     {comprobado && !todoOk && (
                         <div className="mt-3 animate-fade-in">
-                            <Box type="tip" label="Orden correcto">
+                            <Box type="tip" label={grupos.length ? 'Un orden correcto' : 'Orden correcto'}>
                                 <ol className="text-sm" style={{ listStyle: 'decimal', paddingLeft: '1.4rem', margin: 0 }}>
                                     {pasosAct.map((p, i) => <li key={i} className="font-mono text-[0.85rem] whitespace-pre-wrap">{p}</li>)}
                                 </ol>
@@ -3078,7 +3108,7 @@ for k in range(1, n):
            [0 %, 10 %] y tolerancia 10⁻⁶: 1,9924 % mensual en 17 vueltas.
 
            Es la búsqueda binaria del capítulo 2 —que encontró un crédito entre
-           40 000 en 12 comparaciones; en el peor caso harían falta 16, aunque el capítulo 2 no lo dice— aplicada a una función en
+           40 000 en 12 vueltas; en el peor caso hacen falta 16, como dice su sección 5— aplicada a una función en
            vez de a una lista. Se cita, no se repite.
 
            El VPN se calcula con un ciclo DENTRO del ciclo de la bisección: el
@@ -4218,7 +4248,7 @@ End Sub`,
                             <tr><td>Capítulo 1, sección 3</td><td>Los meses que tarda un ahorro en llegar a la meta, y la vuelta que no se da cuando la meta se alcanza exacta</td><td><span className="inline-code">Mientras saldo &lt; meta</span></td></tr>
                             <tr><td>Capítulo 1, sección 4</td><td>Tres décimos que no suman 0,3, y cien centavos que no suman un peso</td><td><span className="inline-code">Para i &lt;- 1 Hasta 3</span> y <span className="inline-code">Hasta 100</span></td></tr>
                             <tr><td>Capítulo 2, sección 1</td><td>«Repita hasta obtener un resultado razonable», que falla la finitud</td><td>Uno que puede no terminar</td></tr>
-                            <tr><td>Capítulo 2, sección 5</td><td>Las comparaciones que hacen dos búsquedas del mismo crédito en una cartera de 40 000</td><td><span className="inline-code">Para</span> contra <span className="inline-code">Mientras izq &lt;= der</span></td></tr>
+                            <tr><td>Capítulo 2, sección 5</td><td>Las vueltas que dan dos búsquedas del mismo crédito en una cartera de 40 000</td><td><span className="inline-code">Para</span> contra <span className="inline-code">Mientras izq &lt;= der</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -7548,7 +7578,7 @@ End Sub`,
                 </p>
                 <p>
                     El capítulo 2 buscó el crédito 39 814 en una cartera ordenada de 40 000 partiéndola por la
-                    mitad, y lo encontró en 12 comparaciones. La <strong>bisección</strong> hace lo mismo con el
+                    mitad, y lo encontró en 12 vueltas. La <strong>bisección</strong> hace lo mismo con el
                     intervalo de tasas: prueba la del medio, mira el signo del VPN y se queda con la mitad donde
                     el signo cambia. Puede seguirla vuelta por vuelta:
                 </p>

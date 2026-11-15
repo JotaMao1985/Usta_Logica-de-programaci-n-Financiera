@@ -2824,3 +2824,489 @@ las 13 salidas de la fase 2.
 pegado desde una sesión que trabaja en segundo plano: el pegado del módulo
 necesitó control de pantalla, aprobado por el docente. Sigue siendo el único
 paso manual de la comprobación.
+
+### Capítulo 2, fase 1: línea base y fuentes · 2026-11-14
+
+El docente aprobó `PLAN_TAREA12_CAPITULO_02_CONTENIDO.md` con las ocho
+recomendaciones (A–H). La fase 1 no toca el capítulo: deja la línea base en el vault
+y las fuentes leídas.
+
+**Línea base** (sobre `c82fc71`). Un lector sin contexto inventarió 90 afirmaciones
+y 26 figuras y tablas; un guion comprobó que el ancla de cada una aparece una sola
+vez en el archivo. Por clase: 33 piden cita, 19 son ejecutadas, 17 de criterio, 10
+ilustrativas, 8 derivadas y 3 son remisiones a otros capítulos. 68 de las 90 no se
+presentan hoy como lo que son. De las 33 que piden cita, 9 tienen fuente leída, 7
+esperan un libro impreso del syllabus y 17 no tienen ninguna: se reescriben como
+criterio, se demuestran ejecutando o se quitan.
+
+**Fuentes leídas.**
+
+- *Símbolos del flujograma (decisión C).* La norma ANSI X3.5-1970 está reproducida
+  entera en FIPS PUB 24 del National Bureau of Standards, abierta en el NIST. Se
+  leyó sobre las páginas escaneadas. Contradice al capítulo en dos puntos: la
+  decisión «determina cuál de varios caminos alternativos se sigue» y la norma
+  dibuja rombos con tres salidas y más, así que «exactamente dos salidas» es
+  convención del curso; y no son «unos pocos símbolos» sino 28, de los que el curso
+  usa seis. Respalda que entrada y salida compartan símbolo. No nombra las formas:
+  las dibuja. Su vigencia no se verificó.
+- *Norma de transparencia (decisión D).* Ley 1748 de 2014, leída completa en el
+  Gestor Normativo de Función Pública. Obliga a informar el Valor Total Unificado,
+  que incluye intereses, seguros, gastos y comisiones, y a diferenciar dentro de él
+  el componente de la tasa de interés. No dice que la cuota deba desglosarse.
+- *Cinco propiedades (decisión B).* No se encontró ninguna fuente abierta que la
+  política admita: lo que aparece son apuntes de clase, blogs y Wikilibros. Queda a
+  la espera del pasaje de un libro impreso del syllabus.
+
+La tanda 03 de Zotero (las dos fuentes) está preparada en el vault y **no se ha
+importado**: espera la aprobación del docente.
+
+**Huecos de las herramientas.**
+
+- La política de fuentes no tiene clase para una remisión a otro capítulo («el
+  capítulo 3 toma…»). Las tres del capítulo 2 quedaron sin clasificar; se comprueban
+  a mano contra el otro capítulo en la fase 9.
+- El esquema del vault numeraba la evaluación como `s5`, que en un capítulo de cinco
+  secciones choca con la quinta. Se corrigió: la evaluación es la sección siguiente
+  a la última (`s6` en el capítulo 2). También se añadió `tabla` a las clases de
+  figura.
+- La lectura automática de páginas falló en las dos fuentes: el PDF del NIST es un
+  escaneo que hubo que extraer con `pdftotext` y mirar página por página, y los
+  sitios `.gov.co` dan error de certificado fuera del navegador.
+- El inventario sale de un lector, no de una regla: nada garantiza que no se le haya
+  escapado una afirmación. La lectura crítica de la fase 10 es la segunda red.
+
+**Importación de la tanda 03 (aprobada por el docente el 2026-11-14).** Las dos
+referencias están en Zotero y en `referencias.json` (`nbs1973`,
+`congreso2014ley1748`). Hubo un error: entraron primero en «3 Fuentes primarias»
+de Teoría del Riesgo, porque hay seis colecciones con ese nombre y la comprobación
+previa miró el nombre y no el curso. Se movieron a la de LPF desde la ventana de
+Zotero, sin borrar nada, y la API confirma que la colección de Teoría del Riesgo
+quedó como estaba. Regla nueva para las tandas siguientes: comprobar el id de la
+colección seleccionada y su colección madre, no solo el nombre. Además, Zotero
+guardó la fecha de consulta en UTC y las dos dicen 2026-11-15; la lectura fue el
+14. Sin corregir.
+
+### Capítulo 2, fase 2: la sección 2 dice lo que calcula · 2026-11-14
+
+Rama `claude/cap02-fase2`. Decisiones A y D del plan.
+
+- **El caso (A).** Se conserva la cuenta y se dice lo que es: «interés simple del
+  1,8 % mensual sobre el capital prestado», repartido en 24 cuotas iguales. Se
+  pide «la cuota mensual»; «cuota fija» desaparece de la sección. Un
+  `<Ilustrativo>` declara que el crédito, sus cifras y su regla de liquidación
+  son inventados. El capítulo no afirma nada sobre cómo se liquida un crédito
+  real. Las salidas no cambian (5 184 000, 345 600, 730 400).
+- **La norma (D).** «La norma de transparencia» pasa a ser la Ley 1748 de 2014,
+  art. 1.º, citada: primera cita del capítulo, con su lista «Referencias» y su
+  registro `afirmaciones/02.yaml`. El verificador independiente calificó la
+  primera redacción de *parcial* (omitía «siempre que la naturaleza del producto
+  lo permita» y cambiaba «Valor Total Unificado» por «valor total»); se
+  reescribió y **la redacción final se volvió a someter: respalda**. La frase «el
+  cliente tiene derecho a saber por qué paga lo que paga» se quitó.
+- **La constante.** La nota del bloque dice que el pseudocódigo y VBA tienen
+  palabra para declararla y que en Python y R es una variable como las demás
+  (ejecutado: los dos reasignan sin error). Promete que la sección 4 vuelve sobre
+  ello: queda como obligación de la fase 6.
+- **La traza** lleva `exigeRespuesta` (en blanco ya no aprueba) y pide la raya
+  «donde el algoritmo todavía no le haya asignado nada», que vale también en VBA.
+- **Ordenar pasos.** El enunciado ya no dice que una variable no puede usarse sin
+  valor, y la lista de VBA lee las tres entradas. Sigue aceptando un solo orden
+  habiendo varios válidos: es del componente y va en la fase 8.
+- La motivación ya no da «media hora ahorra dos días» como regla.
+
+Sin tocar en esta fase: la mención del syllabus (fase 7, con la portada) y la
+clave de la evaluación que suma el seguro al «uso del dinero» (fase 7).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco capítulos;
+sonda de navegador del capítulo 2 en verde, en escritorio y a 375 px (7 de 7
+lecciones, 0 errores de JS).
+
+**Hueco de las herramientas, cerrado.** `sonda_navegador.mjs file 02` respondía
+«no montó», que parece un fallo del capítulo, cuando «02» no es un archivo: Chrome
+cargaba una página de error. Ahora la sonda comprueba que cada ruta exista y, si
+no, lo dice y sale con 2. Costó varias pruebas descubrirlo.
+
+### Capítulo 2, fase 3: la sección 5 cuenta vueltas y las llama vueltas · 2026-11-14
+
+Rama `claude/cap02-fase3`. Decisión E del plan.
+
+- **El conteo.** El contador de los cuatro bloques se llama `vueltas` y la salida
+  dice «39814 vueltas» y «12 vueltas». Un párrafo nuevo explica por qué no se
+  habla de comparaciones (A compara una vez por vuelta con el dato buscado; B,
+  hasta dos) y que el conteo depende del crédito: A da tantas vueltas como su
+  posición; B, a lo sumo 16 en esta cartera. Ejecutado para los 40 000 créditos:
+  máximo 16, mínimo 1.
+- **La contradicción.** Desaparece «depende solo del algoritmo». La sección dice
+  que el número de vueltas no cambia con la máquina y sí con el algoritmo y con
+  el dato.
+- **El caso.** La anécdota ya no trae «ocho minutos» ni «cuarenta», que no
+  cuadraban con las cifras del propio capítulo, ni afirma que el servidor no
+  hacía falta. Un `<Ilustrativo>` declara inventados la cartera, el cierre y las
+  5 000 búsquedas; los conteos se declaran ejecutados.
+- **Por qué B no siempre sirve.** «Solo es correcto si la cartera está ordenada»,
+  con un caso que se sigue a mano: en la lista 5, 1, 4, 2, 3 busca el 5 y no lo
+  halla (ejecutado).
+- **El ejercicio de interpretación.** «Suponga que el cierre diario hace 5 000
+  búsquedas como esa»; 199 070 000 frente a 60 000, «unas 3 318 veces menos». El
+  distractor que afirmaba algo cierto —que los computadores hacen millones de
+  operaciones por segundo— se cambió por uno falso por lo que la sección enseña.
+- **Opiniones como opiniones.** «En este curso la corrección va primero»;
+  «conviene mirar el código antes de pedir más máquina».
+- Para que el mismo conteo tenga el mismo nombre en todo el capítulo se tocaron
+  también la portada («39 814 vueltas; la segunda, doce»; el gancho ya no dice
+  «tarda mil veces más»), la pregunta del crédito 2 500 del cuestionario y la
+  entrada «Eficiencia» del glosario.
+
+**Para la fase 9.** El capítulo 5 dice tres veces que el 2 encontró el crédito
+«en 12 comparaciones» (líneas 3081, 4221 y 7550-7551). Son vueltas.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 5: la sección 3 cita la norma y separa lo que es del curso · 2026-11-14
+
+Rama `claude/cap02-fase5`. Decisión C del plan. Se adelantó a la fase 4, con
+permiso del docente, porque la 4 espera el pasaje de un libro impreso.
+
+- **La norma.** «El estándar ANSI fija unos pocos símbolos» pasa a decir lo que la
+  norma ANSI X3.5 de 1970 dice: un símbolo básico para cada una de cuatro
+  funciones y símbolos especializados (§3.1). Debajo del widget, una lista cita
+  la norma símbolo por símbolo —entrada y salida (§3.2.1), decisión (§3.3.2.1 y
+  §4.10.1), terminal (§3.4.2), conector (§3.4.1) y línea de flujo (§4.4.1)— y
+  dice en cada uno qué añade el curso.
+- **Convención del curso, y dicho así:** las dos salidas de la decisión, el único
+  Inicio y el único Fin, y la punta de flecha en todas las líneas. La norma
+  habla de «varios caminos alternativos». La pregunta del cuestionario que daba
+  por incorrecta esa lectura dice ahora «según la convención de este curso».
+- **El widget** lleva `<Fuente>`: «formas adaptadas de» la norma. Un lector
+  independiente comparó los seis dibujos con las páginas escaneadas: son
+  reconocibles, pero tres están aplanadas respecto a la proporción 1:2/3 que la
+  norma pide mantener y la punta de flecha es rellena donde la norma la dibuja
+  abierta. Por eso «adaptadas» y no «conformes». Queda para la fase 8 decidir si
+  se redibujan.
+- **Verificador independiente.** Siete frases contra sus pasajes: seis respaldan
+  y una, la de las puntas de flecha, salió *parcial* (sobraba «solo»: con flujo
+  bidireccional también son obligatorias). Se adoptó la redacción que el mismo
+  verificador dio por respaldada. Ocho filas nuevas en `afirmaciones/02.yaml`.
+- **Frases sin respaldo, fuera o reescritas:** «El lenguaje que más se usa en el
+  sector financiero es el que menos protege» (quitada); «es el símbolo más
+  frecuente» (quitada); el pseudocódigo «es la única» representación sin
+  ambigüedad (ahora, decisión del curso); los límites de la tabla de
+  representaciones (criterio del curso, con `<Fuente propia>`); la escena del
+  comité (supuesto).
+- **El ejercicio de detectar el error** ya no adelanta la consecuencia en el
+  enunciado. El microcrédito lleva `<Ilustrativo>`.
+
+Lo que no se afirma: que la norma siga vigente. No se comprobó.
+
+Sin tocar: la mención del RA1 (fase 7) y los defectos de las figuras (fase 8).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+**Hueco de las herramientas.** El verificador de citas lee texto; una `<Fuente>`
+que atribuye un dibujo no se puede comprobar así. Aquí se resolvió con un lector
+que abrió las páginas escaneadas y comparó forma por forma, pero nada en
+`verificar.py` distingue una fila del registro respaldada por texto de una
+respaldada por una imagen.
+
+### Capítulo 2: lo que quedó abierto de la fase 5, y el hueco del respaldo por imagen · 2026-11-14
+
+Rama `claude/cap02-abiertos`, sobre la fase 5.
+
+**Lo abierto.**
+
+- *Vigencia de la norma.* La lista oficial del NIST de publicaciones FIPS
+  retiradas trae FIPS 24 como publicada el 30 de junio de 1973 y **retirada el
+  23 de agosto de 1988**. De la norma ANSI misma no se halló aviso oficial de
+  retiro. El capítulo la sigue citando con su año y sin decir que sea la
+  vigente; el dato queda en la nota de la fuente.
+- *El syllabus y el RA1.* Lo que el capítulo le atribuye se cotejó contra el
+  documento: el RA1 dice «Construye un algoritmo computacional…», los entregables
+  incluyen el «Formato Definición y Análisis» y la rúbrica trae «Dominio de
+  algoritmos y procedimientos propios del pensamiento matemático». Como en el
+  capítulo 1, el syllabus se nombra y no se cita: es un documento propio del
+  curso y no está en Zotero. La ficha de la portada lleva su `fuente-ok`.
+- *Las formas del widget.* Redibujadas con la proporción de la norma (1:2/3 para
+  entrada/salida, proceso y decisión; 1:3/8 para el terminal) y con la punta de
+  flecha abierta. El pie dice ahora «formas y proporciones de». La ficha de cada
+  símbolo muestra el rótulo de ejemplo, que antes no se pintaba.
+
+Sigue abierto: el flujograma del ejemplo (`BloqueFlujo`) no usa esas
+proporciones porque sus cajas llevan texto largo —el pie del widget no se refiere
+a él—; su texto de 12,5 px y el foco de teclado van en la fase 8. La fase 4
+espera el pasaje del libro impreso.
+
+**El hueco, cerrado.** El registro no distinguía una fila respaldada por un
+pasaje de una respaldada por un dibujo, que el verificador de citas no puede
+leer. Ahora:
+
+- la nota del vault lleva `respaldo: imagen` y `cotejado_por` (quién miró la
+  página); el esquema y la plantilla los traen;
+- `registrar_afirmaciones.py` escribe `respaldo: "imagen"` en la fila y se niega
+  a escribir el registro si falta `cotejado_por`; las filas de texto no cambian
+  (`01.yaml` quedó idéntico);
+- la regla 31 falla si un `<Cita>` —una frase— se apoya en una fila de imagen:
+  eso solo sirve para la procedencia de una figura (`<Fuente>`).
+
+Pruebas negativas, sobre copias: marcar como imagen la fila de una frase falla;
+un valor distinto de `texto` o `imagen` falla; una nota de imagen sin
+`cotejado_por` no se registra. README y cabecera de `verificar.py` al día.
+
+**Hueco que sigue abierto, y es de política.** No hay clase para lo que el curso
+dice de sus propios documentos: las remisiones a otros capítulos y las menciones
+del syllabus. Están comprobadas y quedan `sin-clasificar` (nueve notas en el
+capítulo 2). Decidirlo es del docente: una sexta clase, o tratarlas como
+derivadas.
+
+### Capítulo 2, fase 6: la sección 4 dice de cada lenguaje lo que ese lenguaje hace · 2026-11-14
+
+Rama `claude/cap02-fase6`.
+
+- **La constante.** Ya no se declara «para que el lenguaje avise»: se declara
+  «para que quien lea el algoritmo lo sepa». Un párrafo nuevo —el que la sección
+  2 prometía— dice que el pseudocódigo y VBA tienen palabra para declararla y que
+  en Python y R el nombre en mayúsculas es un acuerdo entre personas: si se
+  reasigna, ninguno protesta (ejecutado). No se afirma qué hace VBA ante el
+  intento; se comprueba en Excel en la fase 9.
+- **La tabla de tipos.** Fuera «la causa más común de descuadres de un peso». La
+  fila Moneda cita la ayuda de VBA: entero con escala de 10 000, punto fijo con
+  cuatro decimales (verificador: respalda). «Decimales exactos» pasó a «un
+  número fijo de decimales». La fila Real reconoce que los bloques de Python y R
+  del capítulo guardan así el dinero y redondean al mostrarlo. El ejemplo de los
+  ceros a la izquierda ya no es la cédula —no consta que empiecen por cero— sino
+  un código de oficina inventado, 0045, también en el cuestionario. La tabla lleva
+  `<Fuente propia>`.
+- **Asignar y comparar.** La nota del acumulador decía que `=` no significa «es
+  igual a» en ninguno de los cuatro. En VBA y en el pseudocódigo el mismo `=`
+  compara. Ahora dice que Python y R tienen `==` para preguntar y que en los otros
+  dos lo distingue el lugar en la línea.
+- **El reparto.** Las explicaciones prometían que declarar la variable como
+  moneda arreglaba el error. No lo arregla: 100 000 no es divisible entre 3. Ahora
+  dicen que con decimales la pérdida se achica y que el peso que no se puede
+  partir necesita una regla escrita. En Python y R, sin `int` el total vuelve a
+  dar 100 000 (ejecutado), pero queda una fracción de peso por cuenta.
+- **La remisión al capítulo 1 estaba desfasada.** Decía que allí el descuadre
+  venía «por el binario»; desde la auditoría del capítulo 1 viene del recorte de
+  decimales en cada pago. Corregida.
+- **Trazas.** Las dos llevan `exigeRespuesta` y piden la raya «donde el algoritmo
+  todavía no le haya asignado nada», que vale también en VBA.
+- **Opiniones como opiniones:** «la instrucción más común que existe», «el único
+  sitio donde el valor sobrevive», «debe inicializarse».
+- Un `<Ilustrativo>` declara inventadas las cifras de los ejercicios.
+
+Sin tocar: las definiciones de variable y constante como «espacio de memoria con
+nombre», que esperan con las de la sección 1 el pasaje del libro impreso.
+
+Para la fase 9, en Excel: el redondeo de VBA al guardar en `Long`, el valor del
+reparto con `Currency`, `Option Compare` y qué pasa al reasignar un `Const`.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 7: portada, evaluación y cierre · 2026-11-14
+
+Rama `claude/cap02-fase7`.
+
+- **La clave que sumaba el seguro al «uso del dinero»** (hallazgo alto de la
+  línea base). La opción correcta dice ahora que el cliente devuelve 17 529 600,
+  que son 5 529 600 más de lo recibido —el 46,1 % del capital—, y que de esa
+  diferencia 5 184 000 son intereses y 345 600 son seguro. La justificación
+  muestra la cuenta entera y ya no invoca «la norma de transparencia»: remite a
+  la sección 2, donde está la cita.
+- **La ficha de la portada**, cotejada celda por celda con el syllabus:
+  contenido, 4 horas, cuestionario «Algoritmos» y naturaleza coinciden.
+- **La rúbrica.** El criterio va con su nombre completo, y «más difícil» pasó a
+  «que este curso considera más exigente».
+- **Distractores sin hechos sin respaldo:** fuera «Python […] el más usado hoy»
+  y «el lenguaje que usa el sector financiero».
+- **Opiniones como opiniones:** el gancho de la evaluación ya no cuenta «diez
+  respuestas»; «el algoritmo rápido de este capítulo supone algo», no «suele
+  suponer»; la prueba de escritorio es «una forma», no «la forma».
+- El paso 5 del recorrido de la portada dice «contar vueltas».
+
+Con esta fase quedan corregidos los tres hallazgos altos de la línea base, salvo
+la parte del ejercicio de ordenar que depende del componente (fase 8).
+
+Sin tocar, a la espera del libro impreso (fase 4): toda la sección 1 y tres
+entradas del glosario (Definición «también se le llama determinismo»,
+pseudocódigo, prueba de escritorio).
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 8: `OrdenaPasos` acepta más de un orden · 2026-11-14
+
+Rama `claude/cap02-fase8`. Decisión F del plan. Es un cambio de LP-CORE: se hizo
+en `lp-core-extra.jsx`, se ensambló y se estampó en los cinco capítulos.
+
+- **La propiedad nueva, `libres`.** Declara los pasos que pueden cambiar de lugar
+  entre sí sin que el algoritmo cambie: grupos de posiciones del orden canónico,
+  por lenguaje como `pasos`. Dentro de un grupo cualquier orden cuenta como bien.
+  Sin `libres` el componente califica contra un solo orden, igual que antes: los
+  demás capítulos no cambian de comportamiento.
+- Cuando hay grupos, el componente lo dice al comprobar («Este ejercicio admite
+  más de un orden…») y la solución se titula «Un orden correcto».
+- **El capítulo 2** declara sus grupos en los cuatro lenguajes: la constante y las
+  lecturas entre sí, y el interés y el seguro entre sí. Era el último hallazgo
+  alto de la línea base.
+- Dos diagramas llevan su `fuente-ok`.
+
+Probado en Chrome, sobre el capítulo 2: el orden canónico y uno alterno válido
+dan «¡Secuencia correcta!»; la cuota antes del interés, y el Fin de primero, se
+rechazan (6 de 8). Prueba negativa: un grupo con una posición fuera de rango y
+otra repetida sale por `console.error` y la sonda marca el capítulo en rojo.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos (regla 1, deriva, incluida); sonda en verde en los cinco.
+
+**Huecos de las herramientas.**
+
+- Ninguna regla puede saber si a un ejercicio de ordenar le **falta** `libres`:
+  eso solo lo ve quien lo resuelve de otra manera válida. Queda en el README. Los
+  ejercicios de ordenar de los capítulos 3 (dos), 4 (dos) y 5 (dos) están sin
+  revisar; el del capítulo 1 se dejó con un solo orden y lo dice en su título.
+- `libres` cubre grupos de pasos intercambiables, no cualquier orden parcial
+  (por ejemplo, un paso que pudiera ir en cualquier punto antes de su primer
+  uso). Bastó para el capítulo 2.
+- La sonda comprueba que los capítulos montan, no que un ejercicio califique
+  bien. La prueba de esta fase se hizo con un guion de usar y tirar sobre la
+  sonda; no quedó en el repositorio.
+
+Sin hacer, anotado: el texto de 12,5 px del flujograma del ejemplo en pantallas
+estrechas y el foco de teclado de sus bloques.
+
+### Capítulo 2, fase 9: los demás capítulos, el banco y VBA en Excel · 2026-11-14
+
+Rama `claude/cap02-fase9`.
+
+**Lo que los demás capítulos dicen del 2.** Se leyeron todas las menciones del
+capítulo 2 en el 1, el 3, el 4 y el 5. Solo el 5 quedaba desfasado: decía tres
+veces que la búsqueda encontró el crédito «en 12 comparaciones». Ahora dice
+vueltas, y el comentario que anotaba «en el peor caso harían falta 16, aunque el
+capítulo 2 no lo dice» recoge que ya lo dice. Ningún otro capítulo usa las cifras
+del caso de la cuota. Una dependencia que hay que cuidar en la fase 4: el
+capítulo 5 cita literal la frase del 2 sobre la TIR que no converge.
+
+**VBA en Excel.** `ejecutar_vba.py comparar`, arnés `2c921dca6a`: los cinco
+bloques que declaran salida **coinciden**. Con `--incluir` se mostraron además los
+dos ejercicios de detectar el error: «Interes: 0» al usar la variable antes de
+asignarla, y 33333 y 99999 en el reparto, como dice el capítulo. Un módulo aparte
+comprobó lo que la fase 6 dejó pendiente: con `Currency` el reparto da 33333,3333
+y 99999,9999; `Long` redondea al guardar (2,5 → 2; 3,5 → 4; 33333,5 → 33334);
+`"Si" = "SI"` es falso; una variable `Currency` sin asignar vale 0. **Sin
+comprobar:** qué pasa al reasignar un `Const`, que es un error de compilación e
+impediría correr lo demás; el capítulo no afirma nada sobre eso.
+
+**Banco Moodle.** Las seis preguntas del capítulo 2 se revisaron contra el
+capítulo corregido, solo leyendo el banco: una sigue vigente y cinco tienen
+borrador en el vault. El detalle y las dudas que decide el docente están en la
+nota del vault. Nada se copió al banco.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 5 en verde.
+
+**Huecos de las herramientas.**
+
+- El módulo 2 del arnés llegó a Excel con los comentarios en caracteres rotos
+  (acentos y rayas). El guion copia bien el primer módulo, pero para el segundo
+  daba la orden `pbcopy < archivo`, que sin configuración regional UTF-8 rompe
+  esos caracteres. No afectó lo ejecutado, porque el código y las cadenas eran
+  ASCII; un bloque con tildes en una cadena habría salido mal. **Cerrado:** la
+  orden que imprime `ejecutar_vba.py` lleva ahora `LC_ALL=en_US.UTF-8`.
+- Un error de compilación no se puede comprobar con el arnés: no deja correr
+  nada. Lo que el material diga de «VBA no deja compilar…» hay que mirarlo a mano.
+- Pegar en el editor de Visual Basic sigue necesitando control de pantalla.
+
+### Capítulo 2, fase 4: las cinco propiedades son convención del curso · 2026-11-14
+
+Rama `claude/cap02-fase4`. Decisión B del plan, resuelta por el docente: en lugar
+de atribuir las propiedades y las definiciones a un libro, se presentan como lo
+que son, **convención del curso**.
+
+- **Las cinco propiedades.** «Este curso le pide cinco cosas, con estos nombres,
+  y son las que se usan para evaluar. Otros textos las agrupan o las llaman de
+  otro modo.» La tabla lleva `<Fuente propia>` y declara inventados los ejemplos
+  de su tercera columna.
+- **La definición de algoritmo** empieza por «En este curso…».
+- **El glosario** dice que sus definiciones son las del curso y lleva
+  `<Fuente propia>`. La entrada Definición ya no dice «también se le llama
+  determinismo».
+- **Fuera la Superintendencia**: una liquidación que depende de quién la corra «no
+  se puede auditar ni reproducir».
+- «Tres frases que aparecen en manuales reales» pasó a «Tres frases inventadas,
+  del tipo que trae un instructivo». La escena de la factura es un supuesto. «El
+  manual es, a juicio de este curso, el peligroso». Los 90 días de mora son «por
+  ejemplo».
+- La frase de la TIR que no converge no se tocó: el capítulo 5 la cita literal.
+
+Con esto el capítulo 2 pasa `verificar.py` **sin avisos**: ninguna figura sin
+fuente y ninguna entidad o norma sin cita. Sonda en verde, en escritorio y a
+375 px.
+
+Queda la fase 10: lectura crítica final y verificación de todas las citas.
+
+### Capítulo 2, fase 10: lectura crítica final y verificación de las citas · 2026-11-14
+
+Rama `claude/cap02-fase10`. Dos lectores sin contexto sobre el capítulo ya
+corregido, antes de fusionar, como pedía la lección del capítulo 1.
+
+**El lector del capítulo entero** encontró 2 hallazgos altos, 12 medios y 17
+bajos. Todas las salidas declaradas de Python y R coinciden con la ejecución y
+todas las claves son correctas.
+
+- *Alto 1, un error introducido en esta misma mejora.* En la fase 6 se escribió
+  que «el pseudocódigo y VBA usan el mismo `=`» para asignar y para comparar. Es
+  falso para el pseudocódigo, que asigna con `<-`. Corregido: solo VBA usa el
+  mismo símbolo para las dos cosas.
+- *Alto 2.* El ejercicio de ordenar decía que dos líneas que no dependen una de
+  otra pueden ir en cualquier orden, y rechazaba órdenes que cumplían esa regla
+  (la constante declarada justo antes de usarla). `libres` no expresa órdenes
+  parciales, así que se acotó el enunciado: la constante y las lecturas van antes
+  de los cálculos, y dentro de cada grupo el orden es libre. Con esa regla los
+  grupos declarados cubren todos los órdenes válidos.
+- *Los doce medios, corregidos.* Entre ellos: la solución de la receta decía que
+  no fallaba la finitud, con la misma forma de condición que el capítulo pone como
+  ejemplo de falla; el reparto decía que con cualquier tipo con decimales la
+  pérdida no desaparece, y con Real el total vuelve a 100 000; dos frases le
+  anunciaban al estudiante la respuesta de un ejercicio; el pseudocódigo de la
+  búsqueda no decía que los créditos van numerados del 1 al 40 000.
+- De los bajos se corrigieron cuatro; los demás quedan listados en la nota del
+  capítulo en el vault.
+
+**El verificador de las diez citas** comprobó, una por una, que la frase del
+capítulo es la de la nota, que el ancla está en la oración citada y que clave y
+localizador coinciden con la fila. Las diez respaldan. Señaló ocho ajustes
+alrededor de ellas, todos aplicados:
+
+- dos frases contiguas a una cita eran convención del curso y no lo decían;
+- la justificación del cuestionario decía que la norma «admite más de dos»
+  salidas, que solo sale de un dibujo;
+- «la ley obliga», en presente, daba por vigente una norma cuya vigencia no se
+  comprobó: ahora «la Ley 1748 de 2014 estableció […] la obligación». Esa frase
+  se volvió a someter y salió *parcial* por una razón que los verificadores
+  anteriores dejaron pasar —la condición «siempre que la naturaleza del producto
+  lo permita» limitaba la obligación y en la ley solo limita qué conceptos
+  entran—; se adoptó la redacción que el verificador dio por respaldada;
+- el pie del widget localiza ahora la punta de flecha en §4.4.1, que es de donde
+  sale. Un lector independiente cotejó el redibujado midiendo los dibujos de la
+  norma: formas y proporciones coinciden.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos y el 2 queda sin avisos; sonda del capítulo 2 en verde, en escritorio
+y a 375 px.
+
+**Lo que esta fase enseña sobre el método.**
+
+- La lectura final encontró un error alto que la propia mejora había metido. El
+  verificador automático estaba en verde. La lectura independiente antes de
+  fusionar no es un trámite.
+- Cuatro verificadores leyeron la frase de la ley; los tres primeros no vieron
+  lo que vio el cuarto. Un «respalda» no es definitivo: depende de quién lee.
+- Tres borradores del banco Moodle copiaron frases que esta fase volvió a
+  cambiar. Hay que realinearlos antes de copiarlos; está anotado en el vault.
+
+**Criterios de aceptación del plan.** 1, parcial: nueve afirmaciones
+comprobadas quedan sin clase porque la política no tiene una para remisiones y
+menciones del syllabus. 2 a 7, cumplidos (las salidas de VBA, en Excel). 8,
+cumplido: sin hallazgos altos abiertos y los medios corregidos. 9, cumplido.

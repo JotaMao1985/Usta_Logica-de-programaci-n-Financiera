@@ -427,7 +427,8 @@ def preparar(opciones):
           f"  Herramientas › Macro › Editor de Visual Basic › Insertar › Módulo › ⌘V")
     if len(modulos) > 1:
         print(f"Después, {modulos[1][0]}, en otro módulo:  "
-              f"pbcopy < {DIR_ARNES / 'arnes_2.bas'}")
+              f"LC_ALL=en_US.UTF-8 pbcopy < '{DIR_ARNES / 'arnes_2.bas'}'\n"
+              f"  (con LC_ALL: sin él, `pbcopy` copia las tildes y las rayas como caracteres rotos)")
     print(f"Y luego:  python3 _plantilla/ejecutar_vba.py comparar")
     return 0
 

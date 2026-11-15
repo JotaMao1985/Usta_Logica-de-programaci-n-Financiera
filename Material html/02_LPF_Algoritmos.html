@@ -1878,7 +1878,14 @@
             return mejor;
         };
 
-        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista }) => {
+        // `libres` declara los pasos que pueden cambiar de lugar entre sí sin que el
+        // algoritmo cambie: grupos de posiciones (desde 0) del orden canónico, por
+        // lenguaje como `pasos` —`{ pseudo: [[1, 2], [3, 4]], … }`— o una sola lista
+        // si vale para todos. Dentro de un grupo cualquier orden cuenta como bien.
+        // Sin `libres` se califica contra un único orden, como siempre; por eso un
+        // ejercicio con dos lecturas independientes, o dos cálculos que no dependen
+        // uno del otro, TIENE que declararlos: si no, castiga una respuesta correcta.
+        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista, libres }) => {
             const idiomas = lenguajesDe(pasos);
             const langs = idiomas.length ? idiomas : [lang];
             const [langActivo, cambiarLang] = useLenguajeActivo(langs, lang);
@@ -1893,8 +1900,25 @@
             const agregar = (i) => { if (!comprobado) setSecuencia(s => [...s, i]); };
             const quitar = (pos) => { if (!comprobado) setSecuencia(s => s.filter((_, k) => k !== pos)); };
             const completo = secuencia.length === pasosAct.length;
+            const gruposCrudos = libres ? porLenguaje(libres, langActivo) : [];
+            const grupos = Array.isArray(gruposCrudos) ? gruposCrudos : [];
+            useEffect(() => {
+                const usados = new Set();
+                grupos.forEach(g => {
+                    const mal = !Array.isArray(g) || g.length < 2 || g.some(k => !Number.isInteger(k) || k < 0 || k >= pasosAct.length || usados.has(k));
+                    if (mal) console.error(`[OrdenaPasos] \`libres\` (${langActivo}): el grupo ${JSON.stringify(g)} no vale. Cada grupo lleva dos o más posiciones entre 0 y ${pasosAct.length - 1}, y ninguna posición va en dos grupos.`);
+                    if (Array.isArray(g)) g.forEach(k => usados.add(k));
+                });
+            }, [langActivo]);
+            const grupoDe = (pos) => grupos.find(g => Array.isArray(g) && g.includes(pos));
             // Por texto, no por índice: dos pasos iguales intercambiados dan el mismo programa.
-            const posOk = (pos) => pasosAct[secuencia[pos]] === pasosAct[pos];
+            // Y un paso de un grupo libre vale en cualquier posición de su grupo.
+            const posOk = (pos) => {
+                const puesto = pasosAct[secuencia[pos]];
+                if (puesto === pasosAct[pos]) return true;
+                const g = grupoDe(pos);
+                return !!g && g.some(k => pasosAct[k] === puesto);
+            };
             const aciertos = secuencia.filter((_, pos) => posOk(pos)).length;
             const todoOk = completo && aciertos === pasosAct.length;
 
@@ -1962,13 +1986,19 @@
                                 </button>
                                 <span className={`text-sm font-bold ${todoOk ? 'text-green-600' : 'text-red-500'}`}>
                                     <i className={`fas ${todoOk ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
-                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en la posición correcta`}
+                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en ${grupos.length ? 'una posición válida' : 'la posición correcta'}`}
                                 </span>
                             </>}
                     </div>
+                    {comprobado && grupos.length > 0 && (
+                        <p className="text-xs text-gray-600 mt-2" data-orden-libre="">
+                            <i className="fas fa-shuffle mr-1 text-secondary"></i>
+                            Este ejercicio admite más de un orden: los pasos que no dependen unos de otros pueden intercambiarse.
+                        </p>
+                    )}
                     {comprobado && !todoOk && (
                         <div className="mt-3 animate-fade-in">
-                            <Box type="tip" label="Orden correcto">
+                            <Box type="tip" label={grupos.length ? 'Un orden correcto' : 'Orden correcto'}>
                                 <ol className="text-sm" style={{ listStyle: 'decimal', paddingLeft: '1.4rem', margin: 0 }}>
                                     {pasosAct.map((p, i) => <li key={i} className="font-mono text-[0.85rem] whitespace-pre-wrap">{p}</li>)}
                                 </ol>
@@ -2721,12 +2751,12 @@
         const PortadaSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-money-bill-trend-up"
-                    gancho="Dos algoritmos correctos para el mismo problema, y uno tarda mil veces más. ¿Qué los diferencia, si los dos dan el resultado bueno?">
+                    gancho="Dos algoritmos correctos para el mismo problema, y, para el mismo dato, uno repite su trabajo tres mil veces más que el otro. ¿Qué los diferencia, si los dos dan el resultado bueno?">
                     A dos analistas les encargan lo mismo: encontrar un crédito dentro de una cartera de
                     40 000. El primero escribe una rutina que los revisa uno por uno y funciona. El
                     segundo aprovecha que la cartera ya viene ordenada y escribe otra que también
-                    funciona. Uno hace 39 814 comparaciones; el otro, doce. Las dos respuestas son
-                    correctas y solo una sirve para el cierre diario.
+                    funciona. Para el mismo crédito, la primera da 39 814 vueltas; la segunda, doce. Las
+                    dos respuestas son correctas; lo que cuesta llegar a ellas no se parece.
                 </Motivacion>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
@@ -2739,6 +2769,7 @@
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; sus datos son los del syllabus, que nombra */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -2766,7 +2797,7 @@
                     { num: 2, title: 'Cómo se analiza', desc: 'Entrada, proceso y salida antes de escribir' },
                     { num: 3, title: 'Cómo se escribe', desc: 'Cuatro representaciones de una misma lógica' },
                     { num: 4, title: 'Con qué se escribe', desc: 'Variables, tipos y asignación' },
-                    { num: 5, title: 'Cuál conviene', desc: 'Contar operaciones para poder elegir' },
+                    { num: 5, title: 'Cuál conviene', desc: 'Contar vueltas para poder elegir' },
                 ]} />
 
                 <h3>Los cuatro lenguajes</h3>
@@ -2784,8 +2815,9 @@
                     talleres evaluables. Aquí se ejercita otra cosa —<strong>leer</strong> un algoritmo
                     ajeno, <strong>trazarlo</strong> a mano, <strong>diagnosticar</strong> por qué falla,
                     <strong> compararlo</strong> con otro e <strong>interpretar</strong> qué significa el
-                    resultado para el negocio— que es más difícil y es lo que la rúbrica del syllabus
-                    llama <em>dominio de algoritmos y procedimientos</em>.
+                    resultado para el negocio—, que este curso considera más exigente y que es como
+                    entiende el criterio de la rúbrica del syllabus <em>Dominio de algoritmos y
+                    procedimientos propios del pensamiento matemático</em>.
                 </CalloutPro>
             </div>
         );
@@ -2861,7 +2893,7 @@ End Sub`,
             {
                 nombre: 'Definición',
                 exige: 'Con las mismas entradas produce siempre el mismo resultado.',
-                falta: 'Una liquidación cuyo resultado depende de quién la corra no se puede auditar ni reproducir ante la Superintendencia.',
+                falta: 'Una liquidación cuyo resultado depende de quién la corra no se puede auditar ni reproducir.',
             },
             {
                 nombre: 'Finitud',
@@ -2871,7 +2903,7 @@ End Sub`,
             {
                 nombre: 'Entrada',
                 exige: 'Recibe cero o más datos, y está escrito cuáles y en qué unidad.',
-                falta: 'Si no dice que la tasa entra en porcentaje, tarde o temprano alguien la digita en decimal, y el interés sale cien veces menor.',
+                falta: 'Si no dice que la tasa entra en porcentaje y alguien la digita en decimal, el interés sale cien veces menor.',
             },
             {
                 nombre: 'Salida',
@@ -2884,14 +2916,15 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-clipboard-question"
                     gancho="¿En qué momento una instrucción deja de ser una orden y se vuelve una interpretación de quien la lee?">
-                    Un proveedor radica la factura el día 2 y el instructivo interno dice: «si se paga
+                    Suponga que un proveedor radica la factura el día 2 y el instructivo interno dice: «si se paga
                     pronto, aplique el descuento acordado». El auxiliar de la mañana entiende cinco días;
-                    el de la tarde, quince. Ese mes dos facturas iguales se pagan por cifras distintas y la
-                    conciliación no cuadra. Nadie se equivocó: la instrucción admitía dos lecturas.
+                    el de la tarde, quince. Ese mes dos facturas iguales se pagarían por cifras distintas y
+                    la conciliación no cuadraría. Nadie se habría equivocado: la instrucción admitía dos
+                    lecturas.
                 </Motivacion>
 
                 <p>
-                    Un <Termino def="Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.">algoritmo</Termino> no
+                    En este curso, un <Termino def="Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.">algoritmo</Termino> no
                     es un programa, ni un lenguaje, ni un diagrama: es la <strong>lógica</strong> que
                     después se escribe en cualquiera de esas formas. Por eso el mismo algoritmo puede
                     aparecer en pseudocódigo, en Python, en R o en VBA sin dejar de ser el mismo, y por eso
@@ -2900,8 +2933,10 @@ End Sub`,
 
                 <h3>Las cinco propiedades</h3>
                 <p>
-                    Que un procedimiento «funcione» no lo convierte en algoritmo. Le faltan cinco
-                    exigencias, y la columna de la derecha es lo que cuesta cuando alguna no se cumple.
+                    Que un procedimiento «funcione» no lo convierte en algoritmo. Este curso le pide
+                    cinco cosas, con estos nombres, y son las que se usan para evaluar. Otros textos las
+                    agrupan o las llaman de otro modo; lo que importa aquí es poder reconocer cuándo falta
+                    cada una. La columna de la derecha da un ejemplo de lo que puede costar que falte.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -2917,6 +2952,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso; los ejemplos de la tercera columna son inventados</Fuente>
 
                 <h3>Un algoritmo que sí cumple las cinco</h3>
                 <p>
@@ -2927,16 +2963,16 @@ End Sub`,
                 <CodeTabs
                     titulo="Descuento por pronto pago sobre una factura de $8 000 000"
                     bloques={EJ_DESCUENTO}
-                    nota={<>Las líneas que empiezan por <span className="inline-code">#&gt;</span> son la <strong>salida</strong> de la máquina, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
+                    nota={<>Las líneas que empiezan por <span className="inline-code">//&gt;</span>, <span className="inline-code">#&gt;</span> o <span className="inline-code">'&gt;</span>, según el lenguaje, son la <strong>salida</strong>, no comentarios. Python la imprime con separador de miles y R sin él: es la misma cifra escrita de dos maneras.</>}
                 />
 
-                <CalloutPro tema="warn" titulo="Lo que parece un algoritmo y no lo es" subtitulo="Tres frases que aparecen en manuales reales" icon="fa-triangle-exclamation">
+                <CalloutPro tema="warn" titulo="Lo que parece un algoritmo y no lo es" subtitulo="Tres frases inventadas, del tipo que trae un instructivo" icon="fa-triangle-exclamation">
                     <strong>«Revise si el cliente tiene mora considerable.»</strong> ¿Cuántos días son
                     considerables? Falla la <strong>precisión</strong>.<br />
                     <strong>«Repita hasta obtener un resultado razonable.»</strong> Puede no terminar
                     nunca. Falla la <strong>finitud</strong>.<br />
                     <strong>«Aplique el criterio del analista senior.»</strong> Dos analistas, dos
-                    resultados. Falla la <strong>definición</strong>.
+                    resultados. Falla la <strong>precisión</strong> y, con ella, la <strong>definición</strong>.
                 </CalloutPro>
 
                 <h3>Ejercicios</h3>
@@ -2947,7 +2983,9 @@ End Sub`,
                         <p style={{ marginTop: 0 }}>
                             <strong>La receta</strong> falla la <strong>precisión</strong> en el paso 4
                             («sal al gusto» delega la cantidad en quien cocina) y también en el 3
-                            («al dente» no es una condición medible). No falla la finitud: termina.
+                            («al dente» no es una condición medible). Con la precisión caen otras dos: una
+                            condición de parada que no se puede medir no garantiza que la cocción
+                            termine, ni que dos cocineros obtengan lo mismo.
                         </p>
                         <p>
                             <strong>El manual</strong> falla la <strong>precisión</strong> en el paso 2
@@ -2957,12 +2995,12 @@ End Sub`,
                             dice qué resultado ni dónde.
                         </p>
                         <p style={{ marginBottom: 0 }}>
-                            <strong>El manual es el peligroso.</strong> Una pasta blanda se nota al primer
-                            bocado y se corrige. Una política de recaudo aplicada de dos maneras produce
-                            cifras que parecen correctas —están en el sistema, suman, cuadran— y el error
-                            solo aparece cuando alguien audita la cartera meses después. La receta falla
-                            de forma visible; el manual, en silencio. Precisar cuesta una frase: «mora
-                            superior a 90 días».
+                            <strong>El manual es, a juicio de este curso, el peligroso.</strong> Una pasta
+                            blanda se nota al primer bocado y se corrige. Una política de recaudo aplicada
+                            de dos maneras produce cifras que parecen correctas —están en el sistema,
+                            suman, cuadran—, y el error puede pasar inadvertido hasta que alguien revise la
+                            cartera. La receta falla de forma visible; el manual, en silencio. Precisar
+                            cuesta una frase; por ejemplo, «mora superior a 90 días».
                         </p>
                     </Box>}>
                     <p style={{ marginTop: 0 }}>Dos textos, ambos con pasos numerados.</p>
@@ -2975,9 +3013,9 @@ End Sub`,
                 </Reto></Ejercicio>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En el algoritmo del descuento, alguien cambia la línea de la tasa y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
+                    pregunta="En el algoritmo del descuento, alguien cambia el dato del porcentaje y escribe un porcentaje del 3 % como 0.03 en lugar de 3. El resto del algoritmo no se toca. ¿Qué imprime la primera línea de salida?"
                     opciones={[
-                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. La entrada estaba mal declarada, no el proceso.' },
+                        { texto: 'Descuento: 2,400 — el algoritmo vuelve a dividir entre 100, así que aplica el 0,03 %.', correcta: true, justificacion: 'El algoritmo hace lo que dice, no lo que se quiso decir: divide entre 100 el número que reciba. Con 0.03 calcula 8 000 000 × 0,0003 = 2 400. Es la propiedad de DEFINICIÓN vista por su lado incómodo: el resultado es perfectamente reproducible, y perfectamente equivocado. El dato se dio en otra unidad de la que el algoritmo espera; el proceso hizo lo que dice.' },
                         { texto: 'Descuento: 24,000 — el 0.03 se redondea a 0,3 %.', correcta: false },
                         { texto: 'El programa se detiene con un error: 0.03 no es un porcentaje válido.', correcta: false },
                         { texto: 'Descuento: 240,000 — la máquina interpreta que 0.03 es el 3 % y corrige sola.', correcta: false },
@@ -2992,7 +3030,7 @@ End Sub`,
 
         const EJ_LIQUIDACION = {
             pseudo: `Inicio
-    // Liquidacion de la cuota de un credito de libre inversion
+    // Cuota de un credito de libre inversion, con interes simple
     Constante SEGURO_MENSUAL <- 0.0012    // 0,12 % mensual: politica del banco
 
     Leer capital, tasa, plazo
@@ -3008,7 +3046,7 @@ End Sub`,
     Escribir "Cuota mensual: ", cuota
     //> Cuota mensual: 730400
 Fin`,
-            python: `# Liquidacion de la cuota de un credito de libre inversion
+            python: `# Cuota de un credito de libre inversion, con interes simple
 SEGURO_MENSUAL = 0.0012       # constante del negocio: 0,12 % mensual
 
 capital = 12_000_000          # COP, lo que el cliente recibe
@@ -3025,7 +3063,7 @@ print(f"Seguro total: {seguro:,.0f}")
 #> Seguro total: 345,600
 print(f"Cuota mensual: {cuota:,.0f}")
 #> Cuota mensual: 730,400`,
-            r: `# Liquidacion de la cuota de un credito de libre inversion
+            r: `# Cuota de un credito de libre inversion, con interes simple
 SEGURO_MENSUAL <- 0.0012    # constante del negocio: 0,12 % mensual
 
 capital <- 12000000         # COP, lo que el cliente recibe
@@ -3045,7 +3083,7 @@ cat(sprintf("Cuota mensual: %.0f\\n", cuota))
             vba: `Option Explicit
 
 Sub LiquidarCuota()
-    ' Liquidacion de la cuota de un credito de libre inversion
+    ' Cuota de un credito de libre inversion, con interes simple
     Const SEGURO_MENSUAL As Double = 0.0012   ' politica del banco
 
     Dim capital As Currency, tasa As Double, plazo As Integer
@@ -3113,9 +3151,19 @@ End Sub`,
                 'interes <- capital * tasa * plazo', 'seguro <- capital * SEGURO_MENSUAL * plazo',
                 'cuota <- (capital + interes + seguro) / plazo', 'cat(cuota)'],
             vba: ['Sub LiquidarCuota()', 'Const SEGURO_MENSUAL As Double = 0.0012',
-                'Dim interes As Currency, seguro As Currency, cuota As Currency',
+                'capital = CCur(InputBox("Capital"))', 'tasa = CDbl(InputBox("Tasa"))',
+                'plazo = CInt(InputBox("Plazo"))',
                 'interes = capital * tasa * plazo', 'seguro = capital * SEGURO_MENSUAL * plazo',
                 'cuota = (capital + interes + seguro) / plazo', 'MsgBox cuota', 'End Sub'],
+        };
+
+        // Lo que puede cambiar de lugar sin cambiar el algoritmo: la constante y
+        // las lecturas no dependen unas de otras, y el interés y el seguro tampoco.
+        const LIBRES_LIQUIDACION = {
+            pseudo: [[1, 2], [3, 4]],
+            python: [[0, 1, 2, 3], [4, 5]],
+            r: [[0, 1, 2, 3], [4, 5]],
+            vba: [[1, 2, 3, 4], [5, 6]],
         };
 
         const Cap2Section = () => (
@@ -3123,10 +3171,10 @@ End Sub`,
                 <Motivacion icon="fa-compass"
                     gancho="Antes de escribir la primera línea hay que responder tres preguntas: qué entra, qué sale y qué ocurre en medio.">
                     «Necesito que me saques la cuota de este crédito», dice el jefe de cartera, y se va.
-                    Empezar a escribir ahí mismo es la manera más rápida de entregar algo que hay que
-                    rehacer: falta saber si la tasa viene mensual o anual, si el seguro lo pone el banco o
-                    el cliente, y si lo que piden es la cuota o el total. Media hora de preguntas ahorra
-                    dos días de correcciones.
+                    Quien empieza a escribir ahí mismo se arriesga a rehacerlo todo: falta saber si la
+                    tasa viene mensual o anual, si el seguro lo pone el banco o el cliente, y si lo que
+                    piden es la cuota o el total. Conviene preguntar antes; corregir después sale más
+                    caro.
                 </Motivacion>
 
                 <p>
@@ -3144,14 +3192,22 @@ End Sub`,
 
                 <h3>El caso: la cuota de un crédito de libre inversión</h3>
                 <p>
-                    Un cliente solicita $12 000 000 a 24 meses. El banco cobra 1,8 % mensual de interés y
-                    un seguro de vida deudor del 0,12 % mensual. Se pide la cuota fija.
+                    Un cliente solicita $12 000 000 a 24 meses. El banco le liquida un interés
+                    simple del 1,8 % mensual sobre el capital prestado, le cobra un seguro de vida deudor
+                    del 0,12 % mensual sobre ese mismo capital y reparte el total en 24 cuotas iguales.
+                    Se pide la cuota mensual.
                 </p>
+                <Ilustrativo>
+                    El crédito, sus cifras y su regla de liquidación se inventaron para este capítulo.
+                    El interés se cobra durante todo el plazo sobre el capital inicial —interés
+                    simple— porque así la cuenta cabe en tres líneas y se puede seguir a mano. No
+                    pretende ser la liquidación de un crédito real ni la política de ninguna entidad.
+                </Ilustrativo>
 
                 <CalloutPro tema="tip" titulo="Un dato de entrada no es lo mismo que una constante del negocio" subtitulo="La distinción que decide qué se pregunta y qué se escribe" icon="fa-key">
                     El capital, la tasa y el plazo <strong>cambian en cada solicitud</strong>: son
-                    entradas, y el algoritmo las recibe. El 0,12 % del seguro <strong>lo fija la
-                    política del banco</strong>: es una constante, y va escrita en el algoritmo con un
+                    entradas, y el algoritmo las recibe. El 0,12 % del seguro, en este caso, <strong>lo
+                    fija la política del banco</strong>: es una constante, y va escrita en el algoritmo con un
                     nombre. Confundirlas tiene dos costos simétricos —pedirle al usuario un dato que él
                     no decide, o enterrar en el código un número que mañana cambia y nadie encuentra—.
                 </CalloutPro>
@@ -3173,33 +3229,38 @@ End Sub`,
                                     3. cuota = (capital + interés + seguro) ÷ plazo
                                 </td>
                                 <td>
-                                    <strong>cuota</strong> — valor fijo mensual, en pesos<br />
-                                    <span className="text-gray-500 text-sm">Se muestran también el interés y el seguro: el cliente tiene derecho a saber por qué paga lo que paga.</span>
+                                    <strong>cuota</strong> — valor mensual, en pesos<br />
+                                    <span className="text-gray-500 text-sm">Se muestran también el interés y el seguro, para que quien recibe la cuota pueda rehacer la cuenta.</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>análisis del caso ilustrativo de esta sección</Fuente>
 
                 <p>Con las tres columnas resueltas, escribir el algoritmo es transcripción:</p>
                 <CodeTabs
                     titulo="Liquidación de la cuota — el análisis EPS convertido en algoritmo"
                     bloques={EJ_LIQUIDACION}
-                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio.</>}
+                    nota={<>Fíjese en que la constante se declara <strong>arriba y con nombre</strong>, no repetida como <span className="inline-code">0.0012</span> en medio de la fórmula. El día que la política cambie, se corrige en un solo sitio. El pseudocódigo y VBA tienen una palabra para declararla (<span className="inline-code">Constante</span>, <span className="inline-code">Const</span>); en los bloques de Python y de R es una variable como las demás, y el nombre en mayúsculas es un aviso para quien lee. La sección 4 vuelve sobre esa diferencia.</>}
                 />
 
                 <Box type="warn" label="La salida también se diseña">
                     Un algoritmo que solo devuelve <span className="inline-code">730400</span> obliga a
                     quien lo recibe a confiar. Uno que devuelve el interés, el seguro y la cuota permite
-                    verificar. En un producto financiero eso no es cortesía: es lo que exige la norma de
-                    transparencia al informar el costo total del crédito.
+                    verificar. En un producto financiero eso no es solo cortesía. En Colombia, la Ley
+                    1748 de 2014 estableció para las entidades vigiladas la obligación de informar a
+                    sus clientes el Valor Total Unificado, que incluye todos los conceptos que pagan
+                    —intereses y seguros incluidos— siempre que la naturaleza del producto lo permita,
+                    y de diferenciar dentro de ese total lo que corresponde a la tasa de
+                    interés <Cita k="congreso2014ley1748" loc="art. 1.º" />.
                 </Box>
 
                 <h3>Ejercicios</h3>
 
                 <TablaTraza
                     titulo="Traza de la liquidación"
-                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor. Esta versión omite el seguro para que la tabla quepa en pantalla.</>}
+                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta. Esta versión omite el seguro para que la tabla quepa en pantalla.</>}
                     codigo={TRAZA_CUOTA}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -3212,6 +3273,7 @@ End Sub`,
                         { clave: 'salida', titulo: 'Salida' },
                     ]}
                     ocultas={['interes', 'cuota', 'salida']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('capital <- 12000000', 'capital = 12_000_000', 'capital <- 12000000', 'capital = 12000000'), capital: '12000000', tasa: '—', plazo: '—', interes: '—', cuota: '—', salida: '—' },
                         { paso: 2, instruccion: ins('tasa <- 0.018', 'tasa = 0.018', 'tasa <- 0.018', 'tasa = 0.018'), capital: '12000000', tasa: '0.018', plazo: '—', interes: '—', cuota: '—', salida: '—' },
@@ -3220,12 +3282,13 @@ End Sub`,
                         { paso: 5, instruccion: ins('cuota <- (capital + interes) / plazo', 'cuota = (capital + interes) / plazo', 'cuota <- (capital + interes) / plazo', 'cuota = (capital + interes) / plazo'), capital: '12000000', tasa: '0.018', plazo: '24', interes: '5184000', cuota: '716000', salida: '—' },
                         { paso: 6, instruccion: ins('Escribir cuota', 'print(cuota)', 'cat(cuota)', 'Debug.Print cuota'), capital: '12000000', tasa: '0.018', plazo: '24', interes: '5184000', cuota: '716000', salida: '716000' },
                     ]}
-                    pista="Una asignación solo modifica la variable de la izquierda; las demás conservan el valor de la fila anterior. Y una variable no tiene valor hasta que alguna instrucción se lo da."
+                    pista="Una asignación solo modifica la variable de la izquierda; las demás conservan el valor de la fila anterior. Mientras ninguna instrucción le haya asignado algo a una variable, en su celda va la raya."
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. Recuerde que el orden no es una convención: una variable no puede usarse antes de tener valor."
+                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. El orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos. Como en todo el capítulo, la constante y las lecturas van antes de los cálculos; dentro de cada uno de esos dos grupos, las líneas que no dependen una de otra pueden ir en cualquier orden."
                     pasos={PASOS_LIQUIDACION}
+                    libres={LIBRES_LIQUIDACION}
                     pista="Empiece por lo que no depende de nada: la constante del negocio y los datos que se leen. El cálculo de la cuota necesita el interés y el seguro ya calculados."
                 />
             </div>
@@ -3245,7 +3308,7 @@ End Sub`,
             {
                 id: 'terminal', nombre: 'Terminal', forma: 'terminal',
                 etiqueta: 'Inicio',
-                funcion: 'Marca dónde empieza y dónde termina el algoritmo. Siempre hay exactamente uno de cada.',
+                funcion: 'Marca dónde empieza y dónde termina el algoritmo. En este curso hay exactamente uno de cada.',
                 pseudo: 'Inicio  …  Fin',
                 nota: 'Si un flujograma no tiene un Fin alcanzable, el algoritmo no cumple la propiedad de finitud.',
             },
@@ -3261,14 +3324,14 @@ End Sub`,
                 etiqueta: 'interes ← capital × tasa',
                 funcion: 'Una operación transforma datos y guarda el resultado en una variable.',
                 pseudo: 'interes <- capital * tasa * plazo',
-                nota: 'Es el símbolo más frecuente. La flecha ← recuerda que la asignación tiene dirección.',
+                nota: 'La flecha ← recuerda que la asignación tiene dirección.',
             },
             {
                 id: 'decision', nombre: 'Decisión', forma: 'rombo',
                 etiqueta: '¿mora > 90?',
                 funcion: 'El flujo se bifurca: una condición se evalúa y el camino continúa por Sí o por No.',
                 pseudo: 'Si mora > 90 Entonces … Sino … FinSi',
-                nota: 'Tiene una entrada y exactamente dos salidas rotuladas. Un rombo con una sola salida es un error de dibujo.',
+                nota: 'En este curso tiene una entrada y dos salidas rotuladas, Sí y No. Un rombo con una sola salida no decide nada.',
             },
             {
                 id: 'conector', nombre: 'Conector', forma: 'circulo',
@@ -3282,7 +3345,7 @@ End Sub`,
                 etiqueta: '',
                 funcion: 'Indica en qué orden se ejecutan los pasos. Es lo que convierte los símbolos en una secuencia.',
                 pseudo: '(el orden de las líneas, de arriba abajo)',
-                nota: 'Sin flechas hay un conjunto de cajas, no un algoritmo: se pierde justamente el orden.',
+                nota: 'En este curso todas llevan punta de flecha: sin ellas se pierde justamente el orden.',
             },
         ];
 
@@ -3290,17 +3353,21 @@ End Sub`,
             const trazo = activo ? '#ED1E79' : '#3D008D';
             const relleno = activo ? '#FDE7F1' : '#F5F0FA';
             const comun = { fill: relleno, stroke: trazo, strokeWidth: activo ? 3 : 2 };
-            return (
+            return ( // fuente-ok: las formas llevan su <Fuente> debajo del widget que las usa
                 <svg viewBox="0 0 120 56" className="w-full" style={{ maxWidth: 120 }} aria-hidden="true">
-                    {forma === 'terminal' && <rect x="8" y="10" width="104" height="36" rx="18" {...comun} />}
-                    {forma === 'paralelogramo' && <polygon points="20,10 112,10 100,46 8,46" {...comun} />}
-                    {forma === 'rectangulo' && <rect x="8" y="10" width="104" height="36" {...comun} />}
-                    {forma === 'rombo' && <polygon points="60,8 114,28 60,48 6,28" {...comun} />}
+                    {/* Proporciones ancho:alto de la norma ANSI X3.5-1970: 1:2/3 para
+                        entrada/salida, proceso y decisión (60 × 40); 1:3/8 para el
+                        terminal (104 × 39); 1:1 para el conector. La punta de la
+                        línea de flujo es abierta, como la dibuja la norma. */}
+                    {forma === 'terminal' && <rect x="8" y="8.5" width="104" height="39" rx="19.5" {...comun} />}
+                    {forma === 'paralelogramo' && <polygon points="42,8 90,8 78,48 30,48" {...comun} />}
+                    {forma === 'rectangulo' && <rect x="30" y="8" width="60" height="40" {...comun} />}
+                    {forma === 'rombo' && <polygon points="60,8 90,28 60,48 30,28" {...comun} />}
                     {forma === 'circulo' && <circle cx="60" cy="28" r="18" {...comun} />}
                     {forma === 'flecha' && (
-                        <g>
-                            <line x1="60" y1="8" x2="60" y2="38" stroke={trazo} strokeWidth={activo ? 3 : 2} />
-                            <polygon points="60,50 53,36 67,36" fill={trazo} />
+                        <g fill="none" stroke={trazo} strokeWidth={activo ? 3 : 2} strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="60" y1="8" x2="60" y2="48" />
+                            <polyline points="52,36 60,48 68,36" />
                         </g>
                     )}
                 </svg>
@@ -3329,10 +3396,11 @@ End Sub`,
                         <p className="text-sm font-bold text-navy m-0">{activo.nombre}</p>
                         <p className="text-sm text-gray-700 mt-1 mb-2">{activo.funcion}</p>
                         <p className="m-0"><span className="inline-code">{activo.pseudo}</span></p>
+                        {activo.etiqueta && <p className="text-sm text-gray-700 mt-2 mb-0">Dentro del símbolo se escribe, por ejemplo, <span className="inline-code">{activo.etiqueta}</span>.</p>}
                         <p className="text-xs text-gray-500 italic mt-2 mb-0">{activo.nota}</p>
                     </div>
                     <p className="text-xs text-gray-500 italic text-center mt-2 mb-0">
-                        Seis símbolos del estándar ANSI. Toque uno para ver qué representa y cómo se escribe en pseudocódigo.
+                        Seis símbolos, con las reglas de uso de este curso. Toque uno para ver qué representa y cómo se escribe en pseudocódigo.
                     </p>
                 </div>
             );
@@ -3517,6 +3585,7 @@ End Sub`,
 
                         <div className="lp-card p-4">
                             <p className="text-xs uppercase tracking-widest text-primary font-bold m-0 mb-2">3 · Diagrama de flujo</p>
+                            {/* fuente-ok: flujograma propio del caso inventado de la sección, que lleva su <Ilustrativo> debajo */}
                             <svg viewBox="0 0 320 425" className="w-full" style={{ maxWidth: 340, margin: '0 auto', display: 'block' }}
                                 role="img" aria-label="Diagrama de flujo del cálculo del interés simple: inicio, lectura de datos, cálculo del interés, cálculo del total, escritura de resultados y fin.">
                                 <title>Los seis pasos del algoritmo de interés simple, conectados de arriba abajo por líneas de flujo.</title>
@@ -3617,11 +3686,11 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-code-compare"
                     gancho="El mismo algoritmo se escribe de cuatro maneras. La pregunta no es cuál es la buena, sino con quién se va a hablar.">
-                    El comité aprueba un cambio en la liquidación y pide verlo antes de que se programe.
-                    Si se les lleva código, la reunión se va en explicar qué significa cada línea. Si se
-                    les lleva un diagrama de una página, discuten lo que hay que discutir —dónde se
-                    bifurca la decisión, qué pasa con los casos de borde— y firman. El algoritmo es el
-                    mismo; lo que cambió fue en qué idioma se presentó.
+                    Suponga que el comité aprueba un cambio en la liquidación y pide verlo antes de que
+                    se programe. Si se les lleva código, es fácil que la reunión se vaya en explicar qué
+                    significa cada línea. Con un diagrama de una página es más fácil discutir lo que hay
+                    que discutir: dónde se bifurca la decisión, qué pasa con los casos de borde. El
+                    algoritmo es el mismo; lo que cambia es en qué idioma se presenta.
                 </Motivacion>
 
                 <p>
@@ -3636,31 +3705,77 @@ End Sub`,
                         <thead><tr><th>Representación</th><th>Para qué sirve</th><th>Su límite</th></tr></thead>
                         <tbody>
                             <tr><td><strong>Lenguaje natural</strong></td><td>Acordar con quien no programa qué debe hacer el algoritmo</td><td>Admite ambigüedad: es donde nacen los «mora considerable»</td></tr>
-                            <tr><td><strong>Pseudocódigo</strong></td><td>Fijar la lógica sin atarla a ninguna herramienta. <strong>Es lo que se evalúa</strong></td><td>No se ejecuta: nadie comprueba si funciona</td></tr>
-                            <tr><td><strong>Diagrama de flujo</strong></td><td>Ver de un vistazo por dónde se bifurca y por dónde se repite</td><td>Crece rápido: más de una página y deja de ayudar</td></tr>
+                            <tr><td><strong>Pseudocódigo</strong></td><td>Fijar la lógica sin atarla a ninguna herramienta. <strong>Es lo que se evalúa</strong></td><td>El de este curso no se ejecuta: hay que comprobarlo a mano, con la traza</td></tr>
+                            <tr><td><strong>Diagrama de flujo</strong></td><td>Ver de un vistazo por dónde se bifurca y por dónde se repite</td><td>Crece rápido: con muchas bifurcaciones cuesta seguirlo</td></tr>
                             <tr><td><strong>Código</strong></td><td>Ejecutar, medir y comprobar de verdad</td><td>Mezcla la lógica con detalles de la herramienta</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>criterio del curso</Fuente>
 
                 <h3>Los símbolos del flujograma</h3>
                 <p>
-                    El estándar ANSI fija unos pocos símbolos, y la disciplina de usarlos bien es lo que
-                    permite que el diagrama de una persona lo lea otra sin traducción.
+                    La norma ANSI X3.5 de 1970 establece un símbolo básico para cada una de cuatro
+                    funciones —entrada y salida, proceso, dirección del flujo y anotación— y símbolos
+                    especializados que pueden usarse en lugar de uno básico para dar más
+                    información <Cita k="nbs1973" loc="§3.1" />. Este curso usa seis de sus símbolos. Dibujar
+                    todos con los mismos es lo que permite que el diagrama de una persona lo lea otra
+                    sin traducción.
                 </p>
                 <SimbologiaANSI />
+                <Fuente k="nbs1973" loc="§3.2 a §3.4; punta de flecha, §4.4.1">formas y proporciones de</Fuente>
+
+                <p>
+                    Las fichas mezclan dos cosas que conviene separar: lo que dice la norma y lo que este
+                    curso añade para dibujar siempre igual.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Entrada y salida.</strong> Un mismo símbolo representa tanto poner
+                        información a disposición para su procesamiento como registrar la información ya
+                        procesada <Cita k="nbs1973" loc="§3.2.1" />. En este curso, lo que las distingue
+                        en el diagrama es el verbo que va escrito dentro.
+                    </li>
+                    <li>
+                        <strong>Decisión.</strong> El símbolo representa una operación que determina
+                        cuál de varios caminos alternativos se sigue <Cita k="nbs1973" loc="§3.3.2.1" />,
+                        y la norma prevé que de un símbolo salgan varias líneas de
+                        flujo <Cita k="nbs1973" loc="§4.10.1" />. En este curso toda decisión se dibuja con
+                        dos salidas, Sí y No, porque así corresponde a
+                        <span className="inline-code"> Si … Entonces … Sino</span>.
+                    </li>
+                    <li>
+                        <strong>Terminal.</strong> Representa un punto terminal del diagrama, como el
+                        inicio, la parada o una interrupción <Cita k="nbs1973" loc="§3.4.2" />. Que haya
+                        exactamente un Inicio y un Fin es convención de este curso.
+                    </li>
+                    <li>
+                        <strong>Conector.</strong> Representa una salida hacia otra parte del diagrama o
+                        una entrada desde ella, y se usa en pareja para continuar un flujo que se
+                        interrumpe por alguna limitación del diagrama <Cita k="nbs1973" loc="§3.4.1" />.
+                    </li>
+                    <li>
+                        <strong>Línea de flujo.</strong> La dirección normal es de izquierda a derecha y
+                        de arriba abajo, y cuando el flujo va en otro sentido las puntas de flecha son
+                        obligatorias <Cita k="nbs1973" loc="§4.4.1" />. En este curso todas las líneas
+                        llevan punta de flecha.
+                    </li>
+                </ul>
 
                 <h3>El mismo algoritmo, cuatro veces</h3>
                 <p>
                     El interés simple de un microcrédito, en las cuatro representaciones a la vez. Al
-                    señalar un paso en cualquiera de ellas, los demás resaltan el suyo: es lo que hace
-                    visible que se trata de una sola cosa escrita de cuatro maneras.
+                    señalar un paso del pseudocódigo, el lenguaje natural y el flujograma resaltan el
+                    suyo: es lo que hace visible que se trata de una sola cosa escrita de varias maneras.
                 </p>
                 <CuatroRepresentaciones />
+                <Ilustrativo>
+                    El microcrédito de esta sección y sus cifras se inventaron para el ejemplo.
+                </Ilustrativo>
 
                 <Box type="tip" label="Por qué el pseudocódigo es el lenguaje normativo del curso">
-                    De las cuatro, es la única que expresa la lógica completa sin ambigüedad
-                    <em> y</em> sin depender de ninguna herramienta. El RA1 pide construir un algoritmo,
+                    Este curso lo eligió porque fija la lógica completa <em>y</em> no depende de
+                    ninguna herramienta. El RA1 pide construir un algoritmo,
                     no programar en un lenguaje: por eso lo que se evalúa es esta columna, y las otras
                     tres están para mostrar que la lógica no cambia al cambiar de acento.
                 </Box>
@@ -3683,13 +3798,13 @@ End Sub`,
 
                 <Box type="info" label="Sobre el ejercicio anterior">
                     Dos de las cuatro respuestas son el <strong>mismo símbolo</strong>, el
-                    paralelogramo, y eso no es un descuido del enunciado: en el estándar ANSI la entrada
-                    y la salida comparten forma. Lo que las distingue es el verbo que va escrito dentro,
-                    y por eso un flujograma con paralelogramos vacíos no se puede leer.
+                    paralelogramo, y eso no es un descuido del enunciado: como se vio arriba, la entrada
+                    y la salida comparten símbolo. En este curso, lo que las distingue es el verbo que va escrito dentro;
+                    con los paralelogramos vacíos no se sabría cuál es cuál.
                 </Box>
 
                 <DetectaError
-                    enunciado={<>El siguiente algoritmo debe informar el interés y el total a pagar de un microcrédito. Al ejecutarlo, o bien se detiene con un error, o bien informa un interés de cero. <strong>¿En qué línea está la instrucción que provoca el fallo?</strong></>}
+                    enunciado={<>El siguiente algoritmo debe informar el interés y el total a pagar de un microcrédito, y no lo hace bien. <strong>¿En qué línea está la instrucción que provoca el fallo?</strong></>}
                     lineas={ERROR_ORDEN_LINEAS}
                     lineaCorrecta={ERROR_ORDEN_OK}
                     tipos={[
@@ -3707,7 +3822,7 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={0}
                     explicacion={ERROR_ORDEN_EXPL}
-                    impacto={<>Es el fallo que mejor ilustra por qué un algoritmo es una secuencia <em>ordenada</em> y no un conjunto de instrucciones. Y note la asimetría: Python y R <strong>se detienen</strong>, así que el error se descubre en la primera prueba. VBA <strong>no</strong>: la variable declarada vale cero, el mensaje sale, nadie se entera, y el cliente recibe una liquidación que dice que su microcrédito no causa intereses. El lenguaje que más se usa en el sector financiero es el que menos protege.</>}
+                    impacto={<>Es el fallo que mejor ilustra por qué un algoritmo es una secuencia <em>ordenada</em> y no un conjunto de instrucciones. Y note la asimetría: Python y R <strong>se detienen</strong>, así que el error se descubre en la primera prueba. VBA <strong>no</strong>: la variable declarada vale cero, el mensaje sale y dice que el microcrédito no causa intereses. De los tres, es el único que deja pasar este error sin avisar.</>}
                 />
             </div>
         );
@@ -3758,13 +3873,13 @@ End Sub`,
 
         const TIPOS_DATO = [
             { tipo: 'Entero', guarda: 'Números sin parte decimal', ejemplo: 'plazo en meses, número de cuotas, días de mora',
-                malo: 'Guardar dinero aquí pierde los centavos, y en un reparto el faltante no cuadra con nada.' },
+                malo: 'Guardar aquí un valor con decimales le quita la parte decimal: Python y R la cortan, y VBA redondea al entero más cercano.' },
             { tipo: 'Real', guarda: 'Números con decimales', ejemplo: 'tasas, porcentajes, factores',
-                malo: 'Usarlo para dinero arrastra el error de redondeo binario del capítulo 1.' },
-            { tipo: 'Moneda', guarda: 'Valores monetarios con decimales exactos', ejemplo: 'capital, cuota, saldo',
-                malo: 'Es el tipo Currency de VBA. No usarlo es la causa más común de descuadres de un peso.' },
-            { tipo: 'Texto', guarda: 'Cadenas de caracteres', ejemplo: 'nombre, cédula, número de obligación',
-                malo: 'Guardar una cédula como número borra los ceros a la izquierda y le cambia la identidad al cliente.' },
+                malo: 'Usarlo para dinero arrastra el error de redondeo binario del capítulo 1. Los bloques de Python y R de este capítulo guardan así el dinero y redondean al mostrarlo.' },
+            { tipo: 'Moneda', guarda: 'Valores monetarios con un número fijo de decimales', ejemplo: 'capital, cuota, saldo',
+                malo: <>En VBA es el tipo <span className="inline-code">Currency</span>, que guarda el número como un entero con escala de 10 000: punto fijo con cuatro decimales <Cita k="microsoft2018moneda" />. Con otro tipo, ni siquiera esos cuatro decimales los fija el lenguaje: cuándo y cómo se redondea queda por decidir a mano.</> },
+            { tipo: 'Texto', guarda: 'Cadenas de caracteres', ejemplo: 'nombre, cédula, código de oficina',
+                malo: 'Guardar como número un código que empieza por cero —la oficina 0045— borra esos ceros: queda 45, que ya no es el mismo código.' },
             { tipo: 'Lógico', guarda: 'Verdadero o falso', ejemplo: '¿está en mora?, ¿tiene codeudor?',
                 malo: 'Sustituirlo por un texto «SI»/«NO» obliga a comparar cadenas, y «Si» ya no es igual a «SI».' },
         ];
@@ -3773,7 +3888,7 @@ End Sub`,
 
         const PASOS_ASIGNACION = [
             { instruccion: null, a: '—', b: '—', aux: '—', cambia: null,
-                nota: 'Antes de empezar, las tres casillas están vacías. Una variable no tiene valor hasta que una instrucción se lo da.' },
+                nota: 'Antes de empezar, el algoritmo no le ha asignado nada a ninguna de las tres casillas.' },
             { instruccion: ins('a <- 500000', 'a = 500_000', 'a <- 500000', 'a = 500000'),
                 a: '500000', b: '—', aux: '—', cambia: 'a',
                 nota: 'La cuenta A tiene $500 000. Solo cambia la casilla de la izquierda de la flecha.' },
@@ -3785,7 +3900,7 @@ End Sub`,
                 nota: 'aux COPIA lo que hay en a. Copiar no es mover: a conserva su valor. Es el punto donde falla la intuición.' },
             { instruccion: ins('a <- b', 'a = b', 'a <- b', 'a = b'),
                 a: '800000', b: '800000', aux: '500000', cambia: 'a',
-                nota: 'a recibe lo de b y pierde lo que tenía. Si no lo hubiéramos copiado en aux, ya no habría forma de recuperarlo.' },
+                nota: 'a recibe lo de b y pierde lo que tenía. Si no se hubiera copiado en aux, este algoritmo ya no tendría de dónde recuperarlo.' },
             { instruccion: ins('b <- aux', 'b = aux', 'b <- aux', 'b = aux'),
                 a: '800000', b: '500000', aux: '500000', cambia: 'b',
                 nota: 'b recibe el valor original de a. El intercambio está hecho, y aux se queda con una copia que ya no hace falta.' },
@@ -3937,10 +4052,10 @@ End Sub`,
         const ERROR_TIPO_OK = { pseudo: 4, python: 3, r: 3, vba: 4 };
 
         const ERROR_TIPO_EXPL = {
-            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Debe declararse como un tipo con decimales —moneda, idealmente—.</>,
-            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta = rendimiento / 3</span>.</>,
-            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Basta con quitarlo: <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span>.</>,
-            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Debe ser <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3.</>,
+            pseudo: <>La división de la <strong>línea 5</strong> es correcta: 100 000 ÷ 3 da 33 333,33. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta</span> como <strong>entero</strong>: al guardar el resultado se pierden los decimales y quedan 33 333. Con el tipo Moneda la pérdida se achica y no desaparece; con el tipo Real el total vuelve a dar 100 000, pero cada cuenta queda con una fracción de peso que no se puede pagar. En los dos casos el fondo es el mismo: 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
+            python: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">int(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta = rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
+            r: <>La división de la <strong>línea 3</strong> es correcta por sí sola; lo que sobra es el <span className="inline-code">as.integer(...)</span> que la envuelve, en esa misma línea, y que trunca 33 333,33 a 33 333. Sin él, <span className="inline-code">por_cuenta &lt;- rendimiento / 3</span> conserva los decimales y el total vuelve a dar 100 000; pero cada cuenta queda con una fracción de peso que no se puede pagar, y decidir a quién le toca el peso sobrante sigue siendo tarea del algoritmo.</>,
+            vba: <>El cálculo de la <strong>línea 6</strong> es correcto. El error está en la <strong>línea 4</strong>, que declara <span className="inline-code">porCuenta As Long</span>: VBA redondea el resultado al guardarlo y quedan 33 333. Con <span className="inline-code">As Currency</span>, como <span className="inline-code">rendimiento</span> en la línea 3, se conservan cuatro decimales y la pérdida se achica; no desaparece, porque 100 000 no es divisible entre 3, y el peso que no se puede partir hay que asignárselo a alguien con una regla escrita.</>,
         };
 
         const Cap4Section = () => (
@@ -3948,24 +4063,34 @@ End Sub`,
                 <Motivacion icon="fa-layer-group"
                     gancho="«saldo <- saldo + cuota» es falso como ecuación y correcto como instrucción. Entender por qué es entender qué es una variable.">
                     En clase de matemáticas, <em>x = x + 1</em> no tiene solución: se cancela la x y queda
-                    0 = 1. En un algoritmo, esa misma línea es la instrucción más común que existe: es la
-                    que suma una cuota al saldo, un día a la mora, un registro al conteo. Quien arrastra
-                    la lectura matemática se queda atascado en la tercera línea de su primer programa.
+                    0 = 1. En un algoritmo, esa misma línea es de las que más se repiten: es la que suma
+                    una cuota al saldo, un día a la mora, un registro al conteo. Quien la lee como una
+                    ecuación no la entiende; hay que leerla como una orden.
                 </Motivacion>
 
                 <h3>Variable y constante</h3>
                 <p>
                     Una <Termino def="Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.">variable</Termino> es
                     una casilla con nombre. Una <Termino def="Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución.">constante</Termino> es
-                    una casilla con nombre que nadie vuelve a tocar. La diferencia no es técnica sino de
-                    <strong> intención</strong>: se declara constante lo que no debe cambiar, para que el
-                    lenguaje avise si alguien lo intenta.
+                    una casilla con nombre que nadie vuelve a tocar. La diferencia es de
+                    <strong> intención</strong>: se declara constante lo que no debe cambiar, para que
+                    quien lea el algoritmo lo sepa.
+                </p>
+                <p>
+                    Los lenguajes no la tratan igual. El pseudocódigo del curso y VBA tienen una palabra
+                    para declararla, <span className="inline-code">Constante</span> y
+                    <span className="inline-code"> Const</span>. Los bloques de Python y de R de este
+                    capítulo no la declaran con ninguna palabra: el nombre en mayúsculas
+                    —<span className="inline-code">SEGURO_MENSUAL</span> en la sección 2— es un
+                    acuerdo entre personas, y si una línea posterior le asigna otro valor, ninguno de los
+                    dos protesta. En esos bloques la constante la protege quien revisa el código, no
+                    la máquina.
                 </p>
 
                 <h3>Tipos de datos, con criterio financiero</h3>
                 <p>
                     El tipo dice qué cabe en la casilla y qué operaciones tienen sentido. Elegirlo mal no
-                    produce un error visible: produce cifras equivocadas.
+                    siempre produce un error visible; a veces produce cifras equivocadas sin avisar.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -3982,6 +4107,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>criterio del curso</Fuente>
 
                 <h3>La asignación no es una igualdad</h3>
                 <p>
@@ -3995,7 +4121,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Un acumulador: tres aportes a una cuenta de ahorro programado"
                     bloques={EJ_ACUMULA}
-                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia, la operación es la misma, y en ninguno de los cuatro significa «es igual a».</>}
+                    nota={<>Pseudocódigo y R usan <span className="inline-code">&lt;-</span>; Python y VBA usan <span className="inline-code">=</span>. El símbolo cambia y la operación es la misma: en una asignación no se pregunta si los dos lados son iguales, se ordena guardar. Para preguntar, Python y R tienen otro símbolo, <span className="inline-code">==</span>, y el pseudocódigo usa <span className="inline-code">=</span>, que en él nunca asigna. Solo en VBA el mismo <span className="inline-code">=</span> hace las dos cosas, y es el lugar que ocupa en la línea lo que dice cuál.</>}
                 />
 
                 <h3>La memoria, paso a paso</h3>
@@ -4006,10 +4132,14 @@ End Sub`,
                 <AsignacionPasoAPaso />
 
                 <h3>Ejercicios</h3>
+                <Ilustrativo>
+                    Los saldos, los aportes, las comisiones y el rendimiento de esta sección son cifras
+                    inventadas para practicar.
+                </Ilustrativo>
 
                 <TablaTraza
                     titulo="Traza del intercambio de saldos"
-                    enunciado={<>Complete el valor de las tres variables después de cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor.</>}
+                    enunciado={<>Complete el valor de las tres variables después de cada instrucción. Escriba <span className="inline-code">—</span> donde el algoritmo todavía no le haya asignado nada a la variable; una celda en blanco no cuenta.</>}
                     codigo={TRAZA_INTERCAMBIO}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -4019,6 +4149,7 @@ End Sub`,
                         { clave: 'aux', titulo: 'aux' },
                     ]}
                     ocultas={['a', 'b', 'aux']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('a <- 500000', 'a = 500_000', 'a <- 500000', 'a = 500000'), a: '500000', b: '—', aux: '—' },
                         { paso: 2, instruccion: ins('b <- 800000', 'b = 800_000', 'b <- 800000', 'b = 800000'), a: '500000', b: '800000', aux: '—' },
@@ -4031,7 +4162,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Traza de un acumulador de comisiones"
-                    enunciado="Tres operaciones dejan comisión en el mismo día. Complete el valor de la variable después de cada instrucción."
+                    enunciado={<>Tres operaciones dejan comisión en el mismo día. Complete el valor de la variable después de cada instrucción, y escriba <span className="inline-code">—</span> en la salida mientras no se haya mostrado nada; una celda en blanco no cuenta.</>}
                     codigo={TRAZA_COMISIONES}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -4040,6 +4171,7 @@ End Sub`,
                         { clave: 'salida', titulo: 'Salida' },
                     ]}
                     ocultas={['total', 'salida']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('total <- 0', 'total = 0', 'total <- 0', 'total = 0'), total: '0', salida: '—' },
                         { paso: 2, instruccion: ins('total <- total + 12000', 'total = total + 12_000', 'total <- total + 12000', 'total = total + 12000'), total: '12000', salida: '—' },
@@ -4047,7 +4179,7 @@ End Sub`,
                         { paso: 4, instruccion: ins('total <- total + 15300', 'total = total + 15_300', 'total <- total + 15300', 'total = total + 15300'), total: '35800', salida: '—' },
                         { paso: 5, instruccion: ins('Escribir total', 'print(total)', 'cat(total)', 'Debug.Print total'), total: '35800', salida: '35800' },
                     ]}
-                    pista="El acumulador arranca en cero a propósito: si no se inicializa, la primera suma no tiene con qué sumar."
+                    pista="El acumulador arranca en cero a propósito: la primera suma necesita un valor de partida, y escribirlo deja a la vista cuál es."
                 />
 
                 <Ejercicio tipo="E2"><MCQ
@@ -4056,7 +4188,7 @@ End Sub`,
                         { texto: 'a = 500 000 y b = 500 000: se pierde el saldo de la cuenta B.', correcta: false },
                         { texto: 'a = 500 000 y b = 800 000: no cambia nada, las dos instrucciones se anulan.', correcta: false },
                         { texto: 'a = 800 000 y b = 500 000: el intercambio funciona igual, la auxiliar sobraba.', correcta: false },
-                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: no es un adorno del método, es el único sitio donde el valor sobrevive. Aplicado a saldos reales, el dinero de una cuenta desaparece sin que ningún error se reporte.' },
+                        { texto: 'a = 800 000 y b = 800 000: el saldo de la cuenta A se perdió.', correcta: true, justificacion: 'La primera instrucción guarda 800 000 en a y borra los 500 000 que había, porque asignar reemplaza. Cuando la segunda instrucción va a leer a, ya no encuentra el valor original sino el nuevo. Por eso hace falta la auxiliar: en este algoritmo es el sitio donde el valor sobrevive. Y ningún lenguaje reporta un error, porque las dos asignaciones son válidas: el saldo de una cuenta se pierde en silencio.' },
                     ]}
                 /></Ejercicio>
 
@@ -4067,7 +4199,7 @@ End Sub`,
                     tipos={[
                         'Error de orden: se usa una variable antes de que ninguna instrucción le haya dado valor.',
                         'Error de unidades: se opera con un porcentaje sin convertirlo a tasa decimal.',
-                        'Error de tipo: se guarda un valor con decimales en una variable que solo admite enteros.',
+                        'Error de tipo: se guarda como entero, o se convierte a entero, un valor que tenía decimales.',
                         'Error de sintaxis: falta una palabra clave o un delimitador.',
                     ]}
                     tipoCorrecto={2}
@@ -4079,7 +4211,7 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={3}
                     explicacion={ERROR_TIPO_EXPL}
-                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso no le importa a nadie hasta que se repara en que este reparto corre para cada rendimiento, de cada producto, todos los días. Ese peso diario no desaparece del mundo: queda en una cuenta de descuadre que alguien tiene que explicar a fin de mes. Es el mismo problema del capítulo 1 llegando por otra puerta —allí por el binario, aquí por el tipo elegido—.</>}
+                    impacto={<>Cada cuenta recibe <strong>$33 333</strong> y el total repartido es <strong>$99 999</strong>: falta <strong>un peso</strong>. Un peso parece nada; repetido en muchos repartos se vuelve una diferencia que alguien tiene que explicar. Es el mecanismo del descuadre con que abre el capítulo 1: allí el sistema recortaba decimales en cada pago; aquí los recorta el tipo elegido.</>}
                 />
             </div>
         );
@@ -4088,48 +4220,49 @@ End Sub`,
            SECCIÓN 5 — DOS ALGORITMOS CORRECTOS NO SON IGUAL DE BUENOS
         ============================================================ */
 
-        // Salida comprobada por ejecución: 39 814 frente a 12 comparaciones.
+        // Salida comprobada por ejecución: 39 814 frente a 12 vueltas.
         const EJ_CONTEO = {
-            pseudo: `// Cuantas comparaciones hace cada algoritmo
+            pseudo: `// Cuantas vueltas da cada algoritmo
 // sobre 40 000 creditos ORDENADOS por numero de obligacion
+// (numerados del 1 al 40 000: cartera[i] = i)
 buscado <- 39814
 
 // A: recorrer uno por uno
-pasosA <- 0
+vueltasA <- 0
 Para i <- 1 Hasta 40000 Hacer
-    pasosA <- pasosA + 1
+    vueltasA <- vueltasA + 1
     Si cartera[i] = buscado Entonces Salir FinSi
 FinPara
 
 // B: partir por la mitad cada vez
-pasosB <- 0
+vueltasB <- 0
 izq <- 1
 der <- 40000
 Mientras izq <= der Hacer
-    pasosB <- pasosB + 1
+    vueltasB <- vueltasB + 1
     medio <- (izq + der) div 2
     Si cartera[medio] = buscado Entonces Salir FinSi
     Si cartera[medio] < buscado Entonces izq <- medio + 1 Sino der <- medio - 1 FinSi
 FinMientras
 
-Escribir "Algoritmo A: ", pasosA, " comparaciones"
-//> Algoritmo A: 39814 comparaciones
-Escribir "Algoritmo B: ", pasosB, " comparaciones"
-//> Algoritmo B: 12 comparaciones`,
-            python: `# Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+Escribir "Algoritmo A: ", vueltasA, " vueltas"
+//> Algoritmo A: 39814 vueltas
+Escribir "Algoritmo B: ", vueltasB, " vueltas"
+//> Algoritmo B: 12 vueltas`,
+            python: `# Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
 cartera = list(range(1, 40_001))
 buscado = 39_814
 
-pasos_a = 0                       # A: recorrer uno por uno
+vueltas_a = 0                       # A: recorrer uno por uno
 for numero in cartera:
-    pasos_a += 1
+    vueltas_a += 1
     if numero == buscado:
         break
 
-pasos_b = 0                       # B: partir por la mitad cada vez
+vueltas_b = 0                       # B: partir por la mitad cada vez
 izq, der = 0, len(cartera) - 1
 while izq <= der:
-    pasos_b += 1
+    vueltas_b += 1
     medio = (izq + der) // 2
     if cartera[medio] == buscado:
         break
@@ -4138,105 +4271,105 @@ while izq <= der:
     else:
         der = medio - 1
 
-print(f"Algoritmo A: {pasos_a} comparaciones")
-#> Algoritmo A: 39814 comparaciones
-print(f"Algoritmo B: {pasos_b} comparaciones")
-#> Algoritmo B: 12 comparaciones`,
-            r: `# Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+print(f"Algoritmo A: {vueltas_a} vueltas")
+#> Algoritmo A: 39814 vueltas
+print(f"Algoritmo B: {vueltas_b} vueltas")
+#> Algoritmo B: 12 vueltas`,
+            r: `# Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
 cartera <- 1:40000
 buscado <- 39814
 
-pasos_a <- 0                      # A: recorrer uno por uno
+vueltas_a <- 0                      # A: recorrer uno por uno
 for (numero in cartera) {
-  pasos_a <- pasos_a + 1
+  vueltas_a <- vueltas_a + 1
   if (numero == buscado) break
 }
 
-pasos_b <- 0                      # B: partir por la mitad cada vez
+vueltas_b <- 0                      # B: partir por la mitad cada vez
 izq <- 1; der <- length(cartera)
 while (izq <= der) {
-  pasos_b <- pasos_b + 1
+  vueltas_b <- vueltas_b + 1
   medio <- (izq + der) %/% 2
   if (cartera[medio] == buscado) break
   if (cartera[medio] < buscado) izq <- medio + 1 else der <- medio - 1
 }
 
-cat(sprintf("Algoritmo A: %d comparaciones\\n", pasos_a))
-#> Algoritmo A: 39814 comparaciones
-cat(sprintf("Algoritmo B: %d comparaciones\\n", pasos_b))
-#> Algoritmo B: 12 comparaciones`,
+cat(sprintf("Algoritmo A: %d vueltas\\n", vueltas_a))
+#> Algoritmo A: 39814 vueltas
+cat(sprintf("Algoritmo B: %d vueltas\\n", vueltas_b))
+#> Algoritmo B: 12 vueltas`,
             vba: `Option Explicit
 
-Sub ContarComparaciones()
-    ' Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+Sub ContarVueltas()
+    ' Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
     Dim cartera(1 To 40000) As Long, i As Long, buscado As Long
-    Dim pasosA As Long, pasosB As Long, izq As Long, der As Long, medio As Long
+    Dim vueltasA As Long, vueltasB As Long, izq As Long, der As Long, medio As Long
 
     For i = 1 To 40000: cartera(i) = i: Next i
     buscado = 39814
 
-    pasosA = 0                    ' A: recorrer uno por uno
+    vueltasA = 0                    ' A: recorrer uno por uno
     For i = 1 To 40000
-        pasosA = pasosA + 1
+        vueltasA = vueltasA + 1
         If cartera(i) = buscado Then Exit For
     Next i
 
-    pasosB = 0                    ' B: partir por la mitad cada vez
+    vueltasB = 0                    ' B: partir por la mitad cada vez
     izq = 1: der = 40000
     Do While izq <= der
-        pasosB = pasosB + 1
+        vueltasB = vueltasB + 1
         medio = (izq + der) \\ 2
         If cartera(medio) = buscado Then Exit Do
         If cartera(medio) < buscado Then izq = medio + 1 Else der = medio - 1
     Loop
 
-    Debug.Print "Algoritmo A: " & pasosA & " comparaciones"
-    '> Algoritmo A: 39814 comparaciones
-    Debug.Print "Algoritmo B: " & pasosB & " comparaciones"
-    '> Algoritmo B: 12 comparaciones
+    Debug.Print "Algoritmo A: " & vueltasA & " vueltas"
+    '> Algoritmo A: 39814 vueltas
+    Debug.Print "Algoritmo B: " & vueltasB & " vueltas"
+    '> Algoritmo B: 12 vueltas
 End Sub`,
         };
 
         const CMP_SECUENCIAL = {
             pseudo: `// A · Recorrer la cartera de principio a fin
-pasos <- 0
+vueltas <- 0
 Para i <- 1 Hasta 40000 Hacer
-    pasos <- pasos + 1
+    vueltas <- vueltas + 1
     Si cartera[i] = buscado Entonces
         Salir
     FinSi
 FinPara
-Escribir pasos`,
+Escribir vueltas`,
             python: `# A · Recorrer la cartera de principio a fin
-pasos = 0
+vueltas = 0
 for numero in cartera:
-    pasos += 1
+    vueltas += 1
     if numero == buscado:
         break
-print(pasos)`,
+print(vueltas)`,
             r: `# A · Recorrer la cartera de principio a fin
-pasos <- 0
+vueltas <- 0
 for (numero in cartera) {
-  pasos <- pasos + 1
+  vueltas <- vueltas + 1
   if (numero == buscado) break
 }
-cat(pasos)`,
+cat(vueltas)`,
             vba: `' A · Recorrer la cartera de principio a fin
-pasos = 0
+vueltas = 0
 For i = 1 To 40000
-    pasos = pasos + 1
+    vueltas = vueltas + 1
     If cartera(i) = buscado Then Exit For
 Next i
-Debug.Print pasos`,
+Debug.Print vueltas`,
         };
 
         const CMP_BINARIA = {
             pseudo: `// B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos <- 0
+vueltas <- 0
 izq <- 1
 der <- 40000
 Mientras izq <= der Hacer
-    pasos <- pasos + 1
+    vueltas <- vueltas + 1
     medio <- (izq + der) div 2
     Si cartera[medio] = buscado Entonces
         Salir
@@ -4248,12 +4381,12 @@ Mientras izq <= der Hacer
         FinSi
     FinSi
 FinMientras
-Escribir pasos`,
+Escribir vueltas`,
             python: `# B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos = 0
+vueltas = 0
 izq, der = 0, len(cartera) - 1
 while izq <= der:
-    pasos += 1
+    vueltas += 1
     medio = (izq + der) // 2
     if cartera[medio] == buscado:
         break
@@ -4261,46 +4394,46 @@ while izq <= der:
         izq = medio + 1
     else:
         der = medio - 1
-print(pasos)`,
+print(vueltas)`,
             r: `# B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos <- 0
+vueltas <- 0
 izq <- 1; der <- length(cartera)
 while (izq <= der) {
-  pasos <- pasos + 1
+  vueltas <- vueltas + 1
   medio <- (izq + der) %/% 2
   if (cartera[medio] == buscado) break
   if (cartera[medio] < buscado) izq <- medio + 1 else der <- medio - 1
 }
-cat(pasos)`,
+cat(vueltas)`,
             vba: `' B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos = 0
+vueltas = 0
 izq = 1: der = 40000
 Do While izq <= der
-    pasos = pasos + 1
+    vueltas = vueltas + 1
     medio = (izq + der) \\ 2
     If cartera(medio) = buscado Then Exit Do
     If cartera(medio) < buscado Then izq = medio + 1 Else der = medio - 1
 Loop
-Debug.Print pasos`,
+Debug.Print vueltas`,
         };
 
         const Cap5Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
-                    gancho="Contar operaciones no es una manía académica: es la diferencia entre un cierre de dos minutos y uno de dos horas.">
-                    El cierre diario de cartera empezó tardando ocho minutos. Con el negocio creciendo,
-                    pasó a cuarenta, y el equipo pidió un servidor más grande. Alguien miró el código
-                    antes de firmar la compra: la rutina de búsqueda recorría los 40 000 créditos uno por
-                    uno, y la cartera ya estaba ordenada por número de obligación. El servidor no hacía
-                    falta.
+                    gancho="Contar cuántas veces repite un algoritmo su trabajo permite saber, antes de ejecutarlo, si va a costar poco o mucho.">
+                    El cierre diario de cartera tardaba cada vez más a medida que crecía el negocio, y
+                    el equipo pidió un servidor más grande. Alguien miró el código antes de firmar la
+                    compra: la rutina de búsqueda recorría los 40 000 créditos uno por uno, y la cartera
+                    ya estaba ordenada por número de obligación. Había otra manera de buscar.
                 </Motivacion>
 
                 <p>
                     Hasta aquí un algoritmo era bueno si era correcto. No basta. Dos algoritmos pueden dar
                     exactamente el mismo resultado y costar cosas muy distintas, y elegir entre ellos es
-                    parte del oficio. La medida no es el reloj —que depende de la máquina, del día y de
-                    qué más esté corriendo— sino el <strong>número de operaciones</strong>, que depende
-                    solo del algoritmo.
+                    parte del oficio. En esta sección la medida no será el reloj —que depende de la máquina,
+                    del día y de qué más esté corriendo— sino <strong>cuántas veces repite el algoritmo
+                    su trabajo</strong>: cuántas vueltas da su ciclo. Ese número no cambia con la máquina.
+                    Cambia con el algoritmo y, como se verá, con el dato que se busca.
                 </p>
 
                 <Box type="info" label="Sobre las estructuras que aparecen aquí">
@@ -4308,30 +4441,48 @@ Debug.Print pasos`,
                     <span className="inline-code"> Mientras</span>, que son las estructuras repetitivas del
                     <strong> capítulo 5</strong>. Aquí no hay que saber escribirlas: basta con leerlas y
                     entender que repiten lo de dentro. Lo que se estudia en esta sección es
-                    <strong> cuántas veces</strong> lo repiten.
+                    <strong> cuántas veces</strong> lo repiten. Usan además tres cosas que tampoco hay que
+                    saber escribir todavía: una lista de la que se pide el elemento de una posición
+                    (<span className="inline-code">cartera[i]</span>), la división entera del capítulo 1 y
+                    una orden para salir del ciclo en cuanto aparece el dato.
                 </Box>
 
                 <h3>El mismo problema, dos maneras</h3>
                 <p>
-                    Buscar el crédito número 39 814 en una cartera de 40 000, ordenada por número de
-                    obligación. El algoritmo <strong>A</strong> empieza por el primero y avanza. El
+                    Buscar el crédito número 39 814 en una cartera de 40 000 créditos, numerados del 1
+                    al 40 000 y ordenados por ese número. El algoritmo <strong>A</strong> empieza por el primero y avanza. El
                     algoritmo <strong>B</strong> mira el del medio: si el buscado es mayor, descarta de
                     golpe la mitad de abajo; si es menor, la de arriba; y repite. Los dos encuentran el
                     mismo crédito.
                 </p>
+                <Ilustrativo>
+                    La cartera de 40 000 créditos, el cierre diario y las 5 000 búsquedas del último
+                    ejercicio son un caso inventado para tener algo que contar. Los conteos no: salen
+                    de ejecutar el bloque que sigue.
+                </Ilustrativo>
 
                 <CodeTabs
-                    titulo="Contar las comparaciones de cada algoritmo"
+                    titulo="Contar las vueltas de cada algoritmo"
                     bloques={EJ_CONTEO}
-                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador. La diferencia es de <strong>3 318 veces</strong>, y no depende de tener una máquina mejor.</>}
+                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador, que sube uno en cada vuelta del ciclo. Para este crédito, A da unas <strong>3 318 veces</strong> más vueltas que B (39 814 ÷ 12 ≈ 3 318), en cualquier máquina.</>}
                 />
 
+                <p>
+                    Se cuentan vueltas y no comparaciones porque no son lo mismo: en cada vuelta A
+                    compara una vez con el dato buscado y B hasta dos, la de igualdad y la de «menor que». Y el conteo
+                    depende del crédito que se busque. A da tantas vueltas como la posición del crédito:
+                    una si es el primero, 40 000 si es el último. B nunca da más de 16 en esta cartera,
+                    porque cada vuelta deja a lo sumo la mitad de lo que quedaba y 40 000 no llega a
+                    2<sup>16</sup> = 65 536.
+                </p>
+
                 <CalloutPro tema="warn" titulo="Por qué B no siempre se puede usar" subtitulo="La condición que hace correcto al algoritmo rápido" icon="fa-scale-balanced">
-                    El algoritmo B <strong>solo funciona si la cartera está ordenada</strong>. Sobre una
-                    lista desordenada descarta mitades que sí contenían el dato y devuelve «no
-                    encontrado» siendo falso. No es que sea peor en ese caso: es que es
-                    <strong> incorrecto</strong>. La eficiencia nunca se compra a costa de la corrección,
-                    y por eso la primera pregunta ante un algoritmo rápido es siempre qué está suponiendo.
+                    El algoritmo B <strong>solo es correcto si la cartera está ordenada</strong>. Sobre una
+                    lista desordenada puede descartar la mitad donde estaba el dato y terminar sin
+                    encontrarlo: en la lista 5, 1, 4, 2, 3 busca el 5, que está de primero, y no lo
+                    halla. No es que sea peor en ese caso: es que es <strong> incorrecto</strong>. En
+                    este curso la corrección va primero, y por eso ante un algoritmo rápido conviene
+                    preguntar antes que nada qué está suponiendo.
                 </CalloutPro>
 
                 <h3>Ejercicios</h3>
@@ -4343,19 +4494,19 @@ Debug.Print pasos`,
                     pregunta="¿Las dos versiones encuentran siempre el mismo crédito?"
                     opciones={[
                         { texto: 'Solo coinciden cuando el crédito buscado está en la primera mitad de la cartera.', correcta: false },
-                        { texto: 'Sí, pero solo mientras la cartera esté ordenada: B deja de ser correcto sobre una lista desordenada.', correcta: true, justificacion: 'B no compara con todos: descarta media lista en cada paso, y esa decisión solo es válida si el orden garantiza que lo descartado no podía contener el dato. Sobre una lista desordenada B responde «no encontrado» cuando el crédito sí está. A no supone nada y por eso funciona siempre, aunque cueste más. Elegir entre los dos no es elegir el más rápido: es verificar primero si su suposición se cumple.' },
+                        { texto: 'Sí, pero solo mientras la cartera esté ordenada: B deja de ser correcto sobre una lista desordenada.', correcta: true, justificacion: 'B no compara con todos: descarta media lista en cada paso, y esa decisión solo es válida si el orden garantiza que lo descartado no podía contener el dato. Sobre una lista desordenada B puede responder «no encontrado» cuando el crédito sí está. A no supone nada y por eso funciona siempre, aunque cueste más. Elegir entre los dos no es elegir el más rápido: es verificar primero si su suposición se cumple.' },
                         { texto: 'Sí, siempre y en cualquier caso: son equivalentes sin condiciones.', correcta: false },
                         { texto: 'No: B puede saltarse el registro incluso con la cartera ordenada.', correcta: false },
                     ]}
                 />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="El cierre diario ejecuta esa búsqueda 5 000 veces. Con el algoritmo A son 39 814 comparaciones cada vez; con el B, 12. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
+                    pregunta="Suponga que el cierre diario hace 5 000 búsquedas como esa: 39 814 vueltas cada una con el algoritmo A y 12 con el B. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
                     opciones={[
-                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de comparaciones a unas 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 ≈ 199 millones frente a 5 000 × 12 = 60 000: tres órdenes de magnitud. Y el argumento decisivo para un comité no es la elegancia del algoritmo sino que el ahorro no cuesta inversión. Es también el motivo por el que revisar el código antes de comprar hardware suele ser rentable.' },
+                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de vueltas a 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 = 199 070 000 frente a 5 000 × 12 = 60 000: unas 3 318 veces menos. Y el argumento que le sirve a un comité no es la elegancia del algoritmo sino que el ahorro no pide inversión. Por eso conviene mirar el código antes de pedir más máquina. La cuenta vale con el supuesto del enunciado: 39 814 es casi lo peor que le puede pasar a A, y 12 no es lo peor de B, que puede llegar a 16. Con otros créditos la proporción cambia; lo que no cambia es que A puede dar hasta 40 000 vueltas y B nunca más de 16.' },
                         { texto: 'El algoritmo B es preferible porque ocupa menos memoria: carga 12 registros por búsqueda en vez de 39 814.', correcta: false },
-                        { texto: 'La diferencia es irrelevante: los computadores actuales hacen millones de operaciones por segundo, sea cual sea el algoritmo.', correcta: false },
-                        { texto: 'El algoritmo B entrega un resultado más preciso: con 12 comparaciones hay menos pasos en los que equivocarse.', correcta: false },
+                        { texto: 'La diferencia desaparece con un servidor más rápido: una máquina mejor reduce las vueltas que da el algoritmo A.', correcta: false },
+                        { texto: 'El algoritmo B entrega un resultado más preciso: con 12 vueltas hay menos pasos en los que equivocarse.', correcta: false },
                     ]}
                 /></Ejercicio>
             </div>
@@ -4365,25 +4516,25 @@ Debug.Print pasos`,
             ['Algoritmo', 'Secuencia finita, precisa y ordenada de pasos que, a partir de cero o más entradas, produce al menos una salida y termina.'],
             ['Precisión', 'Propiedad por la cual cada paso dice exactamente qué hacer, sin dejar nada al criterio de quien lo ejecuta.'],
             ['Finitud', 'Propiedad por la cual el algoritmo termina después de un número limitado de pasos.'],
-            ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado. También se le llama determinismo.'],
+            ['Definición', 'Propiedad por la cual, con las mismas entradas, el algoritmo produce siempre el mismo resultado.'],
             ['Análisis EPS', 'Método para pasar del enunciado al algoritmo respondiendo tres preguntas: qué datos entran, qué operaciones los transforman y qué resultado sale.'],
             ['Pseudocódigo', 'Notación intermedia entre el lenguaje natural y un lenguaje de programación. Es el lenguaje normativo del curso: lo que se evalúa.'],
-            ['Flujograma', 'Representación gráfica de un algoritmo mediante los símbolos del estándar ANSI, unidos por líneas de flujo que fijan el orden.'],
+            ['Flujograma', 'Representación gráfica de un algoritmo mediante símbolos normalizados, unidos por líneas de flujo que fijan el orden.'],
             ['Variable', 'Espacio de memoria con nombre cuyo contenido puede cambiar durante la ejecución.'],
             ['Constante', 'Espacio de memoria con nombre cuyo contenido se fija al escribir el algoritmo y no cambia durante la ejecución. Las políticas del negocio se escriben así.'],
             ['Asignación', 'Operación que evalúa una expresión y guarda el resultado en una variable, borrando lo que hubiera. No es una igualdad matemática: saldo <- saldo + cuota es válido.'],
-            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. Debe inicializarse antes del primer uso.'],
-            ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. Es lo que hace posible intercambiar dos valores sin perder ninguno.'],
-            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es la forma de encontrar un fallo que la máquina no reporta.'],
-            ['Eficiencia', 'Medida del costo de un algoritmo en número de operaciones. Es independiente de la máquina, a diferencia del tiempo de reloj.'],
+            ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. En este curso se inicializa siempre antes del primer uso.'],
+            ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. En el algoritmo de intercambio de este capítulo es la que evita perder uno de los dos valores.'],
+            ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es una forma de encontrar un fallo que la máquina no reporta.'],
+            ['Eficiencia', 'Costo de un algoritmo medido en cuántas operaciones hace; en este capítulo, en cuántas vueltas da su ciclo. Ese número no depende de la máquina, a diferencia del tiempo de reloj.'],
         ];
 
         const EvaluacionSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-flag-checkered" etiqueta="Antes de responder"
-                    gancho="Un error propio, cometido antes de ver la clave, enseña más que diez respuestas correctas leídas.">
-                    La tentación es mirar la respuesta, reconocerla y seguir: «claro, eso ya lo sabía». Es
-                    también la manera más rápida de salir del capítulo creyendo que se entendió algo que
+                    gancho="Vale más un error propio, cometido antes de ver la clave, que una respuesta correcta leída.">
+                    La tentación es mirar la respuesta, reconocerla y seguir: «claro, eso ya lo sabía». Así
+                    es fácil salir del capítulo creyendo que se entendió algo que
                     no. Equivocarse aquí es barato; en el parcial cuesta una nota, y en producción cuesta
                     dinero de alguien.
                 </Motivacion>
@@ -4401,8 +4552,8 @@ Debug.Print pasos`,
                     opciones={[
                         { texto: 'El seguro de vida deudor explica la mayor parte del sobrecosto, porque se cobra en cada una de las 24 cuotas.', correcta: false },
                         { texto: 'No puede afirmarse nada todavía: cualquier cifra depende de la inflación que haya en los dos años del crédito.', correcta: false },
-                        { texto: 'Devolverá $17 529 600 en total: pagará $5 529 600 por el uso del dinero, un 46,1 % del capital repartido en dos años.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve —24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos—, y expresarlo como porcentaje del capital lo hace comparable con otras alternativas. Decirlo así, y no solo «su cuota es de 730 400», es lo que exige la norma de transparencia sobre el costo total del crédito.' },
-                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false },
+                        { texto: 'Devolverá $17 529 600 en total: $5 529 600 más de lo que recibió, el 46,1 % del capital. De esa diferencia, $5 184 000 son intereses y $345 600 son seguro.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve: 24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos, da 5 529 600, y 5 529 600 ÷ 12 000 000 = 46,1 %. Esa diferencia no es toda interés: el algoritmo de la sección 2 ya la entrega separada, 5 184 000 de intereses y 345 600 de seguro. Decirlo así, y no solo «su cuota es de 730 400», va en la línea de lo que dispuso la ley que se cita en la sección 2.' },
+                        { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false, justificacion: 'El 46,1 % es lo que se paga de más en los 24 meses, frente al capital recibido. No es una tasa anual, y además incluye el seguro.' },
                     ]}
                 /></Ejercicio>
 
@@ -4417,7 +4568,7 @@ Debug.Print pasos`,
                             { texto: 'Ninguna: cualquier analista de cartera sabe qué mora es alta y escalaría el mismo caso.', correcta: false },
                             { texto: 'La finitud: no dice en qué momento se deja de revisar al cliente.', correcta: false },
                         ],
-                        justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase: «mora superior a 90 días».',
+                        justificacion: 'Un paso que admite dos lecturas razonables no es preciso, y al no serlo arrastra también la definición: dos personas con el mismo caso producen resultados distintos. Precisarlo cuesta una frase; por ejemplo, «mora superior a 90 días».',
                     },
                     {
                         seccion: 'cap1',
@@ -4428,7 +4579,7 @@ Debug.Print pasos`,
                             { texto: 'La finitud: nada garantiza que la condición se cumpla alguna vez.', correcta: true },
                             { texto: 'La entrada: no dice con qué valor empezar a iterar.', correcta: false },
                         ],
-                        justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. La definición también queda tocada —dos personas pararían en puntos distintos—, pero decir que ambas pararían es suponer justo lo que falta. En un cierre diario eso no se manifiesta como un error: se manifiesta como un proceso que sigue corriendo a medianoche.',
+                        justificacion: 'Si la condición de parada no está definida en términos medibles, el ciclo puede no terminar nunca. La definición también queda tocada —dos personas pararían en puntos distintos—, pero decir que ambas pararían es suponer justo lo que falta. En un cierre diario eso no se vería como un error, sino como un proceso que sigue corriendo a medianoche.',
                     },
                     {
                         seccion: 'cap2',
@@ -4453,38 +4604,38 @@ Debug.Print pasos`,
                         opciones: [
                             { texto: 'El diagrama de flujo, porque se entiende de un vistazo y lo puede leer quien no programa.', correcta: false },
                             { texto: 'El pseudocódigo, porque expresa la lógica completa sin atarla a ninguna herramienta.', correcta: true },
-                            { texto: 'VBA, porque es el lenguaje que usa el sector financiero en sus hojas de cálculo.', correcta: false },
-                            { texto: 'Python, porque es el más legible de los tres lenguajes y el más usado hoy.', correcta: false },
+                            { texto: 'VBA, porque es el lenguaje de las hojas de cálculo de Excel.', correcta: false },
+                            { texto: 'Python, porque sus bloques se pueden ejecutar y comprobar de inmediato.', correcta: false },
                         ],
-                        justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el flujograma para acordarla con quien no programa, el código para ejecutarla y comprobarla.',
+                        justificacion: 'El RA1 evalúa la construcción de un algoritmo, no el dominio de un lenguaje. Las otras tres representaciones están para mostrar que la lógica es invariante: el lenguaje natural para acordarla con quien no programa, el flujograma para verla de un vistazo, el código para ejecutarla y comprobarla.',
                     },
                     {
                         seccion: 'cap3',
-                        pregunta: 'En un flujograma correctamente dibujado, el rombo de decisión tiene:',
+                        pregunta: 'Según la convención de este curso, el rombo de decisión de un flujograma tiene:',
                         opciones: [
                             { texto: 'Tantas salidas como condiciones se quieran evaluar.', correcta: false },
                             { texto: 'Una entrada y una salida.', correcta: false },
                             { texto: 'Una entrada y exactamente dos salidas rotuladas.', correcta: true },
                             { texto: 'Dos entradas y una salida.', correcta: false },
                         ],
-                        justificacion: 'La condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. Un rombo con una sola salida es un error de dibujo, no una variante.',
+                        justificacion: 'En este curso la condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos salidas, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. La norma que se cita en la sección 3 prevé que de un símbolo salgan varias líneas de flujo; el curso se queda con dos porque así el rombo corresponde a Si … Entonces … Sino. Un rombo con una sola salida no decide nada.',
                     },
                     {
                         seccion: 'cap4',
                         pregunta: 'La instrucción saldo <- saldo + cuota es incorrecta porque una misma variable no puede aparecer a ambos lados. (Verdadero/Falso)',
                         opciones: [{ texto: 'Verdadero', correcta: false }, { texto: 'Falso', correcta: true }],
-                        justificacion: 'Falso, y es el punto donde más se atasca quien viene de matemáticas. La asignación no es una ecuación: primero se evalúa la expresión de la derecha con el valor que ahora tiene saldo, y después el resultado se guarda en saldo. Es el patrón del acumulador, la instrucción más común que existe.',
+                        justificacion: 'Falso. La asignación no es una ecuación: primero se evalúa la expresión de la derecha con el valor que ahora tiene saldo, y después el resultado se guarda en saldo. Es el patrón del acumulador.',
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'Un sistema guarda el número de cédula de los clientes en una variable de tipo entero. ¿Qué problema aparece?',
+                        pregunta: 'Un sistema guarda el código de oficina —por ejemplo 0045— en una variable de tipo entero. ¿Qué problema aparece?',
                         opciones: [
-                            { texto: 'Se pierden los ceros a la izquierda, y el identificador deja de coincidir con el documento real.', correcta: true },
-                            { texto: 'Ocupa más memoria que un texto, y en una base de millones de clientes eso encarece el sistema.', correcta: false },
+                            { texto: 'Se pierden los ceros a la izquierda: queda 45, que ya no coincide con el código real.', correcta: true },
+                            { texto: 'Ocupa más memoria que un texto, y eso encarece el sistema.', correcta: false },
                             { texto: 'No se pueden hacer sumas ni promedios con ella, y el sistema necesita esos totales.', correcta: false },
-                            { texto: 'Ninguno: una cédula está hecha solo de dígitos, así que el tipo entero es el que le corresponde.', correcta: false },
+                            { texto: 'Ninguno: el código está hecho solo de dígitos, así que el tipo entero es el que le corresponde.', correcta: false },
                         ],
-                        justificacion: 'Una cédula se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarla como entero borra los ceros iniciales y convierte a dos personas distintas en la misma. El criterio general: si no tiene sentido hacer aritmética con ello, es texto.',
+                        justificacion: 'Un código se parece a un número pero no lo es: no se suma, no se promedia, y su valor está en la cadena exacta de caracteres. Guardarlo como entero borra los ceros iniciales, y 0045 y 45 pasan a ser lo mismo. El criterio del curso: si no tiene sentido hacer aritmética con ello, es texto.',
                     },
                     {
                         seccion: 'cap5',
@@ -4502,22 +4653,26 @@ Debug.Print pasos`,
                             { texto: 'Los dos pueden ser correctos y costar cantidades de operaciones muy distintas.', correcta: true },
                             { texto: 'El número de operaciones depende del algoritmo, no de la máquina donde corra.', correcta: true },
                         ],
-                        justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido suele suponer algo —que la cartera está ordenada, por ejemplo— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
+                        justificacion: 'Las dos ciertas son el contenido de la sección 5. Que el más rápido sea siempre preferible es falso: el algoritmo rápido de este capítulo supone algo —que la cartera está ordenada— y si esa suposición no se cumple deja de ser correcto. Y deducir un error del otro por ser más lento confunde eficiencia con corrección: son dos propiedades independientes.',
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas comparaciones hace?',
+                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas vueltas da su ciclo?',
                         opciones: [
                             { texto: '40 000: A recorre siempre la cartera completa, esté donde esté el crédito.', correcta: false },
                             { texto: '4: con la cartera ordenada, A también descarta mitades, igual que B.', correcta: false },
                             { texto: '2 500: A se detiene en cuanto lo encuentra, y el 2 500 está en la posición 2 500.', correcta: true },
                             { texto: '20 000: en promedio, A recorre la mitad de la cartera antes de encontrar un crédito.', correcta: false },
                         ],
-                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 hace 2 500 comparaciones, igual que para el 39 814 hizo 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 comparaciones para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
+                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 da 2 500 vueltas, igual que para el 39 814 dio 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 vueltas para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
                     },
                 ]} />
 
                 <h3>Glosario</h3>
+                <p>
+                    Las definiciones son las que usa este curso. Otros textos pueden dar las mismas ideas
+                    con otras palabras.
+                </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead><tr><th>Término</th><th>Definición</th></tr></thead>
@@ -4528,6 +4683,7 @@ Debug.Print pasos`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 3 toma el análisis EPS de aquí y lo convierte en el entregable
@@ -4535,6 +4691,8 @@ Debug.Print pasos`,
                     método formal para encontrar fallos que la máquina no reporta. Todo lo de este
                     capítulo se usa allí.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -4753,6 +4911,44 @@ Debug.Print pasos`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "d9a7bb6ddf29af28bc2959126ed2d94fae2390ec99a9a6b28c6e44d2de154c9f",
+  "sello": "35feee79ac0a9d6ba07dc645239af1a2576ded21f2e7ca64d9624940e1cdd6cf",
+  "orden": [
+    "congreso2014ley1748",
+    "microsoft2018moneda",
+    "nbs1973"
+  ],
+  "entradas": {
+    "congreso2014ley1748": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "2014",
+      "html": "Congreso de la República de Colombia. (2014). \u003cem>Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones\u003c/em>. Diario Oficial 49.376. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (2014). Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones. Diario Oficial 49.376. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402"
+    },
+    "microsoft2018moneda": {
+      "autor": "Microsoft",
+      "anio": "2018",
+      "html": "Microsoft. (2018, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+    },
+    "nbs1973": {
+      "autor": "National Bureau of Standards",
+      "anio": "1973",
+      "html": "National Bureau of Standards. (1973). \u003cem>Flowchart symbols and their usage in information processing\u003c/em> (FIPS PUB 24). U.S. Department of Commerce, National Bureau of Standards. \u003ca href=\"https://doi.org/10.6028/NBS.FIPS.24\">https://doi.org/10.6028/NBS.FIPS.24\u003c/a>",
+      "plano": "National Bureau of Standards. (1973). Flowchart symbols and their usage in information processing (FIPS PUB 24). U.S. Department of Commerce, National Bureau of Standards. https://doi.org/10.6028/NBS.FIPS.24"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

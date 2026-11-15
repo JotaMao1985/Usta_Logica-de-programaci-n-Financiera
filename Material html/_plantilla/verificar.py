@@ -138,6 +138,12 @@ Comprueba dos cosas una sola vez —la 13 sobre la plantilla y la 29 sobre
      `loc` vacío es válido: se cita la obra entera. Que el capítulo ya no cite
      lo que respalda una fila es un AVISO. Una obra de `<ParaProfundizar>` no
      necesita fila: recomendarla no es atribuirle nada.
+     Una fila con `respaldo: "imagen"` se cotejó contra un dibujo de la fuente,
+     no contra un pasaje: sirve para la procedencia de una figura (`<Fuente>`) y
+     FALLA si un `<Cita>` se apoya en ella. Probada el 2026-11-14 sobre copias
+     de `_fuentes/`: marcar como imagen la fila de una frase falla; un valor que
+     no sea `texto` ni `imagen` falla; y `registrar_afirmaciones.py` se niega a
+     escribir una nota de imagen sin `cotejado_por`.
  32. ENTIDAD O NORMA SIN CITA — que el texto no nombre una entidad (la
      Superintendencia, el Banco de la República…) o una norma (una ley, una
      circular, un estándar) sin citarla ni declararla ilustrativa. Es un AVISO:
@@ -1935,10 +1941,13 @@ def entradas_no_verificables(fnt, citadas=frozenset(), recomendadas=frozenset())
 def afirmaciones_sin_registro(ruta, texto, fnt):
     """(problemas, avisos) del cruce entre las citas del capítulo y su registro."""
     citas, ilegibles = fuentes.citas_de(texto)
-    pares = {}
-    for pos, _componente, claves, loc in citas:
+    pares, en_frase = {}, {}
+    for pos, componente, claves, loc in citas:
         for c in claves:
-            pares.setdefault((c, fuentes.sin_espacio_duro(loc)), linea_de(texto, pos))
+            par = (c, fuentes.sin_espacio_duro(loc))
+            pares.setdefault(par, linea_de(texto, pos))
+            if componente == "Cita":      # una frase, no la procedencia de una figura
+                en_frase.setdefault(par, linea_de(texto, pos))
     nn = fuentes.numero_de_capitulo(ruta.name)
     if nn is None:
         return [], ([f"afirmaciones — «{ruta.name}» no empieza por el número del capítulo: no "
@@ -1959,7 +1968,7 @@ def afirmaciones_sin_registro(ruta, texto, fnt):
     # El ancla es texto literal del capítulo, salvo por dónde se parte el
     # renglón: eso no lo ve quien lee (ver `sin_saltos`).
     limpio = fuentes.sin_saltos(fuentes.sin_comentarios(zona))
-    permitidos = set(fuentes.CAMPOS_FILA) | {"leido", "extracto_sha256"}
+    permitidos = set(fuentes.CAMPOS_FILA) | {"leido", "extracto_sha256", "respaldo"}
     respaldados, vistos = set(), set()
     for f in filas:
         ident = f.get("id") or "(sin id)"
@@ -1986,6 +1995,17 @@ def afirmaciones_sin_registro(ruta, texto, fnt):
                              f"capítulo. El texto que se respaldó con «{f.get('clave')}» cambió: "
                              f"hay que volver a leerlo contra la fuente y actualizar la nota")
         par = (f.get("clave"), fuentes.sin_espacio_duro(f.get("loc", "")))
+        respaldo = f.get("respaldo", "texto")
+        if respaldo not in fuentes.RESPALDOS:
+            problemas.append(f"{nombre}, fila {ident}: `respaldo` es «{respaldo}» y solo puede "
+                             f"ser {' o '.join(fuentes.RESPALDOS)}")
+        elif respaldo == "imagen" and par in en_frase:
+            # Lo que se cotejó contra un dibujo no lo leyó el verificador de citas.
+            # Vale para decir de dónde sale una figura; una frase necesita un pasaje.
+            problemas.append(f"línea {en_frase[par]}: un <Cita> se apoya en la fila {ident} de "
+                             f"{nombre}, que se cotejó contra una imagen de la fuente y no contra "
+                             f"un pasaje. Eso solo respalda la procedencia de una figura "
+                             f"(<Fuente>): la frase necesita su propia fila, con texto")
         if par in pares:
             if leida:
                 respaldados.add(par)
