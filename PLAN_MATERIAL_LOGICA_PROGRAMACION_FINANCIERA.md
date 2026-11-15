@@ -3351,3 +3351,90 @@ Después el docente decidió lo que estaba abierto. Rama `claude/cap02-decisione
   importación en UTC y no la del archivo RIS; hay que revisarla después de cada
   tanda. Y al editar por la interfaz hay que apuntar al campo por su
   elemento de accesibilidad, no por coordenada, y comprobar después por la API.
+
+### 2026-11-15 — Los ejercicios de ordenar de los capítulos 1 a 5
+
+Quedaba abierto desde la fase 8 del capítulo 2: `OrdenaPasos` aprendió a aceptar
+más de un orden (`libres`), pero solo el capítulo 2 lo declaraba. Rama
+`claude/ordenar-pasos`. Se revisaron los ocho ejercicios.
+
+**Lo que estaba mal.** Los dos del capítulo 3 (la factura y el CDT) leen tres
+datos en tres líneas en Python y en R, y solo aceptaban un orden, sin decirlo. La
+sección 1 de ese capítulo enseña que esas tres lecturas «se pueden barajar como
+se quiera»: el ejercicio castigaba lo que el texto acababa de afirmar.
+
+**Lo que estaba resuelto con convenciones.** Los de los capítulos 1, 4 y 5 ya
+tenían una sola respuesta porque el enunciado imponía un orden «que no cambia el
+resultado». Era la salida disponible antes de `libres`. Ahora el ejercicio acepta
+lo que es libre y el enunciado solo fija lo que `libres` no puede expresar:
+
+| Ejercicio | Libre ahora | Convención que queda |
+|---|---|---|
+| Cap. 1, ciclo de la máquina | las tres cargas de memoria | primero cargar; después captar, ejecutar y almacenar |
+| Cap. 3, factura y CDT | las tres lecturas (Python y R) | las lecturas, antes de los cálculos |
+| Cap. 4, recargo por mora | lecturas y valor por defecto | van antes de la condición |
+| Cap. 4, `Segun` | nada | casos en orden alfabético y el caso por defecto al final (son bloques de dos líneas) |
+| Cap. 5, recaudo | lo de antes del ciclo | la vuelta se cuenta al final del cuerpo |
+| Cap. 5, oficinas | tres parejas de líneas vecinas | ninguna |
+
+**Cómo se comprobó.** Con la versión de Python de cada ejercicio: se ejecutaron
+todos los órdenes posibles (hasta nueve pasos; el de oficinas, de once, solo los
+aceptados) con dos juegos de datos, comparando lo impreso y las variables con el
+orden canónico. Ningún orden aceptado cambia el resultado. Cada orden válido que
+un ejercicio rechaza incumple una convención escrita en su enunciado, incluido el
+del capítulo 2. Pseudocódigo, R y VBA se revisaron leyendo qué líneas cae en
+cada grupo. Verificador y sonda (capítulos 1, 3, 4 y 5), en verde.
+
+**Huecos de las herramientas.**
+
+- La prueba de «todos los órdenes» vive en un guion temporal; no está en
+  `verificar.py`. Solo ejecuta Python: R y VBA se revisaron a ojo.
+- No se probó la calificación con clics en el navegador. La lógica de `libres`
+  no cambió desde la fase 8, donde sí se probó; la sonda confirma que ningún
+  grupo declarado está mal formado.
+- `libres` no expresa órdenes parciales ni intercambio de bloques. El README lo
+  dice ahora, con la regla de autoría: lo que `libres` no cubre lo excluye el
+  enunciado.
+
+### 2026-11-15 — El material en Safari de un iPhone, y la sonda a 320 px
+
+Pendiente desde el cierre del capítulo 1. Se abrió el capítulo 1 publicado en
+Safari de un iPhone 15 Pro, a través de la duplicación del iPhone en el Mac.
+
+**Lo que se vio.** El teléfono tiene activado el zoom de pantalla y Safari
+dibuja la página a **320 px** de ancho, no a 393. Se comparó con la misma página
+emulada a 320 px: los saltos de línea coinciden uno por uno. El menú lateral, el
+cambio de lección y las pestañas de código responden al toque, y las fórmulas
+se desplazan dentro de su caja.
+
+**Lo que estaba roto a 320 px**, y la sonda no veía porque mide a 375:
+
+- la cabecera de los bloques de código que se pliegan: el título y los botones
+  «Copiar» y «Mostrar» no caben en una fila, y «Mostrar» salía cortado. Visto
+  también en el teléfono. Ahora la cabecera parte en dos filas;
+- la cabecera de los ejercicios: la etiqueta del tipo («E6 · Emparejar») se
+  salía 12 px. Ahora baja de fila si no cabe;
+- en el capítulo 2, el contador del paso a paso de la asignación se salía 13 px.
+
+El CSS se cambió en el `head` del capítulo 1 y se copió a los otros cuatro; lo
+demás, en `lp-core-extra.jsx`, regenerado y reestampado. La sonda tiene un modo
+nuevo, `320`. Los cinco capítulos pasan a 320, a 375 y en escritorio, y el
+verificador completo.
+
+**Lo que no se hizo.** No se recorrió el capítulo entero en el teléfono: se
+vieron la portada, la sección 3 y un bloque de código. Lo demás se apoya en que
+el teléfono y la emulación a 320 px dieron lo mismo. La versión publicada que
+vio el teléfono es la anterior a estas correcciones.
+
+**Queda a criterio del docente.** El botón flotante del menú tapa las dos
+primeras letras de la línea que pasa por debajo al desplazarse. A 320 px la
+tarjeta «Antes de empezar» deja 172 px para el texto: unas veinte letras por
+línea.
+
+**Huecos de las herramientas.**
+
+- La duplicación del iPhone no recibe teclado ni desplazamiento en segundo
+  plano: hay que tomar la pantalla del Mac. Los clics sí llegan.
+- La sonda mide que nada se salga, no que algo quede tapado por el botón
+  flotante fuera de la fila «Lección N de M».
+

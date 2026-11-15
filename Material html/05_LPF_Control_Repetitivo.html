@@ -328,6 +328,7 @@
 
         .lp-code-header {
             display: flex;
+            flex-wrap: wrap;   /* a 320 px el título y los dos botones no caben en una fila */
             justify-content: space-between;
             align-items: center;
             gap: 0.5rem;
@@ -1538,7 +1539,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-table-list"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E1 · Traza" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -1734,7 +1735,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 p-5 shadow-sm" style={{ borderColor: '#FCA5A5', background: '#FFFBFB' }}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#B91C1C 0%,#F59E0B 100%)' }}><i className="fas fa-bug"></i></span>
                         <h4 className="text-base font-bold text-navy" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E3 · Diagnóstico" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-red-700/80 rounded px-2 py-0.5" />
@@ -1825,7 +1826,7 @@
             );
             return (
                 <div className="my-6 rounded-2xl border-2 border-teal/30 bg-white p-5 shadow-sm" style={{ borderColor: 'rgba(14,116,144,0.3)' }}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="text-white p-2 rounded-lg" style={{ background: 'linear-gradient(135deg,#0E7490,#3D008D)' }}><i className="fas fa-code-compare"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E4 · Equivalencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white rounded px-2 py-0.5" style={{ background: '#0E7490' }} />
@@ -1924,7 +1925,7 @@
 
             return (
                 <div className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-list-ol"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E5 · Secuencia" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -2054,7 +2055,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-link"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <EtiquetaTipo texto="E6 · Emparejar" className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-primary/80 rounded px-2 py-0.5" />
@@ -2244,7 +2245,7 @@
 
             return (
                 <div ref={ref} className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-shoe-prints"></i></span>
                         <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
                         <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Traza guiada</span>
@@ -4196,14 +4197,20 @@ End Sub`,
         };
 
         /* E5. El orden entre las dos inicializaciones, entre ellas y la lectura
-           de n, y entre las dos actualizaciones, no cambia el resultado. El
-           enunciado fija uno —la lectura antes de las inicializaciones, las
-           inicializaciones en el orden en que se actualizan y la vuelta contada
-           al final— para que el ejercicio tenga una sola respuesta. La lectura
-           la fijó la revisión del 2026-10-20: sin ella, inicializar y después
-           leer, que es correcto, sacaba 8 de 11.
+           de n, y entre las dos actualizaciones, no cambia el resultado. Desde
+           el 2026-11-15 lo de antes del ciclo va en `libres` y el ejercicio lo
+           acepta en cualquier orden; dentro del cuerpo el enunciado fija una
+           convención —la vuelta se cuenta al final—, porque contar la vuelta
+           antes de leer el pago también es correcto y `libres` no lo expresa.
            Ningún paso se repite dentro de un mismo lenguaje: `OrdenaPasos`
            califica por posición, y dos pasos idénticos serían indistinguibles. */
+        /* Órdenes libres del ejercicio de ordenar: grupos de posiciones (desde 0)
+           cuyos pasos no dependen unos de otros. Ver `libres` en OrdenaPasos. */
+        const LIBRES_RECAUDO = { pseudo: [[1, 2, 3]], python: [[0, 1, 2]], r: [[0, 1, 2]], vba: [[2, 3, 4]] };   // lo de antes del ciclo
+        const LIBRES_OFICINAS = {   // en cada nivel: lectura e inicialización; y escribir y acumular el subtotal
+            pseudo: [[1, 2], [4, 5], [10, 11]], python: [[0, 1], [3, 4], [8, 9]],
+            r: [[0, 1], [3, 4], [9, 10]], vba: [[2, 3], [5, 6], [11, 12]],
+        };
         const ORDENA_RECAUDO = {
             pseudo: ['Inicio', 'Leer n', 'total <- 0', 'k <- 0',
                 'Mientras k < n Hacer', '    Leer pago', '    total <- total + pago', '    k <- k + 1',
@@ -4405,8 +4412,9 @@ End Sub`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Para que tenga una sola respuesta, siga tres convenciones que no cambian el resultado: la cantidad de pagos se lee antes de las inicializaciones; las inicializaciones van en el mismo orden en que sus variables se actualizan dentro del ciclo, y la vuelta se cuenta al final del cuerpo."
+                    enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Lo que va antes del ciclo —la lectura de la cantidad de pagos y las dos inicializaciones— no depende una cosa de otra: ahí vale cualquier orden. Dentro del ciclo siga una convención que no cambia el resultado: la vuelta se cuenta al final del cuerpo."
                     pasos={ORDENA_RECAUDO}
+                    libres={LIBRES_RECAUDO}
                     pista="Hay dos líneas que no pueden quedar dentro del ciclo: una deja en el total solo el último pago, y la otra impide que el ciclo termine. Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago."
                 />
             </div>
@@ -6413,8 +6421,9 @@ End Sub`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Es el cierre de recaudo de la sección 1, ahora para una red de oficinas. El programa lee cuántas oficinas hay; de cada una lee cuántos pagos llegaron, los lee uno por uno y escribe su subtotal; al final escribe el total de la red. Para que tenga una sola respuesta, siga dos convenciones que no cambian el resultado: en cada nivel, la lectura va antes que la inicialización, y el subtotal de cada oficina se escribe antes de sumarse al total."
+                    enunciado="Es el cierre de recaudo de la sección 1, ahora para una red de oficinas. El programa lee cuántas oficinas hay; de cada una lee cuántos pagos llegaron, los lee uno por uno y escribe su subtotal; al final escribe el total de la red. Hay tres parejas de líneas vecinas que no dependen una de otra, y en cada una vale cualquier orden: en cada nivel, la lectura y la inicialización; y, al cerrar cada oficina, escribir su subtotal y sumarlo al total."
                     pasos={ORDENA_OFICINAS}
+                    libres={LIBRES_OFICINAS}
                     pista="Hay tres niveles: lo que se ejecuta una vez, lo que se ejecuta una vez por oficina y lo que se ejecuta una vez por pago. Pregúntese, para cada línea, en cuál le toca."
                 />
 

@@ -76,10 +76,14 @@ node "Material html/_plantilla/sonda_navegador.mjs" # y en un Chrome de verdad
 Hasta el 2026-10-27 las ignoraba, y un `--help` estampaba los cinco capítulos.
 
 **`sonda_navegador.mjs`** abre cada capítulo como `file://` en un Chrome sin
-ventana y recorre todas sus lecciones. Tiene cinco modos:
+ventana y recorre todas sus lecciones. Tiene seis modos:
 - `file`, el de omisión: monta, guarda y no da errores de JavaScript;
 - `375`: nada se sale a 375 px y el botón del menú no tapa la fila «Lección
   N de M»;
+- `320`: lo mismo a 320 px. Es el ancho al que Safari dibuja la página en un
+  iPhone con el zoom de pantalla activado («Texto más grande»); el 2026-11-15 se
+  comparó con un iPhone 15 Pro y coincide línea por línea. A 375 px pasaban
+  cosas que a 320 se cortaban: se corre en los dos anchos;
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar
@@ -736,8 +740,23 @@ pueden intercambiarse entre sí, por lenguaje como `pasos`:
 Un grupo mal escrito (una posición fuera de rango, o en dos grupos) sale por
 `console.error`, y la sonda de navegador lo cuenta como error. Lo que ninguna
 regla puede saber es si a un ejercicio le **falta** `libres`: eso lo ve quien lo
-resuelve de otra manera válida. El ejercicio del capítulo 1 se dejó con un solo
-orden y lo dice en el título; los de los capítulos 3, 4 y 5 están sin revisar.
+resuelve de otra manera válida.
+
+`libres` solo expresa grupos de posiciones que se barajan entre sí. No expresa un
+orden parcial —una lectura que podría ir después de un cálculo que no la usa— ni
+el intercambio de bloques de dos líneas, como los casos de un `Segun`. Lo que
+queda fuera se cierra en el **enunciado**, con una convención dicha en voz alta
+(«las lecturas van antes de los cálculos», «la vuelta se cuenta al final del
+cuerpo», «los casos, en orden alfabético»). La regla de autoría es esa: todo
+orden que dé el mismo resultado, o lo acepta `libres` o lo excluye una frase del
+enunciado.
+
+Los ocho ejercicios de los capítulos 1 a 5 se revisaron así el 2026-11-15. La
+prueba fue ejecutar la versión de Python de cada uno en todos los órdenes
+posibles y comparar salida y variables con el orden canónico: ningún orden
+aceptado cambia el resultado, y cada orden válido que el ejercicio rechaza
+incumple una convención escrita en su enunciado. Es una prueba que conviene
+repetir al escribir un `OrdenaPasos` nuevo; no está en `verificar.py`.
 
 Una variable del `Trazador` con `efimera: true` vale solo en el paso que la
 escribe, sin arrastrarse a los siguientes. Es para las condiciones evaluadas:
