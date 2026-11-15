@@ -99,6 +99,17 @@ letra o una cifra del texto vecino, y falla. El arreglo es `{' '}` al final de
 la línea de texto; `data-pegado-ok` calla un caso buscado. Solo ve lo que está
 pintado: lo que hay dentro de una solución plegada se revisa en el código.
 
+Y busca **etiquetas de ejercicio fuera de su tarjeta**. La etiqueta del tipo
+(«E7 · Interpretación») se coloca midiendo dónde empieza su tarjeta. Cuando el
+capítulo se abría directamente en una lección guardada, la medida se tomaba
+antes de que Tailwind generara los estilos: la etiqueta caía miles de píxeles
+más abajo y la lección ganaba un tramo vacío al final. Entrando por
+«Siguiente» no pasa, y la sonda siempre entraba así. Ahora, además de mirar
+cada lección al pasar, vuelve a cada una que tenga etiquetas, **recarga la
+página** y mira otra vez. Regla para cualquier componente que se mida a sí
+mismo: lo que la medida necesita va en `style`, no en una clase de Tailwind, y
+se vuelve a medir con un `ResizeObserver`.
+
 **Lo que la sonda no ve, y solo se vio en un teléfono** (2026-11-15): con
 `100vh`, Safari de iPhone deja el documento más alto que la pantalla y lo
 desplaza entero; el `App` usa `100dvh`. Y el contenido que se desplaza lleva
