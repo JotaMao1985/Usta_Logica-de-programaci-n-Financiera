@@ -2925,3 +2925,40 @@ lecciones, 0 errores de JS).
 «no montó», que parece un fallo del capítulo, cuando «02» no es un archivo: Chrome
 cargaba una página de error. Ahora la sonda comprueba que cada ruta exista y, si
 no, lo dice y sale con 2. Costó varias pruebas descubrirlo.
+
+### Capítulo 2, fase 3: la sección 5 cuenta vueltas y las llama vueltas · 2026-11-14
+
+Rama `claude/cap02-fase3`. Decisión E del plan.
+
+- **El conteo.** El contador de los cuatro bloques se llama `vueltas` y la salida
+  dice «39814 vueltas» y «12 vueltas». Un párrafo nuevo explica por qué no se
+  habla de comparaciones (A compara una vez por vuelta con el dato buscado; B,
+  hasta dos) y que el conteo depende del crédito: A da tantas vueltas como su
+  posición; B, a lo sumo 16 en esta cartera. Ejecutado para los 40 000 créditos:
+  máximo 16, mínimo 1.
+- **La contradicción.** Desaparece «depende solo del algoritmo». La sección dice
+  que el número de vueltas no cambia con la máquina y sí con el algoritmo y con
+  el dato.
+- **El caso.** La anécdota ya no trae «ocho minutos» ni «cuarenta», que no
+  cuadraban con las cifras del propio capítulo, ni afirma que el servidor no
+  hacía falta. Un `<Ilustrativo>` declara inventados la cartera, el cierre y las
+  5 000 búsquedas; los conteos se declaran ejecutados.
+- **Por qué B no siempre sirve.** «Solo es correcto si la cartera está ordenada»,
+  con un caso que se sigue a mano: en la lista 5, 1, 4, 2, 3 busca el 5 y no lo
+  halla (ejecutado).
+- **El ejercicio de interpretación.** «Suponga que el cierre diario hace 5 000
+  búsquedas como esa»; 199 070 000 frente a 60 000, «unas 3 318 veces menos». El
+  distractor que afirmaba algo cierto —que los computadores hacen millones de
+  operaciones por segundo— se cambió por uno falso por lo que la sección enseña.
+- **Opiniones como opiniones.** «En este curso la corrección va primero»;
+  «conviene mirar el código antes de pedir más máquina».
+- Para que el mismo conteo tenga el mismo nombre en todo el capítulo se tocaron
+  también la portada («39 814 vueltas; la segunda, doce»; el gancho ya no dice
+  «tarda mil veces más»), la pregunta del crédito 2 500 del cuestionario y la
+  entrada «Eficiencia» del glosario.
+
+**Para la fase 9.** El capítulo 5 dice tres veces que el 2 encontró el crédito
+«en 12 comparaciones» (líneas 3081, 4221 y 7550-7551). Son vueltas.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.

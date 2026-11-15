@@ -2721,12 +2721,12 @@
         const PortadaSection = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-money-bill-trend-up"
-                    gancho="Dos algoritmos correctos para el mismo problema, y uno tarda mil veces más. ¿Qué los diferencia, si los dos dan el resultado bueno?">
+                    gancho="Dos algoritmos correctos para el mismo problema, y uno repite su trabajo tres mil veces más que el otro. ¿Qué los diferencia, si los dos dan el resultado bueno?">
                     A dos analistas les encargan lo mismo: encontrar un crédito dentro de una cartera de
                     40 000. El primero escribe una rutina que los revisa uno por uno y funciona. El
                     segundo aprovecha que la cartera ya viene ordenada y escribe otra que también
-                    funciona. Uno hace 39 814 comparaciones; el otro, doce. Las dos respuestas son
-                    correctas y solo una sirve para el cierre diario.
+                    funciona. Para el mismo crédito, la primera da 39 814 vueltas; la segunda, doce. Las
+                    dos respuestas son correctas; lo que cuesta llegar a ellas no se parece.
                 </Motivacion>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
@@ -4102,48 +4102,48 @@ End Sub`,
            SECCIÓN 5 — DOS ALGORITMOS CORRECTOS NO SON IGUAL DE BUENOS
         ============================================================ */
 
-        // Salida comprobada por ejecución: 39 814 frente a 12 comparaciones.
+        // Salida comprobada por ejecución: 39 814 frente a 12 vueltas.
         const EJ_CONTEO = {
-            pseudo: `// Cuantas comparaciones hace cada algoritmo
+            pseudo: `// Cuantas vueltas da cada algoritmo
 // sobre 40 000 creditos ORDENADOS por numero de obligacion
 buscado <- 39814
 
 // A: recorrer uno por uno
-pasosA <- 0
+vueltasA <- 0
 Para i <- 1 Hasta 40000 Hacer
-    pasosA <- pasosA + 1
+    vueltasA <- vueltasA + 1
     Si cartera[i] = buscado Entonces Salir FinSi
 FinPara
 
 // B: partir por la mitad cada vez
-pasosB <- 0
+vueltasB <- 0
 izq <- 1
 der <- 40000
 Mientras izq <= der Hacer
-    pasosB <- pasosB + 1
+    vueltasB <- vueltasB + 1
     medio <- (izq + der) div 2
     Si cartera[medio] = buscado Entonces Salir FinSi
     Si cartera[medio] < buscado Entonces izq <- medio + 1 Sino der <- medio - 1 FinSi
 FinMientras
 
-Escribir "Algoritmo A: ", pasosA, " comparaciones"
-//> Algoritmo A: 39814 comparaciones
-Escribir "Algoritmo B: ", pasosB, " comparaciones"
-//> Algoritmo B: 12 comparaciones`,
-            python: `# Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+Escribir "Algoritmo A: ", vueltasA, " vueltas"
+//> Algoritmo A: 39814 vueltas
+Escribir "Algoritmo B: ", vueltasB, " vueltas"
+//> Algoritmo B: 12 vueltas`,
+            python: `# Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
 cartera = list(range(1, 40_001))
 buscado = 39_814
 
-pasos_a = 0                       # A: recorrer uno por uno
+vueltas_a = 0                       # A: recorrer uno por uno
 for numero in cartera:
-    pasos_a += 1
+    vueltas_a += 1
     if numero == buscado:
         break
 
-pasos_b = 0                       # B: partir por la mitad cada vez
+vueltas_b = 0                       # B: partir por la mitad cada vez
 izq, der = 0, len(cartera) - 1
 while izq <= der:
-    pasos_b += 1
+    vueltas_b += 1
     medio = (izq + der) // 2
     if cartera[medio] == buscado:
         break
@@ -4152,105 +4152,105 @@ while izq <= der:
     else:
         der = medio - 1
 
-print(f"Algoritmo A: {pasos_a} comparaciones")
-#> Algoritmo A: 39814 comparaciones
-print(f"Algoritmo B: {pasos_b} comparaciones")
-#> Algoritmo B: 12 comparaciones`,
-            r: `# Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+print(f"Algoritmo A: {vueltas_a} vueltas")
+#> Algoritmo A: 39814 vueltas
+print(f"Algoritmo B: {vueltas_b} vueltas")
+#> Algoritmo B: 12 vueltas`,
+            r: `# Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
 cartera <- 1:40000
 buscado <- 39814
 
-pasos_a <- 0                      # A: recorrer uno por uno
+vueltas_a <- 0                      # A: recorrer uno por uno
 for (numero in cartera) {
-  pasos_a <- pasos_a + 1
+  vueltas_a <- vueltas_a + 1
   if (numero == buscado) break
 }
 
-pasos_b <- 0                      # B: partir por la mitad cada vez
+vueltas_b <- 0                      # B: partir por la mitad cada vez
 izq <- 1; der <- length(cartera)
 while (izq <= der) {
-  pasos_b <- pasos_b + 1
+  vueltas_b <- vueltas_b + 1
   medio <- (izq + der) %/% 2
   if (cartera[medio] == buscado) break
   if (cartera[medio] < buscado) izq <- medio + 1 else der <- medio - 1
 }
 
-cat(sprintf("Algoritmo A: %d comparaciones\\n", pasos_a))
-#> Algoritmo A: 39814 comparaciones
-cat(sprintf("Algoritmo B: %d comparaciones\\n", pasos_b))
-#> Algoritmo B: 12 comparaciones`,
+cat(sprintf("Algoritmo A: %d vueltas\\n", vueltas_a))
+#> Algoritmo A: 39814 vueltas
+cat(sprintf("Algoritmo B: %d vueltas\\n", vueltas_b))
+#> Algoritmo B: 12 vueltas`,
             vba: `Option Explicit
 
-Sub ContarComparaciones()
-    ' Cuantas comparaciones hace cada algoritmo sobre 40 000 creditos ORDENADOS
+Sub ContarVueltas()
+    ' Cuantas vueltas da cada algoritmo sobre 40 000 creditos ORDENADOS
     Dim cartera(1 To 40000) As Long, i As Long, buscado As Long
-    Dim pasosA As Long, pasosB As Long, izq As Long, der As Long, medio As Long
+    Dim vueltasA As Long, vueltasB As Long, izq As Long, der As Long, medio As Long
 
     For i = 1 To 40000: cartera(i) = i: Next i
     buscado = 39814
 
-    pasosA = 0                    ' A: recorrer uno por uno
+    vueltasA = 0                    ' A: recorrer uno por uno
     For i = 1 To 40000
-        pasosA = pasosA + 1
+        vueltasA = vueltasA + 1
         If cartera(i) = buscado Then Exit For
     Next i
 
-    pasosB = 0                    ' B: partir por la mitad cada vez
+    vueltasB = 0                    ' B: partir por la mitad cada vez
     izq = 1: der = 40000
     Do While izq <= der
-        pasosB = pasosB + 1
+        vueltasB = vueltasB + 1
         medio = (izq + der) \\ 2
         If cartera(medio) = buscado Then Exit Do
         If cartera(medio) < buscado Then izq = medio + 1 Else der = medio - 1
     Loop
 
-    Debug.Print "Algoritmo A: " & pasosA & " comparaciones"
-    '> Algoritmo A: 39814 comparaciones
-    Debug.Print "Algoritmo B: " & pasosB & " comparaciones"
-    '> Algoritmo B: 12 comparaciones
+    Debug.Print "Algoritmo A: " & vueltasA & " vueltas"
+    '> Algoritmo A: 39814 vueltas
+    Debug.Print "Algoritmo B: " & vueltasB & " vueltas"
+    '> Algoritmo B: 12 vueltas
 End Sub`,
         };
 
         const CMP_SECUENCIAL = {
             pseudo: `// A · Recorrer la cartera de principio a fin
-pasos <- 0
+vueltas <- 0
 Para i <- 1 Hasta 40000 Hacer
-    pasos <- pasos + 1
+    vueltas <- vueltas + 1
     Si cartera[i] = buscado Entonces
         Salir
     FinSi
 FinPara
-Escribir pasos`,
+Escribir vueltas`,
             python: `# A · Recorrer la cartera de principio a fin
-pasos = 0
+vueltas = 0
 for numero in cartera:
-    pasos += 1
+    vueltas += 1
     if numero == buscado:
         break
-print(pasos)`,
+print(vueltas)`,
             r: `# A · Recorrer la cartera de principio a fin
-pasos <- 0
+vueltas <- 0
 for (numero in cartera) {
-  pasos <- pasos + 1
+  vueltas <- vueltas + 1
   if (numero == buscado) break
 }
-cat(pasos)`,
+cat(vueltas)`,
             vba: `' A · Recorrer la cartera de principio a fin
-pasos = 0
+vueltas = 0
 For i = 1 To 40000
-    pasos = pasos + 1
+    vueltas = vueltas + 1
     If cartera(i) = buscado Then Exit For
 Next i
-Debug.Print pasos`,
+Debug.Print vueltas`,
         };
 
         const CMP_BINARIA = {
             pseudo: `// B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos <- 0
+vueltas <- 0
 izq <- 1
 der <- 40000
 Mientras izq <= der Hacer
-    pasos <- pasos + 1
+    vueltas <- vueltas + 1
     medio <- (izq + der) div 2
     Si cartera[medio] = buscado Entonces
         Salir
@@ -4262,12 +4262,12 @@ Mientras izq <= der Hacer
         FinSi
     FinSi
 FinMientras
-Escribir pasos`,
+Escribir vueltas`,
             python: `# B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos = 0
+vueltas = 0
 izq, der = 0, len(cartera) - 1
 while izq <= der:
-    pasos += 1
+    vueltas += 1
     medio = (izq + der) // 2
     if cartera[medio] == buscado:
         break
@@ -4275,46 +4275,46 @@ while izq <= der:
         izq = medio + 1
     else:
         der = medio - 1
-print(pasos)`,
+print(vueltas)`,
             r: `# B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos <- 0
+vueltas <- 0
 izq <- 1; der <- length(cartera)
 while (izq <= der) {
-  pasos <- pasos + 1
+  vueltas <- vueltas + 1
   medio <- (izq + der) %/% 2
   if (cartera[medio] == buscado) break
   if (cartera[medio] < buscado) izq <- medio + 1 else der <- medio - 1
 }
-cat(pasos)`,
+cat(vueltas)`,
             vba: `' B · Partir por la mitad, aprovechando que esta ORDENADA
-pasos = 0
+vueltas = 0
 izq = 1: der = 40000
 Do While izq <= der
-    pasos = pasos + 1
+    vueltas = vueltas + 1
     medio = (izq + der) \\ 2
     If cartera(medio) = buscado Then Exit Do
     If cartera(medio) < buscado Then izq = medio + 1 Else der = medio - 1
 Loop
-Debug.Print pasos`,
+Debug.Print vueltas`,
         };
 
         const Cap5Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
-                    gancho="Contar operaciones no es una manía académica: es la diferencia entre un cierre de dos minutos y uno de dos horas.">
-                    El cierre diario de cartera empezó tardando ocho minutos. Con el negocio creciendo,
-                    pasó a cuarenta, y el equipo pidió un servidor más grande. Alguien miró el código
-                    antes de firmar la compra: la rutina de búsqueda recorría los 40 000 créditos uno por
-                    uno, y la cartera ya estaba ordenada por número de obligación. El servidor no hacía
-                    falta.
+                    gancho="Contar cuántas veces repite un algoritmo su trabajo permite saber, antes de ejecutarlo, si va a costar poco o mucho.">
+                    El cierre diario de cartera tardaba cada vez más a medida que crecía el negocio, y
+                    el equipo pidió un servidor más grande. Alguien miró el código antes de firmar la
+                    compra: la rutina de búsqueda recorría los 40 000 créditos uno por uno, y la cartera
+                    ya estaba ordenada por número de obligación. Había otra manera de buscar.
                 </Motivacion>
 
                 <p>
                     Hasta aquí un algoritmo era bueno si era correcto. No basta. Dos algoritmos pueden dar
                     exactamente el mismo resultado y costar cosas muy distintas, y elegir entre ellos es
-                    parte del oficio. La medida no es el reloj —que depende de la máquina, del día y de
-                    qué más esté corriendo— sino el <strong>número de operaciones</strong>, que depende
-                    solo del algoritmo.
+                    parte del oficio. En esta sección la medida no será el reloj —que depende de la máquina,
+                    del día y de qué más esté corriendo— sino <strong>cuántas veces repite el algoritmo
+                    su trabajo</strong>: cuántas vueltas da su ciclo. Ese número no cambia con la máquina.
+                    Cambia con el algoritmo y, como se verá, con el dato que se busca.
                 </p>
 
                 <Box type="info" label="Sobre las estructuras que aparecen aquí">
@@ -4333,19 +4333,34 @@ Debug.Print pasos`,
                     golpe la mitad de abajo; si es menor, la de arriba; y repite. Los dos encuentran el
                     mismo crédito.
                 </p>
+                <Ilustrativo>
+                    La cartera de 40 000 créditos, el cierre diario y las 5 000 búsquedas del último
+                    ejercicio son un caso inventado para tener algo que contar. Los conteos no: salen
+                    de ejecutar el bloque que sigue.
+                </Ilustrativo>
 
                 <CodeTabs
-                    titulo="Contar las comparaciones de cada algoritmo"
+                    titulo="Contar las vueltas de cada algoritmo"
                     bloques={EJ_CONTEO}
-                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador. La diferencia es de <strong>3 318 veces</strong>, y no depende de tener una máquina mejor.</>}
+                    nota={<>Las dos cifras de salida están <strong>ejecutadas</strong>, no estimadas: son la respuesta real del contador, que sube uno en cada vuelta del ciclo. Para este crédito, A da unas <strong>3 318 veces</strong> más vueltas que B (39 814 ÷ 12 ≈ 3 318), en cualquier máquina.</>}
                 />
 
+                <p>
+                    Se cuentan vueltas y no comparaciones porque no son lo mismo: en cada vuelta A
+                    compara una vez con el dato buscado y B hasta dos, la de igualdad y la de «menor que». Y el conteo
+                    depende del crédito que se busque. A da tantas vueltas como la posición del crédito:
+                    una si es el primero, 40 000 si es el último. B nunca da más de 16 en esta cartera,
+                    porque cada vuelta deja a lo sumo la mitad de lo que quedaba y 40 000 no llega a
+                    2<sup>16</sup> = 65 536.
+                </p>
+
                 <CalloutPro tema="warn" titulo="Por qué B no siempre se puede usar" subtitulo="La condición que hace correcto al algoritmo rápido" icon="fa-scale-balanced">
-                    El algoritmo B <strong>solo funciona si la cartera está ordenada</strong>. Sobre una
-                    lista desordenada descarta mitades que sí contenían el dato y devuelve «no
-                    encontrado» siendo falso. No es que sea peor en ese caso: es que es
-                    <strong> incorrecto</strong>. La eficiencia nunca se compra a costa de la corrección,
-                    y por eso la primera pregunta ante un algoritmo rápido es siempre qué está suponiendo.
+                    El algoritmo B <strong>solo es correcto si la cartera está ordenada</strong>. Sobre una
+                    lista desordenada puede descartar la mitad donde estaba el dato y terminar sin
+                    encontrarlo: en la lista 5, 1, 4, 2, 3 busca el 5, que está de primero, y no lo
+                    halla. No es que sea peor en ese caso: es que es <strong> incorrecto</strong>. En
+                    este curso la corrección va primero, y por eso ante un algoritmo rápido conviene
+                    preguntar antes que nada qué está suponiendo.
                 </CalloutPro>
 
                 <h3>Ejercicios</h3>
@@ -4357,19 +4372,19 @@ Debug.Print pasos`,
                     pregunta="¿Las dos versiones encuentran siempre el mismo crédito?"
                     opciones={[
                         { texto: 'Solo coinciden cuando el crédito buscado está en la primera mitad de la cartera.', correcta: false },
-                        { texto: 'Sí, pero solo mientras la cartera esté ordenada: B deja de ser correcto sobre una lista desordenada.', correcta: true, justificacion: 'B no compara con todos: descarta media lista en cada paso, y esa decisión solo es válida si el orden garantiza que lo descartado no podía contener el dato. Sobre una lista desordenada B responde «no encontrado» cuando el crédito sí está. A no supone nada y por eso funciona siempre, aunque cueste más. Elegir entre los dos no es elegir el más rápido: es verificar primero si su suposición se cumple.' },
+                        { texto: 'Sí, pero solo mientras la cartera esté ordenada: B deja de ser correcto sobre una lista desordenada.', correcta: true, justificacion: 'B no compara con todos: descarta media lista en cada paso, y esa decisión solo es válida si el orden garantiza que lo descartado no podía contener el dato. Sobre una lista desordenada B puede responder «no encontrado» cuando el crédito sí está. A no supone nada y por eso funciona siempre, aunque cueste más. Elegir entre los dos no es elegir el más rápido: es verificar primero si su suposición se cumple.' },
                         { texto: 'Sí, siempre y en cualquier caso: son equivalentes sin condiciones.', correcta: false },
                         { texto: 'No: B puede saltarse el registro incluso con la cartera ordenada.', correcta: false },
                     ]}
                 />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="El cierre diario ejecuta esa búsqueda 5 000 veces. Con el algoritmo A son 39 814 comparaciones cada vez; con el B, 12. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
+                    pregunta="Suponga que el cierre diario hace 5 000 búsquedas como esa: 39 814 vueltas cada una con el algoritmo A y 12 con el B. ¿Cuál de estas afirmaciones es la que hay que llevar al comité?"
                     opciones={[
-                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de comparaciones a unas 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 ≈ 199 millones frente a 5 000 × 12 = 60 000: tres órdenes de magnitud. Y el argumento decisivo para un comité no es la elegancia del algoritmo sino que el ahorro no cuesta inversión. Es también el motivo por el que revisar el código antes de comprar hardware suele ser rentable.' },
+                        { texto: 'Cambiar de algoritmo lleva el cierre de unos 199 millones de vueltas a 60 000, sin comprar un solo equipo.', correcta: true, justificacion: 'Interpretar es traducir la cifra a una decisión de negocio. 5 000 × 39 814 = 199 070 000 frente a 5 000 × 12 = 60 000: unas 3 318 veces menos. Y el argumento que le sirve a un comité no es la elegancia del algoritmo sino que el ahorro no pide inversión. Por eso conviene mirar el código antes de pedir más máquina.' },
                         { texto: 'El algoritmo B es preferible porque ocupa menos memoria: carga 12 registros por búsqueda en vez de 39 814.', correcta: false },
-                        { texto: 'La diferencia es irrelevante: los computadores actuales hacen millones de operaciones por segundo, sea cual sea el algoritmo.', correcta: false },
-                        { texto: 'El algoritmo B entrega un resultado más preciso: con 12 comparaciones hay menos pasos en los que equivocarse.', correcta: false },
+                        { texto: 'La diferencia desaparece con un servidor más rápido: una máquina mejor reduce las vueltas que da el algoritmo A.', correcta: false },
+                        { texto: 'El algoritmo B entrega un resultado más preciso: con 12 vueltas hay menos pasos en los que equivocarse.', correcta: false },
                     ]}
                 /></Ejercicio>
             </div>
@@ -4389,7 +4404,7 @@ Debug.Print pasos`,
             ['Acumulador', 'Variable que conserva un total parcial y se actualiza sumándose a sí misma. Debe inicializarse antes del primer uso.'],
             ['Variable auxiliar', 'Variable temporal que conserva un valor mientras se sobrescribe el original. Es lo que hace posible intercambiar dos valores sin perder ninguno.'],
             ['Prueba de escritorio', 'Ejecución manual de un algoritmo, anotando el valor de cada variable paso a paso. Es la forma de encontrar un fallo que la máquina no reporta.'],
-            ['Eficiencia', 'Medida del costo de un algoritmo en número de operaciones. Es independiente de la máquina, a diferencia del tiempo de reloj.'],
+            ['Eficiencia', 'Costo de un algoritmo medido en cuántas operaciones hace; en este capítulo, en cuántas vueltas da su ciclo. Ese número no depende de la máquina, a diferencia del tiempo de reloj.'],
         ];
 
         const EvaluacionSection = () => (
@@ -4520,14 +4535,14 @@ Debug.Print pasos`,
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas comparaciones hace?',
+                        pregunta: 'En la misma cartera ordenada de 40 000 créditos, el algoritmo A —el que compara uno por uno— busca ahora el crédito número 2 500. ¿Cuántas vueltas da su ciclo?',
                         opciones: [
                             { texto: '40 000: A recorre siempre la cartera completa, esté donde esté el crédito.', correcta: false },
                             { texto: '4: con la cartera ordenada, A también descarta mitades, igual que B.', correcta: false },
                             { texto: '2 500: A se detiene en cuanto lo encuentra, y el 2 500 está en la posición 2 500.', correcta: true },
                             { texto: '20 000: en promedio, A recorre la mitad de la cartera antes de encontrar un crédito.', correcta: false },
                         ],
-                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 hace 2 500 comparaciones, igual que para el 39 814 hizo 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 comparaciones para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
+                        justificacion: 'A compara uno por uno y se detiene en cuanto encuentra el crédito: para el 2 500 da 2 500 vueltas, igual que para el 39 814 dio 39 814. Su costo depende de dónde esté el dato, y el peor caso es el último, con 40 000. Descartar mitades es lo que hace B —4 vueltas para el 2 500—, y A no lo hace aunque la cartera esté ordenada: su código no lo dice. Los 20 000 son un promedio sobre muchas búsquedas, no lo que cuesta esta.',
                     },
                 ]} />
 
