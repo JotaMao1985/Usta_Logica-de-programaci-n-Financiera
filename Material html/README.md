@@ -513,7 +513,7 @@ Toda propiedad que contenga **código** admite un objeto `{pseudo, python, r, vb
 | `TablaTraza` | `codigo` · y la columna `instruccion` de cada fila |
 | `DetectaError` | `lineas`, **`lineaCorrecta`** y, si citan números de línea, **`enunciado` y `explicacion`** |
 | `Comparador` | `a.codigo` y `b.codigo` |
-| `OrdenaPasos` | `pasos` |
+| `OrdenaPasos` | `pasos` · y `libres`, si el ejercicio admite más de un orden |
 | `Emparejamiento` | `izquierda` (el lado derecho son significados: no cambia) |
 
 Lo que **no** va por lenguaje son los **valores de las variables** en la tabla de
@@ -723,6 +723,21 @@ sembrada con el texto de sus pasos: no cambia entre visitas, no deja ningún pas
 en su sitio ni dos seguidos en orden. La de antes era el mismo patrón en todos
 (L1). Los pasos conservan su sangría, y se califica por texto: dos pasos
 idénticos intercambiados cuentan como bien.
+
+Sin más, `OrdenaPasos` acepta **un solo orden**. Si el algoritmo tiene pasos que
+no dependen unos de otros —dos lecturas, dos cálculos independientes—, hay que
+declararlos en `libres`: grupos de posiciones (desde 0) del orden canónico que
+pueden intercambiarse entre sí, por lenguaje como `pasos`:
+
+```jsx
+<OrdenaPasos pasos={PASOS} libres={{ pseudo: [[1, 2], [3, 4]], python: [[0, 1, 2, 3], [4, 5]] }} />
+```
+
+Un grupo mal escrito (una posición fuera de rango, o en dos grupos) sale por
+`console.error`, y la sonda de navegador lo cuenta como error. Lo que ninguna
+regla puede saber es si a un ejercicio le **falta** `libres`: eso lo ve quien lo
+resuelve de otra manera válida. El ejercicio del capítulo 1 se dejó con un solo
+orden y lo dice en el título; los de los capítulos 3, 4 y 5 están sin revisar.
 
 Una variable del `Trazador` con `efimera: true` vale solo en el paso que la
 escribe, sin arrastrarse a los siguientes. Es para las condiciones evaluadas:

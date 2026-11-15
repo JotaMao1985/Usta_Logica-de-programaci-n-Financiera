@@ -3134,3 +3134,44 @@ pseudocódigo, prueba de escritorio).
 
 Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
 capítulos; sonda del capítulo 2 en verde, en escritorio y a 375 px.
+
+### Capítulo 2, fase 8: `OrdenaPasos` acepta más de un orden · 2026-11-14
+
+Rama `claude/cap02-fase8`. Decisión F del plan. Es un cambio de LP-CORE: se hizo
+en `lp-core-extra.jsx`, se ensambló y se estampó en los cinco capítulos.
+
+- **La propiedad nueva, `libres`.** Declara los pasos que pueden cambiar de lugar
+  entre sí sin que el algoritmo cambie: grupos de posiciones del orden canónico,
+  por lenguaje como `pasos`. Dentro de un grupo cualquier orden cuenta como bien.
+  Sin `libres` el componente califica contra un solo orden, igual que antes: los
+  demás capítulos no cambian de comportamiento.
+- Cuando hay grupos, el componente lo dice al comprobar («Este ejercicio admite
+  más de un orden…») y la solución se titula «Un orden correcto».
+- **El capítulo 2** declara sus grupos en los cuatro lenguajes: la constante y las
+  lecturas entre sí, y el interés y el seguro entre sí. Era el último hallazgo
+  alto de la línea base.
+- Dos diagramas llevan su `fuente-ok`.
+
+Probado en Chrome, sobre el capítulo 2: el orden canónico y uno alterno válido
+dan «¡Secuencia correcta!»; la cuota antes del interés, y el Fin de primero, se
+rechazan (6 de 8). Prueba negativa: un grupo con una posición fuera de rango y
+otra repetida sale por `console.error` y la sonda marca el capítulo en rojo.
+
+Comprobado: `verificar.py --con-salidas --con-pandoc` pasa en los cinco
+capítulos (regla 1, deriva, incluida); sonda en verde en los cinco.
+
+**Huecos de las herramientas.**
+
+- Ninguna regla puede saber si a un ejercicio de ordenar le **falta** `libres`:
+  eso solo lo ve quien lo resuelve de otra manera válida. Queda en el README. Los
+  ejercicios de ordenar de los capítulos 3 (dos), 4 (dos) y 5 (dos) están sin
+  revisar; el del capítulo 1 se dejó con un solo orden y lo dice en su título.
+- `libres` cubre grupos de pasos intercambiables, no cualquier orden parcial
+  (por ejemplo, un paso que pudiera ir en cualquier punto antes de su primer
+  uso). Bastó para el capítulo 2.
+- La sonda comprueba que los capítulos montan, no que un ejercicio califique
+  bien. La prueba de esta fase se hizo con un guion de usar y tirar sobre la
+  sonda; no quedó en el repositorio.
+
+Sin hacer, anotado: el texto de 12,5 px del flujograma del ejemplo en pantallas
+estrechas y el foco de teclado de sus bloques.

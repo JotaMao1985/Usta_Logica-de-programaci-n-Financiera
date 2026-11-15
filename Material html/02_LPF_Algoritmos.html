@@ -1878,7 +1878,14 @@
             return mejor;
         };
 
-        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista }) => {
+        // `libres` declara los pasos que pueden cambiar de lugar entre sí sin que el
+        // algoritmo cambie: grupos de posiciones (desde 0) del orden canónico, por
+        // lenguaje como `pasos` —`{ pseudo: [[1, 2], [3, 4]], … }`— o una sola lista
+        // si vale para todos. Dentro de un grupo cualquier orden cuenta como bien.
+        // Sin `libres` se califica contra un único orden, como siempre; por eso un
+        // ejercicio con dos lecturas independientes, o dos cálculos que no dependen
+        // uno del otro, TIENE que declararlos: si no, castiga una respuesta correcta.
+        const OrdenaPasos = ({ titulo = 'Ordene los pasos del algoritmo', enunciado, pasos, lang = 'pseudo', mezcla, pista, libres }) => {
             const idiomas = lenguajesDe(pasos);
             const langs = idiomas.length ? idiomas : [lang];
             const [langActivo, cambiarLang] = useLenguajeActivo(langs, lang);
@@ -1893,8 +1900,25 @@
             const agregar = (i) => { if (!comprobado) setSecuencia(s => [...s, i]); };
             const quitar = (pos) => { if (!comprobado) setSecuencia(s => s.filter((_, k) => k !== pos)); };
             const completo = secuencia.length === pasosAct.length;
+            const gruposCrudos = libres ? porLenguaje(libres, langActivo) : [];
+            const grupos = Array.isArray(gruposCrudos) ? gruposCrudos : [];
+            useEffect(() => {
+                const usados = new Set();
+                grupos.forEach(g => {
+                    const mal = !Array.isArray(g) || g.length < 2 || g.some(k => !Number.isInteger(k) || k < 0 || k >= pasosAct.length || usados.has(k));
+                    if (mal) console.error(`[OrdenaPasos] \`libres\` (${langActivo}): el grupo ${JSON.stringify(g)} no vale. Cada grupo lleva dos o más posiciones entre 0 y ${pasosAct.length - 1}, y ninguna posición va en dos grupos.`);
+                    if (Array.isArray(g)) g.forEach(k => usados.add(k));
+                });
+            }, [langActivo]);
+            const grupoDe = (pos) => grupos.find(g => Array.isArray(g) && g.includes(pos));
             // Por texto, no por índice: dos pasos iguales intercambiados dan el mismo programa.
-            const posOk = (pos) => pasosAct[secuencia[pos]] === pasosAct[pos];
+            // Y un paso de un grupo libre vale en cualquier posición de su grupo.
+            const posOk = (pos) => {
+                const puesto = pasosAct[secuencia[pos]];
+                if (puesto === pasosAct[pos]) return true;
+                const g = grupoDe(pos);
+                return !!g && g.some(k => pasosAct[k] === puesto);
+            };
             const aciertos = secuencia.filter((_, pos) => posOk(pos)).length;
             const todoOk = completo && aciertos === pasosAct.length;
 
@@ -1962,13 +1986,19 @@
                                 </button>
                                 <span className={`text-sm font-bold ${todoOk ? 'text-green-600' : 'text-red-500'}`}>
                                     <i className={`fas ${todoOk ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1`}></i>
-                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en la posición correcta`}
+                                    {todoOk ? '¡Secuencia correcta!' : `${aciertos} de ${pasosAct.length} pasos en ${grupos.length ? 'una posición válida' : 'la posición correcta'}`}
                                 </span>
                             </>}
                     </div>
+                    {comprobado && grupos.length > 0 && (
+                        <p className="text-xs text-gray-600 mt-2" data-orden-libre="">
+                            <i className="fas fa-shuffle mr-1 text-secondary"></i>
+                            Este ejercicio admite más de un orden: los pasos que no dependen unos de otros pueden intercambiarse.
+                        </p>
+                    )}
                     {comprobado && !todoOk && (
                         <div className="mt-3 animate-fade-in">
-                            <Box type="tip" label="Orden correcto">
+                            <Box type="tip" label={grupos.length ? 'Un orden correcto' : 'Orden correcto'}>
                                 <ol className="text-sm" style={{ listStyle: 'decimal', paddingLeft: '1.4rem', margin: 0 }}>
                                     {pasosAct.map((p, i) => <li key={i} className="font-mono text-[0.85rem] whitespace-pre-wrap">{p}</li>)}
                                 </ol>
@@ -3121,6 +3151,15 @@ End Sub`,
                 'cuota = (capital + interes + seguro) / plazo', 'MsgBox cuota', 'End Sub'],
         };
 
+        // Lo que puede cambiar de lugar sin cambiar el algoritmo: la constante y
+        // las lecturas no dependen unas de otras, y el interés y el seguro tampoco.
+        const LIBRES_LIQUIDACION = {
+            pseudo: [[1, 2], [3, 4]],
+            python: [[0, 1, 2, 3], [4, 5]],
+            r: [[0, 1, 2, 3], [4, 5]],
+            vba: [[1, 2, 3, 4], [5, 6]],
+        };
+
         const Cap2Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-compass"
@@ -3240,8 +3279,9 @@ End Sub`,
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. Recuerde que el orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos."
+                    enunciado="Reconstruya el algoritmo que liquida la cuota, esta vez con el seguro incluido. El orden no es una convención: cada línea usa valores que alguna línea anterior tuvo que dejar listos. Donde dos líneas no dependen una de otra, cualquiera puede ir primero."
                     pasos={PASOS_LIQUIDACION}
+                    libres={LIBRES_LIQUIDACION}
                     pista="Empiece por lo que no depende de nada: la constante del negocio y los datos que se leen. El cálculo de la cuota necesita el interés y el seguro ya calculados."
                 />
             </div>
@@ -3306,7 +3346,7 @@ End Sub`,
             const trazo = activo ? '#ED1E79' : '#3D008D';
             const relleno = activo ? '#FDE7F1' : '#F5F0FA';
             const comun = { fill: relleno, stroke: trazo, strokeWidth: activo ? 3 : 2 };
-            return (
+            return ( // fuente-ok: las formas llevan su <Fuente> debajo del widget que las usa
                 <svg viewBox="0 0 120 56" className="w-full" style={{ maxWidth: 120 }} aria-hidden="true">
                     {/* Proporciones ancho:alto de la norma ANSI X3.5-1970: 1:2/3 para
                         entrada/salida, proceso y decisión (60 × 40); 1:3/8 para el
@@ -3538,6 +3578,7 @@ End Sub`,
 
                         <div className="lp-card p-4">
                             <p className="text-xs uppercase tracking-widest text-primary font-bold m-0 mb-2">3 · Diagrama de flujo</p>
+                            {/* fuente-ok: flujograma propio del caso inventado de la sección, que lleva su <Ilustrativo> debajo */}
                             <svg viewBox="0 0 320 425" className="w-full" style={{ maxWidth: 340, margin: '0 auto', display: 'block' }}
                                 role="img" aria-label="Diagrama de flujo del cálculo del interés simple: inicio, lectura de datos, cálculo del interés, cálculo del total, escritura de resultados y fin.">
                                 <title>Los seis pasos del algoritmo de interés simple, conectados de arriba abajo por líneas de flujo.</title>
