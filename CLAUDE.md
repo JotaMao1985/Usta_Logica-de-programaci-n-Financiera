@@ -34,10 +34,10 @@ ninguna sesión puede saltarse:
 3. **Una afirmación solo se atribuye a una fuente que se haya leído**: el pasaje, con
    página o sección, queda copiado en la nota de la afirmación en el vault antes de
    escribir `<Cita>`. Si no se pudo leer la fuente, no se cita.
-4. **Toda afirmación fáctica cae en una de cinco clases**: citada, ejecutada (regla 9),
+4. **Toda afirmación fáctica cae en una de seis clases**: citada, ejecutada (regla 9),
    derivada (la aritmética está a la vista), ilustrativa (inventada y declarada como
-   tal) o criterio del docente (redactada como opinión). Lo que no cabe en ninguna se
-   reescribe o se quita.
+   tal), criterio del docente (redactada como opinión) o remisión (a otro capítulo o al
+   syllabus, cotejada con su destino). Lo que no cabe en ninguna se reescribe o se quita.
 5. **No respaldan nada**: Wikipedia, blogs, W3Schools, salidas de IA ni la memoria del
    modelo. Sirven para encontrar la fuente, no para citarla.
 6. Si una cifra, una fecha o una norma no se puede verificar, se dice así y se deja

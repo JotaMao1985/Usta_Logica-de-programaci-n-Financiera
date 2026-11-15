@@ -3310,3 +3310,44 @@ y a 375 px.
 comprobadas quedan sin clase porque la política no tiene una para remisiones y
 menciones del syllabus. 2 a 7, cumplidos (las salidas de VBA, en Excel). 8,
 cumplido: sin hallazgos altos abiertos y los medios corregidos. 9, cumplido.
+
+### 2026-11-15 — Capítulo 2: fusión, publicación y las decisiones que quedaban
+
+La rama `claude/cap02-fase10` se fusionó en `main` (`04c8393`) con la aprobación
+del docente y se subió a GitHub el mismo día. Pages publicó: el capítulo 2
+publicado se descargó y es idéntico al de `main`.
+
+Después el docente decidió lo que estaba abierto. Rama `claude/cap02-decisiones`:
+
+- **La tasa del caso de la cuota: frase de advertencia.** El `<Ilustrativo>` del
+  caso dice ahora que no es una tasa de mercado: el 1,8 % mensual simple sobre el
+  capital inicial equivale a 3,10 % mensual sobre saldo, 44,20 % efectivo anual, y
+  a 3,28 % y 47,36 % con el seguro. Es una cifra derivada (tasa que iguala las 24
+  cuotas con el capital recibido), calculada y vuelta a comprobar. No se compara
+  con la tasa de usura, que no se leyó.
+- **Sexta clase de afirmación: remisión.** `POLITICA_DE_FUENTES.md` §1 y la regla
+  4 de `CLAUDE.md` la definen: dice qué trata otro capítulo o qué pide el
+  syllabus, no lleva `<Cita>` y se coteja con su destino. Las diez notas del
+  capítulo 2 que estaban sin clase se cotejaron de nuevo contra los capítulos 1,
+  3 y 5 y el syllabus, y quedaron clasificadas. Con eso el criterio 1 del plan
+  del capítulo 2 queda cumplido.
+- **Fecha de consulta de las dos referencias nuevas.** La norma ANSI y la Ley
+  1748 quedaron en 2026-11-14 en Zotero y en `referencias.json`. Al corregir la
+  segunda, un clic por coordenada cayó en el campo URL (la ventana se había
+  desplazado) y le antepuso la fecha; se restauró y se comprobó por la API que
+  URL, título y tipo son los originales.
+- **Borradores del banco Moodle del capítulo 2.** Las seis recomendaciones y la
+  realineación con la fase 10 están aplicadas en el vault y compilan. No se
+  copiaron al banco.
+
+**Huecos de las herramientas.**
+
+- Ninguna regla de `verificar.py` conoce la clase `remision`: que una remisión
+  siga siendo cierta cuando cambia el capítulo de destino depende de la fase de
+  coherencia, a mano. El registro público (`afirmaciones/NN.yaml`) solo lleva
+  citas, así que las remisiones no aparecen en él.
+- Zotero no deja corregir un campo sin la interfaz: la API local es de solo
+  lectura. Al importar, Zotero puso como fecha de consulta el instante de la
+  importación en UTC y no la del archivo RIS; hay que revisarla después de cada
+  tanda. Y al editar por la interfaz hay que apuntar al campo por su
+  elemento de accesibilidad, no por coordenada, y comprobar después por la API.
