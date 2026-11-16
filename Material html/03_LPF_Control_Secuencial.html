@@ -3772,8 +3772,8 @@ cat(sprintf("Total: %.0f\\n", total))
 #> Total: 22160000`,
             vba: `Sub LiquidarCredito()
     ' Liquidación de un crédito de libre inversión
-    Dim capital As Double, tasa As Double, plazo As Integer
-    Dim interes As Double, total As Double
+    Dim capital As Currency, tasa As Double, plazo As Integer
+    Dim interes As Currency, total As Currency
 
     capital = 20000000
     tasa = 0.018              ' mensual
@@ -3800,15 +3800,15 @@ End Sub`,
         // y el pseudocódigo abre con `Inicio`—; los valores no cambian.
         const TZ_LIQUIDACION_PASOS = [
             { linea: { pseudo: 3, python: 2, r: 2, vba: 6 }, estado: { capital: '20000000' },
-                nota: 'Entra el capital desembolsado. Las otras dos variables todavía no existen para la máquina.' },
+                nota: 'Entra el capital desembolsado. A las otras variables ninguna instrucción les ha dado valor todavía.' },
             { linea: { pseudo: 4, python: 3, r: 3, vba: 7 }, estado: { tasa: '0.018' },
                 nota: 'La tasa se guarda ya en forma decimal: 0.018 es el 1,8 % mensual. Si aquí entrara 1.8, todo lo que venga después estará cien veces mal y nada avisará.' },
             { linea: { pseudo: 5, python: 4, r: 4, vba: 8 }, estado: { plazo: '6' },
-                nota: 'El plazo en meses, la misma unidad en la que está expresada la tasa. Mezclar meses con una tasa anual es el error más común de esta sección.' },
+                nota: 'El plazo en meses, la misma unidad en la que está expresada la tasa. Mezclar meses con una tasa anual es un error fácil de cometer y difícil de ver.' },
             { linea: { pseudo: 7, python: 6, r: 6, vba: 10 }, estado: { interes: '2160000' },
-                nota: 'Esta línea solo puede ejecutarse ahora: necesita las tres variables anteriores. Ese es el sentido del orden en una secuencia.' },
+                nota: 'Con los valores sustituidos: 20000000 * 0.018 * 6 = 2160000. La línea necesita las tres variables anteriores: ese es el sentido del orden en una secuencia.' },
             { linea: { pseudo: 8, python: 7, r: 7, vba: 11 }, estado: { total: '22160000' },
-                nota: 'El total se calcula sobre el interés recién obtenido. Si estas dos líneas estuvieran al revés, el total sumaría un interés que aún no existe.' },
+                nota: 'El total se calcula con el interés recién obtenido. Con estas dos líneas al revés, el total se calcularía antes de que el interés tuviera su valor.' },
             { linea: { pseudo: 10, python: 9, r: 9, vba: 13 }, estado: {}, salida: TZ_SAL_INTERES,
                 nota: 'Escribir no cambia ninguna variable: solo muestra. La columna de estado queda igual y aparece la primera línea de salida.' },
             { linea: { pseudo: 12, python: 11, r: 11, vba: 15 }, estado: {}, salida: TZ_SAL_TOTAL,
@@ -3948,20 +3948,22 @@ End Sub`,
             { linea: { pseudo: 5, python: 4, r: 4, vba: 8 }, estado: { abono: '3000000' },
                 nota: 'El abono extraordinario que el cliente anuncia para el día del vencimiento. Todavía no se ha aplicado a nada.' },
             { linea: { pseudo: 7, python: 6, r: 6, vba: 10 }, estado: { interes: '264000' },
-                nota: 'Aquí está el punto de la sección: el interés se calcula con saldo valiendo 12 000 000, que es el estado que corresponde al mes que se está liquidando.' },
+                nota: 'Aquí está el punto de la sección: 12000000 * 0.022 = 264000. El interés se calcula con saldo valiendo 12 000 000, que es el estado que corresponde al mes que se está liquidando.' },
             { linea: { pseudo: 8, python: 7, r: 7, vba: 11 }, estado: { saldo: '9000000' },
                 nota: 'Ahora sí se aplica el abono. La variable saldo pasa a 9 000 000, y el interés ya está calculado y guardado: nada de lo que pase después lo cambia.' },
             { linea: { pseudo: 10, python: 9, r: 9, vba: 13 }, estado: {}, salida: TZ_SAL_INT_CAUSADO,
                 nota: 'Se informa el interés del mes.' },
             { linea: { pseudo: 12, python: 11, r: 11, vba: 15 }, estado: {}, salida: TZ_SAL_NUEVO_SALDO,
-                nota: 'Y el saldo con el que la obligación entra al mes siguiente. Invierta mentalmente los pasos 4 y 5 y vuelva a leer la tabla: el interés saldría 198 000 y ninguna de las dos cifras se vería rara.' },
+                nota: 'Y el saldo con el que la obligación entra al mes siguiente. Invierta mentalmente los pasos 4 y 5 y vuelva a leer la tabla: ninguna de las dos cifras se vería rara. Cuánto cambia el interés es el ejercicio de más abajo.' },
         ];
 
         /* --- Expresiones intermedias: la misma cuenta en una línea y en cuatro.
            No declara salida a propósito: los valores son los que el E1 de más
            abajo pide trazar. */
         const EJ_INTERMEDIAS = {
-            pseudo: `// Version A - todo en una linea
+            pseudo: `subtotal <- 24000000
+
+// Version A - todo en una linea
 total <- (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
 
 // Version B - con la base gravable como variable intermedia
@@ -3969,7 +3971,9 @@ base      <- subtotal - 1200000
 iva       <- base * 0.19
 retencion <- base * 0.025
 total     <- base + iva - retencion`,
-            python: `# Version A - todo en una linea
+            python: `subtotal = 24_000_000
+
+# Version A - todo en una linea
 total = (subtotal - 1_200_000) * 1.19 - (subtotal - 1_200_000) * 0.025
 
 # Version B - con la base gravable como variable intermedia
@@ -3977,7 +3981,9 @@ base      = subtotal - 1_200_000
 iva       = base * 0.19
 retencion = base * 0.025
 total     = base + iva - retencion`,
-            r: `# Version A - todo en una linea
+            r: `subtotal <- 24000000
+
+# Version A - todo en una linea
 total <- (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
 
 # Version B - con la base gravable como variable intermedia
@@ -3985,14 +3991,20 @@ base      <- subtotal - 1200000
 iva       <- base * 0.19
 retencion <- base * 0.025
 total     <- base + iva - retencion`,
-            vba: `' Version A - todo en una linea
-total = (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
+            vba: `Sub LiquidarFacturaConRetencion()
+    Dim subtotal As Currency, base As Currency, iva As Currency
+    Dim retencion As Currency, total As Currency
+    subtotal = 24000000
 
-' Version B - con la base gravable como variable intermedia
-base = subtotal - 1200000
-iva = base * 0.19
-retencion = base * 0.025
-total = base + iva - retencion`,
+    ' Version A - todo en una linea
+    total = (subtotal - 1200000) * 1.19 - (subtotal - 1200000) * 0.025
+
+    ' Version B - con la base gravable como variable intermedia
+    base = subtotal - 1200000
+    iva = base * 0.19
+    retencion = base * 0.025
+    total = base + iva - retencion
+End Sub`,
         };
 
         /* --- E1 · traza corta: causación de intereses de mora --- */
@@ -4049,17 +4061,17 @@ total = base + iva - retencion`,
 11  print("Retencion:", retencion)
 12  print("Total a pagar:", total)`,
             r: `1   subtotal  <- 24000000
-2   cat("Subtotal:", subtotal)
+2   cat(sprintf("Subtotal: %.0f\\n", subtotal))
 3   base      <- subtotal - 1200000
 4   iva       <- base * 0.19
 5   retencion <- base * 0.025
 6   total     <- base
 7   total     <- total + iva
 8   total     <- total - retencion
-9   cat("Base gravable:", base)
-10  cat("IVA:", iva)
-11  cat("Retencion:", retencion)
-12  cat("Total a pagar:", total)`,
+9   cat(sprintf("Base gravable: %.0f\\n", base))
+10  cat(sprintf("IVA: %.0f\\n", iva))
+11  cat(sprintf("Retencion: %.0f\\n", retencion))
+12  cat(sprintf("Total a pagar: %.0f\\n", total))`,
             vba: `1   subtotal = 24000000
 2   Debug.Print "Subtotal: " & subtotal
 3   base = subtotal - 1200000
@@ -4140,7 +4152,7 @@ total = base + iva - retencion`,
             pseudo: ['Inicio',
                 'Leer capital, tasaMensual, meses',
                 'interesBruto <- capital * tasaMensual * meses',
-                'retencion    <- interesBruto * 0.07',
+                'retencion    <- interesBruto * 0.04',
                 'interesNeto  <- interesBruto - retencion',
                 'Escribir "Interes neto: ", interesNeto',
                 'Fin'],
@@ -4148,20 +4160,20 @@ total = base + iva - retencion`,
                 'tasa_mensual  = float(input("Tasa mensual: "))',
                 'meses         = int(input("Meses: "))',
                 'interes_bruto = capital * tasa_mensual * meses',
-                'retencion     = interes_bruto * 0.07',
+                'retencion     = interes_bruto * 0.04',
                 'interes_neto  = interes_bruto - retencion',
                 'print(f"Interes neto: {interes_neto:,.0f}")'],
             r: ['capital       <- as.numeric(readline("Capital: "))',
                 'tasa_mensual  <- as.numeric(readline("Tasa mensual: "))',
                 'meses         <- as.numeric(readline("Meses: "))',
                 'interes_bruto <- capital * tasa_mensual * meses',
-                'retencion     <- interes_bruto * 0.07',
+                'retencion     <- interes_bruto * 0.04',
                 'interes_neto  <- interes_bruto - retencion',
                 'cat(sprintf("Interes neto: %.0f", interes_neto))'],
             vba: ['Sub LiquidarCDT()',
                 'Dim interesBruto As Currency, retencion As Currency, interesNeto As Currency',
                 'interesBruto = Range("B2").Value * Range("B3").Value * Range("B4").Value',
-                'retencion = interesBruto * 0.07',
+                'retencion = interesBruto * 0.04',
                 'interesNeto = interesBruto - retencion',
                 'MsgBox interesNeto',
                 'End Sub'],
@@ -4171,11 +4183,11 @@ total = base + iva - retencion`,
             <div className="prose-lp">
                 <Motivacion icon="fa-magnifying-glass-chart"
                     gancho="Trazar es ejecutar el programa con la cabeza y dejar constancia. ¿Qué columnas lleva esa tabla y cuándo se escribe una fila?">
-                    El fallo de la nómina del que habla la portada tardó dos días en aparecer y once
-                    minutos en encontrarse. Nadie usó un depurador: una analista se sentó con una hoja,
-                    dibujó una tabla de cuatro columnas y ejecutó el programa a mano, instrucción por
-                    instrucción, anotando cuánto valía cada variable. En la fila siete, el salario base
-                    ya venía deducido.
+                    Vuelva al fallo de la nómina de la portada, y suponga que tardó un fin de semana en
+                    aparecer y unos minutos en encontrarse. Quien lo encontró no necesitó ningún programa:
+                    se sentó con una hoja, dibujó una tabla con una columna por variable y ejecutó la
+                    rutina a mano, instrucción por instrucción, anotando cuánto valía cada variable. En
+                    una de las filas, el salario ya no era el salario base.
                 </Motivacion>
 
                 <h3>Qué es una prueba de escritorio</h3>
@@ -4183,15 +4195,16 @@ total = base + iva - retencion`,
                     Una <Termino def="Ejecución manual de un algoritmo, instrucción por instrucción, registrando en una tabla el valor de cada variable después de cada paso.">prueba
                     de escritorio</Termino> —o <em>traza</em>— es ejecutar el programa con la cabeza y
                     escribir lo que va pasando. No es una técnica de principiantes que después se
-                    reemplace por el depurador: es la única herramienta que sirve cuando el programa
-                    <strong> no falla</strong>. Un depurador ayuda a encontrar dónde revienta algo; aquí no
-                    revienta nada, y la pregunta es otra —en qué instrucción la cifra dejó de significar
-                    lo que debía—.
+                    abandone: es el método de este capítulo, y no necesita nada más que el algoritmo, que
+                    ni siquiera tiene que estar escrito en un lenguaje. Sirve sobre todo cuando el
+                    programa <strong>no falla</strong>: no revienta nada, y la pregunta es otra —en qué
+                    instrucción la cifra dejó de significar lo que debía—.
                 </p>
                 <p>
-                    También es lo que el syllabus llama <em>Formato Definición y Análisis</em>, y lo que
-                    el capítulo 2 planteó como Entrada–Proceso–Salida: la traza es ese análisis hecho
-                    valor por valor en lugar de en bloque.
+                    El syllabus pide para este tema un <em>Formato Definición y Análisis</em>. Este
+                    material lo trabaja con dos piezas: el análisis de entrada, proceso y salida del
+                    capítulo 2, que define el problema, y la traza, que analiza la solución valor por
+                    valor.
                 </p>
 
                 <h3>Las cuatro reglas de la tabla</h3>
@@ -4203,7 +4216,7 @@ total = base + iva - retencion`,
                         <tbody>
                             <tr>
                                 <td><strong>Una columna por variable</strong></td>
-                                <td>Más la columna de la instrucción y, si el algoritmo imprime, una de salida. Las columnas se fijan <em>antes</em> de empezar, leyendo el código.</td>
+                                <td>Más la columna de la instrucción; lo que el algoritmo imprime se anota aparte. Las columnas se fijan <em>antes</em> de empezar, leyendo el código.</td>
                             </tr>
                             <tr>
                                 <td><strong>Una fila por instrucción ejecutada</strong></td>
@@ -4215,11 +4228,12 @@ total = base + iva - retencion`,
                             </tr>
                             <tr>
                                 <td><strong>Antes de la primera fila no hay nada</strong></td>
-                                <td>Se escribe <span className="inline-code">—</span>, no <span className="inline-code">0</span>. Cero es un valor y «sin valor» no lo es; confundirlos es exactamente el error que la traza busca.</td>
+                                <td>Se escribe <span className="inline-code">—</span>, no <span className="inline-code">0</span>. Cero es un valor y «sin valor» no lo es. La raya es una convención del método: dice que ninguna instrucción le ha dado valor todavía a esa variable. Lo que haría cada lenguaje si se la leyera en ese momento es distinto, y el capítulo 2 lo mostró.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso</Fuente>
 
                 <Box type="tip" label="Qué se anota cuando la instrucción es una expresión">
                     No el resultado a secas: primero la expresión <strong>con los valores sustituidos</strong>,
@@ -4236,6 +4250,13 @@ total = base + iva - retencion`,
                     cambiar de lenguaje a mitad de la traza: los números de línea cambian y
                     <strong> los valores no</strong>.
                 </p>
+                <Ilustrativo>
+                    Los créditos, la cuenta de recaudo, las facturas, la mora y el CDT de esta sección,
+                    con sus cifras, sus tasas y sus reglas de liquidación, se inventaron para practicar la
+                    traza. El interés se liquida como interés simple y la mora con meses de 30 días
+                    porque así cada cuenta cabe en una línea. No describen cómo liquida ningún producto
+                    real ni son tasas de mercado.
+                </Ilustrativo>
 
                 <Trazador
                     titulo="Traza guiada 1 · liquidación de un crédito"
@@ -4276,27 +4297,29 @@ total = base + iva - retencion`,
                     codigo={TZ_CONCILIACION}
                     variables={[{ clave: 'saldo', titulo: 'saldo' }]}
                     pasos={TZ_CONCILIACION_PASOS}
-                    nota="El patrón se llama acumulador: una variable que se lee a sí misma para actualizarse. Aparece en todo cierre, todo saldo y toda suma corrida." />
+                    nota="El patrón se llama acumulador: una variable que se lee a sí misma para actualizarse. Aparece cada vez que hay que llevar un saldo o una suma corrida." />
 
                 <h3>Cuando el orden lo impone el negocio</h3>
                 <p>
-                    Las dos secciones anteriores mostraron órdenes obligados por el <em>código</em>: no se
-                    puede usar una variable antes de darle valor. Hay un segundo tipo de orden, más
-                    difícil de ver, que no lo impone el lenguaje sino el <strong>contrato</strong>. El
-                    lenguaje acepta las dos versiones; solo una responde a la pregunta que se hizo.
+                    La sección 1 mostró dos razones para un orden: que una instrucción necesite un valor
+                    que otra produce, y que una regla del negocio —allí, la base del impuesto— diga qué
+                    va primero. Esta sección vuelve sobre la segunda, que es la más difícil de ver
+                    porque no la impone el lenguaje sino el <strong>contrato</strong>. El lenguaje acepta
+                    las dos versiones; solo una responde a la pregunta que se hizo.
                 </p>
                 <Box type="info" label="La regla del caso">
-                    Un cliente con un saldo de 12 000 000 al 2,2 % mensual anuncia un abono extraordinario
-                    de 3 000 000 <strong>para el día del vencimiento</strong>. El interés del mes se causa
-                    sobre el saldo que estuvo vigente <em>durante</em> el mes —los 12 000 000—, y el abono se
-                    aplica después, porque llega al final. Ese «después» es una cláusula, no una
+                    Suponga un cliente con un saldo de 12 000 000 al 2,2 % mensual que anuncia un abono
+                    extraordinario de 3 000 000 <strong>para el día del vencimiento</strong>, y un contrato
+                    según el cual el interés del mes se causa sobre el saldo que estuvo vigente
+                    <em> durante</em> el mes —los 12 000 000— y el abono se aplica después, porque llega al
+                    final. Ese «después» es una cláusula, no una
                     instrucción: hay que traducirlo a un orden.
                 </Box>
 
                 <Trazador
                     titulo="Traza guiada 3 · causación del mes y abono extraordinario"
-                    enunciado={<>Dos instrucciones que se pueden escribir en cualquier orden sin que ningún
-                        lenguaje objete, y que dan cifras distintas. Mire el estado de <span className="inline-code">saldo</span> en
+                    enunciado={<>Dos instrucciones que se pueden escribir en los dos órdenes sin que el
+                        programa proteste, y que dan cifras distintas. Mire el estado de <span className="inline-code">saldo</span> en
                         el paso 4: es el valor con el que se calcula el interés, y es el que decide si la
                         liquidación es correcta.</>}
                     codigo={TZ_ABONO}
@@ -4307,13 +4330,25 @@ total = base + iva - retencion`,
                         { clave: 'interes', titulo: 'interes' },
                     ]}
                     pasos={TZ_ABONO_PASOS}
-                    nota="El gancho del capítulo cabe en esta tabla: las dos versiones corren, ninguna avisa, y la diferencia son 66 000 pesos por obligación." />
+                    nota="Esta es la versión correcta. La otra también corre y tampoco avisa: es el ejercicio de más abajo." />
 
                 <h3>Las expresiones intermedias</h3>
                 <p>
                     Una cuenta larga se puede escribir en una línea o repartida en varias. Las dos calculan
-                    lo mismo y ninguna es más rápida que la otra de forma apreciable; la diferencia está en
-                    lo que ocurre cuando el resultado sale mal.
+                    lo mismo; la diferencia está en lo que ocurre cuando el resultado sale mal.
+                </p>
+                <p>
+                    La cuenta de ejemplo es una factura con retención en la fuente. El proveedor concede
+                    en la misma factura un descuento por volumen y el IVA va sobre lo que queda, como en
+                    la sección 1. Se supone además que el comprador es agente retenedor, que el proveedor
+                    declara renta y es responsable del IVA que cobra, y que el pago cae en la regla de
+                    retención por otros ingresos: los pagos por
+                    conceptos que al 27 de junio de 1985 no estaban sometidos a retención en la fuente
+                    se someten a una del 2,5 % <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.9.1" />, y para calcular la
+                    base de esa retención se descuenta el valor de los impuestos incorporados en el
+                    pago, siempre que quien lo recibe sea responsable o recaudador de ellos
+                    <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.9.1, par. 1.º" />. Por eso en el ejemplo la retención
+                    se calcula sobre el valor antes de IVA y no sobre el total con IVA.
                 </p>
 
                 <CodeTabs
@@ -4333,7 +4368,7 @@ total = base + iva - retencion`,
 
                 <TablaTraza
                     titulo="Traza 1 · causación de intereses de mora"
-                    enunciado={<>Una obligación de 8 500 000 lleva 45 días vencida y causa mora al 2,5 % mensual.
+                    enunciado={<>Suponga una obligación de 8 500 000 que lleva 45 días vencida y causa mora al 2,5 % mensual.
                         Complete el estado de las cuatro variables después de cada instrucción. Escriba
                         <span className="inline-code"> —</span> donde la variable todavía no tenga valor, y recuerde que la
                         última fila no cambia nada: escribir no modifica variables.</>}
@@ -4347,6 +4382,7 @@ total = base + iva - retencion`,
                         { clave: 'totalACobrar', titulo: 'totalACobrar' },
                     ]}
                     ocultas={['saldoVencido', 'diasMora', 'interesMora', 'totalACobrar']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('saldoVencido <- 8500000', 'saldo_vencido = 8500000', 'saldo_vencido <- 8500000', 'saldoVencido = 8500000'), saldoVencido: '8500000', diasMora: '—', interesMora: '—', totalACobrar: '—' },
                         { paso: 2, instruccion: ins('diasMora <- 45', 'dias_mora = 45', 'dias_mora <- 45', 'diasMora = 45'), saldoVencido: '8500000', diasMora: '45', interesMora: '—', totalACobrar: '—' },
@@ -4361,7 +4397,8 @@ total = base + iva - retencion`,
                     titulo="Traza 2 · factura con IVA y retención en la fuente"
                     enunciado={<>La versión B del bloque anterior, con el subtotal ya puesto y el total construido
                         en tres pasos. Complete las columnas <span className="inline-code">retencion</span> y
-                        <span className="inline-code"> total</span> a lo largo de las doce instrucciones. Es la traza más
+                        <span className="inline-code"> total</span> a lo largo de las doce instrucciones, con <span className="inline-code">—</span> donde
+                        la variable todavía no tenga valor. Es la traza más
                         larga del capítulo, y su dificultad no está en las cuentas: está en sostener el
                         estado sin perderlo.</>}
                     codigo={TRAZA_FACTURA}
@@ -4375,34 +4412,35 @@ total = base + iva - retencion`,
                         { clave: 'total', titulo: 'total' },
                     ]}
                     ocultas={['retencion', 'total']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('subtotal <- 24000000', 'subtotal = 24000000', 'subtotal <- 24000000', 'subtotal = 24000000'), subtotal: '24000000', base: '—', iva: '—', retencion: '—', total: '—' },
-                        { paso: 2, instruccion: ins('Escribir "Subtotal: ", subtotal', 'print("Subtotal:", subtotal)', 'cat("Subtotal:", subtotal)', 'Debug.Print "Subtotal: " & subtotal'), subtotal: '24000000', base: '—', iva: '—', retencion: '—', total: '—' },
+                        { paso: 2, instruccion: ins('Escribir "Subtotal: ", subtotal', 'print("Subtotal:", subtotal)', 'cat(sprintf("Subtotal: %.0f\\n", subtotal))', 'Debug.Print "Subtotal: " & subtotal'), subtotal: '24000000', base: '—', iva: '—', retencion: '—', total: '—' },
                         { paso: 3, instruccion: ins('base <- subtotal - 1200000', 'base = subtotal - 1200000', 'base <- subtotal - 1200000', 'base = subtotal - 1200000'), subtotal: '24000000', base: '22800000', iva: '—', retencion: '—', total: '—' },
                         { paso: 4, instruccion: ins('iva <- base * 0.19', 'iva = base * 0.19', 'iva <- base * 0.19', 'iva = base * 0.19'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '—', total: '—' },
                         { paso: 5, instruccion: ins('retencion <- base * 0.025', 'retencion = base * 0.025', 'retencion <- base * 0.025', 'retencion = base * 0.025'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '—' },
                         { paso: 6, instruccion: ins('total <- base', 'total = base', 'total <- base', 'total = base'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '22800000' },
                         { paso: 7, instruccion: ins('total <- total + iva', 'total = total + iva', 'total <- total + iva', 'total = total + iva'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '27132000' },
                         { paso: 8, instruccion: ins('total <- total - retencion', 'total = total - retencion', 'total <- total - retencion', 'total = total - retencion'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
-                        { paso: 9, instruccion: ins('Escribir "Base gravable: ", base', 'print("Base gravable:", base)', 'cat("Base gravable:", base)', 'Debug.Print "Base gravable: " & base'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
-                        { paso: 10, instruccion: ins('Escribir "IVA: ", iva', 'print("IVA:", iva)', 'cat("IVA:", iva)', 'Debug.Print "IVA: " & iva'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
-                        { paso: 11, instruccion: ins('Escribir "Retencion: ", retencion', 'print("Retencion:", retencion)', 'cat("Retencion:", retencion)', 'Debug.Print "Retencion: " & retencion'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
-                        { paso: 12, instruccion: ins('Escribir "Total a pagar: ", total', 'print("Total a pagar:", total)', 'cat("Total a pagar:", total)', 'Debug.Print "Total a pagar: " & total'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 9, instruccion: ins('Escribir "Base gravable: ", base', 'print("Base gravable:", base)', 'cat(sprintf("Base gravable: %.0f\\n", base))', 'Debug.Print "Base gravable: " & base'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 10, instruccion: ins('Escribir "IVA: ", iva', 'print("IVA:", iva)', 'cat(sprintf("IVA: %.0f\\n", iva))', 'Debug.Print "IVA: " & iva'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 11, instruccion: ins('Escribir "Retencion: ", retencion', 'print("Retencion:", retencion)', 'cat(sprintf("Retencion: %.0f\\n", retencion))', 'Debug.Print "Retencion: " & retencion'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
+                        { paso: 12, instruccion: ins('Escribir "Total a pagar: ", total', 'print("Total a pagar:", total)', 'cat(sprintf("Total a pagar: %.0f\\n", total))', 'Debug.Print "Total a pagar: " & total'), subtotal: '24000000', base: '22800000', iva: '4332000', retencion: '570000', total: '26562000' },
                     ]}
-                    pista="El descuento por volumen es un literal, no una variable: la base son 24 000 000 menos 1 200 000. Y la retención se calcula sobre la base gravable, nunca sobre el total con IVA."
+                    pista="El descuento por volumen es un literal, no una variable: la base son 24 000 000 menos 1 200 000. Y la retención se calcula sobre el valor antes de IVA, no sobre el total."
                 />
 
                 <DetectaError
                     enunciado={<>Esta es la liquidación del abono extraordinario con las dos instrucciones del
                         cálculo <strong>en el otro orden</strong>. No hay error de sintaxis: corre, imprime dos
-                        cifras y no advierte nada. <strong>Señale la instrucción que deja el dato en un estado
-                        que ya no corresponde al mes que se está liquidando.</strong></>}
+                        cifras y no advierte nada. <strong>Señale la instrucción que cambia un dato antes de que
+                        el cálculo del mes lo haya usado.</strong></>}
                     lineas={ERROR_ABONO_LINEAS}
                     lineaCorrecta={ERROR_ABONO_LINEA_OK}
                     tipos={[
                         'Error de sintaxis: falta una palabra clave o un delimitador en el cálculo.',
                         'Error de unidades: se aplica una tasa anual sobre un plazo expresado en meses.',
-                        'Estado ya cambiado: el cálculo usa un dato que una instrucción anterior modificó.',
+                        'Sobrescritura antes de lectura: se asigna sobre una variable cuyo valor todavía hace falta.',
                         'Error de tipo: se asigna un valor decimal a una variable declarada como entera.',
                     ]}
                     tipoCorrecto={2}
@@ -4416,18 +4454,19 @@ total = base + iva - retencion`,
                     explicacion={ERROR_ABONO_EXPLICACION}
                     impacto={<>El interés del mes se causa sobre 9 000 000 en vez de sobre 12 000 000:
                         <strong> 198 000 en lugar de 264 000</strong>. Son 66 000 pesos que la entidad deja de
-                        causar en cada obligación con abono extraordinario; en una cartera con 1 200 abonos
-                        al mes, 79 200 000 que no aparecen en el ingreso por intereses y que ningún registro
-                        de errores reporta, porque no hubo ningún error. Es primo hermano de la
-                        sobrescritura de la sección 2, con una diferencia: allá el valor perdido no volvía;
-                        aquí sigue estando, solo que la instrucción que lo necesitaba llegó tarde.</>}
+                        causar en cada obligación con abono extraordinario; en una cartera que tuviera 1 200
+                        abonos así al mes serían 79 200 000 que no aparecerían en el ingreso por intereses ni
+                        en ningún registro de errores, porque no hubo ningún error. Es el mismo error de la
+                        sección 2 —una asignación que llega antes de que otra instrucción lea el valor—, con
+                        una diferencia: allá el valor perdido no se podía reconstruir; aquí sí, porque el
+                        abono sigue guardado, pero el programa no lo hace.</>}
                 />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida un CDT al vencimiento: sobre el interés bruto se practica una retención en la fuente del 7 % y se informa el interés neto que recibe el ahorrador. Las lecturas van antes de los cálculos; donde cada dato se lee en su propia línea, entre esas lecturas vale cualquier orden."
+                    enunciado={<>Reconstruya el algoritmo que liquida un CDT al vencimiento: sobre el interés bruto se practica la retención en la fuente y se informa el interés neto que recibe el ahorrador. El ejercicio supone que el CDT es uno de los títulos con intereses a cuyos rendimientos se les practica retención y que la base es todo el interés, y le aplica la tarifa que el decreto fija para esos rendimientos, el 4 % <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.2.83" />. Donde cada dato se lee en su propia línea, esas lecturas van antes de los cálculos y entre ellas vale cualquier orden; en VBA los datos se toman de la hoja dentro del mismo cálculo.</>}
                     pasos={ORDENA_CDT}
                     libres={LIBRES_LECTURAS}
-                    pista="Tres cálculos encadenados: cada uno necesita el resultado del anterior. Pregúntese, para cada línea, qué variables tienen que existir ya para que esa línea pueda ejecutarse."
+                    pista="Tres cálculos encadenados: cada uno necesita el resultado del anterior. Pregúntese, para cada línea, qué variables tienen que tener ya su valor para que esa línea dé la cifra correcta."
                 />
             </div>
         );
@@ -5224,12 +5263,12 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         // múltiple)» la pinta el componente a partir de este campo.
                         multiple: true,
                         opciones: [
-                            { texto: 'Antes de ejecutar la primera instrucción, las variables valen cero.', correcta: false },
+                            { texto: 'En la tabla, una variable a la que ninguna instrucción le ha dado valor se anota con 0.', correcta: false },
                             { texto: 'Solo tiene sentido en algoritmos de menos de diez líneas.', correcta: false },
-                            { texto: 'Es la herramienta que sirve cuando el programa no falla, que es cuando un depurador no tiene dónde detenerse.', correcta: true },
+                            { texto: 'Sirve para encontrar en qué instrucción una cifra dejó de significar lo que debía, aunque el programa no falle.', correcta: true },
                             { texto: 'La tabla conserva valores que la variable ya no guarda.', correcta: true },
                         ],
-                        justificacion: 'Las dos ciertas son las dos razones de ser del método. Que las variables «valgan cero» antes de empezar es justamente el error que previene la cuarta regla de la tabla: cero es un valor y «sin valor» no lo es, y confundirlos es el fallo que la traza busca. Y limitar el método a los algoritmos cortos invierte el argumento: cuanto más largo es, más difícil resulta sostener el estado de memoria y más falta hace la tabla.',
+                        justificacion: 'Las dos ciertas son las dos razones de ser del método. Anotar 0 donde todavía no hay valor es lo que evita la cuarta regla de la tabla: cero es un valor y «sin valor» no lo es. La raya es una convención del método, no una descripción de la máquina. Y limitar el método a los algoritmos cortos invierte el argumento: cuanto más largo es, más difícil resulta sostener el estado de memoria y más falta hace la tabla.',
                     },
                     {
                         seccion: 'cap5',
@@ -5515,13 +5554,20 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "68ba6c27a20378b185abb365cde09ced937decd01ef8a0c0033bdb5370d235aa",
-  "sello": "8a4a64c43bd2cf3dcd5bc3a4ab3f8b20da4592c923186f4f23ba8f508e96aa3f",
+  "huella": "da6e238849fc92d8245d9245803d17f09f09cc48ab84c7dd71188fc7a364e533",
+  "sello": "f8868d325beb04fc4a28906fc5b3060519dbf12d938da5eb61534cf3f1fa8042",
   "orden": [
+    "minhacienda2016decreto1625",
     "presidencia1989decreto624",
     "psf2026expresiones"
   ],
   "entradas": {
+    "minhacienda2016decreto1625": {
+      "autor": "Ministerio de Hacienda y Crédito Público",
+      "anio": "2016",
+      "html": "Ministerio de Hacienda y Crédito Público. (2016). \u003cem>Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria\u003c/em>. Diario Oficial 50.023. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\u003c/a>",
+      "plano": "Ministerio de Hacienda y Crédito Público. (2016). Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria. Diario Oficial 50.023. https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm"
+    },
     "presidencia1989decreto624": {
       "autor": "Presidencia de la República de Colombia",
       "anio": "1989",

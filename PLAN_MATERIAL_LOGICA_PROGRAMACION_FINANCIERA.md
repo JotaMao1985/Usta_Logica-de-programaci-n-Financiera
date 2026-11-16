@@ -3794,3 +3794,44 @@ en R sigue imprimiendo en notación científica; nadie pregunta por esa salida.
 la raya y no lleva `exigeRespuesta`: esta se corrigió porque el lector la contó a mano.
 Quedan tres en el capítulo, para la fase 5.
 
+### 2026-11-16 — Capítulo 3, fase 5: sección 4, la prueba de escritorio
+
+Rama `claude/cap03-fase5`, sobre la fase 4. El docente decidió el CDT al 4 %, citado.
+
+- **El depurador (hallazgo alto H2).** Fuera «es la única herramienta que sirve cuando el
+  programa no falla», y corregida la opción del cuestionario que lo premiaba. Queda lo que
+  el capítulo sostiene: la traza es su método y no necesita más que el algoritmo.
+- La escena de la nómina es un supuesto y ya no contradice la traza de la sección 5
+  («cuatro columnas», «fila siete»). La raya de la tabla se dice como convención del
+  método. Las notas de los trazadores valen en los cuatro lenguajes y dos de ellas
+  escriben la expresión con los valores sustituidos, que la sección recomendaba y no hacía.
+- Un solo `<Ilustrativo>` declara inventados los casos de la sección y dice que el interés
+  simple y el mes de 30 días son simplificaciones.
+- Las dos trazas exigen respuesta. El ejercicio del abono tenía dos líneas defendibles:
+  ahora pide «la instrucción que cambia un dato antes de que el cálculo del mes lo haya
+  usado», y el error se llama igual que en la sección 2. Las notas previas ya no dan las
+  cifras que el ejercicio pregunta.
+- R imprime con formato en la traza de la factura; `EJ_INTERMEDIAS` define `subtotal` y
+  su VBA es un `Sub`; el VBA del crédito usa `Currency`.
+- **Tres citas del Decreto 1625 de 2016**: la retención del 2,5 %, su base sin impuestos y
+  el 4 % del CDT (antes 7 %, en cuatro líneas de código y en el enunciado).
+
+**Verificador independiente.** Tres rondas. El 2,5 % salió «parcial»: la frase lo daba
+por incondicional, y el artículo exige agente retenedor, fija 3,5 % para quien no declara
+renta y define el concepto por una fecha. La del CDT, «parcial» en la segunda ronda,
+porque «sobre todo el interés» no lo dice el artículo. Las dos quedaron con sus supuestos
+a la vista y «respalda».
+
+**Lo que no se hizo.** La decisión D pedía decir que un depurador hace lo mismo sobre la
+máquina: esa frase necesita fuente, y no se escribió. Quedó preparada, **sin importar**, la
+tanda 05 de Zotero con la documentación del depurador de Python. Los literales sin nombre
+de las trazas (0.19, 0.025, 1200000) siguen; VBA sin ejecutar; nada visto a ojo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320.
+
+**Hueco de las herramientas.** El verificador de citas trabaja sobre una oración, y aquí
+la conclusión iba en la oración siguiente, sin cita: hubo que pedirle expresamente que
+dijera si «se sigue». El encargo al verificador debería incluir siempre la oración que
+viene después de la cita.
+
