@@ -2884,8 +2884,8 @@
                         {flecha(46)}
 
                         <polygon points="44,66 390,66 376,114 30,114" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.5" />
-                        <text x="210" y="86" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Leer valorFactura, descuento</text>
-                        <text x="210" y="103" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">8000000 · 200000</text>
+                        <text x="210" y="86" textAnchor="middle" fontSize="13" fontFamily="ui-monospace, monospace" fill="#001A4D">Leer valorFactura, descuento, tasaIva</text>
+                        <text x="210" y="103" textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">8000000 · 200000 · 0.19</text>
                         {flecha(114)}
 
                         {proceso(134, 'base \u2190 valorFactura - descuento', 'base = 7800000')}
@@ -2918,7 +2918,7 @@
             pseudo: `Inicio
     // Liquidacion de una factura de proveedor
     valorFactura <- 8000000
-    descuento    <- 200000        // por pronto pago
+    descuento    <- 200000        // concedido en la factura
     tasaIva      <- 0.19
 
     base  <- valorFactura - descuento
@@ -2968,7 +2968,7 @@ cat(sprintf("Total: %.0f\\n", total))
     Dim tasaIva As Double, base As Currency, iva As Currency, total As Currency
 
     valorFactura = 8000000
-    descuento = 200000            ' por pronto pago
+    descuento = 200000            ' concedido en la factura
     tasaIva = 0.19
 
     base = valorFactura - descuento
@@ -3044,10 +3044,10 @@ End Sub`,
                 'base  <- valorFactura - descuento', 'iva   <- base * tasaIva',
                 'total <- base + iva', 'Escribir total', 'Fin'],
             python: ['valor_factura = float(input("Valor: "))', 'descuento = float(input("Descuento: "))',
-                'tasa_iva = float(input("IVA: "))', 'base  = valor_factura - descuento',
+                'tasa_iva = float(input("Tasa de IVA: "))', 'base  = valor_factura - descuento',
                 'iva   = base * tasa_iva', 'total = base + iva', 'print(total)'],
             r: ['valor_factura <- as.numeric(readline("Valor: "))', 'descuento <- as.numeric(readline("Descuento: "))',
-                'tasa_iva <- as.numeric(readline("IVA: "))', 'base  <- valor_factura - descuento',
+                'tasa_iva <- as.numeric(readline("Tasa de IVA: "))', 'base  <- valor_factura - descuento',
                 'iva   <- base * tasa_iva', 'total <- base + iva', 'cat(total)'],
             vba: ['Sub LiquidarFactura()', 'Dim base As Currency, iva As Currency, total As Currency',
                 'base = Range("B2").Value - Range("B3").Value', 'iva = base * Range("B4").Value',
@@ -3062,10 +3062,10 @@ End Sub`,
                     da error, pinta un hueco (riesgo R9 del plan maestro). */}
                 <Motivacion icon="fa-arrow-down-1-9"
                     gancho="Las mismas instrucciones en otro orden dan otra cifra. ¿Cuándo el orden es negociable y cuándo no?">
-                    Una factura de 8 000 000 con un descuento fijo de 200 000 por pronto pago y 19 % de
-                    IVA. Descontar antes del impuesto o después son las mismas dos líneas en distinto
-                    orden: 9 282 000 contra 9 320 000. Treinta y ocho mil pesos de diferencia por
-                    factura, en un proveedor que emite mil facturas al mes.
+                    Una factura de 8 000 000 con un descuento de 200 000 concedido en la misma factura y
+                    19 % de IVA. Descontar antes del impuesto o después son las mismas dos líneas en
+                    distinto orden, y no dan el mismo total. La diferencia cabe en una factura; piense en
+                    un proveedor que emitiera mil al mes.
                 </Motivacion>
 
                 <h3>Qué es una secuencia</h3>
@@ -3078,20 +3078,37 @@ End Sub`,
                     repetición en el 5.
                 </p>
                 <p>
-                    Que sea la más simple no la vuelve inofensiva. Es donde más dinero se pierde, porque
-                    un error de secuencia <strong>no produce ningún mensaje</strong>: el programa corre, la
-                    cifra sale, y lo único raro es que está mal.
+                    Que sea la más simple no la vuelve inofensiva. Un error de orden como los de este
+                    capítulo <strong>no produce ningún mensaje</strong>: el programa corre, la cifra sale,
+                    y lo único raro es que está mal.
                 </p>
 
                 <FlujogramaSecuencial />
 
                 <h3>El caso: liquidar una factura de proveedor</h3>
                 <p>
-                    Sobre el valor de la factura se aplica un descuento por pronto pago, y el IVA se
-                    calcula sobre lo que queda —la <strong>base gravable</strong>—, no sobre el valor
-                    original. Esa es una regla del negocio, no del lenguaje, y es la que fija el orden
-                    de las tres operaciones.
+                    El proveedor concede en la misma factura un descuento de 200 000, sin ninguna
+                    condición, y el IVA se calcula sobre lo que queda —la <strong>base
+                    gravable</strong>—, no sobre el valor original. Eso no lo decide el lenguaje, sino la
+                    norma tributaria: no forman parte de la base gravable los descuentos efectivos que
+                    constan en la factura, siempre que no estén sujetos a ninguna condición y sean
+                    normales según la costumbre comercial <Cita k="presidencia1989decreto624" loc="art. 454" />. La tarifa
+                    general del impuesto es del 19 % <Cita k="presidencia1989decreto624" loc="art. 468" />.
+                    Esa regla del negocio es la que fija el orden de las tres operaciones.
                 </p>
+                <p>
+                    Un descuento por pronto pago no cabe en esa regla tal como está escrita. Depende de
+                    una condición —que el cliente pague antes de cierta fecha—, y el artículo exige,
+                    entre otras cosas, que el descuento no esté sujeto a ninguna. Por eso el caso usa un
+                    descuento concedido sin condición: con uno por pronto pago, ese artículo ya no
+                    bastaría para sacarlo de la base.
+                </p>
+                <Ilustrativo>
+                    La factura, el proveedor y sus cifras se inventaron para este capítulo. La
+                    liquidación deja por fuera lo que una factura real puede traer —retenciones, bienes
+                    con otra tarifa o sin impuesto— porque aquí solo interesa el orden de tres
+                    operaciones.
+                </Ilustrativo>
 
                 <Eq>{String.raw`$$\text{base} = \text{valorFactura} - \text{descuento} \qquad \text{IVA} = \text{base} \times 0{,}19$$`}</Eq>
 
@@ -3108,20 +3125,28 @@ End Sub`,
                     lee lo que otra escribe. La regla es exactamente esa:
                 </p>
                 <Box type="info" label="Regla de dependencia">
-                    Dos instrucciones consecutivas <strong>se pueden intercambiar</strong> si ninguna de las
-                    dos usa una variable que la otra modifica. Si la segunda <em>lee</em> lo que la primera
-                    <em> escribe</em>, el orden es obligatorio y cambiarlo altera el resultado —sin avisar—.
+                    Dos instrucciones consecutivas <strong>se pueden intercambiar</strong> sin mirar más si
+                    ninguna de las dos usa una variable que la otra modifica. Si una <em>lee</em> lo que
+                    la otra <em>escribe</em>, el orden deja de ser libre: hay que comprobar qué pasa al
+                    cambiarlo, y lo habitual es que cambie el resultado.
                 </Box>
                 <p>
                     <span className="inline-code">iva ← base * tasaIva</span> lee <span className="inline-code">base</span>,
                     que la línea anterior acaba de escribir. Ahí el orden no se negocia. Y
                     <span className="inline-code"> total ← base + iva</span> lee las dos, así que tiene que ir de últimas.
                 </p>
+                <p>
+                    La regla dice cuándo el intercambio es seguro, no cuándo está prohibido. Dos líneas
+                    que restan cada una un valor de la misma variable se leen y se escriben entre sí, y
+                    aun así dan lo mismo en cualquier orden, porque restar primero una cosa o la otra no
+                    cambia la diferencia. La sección 4 trae un caso así.
+                </p>
 
                 <Box type="warn" label="El orden equivocado no es un error de programación">
-                    Es un error de <strong>modelo del negocio</strong>. El código de más abajo compila,
-                    corre y no advierte nada: simplemente responde a otra pregunta —cuánto sería el IVA
-                    si no hubiera descuento— y la presenta como si fuera la respuesta a la que se hizo.
+                    Es un error de <strong>modelo del negocio</strong>. El código de más abajo corre y no
+                    advierte nada: simplemente responde a otra pregunta —el IVA de una factura sin
+                    descuento, sumado a la base que sí lo tiene— y la presenta como si fuera la
+                    respuesta a la que se hizo.
                 </Box>
 
                 <CodeTabs
@@ -3142,10 +3167,10 @@ End Sub`,
                 /></Ejercicio>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya el algoritmo que liquida una factura de proveedor con descuento por pronto pago e IVA sobre la base gravable. Las lecturas van antes de los cálculos; donde cada dato se lee en su propia línea, esas lecturas no dependen una de otra y entre ellas vale cualquier orden."
+                    enunciado="Reconstruya el algoritmo que liquida una factura de proveedor con un descuento concedido en la misma factura e IVA sobre la base gravable. Donde cada dato se lee en su propia línea, esas lecturas van antes de los cálculos, no dependen una de otra y entre ellas vale cualquier orden; en VBA los datos se toman de la hoja dentro del mismo cálculo."
                     pasos={ORDENA_FACTURA}
                     libres={LIBRES_LECTURAS}
-                    pista="Ninguna variable puede leerse antes de que alguna instrucción le haya dado valor. Empiece por preguntarse qué necesita cada línea para poder ejecutarse."
+                    pista="Cada línea necesita que las variables que lee ya tengan su valor. Empiece por preguntarse qué necesita cada línea para dar la cifra correcta."
                 />
             </div>
         );
@@ -4963,7 +4988,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             ['Expresión intermedia', 'Paso de un cálculo largo al que se le da nombre y variable propia. No cambia el resultado: cambia que el cálculo se pueda auditar línea por línea contra el contrato.'],
             ['Prueba de escritorio', 'Ejecución manual de un algoritmo, instrucción por instrucción, registrando en una tabla el valor de cada variable después de cada paso. También se le llama traza.'],
             ['Fallo silencioso', 'Error que no interrumpe la ejecución ni produce ningún mensaje: el programa corre, entrega una cifra plausible y responde a una pregunta distinta de la que se le hizo.'],
-            ['Base gravable', 'Valor sobre el que se liquida un impuesto. En una factura con descuento por pronto pago es el valor de la factura menos el descuento, y esa resta fija el orden de las instrucciones.'],
+            ['Base gravable', 'Valor sobre el que se liquida un impuesto. En la factura de la sección 1 es el valor de la factura menos el descuento concedido en ella sin condición, y esa resta fija el orden de las instrucciones.'],
             ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje es siempre menor que el costo real de la operación.'],
             ['Tasa nominal', 'Tasa anual de referencia que no incorpora el interés sobre interés. Sin declarar cada cuánto capitaliza no significa nada: el mismo 24 % nominal da 24 %, 26,82 % o 27,11 % efectivo.'],
             ['Tasa periódica', 'Tasa que rige en cada período de capitalización. Se obtiene repartiendo la nominal entre el número de capitalizaciones del año: 24 % nominal con capitalización mensual son 2 % mensual.'],
@@ -5196,6 +5221,8 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     condiciones: un crédito aprobado que no debía aprobarse, con las condiciones «bien»
                     escritas y en el orden equivocado.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -5429,6 +5456,30 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "355e39c66798a076b7b3bbe1a5b4ecf350dd5edd393c78f3f9ebf9ffd2e02e92",
+  "sello": "c1cda970778c4f7708458dd559225a1fad9305a718e3c8a756f420a184747c04",
+  "orden": [
+    "presidencia1989decreto624"
+  ],
+  "entradas": {
+    "presidencia1989decreto624": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "1989",
+      "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

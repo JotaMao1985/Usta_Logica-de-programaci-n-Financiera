@@ -3694,3 +3694,45 @@ están sin cotejar.
 - El buscador no devolvió ninguna página oficial para tres de las cinco normas: hubo que
   ir a la dirección de la Secretaría del Senado y de la DIAN directamente.
 
+### 2026-11-16 — Capítulo 3, fase 2: sección 1, la secuencia
+
+El docente aprobó la fase 1 y la importación de la tanda 04. Rama `claude/cap03-fase2`.
+
+**Zotero.** Las cinco normas entraron por el conector local a «3 Fuentes primarias» de
+LPF (11 ítems en la colección, todas con clave). La colección seleccionada en Zotero era
+la del mismo nombre en Teoría del Riesgo: se vio en `getSelectedCollection` y se cambió
+antes de enviar. `referencias.json` exportado.
+
+**Sección 1.**
+
+- El caso de la factura ya no enseña la regla al revés: el descuento es «concedido en la
+  misma factura, sin ninguna condición», con las mismas cifras, y la regla se cita
+  (Estatuto Tributario, art. 454); la tarifa del 19 %, también (art. 468). Un párrafo
+  explica por qué un descuento por pronto pago no cabe en la regla. El caso lleva
+  `<Ilustrativo>`.
+- La regla de dependencia dice lo que es: una condición suficiente. Un párrafo nuevo
+  trae el caso de dos restas sobre la misma variable.
+- El flujograma lee `tasaIva`; fuera «compila» y «es donde más dinero se pierde»; la
+  Motivación ya no da la respuesta del primer ejercicio; `input` pide «Tasa de IVA»; la
+  pista del ejercicio de ordenar no afirma nada sobre los lenguajes.
+- Primeras dos citas del capítulo, `<Referencias />` al cierre y `afirmaciones/03.yaml`.
+
+**Verificador independiente.** La cita del artículo 454 salió «parcial» en la primera
+redacción (faltaba «efectivos», y sin esa palabra la frase cubría más descuentos que la
+norma); corregida y vuelta a someter, «respalda». El razonamiento sobre el pronto pago
+decía «la cuenta correcta sería otra», que el artículo no permite afirmar: dice qué sale
+de la base, no qué entra. Quedó «ese artículo ya no bastaría para sacarlo de la base».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco capítulos pasan.
+Sonda en `file`, 375 y 320: siete lecciones, cero errores; los recortes (3, 3, 5 y 22 a
+320 px) son los mismos de la línea base y quedan para las fases 8 y 9.
+
+**Lo que no se hizo.** No se miró la sección en el navegador a ojo ni en el teléfono
+(fase 9). VBA sin ejecutar. No se leyó doctrina de la DIAN sobre descuentos
+condicionados.
+
+**Hueco de las herramientas.** `registrar_afirmaciones.py` rechazó una nota que había
+pasado de `citada` a criterio en el texto pero seguía con `clase: citada` y
+`estado: resuelta`: el aviso («le falta `leido_por`») no dice que el problema puede ser
+la clase. Se corrigió la nota; el mensaje merece una segunda línea.
+

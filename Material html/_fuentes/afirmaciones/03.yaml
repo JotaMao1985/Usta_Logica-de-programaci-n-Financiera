@@ -1,0 +1,25 @@
+# Registro público de las afirmaciones citadas del capítulo 03.
+# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.
+# No lleva el extracto de la fuente, solo su sha256.
+- id: "c03-s1-a03"
+  seccion: "1. La secuencia: el orden importa"
+  ancla: "general del impuesto es del 19"
+  clave: "presidencia1989decreto624"
+  loc: "art. 468"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-16"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "4e03bd6ff7e42f69ffb8f8fee96337803280c3f97232befec5697911216717be"
+- id: "c03-s1-a09"
+  seccion: "1. La secuencia: el orden importa"
+  ancla: "no forman parte de la base gravable los descuentos efectivos"
+  clave: "presidencia1989decreto624"
+  loc: "art. 454"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-16"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "252b3a9384b23ca48a60e8435ba8d9c66b33699de34785e0a9d3c4c726f92bd8"
