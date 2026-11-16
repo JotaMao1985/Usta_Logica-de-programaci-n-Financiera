@@ -3736,3 +3736,34 @@ pasado de `citada` a criterio en el texto pero seguía con `clase: citada` y
 `estado: resuelta`: el aviso («le falta `leido_por`») no dice que el problema puede ser
 la clase. Se corrigió la nota; el mensaje merece una segunda línea.
 
+### 2026-11-16 — Capítulo 3, fase 3: sección 3, expresiones y precedencia
+
+Rama `claude/cap03-fase3`, sobre la fase 2.
+
+- **La potencia (hallazgo alto H1).** El aviso decía que `2 ^ 3 ^ 2` vale 512 «en
+  pseudocódigo, Python y R». Ahora dice qué símbolo usa cada lenguaje, y un bloque nuevo
+  (`EJ_POTENCIAS`) lo muestra: 512 en pseudocódigo, Python (`**`) y R, 64 en VBA. La
+  pestaña de Python trae una segunda línea, ejecutada, con `2 ^ 3 ^ 2`: da 3, sin error.
+  Un recuadro lo explica con cita (referencia de Python, §6.9: `^` es el XOR bit a bit).
+- La tabla de precedencia dice que es un resumen de las del capítulo 1 y ya no cuenta
+  «dos» diferencias entre lenguajes, que eran tres con la del signo en Python.
+- El saldo promedio es un supuesto declarado (decisión G). La línea que el ejercicio
+  pregunta imprime con formato en Python y en R (decisión F): antes R escribía `1.3e+07`
+  y Python `13000000.0`. 62,5 % en vez de 62 %. La división entera se explica con una
+  cuenta a la vista. El recuadro previo ya no da la respuesta del ejercicio.
+
+**Verificador independiente.** La cita de Python: «respalda».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320: siete lecciones, cero errores, mismos recortes que la línea base.
+
+**Lo que no se hizo.** El 64 de VBA de `EJ_POTENCIAS` no se ejecutó en Excel: es la misma
+expresión que el capítulo 1 ejecutó el 2026-11-14, y se vuelve a correr en la fase 9. No
+se miró la sección a ojo.
+
+**Hueco de las herramientas.** La regla 25 (cotejo del pseudocódigo con Python) no tiene
+manera de decir «Python imprime una línea de más a propósito» salvo la lista
+`COTEJO_DISTINTO`, que vive en `verificar.py`: se añadió `EJ_POTENCIAS` allí. Con dos
+excepciones en dos capítulos, la lista empieza a pedir vivir junto al bloque (un
+comentario `cotejo-distinto` en el propio capítulo) y no en el verificador.
+

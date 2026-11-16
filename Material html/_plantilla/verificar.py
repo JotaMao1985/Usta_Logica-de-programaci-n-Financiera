@@ -1456,6 +1456,10 @@ COTEJO_DISTINTO = {
         ["Distintos"],
         "el pseudocódigo escribe el resultado de la comparación; Python muestra "
         "además la suma, 0.30000000000000004"),
+    ("03_LPF_Control_Secuencial.html", "EJ_POTENCIAS"): (
+        ["512"],
+        "el pseudocódigo escribe la potencia; Python muestra además lo que da "
+        "`2 ^ 3 ^ 2`, que allí no es la potencia: 3"),
 }
 
 

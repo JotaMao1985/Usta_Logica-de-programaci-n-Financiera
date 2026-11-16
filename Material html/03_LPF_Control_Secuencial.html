@@ -3532,15 +3532,34 @@ End Sub`,
             python: `1  saldo_inicial = 10000000
 2  saldo_final   = 6000000
 3  promedio      = saldo_inicial + saldo_final / 2
-4  print(promedio)`,
+4  print(f"{promedio:.0f}")`,
             r: `1  saldo_inicial <- 10000000
 2  saldo_final   <- 6000000
 3  promedio      <- saldo_inicial + saldo_final / 2
-4  cat(promedio)`,
+4  cat(sprintf("%.0f", promedio))`,
             vba: `1  saldoInicial = 10000000
 2  saldoFinal = 6000000
 3  promedio = saldoInicial + saldoFinal / 2
 4  Debug.Print promedio`,
+        };
+
+        // Dos potencias seguidas, con el símbolo de cada lenguaje. En Python `^`
+        // existe y es otra operación: el bloque lo muestra ejecutado (regla 9).
+        const EJ_POTENCIAS = {
+            pseudo: `Inicio
+    Escribir 2 ^ 3 ^ 2
+    //> 512
+Fin`,
+            python: `print(2 ** 3 ** 2)     # la potencia de Python es **
+#> 512
+print(2 ^ 3 ^ 2)       # ^ es otra operacion: no da error
+#> 3`,
+            r: `cat(2 ^ 3 ^ 2, "\\n")
+#> 512`,
+            vba: `Sub DosPotencias()
+    Debug.Print 2 ^ 3 ^ 2
+    '> 64
+End Sub`,
         };
 
         const CMP_PARENTESIS = {
@@ -3560,7 +3579,7 @@ End Sub`,
             <div className="prose-lp">
                 <Motivacion icon="fa-square-root-variable"
                     gancho="Nadie escribió mal la fórmula y el resultado está mal. ¿Quién decide en qué orden se calcula una expresión?">
-                    El contrato dice que la comisión es el 3 % sobre el capital más los intereses
+                    Suponga un contrato que fija la comisión en el 3 % sobre el capital más los intereses
                     acumulados. Quien lo traduce a código escribe <span className="inline-code">capital + interes * 0.03</span> y
                     el sistema lo acepta sin objetar nada. La cláusula y la línea de código se leen
                     igual; una cobra el 3 % de todo y la otra, el 3 % solo de los intereses.
@@ -3570,10 +3589,11 @@ End Sub`,
                 <p>
                     El capítulo 1 estableció la tabla de precedencia de los operadores; aquí se usa. Lo
                     que interesa ahora no es memorizarla, sino una consecuencia práctica: una expresión
-                    con varios operadores <strong>no se evalúa en el orden en que está escrita</strong>, sino
-                    en el orden que fija la precedencia. Ese orden —qué operador va antes que cuál— es el
-                    mismo en los cuatro lenguajes del curso salvo en dos puntos, que el capítulo 1 muestra
-                    en su sección 3: el desempate entre dos potencias seguidas, del que se ocupa el aviso
+                    con varios operadores <strong>no se evalúa necesariamente en el orden en que está
+                    escrita</strong>, sino en el que fija la precedencia. Para los operadores de esta
+                    sección, ese orden —qué operador va antes que cuál— es casi el mismo en los cuatro
+                    lenguajes del curso. Las diferencias las muestra el capítulo 1 en su sección 3, y
+                    aquí pesan dos: el desempate entre dos potencias seguidas, del que se ocupa el aviso
                     que sigue a la tabla, y la prioridad del residuo y de la división entera.
                 </p>
                 <div className="overflow-x-auto">
@@ -3583,30 +3603,46 @@ End Sub`,
                         </thead>
                         <tbody>
                             <tr><td>1.ª</td><td><span className="inline-code">( )</span></td><td>Primero, siempre. De dentro hacia fuera</td></tr>
-                            <tr><td>2.ª</td><td><span className="inline-code">^</span> · <span className="inline-code">**</span> (potencia)</td><td><strong>De derecha a izquierda</strong>, salvo en VBA (ver aviso)</td></tr>
-                            <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha. En R y en VBA, <span className="inline-code">MOD</span> y <span className="inline-code">DIV</span> tienen otra prioridad (capítulo 1, sección 3)</td></tr>
+                            <tr><td>2.ª</td><td>Potencia: <span className="inline-code">^</span> en pseudocódigo, R y VBA; <span className="inline-code">**</span> en Python</td><td><strong>De derecha a izquierda</strong>, salvo en VBA (ver aviso)</td></tr>
+                            <tr><td>3.ª</td><td><span className="inline-code">*</span> <span className="inline-code">/</span> <span className="inline-code">MOD</span> <span className="inline-code">DIV</span></td><td>De izquierda a derecha. En R y en VBA, el residuo y la división entera tienen otra prioridad (capítulo 1, sección 3)</td></tr>
                             <tr><td>4.ª</td><td><span className="inline-code">+</span> <span className="inline-code">-</span></td><td>De izquierda a derecha</td></tr>
                             <tr><td>5.ª</td><td>Relacionales y lógicos</td><td>Al final (capítulo 4)</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>resumen de las tablas del capítulo 1, sección 3, con los operadores del pseudocódigo</Fuente>
 
                 <Box type="warn" label="Dos potencias seguidas: un desempate que no es igual en los cuatro">
-                    <span className="inline-code">2 ^ 3 ^ 2</span> vale <strong>512</strong> en pseudocódigo,
-                    Python y R, que resuelven la potencia de derecha a izquierda —primero
+                    <span className="inline-code">2 ^ 3 ^ 2</span> vale <strong>512</strong> en el pseudocódigo
+                    del curso y en R, que resuelven la potencia de derecha a izquierda —primero
                     <span className="inline-code"> 3 ^ 2</span>, después <span className="inline-code">2 ^ 9</span>—, y
                     vale <strong>64</strong> en VBA, que la resuelve de izquierda a derecha como a cualquier
-                    otro operador de su misma prioridad. Es una de las dos discrepancias de precedencia entre
-                    los cuatro lenguajes —la otra es la del residuo y la división entera—, y el remedio es el
-                    mismo que para todo lo demás en esta sección: <strong>escribir el paréntesis</strong>. Una fórmula financiera con dos
-                    potencias encadenadas —una capitalización dentro de otra— es justo donde aparece.
+                    otro operador de su misma prioridad. En Python la potencia se escribe
+                    <span className="inline-code"> **</span>, y <span className="inline-code">2 ** 3 ** 2</span> también
+                    vale 512. De las diferencias de precedencia entre los cuatro lenguajes, esta y la del
+                    residuo y la división entera son las que tocan a una fórmula financiera, y el remedio
+                    es el mismo que para todo lo demás en esta sección: <strong>escribir el paréntesis</strong>.
+                </Box>
+
+                <CodeTabs
+                    titulo="Dos potencias seguidas, con el símbolo de cada lenguaje"
+                    bloques={EJ_POTENCIAS}
+                    nota="Cambie de pestaña: 512 en pseudocódigo, Python y R, y 64 en VBA. La pestaña de Python trae una segunda línea." />
+
+                <Box type="danger" label="En Python, ^ no es la potencia">
+                    El símbolo existe en Python, pero hace otra cosa: genera el XOR bit a bit de dos
+                    números enteros <Cita k="psf2026expresiones" loc="§6.9" />. Por eso copiar
+                    <span className="inline-code"> 2 ^ 3 ^ 2</span> del pseudocódigo a Python no produce ningún
+                    error: produce un <strong>3</strong>, como muestra la segunda línea del bloque. Es el
+                    fallo silencioso de este capítulo en una sola línea.
                 </Box>
 
                 <h3>El caso: comisión de manejo sobre el saldo promedio</h3>
                 <p>
-                    Muchos productos cobran una comisión sobre el <strong>saldo promedio</strong> del mes, no
-                    sobre el saldo del último día. El promedio de dos saldos es una suma dividida entre
-                    dos, y ahí es donde el paréntesis deja de ser decorativo:
+                    Suponga una cuenta que cobra una comisión sobre el <strong>saldo promedio</strong> del
+                    mes, no sobre el saldo del último día, y que ese promedio se toma entre dos saldos: el
+                    inicial y el final. El promedio de dos saldos es una suma dividida entre dos, y ahí es
+                    donde el paréntesis deja de ser decorativo:
                 </p>
 
                 <Eq>{String.raw`$$\text{promedio} = \frac{\text{saldoInicial} + \text{saldoFinal}}{2}$$`}</Eq>
@@ -3619,12 +3655,17 @@ End Sub`,
                 <CodeTabs
                     titulo="Comisión de manejo — con el paréntesis en su sitio"
                     bloques={EJ_PROMEDIO} />
+                <Ilustrativo>
+                    La cuenta, sus saldos y la comisión del 0,5 % se inventaron para este capítulo. No
+                    pretende describir cómo calcula el saldo promedio ningún producto real: aquí se
+                    promedian solo dos saldos para que la expresión quepa en una línea.
+                </Ilustrativo>
 
                 <Box type="danger" label="Lo que pasa si falta el paréntesis">
-                    Sin él, la división se hace <strong>antes</strong> que la suma —tiene más prioridad—, así
-                    que se divide únicamente el saldo final. La cuenta deja de ser un promedio y pasa a
-                    ser «el saldo inicial más la mitad del final», que no significa nada. El resultado
-                    sale más alto y no se parece en nada a un error: es un número plausible.
+                    Sin él, la expresión sigue siendo válida y el programa corre. Lo que cambia es qué se
+                    divide entre dos, y eso lo decide la tabla de arriba, no la intención de quien
+                    escribió la línea. La cuenta deja de ser un promedio, y el resultado no se parece en
+                    nada a un error: es un número plausible. Averiguar cuál es el primer ejercicio.
                 </Box>
 
                 <CodeTabs
@@ -3638,7 +3679,7 @@ End Sub`,
                     pregunta="En la versión sin paréntesis, ¿qué imprime la línea 4?"
                     opciones={[
                         { texto: '8 000 000, el promedio: los paréntesis solo sirven para leer mejor.', correcta: false },
-                        { texto: '13 000 000, porque primero se divide 6 000 000 entre 2 y después se suma.', correcta: true, justificacion: 'La división tiene más prioridad que la suma, así que la máquina calcula 6 000 000 / 2 = 3 000 000 y luego 10 000 000 + 3 000 000. Sobre ese valor, la comisión del 0,5 % sale en 65 000 en vez de 40 000: un 62 % de más, cobrado a cada cliente y todos los meses.' },
+                        { texto: '13 000 000, porque primero se divide 6 000 000 entre 2 y después se suma.', correcta: true, justificacion: 'La división tiene más prioridad que la suma, así que la máquina calcula 6 000 000 / 2 = 3 000 000 y luego 10 000 000 + 3 000 000. Sobre ese valor, la comisión del 0,5 % sale en 65 000 en vez de 40 000: un 62,5 % de más en cada cobro.' },
                         { texto: '16 000 000, la suma de los dos saldos.', correcta: false },
                         { texto: '5 000 000, porque la suma se evalúa primero y luego se divide.', correcta: false },
                     ]}
@@ -3650,7 +3691,7 @@ End Sub`,
                     b={{ etiqueta: 'Versión B · dos mitades', codigo: CMP_DOS_MITADES }}
                     pregunta="¿Las dos versiones calculan lo mismo?"
                     opciones={[
-                        { texto: 'Sí: dividir la suma entre dos y sumar las dos mitades es la misma operación.', correcta: true, justificacion: 'Son equivalentes, y la B no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. La advertencia útil es otra: esto vale mientras la división sea decimal. Con división entera —el operador // de Python o el \\ de VBA— dejan de coincidir cuando los dos saldos son impares, porque cada mitad se trunca por separado y entre las dos pierden una unidad entera. Con dinero en centavos, eso es un descuadre.' },
+                        { texto: 'Sí: dividir la suma entre dos y sumar las dos mitades es la misma operación.', correcta: true, justificacion: 'Son equivalentes, y la B no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. La advertencia útil es otra: esto vale mientras la división sea decimal. Con la división entera del capítulo 1, que descarta los decimales, dejan de coincidir: con saldos de 3 y 5, la versión A da 8 entre 2, que es 4, y la B da 1 más 2, que es 3. Cada mitad pierde su fracción por separado. Con dinero en centavos, eso es un descuadre.' },
                         { texto: 'No: la versión B suma antes de dividir y da el doble.', correcta: false },
                         { texto: 'No: la versión B necesita paréntesis o dividirá solo el segundo saldo.', correcta: false },
                         { texto: 'Solo coinciden si los dos saldos son iguales.', correcta: false },
@@ -5460,10 +5501,11 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "355e39c66798a076b7b3bbe1a5b4ecf350dd5edd393c78f3f9ebf9ffd2e02e92",
-  "sello": "c1cda970778c4f7708458dd559225a1fad9305a718e3c8a756f420a184747c04",
+  "huella": "68ba6c27a20378b185abb365cde09ced937decd01ef8a0c0033bdb5370d235aa",
+  "sello": "8a4a64c43bd2cf3dcd5bc3a4ab3f8b20da4592c923186f4f23ba8f508e96aa3f",
   "orden": [
-    "presidencia1989decreto624"
+    "presidencia1989decreto624",
+    "psf2026expresiones"
   ],
   "entradas": {
     "presidencia1989decreto624": {
@@ -5471,6 +5513,12 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
       "anio": "1989",
       "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
       "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
+    },
+    "psf2026expresiones": {
+      "autor": "Python Software Foundation",
+      "anio": "2026",
+      "html": "Python Software Foundation. (2026, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
     }
   },
   "profundizar": {
