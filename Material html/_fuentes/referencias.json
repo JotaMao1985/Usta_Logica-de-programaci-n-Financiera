@@ -121,6 +121,37 @@
     "language": "es"
   },
   {
+    "id": "congreso1993ley100",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Congreso de la República de Colombia"
+      }
+    ],
+    "title": "Ley 100 de 1993, por la cual se crea el sistema de seguridad social integral y se dictan otras disposiciones",
+    "publisher": "Diario Oficial 41.148",
+    "issued": {
+      "date-parts": [
+        [
+          "1993",
+          12,
+          23
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0100_1993.html",
+    "language": "es"
+  },
+  {
     "id": "congreso2008ley1266",
     "type": "report",
     "author": [
@@ -149,6 +180,37 @@
       ]
     },
     "URL": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488",
+    "language": "es"
+  },
+  {
+    "id": "congreso2011ley1480",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Congreso de la República de Colombia"
+      }
+    ],
+    "title": "Ley 1480 de 2011, por medio de la cual se expide el Estatuto del Consumidor y se dictan otras disposiciones",
+    "publisher": "Diario Oficial 48.220",
+    "issued": {
+      "date-parts": [
+        [
+          "2011",
+          10,
+          12
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011.html",
     "language": "es"
   },
   {
@@ -583,6 +645,37 @@
     "language": "en"
   },
   {
+    "id": "minhacienda2016decreto1625",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Ministerio de Hacienda y Crédito Público"
+      }
+    ],
+    "title": "Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria",
+    "publisher": "Diario Oficial 50.023",
+    "issued": {
+      "date-parts": [
+        [
+          "2016",
+          10,
+          11
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm",
+    "language": "es"
+  },
+  {
     "id": "nbs1973",
     "type": "report",
     "author": [
@@ -637,6 +730,67 @@
     },
     "edition": "2",
     "ISBN": "978-958-648-308-7",
+    "language": "es"
+  },
+  {
+    "id": "presidencia1989decreto624",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Presidencia de la República de Colombia"
+      }
+    ],
+    "title": "Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales",
+    "publisher": "Diario Oficial 38.756",
+    "issued": {
+      "date-parts": [
+        [
+          "1989",
+          3,
+          30
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html",
+    "language": "es"
+  },
+  {
+    "id": "presidencia2007decreto4982",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Presidencia de la República de Colombia"
+      }
+    ],
+    "title": "Decreto 4982 de 2007, por el cual se establece el incremento en la cotización para el Sistema General de Pensiones a partir del año 2008, de conformidad con las Leyes 1122 de 2007 y 797 de 2003",
+    "issued": {
+      "date-parts": [
+        [
+          "2007",
+          12,
+          27
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=28144",
     "language": "es"
   },
   {
