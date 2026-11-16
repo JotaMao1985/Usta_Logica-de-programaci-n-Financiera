@@ -3620,3 +3620,29 @@ este arreglo; se verá al publicar. Al elegir una lección desde el menú estand
 al final de otra, la vista quedó una vez al final de la nueva en vez de al
 principio: visto una sola vez, sin investigar.
 
+### 2026-11-16 — Capítulo 3: plan de la mejora de contenido
+
+Plan `PLAN_TAREA13_CAPITULO_03_CONTENIDO.md`, rama `claude/cap03-plan`. Propuesto;
+espera la aprobación del docente y diez decisiones (A–J). No se tocó el capítulo.
+
+**Línea base.** Un lector sin contexto leyó el capítulo entero, ejecutó los bloques de
+Python y R y rehízo las cuentas: 4 hallazgos altos, 19 medios y 15 bajos. Las 22 salidas
+declaradas de Python y R coinciden. Los altos se comprobaron después aparte: `2 ^ 3 ^ 2`
+da 3 en Python; lo que se dice del depurador es falso y el cuestionario lo marca como
+correcto; los 590 000 pesos del ejercicio de las dos ofertas dependen de un supuesto que
+no se dice. El cuarto —si el descuento por pronto pago reduce la base del IVA— queda
+**sin verificar**: se resuelve leyendo la norma en la fase 1.
+
+**Medido.** Ninguna cita, ningún caso declarado ilustrativo, siete figuras y tablas sin
+fuente, cuatro trazas que aprueban en blanco, y ninguna norma tributaria o financiera en
+Zotero.
+
+**Huecos de las herramientas.**
+
+- La regla 32 del verificador no ve «la regulación colombiana obliga», ni el IVA, la
+  retención o los aportes: busca nombres de entidades, no cifras legales.
+- Ninguna regla comprueba que una traza cuyo enunciado pide la raya lleve
+  `exigeRespuesta`: las cuatro del capítulo aprueban en blanco y el verificador pasa.
+- La regla 9 ejecuta las salidas de Python y R, pero no mira cómo las imprime R: cuatro
+  ejercicios preguntan «¿qué imprime?» con una forma que `cat()` no produce.
+
