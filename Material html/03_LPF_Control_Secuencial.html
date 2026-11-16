@@ -3251,10 +3251,13 @@ print(saldo)`,
 saldo <- saldo + 350000
 saldo <- saldo - 500000
 cat(saldo)`,
-            vba: `saldo = 1200000
-saldo = saldo + 350000
-saldo = saldo - 500000
-Debug.Print saldo`,
+            vba: `Sub Acumular()
+    Dim saldo As Currency
+    saldo = 1200000
+    saldo = saldo + 350000
+    saldo = saldo - 500000
+    Debug.Print saldo
+End Sub`,
         };
 
         const ins = (pseudo, python, r, vba) => ({ pseudo, python, r, vba });
@@ -3314,7 +3317,7 @@ Debug.Print saldo`,
                 'cuenta_b <- 85000000',
                 'cuenta_a <- cuenta_b',
                 'cuenta_b <- cuenta_a',
-                'cat("Cuenta A:", cuenta_a, " Cuenta B:", cuenta_b)',
+                'cat(sprintf("Cuenta A: %.0f  Cuenta B: %.0f", cuenta_a, cuenta_b))',
             ],
             vba: [
                 'Sub TrasladarSaldos()',
@@ -3341,15 +3344,17 @@ Debug.Print saldo`,
             <div className="prose-lp">
                 <Motivacion icon="fa-right-left"
                     gancho="Asignar no es igualar: lo que había dentro de la variable deja de existir. ¿Cuándo importa el valor que se pierde?">
-                    Una rutina de tesorería intercambia los saldos de dos cuentas: el de la B pasa a la
-                    A, y el de la A pasa a la B. Dos líneas, sin condiciones ni ciclos, imposibles de
-                    escribir mal. Al terminar, las dos cuentas tienen el mismo saldo y 340 millones no
-                    aparecen en el cierre. La instrucción que los borró es la más inocente del lenguaje.
+                    Suponga una rutina de tesorería que debe intercambiar los saldos de dos cuentas: el
+                    de la B pasa a la A, y el de la A pasa a la B. Alguien la escribe en dos líneas, sin
+                    condiciones ni ciclos, que parecen imposibles de escribir mal. Al terminar, las dos
+                    cuentas tienen el mismo saldo y el cierre no cuadra. La instrucción que borró el dato
+                    es la más inocente del lenguaje.
                 </Motivacion>
 
                 <h3>Tres instrucciones, y ya está</h3>
                 <p>
-                    Toda secuencia se construye con tres instrucciones elementales. No hay una cuarta.
+                    Las secuencias de este capítulo se construyen con tres instrucciones elementales. Son la
+                    entrada, el proceso y la salida del capítulo 2, vistas ahora línea por línea.
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -3363,16 +3368,18 @@ Debug.Print saldo`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso</Fuente>
                 <p>
-                    De dónde viene el dato en la lectura cambia con el lenguaje —del teclado en Python y
-                    R, de una celda de la hoja en VBA— y eso es una diferencia de <em>acento</em>, no de
-                    lógica. Lo que no cambia es que después de leer, ese dato está dentro de una variable
+                    En los bloques de este curso el dato de la lectura viene del teclado en Python y en R, y
+                    de una celda de la hoja en VBA. Es una convención del material, no una regla de esos
+                    lenguajes, y es una diferencia de <em>acento</em>, no de lógica. Lo que no cambia es que después de leer, ese dato está dentro de una variable
                     y el resto del programa no necesita saber de dónde salió.
                 </p>
 
                 <h3>La asignación no es una igualdad</h3>
                 <p>
-                    En matemáticas <span className="inline-code">x = x + 1</span> es una ecuación sin solución.
+                    Como ya vio el capítulo 2, en matemáticas <span className="inline-code">x = x + 1</span> es una
+                    ecuación sin solución.
                     En programación <span className="inline-code">x ← x + 1</span> es una instrucción perfectamente
                     corriente, y se lee de derecha a izquierda y en dos tiempos: <strong>primero</strong> se
                     calcula lo de la derecha con los valores que hay ahora, <strong>después</strong> el
@@ -3380,8 +3387,9 @@ Debug.Print saldo`,
                 </p>
                 <Box type="info" label="La flecha señala hacia dónde va el valor">
                     Por eso el pseudocódigo escribe <span className="inline-code">←</span> y no <span className="inline-code">=</span>:
-                    la flecha recuerda que hay un origen y un destino. Python, R y VBA usan
-                    <span className="inline-code"> =</span> o <span className="inline-code">&lt;-</span>, pero el
+                    la flecha recuerda que hay un origen y un destino. En los bloques la misma flecha
+                    se teclea <span className="inline-code">&lt;-</span>. Python y VBA asignan con
+                    <span className="inline-code"> =</span> y R con <span className="inline-code">&lt;-</span>, pero el
                     comportamiento es el mismo en los cuatro.
                 </Box>
 
@@ -3392,23 +3400,28 @@ Debug.Print saldo`,
 
                 <h3>Lo que se pierde al asignar</h3>
                 <p>
-                    Si asignar borra, intercambiar dos valores no se puede hacer en dos líneas. Hace
-                    falta una <strong>variable temporal</strong> que guarde el primer valor antes de que la
-                    asignación lo destruya. Es el patrón más viejo de la programación y sigue apareciendo
-                    en cualquier rutina que mueva saldos, posiciones o cupos.
+                    Si asignar borra, intercambiar dos valores con dos asignaciones sueltas no funciona:
+                    la primera destruye un valor que la segunda necesita. En este algoritmo hace falta
+                    una <strong>variable temporal</strong> —la que el capítulo 2 llamó auxiliar— que guarde
+                    el primer valor antes de que la asignación lo destruya. El patrón reaparece cada vez
+                    que una rutina mueve saldos, posiciones o cupos de un sitio a otro.
                 </p>
 
                 <CodeTabs
                     titulo="Intercambio de saldos — con variable temporal"
                     bloques={EJ_INTERCAMBIO}
-                    nota="Tres asignaciones, no dos. La primera no cambia nada visible: solo guarda." />
+                    nota="Tres asignaciones, no dos. La primera no toca ninguna de las dos cuentas: solo guarda." />
+                <Ilustrativo>
+                    Las cuentas, sus saldos y la rutina de tesorería de esta sección se inventaron para
+                    practicar.
+                </Ilustrativo>
 
                 <h3>Ejercicios</h3>
 
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Las tres asignaciones sobre saldo se ejecutan en orden. ¿Qué imprime la última línea?"
                     opciones={[
-                        { texto: '1 050 000: cada línea parte del saldo que dejó la anterior y lo reemplaza.', correcta: true, justificacion: 'Cada asignación calcula primero la derecha con el valor que saldo tiene en ese momento y después lo reemplaza: 1 200 000 → 1 550 000 → 1 050 000. Quien marca 700 000 lee saldo como si guardara para siempre su primer valor, y ese valor se borró en la segunda línea. Es un acumulador, el patrón con el que se construyen todos los saldos del capítulo 5.' },
+                        { texto: '1 050 000: cada línea parte del saldo que dejó la anterior y lo reemplaza.', correcta: true, justificacion: 'Cada asignación calcula primero la derecha con el valor que saldo tiene en ese momento y después lo reemplaza: 1 200 000 → 1 550 000 → 1 050 000. Quien marca 700 000 lee saldo como si guardara para siempre su primer valor, y ese valor se borró en la segunda línea. Es un acumulador, el patrón que el capítulo 5 repite dentro de un ciclo.' },
                         { texto: '700 000: a la derecha, saldo vale siempre lo que se le dio al principio.', correcta: false },
                         { texto: '1 200 000: las dos últimas líneas son ecuaciones imposibles y se ignoran.', correcta: false },
                         { texto: 'Un error: una variable no puede aparecer a ambos lados de la asignación.', correcta: false },
@@ -3417,7 +3430,7 @@ Debug.Print saldo`,
 
                 <TablaTraza
                     titulo="Traza del intercambio con variable temporal"
-                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor. Fíjese en el paso 3: es el único que no cambia nada de lo que se ve, y sin él el algoritmo no funciona.</>}
+                    enunciado={<>Complete el estado de las variables después de ejecutar cada instrucción. Escriba <span className="inline-code">—</span> donde la variable todavía no tenga valor. Fíjese en el paso 3: no cambia ninguna de las dos cuentas, y sin él el algoritmo no funciona.</>}
                     codigo={TRAZA_INTERCAMBIO}
                     columnas={[
                         { clave: 'paso', titulo: 'Paso' },
@@ -3427,6 +3440,7 @@ Debug.Print saldo`,
                         { clave: 'temporal', titulo: 'temporal' },
                     ]}
                     ocultas={['cuentaA', 'cuentaB', 'temporal']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('cuentaA <- 340000000', 'cuenta_a = 340000000', 'cuenta_a <- 340000000', 'cuentaA = 340000000'), cuentaA: '340000000', cuentaB: '—', temporal: '—' },
                         { paso: 2, instruccion: ins('cuentaB <- 85000000', 'cuenta_b = 85000000', 'cuenta_b <- 85000000', 'cuentaB = 85000000'), cuentaA: '340000000', cuentaB: '85000000', temporal: '—' },
@@ -3457,7 +3471,7 @@ Debug.Print saldo`,
                     ]}
                     consecuenciaCorrecta={3}
                     explicacion={ERROR_SWAP_EXPLICACION}
-                    impacto={<>Las dos cuentas quedan con <strong>85 000 000</strong> y los <strong>340 000 000</strong> de la cuenta A desaparecen del cierre. Ningún lenguaje avisa: sobrescribir una variable es una operación legítima, y aquí simplemente se hizo un instante antes de tiempo. El descuadre no aparece en el archivo de log —no hubo error— sino en la conciliación bancaria del día siguiente.</>}
+                    impacto={<>Las dos cuentas quedan con <strong>85 000 000</strong> y los <strong>340 000 000</strong> de la cuenta A desaparecen del cierre. El programa no avisa: sobrescribir una variable es una operación legítima, y aquí simplemente se hizo un instante antes de tiempo. Un descuadre así no quedaría en ningún registro de errores —no hubo error—: aparecería al conciliar.</>}
                 />
             </div>
         );
@@ -5021,7 +5035,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             ['Secuencia', 'Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas. No hay preguntas, saltos ni vueltas atrás.'],
             ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar si ninguna usa una variable que la otra modifica. Si la segunda lee lo que la primera escribe, el orden es obligatorio.'],
             ['Asignación', 'Operación que evalúa la expresión de la derecha con los valores actuales y guarda el resultado en la variable de la izquierda, borrando lo que hubiera. No es una igualdad matemática.'],
-            ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. Es lo que hace falta para intercambiar dos valores sin perder ninguno: tres líneas, no dos.'],
+            ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. En el intercambio de la sección 2 es lo que evita perder uno de los dos valores: tres asignaciones, no dos. El capítulo 2 la llama variable auxiliar.'],
             ['Acumulador', 'Variable que se lee a sí misma para actualizarse —saldo <- saldo + movimiento—. Conserva un solo valor: la historia de los anteriores solo queda en la tabla de traza.'],
             ['Sobrescritura antes de lectura', 'Error que consiste en asignar sobre una variable cuyo valor todavía se necesita. No produce ningún mensaje: asignar es una operación legítima que aquí se hizo un instante antes de tiempo.'],
             ['Precedencia de operadores', 'Orden en que se evalúan los operadores de una expresión, independiente del orden en que están escritos. Los paréntesis primero, después la potencia, después producto y cociente, y al final suma y resta.'],

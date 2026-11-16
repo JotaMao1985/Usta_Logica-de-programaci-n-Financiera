@@ -3767,3 +3767,30 @@ manera de decir «Python imprime una línea de más a propósito» salvo la list
 excepciones en dos capítulos, la lista empieza a pedir vivir junto al bloque (un
 comentario `cotejo-distinto` en el propio capítulo) y no en el verificador.
 
+### 2026-11-16 — Capítulo 3, fase 4: sección 2, leer, asignar, escribir
+
+Rama `claude/cap03-fase4`, sobre la fase 3. Ninguna cita nueva.
+
+- La sección remite al capítulo 2 donde repetía sin decirlo: las tres instrucciones son
+  su entrada, proceso y salida; `x = x + 1`; la variable temporal es su auxiliar.
+- Fuera tres absolutos: «no hay una cuarta» instrucción, «intercambiar no se puede hacer
+  en dos líneas» y «el patrón más viejo de la programación». Queda lo que el capítulo
+  muestra: con dos asignaciones sueltas el intercambio no funciona.
+- La lectura por teclado (Python, R) y por celda (VBA) se dice como convención del
+  material. La Motivación ya no adelanta la cifra del ejercicio, que además era 340
+  millones donde el descuadre es de 255.
+- La traza del intercambio exige respuesta: la raya ya no se aprueba en blanco. El
+  bloque de VBA del acumulador es un `Sub` completo. La línea de R del ejercicio de
+  detectar el error imprime con formato (salía `8.5e+07`).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320: sin errores, mismos recortes.
+
+**Lo que no se hizo.** `exigeRespuesta` no se probó a mano en el navegador: es la misma
+propiedad que el capítulo 2 usa en tres trazas. VBA sin ejecutar. La línea 6 de la traza
+en R sigue imprimiendo en notación científica; nadie pregunta por esa salida.
+
+**Hueco de las herramientas.** Sigue sin regla que avise de una traza cuyo enunciado pide
+la raya y no lleva `exigeRespuesta`: esta se corrigió porque el lector la contó a mano.
+Quedan tres en el capítulo, para la fase 5.
+
