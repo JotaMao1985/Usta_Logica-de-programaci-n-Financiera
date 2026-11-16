@@ -918,6 +918,37 @@
     "language": "es"
   },
   {
+    "id": "psf2026pdb",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "pdb — The Python Debugger",
+    "container-title": "Documentación de Python 3.15.2",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/es/3/library/pdb.html",
+    "language": "es"
+  },
+  {
     "id": "rcoreteam-hexmode",
     "type": "webpage",
     "author": [

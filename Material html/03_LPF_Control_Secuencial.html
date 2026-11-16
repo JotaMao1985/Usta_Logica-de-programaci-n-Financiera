@@ -4196,9 +4196,13 @@ End Sub`,
                     de escritorio</Termino> —o <em>traza</em>— es ejecutar el programa con la cabeza y
                     escribir lo que va pasando. No es una técnica de principiantes que después se
                     abandone: es el método de este capítulo, y no necesita nada más que el algoritmo, que
-                    ni siquiera tiene que estar escrito en un lenguaje. Sirve sobre todo cuando el
+                    ni siquiera tiene que estar escrito en un lenguaje. Aquí se usa sobre todo cuando el
                     programa <strong>no falla</strong>: no revienta nada, y la pregunta es otra —en qué
-                    instrucción la cifra dejó de significar lo que debía—.
+                    instrucción la cifra dejó de significar lo que debía—. Hay herramientas que hacen
+                    algo parecido sobre la máquina: el depurador de Python (el módulo pdb), por ejemplo,
+                    permite ejecutar un programa línea por línea e inspeccionar su estado donde se
+                    detiene <Cita k="psf2026pdb" loc="introducción" />. En este curso la traza va
+                    primero, porque sirve aunque todavía no haya programa.
                 </p>
                 <p>
                     El syllabus pide para este tema un <em>Formato Definición y Análisis</em>. Este
@@ -4703,7 +4707,8 @@ cat(mensual_a, mensual_b)
             vba: `mensualA = 0.018              ' oferta A, ya mensual
 mensualB = 0.24 / 12          ' oferta B, nominal anual / 12
 Debug.Print mensualA, mensualB
-'>  0.018         0.02`,
+'>  0.018         0.02
+' Con Excel en espanol la salida lleva coma decimal`,
         };
         const CMP_EFECTIVAS = {
             pseudo: `efectivaA <- (1 + 0.018) ^ 12 - 1
@@ -4721,7 +4726,8 @@ cat(round(efectiva_a, 6), round(efectiva_b, 6))
             vba: `efectivaA = (1 + 0.018) ^ 12 - 1
 efectivaB = (1 + 0.24 / 12) ^ 12 - 1
 Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
-'>  0.238721      0.268242`,
+'>  0.238721      0.268242
+' Con Excel en espanol la salida lleva coma decimal`,
         };
 
         /* --- Artefacto propio del capítulo: conversión de tasas en vivo.
@@ -4819,16 +4825,16 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             <div className="prose-lp">
                 <Motivacion icon="fa-scale-balanced"
                     gancho="El algoritmo dio el número correcto. ¿Qué significa ese número para el cliente que está enfrente?">
-                    Dos ofertas para el mismo cliente: un crédito al 1,8 % mensual y otro al 24 % anual.
-                    La segunda cifra es más grande y la decisión parece resuelta en dos segundos. No lo
-                    está: las dos tasas están escritas en unidades distintas, y compararlas de frente es
-                    comparar metros con pies. El cálculo que falta cabe en tres líneas.
+                    Suponga dos ofertas para el mismo cliente: un crédito al 1,8 % mensual y otro al 24 %
+                    nominal anual con capitalización mensual. Una cifra es mensual y la otra anual: están
+                    escritas en unidades distintas, y compararlas de frente es comparar metros con pies.
+                    El cálculo que falta cabe en tres líneas.
                 </Motivacion>
 
                 <h3>Cuatro rutinas, la misma forma</h3>
                 <p>
-                    Las cuatro operaciones que siguen son las que aparecen todos los días en un área
-                    financiera, y las cuatro son <strong>secuencias puras</strong>: no hay una sola decisión ni
+                    Las cuatro operaciones que siguen son cuentas de un área financiera, simplificadas para
+                    que quepan en pocas líneas, y las cuatro son <strong>secuencias puras</strong>: no hay una sola decisión ni
                     un solo ciclo. Lo que cambia entre ellas no es la estructura sino qué entra, qué se
                     calcula y qué sale —el análisis de Entrada–Proceso–Salida del capítulo 2, aplicado
                     cuatro veces—.
@@ -4839,22 +4845,29 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             <tr><th>Rutina</th><th>Entrada</th><th>Proceso</th><th>Salida</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>Interés simple</strong></td><td>capital, tasa, plazo</td><td>Una multiplicación y una suma</td><td>interés y total a pagar</td></tr>
+                            <tr><td><strong>Interés simple</strong></td><td>capital, tasa, plazo</td><td>Un producto de tres factores y una suma</td><td>interés y total a pagar</td></tr>
                             <tr><td><strong>Descuento comercial</strong></td><td>valor nominal, tasa de descuento, plazo</td><td>Descuento sobre el <em>valor nominal</em></td><td>valor a recibir hoy</td></tr>
                             <tr><td><strong>Conversión de tasas</strong></td><td>tasa nominal, capitalizaciones</td><td>División y una potencia</td><td>tasa efectiva comparable</td></tr>
                             <tr><td><strong>Liquidación de nómina</strong></td><td>salario y porcentajes de ley</td><td>Deducciones sobre la <em>misma</em> base</td><td>neto a pagar</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>resumen de los bloques de este capítulo</Fuente>
                 <p>
                     La primera ya está trazada: es el algoritmo con el que abrió la sección 4. Las otras
                     tres son las de esta sección, y cada una trae su trampa.
                 </p>
+                <Ilustrativo>
+                    Las ofertas de crédito, la factura descontada, la nómina y todas sus cifras se
+                    inventaron para practicar. El descuento y el interés se liquidan con las fórmulas
+                    simples de esta sección, y la nómina deja por fuera otros descuentos que la ley
+                    prevé. No describen las condiciones de ningún producto real ni son tasas de mercado.
+                </Ilustrativo>
 
                 <h3>Descuento comercial: cobrar hoy una factura que vence en 60 días</h3>
                 <p>
-                    Un proveedor tiene una factura de 15 000 000 que su cliente pagará en dos meses y
-                    necesita el dinero ahora. Un banco se la compra: le entrega hoy el valor de la factura
+                    Suponga un proveedor que tiene una factura de 15 000 000 que su cliente pagará en dos
+                    meses y que necesita el dinero ahora. Un banco se la compra: le entrega hoy el valor de la factura
                     menos un <Termino def="Descuento calculado sobre el valor nominal del título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje no coincide con el costo real de la operación.">descuento
                     comercial</Termino>, y cobra la factura completa al vencimiento.
                 </p>
@@ -4872,12 +4885,14 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 <CodeTabs
                     titulo="Descuento comercial de una factura a 60 días"
                     bloques={EJ_DESCUENTO}
-                    nota="Tres asignaciones y dos escrituras. La estructura es idéntica a la del interés simple; lo que cambia es sobre qué valor se aplica la tasa." />
+                    nota="Tres datos, dos cálculos y dos escrituras. La estructura es idéntica a la del interés simple; lo que cambia es sobre qué valor se aplica la tasa." />
 
                 <CalloutPro tema="warn" titulo="El 1,5 % no es el costo del dinero" subtitulo="Por qué el porcentaje de la operación y el que paga el cliente no coinciden" icon="fa-triangle-exclamation">
                     El proveedor entrega una factura de 15 000 000 y recibe 14 550 000. Los 450 000 de
                     diferencia, medidos <strong>sobre lo que efectivamente recibió</strong>, son el 3,09 % en
-                    dos meses, es decir un 1,55 % mensual y no un 1,50 %. La tasa de descuento se aplica
+                    dos meses. Repartido por igual entre los dos meses da 1,55 % mensual; componiendo,
+                    como enseña el apartado siguiente, 1,53 %. Con cualquiera de las dos cuentas es más
+                    que el 1,50 % pactado. La tasa de descuento se aplica
                     sobre el valor nominal; el costo se mide sobre el valor recibido. Es la misma
                     operación leída desde los dos extremos, y la diferencia crece con el plazo.
                 </CalloutPro>
@@ -4903,22 +4918,27 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 <CodeTabs
                     titulo="De nominal anual a efectiva anual"
                     bloques={EJ_TASAS}
-                    nota="La potencia es la única operación de este capítulo que no es una suma o un producto, y arrastra la regla de precedencia de la sección 3: se evalúa antes que la resta del final." />
+                    nota="La potencia arrastra la regla de precedencia de la sección 3: se evalúa antes que la resta del final." />
 
                 <p>
                     El artefacto de abajo hace esas dos operaciones en vivo y reescribe la fórmula con los
-                    valores sustituidos, que es exactamente lo que pide la segunda regla de la traza:
-                    anotar la expresión con los números puestos antes de anotar el resultado.
+                    valores sustituidos, que es lo que la sección 4 recomienda al trazar: anotar la
+                    expresión con los números puestos antes de anotar el resultado.
                 </p>
 
                 <CalculadoraTasas />
 
                 <h3>Liquidación de nómina, y el reclamo del lunes</h3>
                 <p>
-                    Las deducciones de ley de un empleado —4 % para salud y 4 % para pensión— se calculan
-                    <strong> las dos sobre el mismo salario base</strong>. No se aplican en cascada: la de
-                    pensión no reduce la base de la de salud. Esa frase es toda la regla, y traducirla mal
-                    es lo que produjo el reclamo de la portada.
+                    Vuelva a la nómina de la portada. En ella, a cada empleado se le descuentan de su
+                    salario dos aportes. El de salud es, para el empleado, del 4 % del salario base de cotización
+                    <Cita k="congreso1993ley100" loc="art. 204" />. El de pensión también resulta del 4 %: la cotización
+                    total es del 16 % <Cita k="presidencia2007decreto4982" loc="art. 1.º" /> y el
+                    trabajador paga la cuarta parte <Cita k="congreso1993ley100" loc="art. 20" />. Y
+                    <strong> las dos se calculan sobre la misma base</strong>
+                    <Cita k="congreso1993ley100" loc="art. 204, par. 1.º" />. Por eso no se aplican en cascada: la de
+                    pensión no reduce la base de la de salud. Traducir mal esa regla es lo que produce el reclamo
+                    de la portada.
                 </p>
 
                 <CodeTabs
@@ -4926,20 +4946,21 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     bloques={EJ_NOMINA}
                     nota="Las dos deducciones leen salario, y ninguna lo modifica. Por eso se pueden intercambiar sin que cambie nada: es la regla de dependencia de la sección 1." />
 
-                <Box type="danger" label="Lo que pasó de verdad el viernes">
-                    La rutina que corrió en producción <strong>reasignaba</strong> la variable
+                <Box type="danger" label="Lo que hacía la rutina del caso">
+                    La rutina del caso <strong>reasignaba</strong> la variable
                     <span className="inline-code"> salario</span> después de calcular la pensión, y calculaba la
-                    salud sobre lo que quedaba. La deducción de salud sale más baja, el empleado recibe
-                    unos pesos de más, y el aporte que se reporta a la EPS queda por debajo del que
-                    corresponde: lo que reclamaron los veintiséis del lunes no fue el neto, fue el
-                    <strong> ingreso base de cotización</strong> con el que quedó registrado su mes.
+                    salud sobre lo que quedaba. La deducción de salud sale más baja y el empleado recibe
+                    unos pesos de más. Lo grave no es el neto: el aporte de salud queda calculado sobre
+                    una base que ya no es el salario, contra la regla de arriba. Ese es el reclamo del
+                    caso.
                 </Box>
 
                 <h3>Ejercicios</h3>
 
                 <TablaTraza
                     titulo="Traza · la nómina que produjo el reclamo"
-                    enunciado={<>Esta es la rutina que corrió el viernes. Trace las cuatro variables paso a paso y
+                    enunciado={<>Esta es la rutina del caso. Trace las cuatro variables paso a paso, con <span className="inline-code">—</span> donde
+                        todavía no haya valor, y
                         localice la fila en la que <span className="inline-code">salario</span> deja de ser el salario base.
                         Compare después el neto que sale aquí con los 3 864 000 de la versión correcta.</>}
                     codigo={TRAZA_NOMINA}
@@ -4952,6 +4973,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         { clave: 'neto', titulo: 'neto' },
                     ]}
                     ocultas={['salario', 'pension', 'salud', 'neto']}
+                    exigeRespuesta
                     filas={[
                         { paso: 1, instruccion: ins('salario <- 4200000', 'salario = 4200000', 'salario <- 4200000', 'salario = 4200000'), salario: '4200000', pension: '—', salud: '—', neto: '—' },
                         { paso: 2, instruccion: ins('pension <- salario * 0.04', 'pension = salario * 0.04', 'pension <- salario * 0.04', 'pension = salario * 0.04'), salario: '4200000', pension: '168000', salud: '—', neto: '—' },
@@ -4977,12 +4999,12 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 />
 
                 <Ejercicio tipo="E7"><MCQ
-                    pregunta="El cliente pide 20 000 000 a un año y las dos ofertas son las de arriba. Con las tasas efectivas ya calculadas —23,87 % y 26,82 %—, ¿qué se le dice?"
+                    pregunta="El cliente pide 20 000 000 y los devuelve con sus intereses en un solo pago, al cabo de un año. Las dos ofertas son las de arriba. Con las tasas efectivas ya calculadas —23,87 % y 26,82 %—, ¿qué se le dice?"
                     opciones={[
                         { texto: 'Que le conviene la oferta B, porque el 24 % anual es una sola cifra al año mientras que el 1,8 % se cobra doce veces.', correcta: false },
                         { texto: 'Que las dos cuestan prácticamente lo mismo, porque 1,8 × 12 = 21,6 % y la diferencia con el 24 % es de redondeo.', correcta: false },
                         { texto: 'Que no se puede saber sin conocer el plazo, porque las tasas efectivas dependen del número de cuotas.', correcta: false },
-                        { texto: 'Que le conviene la oferta A, y que la diferencia en un año sobre 20 000 000 es de unos 590 000 pesos.', correcta: true, justificacion: 'La diferencia entre las dos efectivas es de 2,95 puntos porcentuales, y sobre 20 000 000 a un año son 590 000 pesos —el equivalente a casi media cuota—. Decir «la A es mejor» es correcto pero no es asesorar: la cifra en pesos es la que permite al cliente decidir, y es la que convierte un cálculo en una recomendación.' },
+                        { texto: 'Que le conviene la oferta A, y que con un solo pago al cabo del año la diferencia sobre 20 000 000 es de unos 590 000 pesos.', correcta: true, justificacion: 'La diferencia entre las dos efectivas es de 2,95 puntos porcentuales, y sobre 20 000 000 que se deben el año entero son 590 000 pesos. Con cuotas mensuales la diferencia sería menor, porque la deuda va bajando. Decir «la A es mejor» es correcto pero no es asesorar: la cifra en pesos es la que permite al cliente decidir, y es la que convierte un cálculo en una recomendación.' },
                     ]}
                 /></Ejercicio>
 
@@ -4991,7 +5013,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     opciones={[
                         { texto: 'Que el costo fue exactamente el 1,5 % mensual que dice el contrato, porque esa es la tasa pactada.', correcta: false },
                         { texto: 'Que ganó 14 550 000, porque de otro modo no habría tenido nada hasta el vencimiento.', correcta: false },
-                        { texto: 'Que el dinero le costó 1,55 % mensual, y que le convino solo si con esos 14 550 000 obtiene más de eso o evita un costo mayor.', correcta: true, justificacion: 'El costo se mide sobre lo que recibió: 450 000 sobre 14 550 000 son 3,09 % en dos meses, o 1,55 % mensual. La decisión no la resuelve el número solo: si el proveedor iba a pagar un sobregiro al 2,5 % mensual, la operación le ahorró plata; si el dinero se iba a quedar quieto, la perdió. Interpretar es poner el resultado al lado de la alternativa.' },
+                        { texto: 'Que le costó más del 1,5 % mensual pactado, y que le convino solo si con ese dinero gana más o evita un costo mayor.', correcta: true, justificacion: 'El costo se mide sobre lo que recibió: 450 000 sobre 14 550 000 son 3,09 % en dos meses: 1,55 % mensual si se reparte por igual, 1,53 % si se compone. La decisión no la resuelve el número solo: si el proveedor iba a financiarse por otro lado a una tasa mayor, la operación le ahorró plata; si el dinero se iba a quedar quieto, la perdió. Interpretar es poner el resultado al lado de la alternativa.' },
                         { texto: 'Que perdió 450 000 pesos, y que ninguna operación de descuento conviene nunca.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -5013,10 +5035,14 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             abrió este capítulo.
                         </p>
                         <p style={{ marginBottom: 0 }}>
-                            Y hay una razón de oficio: la tasa efectiva anual es la que la regulación
-                            colombiana obliga a informar al consumidor financiero. Convertir no es una
-                            preferencia de estilo del programador; es lo que hace que la cifra que sale del
-                            algoritmo sea la misma que el cliente ve en su contrato.
+                            Y hay una razón de oficio. El proveedor que financia directamente la compra de
+                            sus bienes o servicios, y quien da un crédito sin que una autoridad
+                            administrativa vigile su actividad crediticia, deben informar al consumidor el
+                            interés en términos de tasa efectiva anual <Cita k="congreso2011ley1480" loc="art. 45" />, y las
+                            entidades vigiladas deben informar el Valor Total Unificado, expresado en términos
+                            porcentuales efectivos anuales <Cita k="congreso2014ley1748" loc="art. 1.º" />.
+                            Convertir no es una preferencia de estilo del programador: la ley pide
+                            informar en términos efectivos anuales.
                         </p>
                     </>}>
                     Un sistema de originación recibe dos ofertas de crédito con tasas escritas en unidades
@@ -5086,7 +5112,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje es siempre menor que el costo real de la operación.'],
             ['Tasa nominal', 'Tasa anual de referencia que no incorpora el interés sobre interés. Sin declarar cada cuánto capitaliza no significa nada: el mismo 24 % nominal da 24 %, 26,82 % o 27,11 % efectivo.'],
             ['Tasa periódica', 'Tasa que rige en cada período de capitalización. Se obtiene repartiendo la nominal entre el número de capitalizaciones del año: 24 % nominal con capitalización mensual son 2 % mensual.'],
-            ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es la unidad en la que dos ofertas se pueden comparar, y la que la regulación obliga a informar.'],
+            ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es la unidad en la que dos ofertas se pueden comparar, y en la que la ley manda informar el costo de un crédito (sección 5).'],
         ];
 
         const EvaluacionSection = () => (
@@ -5554,14 +5580,37 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "da6e238849fc92d8245d9245803d17f09f09cc48ab84c7dd71188fc7a364e533",
-  "sello": "f8868d325beb04fc4a28906fc5b3060519dbf12d938da5eb61534cf3f1fa8042",
+  "huella": "4c820d25735dfcbf1d85d2e7405302995d1772a98b74bb0c41cb7137e642c28f",
+  "sello": "e669f695271032d065a39d763461224d1043de98963d304d1ef8090f707f276c",
   "orden": [
+    "congreso1993ley100",
+    "congreso2011ley1480",
+    "congreso2014ley1748",
     "minhacienda2016decreto1625",
     "presidencia1989decreto624",
-    "psf2026expresiones"
+    "presidencia2007decreto4982",
+    "psf2026expresiones",
+    "psf2026pdb"
   ],
   "entradas": {
+    "congreso1993ley100": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "1993",
+      "html": "Congreso de la República de Colombia. (1993). \u003cem>Ley 100 de 1993, por la cual se crea el sistema de seguridad social integral y se dictan otras disposiciones\u003c/em>. Diario Oficial 41.148. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_0100_1993.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_0100_1993.html\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (1993). Ley 100 de 1993, por la cual se crea el sistema de seguridad social integral y se dictan otras disposiciones. Diario Oficial 41.148. http://www.secretariasenado.gov.co/senado/basedoc/ley_0100_1993.html"
+    },
+    "congreso2011ley1480": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "2011",
+      "html": "Congreso de la República de Colombia. (2011). \u003cem>Ley 1480 de 2011, por medio de la cual se expide el Estatuto del Consumidor y se dictan otras disposiciones\u003c/em>. Diario Oficial 48.220. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011.html\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (2011). Ley 1480 de 2011, por medio de la cual se expide el Estatuto del Consumidor y se dictan otras disposiciones. Diario Oficial 48.220. http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011.html"
+    },
+    "congreso2014ley1748": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "2014",
+      "html": "Congreso de la República de Colombia. (2014). \u003cem>Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones\u003c/em>. Diario Oficial 49.376. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (2014). Ley 1748 de 2014, por medio de la cual se establece la obligación de brindar información transparente a los consumidores de los servicios financieros y se dictan otras disposiciones. Diario Oficial 49.376. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402"
+    },
     "minhacienda2016decreto1625": {
       "autor": "Ministerio de Hacienda y Crédito Público",
       "anio": "2016",
@@ -5574,11 +5623,23 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
       "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
       "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
     },
+    "presidencia2007decreto4982": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "2007",
+      "html": "Presidencia de la República de Colombia. (2007). \u003cem>Decreto 4982 de 2007, por el cual se establece el incremento en la cotización para el Sistema General de Pensiones a partir del año 2008, de conformidad con las Leyes 1122 de 2007 y 797 de 2003\u003c/em>. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=28144\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=28144\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (2007). Decreto 4982 de 2007, por el cual se establece el incremento en la cotización para el Sistema General de Pensiones a partir del año 2008, de conformidad con las Leyes 1122 de 2007 y 797 de 2003. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=28144"
+    },
     "psf2026expresiones": {
       "autor": "Python Software Foundation",
-      "anio": "2026",
-      "html": "Python Software Foundation. (2026, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
-      "plano": "Python Software Foundation. (2026, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
+      "anio": "2026a",
+      "html": "Python Software Foundation. (2026a, noviembre 9). \u003cem>Expresiones\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/reference/expressions.html\">https://docs.python.org/es/3/reference/expressions.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026a, noviembre 9). Expresiones. Documentación de Python 3.15.2. https://docs.python.org/es/3/reference/expressions.html"
+    },
+    "psf2026pdb": {
+      "autor": "Python Software Foundation",
+      "anio": "2026b",
+      "html": "Python Software Foundation. (2026b, noviembre 16). \u003cem>pdb — The Python Debugger\u003c/em>. Documentación de Python 3.15.2. \u003ca href=\"https://docs.python.org/es/3/library/pdb.html\">https://docs.python.org/es/3/library/pdb.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026b, noviembre 16). pdb — The Python Debugger. Documentación de Python 3.15.2. https://docs.python.org/es/3/library/pdb.html"
     }
   },
   "profundizar": {

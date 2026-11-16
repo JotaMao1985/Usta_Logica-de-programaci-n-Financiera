@@ -3835,3 +3835,47 @@ la conclusión iba en la oración siguiente, sin cita: hubo que pedirle expresam
 dijera si «se sigue». El encargo al verificador debería incluir siempre la oración que
 viene después de la cita.
 
+### 2026-11-16 — Capítulo 3, fase 6: sección 5, casos financieros, y la frase del depurador
+
+Rama `claude/cap03-fase6`, sobre la fase 5. El docente aprobó la tanda 05 de Zotero (la
+documentación del depurador de Python), que entró a «4 Datos y software» de LPF.
+
+- **El depurador (decisión D).** La sección 4 dice ahora que el depurador de Python
+  permite ejecutar línea por línea e inspeccionar el estado donde se detiene, con cita, y
+  que en este curso la traza va primero porque sirve aunque todavía no haya programa.
+- **Los 590 000 pesos (hallazgo alto H3).** El ejercicio dice su supuesto —un solo pago
+  al cabo del año—, ya no dice «casi media cuota» y avisa que con cuotas la diferencia
+  sería menor.
+- **El 1,55 %.** Era una tasa simple en la sección que enseña a componer: ahora da las
+  dos cuentas, 1,55 % repartido y 1,53 % compuesto.
+- **La nómina.** El 4 % de salud se cita (Ley 100, art. 204); el de pensión se muestra
+  como cuenta, 16 % de cotización total (Decreto 4982 de 2007) por la cuarta parte a cargo
+  del trabajador (Ley 100, art. 20); la base común, también (art. 204, par. 1.º). El
+  recuadro «Lo que pasó de verdad el viernes» es «Lo que hacía la rutina del caso», sin
+  EPS ni ingreso base de cotización. La traza exige respuesta.
+- **La tasa efectiva anual.** Fuera «la regulación colombiana obliga a informar»: la
+  frase dice quién está obligado a qué, con la Ley 1480 (art. 45) y la Ley 1748 (art. 1.º).
+- Un `<Ilustrativo>` declara inventados las ofertas, la factura descontada y la nómina.
+
+**Verificador independiente.** Ocho citas en dos rondas. La del depurador salió
+«parcial»: generalizaba a «los lenguajes» desde la documentación de uno, y puesta antes
+de «sirve cuando el programa no falla» sugería un contraste que el propio pasaje
+desmiente. La de la Ley 1480, «parcial»: decía «quien financia una compra… sin estar
+vigilado», y la ley habla del proveedor que financia sus propios bienes y de quien da
+crédito sin que una autoridad vigile esa actividad. Las dos quedaron con la redacción
+que el verificador propuso.
+
+**Decisión tomada sin consultar.** Las definiciones y fórmulas de matemática financiera
+de la sección (descuento comercial; nominal, periódica y efectiva) se dejaron como
+definiciones del curso, sin cita. El inventario las había propuesto como citadas.
+
+**Lo que no se hizo.** No se comprobó el estado de la reforma pensional más allá del
+aviso de la Secretaría del Senado. VBA sin ejecutar. Nada visto a ojo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320.
+
+**Hueco de las herramientas.** La regla de la «clave larga» avisó bien cuando la opción
+correcta creció al corregirla. Pero ninguna regla mira que la pregunta de un ejercicio
+declare el supuesto del que depende su clave: el de los 590 000 lo encontró el lector.
+
