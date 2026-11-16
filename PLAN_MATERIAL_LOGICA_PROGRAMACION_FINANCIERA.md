@@ -3646,3 +3646,51 @@ Zotero.
 - La regla 9 ejecuta las salidas de Python y R, pero no mira cómo las imprime R: cuatro
   ejercicios preguntan «¿qué imprime?» con una forma que `cat()` no produce.
 
+### 2026-11-16 — Capítulo 3, fase 1: línea base y fuentes
+
+El docente aprobó el plan con las diez recomendaciones (A–J). Rama `claude/cap03-fase1`.
+El capítulo no se tocó.
+
+**Inventario (en el vault).** 213 afirmaciones: 27 citadas, 34 ejecutadas, 68 derivadas,
+24 ilustrativas, 33 de criterio y 27 remisiones; 85 no se presentan hoy como lo que son.
+35 figuras, 33 con defectos anotados. 29 conceptos (16 nuevos) y 20 hilos (16 nuevos).
+Quince cuentas derivadas no dan, siete remisiones no coinciden del todo con su destino y
+cinco esperan el cotejo con el syllabus. El inventario sacó dieciséis hallazgos que la
+lectura crítica no había visto (N1–N16, en la nota del capítulo).
+
+**Normas leídas en su página oficial** (Secretaría del Senado, Compilación Jurídica de la
+DIAN y Gestor Normativo de Función Pública), con los pasajes en el vault:
+
+- Estatuto Tributario, arts. 447, 454 y 468. El artículo 454 solo saca de la base del IVA
+  el descuento que consta en la factura y no está sujeto a condición: **el descuento por
+  pronto pago no reduce la base**, y el caso central de la sección 1 enseña lo contrario.
+  Se confirma el hallazgo H4; se aplica la decisión A.
+- Decreto 1625 de 2016, arts. 1.2.4.9.1, 1.2.4.2.5 y 1.2.4.2.83. El 2,5 % y la base sin
+  IVA se confirman con matices. **La retención de un CDT no es hoy del 7 % sino del 4 %**:
+  hallazgo nuevo.
+- Ley 100 de 1993, arts. 18, 20 y 204, y Decreto 4982 de 2007: 4 % de salud literal; 4 %
+  de pensión como cuenta (16 % × 25 %); misma base para las dos.
+- Ley 1480 de 2011, art. 45: la tasa efectiva anual, con esas palabras, solo para quien
+  da crédito sin estar vigilado. Con la Ley 1748, ya en Zotero, alcanza para una frase
+  más precisa que «la regulación obliga».
+
+La tanda 04 de Zotero (cinco normas) quedó preparada y **no se importó**: espera la
+aprobación del docente.
+
+**Lo que no se hizo o no se verificó.** Ningún pasaje pasó por el verificador
+independiente (se hace al citar, en la fase de cada sección). No se comprobó la vigencia
+de la reforma pensional (Ley 2381 de 2024), ni se leyó la Circular Básica Jurídica, ni
+los oficios de la DIAN sobre descuentos condicionados. Las cinco remisiones al syllabus
+están sin cotejar.
+
+**Huecos de las herramientas.**
+
+- El guion de tandas (`generar_tanda.py`, en el vault) no actualiza una nota de fuente
+  que ya existe como candidata: la del Estatuto Tributario hubo que reescribirla aparte.
+- Al terminar el agente del inventario aparecieron 91 copias de notas con un número
+  añadido o cambiado al final del nombre. Se apartaron sin borrar. `registrar_afirmaciones.py`
+  rechaza un `id` repetido, pero solo se ejecuta al registrar las citas de un capítulo: en
+  la línea base nada lo corre, y las copias se vieron al contar los archivos.
+- El buscador no devolvió ninguna página oficial para tres de las cinco normas: hubo que
+  ir a la dirección de la Secretaría del Senado y de la DIAN directamente.
+
