@@ -3879,3 +3879,32 @@ aviso de la Secretaría del Senado. VBA sin ejecutar. Nada visto a ojo.
 correcta creció al corregirla. Pero ninguna regla mira que la pregunta de un ejercicio
 declare el supuesto del que depende su clave: el de los 590 000 lo encontró el lector.
 
+### 2026-11-16 — Capítulo 3, fase 7: portada, evaluación y glosario
+
+Rama `claude/cap03-fase7`, sobre la fase 6. Ninguna cita nueva.
+
+- **Portada.** El caso de la nómina se cuenta como supuesto y con la misma razón de
+  reclamo que la sección 5; antes daban dos distintas. Fuera «once segundos» y «veintiséis
+  personas». «Los algoritmos de este curso se arman con tres estructuras de control», en
+  vez de «todo programa».
+- **Cuestionario.** Cinco preguntas ajustadas a lo que las secciones dicen ahora: sin
+  «57 000 idénticos en cada factura», sin «ningún lenguaje la reporta», la división
+  entera sin nombrar operadores y con valores positivos, y el costo del descuento con sus
+  dos cuentas. La clave del depurador se había corregido en la fase 5.
+- **Glosario.** La regla de dependencia como condición suficiente; el descuento comercial
+  sin «siempre menor». Lleva su `<Fuente>`.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+3 le queda un solo aviso de figura sin fuente, el flujograma, que es de la fase 8. Sonda
+en `file` y 320.
+
+**Lo que no se hizo.** Las cinco remisiones al syllabus no se cotejaron contra el archivo
+`.xlsx`, sino contra la fila anotada en esta sesión y las notas del capítulo 2. La
+pregunta 5 sigue repitiendo el escenario de la Motivación de la sección 3. La portada no
+dice que el pseudocódigo sea el lenguaje normativo; la del capítulo 2 tampoco.
+
+**Hueco de las herramientas.** El cuestionario cita afirmaciones de las secciones en sus
+justificaciones, y nada avisa cuando la sección cambia y la justificación no: las cinco
+de esta fase se encontraron releyendo. El inventario del vault las tenía enlazadas, y por
+ahí se llegó.
+

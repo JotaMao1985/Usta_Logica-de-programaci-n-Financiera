@@ -2772,11 +2772,11 @@
             <div className="prose-lp">
                 <Motivacion icon="fa-money-bill-trend-up"
                     gancho="El programa corrió sin errores y la liquidación salió mal. ¿Cómo se encuentra un fallo que la máquina no reporta?">
-                    Viernes de cierre. El proceso de nómina de 1 400 empleados corre en once segundos,
-                    sin un solo mensaje de error, y el lunes veintiséis personas reclaman: les
-                    descontaron la salud sobre un salario al que ya le habían restado otra deducción.
-                    Nadie escribió mal una fórmula. Dos instrucciones estaban en el orden equivocado, y
-                    el sistema hizo exactamente lo que le pidieron.
+                    Suponga un viernes de cierre. El proceso de nómina de 1 400 empleados corre en
+                    segundos, sin un solo mensaje de error, y el lunes llegan los reclamos: el aporte de
+                    salud quedó calculado sobre un salario al que ya le habían restado otra deducción.
+                    Nadie escribió mal una fórmula. Una instrucción cambió un dato antes de que otra lo
+                    usara, y el sistema hizo exactamente lo que le pidieron.
                 </Motivacion>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
@@ -2789,6 +2789,7 @@
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; sus datos son los del syllabus, que nombra */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -2822,7 +2823,7 @@
 
                 <h3>Las tres estructuras, y por qué esta va primera</h3>
                 <p>
-                    Todo programa, por grande que sea, se arma con tres estructuras de control:
+                    Los algoritmos de este curso se arman con tres estructuras de control:
                     <strong> secuencia</strong>, <strong>selección</strong> y <strong>repetición</strong>. Este capítulo
                     agota la primera; el 4 se ocupa de la segunda y el 5 de la tercera. Va primera
                     porque las otras dos la contienen: dentro de un <span className="inline-code">Si</span> y
@@ -5098,7 +5099,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
 
         const GLOSARIO_CAP03 = [
             ['Secuencia', 'Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas. No hay preguntas, saltos ni vueltas atrás.'],
-            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar si ninguna usa una variable que la otra modifica. Si la segunda lee lo que la primera escribe, el orden es obligatorio.'],
+            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar sin mirar más si ninguna usa una variable que la otra modifica. Si una lee lo que la otra escribe hay que comprobar: lo habitual es que el orden sea obligatorio.'],
             ['Asignación', 'Operación que evalúa la expresión de la derecha con los valores actuales y guarda el resultado en la variable de la izquierda, borrando lo que hubiera. No es una igualdad matemática.'],
             ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. En el intercambio de la sección 2 es lo que evita perder uno de los dos valores: tres asignaciones, no dos. El capítulo 2 la llama variable auxiliar.'],
             ['Acumulador', 'Variable que se lee a sí misma para actualizarse —saldo <- saldo + movimiento—. Conserva un solo valor: la historia de los anteriores solo queda en la tabla de traza.'],
@@ -5109,7 +5110,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             ['Prueba de escritorio', 'Ejecución manual de un algoritmo, instrucción por instrucción, registrando en una tabla el valor de cada variable después de cada paso. También se le llama traza.'],
             ['Fallo silencioso', 'Error que no interrumpe la ejecución ni produce ningún mensaje: el programa corre, entrega una cifra plausible y responde a una pregunta distinta de la que se le hizo.'],
             ['Base gravable', 'Valor sobre el que se liquida un impuesto. En la factura de la sección 1 es el valor de la factura menos el descuento concedido en ella sin condición, y esa resta fija el orden de las instrucciones.'],
-            ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje es siempre menor que el costo real de la operación.'],
+            ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje queda por debajo del costo medido sobre lo que se recibe.'],
             ['Tasa nominal', 'Tasa anual de referencia que no incorpora el interés sobre interés. Sin declarar cada cuánto capitaliza no significa nada: el mismo 24 % nominal da 24 %, 26,82 % o 27,11 % efectivo.'],
             ['Tasa periódica', 'Tasa que rige en cada período de capitalización. Se obtiene repartiendo la nominal entre el número de capitalizaciones del año: 24 % nominal con capitalización mensual son 2 % mensual.'],
             ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es la unidad en la que dos ofertas se pueden comparar, y en la que la ley manda informar el costo de un crédito (sección 5).'],
@@ -5119,9 +5120,9 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             <div className="prose-lp">
                 <Motivacion icon="fa-clipboard-question" etiqueta="Antes de responder"
                     gancho="¿Puede decir qué hace un algoritmo ajeno sin ejecutarlo?">
-                    En una entrevista para un puesto de analista de riesgo le van a poner sobre la mesa
-                    quince líneas de pseudocódigo escritas por otra persona y le van a preguntar qué
-                    imprimen. No habrá computador. Lo que se mide en ese momento —leer, trazar,
+                    Imagine una entrevista para un puesto de analista de riesgo en la que le ponen sobre
+                    la mesa quince líneas de pseudocódigo escritas por otra persona y le preguntan qué
+                    imprimen. No hay computador. Lo que se mide en ese momento —leer, trazar,
                     anticipar— es exactamente lo que se mide aquí.
                 </Motivacion>
 
@@ -5148,7 +5149,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     derecha={[
                         'Acumulador — la variable se lee a sí misma para actualizarse, y su valor anterior deja de existir.',
                         'Conversión de tasa — lleva una tasa a la unidad en la que se puede comparar con otra.',
-                        'Regla de dependencia — la instrucción siguiente lee lo que ésta escribe, así que el orden no se negocia.',
+                        'Regla de dependencia — la instrucción siguiente lee lo que esta escribe, así que el orden no se negocia.',
                         'Variable temporal — guarda un valor antes de que la asignación siguiente lo destruya.',
                         'Paréntesis de agrupación — obliga a sumar antes de dividir, que es lo que la barra de fracción hace sola.',
                     ]}
@@ -5165,16 +5166,15 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             sí.</strong> En la tabla de traza, la versión corta ocupa una fila: o está bien o
                             está mal, y no hay dónde mirar. La versión con <span className="inline-code">base</span>,
                             <span className="inline-code"> iva</span> y <span className="inline-code">retencion</span> ocupa
-                            cuatro, y cada una se contrasta por separado con lo que dice la factura —ésta es
-                            la base gravable, éste es el IVA, ésta es la retención—. Cuando el total sale
+                            cuatro, y cada una se contrasta por separado con lo que dice la factura —esta es
+                            la base gravable, este es el IVA, esta es la retención—. Cuando el total sale
                             mal, la diferencia entre las dos versiones es entre <em>saber que algo falló</em> y
                             <em> saber qué instrucción lo hizo</em>.
                         </p>
                         <p>
-                            El argumento de la velocidad no aplica: son las mismas operaciones aritméticas
-                            en los dos casos, y las tres asignaciones de más no son medibles frente a
-                            cualquier otra cosa que haga el programa. Optimizar aquí es optimizar lo que no
-                            cuesta.
+                            El argumento de la velocidad no cambia la decisión: son las mismas operaciones
+                            aritméticas en los dos casos, y lo que se ahorre en una línea no compensa lo
+                            que se pierde al no poder auditarla.
                         </p>
                         <p>
                             Hay además un argumento que no es técnico. Los nombres
@@ -5215,14 +5215,14 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     },
                     {
                         seccion: 'cap1',
-                        pregunta: 'La rutina de la factura quedó con el IVA calculado antes de restar el descuento. Sobre una factura de 12 000 000 con 300 000 de descuento informa 13 980 000, cuando lo correcto son 13 923 000. No hubo ningún error ni ningún aviso. ¿Qué es exactamente lo que calculó el programa?',
+                        pregunta: 'La rutina de la factura quedó con el IVA calculado antes de restar el descuento. Sobre una factura de 12 000 000 con 300 000 de descuento concedido en ella informa 13 980 000, cuando lo correcto son 13 923 000. No hubo ningún error ni ningún aviso. ¿Qué es exactamente lo que calculó el programa?',
                         opciones: [
                             { texto: 'El IVA de una factura sin descuento, sumado a la base que sí lo tiene.', correcta: true },
                             { texto: 'El total correcto: la diferencia de 57 000 es el redondeo del IVA.', correcta: false },
                             { texto: 'El total con el descuento aplicado dos veces, una a la base y otra al IVA.', correcta: false },
                             { texto: 'Nada coherente: mezclar los dos órdenes no responde ninguna pregunta.', correcta: false },
                         ],
-                        justificacion: 'Los 57 000 son exactamente el 19 % de los 300 000 del descuento: el IVA se calculó sobre los 12 000 000 completos, y la base, que se calcula después, sí quedó en 11 700 000. De ahí que el total mezcle las dos cosas. Lo importante es que el programa no está roto: contesta impecablemente una pregunta que nadie hizo —cuánto sería el IVA si no hubiera descuento— y presenta el resultado como si fuera el total de esta factura. Por eso no hay mensaje que buscar; un defecto de secuencia no rompe el programa, le cambia el significado a la cifra. Y no es redondeo: 57 000 se repiten idénticos en cada factura.',
+                        justificacion: 'Los 57 000 son exactamente el 19 % de los 300 000 del descuento: el IVA se calculó sobre los 12 000 000 completos, y la base, que se calcula después, sí quedó en 11 700 000. De ahí que el total mezcle las dos cosas. Lo importante es que el programa no está roto: contesta impecablemente una pregunta que nadie hizo y presenta el resultado como si fuera el total de esta factura. Por eso no hay mensaje que buscar; un defecto de secuencia no rompe el programa, le cambia el significado a la cifra. Y no es redondeo: es el 19 % del descuento, y cambia con él.',
                     },
                     {
                         seccion: 'cap2',
@@ -5233,7 +5233,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             { texto: 'Primero se evalúa la derecha con el valor que saldo tiene ahora, y después el resultado se guarda en saldo borrando el anterior.', correcta: true },
                             { texto: 'Es una ecuación sin solución, como x = x - 500000 en álgebra: una variable no puede aparecer a los dos lados.', correcta: false },
                         ],
-                        justificacion: 'La asignación se lee de derecha a izquierda y en dos tiempos. El valor anterior no queda en ninguna parte: por eso la tabla de traza es lo único que conserva la historia de una variable, y por eso intercambiar dos valores necesita una tercera variable.',
+                        justificacion: 'La asignación se lee de derecha a izquierda y en dos tiempos. El valor anterior no queda en ninguna parte: por eso la tabla de traza es lo único que conserva la historia de una variable, y por eso el intercambio de la sección 2 usa una tercera variable.',
                     },
                     {
                         seccion: 'cap2',
@@ -5244,7 +5244,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             { texto: 'El lenguaje avisa de la pérdida de datos antes de ejecutar la segunda línea.', correcta: false },
                             { texto: 'Las dos cuentas quedan con el saldo de la B: el de la A se destruyó en la primera línea.', correcta: true },
                         ],
-                        justificacion: 'La primera línea escribe sobre cuentaA sin que nadie haya guardado antes lo que tenía. La segunda no falla por sí sola: copia lo que encuentra, que ya es el saldo de B. Es una sobrescritura antes de lectura, y ningún lenguaje la reporta, porque asignar es legítimo.',
+                        justificacion: 'La primera línea escribe sobre cuentaA sin que nadie haya guardado antes lo que tenía. La segunda no falla por sí sola: copia lo que encuentra, que ya es el saldo de B. Es una sobrescritura antes de lectura, y el programa no la reporta, porque asignar es legítimo.',
                     },
                     {
                         seccion: 'cap3',
@@ -5259,14 +5259,14 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     },
                     {
                         seccion: 'cap3',
-                        pregunta: 'Las expresiones (a + b) / 2 y a / 2 + b / 2 calculan lo mismo. ¿Bajo qué condición dejan de coincidir?',
+                        pregunta: 'Con dos valores positivos, las expresiones (a + b) / 2 y a / 2 + b / 2 calculan lo mismo. ¿Bajo qué condición dejan de coincidir?',
                         opciones: [
                             { texto: 'Cuando el lenguaje evalúa de derecha a izquierda, porque entonces la suma se hace antes que las divisiones.', correcta: false },
                             { texto: 'Cuando la división es entera y los dos valores son impares: cada mitad pierde su medio por separado.', correcta: true },
                             { texto: 'Nunca: son la misma operación escrita de dos formas, y el tipo de división no cambia eso.', correcta: false },
                             { texto: 'Cuando la división es entera y uno de los dos valores es impar: la mitad de un impar no es exacta.', correcta: false },
                         ],
-                        justificacion: 'Con división decimal son equivalentes, y la segunda no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. Con el operador de división entera —// en Python, \\ en VBA— cada mitad se trunca por separado. Si los dos valores son impares, cada una pierde medio y juntas pierden una unidad entera que la suma, dividida una sola vez, conserva: 3 y 5 dan 4 con paréntesis y 3 sin ellos. Si solo uno es impar no pasa nada, porque la suma también es impar y pierde el mismo medio: 3 y 4 dan 3 de las dos maneras. Sobre dinero en centavos, esa unidad es un descuadre.',
+                        justificacion: 'Con división decimal son equivalentes, y la segunda no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. Con la división entera del capítulo 1, que descarta los decimales, cada mitad se trunca por separado. Si los dos valores son impares, cada una pierde medio y juntas pierden una unidad entera que la suma, dividida una sola vez, conserva: 3 y 5 dan 4 con paréntesis y 3 sin ellos. Si solo uno es impar no pasa nada, porque la suma también es impar y pierde el mismo medio: 3 y 4 dan 3 de las dos maneras. Sobre dinero en centavos, esa unidad es un descuadre.',
                     },
                     {
                         seccion: 'cap4',
@@ -5303,9 +5303,9 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             { texto: '3,00 %, porque los 450 000 de costo se miden sobre los 15 000 000 que dice la factura.', correcta: false },
                             { texto: '450 000 pesos, y no tiene sentido expresarlo como porcentaje.', correcta: false },
                             { texto: '3,00 % en los dos meses, porque la tasa de descuento se aplica dos veces.', correcta: false },
-                            { texto: '3,09 % en los dos meses —450 000 medidos sobre los 14 550 000 que recibió—, es decir un 1,55 % mensual.', correcta: true },
+                            { texto: '3,09 % en los dos meses: 450 000 medidos sobre los 14 550 000 que recibió, no sobre la factura.', correcta: true },
                         ],
-                        justificacion: 'La tasa de descuento se aplica sobre el valor nominal —el que se recibirá en el futuro— y el costo se mide sobre el valor recibido hoy. Es la misma operación leída desde los dos extremos, y la diferencia entre el 1,50 % y el 1,55 % crece con el plazo. Interpretar el resultado exige saber sobre qué base está calculado cada porcentaje.',
+                        justificacion: 'La tasa de descuento se aplica sobre el valor nominal —el que se recibirá en el futuro— y el costo se mide sobre el valor recibido hoy. Es la misma operación leída desde los dos extremos, y la diferencia entre el 1,50 % pactado y lo que cuesta al mes —1,55 % repartido por igual, 1,53 % compuesto— crece con el plazo. Interpretar el resultado exige saber sobre qué base está calculado cada porcentaje.',
                     },
                     {
                         seccion: 'cap5',
@@ -5331,6 +5331,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>convención del curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 4 rompe la línea recta: aparece el <span className="inline-code">Si</span>, y con
