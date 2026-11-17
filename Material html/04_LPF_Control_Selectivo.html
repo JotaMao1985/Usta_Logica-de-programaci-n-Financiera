@@ -3589,9 +3589,15 @@
                     Comité de cartera, martes. Un desembolso de 40 millones a un solicitante con score
                     480 —setenta puntos por debajo del mínimo de originación— aprobado por el motor de
                     decisión sin que nadie lo tocara. Revisan las reglas: las cinco están bien
-                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Cuatro de
-                    las cinco no llegaron a mirarse nunca.
+                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Tres de
+                    sus cuatro condiciones no llegaron a mirarse nunca.
                 </Motivacion>
+
+                <Ilustrativo>
+                    El comité, el desembolso de 40 millones y la política de cinco reglas que recorre este
+                    capítulo se inventaron para practicar: no son la política de ningún banco. Cada
+                    sección dice qué casos y qué cifras suyas son inventados y cuáles salen de una norma.
+                </Ilustrativo>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
                     Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
@@ -3623,8 +3629,8 @@
                     la máquina; saber <strong>cuál</strong> de varias condiciones en cascada decidió, y cuáles
                     ni se evaluaron; negar bien una condición compuesta, cambiando también el conector; decidir cuándo una
                     cadena de <span className="inline-code">Si</span> debe ser un
-                    <span className="inline-code"> Segun</span>; y —sobre todo— reconocer el defecto más caro
-                    de esta estructura: <strong>condiciones correctas en el orden equivocado</strong>.
+                    <span className="inline-code"> Segun</span>; y —sobre todo— reconocer el defecto central
+                    de este capítulo: <strong>condiciones correctas en el orden equivocado</strong>.
                 </p>
 
                 <Pipeline steps={[
@@ -3633,7 +3639,7 @@
                     { num: 3, title: 'Si…Sino', desc: 'Los dos caminos, y por qué dos Si no son lo mismo' },
                     { num: 4, title: 'La cascada', desc: 'Anidar, encadenar, y el orden que aprueba lo que no debía' },
                     { num: 5, title: 'Segun', desc: 'Cuándo la selectiva múltiple cabe, y cuándo no' },
-                    { num: 6, title: 'El oficio', desc: 'Riesgo, tarifas, retención y aprobación automática' },
+                    { num: 6, title: 'El oficio', desc: 'Explicar una decisión de crédito y liquidar una retención' },
                 ]} />
 
                 <h3>De dónde viene este capítulo</h3>
@@ -3660,8 +3666,8 @@
                     Todo algoritmo aparece en cuatro versiones y cada bloque <strong>tiene su propia
                     pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos y compararlos; el
                     material <strong>recuerda la última elección</strong>. En este capítulo mirar los cuatro
-                    no es opcional: es el primero donde <strong>esas diferencias deciden el resultado de un
-                    programa</strong>, y no solo el valor de una expresión. VBA
+                    no es opcional: aquí <strong>las diferencias entre ellos deciden por dónde pasa un
+                    programa</strong>. VBA
                     evalúa siempre los dos lados de un <span className="inline-code">And</span> y los otros
                     tres no; y la selectiva múltiple de la sección 5 admite rangos en VBA, exige una guarda
                     en Python y en R obliga a volver a la cascada.
@@ -6160,8 +6166,8 @@ neto = pago - retencion`,
             ['Selectiva doble', 'Estructura con dos bloques alternativos. Garantiza que se ejecute exactamente uno: ni ninguno ni los dos.'],
             ['Cascada', 'Serie de alternativas evaluadas en orden con Sino Si. Decide la primera condición que se cumple; las siguientes no se evalúan.'],
             ['Anidamiento', 'Una selectiva dentro de una de las ramas de otra. La condición interior solo se plantea si el flujo entra en la rama que la contiene, sea la del Entonces o la del Sino.'],
-            ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos: Segun, Select Case, match o switch según el lenguaje.'],
-            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. Escribirla siempre, aunque «no pueda pasar».'],
+            ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos o, donde el lenguaje lo permite, contra varios tramos: Segun, Select Case, match o switch según el lenguaje.'],
+            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. En este curso se escribe siempre, aunque «no pueda pasar», y se usa para avisar.'],
             ['Cortocircuito', 'Dejar de evaluar una condición compuesta en cuanto el resultado ya está decidido. Lo hacen pseudocódigo, Python y R (este, con && y ||); VBA no.'],
             ['Condición guardia', 'Operando que se pone delante para proteger al que viene detrás —comprobar que un divisor no es cero, por ejemplo—. Solo funciona si hay cortocircuito.'],
             ['Leyes de De Morgan', 'Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. NO (A Y B) es NO A O NO B.'],
@@ -6173,8 +6179,7 @@ neto = pago - retencion`,
             <div className="prose-lp">
                 <Motivacion icon="fa-graduation-cap"
                     gancho="Si una condición mal ordenada cuesta cuarenta millones, leerla bien vale el rato que toma.">
-                    Todo lo de este capítulo cabe en una pregunta que se hace en cualquier comité de
-                    cartera: dado este bloque de condiciones y este solicitante, ¿qué decide el sistema
+                    Todo lo de este capítulo cabe en la pregunta que se hizo el comité de la portada: dado este bloque de condiciones y este solicitante, ¿qué decide el sistema
                     y por qué? Quien sabe responderla sobre el papel, sin ejecutar nada, es quien
                     encuentra el defecto antes de que salga a producción.
                 </Motivacion>
@@ -6215,7 +6220,7 @@ neto = pago - retencion`,
                             { texto: 'Nada, porque el compilador avisa de la enumeración incompleta antes de ejecutar.', correcta: false },
                             { texto: 'No se ejecuta ninguna rama: la cuota no recibe valor, y el Segun no avisa.', correcta: true },
                         ],
-                        justificacion: 'En ninguno de los cuatro lenguajes avisa el Segun. El de pseudocódigo y el match de Python no ejecutan ningún caso; el Select Case de VBA tampoco, y la variable conserva lo que tuviera; el switch de R devuelve NULL de forma invisible. Lo que pase después depende del lenguaje: en VBA la cuenta sale con la cuota que tuviera la variable, y en Python, si cuota no tenía valor, el programa se detiene más adelante con un NameError, lejos del Segun y sin decir que el defecto está en él. Tampoco hay un compilador que revise que la enumeración esté completa: eso lo hacen otros lenguajes, no estos cuatro. Por eso el caso por defecto se escribe SIEMPRE, también cuando la lista parece cerrada: lo que la cierra hoy es el catálogo de productos del banco, y ese cambia sin avisarle al programa.',
+                        justificacion: 'En ninguno de los cuatro lenguajes avisa el Segun. El de pseudocódigo y el match de Python no ejecutan ningún caso; el Select Case de VBA tampoco, y la variable conserva lo que tuviera; el switch de R devuelve NULL de forma invisible. Lo que pase después depende del lenguaje: en VBA la cuenta sale con la cuota que tuviera la variable, y en Python, si cuota no tenía valor, el programa se detiene más adelante con un NameError, lejos del Segun y sin decir que el defecto está en él. Tampoco hay, en estos cuatro, nada que revise antes de ejecutar que la enumeración esté completa. Por eso este curso escribe siempre el caso por defecto, también cuando la lista parece cerrada: lo que la cierra hoy es el catálogo de productos del banco, y ese cambia sin avisarle al programa.',
                     },
                     {
                         seccion: 'cap2',
@@ -6223,10 +6228,10 @@ neto = pago - retencion`,
                         opciones: [
                             { texto: '2 500 000: con 60 días exactos la condición no se cumple.', correcta: false },
                             { texto: '2 700 000: 60 >= 60 es verdadero y se cobra el 8 %.', correcta: true },
-                            { texto: '2 700 000, y el programa deja constancia de que la rama se ejecutó.', correcta: false },
+                            { texto: '2 300 000: como hay mora, el recargo de 200 000 se descuenta del saldo.', correcta: false },
                             { texto: 'No se puede saber: depende de lo que valiera recargo antes del Si.', correcta: false },
                         ],
-                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. La ejecución no deja constancia de qué rama tomó, ni de la que se ejecuta ni de la que se salta. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
+                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. El recargo no se descuenta: la última línea suma. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
                     },
                     {
                         seccion: 'cap3',
@@ -6271,11 +6276,11 @@ neto = pago - retencion`,
                             { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
                             { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
+                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso no es un operador de VBA. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'Un equipo que trabaja en R tiene que escribir cuatro reglas. ¿Cuál de ellas se puede escribir con switch?',
+                        pregunta: 'Un equipo que trabaja en R tiene que escribir cuatro reglas. ¿Cuál de ellas se escribe con switch tal cual, igualando el valor con cada caso?',
                         opciones: [
                             { texto: 'La tarifa por tramos de monto: de 1 a 100 000, de 100 001 a 500 000, y así.', correcta: false },
                             { texto: 'La tasa según la calificación de riesgo del cliente: A, B, C, D o E.', correcta: true },
@@ -6304,7 +6309,7 @@ neto = pago - retencion`,
                             { texto: 'No se evaluó, porque la condición del score ya se había cumplido con 720.', correcta: false },
                             { texto: 'No se evaluó: la cascada se detuvo en la del endeudamiento, que está más arriba.', correcta: true },
                         ],
-                        justificacion: 'La cascada evalúa score < 550 —falso: con 720 la condición no se cumple, aunque el requisito sí—, después endeudamiento > 60 —verdadero, 68— y ahí decide: RECHAZADO. La regla del ingreso está más abajo y no llega a mirarse; si se evaluara daría verdadero, pero ya no se evalúa. Si estuviera de primera, este mismo solicitante saldría aprobado preferencial, que es el defecto de la sección 4 visto desde el otro lado. Las reglas se miran en el orden en que están escritas, no por su tipo.',
+                        justificacion: 'La cascada evalúa score < 550 —falso: 720 no es menor que 550—, después endeudamiento > 60 —verdadero, 68— y ahí decide: RECHAZADO. La regla del ingreso está más abajo y no llega a mirarse; si se evaluara daría verdadero, pero ya no se evalúa. Si estuviera de primera, este mismo solicitante saldría aprobado preferencial, que es el defecto de la sección 4 visto desde el otro lado. Las reglas se miran en el orden en que están escritas, no por su tipo.',
                     },
                 ]} />
 

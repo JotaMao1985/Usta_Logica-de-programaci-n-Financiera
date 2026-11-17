@@ -4237,3 +4237,29 @@ propia.
 terminaba en «lo que se pregunta:» hizo fallar el verificador con un mensaje que apunta
 a la primera línea del `Quiz`. Y las notas de fuente que genera `generar_tanda.py`
 conservan «sin importar» después de la importación: nada las actualiza.
+
+### 2026-11-17 — Capítulo 4, fase 8: portada, evaluación y glosario
+
+Rama `claude/cap04-fase8`, sobre la fase 7. Ninguna cita nueva.
+
+- **Portada.** Un `<Ilustrativo>` declara el comité, los 40 millones y la política de cinco
+  reglas. El conteo quedó igual que en las secciones 4 y 6: tres de las cuatro
+  condiciones no llegaron a mirarse. Salió «es el primero donde esas diferencias deciden
+  el resultado de un programa», que contradecía al capítulo 3 ya publicado.
+- **Cuestionario.** La justificación falsa sobre invertir los operandos en VBA; el
+  distractor que daba la misma cifra que la clave; la pregunta de `switch`, que ahora
+  dice «tal cual, igualando el valor con cada caso»; la frase sin referente. Fuera dos
+  afirmaciones sobre otros lenguajes que nadie leyó («eso lo hacen otros lenguajes»,
+  «AndAlso es de VB.NET»).
+- **Glosario.** La selectiva múltiple admite tramos donde el lenguaje lo permite; el caso
+  por defecto se enuncia como criterio del curso.
+- **Remisiones** al capítulo 3 y al 5 cotejadas con los capítulos publicados: coinciden.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 solo le queda el aviso de las figuras (fase 9). Sonda a 320: 8 de 8. En el vault no
+queda ninguna nota `citada` sin fuente ni `reescribir`.
+
+**Lo que no se hizo.** El lema del curso, «el lenguaje solo cambia de acento», no se
+tocó: lo llevan también los capítulos 3 y 5, y es decisión del docente. Las remisiones
+al syllabus y lo que el cuestionario dice de VBA (`AndAlso`, errores 6 y 11) esperan a
+la fase 10.
