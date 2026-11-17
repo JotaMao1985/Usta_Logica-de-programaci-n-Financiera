@@ -473,6 +473,9 @@ Las vigilan siete reglas:
 32. **Entidad o norma sin cita** (aviso) — el texto nombra una entidad o una
     norma sin un `<Cita>` en el mismo párrafo ni un `<Ilustrativo>` alrededor.
     El léxico es la lista `ENTIDADES_Y_NORMAS` de `comprobar_fuentes.js`.
+    Desde el 2026-11-17 incluye «la norma», «la ley» y «la regulación» dichas sin
+    nombre —no «la ley de Moore»— y la UVT: el capítulo 4 atribuía a «la norma» algo
+    que ninguna decía, y daba por vigente una base «de 4 UVT» que había cambiado.
 
 La 30 y la 32 viven en `comprobar_fuentes.js` y salen resumidas, una línea por
 regla y capítulo. Lo ya revisado se calla con `fuente-ok` y el motivo en un
@@ -482,6 +485,12 @@ comentario, en su línea o en la anterior, como `contraste-ok` en la regla 10:
 {/* fuente-ok: la tabla resume el bloque de código de arriba */}
 <table>…
 ```
+
+Dentro de la etiqueta de apertura de un componente —entre sus atributos— el
+comentario se escribe sin llaves, `/* fuente-ok: … */`; y dentro de un objeto de
+JavaScript, como una pregunta del `Quiz`, `// fuente-ok: …`. En medio del texto de
+un párrafo no: parte el texto en dos y se come el espacio; ahí se reescribe la frase.
+
 
 El 2026-11-10, al escribirlas, avisaban de 67 figuras y 8 menciones en los
 cinco capítulos. No se migró ninguna: solo el capítulo 1 cita, y solo en su

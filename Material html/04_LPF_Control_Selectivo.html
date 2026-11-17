@@ -2794,7 +2794,7 @@
         ------------------------------------------------------------ */
         const EvaluadorLogico = () => {
             const VARS = [
-                { clave: 'A', etiqueta: 'ingreso > 3.000.000', corto: 'ingreso alto' },
+                { clave: 'A', etiqueta: 'ingreso > 3 000 000', corto: 'ingreso alto' },
                 { clave: 'B', etiqueta: 'score >= 680', corto: 'score bueno' },
                 { clave: 'C', etiqueta: 'endeudamiento < 40 %', corto: 'poco endeudado' },
             ];
@@ -2912,6 +2912,7 @@
                     </div>
 
                     <div className="overflow-x-auto">
+                        {/* fuente-ok: tabla de verdad que calcula el propio componente */}
                         <table className="w-full text-sm border-collapse">
                             <caption className="text-xs text-gray-500 text-left mb-1">
                                 Las ocho combinaciones posibles. La fila resaltada es la que está activa.
@@ -2947,8 +2948,8 @@
                     <p className="text-xs text-gray-500 mt-2">
                         Las filas marcadas con <span className="font-mono font-bold">≠</span> son aquellas
                         donde las dos expresiones difieren: <strong>{nDifieren} de 8</strong>. Todas ellas
-                        tienen algo en común —el solicitante gana bien y está muy endeudado—, que es
-                        exactamente el perfil que un banco no quiere aprobar por descuido de un paréntesis.
+                        tienen algo en común —el solicitante supera el ingreso y no cumple el tope de
+                        endeudamiento—: es el perfil que la regla quería detener y que un paréntesis de menos deja pasar.
                     </p>
                 </div>
             );
@@ -2981,7 +2982,7 @@
                 ingreso: [
                     { v: 0, t: '$ 0 — sin ingreso declarado' },
                     { v: 1200000, t: '$ 1.200.000' },
-                    { v: 1500000, t: '$ 1.500.000 — el piso del codeudor, exacto' },
+                    { v: 1500000, t: '$ 1.500.000 — el límite del codeudor, exacto: ya no aplica' },
                     { v: 2800000, t: '$ 2.800.000' },
                     { v: 5000000, t: '$ 5.000.000 — el piso preferencial, exacto' },
                     { v: 6500000, t: '$ 6.500.000' },
@@ -3187,8 +3188,7 @@
            25 000; con una devolución en negativo entra en el PRIMER tramo
            —`monto <= 100000` también es cierto para un negativo— y devuelve
            2 500. Son dos defectos distintos, no uno.
-           Ese es el E4 del capítulo, y el cloze
-           «Segun sin caso por defecto» del banco.
+           Ese es el E4 del capítulo.
         ------------------------------------------------------------ */
         const SelectivasComparadas = () => {
             // Con los bordes exactos de cada tramo, que es donde viven los
@@ -3303,12 +3303,12 @@
         const flechaDefs = (id) => (
             <defs>
                 <marker id={id} markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
-                    <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
+                    <path d="M0.6,0.6 L7,3 L0.6,5.4" fill="none" stroke="#3D008D" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
                 </marker>
             </defs>
         );
 
-        const FlujogramaSelectivaDoble = () => (
+        const FlujogramaSelectivaDoble = () => ( // fuente-ok: flujograma propio del caso inventado de la sección 3, que lleva su <Ilustrativo>
             <figure className="my-6 not-prose">
                 <svg viewBox="0 0 420 472" role="img" className="hidden sm:block" style={{ width: '100%', maxWidth: '440px', height: 'auto', margin: '0 auto' }}
                     aria-label="Flujograma de una selectiva doble. Inicio; se leen esPreferencial y monto; un rombo pregunta si esPreferencial; por la rama Sí se calcula tarifa igual a monto por 0,002, que da 4000; por la rama No se calcula tarifa igual a monto por 0,005, que da 10000; las dos ramas vuelven a juntarse; se escribe tarifa y Fin. Exactamente una de las dos ramas se recorre.">
@@ -3408,7 +3408,8 @@
                     El rombo es el símbolo de la decisión, y de él salen <strong>dos</strong> flechas rotuladas.
                     Las dos vuelven a juntarse antes de seguir: por eso se recorre exactamente una, nunca las
                     dos ni ninguna. Con dos <span className="inline-code">Si</span> sueltos habría dos rombos
-                    seguidos, y esa garantía se perdería.
+                    seguidos, y esa garantía se perdería. El flujograma lee los dos datos; los bloques de
+                    código los traen ya asignados para que se puedan ejecutar tal cual.
                 </figcaption>
             </figure>
         );
@@ -3434,7 +3435,7 @@
 
             // ---- ANCHA (≥ 640 px): la rama Sí sale por el costado ----
             const RAIL = 472, CONFLUYE = 556;
-            const ancha = (
+            const ancha = ( // fuente-ok: variante ancha del flujograma de la política inventada de la sección 4
                 <svg viewBox="0 0 486 716" role="img" className="hidden sm:block"
                     style={{ width: '100%', maxWidth: '486px', height: 'auto', margin: '0 auto' }} aria-label={DESCRIPCION}>
                     {flechaDefs('lp-flecha4-FlujogramaCascada-ancho')}
@@ -3477,7 +3478,7 @@
             // así que en una columna de 319 px la letra sale al doble de tamaño.
             const IZQ = 14, EJE = 124, DER = 234, PASO = 164, Y0 = 76;
             const yDefecto = Y0 + 4 * PASO, yJunta = yDefecto + 74;
-            const estrecha = (
+            const estrecha = ( // fuente-ok: variante estrecha del mismo flujograma
                 <svg viewBox={`0 0 248 ${yJunta + 156}`} role="img" className="sm:hidden"
                     style={{ width: '100%', height: 'auto', margin: '0 auto' }} aria-label={DESCRIPCION}>
                     {flechaDefs('lp-flecha4-FlujogramaCascada-estrecho')}
@@ -3522,7 +3523,7 @@
                 </svg>
             );
 
-            return (
+            return ( // fuente-ok: flujograma propio de la política inventada de la sección 4, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     {ancha}
                     {estrecha}
@@ -3544,21 +3545,22 @@
         // encoge con el viewBox: en una columna de 319 px caía a 8,5 px.
         const SimbologiaFlujograma = () => {
             const FILAS = [
-                ['Inicio y fin', 'Uno de cada uno, y el recorrido va del primero al segundo.',
+                ['Inicio y fin', 'En este curso, uno de cada uno; el recorrido va del primero al segundo.',
                     <ellipse cx="38" cy="16" rx="34" ry="13" fill="#3D008D" />],
                 ['Entrada y salida', 'Leer un dato o escribir un resultado.',
                     <polygon points="14,3 72,3 62,29 4,29" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.4" />],
                 ['Proceso', 'Calcular o asignar: la variable cambia de valor.',
                     <rect x="6" y="3" width="64" height="26" rx="5" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
-                ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.',
+                ['Decisión', 'Una condición; en este curso, con dos salidas rotuladas: Sí y No.',
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha4)" />],
             ];
-            return (
+            return ( // fuente-ok: los cinco símbolos son convención del curso, presentada con su fuente en el capítulo 2
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-                        La simbología de los flujogramas
+                        Los símbolos que usan los flujogramas de este curso
+
                     </figcaption>
                     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{flechaDefs('lp-flecha4')}</svg>
                     <ul className="space-y-2.5" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
@@ -3587,9 +3589,15 @@
                     Comité de cartera, martes. Un desembolso de 40 millones a un solicitante con score
                     480 —setenta puntos por debajo del mínimo de originación— aprobado por el motor de
                     decisión sin que nadie lo tocara. Revisan las reglas: las cinco están bien
-                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Cuatro de
-                    las cinco no llegaron a mirarse nunca.
+                    redactadas y ninguna sobra. Lo que estaba mal era cuál se evaluaba primero. Tres de
+                    sus cuatro condiciones no llegaron a mirarse nunca.
                 </Motivacion>
+
+                <Ilustrativo>
+                    El comité, el desembolso de 40 millones y la política de cinco reglas que recorre este
+                    capítulo se inventaron para practicar: no son la política de ningún banco. Cada
+                    sección dice qué casos y qué cifras suyas son inventados y cuáles salen de una norma.
+                </Ilustrativo>
 
                 <Box type="tip" label="Cómo estudiar este capítulo">
                     Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
@@ -3601,6 +3609,7 @@
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; lo que viene del syllabus se coteja como remisión */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -3621,8 +3630,8 @@
                     la máquina; saber <strong>cuál</strong> de varias condiciones en cascada decidió, y cuáles
                     ni se evaluaron; negar bien una condición compuesta, cambiando también el conector; decidir cuándo una
                     cadena de <span className="inline-code">Si</span> debe ser un
-                    <span className="inline-code"> Segun</span>; y —sobre todo— reconocer el defecto más caro
-                    de esta estructura: <strong>condiciones correctas en el orden equivocado</strong>.
+                    <span className="inline-code"> Segun</span>; y —sobre todo— reconocer el defecto central
+                    de este capítulo: <strong>condiciones correctas en el orden equivocado</strong>.
                 </p>
 
                 <Pipeline steps={[
@@ -3631,7 +3640,7 @@
                     { num: 3, title: 'Si…Sino', desc: 'Los dos caminos, y por qué dos Si no son lo mismo' },
                     { num: 4, title: 'La cascada', desc: 'Anidar, encadenar, y el orden que aprueba lo que no debía' },
                     { num: 5, title: 'Segun', desc: 'Cuándo la selectiva múltiple cabe, y cuándo no' },
-                    { num: 6, title: 'El oficio', desc: 'Riesgo, tarifas, retención y aprobación automática' },
+                    { num: 6, title: 'El oficio', desc: 'Explicar una decisión de crédito y liquidar una retención' },
                 ]} />
 
                 <h3>De dónde viene este capítulo</h3>
@@ -3649,8 +3658,7 @@
                 </p>
                 <Box type="info" label="Una deuda del capítulo 3 que se salda aquí">
                     La tabla de precedencia del capítulo 3 dejó su última fila —la de los operadores
-                    relacionales y lógicos— apuntando explícitamente «al capítulo 4». Es lo primero que
-                    hace la sección 1.
+                    relacionales y lógicos— apuntando explícitamente «al capítulo 4». La sección 1 la salda.
                 </Box>
 
                 <h3>Los cuatro lenguajes</h3>
@@ -3658,8 +3666,8 @@
                     Todo algoritmo aparece en cuatro versiones y cada bloque <strong>tiene su propia
                     pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos y compararlos; el
                     material <strong>recuerda la última elección</strong>. En este capítulo mirar los cuatro
-                    no es opcional: es el primero donde <strong>esas diferencias deciden el resultado de un
-                    programa</strong>, y no solo el valor de una expresión. VBA
+                    no es opcional: aquí <strong>las diferencias entre ellos deciden por dónde pasa un
+                    programa</strong>. VBA
                     evalúa siempre los dos lados de un <span className="inline-code">And</span> y los otros
                     tres no; y la selectiva múltiple de la sección 5 admite rangos en VBA, exige una guarda
                     en Python y en R obliga a volver a la cascada.
@@ -3807,6 +3815,7 @@ End Sub`,
                     de una condición depende que un desembolso salga o no salga:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice de la sección; remite al capítulo 1, cotejado */}
                     <table>
                         <thead>
                             <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
@@ -3825,7 +3834,7 @@ End Sub`,
                     Antes de que exista ningún <span className="inline-code">Si</span>, una condición ya es
                     algo por sí sola: una expresión que <strong>vale verdadero o falso</strong> y que se
                     puede guardar en una variable, igual que se guarda un saldo. Se mira así, sin
-                    decisión de por medio, porque es donde se cometen los errores: cuando el
+                    decisión de por medio, porque es donde se comete el error de esta sección: cuando el
                     <span className="inline-code"> Si</span> aparece en la sección siguiente, la condición ya
                     tiene que estar bien.
                 </p>
@@ -3837,9 +3846,17 @@ End Sub`,
 
                 <EvaluadorLogico />
 
+                <Ilustrativo>
+                    La regla de aprobación de esta sección, con sus umbrales —3 000 000 de ingreso, 680 de
+                    score y 40 % de endeudamiento—, sus solicitantes y los doscientos créditos de la apertura
+                    se inventaron para este capítulo: no son la política de ningún banco. Lo mismo vale
+                    para el aumento de cupo y para la tarjeta de los ejemplos que siguen.
+                </Ilustrativo>
+
+
                 <h3>La precedencia que faltaba</h3>
                 <p>
-                    El capítulo 3 cerró su tabla de precedencia con una fila que decía «relacionales y
+                    El capítulo 3 cerró su tabla de precedencia con una quinta fila que decía «relacionales y
                     lógicos — al final <em>(capítulo 4)</em>». Esta es esa fila, desplegada. Para los
                     relacionales y los lógicos el orden es <strong>el mismo en los cuatro lenguajes</strong>;
                     para los aritméticos, no del todo:
@@ -3859,6 +3876,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>elaboración propia; el orden de Python y R se comprobó ejecutando, y el de VBA, en Excel; los aritméticos remiten al capítulo 3</Fuente>
                 <Box type="warn" label="La consecuencia práctica, en una línea">
                     <span className="inline-code">A O B Y C</span> <strong>no</strong> es
                     <span className="inline-code"> (A O B) Y C</span>: es
@@ -3872,12 +3890,13 @@ End Sub`,
                     Una regla de rechazo suele nacer como la negación de una de aprobación, y ahí aparece
                     el error: se niegan los operandos y se deja el conector como estaba. No funciona así.
                     Al negar, <strong>el conector también cambia</strong> —son las{' '}
-                    <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. Deben su nombre a Augustus De Morgan (1806-1871).">leyes de De Morgan</Termino>—:
+                    <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa.">leyes de De Morgan</Termino>—:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: equivalencias lógicas; se comprueban con la tabla de verdad */}
                     <table>
                         <thead>
-                            <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error frecuente</th></tr>
+                            <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error</th></tr>
                         </thead>
                         <tbody>
                             <tr>
@@ -3913,9 +3932,10 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>solicitantes inventados; cada fila es la regla aplicada a sus datos</Fuente>
                 <p>
                     Dos de los tres perfiles que debían rechazarse pasan el filtro, y son justamente
-                    los que fallan en <em>una</em> cosa: los que un analista habría detenido sin dudar.
+                    los que fallan en <em>una</em> sola cosa.
                 </p>
 
                 <Ejercicio tipo="E2"><MCQ
@@ -3944,19 +3964,18 @@ End Sub`,
                 <Box type="warn" label="El único de los cuatro que no perdona">
                     <span className="inline-code">And</span> y <span className="inline-code">Or</span> de VBA
                     evalúan <strong>siempre los dos lados</strong>. La guardia de arriba no protege nada allí:
-                    la división se ejecuta y el procedimiento se detiene: con el error 6,
-                    «Desbordamiento», porque aquí es 0 entre 0; con un total distinto de cero
-                    sería el 11, «División por cero». La forma de
-                    conseguir el mismo efecto en VBA es <strong>anidar dos <span className="inline-code">Si</span></strong>,
-                    y eso es exactamente lo que hace la sección siguiente.
+                    la división se ejecuta y el procedimiento se detiene. Aquí, que es 0 entre 0, lo hace con el
+                    error 6, «Desbordamiento»; con un total distinto de cero sería el 11, «División por
+                    cero». Una forma de conseguir en VBA el efecto de la guardia es <strong>anidar dos
+                    <span className="inline-code"> Si</span></strong>, y es la que usa la sección siguiente.
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
+                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3 000 000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
                     opciones={[
-                        { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
-                        { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
-                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6.500.000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
+                        { texto: 'Ingreso 2 800 000 · score 700 · endeudamiento 25 %', correcta: false },
+                        { texto: 'Ingreso 1 200 000 · score 750 · endeudamiento 20 %', correcta: false },
+                        { texto: 'Ingreso 6 500 000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6 500 000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Tiene un score de 480, muy por debajo de los 680 que pide la regla, y queda aprobado sin que la máquina lo mire. Con paréntesis, (ingreso > 3 000 000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
                     ]}
                 /></Ejercicio>
@@ -4041,24 +4060,42 @@ End Sub`,
            lenguajes se apoyan en el cortocircuito; VBA necesita dos Si
            anidados porque su And evalúa siempre los dos lados. */
         const EJ_GUARDIA_SI = {
-            pseudo: `// compras vale 0: la tarjeta no se usó este mes
+            pseudo: `// La tarjeta no se usó este mes
+compras <- 0
+total   <- 0
+
 Si compras <> 0 Y total / compras > 500000 Entonces
     Escribir "Consumo promedio alto"
 FinSi`,
-            python: `# compras vale 0: la tarjeta no se usó este mes
+            python: `# La tarjeta no se usó este mes
+compras = 0
+total   = 0
+
 if compras != 0 and total / compras > 500_000:
     print("Consumo promedio alto")`,
-            r: `# compras vale 0: la tarjeta no se usó este mes
+            r: `# La tarjeta no se usó este mes
+compras <- 0
+total   <- 0
+
 if (compras != 0 && total / compras > 500000) {
   cat("Consumo promedio alto\\n")
 }`,
-            vba: `' And evalúa siempre los dos lados, así que la guardia
-' tiene que ser un Si aparte, por fuera
-If compras <> 0 Then
-    If total / compras > 500000 Then
-        Debug.Print "Consumo promedio alto"
+            vba: `Option Explicit
+
+Sub ConsumoPromedioConSi()
+    Dim compras As Long, total As Currency
+
+    compras = 0
+    total = 0
+
+    ' And evalúa siempre los dos lados, así que la guardia
+    ' tiene que ser un Si aparte, por fuera
+    If compras <> 0 Then
+        If total / compras > 500000 Then
+            Debug.Print "Consumo promedio alto"
+        End If
     End If
-End If`,
+End Sub`,
         };
 
         const TRAZA_MORA = {
@@ -4128,7 +4165,7 @@ Debug.Print total`,
 
                 <h3>La estructura</h3>
                 <p>
-                    La selectiva simple tiene una sola forma y no admite variantes: una condición, y un
+                    La selectiva simple es la más corta de las estructuras de decisión: una condición, y un
                     bloque de instrucciones que se ejecuta <strong>solo si</strong> esa condición es
                     verdadera. Si es falsa, el programa salta el bloque entero y sigue en la línea de
                     después. No hay alternativa, no hay aviso y no queda rastro.
@@ -4143,7 +4180,23 @@ Debug.Print total`,
                 <CodeTabs
                     titulo="El recargo que no se cobró"
                     bloques={EJ_MORA}
-                    nota="Con 30 días exactos la condición es falsa: recargo se queda en el 0 que le dieron antes del Si, y el total sale como si la factura estuviera al día. Cambie el 30 por un 31 y la misma rutina cobra 240 000. El 5 % sobre todo el saldo es ilustrativo: en Colombia, el cobro por mora está topado por la tasa de usura y se liquida sobre lo vencido." />
+                    nota="La salida va dentro del bloque. Cambie diasMora <- 30 por 31 y vuelva a mirar el recargo: la misma rutina cobra 240 000." />
+
+                <Ilustrativo>
+                    La factura, su saldo, el corte del día 30, los catorce meses de la apertura y el recargo
+                    del 5 % sobre todo el saldo se inventaron para este capítulo. El caso no dice si
+                    ese recargo estaba pactado, y el 5 % no se comparó con ningún límite legal: sirve para
+                    seguir la cuenta, no para liquidar una factura.
+                </Ilustrativo>
+                <p>
+                    Un cobro así tiene nombre en la ley: toda suma que se cobre al deudor como sanción por
+                    el simple retardo o incumplimiento del plazo de una obligación dineraria se tiene como
+                    interés de mora, cualquiera sea su denominación <Cita k="congreso1990ley45" loc="art. 65" />.
+                    Y, para los negocios mercantiles, la ley dice cuánto vale ese interés cuando nadie lo
+                    pactó: si las partes no han estipulado el interés moratorio, equivale a una y media
+                    veces el bancario corriente, y en cuanto el cobro sobrepase ese monto el acreedor
+                    pierde todos los intereses <Cita k="presidencia1971decreto410" loc="art. 884" />.
+                </p>
 
                 <p>
                     Fíjese en la línea <span className="inline-code">recargo &lt;- 0</span>, antes del
@@ -4153,7 +4206,7 @@ Debug.Print total`,
                     valor: en Python y en R el programa se detendría ahí con un error. En VBA no, porque
                     <span className="inline-code"> Dim</span> ya la deja en 0; aun así se escribe, porque declara
                     la intención y no depende de una regla del lenguaje. <strong>Toda variable que solo se
-                    asigna dentro de una rama necesita un valor por defecto fuera de ella.</strong>
+                    asigna dentro de una rama, y que se lee después, necesita un valor por defecto fuera de ella.</strong>
                 </p>
 
                 <h3>La traza gana una columna</h3>
@@ -4167,7 +4220,7 @@ Debug.Print total`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio con el flujo anotado"
-                    enunciado={<>La tabla tiene una fila por cada línea del programa, se ejecute o no. En la columna <strong>flujo</strong> escriba qué pasó en esa línea: en la del Si, <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span>; en las demás, <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span>. En las variables, el valor después de la fila: <span className="inline-code">—</span> si todavía no tienen valor, y lo mismo que traían si la fila se salta.</>}
+                    enunciado={<>La tabla tiene una fila por cada instrucción del programa, se ejecute o no; <span className="inline-code">Inicio</span>, <span className="inline-code">Fin</span> y <span className="inline-code">FinSi</span> no ocupan fila. En la columna <strong>flujo</strong> escriba qué pasó en esa línea: en la del Si, <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span>; en las demás, <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span>. En las variables, el valor después de la fila: <span className="inline-code">—</span> si todavía no tienen valor, y lo mismo que traían si la fila se salta. La raya se anota también en VBA, aunque allí <span className="inline-code">Dim</span> deje las variables en 0: la traza registra lo que el programa ha asignado.</>}
                     codigo={TRAZA_MORA}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -4202,7 +4255,7 @@ Debug.Print total`,
                 <p>
                     La sección anterior dejó pendiente cómo se escribe en VBA una condición que se
                     protege a sí misma. Aquí está: donde los otros tres lenguajes se apoyan en el
-                    cortocircuito y les basta una condición compuesta, VBA necesita
+                    cortocircuito y les basta una condición compuesta, en VBA este capítulo escribe
                     <strong> dos <span className="inline-code">Si</span>, uno dentro del otro</strong>.
                 </p>
 
@@ -4212,7 +4265,7 @@ Debug.Print total`,
                     nota="Ninguno imprime nada con compras = 0, que es justo lo que se busca. La diferencia está en el motivo: los tres primeros no llegan a dividir; VBA no dividiría tampoco, pero solo porque el Si exterior le impide entrar." />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Las lecturas y el valor por defecto del recargo van antes de la condición; no dependen unos de otros, así que entre ellos vale cualquier orden."
+                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Las lecturas y el valor por defecto del recargo van antes de la condición; no dependen unos de otros, así que entre ellos vale cualquier orden. En VBA no hay lecturas: el saldo está en la celda B2 y los días de mora en la B3."
                     pasos={ORDENA_MORA}
                     libres={LIBRES_MORA}
                     pista="Pregúntese qué necesita cada línea para poder ejecutarse. Una de ellas suma una variable que, si la rama no entra, nadie habrá asignado."
@@ -4392,12 +4445,12 @@ Debug.Print tarifa`,
             <div className="prose-lp">
                 <Motivacion icon="fa-code-compare"
                     gancho="Dos Si seguidos no son un Si…Sino. ¿En qué caso se nota, y cuánto cuesta?">
-                    Dos tarifas: una para el cliente preferencial y otra, la plena, que alguien escribió
-                    como «transacciones de más de un millón». Quedaron como dos condiciones
-                    independientes, una debajo de la otra, en vez de como una sola con su alternativa.
-                    Para casi todos los clientes daba igual. Para los que cumplían
-                    las dos, la segunda instrucción sobrescribía a la primera, y el cliente preferencial
-                    terminó pagando la tarifa plena durante un trimestre.
+                    La regla tenía dos tarifas: una para el cliente preferencial y otra, la plena, para
+                    todos los demás. Quien la tradujo le puso a la plena su propia condición
+                    —«transacciones de más de un millón»— en vez de dejarla como la alternativa de la
+                    primera. Quedaron dos condiciones independientes, una debajo de la otra. El cliente
+                    preferencial que movía más de un millón cumplía las dos: la segunda instrucción
+                    sobrescribía a la primera, y terminó pagando la tarifa plena.
                 </Motivacion>
 
                 <h3>Dos caminos, y exactamente uno se recorre</h3>
@@ -4416,16 +4469,24 @@ Debug.Print tarifa`,
                 <CodeTabs
                     titulo="La tarifa, resuelta con Si…Sino"
                     bloques={EJ_TARIFA_SINO}
-                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no existe para este dato. Cambie Verdadero por Falso y la tarifa pasa a 10 000." />
+                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no se ejecuta con este dato. La traza de más abajo sigue al cliente que no lo es." />
+
+                <Ilustrativo>
+                    Las dos tarifas —0,2 % para el cliente preferencial y 0,5 % para los demás—, el umbral
+                    del millón, los clientes y las cuatrocientas transacciones de esta sección se inventaron
+                    para este capítulo: no son las tarifas de ningún banco.
+                </Ilustrativo>
 
                 <h3>Por qué no da igual escribirlo con dos Si</h3>
                 <p>
                     La tentación es escribir cada tarifa con su propia condición, una debajo de la otra.
                     Parece lo mismo y se lee casi igual. La diferencia aparece en cuanto un dato cumple
                     <strong> las dos condiciones a la vez</strong>: los dos bloques se ejecutan, y el segundo
-                    pisa lo que escribió el primero. Aquí la segunda condición no es la negación de la
-                    primera, sino otra —<span className="inline-code">monto &gt; 1000000</span>—, y nada impide
-                    que un mismo cliente cumpla las dos.
+                    pisa lo que escribió el primero. La regla
+                    sigue siendo la del bloque anterior —plena para todo el que no sea preferencial—, pero
+                    aquí la segunda condición no es la negación de la primera, sino otra
+                    —<span className="inline-code">monto &gt; 1000000</span>—, y nada impide que un mismo
+                    cliente cumpla las dos, ni que no cumpla ninguna.
                 </p>
 
                 <CodeTabs
@@ -4435,15 +4496,14 @@ Debug.Print tarifa`,
 
                 <Box type="warn" label="Seis mil pesos por transacción">
                     El cliente preferencial de 2 000 000 paga <strong>10 000 en vez de 4 000</strong>. Sobre
-                    un corporativo con cuatrocientas transacciones al mes son 2 400 000 mensuales cobrados
-                    de más, en una cuenta que además es la que el banco menos quiere perder. Y el
-                    programa nunca dejó de funcionar.
+                    un corporativo con cuatrocientas transacciones como esa al mes son 2 400 000 mensuales cobrados
+                    de más. Y el programa nunca dejó de funcionar.
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
-                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
+                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis, cuando la regla le asignaba la plena: 4 000. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que abre la sección: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
                         { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
                         { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
                         { texto: 'Un error de ejecución: ninguno de los dos Si le asigna un valor a tarifa.', correcta: false },
@@ -4460,7 +4520,7 @@ Debug.Print tarifa`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio de un cliente no preferencial"
-                    enunciado={<>Una fila por cada línea del programa, se ejecute o no. En <strong>flujo</strong>, como en la sección anterior: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en la fila del Si, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás. En <strong>tarifa</strong>, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tiene.</>}
+                    enunciado={<>Una fila por cada instrucción del programa, se ejecute o no; <span className="inline-code">Sino</span> y <span className="inline-code">FinSi</span> no ocupan fila. En <strong>flujo</strong>, como en la sección anterior: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en la fila del Si, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás. En <strong>tarifa</strong>, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tiene.</>}
                     codigo={TRAZA_SINO}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -4500,8 +4560,8 @@ Debug.Print tarifa`,
                         <p>
                             <strong>El criterio:</strong> si las alternativas son <em>excluyentes por naturaleza</em>
                             —o es preferencial o no lo es—, la estructura debe decirlo. Dejarlo en manos de dos
-                            condiciones separadas convierte una garantía del lenguaje en una responsabilidad de
-                            quien escribe, y en una que nadie va a volver a revisar dentro de seis meses.
+                            condiciones separadas convierte una garantía de la estructura en una responsabilidad de
+                            quien escribe.
                         </p>
                         <p>
                             Hay un caso donde dos <span className="inline-code">Si</span> sí son lo correcto: cuando
@@ -4663,7 +4723,7 @@ if (score < 550) {
   decision <- "APROBADO ESTANDAR"
 }
 
-cat(decision, "\\n")
+cat(sprintf("%s\\n", decision))
 #> RECHAZADO`,
             vba: `Option Explicit
 
@@ -4749,7 +4809,7 @@ if (ingreso >= 5000000) {
   decision <- "APROBADO ESTANDAR"
 }
 
-cat(decision, "\\n")
+cat(sprintf("%s\\n", decision))
 #> APROBADO PREFERENCIAL`,
             vba: `Option Explicit
 
@@ -4834,10 +4894,10 @@ End Sub`,
         };
         const ERROR_CASCADA_LINEA_OK = { pseudo: 3, python: 2, r: 2, vba: 4 };
         const ERROR_CASCADA_EXPLICACION = {
-            pseudo: <>La <strong>línea 3</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 5 y 7 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 3 por debajo de los dos filtros de rechazo.</>,
-            python: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
-            r: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
-            vba: <>La <strong>línea 4</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 6 y 8 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 4 por debajo de los dos filtros de rechazo.</>,
+            pseudo: <>La <strong>línea 3</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 5 y 7 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 3 por debajo de los dos filtros de rechazo.</>,
+            python: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            r: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            vba: <>La <strong>línea 4</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 6 y 8 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 4 por debajo de los dos filtros de rechazo.</>,
         };
 
         const ERROR_NEGACION_LINEAS = {
@@ -4887,10 +4947,10 @@ End Sub`,
         };
         const ERROR_NEGACION_LINEA_OK = { pseudo: 7, python: 6, r: 6, vba: 7 };
         const ERROR_NEGACION_EXPLICACION = {
-            pseudo: <>La política es «pasa automático si <span className="inline-code">documentosCompletos Y referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">NO (A Y B)</span> es <span className="inline-code">NO A <strong>O</strong> NO B</span>. La <strong>línea 7</strong> dejó el <span className="inline-code">Y</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">NO expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
-            python: <>La política es «pasa automático si <span className="inline-code">documentos_completos and referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">not (A and B)</span> es <span className="inline-code">not A <strong>or</strong> not B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">and</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">not expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
-            r: <>La política es «pasa automático si <span className="inline-code">documentos_completos &amp;&amp; referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">!(A &amp;&amp; B)</span> es <span className="inline-code">!A <strong>||</strong> !B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">&amp;&amp;</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">!expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
-            vba: <>La política es «pasa automático si <span className="inline-code">documentosCompletos And referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">Not (A And B)</span> es <span className="inline-code">Not A <strong>Or</strong> Not B</span>. La <strong>línea 7</strong> dejó el <span className="inline-code">And</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— pasa automático sin que nadie lo mire. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">Not expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
+            pseudo: <>La política es «pasa automático si <span className="inline-code">documentosCompletos Y referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">NO (A Y B)</span> es <span className="inline-code">NO A <strong>O</strong> NO B</span>. La <strong>línea 7</strong> dejó el <span className="inline-code">Y</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— se queda sin la marca de revisión, y nadie lo mira. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">NO expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
+            python: <>La política es «pasa automático si <span className="inline-code">documentos_completos and referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">not (A and B)</span> es <span className="inline-code">not A <strong>or</strong> not B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">and</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— se queda sin la marca de revisión, y nadie lo mira. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">not expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
+            r: <>La política es «pasa automático si <span className="inline-code">documentos_completos &amp;&amp; referencias_verificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">!(A &amp;&amp; B)</span> es <span className="inline-code">!A <strong>||</strong> !B</span>. La <strong>línea 6</strong> dejó el <span className="inline-code">&amp;&amp;</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— se queda sin la marca de revisión, y nadie lo mira. La <strong>línea 4</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">!expediente_completo</span>—, negando la condición entera en vez de sus operandos.</>,
+            vba: <>La política es «pasa automático si <span className="inline-code">documentosCompletos And referenciasVerificadas</span>», así que revisión manual es la <strong>negación</strong> de eso. Y al negar una conjunción el conector cambia: <span className="inline-code">Not (A And B)</span> es <span className="inline-code">Not A <strong>Or</strong> Not B</span>. La <strong>línea 7</strong> dejó el <span className="inline-code">And</span>, con lo que solo marca los expedientes a los que les falta <em>todo</em>. El que trae los documentos pero no las referencias —o al revés— se queda sin la marca de revisión, y nadie lo mira. La <strong>línea 5</strong> en cambio está bien: guarda la política en una variable, porque una condición <strong>es un valor</strong>. Y ahí estaba la forma corta y segura de escribir la marca —<span className="inline-code">Not expedienteCompleto</span>—, negando la condición entera en vez de sus operandos.</>,
         };
 
         const TRAZA_CASCADA = {
@@ -4940,8 +5000,10 @@ End If`,
         };
 
         /* Las dos formas de escribir la MISMA política. Comprobada su
-           equivalencia sobre 36 456 combinaciones de ingreso, score y
-           endeudamiento el 2026-09-20: cero diferencias. */
+           equivalencia el 2026-11-16 sobre 115884 combinaciones de ingreso (0 a 8 000 000 de
+           250 000 en 250 000, más los bordes de 1 500 000 y 5 000 000), score (300 a 850 de 10
+           en 10, más 549 y 551) y endeudamiento (0 a 100 de 2 en 2, más 59, 60,5 y 61): cero
+           diferencias. */
         const CMP_CASCADA = {
             pseudo: `Si score < 550 Entonces
     decision <- "RECHAZADO"
@@ -5101,7 +5163,7 @@ if (ingreso >= 5000000) {
 } else {
   decision <- "APROBADO ESTANDAR"
 }
-cat(decision, "\\n")`,
+cat(sprintf("%s\\n", decision))`,
             vba: `Sub EstudiarSolicitudMal()
     Dim ingreso As Currency, score As Integer, endeudamiento As Double
     Dim decision As String
@@ -5127,19 +5189,19 @@ End Sub`,
             { linea: { pseudo: 3, python: 2, r: 2, vba: 5 }, estado: { score: '480' },
                 nota: 'El score, setenta puntos por debajo del mínimo de originación. Queda cargado y disponible: el dato está, y está bien.' },
             { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { endeudamiento: '68' },
-                nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores el comité habría rechazado sin dudar.' },
+                nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores la política rechaza.' },
             { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: {},
                 nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las dos condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
             { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { decision: 'APROBADO PREFERENCIAL' },
-                nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que un auditor encuentra seis meses después y no sabe explicar.' },
+                nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que la traza deja a la vista.' },
             { linea: { pseudo: 14, python: 12, r: 13, vba: 16 }, estado: {}, salida: TZ_MAL_SALIDA,
-                nota: 'Fin. De las tres condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras dos en ningún sitio salvo en esta tabla.' },
+                nota: 'Final del programa. De las tres condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras dos en ningún sitio salvo en esta tabla.' },
         ];
 
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
-                    gancho="Las cinco reglas son correctas. Puestas en ese orden, a un solicitante de altos ingresos tres de ellas no llegan a evaluársele.">
+                    gancho="Las cinco reglas son correctas. Puestas en ese orden, a un solicitante de altos ingresos solo se le evalúa la primera condición: las otras tres no llegan a mirarse.">
                     Es el crédito de la portada. El motor de decisión preguntaba primero por el ingreso
                     —que el solicitante cumplía de sobra— y devolvía aprobado sin llegar a mirar el
                     score. La condición del score estaba escrita, probada y bien redactada, dos
@@ -5186,7 +5248,14 @@ End Sub`,
                 <CodeTabs
                     titulo="La política de originación, en el orden correcto"
                     bloques={EJ_CASCADA_OK}
-                    nota="Cinco reglas: dos causales de rechazo, dos de aprobación con condiciones y un caso por defecto. Los filtros de rechazo van primero, que es lo que hace que el resto pueda confiar en que quien llega ya los pasó." />
+                    nota="Cinco reglas: dos causales de rechazo, dos de aprobación con condiciones y un caso por defecto. Son cuatro condiciones; la quinta regla no pregunta nada. Los filtros de rechazo van primero, que es lo que hace que el resto pueda confiar en que quien llega ya los pasó." />
+
+                <Ilustrativo>
+                    La política de originación de esta sección, con sus cinco reglas y sus umbrales —score de
+                    550, endeudamiento del 60 %, ingresos de 5 000 000 y de 1 500 000—, sus solicitantes y
+                    las mil solicitudes mensuales del ejercicio, con sus porcentajes, se inventaron para este capítulo: no son
+                    la política de ningún banco. Lo mismo vale para el trámite automático de expedientes.
+                </Ilustrativo>
 
                 <h3>Las mismas cinco reglas, en otro orden</h3>
                 <p>
@@ -5201,7 +5270,7 @@ End Sub`,
                     bloques={EJ_CASCADA_MAL}
                     nota="Aprobado preferencial, con un score setenta puntos por debajo del mínimo de originación. Las tres condiciones que quedaban —las dos de rechazo y la del codeudor— no se evaluaron: la cascada ya había decidido." />
 
-                <Box type="warn" label="Por qué esto no lo encuentra una revisión de código">
+                <Box type="warn" label="Por qué esto se le escapa a una revisión línea por línea">
                     Quien revisa lee cinco reglas y las encuentra todas correctas, porque lo son. El
                     defecto no está en ninguna línea: está en la <strong>relación</strong> entre dos de
                     ellas, y solo se manifiesta con los solicitantes que cumplen la regla de arriba
@@ -5215,7 +5284,8 @@ End Sub`,
                         en el código y la tabla escribe una fila por cada instrucción ejecutada. Fíjese en dos
                         cosas: cuántas filas tiene la tabla al final —y cuántas líneas tiene el programa—, y qué
                         pasa con <span className="inline-code">score</span> y
-                        <span className="inline-code"> endeudamiento</span> después de cargarse.</>}
+                        <span className="inline-code"> endeudamiento</span> después de cargarse. Para que la tabla quepa,
+                        esta versión deja fuera la regla del codeudor: son tres condiciones y el caso por defecto.</>}
                     codigo={TZ_CASCADA_MAL}
                     variables={[
                         { clave: 'ingreso', titulo: 'ingreso' },
@@ -5228,7 +5298,7 @@ End Sub`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La cascada que aprueba lo que no debía"
-                    enunciado={<>Esta es la política de originación tal como quedó en producción. Aprueba solicitantes que el comité habría rechazado. <strong>Señale la línea donde está el defecto</strong> y clasifíquelo.</>}
+                    enunciado={<>Esta es la política de originación tal como quedó en producción. Aprueba solicitantes que la política rechaza. <strong>Señale la línea donde está el defecto</strong> y clasifíquelo.</>}
                     lineas={ERROR_CASCADA_LINEAS}
                     lineaCorrecta={ERROR_CASCADA_LINEA_OK}
                     tipos={[
@@ -5259,7 +5329,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio de la cascada completa"
-                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada línea de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
+                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada condición y cada asignación de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
                     codigo={TRAZA_CASCADA}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -5284,7 +5354,7 @@ End Sub`,
 
                 <h3>El otro defecto: la negación</h3>
                 <p>
-                    El otro defecto frecuente de las selectivas no es de orden. Aparece cuando una
+                    El otro defecto de las selectivas que mira esta sección no es de orden. Aparece cuando una
                     regla de aprobación se convierte en una de excepción: hay que negarla, y la
                     sección 1 ya mostró que negar una condición compuesta tiene su trampa.
                 </p>
@@ -5309,7 +5379,8 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={1}
                     explicacion={ERROR_NEGACION_EXPLICACION}
-                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
+                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong>. Los que fallan en una sola
+                    de las dos cosas se quedan sin la marca. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
                 /></Ejercicio>
 
                 <p>
@@ -5335,7 +5406,7 @@ End Sub`,
                         { texto: 'Ocupa menos líneas, y el código corto tiene menos defectos.', correcta: false },
                         { texto: 'Es más rápida: evalúa menos condiciones que la versión anidada.', correcta: false },
                         { texto: 'Permite condiciones compuestas que la versión anidada no admite.', correcta: false },
-                        { texto: 'Pone las cinco reglas al mismo nivel y en el orden en que se evalúan.', correcta: true, justificacion: 'El orden es parte de la política, no del estilo, y en la cascada se puede leer y auditar de un vistazo. En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo llaves; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —la cascada es más corta, pero esa no es la razón— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
+                        { texto: 'Pone las cinco reglas al mismo nivel y en el orden en que se evalúan.', correcta: true, justificacion: 'El orden es parte de la política, no del estilo, y en la cascada se puede leer y auditar de un vistazo. En la versión anidada las reglas están a profundidades distintas y el orden de evaluación hay que reconstruirlo siguiendo los cierres de bloque; en la cascada se lee de arriba abajo, que es exactamente como la escribió el comité de crédito. Eso importa porque el defecto de esta sección es de orden: en la cascada se ve, en la anidada hay que buscarlo. No es cuestión de longitud —la cascada es más corta, pero esa no es la razón— ni de velocidad: las dos evalúan las mismas condiciones y se detienen en la misma. Y no, la anidada no permite condiciones que la cascada no permita: son equivalentes, que es el supuesto del ejercicio.' },
                     ]}
                 /></Ejercicio>
             </div>
@@ -5346,7 +5417,7 @@ End Sub`,
         ============================================================ */
         /* La selectiva múltiple sobre un valor categórico: es el caso donde
            los cuatro lenguajes se parecen. Salidas ejecutadas el 2026-09-20
-           con Python 3.10.14 —`match` exige 3.10 o superior— y R 4.6.0. */
+           con Python 3.10.14 y R 4.6.0. */
         const EJ_SEGUN_CATEGORIA = {
             pseudo: `Inicio
     tipoCuenta <- "AHORROS"
@@ -5429,7 +5500,9 @@ End Sub`,
         Caso 500001..5000000:
             tarifa <- 12000
         DeOtroModo:
-            tarifa <- 25000
+            // Fuera de la escala: 0 es una marca, no una tarifa; se avisa
+            tarifa <- 0
+            Escribir "Monto fuera de la escala: a revision"
     FinSegun
 
     Escribir "Tarifa: ", tarifa
@@ -5451,7 +5524,9 @@ match monto:
     case m if 500_001 <= m <= 5_000_000:
         tarifa = 12000
     case _:
-        tarifa = 25000
+        # Fuera de la escala: 0 es una marca, no una tarifa; se avisa
+        tarifa = 0
+        print("Monto fuera de la escala: a revision")
 
 print(f"Tarifa: {tarifa:,.0f}")
 #> Tarifa: 6,000`,
@@ -5472,7 +5547,9 @@ if (monto >= 1 && monto <= 100000) {
 } else if (monto >= 500001 && monto <= 5000000) {
   tarifa <- 12000
 } else {
-  tarifa <- 25000
+  # Fuera de la escala: 0 es una marca, no una tarifa; se avisa
+  tarifa <- 0
+  cat("Monto fuera de la escala: a revision\\n")
 }
 
 cat(sprintf("Tarifa: %.0f\\n", tarifa))
@@ -5493,7 +5570,9 @@ Sub TarifaPorMonto()
         Case 500001 To 5000000
             tarifa = 12000
         Case Else
-            tarifa = 25000
+            ' Fuera de la escala: 0 es una marca, no una tarifa; se avisa
+            tarifa = 0
+            Debug.Print "Monto fuera de la escala: a revision"
     End Select
 
     Debug.Print "Tarifa: " & tarifa
@@ -5596,15 +5675,15 @@ End If`,
                 <Motivacion icon="fa-list-check"
                     gancho="¿Cuándo doce Si anidados deberían ser un Segun — y cuándo el Segun no puede?">
                     La escala de comisiones tiene doce tramos y vive en un bloque de doce condiciones
-                    anidadas que nadie quiere tocar: para añadir un tramo hay que contar llaves. El
-                    mismo cálculo escrito con la estructura adecuada cabe en doce líneas legibles. Pero
+                    anidadas: para añadir un tramo hay que contar cierres de bloque. El mismo cálculo escrito con la
+                    estructura adecuada pone los doce tramos al mismo nivel, uno debajo de otro. Pero
                     no en los cuatro lenguajes por igual: uno de ellos no sabe comparar rangos y obliga
                     a volver a la cascada.
                 </Motivacion>
 
                 <h3>Una sola variable, muchos valores</h3>
                 <p>
-                    La <Termino def="Estructura que evalúa una sola expresión y ejecuta el bloque correspondiente al valor que toma, con un caso por defecto para todo lo demás.">selectiva múltiple</Termino> resuelve
+                    La <Termino def="Estructura que evalúa una sola expresión y ejecuta el bloque correspondiente al valor que toma; el caso por defecto, si se escribe, recoge todo lo demás.">selectiva múltiple</Termino> resuelve
                     un caso concreto: <strong>una sola variable</strong> que puede tomar varios valores
                     conocidos, y una acción distinta para cada uno. Cuando el problema es ese, la
                     cascada funciona pero cuenta la historia mal: repite el nombre de la variable en
@@ -5615,6 +5694,12 @@ End If`,
                     titulo="Cuota de manejo según el tipo de cuenta"
                     bloques={EJ_SEGUN_CATEGORIA}
                     nota="Con un valor categórico los cuatro lenguajes se parecen mucho. Fíjese en R: su selectiva múltiple es una función que devuelve un valor, no un bloque que asigna, y el caso por defecto es el último argumento sin nombre." />
+
+                <Ilustrativo>
+                    Las cuotas de manejo por tipo de cuenta, la escala de tarifas por tramos de monto y la
+                    escala de doce tramos de la apertura se inventaron para este capítulo: no son las
+                    tarifas de ningún banco.
+                </Ilustrativo>
 
                 <h3>Rangos: donde los cuatro dejan de parecerse</h3>
                 <p>
@@ -5629,24 +5714,24 @@ End If`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Segun … Caso</span></td><td>Sí, por convención de notación</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí, de verdad:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
                             <tr><td>Python</td><td><span className="inline-code">match … case</span></td><td>Con <strong>guarda</strong>: <span className="inline-code">case m if 1 &lt;= m &lt;= 100_000</span></td></tr>
                             <tr><td>R</td><td><span className="inline-code">switch</span></td><td><strong>No.</strong> Iguala valores; con tramos hay que volver a la cascada</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>elaboración propia a partir del bloque de abajo, ejecutado en Python y R, y el de VBA, en Excel</Fuente>
 
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
                     bloques={EJ_SEGUN_RANGOS}
-                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante, así que un monto con centavos cae entre dos tramos y termina en el caso por defecto." />
+                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante. Lo que no cabe en la escala —una devolución, un monto por encima del tope o uno con centavos entre dos tramos— termina en el caso por defecto, que no le cobra una tarifa inventada: pone 0 como marca y lo avisa." />
 
                 <Box type="info" label="Por qué esto anticipa el capítulo 6">
-                    <span className="inline-code">Select Case</span> con rangos es de las pocas cosas que VBA
-                    hace <strong>mejor</strong> que los otros tres. Lo hereda de la familia BASIC, de la que
-                    viene, y en una hoja de cálculo, donde clasificar por tramos —de monto, de antigüedad,
-                    de saldo— es la operación de todos los días, resulta especialmente cómodo. El
-                    capítulo 6 vuelve sobre esto.
+                    De los tres lenguajes reales de este curso, VBA es el único que escribe el tramo tal cual, con
+                    <span className="inline-code"> Select Case</span> y <span className="inline-code">To</span>. En una
+                    hoja de cálculo se clasifica por tramos —de monto, de antigüedad, de saldo—, y ahí
+                    esa forma resulta cómoda. El capítulo 6, dedicado a VBA, vuelve sobre esto.
                 </Box>
 
                 <Ejercicio tipo="E4"><Comparador
@@ -5656,7 +5741,7 @@ End If`,
                     b={{ etiqueta: 'Versión B · cascada', codigo: CMP_CASCADA_TRAMOS }}
                     pregunta="¿Dan las dos el mismo resultado para cualquier monto?"
                     opciones={[
-                        { texto: 'No: fuera de los tramos el Segun no asigna nada y la cascada sí.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A no tiene caso por defecto y deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el panel de abajo con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. En los bordes, en cambio, coinciden: 100 000, 500 000 y 5 000 000 caen en el mismo tramo con las dos versiones, porque los dos lados incluyen el tope.' },
+                        { texto: 'No: fuera de los tramos el Segun no asigna nada y la cascada sí.', correcta: true, justificacion: 'Los tres tramos cubren de 1 a 5 000 000 y nada más, así que ni un ajuste de 7 500 000 ni una devolución de −50 000 encajan en ninguno: la versión A no tiene caso por defecto y deja tarifa sin tocar en los dos casos. La B sí asigna, pero por caminos distintos, y conviene verlo en el panel de abajo con esos dos montos exactos: con 7 500 000 no se cumple ninguna condición y decide el Sino —25 000—, una tarifa que la escala de tres tramos no tiene: ese Sino inventa un resultado donde debía avisar; con −50 000 se cumple la PRIMERA, porque monto <= 100 000 también es cierto para un negativo, y se cobran 2 500. Un tope sin piso es el segundo defecto de esta escala. Y no, no falla solo con negativos: 7 500 000 es perfectamente positivo y tampoco encaja. En los bordes, en cambio, coinciden: 100 000, 500 000 y 5 000 000 caen en el mismo tramo con las dos versiones, porque los dos lados incluyen el tope.' },
                         { texto: 'Sí: los tres tramos cubren todos los montos posibles.', correcta: false },
                         { texto: 'No, pero solo si el monto es negativo: para valores positivos son idénticas.', correcta: false },
                         { texto: 'No: difieren en los bordes de tramo, como 100 000 y 500 000.', correcta: false },
@@ -5693,7 +5778,7 @@ End If`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
+                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto. En esta versión reducida solo hay dos casos: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
                     pasos={ORDENA_SEGUN}
                     pista="En R la selectiva múltiple es una única expresión que devuelve un valor: se lee como una llamada a función, con el caso por defecto al final y sin nombre."
                 />
@@ -5718,12 +5803,13 @@ End If`,
                             <strong>Y la restricción práctica:</strong> si los tramos son rangos y el equipo trabaja
                             en R, la decisión ya está tomada por el lenguaje —<span className="inline-code">switch</span> iguala,
                             no compara—. En VBA, en cambio, <span className="inline-code">Select Case … To</span> es la
-                            opción natural. Junto con la guardia de VBA de la sección 2, es de los pocos puntos del
-                            curso donde la estructura que conviene depende de en qué se va a escribir.
+                            opción natural. Junto con la guardia de VBA de la sección 2, es uno de los dos puntos de
+                            este capítulo donde la estructura que conviene depende de en qué se va a escribir.
                         </p>
                         <p>
-                            <strong>En los dos casos, el caso por defecto se escribe siempre</strong>, aunque «no pueda
-                            pasar». Los doce tramos de la escala de comisiones cubrían todos los montos posibles
+                            <strong>En los dos casos, este curso escribe siempre el caso por defecto</strong>, aunque «no pueda
+                            pasar». Si la regla del negocio dice qué hacer con lo demás, ese caso lo hace; si no
+                            lo dice, avisa, y no inventa un resultado. Los doce tramos de la escala de comisiones cubrían todos los montos posibles
                             hasta que apareció la primera devolución.
                         </p>
                     </>}
@@ -5747,18 +5833,17 @@ End If`,
            SECCIÓN 6 — CASOS FINANCIEROS
         ============================================================ */
         /* Retención en la fuente por servicios, simplificada a propósito: la
-           UVT va redondeada a 50 000 y se declara como supuesto del ejercicio,
-           porque su valor real lo publica la DIAN cada año y el material no
-           debe envejecer con él. Salidas ejecutadas el 2026-09-20. */
+           UVT es un valor redondo, 50 000, declarado como supuesto del ejercicio, porque
+           su valor cambia cada año y el material no debe envejecer con él. Salidas ejecutadas el 2026-11-17. */
         const EJ_RETENCION = {
             pseudo: `Inicio
-    // La UVT real se publica cada año. Aquí va redondeada
-    // a 50 000 para que las cuentas se sigan de cabeza.
+    // La UVT cambia cada año. Aquí va un valor redondo,
+    // 50 000, para que las cuentas se sigan de cabeza.
     uvt          <- 50000
     pago         <- 3500000
     esDeclarante <- Falso
 
-    baseMinima <- 4 * uvt
+    baseMinima <- 2 * uvt
 
     Si pago < baseMinima Entonces
         retencion <- 0
@@ -5778,7 +5863,7 @@ Fin`,
 pago          = 3_500_000
 es_declarante = False
 
-base_minima = 4 * uvt
+base_minima = 2 * uvt
 
 if pago < base_minima:
     retencion = 0
@@ -5796,7 +5881,7 @@ print(f"Neto a pagar: {neto:,.0f}")
 pago          <- 3500000
 es_declarante <- FALSE
 
-base_minima <- 4 * uvt
+base_minima <- 2 * uvt
 
 if (pago < base_minima) {
   retencion <- 0
@@ -5821,7 +5906,7 @@ Sub RetencionServicios()
     pago = 3500000
     esDeclarante = False
 
-    baseMinima = 4 * uvt
+    baseMinima = 2 * uvt
 
     If pago < baseMinima Then
         retencion = 0
@@ -5841,9 +5926,9 @@ End Sub`,
 
         const TRAZA_RETENCION = {
             pseudo: `uvt          <- 50000
-pago         <- 150000
+pago         <- 80000
 esDeclarante <- Verdadero
-baseMinima   <- 4 * uvt
+baseMinima   <- 2 * uvt
 Si pago < baseMinima Entonces
     retencion <- 0
 Sino Si esDeclarante Entonces
@@ -5853,9 +5938,9 @@ Sino
 FinSi
 neto <- pago - retencion`,
             python: `uvt           = 50_000
-pago          = 150_000
+pago          = 80_000
 es_declarante = True
-base_minima   = 4 * uvt
+base_minima   = 2 * uvt
 if pago < base_minima:
     retencion = 0
 elif es_declarante:
@@ -5864,9 +5949,9 @@ else:
     retencion = pago * 0.06
 neto = pago - retencion`,
             r: `uvt           <- 50000
-pago          <- 150000
+pago          <- 80000
 es_declarante <- TRUE
-base_minima   <- 4 * uvt
+base_minima   <- 2 * uvt
 if (pago < base_minima) {
   retencion <- 0
 } else if (es_declarante) {
@@ -5876,9 +5961,9 @@ if (pago < base_minima) {
 }
 neto <- pago - retencion`,
             vba: `uvt = 50000
-pago = 150000
+pago = 80000
 esDeclarante = True
-baseMinima = 4 * uvt
+baseMinima = 2 * uvt
 If pago < baseMinima Then
     retencion = 0
 ElseIf esDeclarante Then
@@ -5895,9 +5980,8 @@ neto = pago - retencion`,
                     gancho="«El sistema dijo que no» no es una respuesta. ¿Cuál de las condiciones lo rechazó?">
                     Un cliente lleva ocho años en el banco, no tiene una sola mora y le acaban de negar
                     un crédito de consumo. Llama, y al otro lado alguien tiene que explicarle por qué.
-                    No vale enumerarle las cinco reglas: cuatro de ellas ni se evaluaron. Lo rechazó
-                    una, y decirle cuál es la diferencia entre un cliente que entiende y un cliente que
-                    se va.
+                    No vale enumerarle las cinco reglas: lo rechazó una, y las que venían después ni se
+                    evaluaron. Decirle cuál fue es lo que separa a un cliente que entiende de uno que se va.
                 </Motivacion>
 
                 <h3>La política de originación, por dentro</h3>
@@ -5921,26 +6005,52 @@ neto = pago - retencion`,
 
                 <h3>Retención en la fuente: una cascada con un umbral</h3>
                 <p>
-                    El otro caso clásico de selectiva en un área financiera tiene tres ramas y un
-                    umbral que se calcula antes de preguntar nada: <strong>si el pago no llega a la base
-                    mínima no se retiene</strong>, y solo si la pasa importa la condición del proveedor.
+                    Otro caso de selectiva en un área financiera tiene tres ramas y un umbral que se
+                    calcula antes de preguntar nada: <strong>si el pago no llega a la base mínima no se
+                    retiene</strong>, y solo si llega importa si el proveedor es
+                    <strong> declarante</strong>, es decir, si está obligado a presentar declaración de renta.
                 </p>
+                <p>
+                    Las tres cifras de la cascada salen de dos normas. No se hace retención sobre los pagos
+                    o abonos en cuenta por prestación de servicios cuya cuantía individual sea inferior a
+                    2 UVT <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />. «Inferior» deja fuera
+                    la igualdad: un pago de exactamente 2 UVT no cabe en esa excepción, y por eso el código
+                    compara con <span className="inline-code">&lt;</span>. Cuando el pago por servicios lo
+                    hace un agente retenedor a un contribuyente obligado a declarar renta, la tarifa es
+                    del 4 % <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14" />; y para los pagos
+                    por servicios a contribuyentes no obligados a declarar, del 6 %
+                    <Cita k="presidencia1989decreto624" loc="art. 392" />.
+                </p>
+                <Ilustrativo>
+                    El proveedor, sus pagos y la UVT de 50 000 se inventaron para este capítulo, igual
+                    que el solicitante, el cliente de ocho años y la política de originación de la primera
+                    parte de la sección. El caso de la retención supone que quien paga es agente retenedor;
+                    que el pago es por servicios, no por honorarios, comisiones o arrendamientos; que el
+                    proveedor es contribuyente del impuesto de renta, y que al servicio le aplican las
+                    tarifas de los dos artículos citados. Supone también que el proveedor no declarante no
+                    es una persona natural cuyo contrato deje ver ingresos de más de 3 300 UVT en el año,
+                    ni una a la que los pagos del mismo agente retenedor en el año superen esa cifra: en
+                    esos casos se le retiene el 4 % (en el segundo, desde el pago con el que la suma la
+                    supera) <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14, inc. 2" />.
+                </Ilustrativo>
 
                 <CodeTabs
                     titulo="Retención por servicios"
                     bloques={EJ_RETENCION}
-                    nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas no es negociable —preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral—." />
+                    nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas importa: preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral." />
 
-                <Box type="warn" label="La UVT de este ejemplo está redondeada a propósito">
-                    50 000 no es el valor real de la UVT: es un número redondo para que las cuentas se
-                    puedan seguir de cabeza. El valor vigente lo publica la DIAN cada año, y en una
-                    rutina de producción <strong>nunca va escrito en el código</strong> —va en un parámetro—,
-                    justamente porque cambia todos los eneros.
+                <Box type="warn" label="La UVT de este ejemplo es un número redondo, a propósito">
+                    50 000 es un número redondo, elegido para que las cuentas se puedan seguir de cabeza; no se
+                    tomó de la resolución de ningún año. El valor se reajusta cada año, y el Director General
+                    de la DIAN lo publica por resolución antes del 1.º de enero de cada año <Cita k="presidencia1989decreto624" loc="art. 868" />.
+                    Por eso en una rutina de producción <strong>conviene no escribirlo en el código</strong>:
+                    va en un parámetro.
                 </Box>
 
                 <TablaTraza
                     titulo="Prueba de escritorio: un pago pequeño"
-                    enunciado={<>Un pago de <strong>150 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada línea, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
+                    /* fuente-ok: la UVT de 50 000 es el supuesto declarado en el <Ilustrativo> de la sección */
+                    enunciado={<>Un pago de <strong>80 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada condición y cada asignación, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
                     codigo={TRAZA_RETENCION}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -5952,63 +6062,73 @@ neto = pago - retencion`,
                     ocultas={['flujo', 'retencion', 'neto']}
                     exigeRespuesta
                     filas={[
-                        { paso: 1, instruccion: ins('baseMinima <- 4 * uvt', 'base_minima = 4 * uvt', 'base_minima <- 4 * uvt', 'baseMinima = 4 * uvt'), flujo: 'ejecuta', retencion: '—', neto: '—' },
+                        { paso: 1, instruccion: ins('baseMinima <- 2 * uvt', 'base_minima = 2 * uvt', 'base_minima <- 2 * uvt', 'baseMinima = 2 * uvt'), flujo: 'ejecuta', retencion: '—', neto: '—' },
                         { paso: 2, instruccion: ins('Si pago < baseMinima Entonces', 'if pago < base_minima:', 'if (pago < base_minima) {', 'If pago < baseMinima Then'), flujo: 'verdadero', retencion: '—', neto: '—' },
                         { paso: 3, instruccion: ins('retencion <- 0', 'retencion = 0', 'retencion <- 0', 'retencion = 0'), flujo: 'ejecuta', retencion: '0', neto: '—' },
                         { paso: 4, instruccion: ins('Sino Si esDeclarante Entonces', 'elif es_declarante:', '} else if (es_declarante) {', 'ElseIf esDeclarante Then'), flujo: 'salta', retencion: '0', neto: '—' },
                         { paso: 5, instruccion: ins('retencion <- pago * 0.04', 'retencion = pago * 0.04', 'retencion <- pago * 0.04', 'retencion = pago * 0.04'), flujo: 'salta', retencion: '0', neto: '—' },
                         { paso: 6, instruccion: ins('retencion <- pago * 0.06', 'retencion = pago * 0.06', 'retencion <- pago * 0.06', 'retencion = pago * 0.06'), flujo: 'salta', retencion: '0', neto: '—' },
-                        { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), flujo: 'ejecuta', retencion: '0', neto: '150000' },
+                        { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), flujo: 'ejecuta', retencion: '0', neto: '80000' },
                     ]}
+                    /* fuente-ok: remite al párrafo de la sección, que cita la norma */
                     pista="Calcule la base mínima con la UVT y compárela con el pago antes de mirar nada más: lo que sea el proveedor solo importa si el pago llega al umbral."
                 />
 
                 <Box type="info" label="Lo que la traza deja ver">
                     <span className="inline-code">esDeclarante</span> vale <span className="inline-code">Verdadero</span> y
                     <strong> no se usa</strong>. Es un dato correcto, cargado a tiempo, que en este pago no
-                    interviene en nada. En una auditoría eso confunde: aparece en el expediente y parece
-                    que debió influir. La traza es lo que permite decir que no, y por qué.
+                    interviene en nada. Quien lo vea en el expediente puede pensar que debió influir. La traza es lo que permite decir que no, y por qué.
                 </Box>
 
                 <Ejercicio tipo="E7"><Reto
                     titulo="Explíquele al proveedor"
                     solucion={<>
                         <p>
-                            <strong>Lo que pasó:</strong> los tres pagos de 150 000 quedaron cada uno por debajo
-                            de la base mínima de 200 000, así que a cada uno se le aplicó la primera rama
+                            <strong>Lo que pasó:</strong> los tres pagos de 80 000 quedaron cada uno por debajo
+                            de la base mínima de 100 000, así que a cada uno se le aplicó la primera rama
                             —retención cero—. La base se compara <strong>contra cada pago</strong>, no contra el
-                            acumulado del mes, porque la rutina se ejecuta una vez por factura y no guarda
-                            memoria de las anteriores.
+                            acumulado del mes. No es un descuido de la rutina: la norma habla de la «cuantía
+                            individual» de cada pago <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />, y la
+                            DIAN ha dicho que la transacción se analiza individualmente, no de forma
+                            acumulada <Cita k="dian2025concepto012327" loc="num. 4" />.
                         </p>
                         <p>
-                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
-                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
-                            tercera y no por la segunda porque este proveedor no es declarante; el de la
-                            prueba de escritorio de arriba sí lo era, y a él le habría correspondido el 4 %.
-                            No es que el sistema lo trate distinto: es que la condición del umbral se evalúa
-                            sobre el valor del pago, y ese lo pasa.
+                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago llega a los
+                            100 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
+                            tercera y no por la segunda porque este proveedor no es declarante. No es que el
+                            sistema lo trate distinto: es que la condición del umbral se evalúa sobre el
+                            valor de cada pago, y ese llega.
                         </p>
                         <p>
-                            <strong>Y lo que hay que decirle al proveedor, que es lo difícil:</strong> fraccionar
-                            no es una estrategia; es exactamente lo que la norma llama fraccionamiento de pagos
-                            y lo que la base mínima existe para detectar cuando se acumula. Si el área de pagos
-                            decide agrupar por mes —que es lo razonable—, la rutina tiene que sumar antes de
-                            comparar, y entonces los tres pagos de 150 000 pasan a retener. El defecto no está
-                            en la cascada: está en <em>qué</em> se le da a comparar.
+                            <strong>Y lo que la rutina no puede decir:</strong> si eran cuatro servicios o uno solo
+                            partido en cuatro facturas. Eso no es de la cascada. La DIAN ha dicho que no es
+                            válido fraccionar pagos artificialmente con el único fin de evitar la retención,
+                            y que puede verificar el cumplimiento de las retenciones sobre el total de los
+                            pagos efectuados, independientemente de cómo se hayan fraccionado
+                            <Cita k="dian2025concepto011217" loc="nums. 3 y 5" />.
+                        </p>
+                        <p>
+                            <strong>Lo que haría falta para esa revisión:</strong> el total pagado a ese
+                            proveedor. El concepto recién citado habla de verificar las retenciones sobre
+                            el total de los pagos efectuados, y la
+                            rutina no lo tiene: se ejecuta una vez por factura y no guarda memoria de las
+                            anteriores. Saber si era un solo servicio exige además mirar qué se contrató, y
+                            eso tampoco está en la rutina. La estructura selectiva no cambia; lo que falta
+                            son datos, y reunir el primero es sumar, no decidir.
                         </p>
                     </>}
                 >
                     <p>
                         Un proveedor <strong>no declarante</strong> recibió cuatro pagos este mes: tres de
-                        <strong> 150 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
+                        <strong> 80 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
                         retuvo nada y al cuarto sí. El proveedor llama convencido de que hubo un error,
-                        porque «en total facturé 900 000 y me retuvieron sobre 450 000».
+                        porque «en total facturé 690 000 y me retuvieron sobre 450 000».
                     </p>
                     <p>
                         <strong>Explíquele qué hizo el sistema y por qué</strong>, con la rutina de arriba a la
-                        vista. Diga además qué habría que cambiar si el área de pagos decidiera aplicar la
-                        base mínima al acumulado del mes en vez de a cada pago, y si ese cambio afecta a la
-                        estructura selectiva o a otra cosa.
+                        vista. Diga además qué dato le haría falta a alguien que quisiera revisar si esas
+                        cuatro facturas eran en realidad un solo servicio partido, y si conseguirlo cambia
+                        la estructura selectiva o cambia otra cosa.
                     </p>
                 </Reto></Ejercicio>
             </div>
@@ -6054,8 +6174,8 @@ neto = pago - retencion`,
             ['Selectiva doble', 'Estructura con dos bloques alternativos. Garantiza que se ejecute exactamente uno: ni ninguno ni los dos.'],
             ['Cascada', 'Serie de alternativas evaluadas en orden con Sino Si. Decide la primera condición que se cumple; las siguientes no se evalúan.'],
             ['Anidamiento', 'Una selectiva dentro de una de las ramas de otra. La condición interior solo se plantea si el flujo entra en la rama que la contiene, sea la del Entonces o la del Sino.'],
-            ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos: Segun, Select Case, match o switch según el lenguaje.'],
-            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. Escribirla siempre, aunque «no pueda pasar».'],
+            ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos o, donde el lenguaje lo permite, contra varios tramos: Segun, Select Case, match o switch según el lenguaje.'],
+            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. En este curso se escribe siempre, aunque «no pueda pasar»: hace lo que la regla diga para lo demás y, si la regla no lo dice, avisa.'],
             ['Cortocircuito', 'Dejar de evaluar una condición compuesta en cuanto el resultado ya está decidido. Lo hacen pseudocódigo, Python y R (este, con && y ||); VBA no.'],
             ['Condición guardia', 'Operando que se pone delante para proteger al que viene detrás —comprobar que un divisor no es cero, por ejemplo—. Solo funciona si hay cortocircuito.'],
             ['Leyes de De Morgan', 'Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. NO (A Y B) es NO A O NO B.'],
@@ -6067,11 +6187,15 @@ neto = pago - retencion`,
             <div className="prose-lp">
                 <Motivacion icon="fa-graduation-cap"
                     gancho="Si una condición mal ordenada cuesta cuarenta millones, leerla bien vale el rato que toma.">
-                    Todo lo de este capítulo cabe en una pregunta que se hace en cualquier comité de
-                    cartera: dado este bloque de condiciones y este solicitante, ¿qué decide el sistema
+                    Todo lo de este capítulo cabe en la pregunta que se hizo el comité de la portada: dado este bloque de condiciones y este solicitante, ¿qué decide el sistema
                     y por qué? Quien sabe responderla sobre el papel, sin ejecutar nada, es quien
                     encuentra el defecto antes de que salga a producción.
                 </Motivacion>
+
+                <Ilustrativo>
+                    Los casos de esta evaluación —pagos, saldos, solicitantes, calificaciones y cascadas,
+                    con sus cifras— se inventaron para este capítulo, igual que los de las secciones.
+                </Ilustrativo>
 
                 <Ejercicio tipo="E6"><Emparejamiento
                     enunciado="Relacione cada fragmento con la idea del capítulo que lo explica. Los cinco vienen de secciones distintas."
@@ -6109,7 +6233,7 @@ neto = pago - retencion`,
                             { texto: 'Nada, porque el compilador avisa de la enumeración incompleta antes de ejecutar.', correcta: false },
                             { texto: 'No se ejecuta ninguna rama: la cuota no recibe valor, y el Segun no avisa.', correcta: true },
                         ],
-                        justificacion: 'En ninguno de los cuatro lenguajes avisa el Segun. El de pseudocódigo y el match de Python no ejecutan ningún caso; el Select Case de VBA tampoco, y la variable conserva lo que tuviera; el switch de R devuelve NULL de forma invisible. Lo que pase después depende del lenguaje: en VBA la cuenta sale con la cuota que tuviera la variable, y en Python, si cuota no tenía valor, el programa se detiene más adelante con un NameError, lejos del Segun y sin decir que el defecto está en él. Tampoco hay un compilador que revise que la enumeración esté completa: eso lo hacen otros lenguajes, no estos cuatro. Por eso el caso por defecto se escribe SIEMPRE, también cuando la lista parece cerrada: lo que la cierra hoy es el catálogo de productos del banco, y ese cambia sin avisarle al programa.',
+                        justificacion: 'En ninguno de los cuatro lenguajes avisa el Segun. El de pseudocódigo y el match de Python no ejecutan ningún caso; el Select Case de VBA tampoco, y la variable conserva lo que tuviera; el switch de R devuelve NULL de forma invisible. Lo que pase después depende del lenguaje: en VBA la cuenta sale con la cuota que tuviera la variable, y en Python, si cuota no tenía valor, el programa se detiene más adelante con un NameError, lejos del Segun y sin decir que el defecto está en él. Tampoco hay, en estos cuatro, nada que revise antes de ejecutar que la enumeración esté completa. Por eso este curso escribe siempre el caso por defecto, también cuando la lista parece cerrada: lo que la cierra hoy es el catálogo de productos del banco, y ese cambia sin avisarle al programa.',
                     },
                     {
                         seccion: 'cap2',
@@ -6117,10 +6241,10 @@ neto = pago - retencion`,
                         opciones: [
                             { texto: '2 500 000: con 60 días exactos la condición no se cumple.', correcta: false },
                             { texto: '2 700 000: 60 >= 60 es verdadero y se cobra el 8 %.', correcta: true },
-                            { texto: '2 700 000, y el programa deja constancia de que la rama se ejecutó.', correcta: false },
+                            { texto: '2 300 000: como hay mora, el recargo de 200 000 se descuenta del saldo.', correcta: false },
                             { texto: 'No se puede saber: depende de lo que valiera recargo antes del Si.', correcta: false },
                         ],
-                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. La ejecución no deja constancia de qué rama tomó, ni de la que se ejecuta ni de la que se salta. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
+                        justificacion: 'Con 60 días exactos, 60 >= 60 es verdadero: el operador incluye el borde. Se cobra el 8 % de 2 500 000, que son 200 000, y total sale 2 700 000. Es el espejo del caso de la sección 2, donde 30 > 30 era falso: la frontera la decide el operador, no el número. El recargo no se descuenta: la última línea suma. Y lo que valiera recargo antes no importa: con la condición verdadera, la rama lo sobrescribe, y con falsa quedaría el 0 que se le asignó antes del Si.',
                     },
                     {
                         seccion: 'cap3',
@@ -6136,7 +6260,7 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTÁNDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
+                        pregunta: 'Una cascada evalúa en este orden: endeudamiento > 60 da RECHAZADO; score < 550 da RECHAZADO; ingreso >= 5 000 000 da PREFERENCIAL; y en cualquier otro caso, ESTANDAR. Llega un solicitante con score 500, endeudamiento del 25 % e ingreso de 8 000 000. ¿Qué decisión sale, y cuántas condiciones llegó a evaluar?',
                         opciones: [
                             { texto: 'RECHAZADO, después de evaluar dos condiciones.', correcta: true },
                             { texto: 'RECHAZADO, después de evaluar las tres condiciones.', correcta: false },
@@ -6165,11 +6289,11 @@ neto = pago - retencion`,
                             { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
                             { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso es de VB.NET, no de VBA. Invertir los operandos empeora las cosas, porque entonces la división se evalúa seguro. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. La única forma de que la división no llegue a ejecutarse es que esté dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
+                        justificacion: 'En VBA, And y Or evalúan siempre los dos lados, y cambiar de operador no lo arregla: este material no ha encontrado en VBA un operador lógico que deje de evaluar el segundo. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         seccion: 'cap5',
-                        pregunta: 'Un equipo que trabaja en R tiene que escribir cuatro reglas. ¿Cuál de ellas se puede escribir con switch?',
+                        pregunta: 'Un equipo que trabaja en R tiene que escribir cuatro reglas. ¿Cuál de ellas se escribe con switch tal cual, igualando el valor con cada caso?',
                         opciones: [
                             { texto: 'La tarifa por tramos de monto: de 1 a 100 000, de 100 001 a 500 000, y así.', correcta: false },
                             { texto: 'La tasa según la calificación de riesgo del cliente: A, B, C, D o E.', correcta: true },
@@ -6180,14 +6304,15 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap6',
-                        pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
+                        // fuente-ok: caso de la sección 6, donde la UVT de 50 000 se declara supuesto y la norma se cita
+                        pregunta: 'Un pago por servicios de 80 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene, y por qué?',
                         opciones: [
-                            { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
-                            { texto: 'Nada: el pago no llega a la base mínima de 200 000.', correcta: true },
-                            { texto: 'Se le retienen 7 200, que es el 4 % del pago.', correcta: false },
-                            { texto: 'Nada, pero porque el proveedor no es declarante.', correcta: false },
+                            { texto: 'Se le retienen 4 800, que es el 6 % del pago.', correcta: false },
+                            { texto: 'Nada: el pago no llega a la base mínima de 100 000.', correcta: true },
+                            { texto: 'Se le retienen 3 200, que es el 4 % del pago.', correcta: false },
+                            { texto: 'Nada, porque el proveedor no es declarante.', correcta: false },
                         ],
-                        justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
+                        justificacion: 'La base mínima se calcula antes de preguntar nada: 2 × 50 000 = 100 000, y 80 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa, que es la otra mitad de lo que se pide: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego cuando el pago llega al umbral.',
                     },
                     {
                         seccion: 'cap6',
@@ -6198,7 +6323,7 @@ neto = pago - retencion`,
                             { texto: 'No se evaluó, porque la condición del score ya se había cumplido con 720.', correcta: false },
                             { texto: 'No se evaluó: la cascada se detuvo en la del endeudamiento, que está más arriba.', correcta: true },
                         ],
-                        justificacion: 'La cascada evalúa score < 550 —falso: con 720 la condición no se cumple, aunque el requisito sí—, después endeudamiento > 60 —verdadero, 68— y ahí decide: RECHAZADO. La regla del ingreso está más abajo y no llega a mirarse; si se evaluara daría verdadero, pero ya no se evalúa. Si estuviera de primera, este mismo solicitante saldría aprobado preferencial, que es el defecto de la sección 4 visto desde el otro lado. Las reglas se miran en el orden en que están escritas, no por su tipo.',
+                        justificacion: 'La cascada evalúa score < 550 —falso: 720 no es menor que 550—, después endeudamiento > 60 —verdadero, 68— y ahí decide: RECHAZADO. La regla del ingreso está más abajo y no llega a mirarse; si se evaluara daría verdadero, pero ya no se evalúa. Si estuviera de primera, este mismo solicitante saldría aprobado preferencial, que es el defecto de la sección 4 visto desde el otro lado. Las reglas se miran en el orden en que están escritas, no por su tipo.',
                     },
                 ]} />
 
@@ -6215,6 +6340,7 @@ neto = pago - retencion`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>definiciones del curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 5 rompe la otra garantía que quedaba: hasta aquí, una instrucción se
@@ -6223,6 +6349,8 @@ neto = pago - retencion`,
                     cuándo para</em>. La tabla de amortización de un crédito a 240 meses tiene 240 filas
                     y nadie las escribió.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -6452,6 +6580,65 @@ neto = pago - retencion`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "882ae490ac31b0c6b2ee9dcfc3eafccec8aec94d61a6472af1da88efc48b5b6b",
+  "sello": "fa1352165b0cc1aa475783d102d5d86afe02e23a70c578733940aea443b33c6d",
+  "orden": [
+    "congreso1990ley45",
+    "dian2025concepto011217",
+    "dian2025concepto012327",
+    "minhacienda2016decreto1625",
+    "presidencia1971decreto410",
+    "presidencia1989decreto624"
+  ],
+  "entradas": {
+    "congreso1990ley45": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "1990",
+      "html": "Congreso de la República de Colombia. (1990). \u003cem>Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones\u003c/em>. Diario Oficial 39.607. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (1990). Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones. Diario Oficial 39.607. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540"
+    },
+    "dian2025concepto011217": {
+      "autor": "Dirección de Impuestos y Aduanas Nacionales",
+      "anio": "2025a",
+      "html": "Dirección de Impuestos y Aduanas Nacionales. (2025a). \u003cem>Concepto 011217 int 1299 de 2025\u003c/em>. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm\u003c/a>",
+      "plano": "Dirección de Impuestos y Aduanas Nacionales. (2025a). Concepto 011217 int 1299 de 2025. https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm"
+    },
+    "dian2025concepto012327": {
+      "autor": "Dirección de Impuestos y Aduanas Nacionales",
+      "anio": "2025b",
+      "html": "Dirección de Impuestos y Aduanas Nacionales. (2025b). \u003cem>Concepto 012327 int 1439 de 2025\u003c/em>. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\u003c/a>",
+      "plano": "Dirección de Impuestos y Aduanas Nacionales. (2025b). Concepto 012327 int 1439 de 2025. https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm"
+    },
+    "minhacienda2016decreto1625": {
+      "autor": "Ministerio de Hacienda y Crédito Público",
+      "anio": "2016",
+      "html": "Ministerio de Hacienda y Crédito Público. (2016). \u003cem>Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria\u003c/em>. Diario Oficial 50.023. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\u003c/a>",
+      "plano": "Ministerio de Hacienda y Crédito Público. (2016). Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria. Diario Oficial 50.023. https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm"
+    },
+    "presidencia1971decreto410": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "1971",
+      "html": "Presidencia de la República de Colombia. (1971). \u003cem>Decreto 410 de 1971, por el cual se expide el Código de Comercio\u003c/em>. Diario Oficial 33.339. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\">http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (1971). Decreto 410 de 1971, por el cual se expide el Código de Comercio. Diario Oficial 33.339. http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html"
+    },
+    "presidencia1989decreto624": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "1989",
+      "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

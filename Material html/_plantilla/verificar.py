@@ -2039,6 +2039,12 @@ def afirmaciones_sin_registro(ruta, texto, fnt):
 # avisa dos veces, con un `<Cita>` en el mismo párrafo no avisa, dentro de un
 # `<Ilustrativo>` tampoco, y con `fuente-ok` en la línea anterior tampoco;
 # «mediante» y «aviso» no cuentan como DIAN ni ISO.
+#
+# Negativas del 2026-11-17, sobre una copia del capítulo 4, al ampliar el léxico
+# de la 32: «la norma llama…», «La ley manda…», «la regulación colombiana» y
+# «4 UVT» en un párrafo avisan; con un `<Cita>` en el párrafo, dentro de un
+# `<Ilustrativo>` o con `fuente-ok` en la línea anterior, no; «la ley de Moore»,
+# «las leyes de De Morgan», «normalmente» y «la normativa» no cuentan.
 NOMBRES_DE_FIGURA = {"ChartFrame": "gráficas", "table": "tablas", "figure": "figuras", "svg": "diagramas"}
 
 

@@ -4020,3 +4020,369 @@ el iPhone.
 `estado: sin-fuente` indefinidamente: `registrar_afirmaciones.py` solo mira las
 verificadas y nada avisa de las otras. Las doce de este capítulo las encontró el
 verificador final, no una regla.
+
+### 2026-11-16 — Capítulo 3 publicado; capítulo 4, línea base y plan
+
+- **Capítulo 3.** Fusionado a `main` (`b3e13e3`) con la aprobación del docente y subido a
+  GitHub por orden suya. La prueba en el iPhone quedó parcial: el capítulo carga y se ve
+  bien al 100 % en la portada, la ficha y el inicio de la lección 3, pero la ventana de
+  «iPhone Mirroring» no deja desplazar la página (la rueda no llega y el arrastre
+  selecciona texto), así que no se recorrieron las lecciones ni se probó el 125 %.
+- **Capítulo 4.** `PLAN_TAREA14_CAPITULO_04_CONTENIDO.md`, rama `claude/cap04-plan`.
+  Línea base de un lector sin contexto: ningún hallazgo alto, 12 medios y 24 bajos; las
+  22 salidas de Python y R coinciden. El capítulo no tiene citas ni casos declarados, y
+  da por ciertas la retención por servicios, la UVT, la mora topada por la usura y «lo
+  que la norma llama fraccionamiento». El plan espera las decisiones A–I del docente.
+
+**Hueco de las herramientas.** La regla 32 avisa de «DIAN» y «tasa de usura», pero no ve
+«retención», «UVT» ni «la norma»: en el capítulo 4 se le pasan tres de las cinco
+afirmaciones normativas. Queda anotado para ampliar su vocabulario con su prueba
+negativa, en la fase 9 de ese capítulo.
+
+### 2026-11-16 — Capítulo 4, fase 1: inventario y normas
+
+Rama `claude/cap04-fase1`, sobre la del plan. El capítulo no se tocó.
+
+- **Vault.** 224 notas de afirmación (31 que piden fuente, 26 ejecutadas, 70 derivadas,
+  21 ilustrativas, 44 de criterio y 32 remisiones), 39 de figura, 21 de concepto y 11 de
+  hilo narrativo. Sin duplicados: esta vez no aparecieron las copias del capítulo 3.
+- **Normas leídas en su página oficial.** El 4 % y el 6 % de la retención por servicios
+  están respaldados (Decreto 1625, art. 1.2.4.4.14; Estatuto Tributario, art. 392). **La
+  base mínima es de 2 UVT desde el Decreto 572 de 2025, y el capítulo dice 4**: el
+  docente decidió usar 2. La UVT la publica el Director de la DIAN antes de cada 1.º de
+  enero (art. 868). La frase de la mora dice más de lo leído (Ley 45 de 1990, arts. 65 y
+  69; Código de Comercio, art. 884). «Fraccionamiento de pagos» no es de ninguna norma:
+  son dos conceptos de la DIAN de 2025, y uno dice que la base se mira pago a pago.
+- **Zotero.** Tanda 06 importada con la aprobación del docente (cuatro referencias) y
+  exportada a `referencias.json`.
+- **De paso, el capítulo 3.** El Decreto 572 de 2025 no cambió el 2,5 % ni el 4 % que ese
+  capítulo cita: se cierra la duda de vigencia anotada en su fase 10.
+- **Cinco defectos nuevos** que la línea base no traía (un bloque que usa variables sin
+  asignar, puntas de flecha rellenas, dos notas que regalan la traza, una traza de
+  cuatro reglas donde el texto dice cinco, una frase sin referente). Están en el plan.
+
+**Lo que no se hizo.** No se ejecutó VBA. No se cotejaron las remisiones a los capítulos
+1, 3 y 5 ni al syllabus. No se leyó la resolución con el valor de la UVT de 2026: el
+capítulo conserva su 50 000 redondeado y declarado. No se leyó el Código Penal más allá
+de su artículo 305, que no se propone para Zotero.
+
+**Hueco de las herramientas.** Zotero tenía seleccionada una colección de otro curso
+con el mismo nombre («4 Datos y software», de Teoría del Riesgo): la comprobación previa
+del identificador lo detuvo, pero `connector/import` no deja elegir la colección por
+parámetro y hay que cambiarla a mano en la ventana. Y el lector de línea base dio por
+buena la base de 4 UVT: una lectura crítica sin acceso a la norma no detecta una norma
+que cambió.
+
+### 2026-11-16 — Capítulo 4, fase 2: sección 1, La condición
+
+Rama `claude/cap04-fase2`, sobre la fase 1. Ninguna cita nueva.
+
+- Las remisiones al capítulo 1 (operadores, tablas de verdad, aviso de VBA) y al capítulo
+  3 (quinta fila de la tabla de precedencia) se cotejaron con los capítulos publicados:
+  coinciden.
+- Un `<Ilustrativo>` declara inventados la regla de aprobación, sus umbrales, los
+  solicitantes y los casos de los dos ejercicios.
+- Fuera lo que nadie leyó o es opinión: las fechas de De Morgan, «muy endeudado», «los
+  que un analista habría detenido sin dudar», «es el caso de la portada». «La forma de
+  conseguir el mismo efecto en VBA» pasó a «una forma».
+- Lo que la sección dice de la precedencia en Python y R se ejecutó: coincide.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+4 conserva sus dos avisos de línea base (figuras sin fuente, de la fase 9, y dos normas
+sin cita, de las fases 3 y 7). Sonda a 320: 8 de 8 lecciones.
+
+**Lo que no se hizo.** Lo que la sección afirma de VBA —que `\` y `Mod` van por debajo de
+`*` y `/`, y que la guardia se detiene con el error 6 o el 11— sigue sin ejecutar: va a
+Excel en la fase 10. Las cinco tablas y el evaluador siguen sin `<Fuente>` (fase 9).
+
+### 2026-11-16 — Capítulo 4, fase 3: sección 2, Si…Entonces
+
+Rama `claude/cap04-fase3`, sobre la fase 2. Entran las dos primeras citas del capítulo, la
+lista «Referencias» generada y `afirmaciones/04.yaml`.
+
+- **La mora.** Salió «en Colombia, el cobro por mora está topado por la tasa de usura y
+  se liquida sobre lo vencido», que decía más de lo leído. Queda lo que sí está: un
+  recargo por el simple retardo de una obligación dineraria es interés de mora (Ley 45
+  de 1990, art. 65), y en los negocios mercantiles el interés moratorio no pactado es
+  una y media veces el bancario corriente (Código de Comercio, art. 884). El verificador
+  sin contexto dio las dos por parciales —faltaba «de una obligación dineraria», y «el
+  interés de mora tiene límite» afirmaba un tope general— y se adoptó su redacción.
+- **Un bloque que no corría.** `EJ_GUARDIA_SI` usaba `compras` y `total` sin asignarlas;
+  ahora las asigna en los cuatro lenguajes. Ejecutado en Python y R.
+- La nota del bloque de la mora ya no da el resultado de la traza que sigue. «Cambie el
+  30 por un 31» decía cuál de los dos treintas. La traza dice qué líneas no ocupan fila
+  y que la raya se anota también en VBA. El ejercicio de ordenar dice dónde están los
+  datos en VBA.
+- Un `<Ilustrativo>` declara el caso de la mora.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Al capítulo
+4 le quedan dos avisos: las 13 figuras sin fuente (fase 9) y «DIAN» sin cita (fase 7); el
+de «tasa de usura» desapareció con la frase. Sonda a 320: 8 de 8 lecciones.
+
+**Lo que no se hizo.** Que `Dim` deje en 0 una variable en VBA sigue sin ejecutar (fase
+10). El video del syllabus no se abrió ni se cotejó contra el `.xlsx` (fase 10). La Ley
+510 de 1999, que dio su texto actual al artículo 884, no está en Zotero y no se cita.
+
+### 2026-11-16 — Capítulo 4, fase 4: sección 3, Si…Sino
+
+Rama `claude/cap04-fase4`, sobre la fase 3. Ninguna cita nueva; no se tocó código ni
+salidas.
+
+- **La tarifa plena tiene una sola definición** (decisión F): plena para todo cliente no
+  preferencial, que es lo que el código ya hacía. «Transacciones de más de un millón» es
+  la condición equivocada de la anécdota, no la regla. Salieron «para casi todos los
+  clientes daba igual», que contradecía al cliente de 800 000, y «durante un trimestre».
+- Un `<Ilustrativo>` declara las tarifas, el umbral, los clientes y las cuatrocientas
+  transacciones.
+- La nota del primer bloque ya no da el resultado de la traza. La traza dice qué líneas
+  no ocupan fila. El pie del flujograma dice que él lee los datos y los bloques los
+  traen asignados. Las dos reglas de los símbolos que son convención dicen «en este
+  curso», como en el capítulo 2.
+- Dos opiniones fuera.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos (figuras, fase 9; «DIAN», fase 7). Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar y el video del syllabus sin cotejar (fase 10).
+
+### 2026-11-16 — Capítulo 4, fase 5: sección 4, la cascada
+
+Rama `claude/cap04-fase5`, sobre la fase 4. Ninguna cita nueva.
+
+- **Los conteos de la política.** Son cuatro condiciones y un caso por defecto; con el
+  orden equivocado, al solicitante de ingresos altos se le evalúa la primera y las otras
+  tres no llegan a mirarse. El gancho de la sección y la nota del bloque lo dicen así. La
+  portada y la sección 6, que cuentan «cuatro», se igualan en sus fases.
+- **La traza guiada** usa una versión de cuatro reglas; su enunciado ahora lo dice.
+- **R.** `cat(decision, "\n")` dejaba un espacio antes del salto de línea; los tres
+  bloques usan `cat(sprintf("%s\n", decision))`, como el resto del capítulo.
+- **La equivalencia** entre la versión anidada y la cascada se reprodujo en Python sobre
+  115 884 combinaciones, sin diferencias. El comentario decía «36 456», que no se podía
+  reproducir desde el archivo; ahora dice la rejilla.
+- Un `<Ilustrativo>` declara la política, sus umbrales, los solicitantes y las mil
+  solicitudes. Cinco opiniones fuera.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos. Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar (fase 10).
+
+### 2026-11-16 — Capítulo 4, fase 6: sección 5, Segun
+
+Rama `claude/cap04-fase6`, sobre la fase 5. Ninguna cita nueva; cambia un bloque.
+
+- **El caso por defecto de los tramos** (decisión G). `EJ_SEGUN_RANGOS` cobraba 25 000, la
+  tarifa más alta, a una devolución, a un cero y a un monto con centavos entre dos
+  tramos. Ahora el caso por defecto deja la tarifa en 0 y escribe «Monto fuera de la
+  escala: a revision», en los cuatro lenguajes. Ejecutado en Python y R con seis montos,
+  bordes incluidos.
+- **Desviación de lo aprobado.** G pedía también dejar explícito el último tramo. El
+  pseudocódigo del curso no tiene cómo escribir un tramo abierto («más de 5 000 000»),
+  así que el tramo implícito de 25 000 se quitó: la escala son tres tramos y lo demás va
+  al aviso. El comparador y el panel interactivo conservan la cascada con `Sino` de
+  25 000, que es la versión defectuosa que ese ejercicio discute.
+- Fuera lo que nadie leyó o es opinión: «lo hereda de la familia BASIC», «de las pocas
+  cosas que VBA hace mejor», «`match` exige 3.10». La definición de selectiva múltiple ya
+  no exige caso por defecto. «De los pocos puntos del curso» pasó a «uno de los dos
+  puntos de este capítulo». El ejercicio de ordenar dice que es una versión reducida.
+- Un `<Ilustrativo>` declara las cuotas, la escala y los doce tramos.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos. Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** Lo que la sección dice de VBA —`Case 1 To 100000`, que
+`1 <= m <= 100000` da siempre `True`, que la variable conserva su valor— sigue sin
+ejecutar (fase 10). La pregunta `segun_sin_defecto` del banco no se ha mirado contra el
+bloque nuevo (fase 10). «El capítulo 6 vuelve sobre esto» es una promesa a un capítulo
+que no existe todavía.
+
+**Hueco de las herramientas.** El pseudocódigo del curso no tiene notación para un tramo
+abierto en un `Segun`; LP-CORE lo resalta, pero ningún documento dice qué se puede
+escribir después de `Caso`. Queda anotado para el README.
+
+### 2026-11-16 — Capítulo 4, fase 7: sección 6, casos financieros
+
+Rama `claude/cap04-fase7`, sobre la fase 6. Entran ocho citas; el capítulo queda con diez.
+
+- **La base mínima a 2 UVT.** Cambió en el código de los cuatro lenguajes, en la traza y
+  en sus filas. Con la UVT de 50 000 la base baja de 200 000 a 100 000, y tres casos
+  dejaban de servir: el pago de la traza y los tres pagos del reto pasaron de 150 000 a
+  80 000, y la pregunta 9 del cuestionario, de 180 000 a 80 000. Las salidas del bloque
+  principal no cambian.
+- **Las tres cifras llevan cita**: 2 UVT y 4 % (Decreto 1625, arts. 1.2.4.4.1 y
+  1.2.4.4.14) y 6 % (Estatuto Tributario, art. 392). El `<Ilustrativo>` declara los
+  supuestos que esas normas exigen, incluida la persona natural no declarante que supera
+  3 300 UVT, con su cita.
+- **La UVT.** Con cita del artículo 868. Salieron «redondeada» y «no es el valor real»:
+  suponían un valor vigente que nadie leyó. Ahora es «un número redondo… no se tomó de la
+  resolución de ningún año».
+- **El reto del fraccionamiento.** Ya no atribuye a «la norma» lo que es doctrina de la
+  DIAN, ni propone sumar los pagos del mes, que contradecía el Concepto 012327 de 2025.
+  Cita los dos conceptos y pregunta qué dato haría falta para revisar un fraccionamiento.
+- **Verificador sin contexto**: de siete citas, cinco respaldadas y dos parciales; se
+  adoptó su redacción. Encontró además una norma afirmada sin cita dentro del
+  `<Ilustrativo>` y el «redondeada» sin respaldo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Al capítulo
+4 solo le queda el aviso de las 13 figuras sin fuente (fase 9). Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar (fase 10). No se leyó la resolución con el valor
+de la UVT de ningún año. El inciso cuarto del artículo 392, al que remite el artículo
+1.2.4.4.14, no se leyó con su numeración: el `<Ilustrativo>` dice «al servicio le aplican
+las tarifas de los dos artículos citados» en vez de afirmar qué servicios tienen tarifa
+propia.
+
+**Hueco de las herramientas.** La regla de cobertura del cuestionario cuenta la cadena
+«pregunta:» dentro de una justificación como si fuera otra pregunta: una frase que
+terminaba en «lo que se pregunta:» hizo fallar el verificador con un mensaje que apunta
+a la primera línea del `Quiz`. Y las notas de fuente que genera `generar_tanda.py`
+conservan «sin importar» después de la importación: nada las actualiza.
+
+### 2026-11-17 — Capítulo 4, fase 8: portada, evaluación y glosario
+
+Rama `claude/cap04-fase8`, sobre la fase 7. Ninguna cita nueva.
+
+- **Portada.** Un `<Ilustrativo>` declara el comité, los 40 millones y la política de cinco
+  reglas. El conteo quedó igual que en las secciones 4 y 6: tres de las cuatro
+  condiciones no llegaron a mirarse. Salió «es el primero donde esas diferencias deciden
+  el resultado de un programa», que contradecía al capítulo 3 ya publicado.
+- **Cuestionario.** La justificación falsa sobre invertir los operandos en VBA; el
+  distractor que daba la misma cifra que la clave; la pregunta de `switch`, que ahora
+  dice «tal cual, igualando el valor con cada caso»; la frase sin referente. Fuera dos
+  afirmaciones sobre otros lenguajes que nadie leyó («eso lo hacen otros lenguajes»,
+  «AndAlso es de VB.NET»).
+- **Glosario.** La selectiva múltiple admite tramos donde el lenguaje lo permite; el caso
+  por defecto se enuncia como criterio del curso.
+- **Remisiones** al capítulo 3 y al 5 cotejadas con los capítulos publicados: coinciden.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 solo le queda el aviso de las figuras (fase 9). Sonda a 320: 8 de 8. En el vault no
+queda ninguna nota `citada` sin fuente ni `reescribir`.
+
+**Lo que no se hizo.** El lema del curso, «el lenguaje solo cambia de acento», no se
+tocó: lo llevan también los capítulos 3 y 5, y es decisión del docente. Las remisiones
+al syllabus y lo que el cuestionario dice de VBA (`AndAlso`, errores 6 y 11) esperan a
+la fase 10.
+
+### 2026-11-17 — Capítulo 4, fase 9: figuras y la regla 32
+
+Rama `claude/cap04-fase9`, sobre la fase 8. No hizo falta tocar LP-CORE.
+
+- **Figuras.** Las 13 figuras y tablas sin fuente del capítulo 4 tienen `<Fuente propia>`
+  o su marca razonada. El capítulo pasa `verificar.py` sin ningún aviso.
+- **Flechas.** Los flujogramas dibujan la punta abierta, como en los capítulos 2 y 3.
+  Mirado en el navegador integrado.
+- **Regla 32.** Su léxico incluye ahora «la norma», «la ley» y «la regulación» dichas sin
+  nombre, y la UVT. Ocho pruebas negativas sobre una copia del capítulo 4, anotadas en
+  `verificar.py`. Al correrla sobre los cinco capítulos encontró nueve menciones, en el
+  2, el 3 y el 4: todas eran remisiones a una norma ya citada, y llevan `fuente-ok`. En
+  el capítulo 3 se cambió una frase («de los artículos citados en las secciones 1 y 4»)
+  porque la marca no cabe en medio del texto de un párrafo. El README lo explica.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; los
+capítulos 1 a 4 salen «OK». Sonda a 320 en los capítulos 2, 3 y 4, y de escritorio en
+el 4.
+
+**Lo que no se hizo.** Las 28 notas de figura que son bloques, trazas o ejercicios no se
+miraron una por una en el navegador: se revisaron por su contenido en las fases 2 a 8 y
+las recorre la sonda. El capítulo 5 tiene el mismo marcador de flecha rellena y 23
+figuras sin fuente: es de su propia tarea.
+
+**Hueco de las herramientas.** La marca `fuente-ok` no se puede poner en medio del texto
+de un párrafo JSX sin partirlo; y entre los atributos de un componente se escribe sin
+llaves. No estaba dicho en ningún sitio: ahora está en el README.
+
+### 2026-11-17 — Capítulo 4, fase 10 (a medias): syllabus, remisiones y banco
+
+Rama `claude/cap04-fase10`, sobre la fase 9. **Falta el VBA en Excel y la prueba en el
+iPhone.**
+
+- **Syllabus.** La portada se cotejó contra el `.xlsx` leído directamente: resultado de
+  aprendizaje (fila 31), contenido, 8 horas, taller, formato y videos (fila 34) y rúbrica
+  (fila 44). Coincide. Los cuatro videos existen; no se vieron. De paso se cerró un
+  pendiente del capítulo 3: su ficha usa el nombre de la actividad y su comentario
+  interno el del entregable, y los dos son del syllabus (fila 33).
+- **Remisiones.** Lo que los capítulos 1, 3 y 5 dicen del 4 —diecisiete remisiones—
+  coincide con el capítulo revisado. No hubo que tocar el capítulo 5.
+- **Banco Moodle.** Las cinco preguntas se revisaron contra el capítulo: las cinco claves
+  siguen siendo correctas (ningún fallo en 3 000 semillas por pregunta, recalculadas por
+  dos caminos) y ninguna usa la UVT ni la escala que cambió. Los cinco borradores, que
+  ajustan la redacción, compilan y están en el vault con su nota. **No se copió nada al
+  banco.**
+- **Del cotejo con el banco.** Una pregunta asigna un valor en el caso por defecto porque
+  la política del enunciado lo dice, y el capítulo decía que ese caso «se usa para
+  avisar». El glosario y el reto de la sección 5 dicen ahora: hace lo que la regla diga
+  para lo demás y, si la regla no lo dice, avisa.
+
+**Lo que no se hizo.** El VBA: el módulo está preparado (12 bloques y 15 pruebas de
+lenguaje), pero Excel no admite pegar en segundo plano y el docente estaba trabajando en
+otra aplicación; se dejó de insistir. La prueba en el iPhone, que hace el docente.
+
+**Hueco de las herramientas.** Esta fase se cortó a media mañana por un error de red y
+se retomó horas después sin memoria de lo hecho: lo que la salvó fue que el vault y el
+scratchpad tenían el trabajo a medias, no ningún registro del estado. Una fase larga
+debería anotar en la nota del capítulo qué partes lleva, a medida que las cierra. Y
+`ejecutar_vba.py` sigue dependiendo de un pegado a mano que quita la pantalla.
+
+### 2026-11-17 — Capítulo 4, fase 10: el VBA, ejecutado en Excel
+
+Misma rama. El docente pidió que el módulo lo pegara la sesión; con Excel al frente se
+pegó de una vez.
+
+- **Bloques.** Los 9 con salida declarada coinciden con Excel. `EJ_GUARDIA` se detiene
+  con el error 6, como dice el capítulo; `EJ_GUARDIA_SI`, corregido en la fase 3, no
+  falla.
+- **Quince pruebas de lenguaje**, escritas para lo que el capítulo afirma de VBA y nadie
+  había ejecutado: `\` y `Mod` van por debajo de `*`; `Dim` deja una variable en 0; 0
+  entre 0 da el error 6 y un divisor cero el 11; `And` evalúa los dos lados;
+  `1 <= m <= 100000` da siempre `True`; `Case … To` y las listas funcionan; sin
+  `Case Else` la variable conserva su valor; `Not` va por debajo de los relacionales y
+  `And` por encima de `Or`. Las quince confirman el texto.
+- **Lo único que no se ejecutó: `AndAlso`.** Un módulo que no compila bloquea el arnés
+  entero. La justificación de la pregunta 7 ya no lo nombra: dice que el material no ha
+  encontrado en VBA un operador lógico que deje de evaluar el segundo.
+
+**Verificación.** `verificar.py`: los cinco pasan; el capítulo 4, «OK». En el vault, de
+229 notas del capítulo quedan dos abiertas a propósito: el lema del curso (decisión del
+docente) y la promesa al capítulo 6.
+
+**Lo que no se hizo.** La prueba en el iPhone, que hace el docente.
+
+**Hueco de las herramientas.** El archivo que escribe una macro queda dentro del
+contenedor de Excel y no se puede leer desde la terminal; se leyó abriéndolo con el
+propio Excel por AppleScript. `ejecutar_vba.py` lo resuelve devolviendo el texto desde
+la macro: una prueba suelta debe hacer lo mismo.
+
+### 2026-11-17 — Capítulo 4, fase 11: lectura crítica final
+
+Rama `claude/cap04-fase11`. Dos lectores independientes, sin permiso de edición.
+
+- **Verificador de citas:** las 10 citas, respaldadas por su pasaje; registro y anclas
+  coinciden una a una. Dos frases sin cita decían más que la norma y se corrigieron: la
+  justificación de la pregunta 9 («cuando el pago llega al umbral», no «por encima») y el
+  reto de la sección 6 (el concepto habla del total de los pagos efectuados, sin «a cada
+  proveedor en el período»).
+- **Lector sin contexto:** ningún hallazgo alto; rehízo las cuentas y ejecutó Python y R,
+  y todo coincide. De 11 medios y 16 bajos se corrigieron: el `Sino` de 25 000 de la
+  cascada del comparador queda nombrado como resultado inventado; el caso por defecto
+  «pone 0 como marca» (texto y comentarios de los cuatro bloques); `<Ilustrativo>` en la
+  evaluación; la etiqueta de 1 500 000 («el límite del codeudor: ya no aplica»); el
+  expediente «se queda sin la marca de revisión», no «pasa automático»; «en VBA este
+  capítulo escribe dos Si», no «VBA necesita»; las dos `Fuente` que afirman cosas de VBA
+  dicen que se ejecutó en Excel; y siete de redacción.
+- **Anotados sin corregir, con su razón:** `AndAlso` (no se ejecutó y no hay fuente en
+  Zotero para decir que no existe en VBA); «match exige Python 3.10» (se quitó en la
+  fase 6 por no tener fuente; sigue pendiente de una referencia); que los 2 UVT rigen
+  desde 2025 y la referencia lleva año 2016; términos del dominio sin definir (UVT sin
+  expandir, agente retenedor, bancario corriente); «guarda» frente a «guardia»; tres
+  claves marginalmente más largas; y los criterios del curso redactados como tales.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el
+capítulo 4, «OK». Sonda en `file`, 375 y 320: 8 de 8 lecciones, sin errores de JS.
+
+**Lo que no se hizo.** La prueba en el iPhone (el docente, antes de publicar). En el
+vault, 42 notas no citadas conservan anclas o nombres de archivo de la línea base: la
+regla 31 solo vigila las del yaml.
+
+**Hueco de las herramientas.** Nada avisa cuando el ancla de una nota no citada deja de
+estar en el capítulo; `registrar_afirmaciones.py` solo comprueba las citadas.

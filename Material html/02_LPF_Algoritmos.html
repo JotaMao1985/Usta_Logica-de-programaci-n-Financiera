@@ -3622,6 +3622,7 @@ End Sub`,
                     </div>
 
                     <p className="text-xs text-gray-500 italic text-center mt-2 mb-3">
+                        {/* fuente-ok: «la norma» es la que esta sección cita más abajo */}
                         Señale un paso del pseudocódigo —con el cursor, con la tecla de tabulación o
                         tocándolo— y los otros dos paneles resaltan el suyo. Un toque lo deja fijo;
                         otro lo suelta. En este diagrama los símbolos van más anchos que en la norma,
@@ -3752,6 +3753,7 @@ End Sub`,
                 <Fuente k="nbs1973" loc="§3.2 a §3.4; punta de flecha, §4.4.1">formas y proporciones de</Fuente>
 
                 <p>
+                    {/* fuente-ok: «la norma» es la que este mismo apartado cita a continuación */}
                     Las fichas mezclan dos cosas que conviene separar: lo que dice la norma y lo que este
                     curso añade para dibujar siempre igual.
                 </p>
@@ -4580,6 +4582,7 @@ Debug.Print vueltas`,
                     opciones={[
                         { texto: 'El seguro de vida deudor explica la mayor parte del sobrecosto, porque se cobra en cada una de las 24 cuotas.', correcta: false },
                         { texto: 'No puede afirmarse nada todavía: cualquier cifra depende de la inflación que haya en los dos años del crédito.', correcta: false },
+                        // fuente-ok: «la ley» no aparece como fuente: es parte de un distractor
                         { texto: 'Devolverá $17 529 600 en total: $5 529 600 más de lo que recibió, el 46,1 % del capital. De esa diferencia, $5 184 000 son intereses y $345 600 son seguro.', correcta: true, justificacion: 'Interpretar no es recalcular: es traducir el número a una afirmación con sentido para quien la recibe. El costo del crédito es la diferencia entre lo que se recibe y lo que se devuelve: 24 × 730 400 = 17 529 600, menos los 12 000 000 recibidos, da 5 529 600, y 5 529 600 ÷ 12 000 000 = 46,1 %. Esa diferencia no es toda interés: el algoritmo de la sección 2 ya la entrega separada, 5 184 000 de intereses y 345 600 de seguro. Decirlo así, y no solo «su cuota es de 730 400», va en la línea de lo que dispuso la ley que se cita en la sección 2.' },
                         { texto: 'La tasa de interés del crédito es del 46,1 % anual: lo que se paga de más, dividido entre el capital recibido.', correcta: false, justificacion: 'El 46,1 % es lo que se paga de más en los 24 meses, frente al capital recibido. No es una tasa anual, y además incluye el seguro.' },
                     ]}
@@ -4646,6 +4649,7 @@ Debug.Print vueltas`,
                             { texto: 'Una entrada y exactamente dos salidas rotuladas.', correcta: true },
                             { texto: 'Dos entradas y una salida.', correcta: false },
                         ],
+                        // fuente-ok: remite a la norma citada en la sección 3
                         justificacion: 'En este curso la condición se evalúa y el flujo continúa por el camino del Sí o por el del No: dos salidas, y rotuladas, porque sin rótulo el diagrama no dice cuál es cuál. La norma que se cita en la sección 3 prevé que de un símbolo salgan varias líneas de flujo; el curso se queda con dos porque así el rombo corresponde a Si … Entonces … Sino. Un rombo con una sola salida no decide nada.',
                     },
                     {
