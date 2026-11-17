@@ -4352,3 +4352,37 @@ docente) y la promesa al capítulo 6.
 contenedor de Excel y no se puede leer desde la terminal; se leyó abriéndolo con el
 propio Excel por AppleScript. `ejecutar_vba.py` lo resuelve devolviendo el texto desde
 la macro: una prueba suelta debe hacer lo mismo.
+
+### 2026-11-17 — Capítulo 4, fase 11: lectura crítica final
+
+Rama `claude/cap04-fase11`. Dos lectores independientes, sin permiso de edición.
+
+- **Verificador de citas:** las 10 citas, respaldadas por su pasaje; registro y anclas
+  coinciden una a una. Dos frases sin cita decían más que la norma y se corrigieron: la
+  justificación de la pregunta 9 («cuando el pago llega al umbral», no «por encima») y el
+  reto de la sección 6 (el concepto habla del total de los pagos efectuados, sin «a cada
+  proveedor en el período»).
+- **Lector sin contexto:** ningún hallazgo alto; rehízo las cuentas y ejecutó Python y R,
+  y todo coincide. De 11 medios y 16 bajos se corrigieron: el `Sino` de 25 000 de la
+  cascada del comparador queda nombrado como resultado inventado; el caso por defecto
+  «pone 0 como marca» (texto y comentarios de los cuatro bloques); `<Ilustrativo>` en la
+  evaluación; la etiqueta de 1 500 000 («el límite del codeudor: ya no aplica»); el
+  expediente «se queda sin la marca de revisión», no «pasa automático»; «en VBA este
+  capítulo escribe dos Si», no «VBA necesita»; las dos `Fuente` que afirman cosas de VBA
+  dicen que se ejecutó en Excel; y siete de redacción.
+- **Anotados sin corregir, con su razón:** `AndAlso` (no se ejecutó y no hay fuente en
+  Zotero para decir que no existe en VBA); «match exige Python 3.10» (se quitó en la
+  fase 6 por no tener fuente; sigue pendiente de una referencia); que los 2 UVT rigen
+  desde 2025 y la referencia lleva año 2016; términos del dominio sin definir (UVT sin
+  expandir, agente retenedor, bancario corriente); «guarda» frente a «guardia»; tres
+  claves marginalmente más largas; y los criterios del curso redactados como tales.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el
+capítulo 4, «OK». Sonda en `file`, 375 y 320: 8 de 8 lecciones, sin errores de JS.
+
+**Lo que no se hizo.** La prueba en el iPhone (el docente, antes de publicar). En el
+vault, 42 notas no citadas conservan anclas o nombres de archivo de la línea base: la
+regla 31 solo vigila las del yaml.
+
+**Hueco de las herramientas.** Nada avisa cuando el ancla de una nota no citada deja de
+estar en el capítulo; `registrar_afirmaciones.py` solo comprueba las citadas.
