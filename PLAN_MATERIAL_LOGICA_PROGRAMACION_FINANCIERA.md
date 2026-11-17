@@ -4020,3 +4020,21 @@ el iPhone.
 `estado: sin-fuente` indefinidamente: `registrar_afirmaciones.py` solo mira las
 verificadas y nada avisa de las otras. Las doce de este capítulo las encontró el
 verificador final, no una regla.
+
+### 2026-11-16 — Capítulo 3 publicado; capítulo 4, línea base y plan
+
+- **Capítulo 3.** Fusionado a `main` (`b3e13e3`) con la aprobación del docente y subido a
+  GitHub por orden suya. La prueba en el iPhone quedó parcial: el capítulo carga y se ve
+  bien al 100 % en la portada, la ficha y el inicio de la lección 3, pero la ventana de
+  «iPhone Mirroring» no deja desplazar la página (la rueda no llega y el arrastre
+  selecciona texto), así que no se recorrieron las lecciones ni se probó el 125 %.
+- **Capítulo 4.** `PLAN_TAREA14_CAPITULO_04_CONTENIDO.md`, rama `claude/cap04-plan`.
+  Línea base de un lector sin contexto: ningún hallazgo alto, 12 medios y 24 bajos; las
+  22 salidas de Python y R coinciden. El capítulo no tiene citas ni casos declarados, y
+  da por ciertas la retención por servicios, la UVT, la mora topada por la usura y «lo
+  que la norma llama fraccionamiento». El plan espera las decisiones A–I del docente.
+
+**Hueco de las herramientas.** La regla 32 avisa de «DIAN» y «tasa de usura», pero no ve
+«retención», «UVT» ni «la norma»: en el capítulo 4 se le pasan tres de las cinco
+afirmaciones normativas. Queda anotado para ampliar su vocabulario con su prueba
+negativa, en la fase 9 de ese capítulo.
