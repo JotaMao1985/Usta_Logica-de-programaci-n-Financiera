@@ -4094,3 +4094,31 @@ sin cita, de las fases 3 y 7). Sonda a 320: 8 de 8 lecciones.
 **Lo que no se hizo.** Lo que la sección afirma de VBA —que `\` y `Mod` van por debajo de
 `*` y `/`, y que la guardia se detiene con el error 6 o el 11— sigue sin ejecutar: va a
 Excel en la fase 10. Las cinco tablas y el evaluador siguen sin `<Fuente>` (fase 9).
+
+### 2026-11-16 — Capítulo 4, fase 3: sección 2, Si…Entonces
+
+Rama `claude/cap04-fase3`, sobre la fase 2. Entran las dos primeras citas del capítulo, la
+lista «Referencias» generada y `afirmaciones/04.yaml`.
+
+- **La mora.** Salió «en Colombia, el cobro por mora está topado por la tasa de usura y
+  se liquida sobre lo vencido», que decía más de lo leído. Queda lo que sí está: un
+  recargo por el simple retardo de una obligación dineraria es interés de mora (Ley 45
+  de 1990, art. 65), y en los negocios mercantiles el interés moratorio no pactado es
+  una y media veces el bancario corriente (Código de Comercio, art. 884). El verificador
+  sin contexto dio las dos por parciales —faltaba «de una obligación dineraria», y «el
+  interés de mora tiene límite» afirmaba un tope general— y se adoptó su redacción.
+- **Un bloque que no corría.** `EJ_GUARDIA_SI` usaba `compras` y `total` sin asignarlas;
+  ahora las asigna en los cuatro lenguajes. Ejecutado en Python y R.
+- La nota del bloque de la mora ya no da el resultado de la traza que sigue. «Cambie el
+  30 por un 31» decía cuál de los dos treintas. La traza dice qué líneas no ocupan fila
+  y que la raya se anota también en VBA. El ejercicio de ordenar dice dónde están los
+  datos en VBA.
+- Un `<Ilustrativo>` declara el caso de la mora.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Al capítulo
+4 le quedan dos avisos: las 13 figuras sin fuente (fase 9) y «DIAN» sin cita (fase 7); el
+de «tasa de usura» desapareció con la frase. Sonda a 320: 8 de 8 lecciones.
+
+**Lo que no se hizo.** Que `Dim` deje en 0 una variable en VBA sigue sin ejecutar (fase
+10). El video del syllabus no se abrió ni se cotejó contra el `.xlsx` (fase 10). La Ley
+510 de 1999, que dio su texto actual al artículo 884, no está en Zotero y no se cita.

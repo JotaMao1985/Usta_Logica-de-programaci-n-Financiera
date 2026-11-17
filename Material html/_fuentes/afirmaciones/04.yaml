@@ -1,0 +1,25 @@
+# Registro público de las afirmaciones citadas del capítulo 04.
+# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.
+# No lleva el extracto de la fuente, solo su sha256.
+- id: "c04-s2-a09"
+  seccion: "2. Selectiva simple"
+  ancla: "se tiene como"
+  clave: "congreso1990ley45"
+  loc: "art. 65"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-16"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "536dbe90c336b68bc27431ff0e3bfe955e644b5ad0a71577e0db12d52fc52fa3"
+- id: "c04-s2-a22"
+  seccion: "2. Selectiva simple"
+  ancla: "equivale a una y media"
+  clave: "presidencia1971decreto410"
+  loc: "art. 884"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-16"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "61d951a95adef3ddc6851f72dc0828923a4ed1ebf3bb12825e17049153b5fc7d"

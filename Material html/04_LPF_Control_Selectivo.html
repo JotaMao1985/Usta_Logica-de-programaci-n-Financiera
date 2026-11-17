@@ -4048,24 +4048,42 @@ End Sub`,
            lenguajes se apoyan en el cortocircuito; VBA necesita dos Si
            anidados porque su And evalúa siempre los dos lados. */
         const EJ_GUARDIA_SI = {
-            pseudo: `// compras vale 0: la tarjeta no se usó este mes
+            pseudo: `// La tarjeta no se usó este mes
+compras <- 0
+total   <- 0
+
 Si compras <> 0 Y total / compras > 500000 Entonces
     Escribir "Consumo promedio alto"
 FinSi`,
-            python: `# compras vale 0: la tarjeta no se usó este mes
+            python: `# La tarjeta no se usó este mes
+compras = 0
+total   = 0
+
 if compras != 0 and total / compras > 500_000:
     print("Consumo promedio alto")`,
-            r: `# compras vale 0: la tarjeta no se usó este mes
+            r: `# La tarjeta no se usó este mes
+compras <- 0
+total   <- 0
+
 if (compras != 0 && total / compras > 500000) {
   cat("Consumo promedio alto\\n")
 }`,
-            vba: `' And evalúa siempre los dos lados, así que la guardia
-' tiene que ser un Si aparte, por fuera
-If compras <> 0 Then
-    If total / compras > 500000 Then
-        Debug.Print "Consumo promedio alto"
+            vba: `Option Explicit
+
+Sub ConsumoPromedioConSi()
+    Dim compras As Long, total As Currency
+
+    compras = 0
+    total = 0
+
+    ' And evalúa siempre los dos lados, así que la guardia
+    ' tiene que ser un Si aparte, por fuera
+    If compras <> 0 Then
+        If total / compras > 500000 Then
+            Debug.Print "Consumo promedio alto"
+        End If
     End If
-End If`,
+End Sub`,
         };
 
         const TRAZA_MORA = {
@@ -4135,7 +4153,7 @@ Debug.Print total`,
 
                 <h3>La estructura</h3>
                 <p>
-                    La selectiva simple tiene una sola forma y no admite variantes: una condición, y un
+                    La selectiva simple es la más corta de las estructuras de decisión: una condición, y un
                     bloque de instrucciones que se ejecuta <strong>solo si</strong> esa condición es
                     verdadera. Si es falsa, el programa salta el bloque entero y sigue en la línea de
                     después. No hay alternativa, no hay aviso y no queda rastro.
@@ -4150,7 +4168,23 @@ Debug.Print total`,
                 <CodeTabs
                     titulo="El recargo que no se cobró"
                     bloques={EJ_MORA}
-                    nota="Con 30 días exactos la condición es falsa: recargo se queda en el 0 que le dieron antes del Si, y el total sale como si la factura estuviera al día. Cambie el 30 por un 31 y la misma rutina cobra 240 000. El 5 % sobre todo el saldo es ilustrativo: en Colombia, el cobro por mora está topado por la tasa de usura y se liquida sobre lo vencido." />
+                    nota="La salida va dentro del bloque. Cambie diasMora <- 30 por 31 y vuelva a mirar el recargo: la misma rutina cobra 240 000." />
+
+                <Ilustrativo>
+                    La factura, su saldo, el corte del día 30, los catorce meses de la apertura y el recargo
+                    del 5 % sobre todo el saldo se inventaron para este capítulo. El caso no dice si
+                    ese recargo estaba pactado, y el 5 % no se comparó con ningún límite legal: sirve para
+                    seguir la cuenta, no para liquidar una factura.
+                </Ilustrativo>
+                <p>
+                    Un cobro así tiene nombre en la ley: toda suma que se cobre al deudor como sanción por
+                    el simple retardo o incumplimiento del plazo de una obligación dineraria se tiene como
+                    interés de mora, cualquiera sea su denominación <Cita k="congreso1990ley45" loc="art. 65" />.
+                    Y, para los negocios mercantiles, la ley dice cuánto vale ese interés cuando nadie lo
+                    pactó: si las partes no han estipulado el interés moratorio, equivale a una y media
+                    veces el bancario corriente, y en cuanto el cobro sobrepase ese monto el acreedor
+                    pierde todos los intereses <Cita k="presidencia1971decreto410" loc="art. 884" />.
+                </p>
 
                 <p>
                     Fíjese en la línea <span className="inline-code">recargo &lt;- 0</span>, antes del
@@ -4160,7 +4194,7 @@ Debug.Print total`,
                     valor: en Python y en R el programa se detendría ahí con un error. En VBA no, porque
                     <span className="inline-code"> Dim</span> ya la deja en 0; aun así se escribe, porque declara
                     la intención y no depende de una regla del lenguaje. <strong>Toda variable que solo se
-                    asigna dentro de una rama necesita un valor por defecto fuera de ella.</strong>
+                    asigna dentro de una rama, y que se lee después, necesita un valor por defecto fuera de ella.</strong>
                 </p>
 
                 <h3>La traza gana una columna</h3>
@@ -4174,7 +4208,7 @@ Debug.Print total`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio con el flujo anotado"
-                    enunciado={<>La tabla tiene una fila por cada línea del programa, se ejecute o no. En la columna <strong>flujo</strong> escriba qué pasó en esa línea: en la del Si, <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span>; en las demás, <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span>. En las variables, el valor después de la fila: <span className="inline-code">—</span> si todavía no tienen valor, y lo mismo que traían si la fila se salta.</>}
+                    enunciado={<>La tabla tiene una fila por cada instrucción del programa, se ejecute o no; <span className="inline-code">Inicio</span>, <span className="inline-code">Fin</span> y <span className="inline-code">FinSi</span> no ocupan fila. En la columna <strong>flujo</strong> escriba qué pasó en esa línea: en la del Si, <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span>; en las demás, <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span>. En las variables, el valor después de la fila: <span className="inline-code">—</span> si todavía no tienen valor, y lo mismo que traían si la fila se salta. La raya se anota también en VBA, aunque allí <span className="inline-code">Dim</span> deje las variables en 0: la traza registra lo que el programa ha asignado.</>}
                     codigo={TRAZA_MORA}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -4219,7 +4253,7 @@ Debug.Print total`,
                     nota="Ninguno imprime nada con compras = 0, que es justo lo que se busca. La diferencia está en el motivo: los tres primeros no llegan a dividir; VBA no dividiría tampoco, pero solo porque el Si exterior le impide entrar." />
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Las lecturas y el valor por defecto del recargo van antes de la condición; no dependen unos de otros, así que entre ellos vale cualquier orden."
+                    enunciado="Reconstruya la rutina que liquida una factura con recargo por mora. Las lecturas y el valor por defecto del recargo van antes de la condición; no dependen unos de otros, así que entre ellos vale cualquier orden. En VBA no hay lecturas: el saldo está en la celda B2 y los días de mora en la B3."
                     pasos={ORDENA_MORA}
                     libres={LIBRES_MORA}
                     pista="Pregúntese qué necesita cada línea para poder ejecutarse. Una de ellas suma una variable que, si la rama no entra, nadie habrá asignado."
@@ -6230,6 +6264,8 @@ neto = pago - retencion`,
                     cuándo para</em>. La tabla de amortización de un crédito a 240 meses tiene 240 filas
                     y nadie las escribió.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -6459,6 +6495,37 @@ neto = pago - retencion`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "d33523e3cc7ae09b35e61db11bb2d18fcd4a9ccd7fd7aa940d19d9db1bb5a97e",
+  "sello": "e1429d8438a1f3fb9f916f974fb7e15406e16d111006a12f1b17d46271302b9e",
+  "orden": [
+    "congreso1990ley45",
+    "presidencia1971decreto410"
+  ],
+  "entradas": {
+    "congreso1990ley45": {
+      "autor": "Congreso de la República de Colombia",
+      "anio": "1990",
+      "html": "Congreso de la República de Colombia. (1990). \u003cem>Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones\u003c/em>. Diario Oficial 39.607. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\u003c/a>",
+      "plano": "Congreso de la República de Colombia. (1990). Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones. Diario Oficial 39.607. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540"
+    },
+    "presidencia1971decreto410": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "1971",
+      "html": "Presidencia de la República de Colombia. (1971). \u003cem>Decreto 410 de 1971, por el cual se expide el Código de Comercio\u003c/em>. Diario Oficial 33.339. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\">http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (1971). Decreto 410 de 1971, por el cual se expide el Código de Comercio. Diario Oficial 33.339. http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>
