@@ -3971,3 +3971,52 @@ contra el `.xlsx`.
 Mirroring» (teclea «aaaa»): la prueba en el teléfono necesita al docente presente.
 `ejecutar_vba.py` exige pegar el módulo a mano en Excel, y eso también pide el control
 de pantalla.
+
+### 2026-11-16 — Capítulo 3, fase 10: lectura crítica final
+
+Rama `claude/cap03-fase10`, sobre la fase 9; sin fusionar. Dos lectores sin contexto y sin
+permiso de escritura: uno leyó el capítulo entero y rehízo las cuentas; el otro cotejó
+cada `<Cita>` con el pasaje guardado en el vault.
+
+- **Citas: 13; 11 respaldadas y 2 parciales, corregidas.** El caso de la factura no decía
+  que el descuento fuera normal según la costumbre comercial, tercera condición del
+  artículo 454: quedó como supuesto del `<Ilustrativo>`. El 4 % de pensión no tenía el
+  puente entre el 16 % del Decreto 4982 y el reparto del artículo 20 de la Ley 100: la
+  frase cita ahora también el artículo 2.º del decreto, que ya estaba leído.
+- **Lectura del capítulo: ningún hallazgo alto.** Todas las cuentas y las salidas de
+  Python y R que el lector ejecutó cuadran. De los medios se corrigieron: la regla de
+  dependencia (dos salidas a pantalla tampoco se intercambian, y la pregunta del
+  cuestionario habla del valor final de las variables); `^` en Python (con una tasa
+  decimal sí da error de tipo: ejecutado); la Motivación de la sección 3, que
+  contradecía la clave de la pregunta 5; la leyenda de *J* y *m*; qué líneas no ocupan
+  fila en una traza. De los bajos: un distractor cuya razón no daba su cifra, la opción
+  del comparador de las dos mitades, «como enseña el apartado siguiente», «no hay forma
+  de saber», «media tasa», «la regla práctica», el rótulo del orden equivocado, el
+  título de la precedencia, la sigla CDT, la solución del reto y la nota del primer
+  bloque («de Python o el de R»).
+- **Vault.** Doce notas que seguían como `citada` sin fuente o `reescribir` quedaron en
+  `criterio` o `remision`, con su razón.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan y el
+capítulo 3 sale «OK». Sonda en `file`, 375 y 320: 7 de 7 lecciones, sin errores.
+
+**Anotado y sin corregir, con su razón.** El flujograma de la sección 1 lee los datos y
+el bloque los asigna (el flujograma es del algoritmo general; se dejó). El ejercicio de
+emparejar se resuelve en parte por eliminación. La variable temporal: el texto ya dice
+«con dos asignaciones sueltas» y «en este algoritmo»; la asignación múltiple de Python
+no es del curso. El pseudocódigo declara `0.0200` sin instrucción de formato. «Cada una
+exactamente una vez» frente al `Mientras` de la portada. «Acumulador» aparece una vez
+antes de definirse. *d* y *n* sin decir que van en la misma unidad. «Causación», «mora»
+y «XOR» sin glosa. Tildes desiguales en comentarios de código. El comentario interno
+llama «Estructuras secuenciales» a la tarea que la ficha llama «Estructuras de Control
+Secuencial»: va con el cotejo pendiente contra el syllabus `.xlsx`.
+
+**Lo que sigue sin comprobar.** Que los pasajes del vault sean literales (el verificador
+comparó capítulo contra nota, no nota contra fuente). La vigencia del 2,5 % y del 4 %
+después del Decreto 572 de 2025 y la de la Ley 2381 de 2024 en pensiones. La prueba en
+el iPhone.
+
+**Hueco de las herramientas.** Una nota puede quedar en `clase: citada` con
+`estado: sin-fuente` indefinidamente: `registrar_afirmaciones.py` solo mira las
+verificadas y nada avisa de las otras. Las doce de este capítulo las encontró el
+verificador final, no una regla.

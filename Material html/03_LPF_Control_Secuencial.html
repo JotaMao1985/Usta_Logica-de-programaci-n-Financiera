@@ -3106,7 +3106,8 @@ End Sub`,
                     bastaría para sacarlo de la base.
                 </p>
                 <Ilustrativo>
-                    La factura, el proveedor y sus cifras se inventaron para este capítulo. La
+                    La factura, el proveedor y sus cifras se inventaron para este capítulo. Se supone
+                    además que el descuento es de los normales según la costumbre comercial del sector. La
                     liquidación deja por fuera lo que una factura real puede traer —retenciones, bienes
                     con otra tarifa o sin impuesto— porque aquí solo interesa el orden de tres
                     operaciones.
@@ -3117,7 +3118,7 @@ End Sub`,
                 <CodeTabs
                     titulo="Liquidación de la factura — el orden correcto"
                     bloques={EJ_FACTURA}
-                    nota="La salida va dentro del bloque, con el prefijo de cada lenguaje. Copiar el bloque entrega un guion ejecutable." />
+                    nota="La salida va dentro del bloque, con el prefijo de cada lenguaje. Copiar el bloque de Python o el de R entrega un guion ejecutable." />
 
                 <h3>Cuándo se pueden intercambiar dos instrucciones</h3>
                 <p>
@@ -3128,7 +3129,8 @@ End Sub`,
                 </p>
                 <Box type="info" label="Regla de dependencia">
                     Dos instrucciones consecutivas <strong>se pueden intercambiar</strong> sin mirar más si
-                    ninguna de las dos lee ni modifica una variable que la otra modifica. Si una <em>lee</em> lo que
+                    ninguna de las dos lee ni modifica una variable que la otra modifica, y no son dos
+                    salidas a pantalla, que al cambiar de lugar cambian el orden de lo impreso. Si una <em>lee</em> lo que
                     la otra <em>escribe</em>, el orden deja de ser libre: hay que comprobar qué pasa al
                     cambiarlo, y lo habitual es que cambie el resultado.
                 </Box>
@@ -3144,7 +3146,7 @@ End Sub`,
                     cambia la diferencia. La sección 4 trae un caso así.
                 </p>
 
-                <Box type="warn" label="El orden equivocado no es un error de programación">
+                <Box type="warn" label="El orden equivocado no es un error que la máquina detecte">
                     Es un error de <strong>modelo del negocio</strong>. El código de más abajo corre y no
                     advierte nada: simplemente responde a otra pregunta —el IVA de una factura sin
                     descuento, sumado a la base que sí lo tiene— y la presenta como si fuera la
@@ -3372,7 +3374,7 @@ End Sub`,
                 </div>
                 <Fuente propia>convención del curso</Fuente>
                 <p>
-                    En los bloques de este curso el dato de la lectura viene del teclado en Python y en R, y
+                    Cuando un bloque de este curso lee un dato, lo toma del teclado en Python y en R, y
                     de una celda de la hoja en VBA. Es una convención del material, no una regla de esos
                     lenguajes, y es una diferencia de <em>acento</em>, no de lógica. Lo que no cambia es que después de leer, ese dato está dentro de una variable
                     y el resto del programa no necesita saber de dónde salió.
@@ -3598,10 +3600,10 @@ End Sub`,
                     Suponga un contrato que fija la comisión en el 3 % sobre el capital más los intereses
                     acumulados. Quien lo traduce a código escribe <span className="inline-code">capital + interes * 0.03</span> y
                     el sistema lo acepta sin objetar nada. La cláusula y la línea de código se leen
-                    igual; una cobra el 3 % de todo y la otra, el 3 % solo de los intereses.
+                    igual; una cobra el 3 % de todo y la otra suma el capital completo más el 3 % de los intereses.
                 </Motivacion>
 
-                <h3>La máquina no lee de izquierda a derecha</h3>
+                <h3>La máquina no lee solo de izquierda a derecha</h3>
                 <p>
                     El capítulo 1 estableció la tabla de precedencia de los operadores; aquí se usa. Lo
                     que interesa ahora no es memorizarla, sino una consecuencia práctica: una expresión
@@ -3636,8 +3638,7 @@ End Sub`,
                     otro operador de su misma prioridad. En Python la potencia se escribe
                     <span className="inline-code"> **</span>, y <span className="inline-code">2 ** 3 ** 2</span> también
                     vale 512. De las diferencias de precedencia entre los cuatro lenguajes, esta y la del
-                    residuo y la división entera son las que tocan a una fórmula financiera, y el remedio
-                    es el mismo que para todo lo demás en esta sección: <strong>escribir el paréntesis</strong>.
+                    residuo y la división entera son las que importan para las fórmulas de este curso, y el remedio es el mismo que para lo demás de esta sección: <strong>escribir el paréntesis</strong>.
                 </Box>
 
                 <CodeTabs
@@ -3650,7 +3651,9 @@ End Sub`,
                     números enteros <Cita k="psf2026expresiones" loc="§6.9" />. Por eso copiar
                     <span className="inline-code"> 2 ^ 3 ^ 2</span> del pseudocódigo a Python no produce ningún
                     error: produce un <strong>3</strong>, como muestra la segunda línea del bloque. Es el
-                    fallo silencioso de este capítulo en una sola línea.
+                    fallo silencioso de este capítulo en una sola línea. El silencio es de los enteros: con
+                    una tasa decimal, como en <span className="inline-code">(1 + 0.02) ^ 12</span>, Python sí
+                    se detiene con un error de tipo.
                 </Box>
 
                 <h3>El caso: comisión de manejo sobre el saldo promedio</h3>
@@ -3697,7 +3700,7 @@ End Sub`,
                         { texto: '8 000 000, el promedio: los paréntesis solo sirven para leer mejor.', correcta: false },
                         { texto: '13 000 000, porque primero se divide 6 000 000 entre 2 y después se suma.', correcta: true, justificacion: 'La división tiene más prioridad que la suma, así que la máquina calcula 6 000 000 / 2 = 3 000 000 y luego 10 000 000 + 3 000 000. Sobre ese valor, la comisión del 0,5 % sale en 65 000 en vez de 40 000: un 62,5 % de más en cada cobro.' },
                         { texto: '16 000 000, la suma de los dos saldos.', correcta: false },
-                        { texto: '5 000 000, porque la suma se evalúa primero y luego se divide.', correcta: false },
+                        { texto: '11 000 000, porque se divide el primer saldo entre 2 y después se suma el segundo.', correcta: false },
                     ]}
                 /></Ejercicio>
 
@@ -3707,7 +3710,7 @@ End Sub`,
                     b={{ etiqueta: 'Versión B · dos mitades', codigo: CMP_DOS_MITADES }}
                     pregunta="¿Las dos versiones calculan lo mismo?"
                     opciones={[
-                        { texto: 'Sí: dividir la suma entre dos y sumar las dos mitades es la misma operación.', correcta: true, justificacion: 'Son equivalentes, y la B no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. La advertencia útil es otra: esto vale mientras la división sea decimal. Con la división entera del capítulo 1, que descarta los decimales, dejan de coincidir: con saldos de 3 y 5, la versión A da 8 entre 2, que es 4, y la B da 1 más 2, que es 3. Cada mitad pierde su fracción por separado. Con dinero en centavos, eso es un descuadre.' },
+                        { texto: 'Sí: con división decimal, las dos dan el mismo resultado.', correcta: true, justificacion: 'Son equivalentes, y la B no necesita paréntesis porque las dos divisiones ya tienen más prioridad que la suma. La advertencia útil es otra: esto vale mientras la división sea decimal. Con la división entera del capítulo 1, que descarta los decimales, dejan de coincidir: con saldos de 3 y 5, la versión A da 8 entre 2, que es 4, y la B da 1 más 2, que es 3. Cada mitad pierde su fracción por separado. Con dinero en centavos, eso es un descuadre.' },
                         { texto: 'No: la versión B suma antes de dividir y da el doble.', correcta: false },
                         { texto: 'No: la versión B necesita paréntesis o dividirá solo el segundo saldo.', correcta: false },
                         { texto: 'Solo coinciden si los dos saldos son iguales.', correcta: false },
@@ -4226,7 +4229,7 @@ End Sub`,
                             </tr>
                             <tr>
                                 <td><strong>Una fila por instrucción ejecutada</strong></td>
-                                <td>Los comentarios y las líneas en blanco no son instrucciones y no ocupan fila. <span className="inline-code">Escribir</span> sí ocupa una: es una instrucción, aunque no cambie nada.</td>
+                                <td>Los comentarios y las líneas en blanco no son instrucciones y no ocupan fila. Tampoco la ocupan <span className="inline-code">Inicio</span> y <span className="inline-code">Fin</span>, ni las líneas <span className="inline-code">Sub</span>, <span className="inline-code">End Sub</span> y <span className="inline-code">Dim</span> de VBA. <span className="inline-code">Escribir</span> sí ocupa una: es una instrucción, aunque no cambie nada.</td>
                             </tr>
                             <tr>
                                 <td><strong>Cada fila arrastra la anterior</strong></td>
@@ -4257,7 +4260,7 @@ End Sub`,
                     <strong> los valores no</strong>.
                 </p>
                 <Ilustrativo>
-                    Los créditos, la cuenta de recaudo, las facturas, la mora y el CDT de esta sección,
+                    Los créditos, la cuenta de recaudo, las facturas, la mora y el CDT (certificado de depósito a término) de esta sección,
                     con sus cifras, sus tasas y sus reglas de liquidación, se inventaron para practicar la
                     traza. El interés se liquida como interés simple y la mora con meses de 30 días
                     porque así cada cuenta cabe en una línea. No describen cómo liquida ningún producto
@@ -4286,8 +4289,7 @@ End Sub`,
                     En el algoritmo anterior cada variable se escribió una sola vez, y por eso la tabla se
                     llenó en diagonal. Lo normal es lo contrario: una misma variable recibe valor muchas
                     veces, y en cada asignación <strong>el valor anterior desaparece</strong>. Al terminar el
-                    programa la variable conserva uno solo, y si ese está mal no hay forma de saber en
-                    cuál de las cuatro asignaciones se torció.
+                    programa la variable conserva uno solo, y si ese está mal, el valor final por sí solo no dice en cuál de las asignaciones se torció.
                 </p>
                 <p>
                     La tabla de traza es lo que guarda esa historia. Es su segunda razón de ser, y la que
@@ -4892,8 +4894,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 <CalloutPro tema="warn" titulo="El 1,5 % no es el costo del dinero" subtitulo="Por qué el porcentaje de la operación y el que paga el cliente no coinciden" icon="fa-triangle-exclamation">
                     El proveedor entrega una factura de 15 000 000 y recibe 14 550 000. Los 450 000 de
                     diferencia, medidos <strong>sobre lo que efectivamente recibió</strong>, son el 3,09 % en
-                    dos meses. Repartido por igual entre los dos meses da 1,55 % mensual; componiendo,
-                    como enseña el apartado siguiente, 1,53 %. Con cualquiera de las dos cuentas es más
+                    dos meses. Repartido por igual entre los dos meses da 1,55 % mensual; componiendo —la tasa mensual que aplicada dos veces da ese 3,09 %—, 1,53 %. Con cualquiera de las dos cuentas es más
                     que el 1,50 % pactado. La tasa de descuento se aplica
                     sobre el valor nominal; el costo se mide sobre el valor recibido. Es la misma
                     operación leída desde los dos extremos, y la diferencia crece con el plazo.
@@ -4905,13 +4906,15 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     hubiera interés sobre interés. Para saber qué se cobra de verdad hay que hacer dos
                     cosas, y en este orden: repartir la nominal entre las capitalizaciones del año para
                     obtener la tasa <strong>periódica</strong>, y componer esa periódica tantas veces como
-                    períodos tenga el año para obtener la tasa <strong>efectiva</strong>.
+                    períodos tenga el año para obtener la tasa <strong>efectiva</strong>. En las ecuaciones,
+                    <em> J</em> es la tasa nominal anual, <em>m</em> el número de capitalizaciones del año,
+                    <em> i<sub>p</sub></em> la tasa periódica e <em>i<sub>e</sub></em> la efectiva anual.
                 </p>
 
                 <Eq>{String.raw`$$i_p = \frac{J}{m} \qquad i_e = \left(1 + i_p\right)^{m} - 1$$`}</Eq>
 
                 <Box type="warn" label="Una tasa nominal sin su capitalización no significa nada">
-                    «24 % anual» no es una tasa: es media tasa. Falta decir <em>cada cuánto capitaliza</em>.
+                    «24 % anual» no es una tasa completa. Falta decir <em>cada cuánto capitaliza</em>.
                     El mismo 24 % nominal da 24 % efectivo si capitaliza una vez al año, 26,82 % si
                     capitaliza mensualmente y 27,11 % si capitaliza a diario. Cuando una oferta dice solo
                     «24 % anual», la primera pregunta no es de matemáticas sino de lectura del contrato.
@@ -4935,8 +4938,9 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                     Vuelva a la nómina de la portada. En ella, a cada empleado se le descuentan de su
                     salario dos aportes. El de salud es, para el empleado, del 4 % del salario base de cotización
                     <Cita k="congreso1993ley100" loc="art. 204" />. El de pensión también resulta del 4 %: la cotización
-                    total es del 16 % <Cita k="presidencia2007decreto4982" loc="art. 1.º" /> y el
-                    trabajador paga la cuarta parte <Cita k="congreso1993ley100" loc="art. 20" />. Y
+                    total es del 16 % y se distribuye entre empleador y trabajador en la forma prevista en
+                    la ley <Cita k="presidencia2007decreto4982" loc="arts. 1.º y 2.º" />, que pone a cargo del
+                    trabajador la cuarta parte <Cita k="congreso1993ley100" loc="art. 20" />. Y
                     <strong> las dos se calculan sobre la misma base</strong>
                     <Cita k="congreso1993ley100" loc="art. 204, par. 1.º" />. Por eso no se aplican en cascada: la de
                     pensión no reduce la base de la de salud. Traducir mal esa regla es lo que produce el reclamo
@@ -5028,7 +5032,9 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             unidades, y la conversión es la que las iguala.</strong> Una nominal del 24 % con
                             capitalización mensual y otra del 24 % con capitalización diaria son la misma
                             etiqueta y dos precios distintos —26,82 % y 27,11 % efectivo—; sin convertir, el
-                            programa compararía las etiquetas y no los precios.
+                            programa compararía las etiquetas y no los precios. Con las dos ofertas de esta sección,
+                            quedarse con el número menor acertaría, pero por casualidad: 1,8 es menor que 24
+                            aunque una sea mensual y la otra anual.
                         </p>
                         <p>
                             En términos del capítulo: la conversión es una <strong>instrucción que otra
@@ -5099,7 +5105,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
 
         const GLOSARIO_CAP03 = [
             ['Secuencia', 'Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas. No hay preguntas, saltos ni vueltas atrás.'],
-            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar sin mirar más si ninguna lee ni modifica una variable que la otra modifica. Si una lee lo que la otra escribe hay que comprobar: lo habitual es que el orden sea obligatorio.'],
+            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar sin mirar más si ninguna lee ni modifica una variable que la otra modifica y no son dos salidas a pantalla. Si una lee lo que la otra escribe hay que comprobar: lo habitual es que el orden sea obligatorio.'],
             ['Asignación', 'Operación que evalúa la expresión de la derecha con los valores actuales y guarda el resultado en la variable de la izquierda, borrando lo que hubiera. No es una igualdad matemática.'],
             ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. En el intercambio de la sección 2 es lo que evita perder uno de los dos valores: tres asignaciones, no dos. El capítulo 2 la llama variable auxiliar.'],
             ['Acumulador', 'Variable que se lee a sí misma para actualizarse —saldo <- saldo + movimiento—. Conserva un solo valor: la historia de los anteriores solo queda en la tabla de traza.'],
@@ -5179,13 +5185,13 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         <p>
                             Hay además un argumento que no es técnico. Los nombres
                             <span className="inline-code"> base</span> y <span className="inline-code">retencion</span> son
-                            los términos del contrato y de la norma tributaria: la versión larga
+                            los términos del contrato y de las normas citadas en las secciones 1 y 4: la versión larga
                             <strong> documenta la regla del negocio</strong> mientras la calcula, y quien la lea
                             dentro de dos años —o quien tenga que explicársela a un auditor— no necesita
                             reconstruir de dónde salió cada factor.
                         </p>
                         <p style={{ marginBottom: 0 }}>
-                            La regla práctica que deja este capítulo: <strong>una expresión con más de dos
+                            El criterio práctico que propone este capítulo: <strong>una expresión con más de dos
                             operadores y algún término repetido pide variables intermedias</strong>. El
                             <span className="inline-code"> (subtotal - 1200000)</span> escrito dos veces es la señal:
                             aparece dos veces porque tiene un nombre que nadie le puso.
@@ -5204,7 +5210,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                 <Quiz titulo="Evaluación · Capítulo 03 — Control secuencial" preguntas={[
                     {
                         seccion: 'cap1',
-                        pregunta: 'Dos instrucciones consecutivas de una secuencia se pueden intercambiar sin que cambie el resultado cuando:',
+                        pregunta: 'Dos instrucciones consecutivas de una secuencia se pueden intercambiar sin que cambie el valor final de ninguna variable cuando:',
                         opciones: [
                             { texto: 'Las dos son asignaciones, porque asignar nunca depende del orden.', correcta: false },
                             { texto: 'Ninguna de las dos imprime nada.', correcta: false },
@@ -5316,7 +5322,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             { texto: 'Que la tasa efectiva anual es del 24 %: es lo que la oferta declara, y una tasa anual ya incluye todo el año.', correcta: false },
                             { texto: 'Que equivale a 2 % mensual, porque toda tasa anual, sea del tipo que sea, se reparte entre los 12 meses.', correcta: false },
                         ],
-                        justificacion: 'Una tasa nominal sin período de capitalización es media tasa. El mismo 24 % da 24 % efectivo si capitaliza una vez al año, 26,82 % si capitaliza mensualmente y 27,11 % si capitaliza a diario. Decir que la efectiva es del 24 % confunde las dos tasas; decir que equivale a 2 % mensual da por sabido justo el dato que falta: es así solo si capitaliza cada mes, y si el 24 % fuera efectivo anual el mes costaría 1,81 %.',
+                        justificacion: 'Una tasa nominal sin período de capitalización está incompleta. El mismo 24 % da 24 % efectivo si capitaliza una vez al año, 26,82 % si capitaliza mensualmente y 27,11 % si capitaliza a diario. Decir que la efectiva es del 24 % confunde las dos tasas; decir que equivale a 2 % mensual da por sabido justo el dato que falta: es así solo si capitaliza cada mes, y si el 24 % fuera efectivo anual el mes costaría 1,81 %.',
                     },
                 ]} />
 
