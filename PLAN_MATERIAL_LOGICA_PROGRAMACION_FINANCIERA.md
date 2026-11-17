@@ -4144,3 +4144,25 @@ salidas.
 4 le quedan los mismos dos avisos (figuras, fase 9; «DIAN», fase 7). Sonda a 320: 8 de 8.
 
 **Lo que no se hizo.** VBA sin ejecutar y el video del syllabus sin cotejar (fase 10).
+
+### 2026-11-16 — Capítulo 4, fase 5: sección 4, la cascada
+
+Rama `claude/cap04-fase5`, sobre la fase 4. Ninguna cita nueva.
+
+- **Los conteos de la política.** Son cuatro condiciones y un caso por defecto; con el
+  orden equivocado, al solicitante de ingresos altos se le evalúa la primera y las otras
+  tres no llegan a mirarse. El gancho de la sección y la nota del bloque lo dicen así. La
+  portada y la sección 6, que cuentan «cuatro», se igualan en sus fases.
+- **La traza guiada** usa una versión de cuatro reglas; su enunciado ahora lo dice.
+- **R.** `cat(decision, "\n")` dejaba un espacio antes del salto de línea; los tres
+  bloques usan `cat(sprintf("%s\n", decision))`, como el resto del capítulo.
+- **La equivalencia** entre la versión anidada y la cascada se reprodujo en Python sobre
+  115 884 combinaciones, sin diferencias. El comentario decía «36 456», que no se podía
+  reproducir desde el archivo; ahora dice la rejilla.
+- Un `<Ilustrativo>` declara la política, sus umbrales, los solicitantes y las mil
+  solicitudes. Cinco opiniones fuera.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos. Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar (fase 10).

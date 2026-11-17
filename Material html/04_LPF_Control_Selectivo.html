@@ -4713,7 +4713,7 @@ if (score < 550) {
   decision <- "APROBADO ESTANDAR"
 }
 
-cat(decision, "\\n")
+cat(sprintf("%s\\n", decision))
 #> RECHAZADO`,
             vba: `Option Explicit
 
@@ -4799,7 +4799,7 @@ if (ingreso >= 5000000) {
   decision <- "APROBADO ESTANDAR"
 }
 
-cat(decision, "\\n")
+cat(sprintf("%s\\n", decision))
 #> APROBADO PREFERENCIAL`,
             vba: `Option Explicit
 
@@ -4884,10 +4884,10 @@ End Sub`,
         };
         const ERROR_CASCADA_LINEA_OK = { pseudo: 3, python: 2, r: 2, vba: 4 };
         const ERROR_CASCADA_EXPLICACION = {
-            pseudo: <>La <strong>línea 3</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 5 y 7 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 3 por debajo de los dos filtros de rechazo.</>,
-            python: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
-            r: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
-            vba: <>La <strong>línea 4</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una política real del banco. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 6 y 8 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 4 por debajo de los dos filtros de rechazo.</>,
+            pseudo: <>La <strong>línea 3</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 5 y 7 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 3 por debajo de los dos filtros de rechazo.</>,
+            python: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            r: <>La <strong>línea 2</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 4 y 6 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 2 por debajo de los dos filtros de rechazo.</>,
+            vba: <>La <strong>línea 4</strong> no está mal escrita: la regla «ingreso de cinco millones o más ⇒ preferencial» es una de las reglas de la política. Está mal <strong>situada</strong>. Al ser la primera de la cascada, cualquier solicitante que la cumpla recibe su decisión ahí mismo, y las condiciones de las líneas 6 y 8 —las dos causales de rechazo— <strong>no llegan a evaluarse</strong>. El arreglo no toca ninguna condición: baja la línea 4 por debajo de los dos filtros de rechazo.</>,
         };
 
         const ERROR_NEGACION_LINEAS = {
@@ -4990,8 +4990,10 @@ End If`,
         };
 
         /* Las dos formas de escribir la MISMA política. Comprobada su
-           equivalencia sobre 36 456 combinaciones de ingreso, score y
-           endeudamiento el 2026-09-20: cero diferencias. */
+           equivalencia el 2026-11-16 sobre 115884 combinaciones de ingreso (0 a 8 000 000 de
+           250 000 en 250 000, más los bordes de 1 500 000 y 5 000 000), score (300 a 850 de 10
+           en 10, más 549 y 551) y endeudamiento (0 a 100 de 2 en 2, más 59, 60,5 y 61): cero
+           diferencias. */
         const CMP_CASCADA = {
             pseudo: `Si score < 550 Entonces
     decision <- "RECHAZADO"
@@ -5151,7 +5153,7 @@ if (ingreso >= 5000000) {
 } else {
   decision <- "APROBADO ESTANDAR"
 }
-cat(decision, "\\n")`,
+cat(sprintf("%s\\n", decision))`,
             vba: `Sub EstudiarSolicitudMal()
     Dim ingreso As Currency, score As Integer, endeudamiento As Double
     Dim decision As String
@@ -5177,11 +5179,11 @@ End Sub`,
             { linea: { pseudo: 3, python: 2, r: 2, vba: 5 }, estado: { score: '480' },
                 nota: 'El score, setenta puntos por debajo del mínimo de originación. Queda cargado y disponible: el dato está, y está bien.' },
             { linea: { pseudo: 4, python: 3, r: 3, vba: 6 }, estado: { endeudamiento: '68' },
-                nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores el comité habría rechazado sin dudar.' },
+                nota: 'El endeudamiento, ocho puntos por encima del tope. También queda cargado. Con estos tres valores la política rechaza.' },
             { linea: { pseudo: 5, python: 4, r: 4, vba: 7 }, estado: {},
                 nota: 'La primera condición de la cascada, y es verdadera: 6 500 000 pasa de cinco millones. Aquí se acaba todo. Las dos condiciones de abajo no van a dar falso — es que nadie las va a mirar.' },
             { linea: { pseudo: 6, python: 5, r: 5, vba: 8 }, estado: { decision: 'APROBADO PREFERENCIAL' },
-                nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que un auditor encuentra seis meses después y no sabe explicar.' },
+                nota: 'Decisión tomada, y a tasa preferencial. Mire la fila: los dos datos que descalificaban al solicitante siguen ahí, intactos y sin usar. Eso es lo que la traza deja a la vista.' },
             { linea: { pseudo: 14, python: 12, r: 13, vba: 16 }, estado: {}, salida: TZ_MAL_SALIDA,
                 nota: 'Fin. De las tres condiciones del bloque se evaluó una, y el programa no dejó constancia de las otras dos en ningún sitio salvo en esta tabla.' },
         ];
@@ -5189,7 +5191,7 @@ End Sub`,
         const Cap4Section = () => (
             <div className="prose-lp">
                 <Motivacion icon="fa-layer-group"
-                    gancho="Las cinco reglas son correctas. Puestas en ese orden, a un solicitante de altos ingresos tres de ellas no llegan a evaluársele.">
+                    gancho="Las cinco reglas son correctas. Puestas en ese orden, a un solicitante de altos ingresos solo se le evalúa la primera condición: las otras tres no llegan a mirarse.">
                     Es el crédito de la portada. El motor de decisión preguntaba primero por el ingreso
                     —que el solicitante cumplía de sobra— y devolvía aprobado sin llegar a mirar el
                     score. La condición del score estaba escrita, probada y bien redactada, dos
@@ -5236,7 +5238,14 @@ End Sub`,
                 <CodeTabs
                     titulo="La política de originación, en el orden correcto"
                     bloques={EJ_CASCADA_OK}
-                    nota="Cinco reglas: dos causales de rechazo, dos de aprobación con condiciones y un caso por defecto. Los filtros de rechazo van primero, que es lo que hace que el resto pueda confiar en que quien llega ya los pasó." />
+                    nota="Cinco reglas: dos causales de rechazo, dos de aprobación con condiciones y un caso por defecto. Son cuatro condiciones; la quinta regla no pregunta nada. Los filtros de rechazo van primero, que es lo que hace que el resto pueda confiar en que quien llega ya los pasó." />
+
+                <Ilustrativo>
+                    La política de originación de esta sección, con sus cinco reglas y sus umbrales —score de
+                    550, endeudamiento del 60 %, ingresos de 5 000 000 y de 1 500 000—, sus solicitantes y
+                    las mil solicitudes mensuales del ejercicio se inventaron para este capítulo: no son
+                    la política de ningún banco. Lo mismo vale para el trámite automático de expedientes.
+                </Ilustrativo>
 
                 <h3>Las mismas cinco reglas, en otro orden</h3>
                 <p>
@@ -5251,7 +5260,7 @@ End Sub`,
                     bloques={EJ_CASCADA_MAL}
                     nota="Aprobado preferencial, con un score setenta puntos por debajo del mínimo de originación. Las tres condiciones que quedaban —las dos de rechazo y la del codeudor— no se evaluaron: la cascada ya había decidido." />
 
-                <Box type="warn" label="Por qué esto no lo encuentra una revisión de código">
+                <Box type="warn" label="Por qué esto se le escapa a una revisión línea por línea">
                     Quien revisa lee cinco reglas y las encuentra todas correctas, porque lo son. El
                     defecto no está en ninguna línea: está en la <strong>relación</strong> entre dos de
                     ellas, y solo se manifiesta con los solicitantes que cumplen la regla de arriba
@@ -5265,7 +5274,8 @@ End Sub`,
                         en el código y la tabla escribe una fila por cada instrucción ejecutada. Fíjese en dos
                         cosas: cuántas filas tiene la tabla al final —y cuántas líneas tiene el programa—, y qué
                         pasa con <span className="inline-code">score</span> y
-                        <span className="inline-code"> endeudamiento</span> después de cargarse.</>}
+                        <span className="inline-code"> endeudamiento</span> después de cargarse. Para que la tabla quepa,
+                        esta versión deja fuera la regla del codeudor: son tres condiciones y el caso por defecto.</>}
                     codigo={TZ_CASCADA_MAL}
                     variables={[
                         { clave: 'ingreso', titulo: 'ingreso' },
@@ -5278,7 +5288,7 @@ End Sub`,
 
                 <Ejercicio tipo="E3"><DetectaError
                     titulo="La cascada que aprueba lo que no debía"
-                    enunciado={<>Esta es la política de originación tal como quedó en producción. Aprueba solicitantes que el comité habría rechazado. <strong>Señale la línea donde está el defecto</strong> y clasifíquelo.</>}
+                    enunciado={<>Esta es la política de originación tal como quedó en producción. Aprueba solicitantes que la política rechaza. <strong>Señale la línea donde está el defecto</strong> y clasifíquelo.</>}
                     lineas={ERROR_CASCADA_LINEAS}
                     lineaCorrecta={ERROR_CASCADA_LINEA_OK}
                     tipos={[
@@ -5309,7 +5319,7 @@ End Sub`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio de la cascada completa"
-                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada línea de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
+                    enunciado={<>Un solicitante con ingreso <strong>5 000 000</strong>, score <strong>600</strong> y endeudamiento del <strong>30 %</strong>. La tabla tiene una fila por cada condición y cada asignación de la cascada, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa; <span className="inline-code">salta</span> en una condición que no se llega a evaluar; y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las asignaciones.</>}
                     codigo={TRAZA_CASCADA}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -5334,7 +5344,7 @@ End Sub`,
 
                 <h3>El otro defecto: la negación</h3>
                 <p>
-                    El otro defecto frecuente de las selectivas no es de orden. Aparece cuando una
+                    El otro defecto de las selectivas que mira esta sección no es de orden. Aparece cuando una
                     regla de aprobación se convierte en una de excepción: hay que negarla, y la
                     sección 1 ya mostró que negar una condición compuesta tiene su trampa.
                 </p>
@@ -5359,7 +5369,8 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={1}
                     explicacion={ERROR_NEGACION_EXPLICACION}
-                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong> —los que ningún analista habría dejado pasar de todos modos—. Los que fallan en una sola de las dos cosas, que son la mayoría de los casos dudosos, entran a trámite automático. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
+                    impacto={<>Solo se revisan a mano los expedientes que no traen <strong>ni documentos ni referencias</strong>. Los que fallan en una sola
+                    de las dos cosas entran a trámite automático. Es el mismo cálculo de la sección 1: de los tres expedientes que debían detenerse, <strong>dos pasan</strong>.</>}
                 /></Ejercicio>
 
                 <p>
