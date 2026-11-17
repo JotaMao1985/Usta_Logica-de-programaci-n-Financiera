@@ -4291,3 +4291,35 @@ figuras sin fuente: es de su propia tarea.
 **Hueco de las herramientas.** La marca `fuente-ok` no se puede poner en medio del texto
 de un párrafo JSX sin partirlo; y entre los atributos de un componente se escribe sin
 llaves. No estaba dicho en ningún sitio: ahora está en el README.
+
+### 2026-11-17 — Capítulo 4, fase 10 (a medias): syllabus, remisiones y banco
+
+Rama `claude/cap04-fase10`, sobre la fase 9. **Falta el VBA en Excel y la prueba en el
+iPhone.**
+
+- **Syllabus.** La portada se cotejó contra el `.xlsx` leído directamente: resultado de
+  aprendizaje (fila 31), contenido, 8 horas, taller, formato y videos (fila 34) y rúbrica
+  (fila 44). Coincide. Los cuatro videos existen; no se vieron. De paso se cerró un
+  pendiente del capítulo 3: su ficha usa el nombre de la actividad y su comentario
+  interno el del entregable, y los dos son del syllabus (fila 33).
+- **Remisiones.** Lo que los capítulos 1, 3 y 5 dicen del 4 —diecisiete remisiones—
+  coincide con el capítulo revisado. No hubo que tocar el capítulo 5.
+- **Banco Moodle.** Las cinco preguntas se revisaron contra el capítulo: las cinco claves
+  siguen siendo correctas (ningún fallo en 3 000 semillas por pregunta, recalculadas por
+  dos caminos) y ninguna usa la UVT ni la escala que cambió. Los cinco borradores, que
+  ajustan la redacción, compilan y están en el vault con su nota. **No se copió nada al
+  banco.**
+- **Del cotejo con el banco.** Una pregunta asigna un valor en el caso por defecto porque
+  la política del enunciado lo dice, y el capítulo decía que ese caso «se usa para
+  avisar». El glosario y el reto de la sección 5 dicen ahora: hace lo que la regla diga
+  para lo demás y, si la regla no lo dice, avisa.
+
+**Lo que no se hizo.** El VBA: el módulo está preparado (12 bloques y 15 pruebas de
+lenguaje), pero Excel no admite pegar en segundo plano y el docente estaba trabajando en
+otra aplicación; se dejó de insistir. La prueba en el iPhone, que hace el docente.
+
+**Hueco de las herramientas.** Esta fase se cortó a media mañana por un error de red y
+se retomó horas después sin memoria de lo hecho: lo que la salvó fue que el vault y el
+scratchpad tenían el trabajo a medias, no ningún registro del estado. Una fase larga
+debería anotar en la nota del capítulo qué partes lleva, a medida que las cierra. Y
+`ejecutar_vba.py` sigue dependiendo de un pegado a mano que quita la pantalla.

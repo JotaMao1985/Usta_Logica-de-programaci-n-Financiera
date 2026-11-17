@@ -3188,8 +3188,7 @@
            25 000; con una devolución en negativo entra en el PRIMER tramo
            —`monto <= 100000` también es cierto para un negativo— y devuelve
            2 500. Son dos defectos distintos, no uno.
-           Ese es el E4 del capítulo, y el cloze
-           «Segun sin caso por defecto» del banco.
+           Ese es el E4 del capítulo.
         ------------------------------------------------------------ */
         const SelectivasComparadas = () => {
             // Con los bordes exactos de cada tramo, que es donde viven los
@@ -5810,7 +5809,8 @@ End If`,
                         </p>
                         <p>
                             <strong>En los dos casos, este curso escribe siempre el caso por defecto</strong>, aunque «no pueda
-                            pasar», y lo usa para avisar, no para inventar un resultado. Los doce tramos de la escala de comisiones cubrían todos los montos posibles
+                            pasar». Si la regla del negocio dice qué hacer con lo demás, ese caso lo hace; si no
+                            lo dice, avisa, y no inventa un resultado. Los doce tramos de la escala de comisiones cubrían todos los montos posibles
                             hasta que apareció la primera devolución.
                         </p>
                     </>}
@@ -6176,7 +6176,7 @@ neto = pago - retencion`,
             ['Cascada', 'Serie de alternativas evaluadas en orden con Sino Si. Decide la primera condición que se cumple; las siguientes no se evalúan.'],
             ['Anidamiento', 'Una selectiva dentro de una de las ramas de otra. La condición interior solo se plantea si el flujo entra en la rama que la contiene, sea la del Entonces o la del Sino.'],
             ['Selectiva múltiple', 'Estructura que compara una sola variable contra varios valores conocidos o, donde el lenguaje lo permite, contra varios tramos: Segun, Select Case, match o switch según el lenguaje.'],
-            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. En este curso se escribe siempre, aunque «no pueda pasar», y se usa para avisar.'],
+            ['Caso por defecto', 'La rama que recoge todo lo que no encajó en ningún caso. En este curso se escribe siempre, aunque «no pueda pasar»: hace lo que la regla diga para lo demás y, si la regla no lo dice, avisa.'],
             ['Cortocircuito', 'Dejar de evaluar una condición compuesta en cuanto el resultado ya está decidido. Lo hacen pseudocódigo, Python y R (este, con && y ||); VBA no.'],
             ['Condición guardia', 'Operando que se pone delante para proteger al que viene detrás —comprobar que un divisor no es cero, por ejemplo—. Solo funciona si hay cortocircuito.'],
             ['Leyes de De Morgan', 'Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. NO (A Y B) es NO A O NO B.'],
