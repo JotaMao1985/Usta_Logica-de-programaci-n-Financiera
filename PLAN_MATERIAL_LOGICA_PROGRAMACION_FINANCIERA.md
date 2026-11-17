@@ -4386,3 +4386,28 @@ regla 31 solo vigila las del yaml.
 
 **Hueco de las herramientas.** Nada avisa cuando el ancla de una nota no citada deja de
 estar en el capítulo; `registrar_afirmaciones.py` solo comprueba las citadas.
+
+### 2026-11-17 — Capítulo 4, pendientes de la fase 11
+
+Rama `claude/cap04-pendientes`, sobre `main` ya publicado. Decisiones del docente del
+mismo día.
+
+- **Lema del curso: se deja y se matiza.** No cambia en los capítulos 3, 4 y 5; la
+  portada del 4 dice que este capítulo trae su primera excepción.
+- **`AndAlso`:** la sección 1 enumera los seis operadores lógicos de la tabla de
+  precedencia de la especificación de VBA (`microsoft2026vbal`, §5.6.9.1, que ya estaba
+  en Zotero) y dice que `AndAlso` no está entre ellos. La pregunta 7 remite a eso. No
+  hizo falta importar la página de Microsoft Learn. Sigue sin ejecutarse en Excel.
+- **`match` desde Python 3.10:** tanda 07, una referencia (`psf2026match`), importada a
+  Zotero con la aprobación del docente. La sección 5 lo dice en el texto visible.
+- **2 UVT:** el texto dice que es el que dejó el Decreto 572 de 2025, con la cita del
+  concepto 012327 de la DIAN (num. 3), y expande la sigla UVT.
+- **Verificador independiente:** dos citas respaldadas y una parcial («los bloques de
+  esta sección que la usan», no todos); se adoptó su redacción en las tres.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+4, «OK», con 13 citas registradas. Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** Definir en el texto «agente retenedor» y «bancario corriente»;
+unificar «guarda» y «guardia». Los borradores del banco Moodle se resuelven en el vault
+y no se copian al banco.

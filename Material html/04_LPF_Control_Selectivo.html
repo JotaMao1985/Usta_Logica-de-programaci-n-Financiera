@@ -3665,8 +3665,9 @@
                 <p>
                     Todo algoritmo aparece en cuatro versiones y cada bloque <strong>tiene su propia
                     pestaña</strong>, de modo que se pueden dejar dos lenguajes abiertos y compararlos; el
-                    material <strong>recuerda la última elección</strong>. En este capítulo mirar los cuatro
-                    no es opcional: aquí <strong>las diferencias entre ellos deciden por dónde pasa un
+                    material <strong>recuerda la última elección</strong>. El lema del curso dice que
+                    el lenguaje solo cambia de acento, y este capítulo trae su primera excepción. Mirar los
+                    cuatro no es opcional: aquí <strong>las diferencias entre ellos deciden por dónde pasa un
                     programa</strong>. VBA
                     evalúa siempre los dos lados de un <span className="inline-code">And</span> y los otros
                     tres no; y la selectiva múltiple de la sección 5 admite rangos en VBA, exige una guarda
@@ -3966,7 +3967,13 @@ End Sub`,
                     evalúan <strong>siempre los dos lados</strong>. La guardia de arriba no protege nada allí:
                     la división se ejecuta y el procedimiento se detiene. Aquí, que es 0 entre 0, lo hace con el
                     error 6, «Desbordamiento»; con un total distinto de cero sería el 11, «División por
-                    cero». Una forma de conseguir en VBA el efecto de la guardia es <strong>anidar dos
+                    cero». La tabla de precedencia de operadores de la especificación del lenguaje trae seis lógicos
+                    —<span className="inline-code">Not</span>, <span className="inline-code">And</span>,
+                    <span className="inline-code"> Or</span>, <span className="inline-code">Xor</span>,
+                    <span className="inline-code"> Eqv</span> e <span className="inline-code">Imp</span>
+                    <Cita k="microsoft2026vbal" loc="§5.6.9.1" />—, y
+                    <span className="inline-code"> AndAlso</span>, que podría parecer el arreglo, no está
+                    entre ellos. Una forma de conseguir en VBA el efecto de la guardia es <strong>anidar dos
                     <span className="inline-code"> Si</span></strong>, y es la que usa la sección siguiente.
                 </Box>
 
@@ -5721,6 +5728,10 @@ End If`,
                     </table>
                 </div>
                 <Fuente propia>elaboración propia a partir del bloque de abajo, ejecutado en Python y R, y el de VBA, en Excel</Fuente>
+                <p>
+                    La sentencia <span className="inline-code">match</span> se añadió a Python en la
+                    versión 3.10 <Cita k="psf2026match" loc="§8.6" />: un intérprete anterior no la tiene, y los bloques de esta sección que la usan no corren en él.
+                </p>
 
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
@@ -6013,7 +6024,8 @@ neto = pago - retencion`,
                 <p>
                     Las tres cifras de la cascada salen de dos normas. No se hace retención sobre los pagos
                     o abonos en cuenta por prestación de servicios cuya cuantía individual sea inferior a
-                    2 UVT <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />. «Inferior» deja fuera
+                    2 UVT, unidades de valor tributario <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />.
+                    Ese texto es el que dejó el Decreto 572 de 2025, que sustituyó el artículo 1.2.4.4.1 <Cita k="dian2025concepto012327" loc="num. 3" />. «Inferior» deja fuera
                     la igualdad: un pago de exactamente 2 UVT no cabe en esa excepción, y por eso el código
                     compara con <span className="inline-code">&lt;</span>. Cuando el pago por servicios lo
                     hace un agente retenedor a un contribuyente obligado a declarar renta, la tarifa es
@@ -6289,7 +6301,7 @@ neto = pago - retencion`,
                             { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
                             { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'En VBA, And y Or evalúan siempre los dos lados, y cambiar de operador no lo arregla: este material no ha encontrado en VBA un operador lógico que deje de evaluar el segundo. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
+                        justificacion: 'En VBA, And y Or evalúan siempre los dos lados, y cambiar And por AndAlso no lo arregla: AndAlso no está entre los seis operadores lógicos que, según la sección 1, trae la tabla de la especificación de VBA. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         seccion: 'cap5',
@@ -6584,15 +6596,17 @@ neto = pago - retencion`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "882ae490ac31b0c6b2ee9dcfc3eafccec8aec94d61a6472af1da88efc48b5b6b",
-  "sello": "fa1352165b0cc1aa475783d102d5d86afe02e23a70c578733940aea443b33c6d",
+  "huella": "ae8b1b9afb08fb3ddf38e5a6bd65c30b97e06275e31950143ef041fd3fb40d51",
+  "sello": "b198512520b51682c071cd06983bb615916d37ee0ca6e012bdb9cf42f69f424c",
   "orden": [
     "congreso1990ley45",
     "dian2025concepto011217",
     "dian2025concepto012327",
+    "microsoft2026vbal",
     "minhacienda2016decreto1625",
     "presidencia1971decreto410",
-    "presidencia1989decreto624"
+    "presidencia1989decreto624",
+    "psf2026match"
   ],
   "entradas": {
     "congreso1990ley45": {
@@ -6613,6 +6627,12 @@ neto = pago - retencion`,
       "html": "Dirección de Impuestos y Aduanas Nacionales. (2025b). \u003cem>Concepto 012327 int 1439 de 2025\u003c/em>. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\u003c/a>",
       "plano": "Dirección de Impuestos y Aduanas Nacionales. (2025b). Concepto 012327 int 1439 de 2025. https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm"
     },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026",
+      "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    },
     "minhacienda2016decreto1625": {
       "autor": "Ministerio de Hacienda y Crédito Público",
       "anio": "2016",
@@ -6630,6 +6650,12 @@ neto = pago - retencion`,
       "anio": "1989",
       "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
       "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
+    },
+    "psf2026match": {
+      "autor": "Python Software Foundation",
+      "anio": "2026",
+      "html": "Python Software Foundation. (2026, noviembre 17). \u003cem>8. Compound statements\u003c/em>. Python 3.15.2 Documentation. \u003ca href=\"https://docs.python.org/3/reference/compound_stmts.html\">https://docs.python.org/3/reference/compound_stmts.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026, noviembre 17). 8. Compound statements. Python 3.15.2 Documentation. https://docs.python.org/3/reference/compound_stmts.html"
     }
   },
   "profundizar": {
