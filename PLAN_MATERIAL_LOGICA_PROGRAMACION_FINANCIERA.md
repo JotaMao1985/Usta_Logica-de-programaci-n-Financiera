@@ -4038,3 +4038,37 @@ verificador final, no una regla.
 «retención», «UVT» ni «la norma»: en el capítulo 4 se le pasan tres de las cinco
 afirmaciones normativas. Queda anotado para ampliar su vocabulario con su prueba
 negativa, en la fase 9 de ese capítulo.
+
+### 2026-11-16 — Capítulo 4, fase 1: inventario y normas
+
+Rama `claude/cap04-fase1`, sobre la del plan. El capítulo no se tocó.
+
+- **Vault.** 224 notas de afirmación (31 que piden fuente, 26 ejecutadas, 70 derivadas,
+  21 ilustrativas, 44 de criterio y 32 remisiones), 39 de figura, 21 de concepto y 11 de
+  hilo narrativo. Sin duplicados: esta vez no aparecieron las copias del capítulo 3.
+- **Normas leídas en su página oficial.** El 4 % y el 6 % de la retención por servicios
+  están respaldados (Decreto 1625, art. 1.2.4.4.14; Estatuto Tributario, art. 392). **La
+  base mínima es de 2 UVT desde el Decreto 572 de 2025, y el capítulo dice 4**: el
+  docente decidió usar 2. La UVT la publica el Director de la DIAN antes de cada 1.º de
+  enero (art. 868). La frase de la mora dice más de lo leído (Ley 45 de 1990, arts. 65 y
+  69; Código de Comercio, art. 884). «Fraccionamiento de pagos» no es de ninguna norma:
+  son dos conceptos de la DIAN de 2025, y uno dice que la base se mira pago a pago.
+- **Zotero.** Tanda 06 importada con la aprobación del docente (cuatro referencias) y
+  exportada a `referencias.json`.
+- **De paso, el capítulo 3.** El Decreto 572 de 2025 no cambió el 2,5 % ni el 4 % que ese
+  capítulo cita: se cierra la duda de vigencia anotada en su fase 10.
+- **Cinco defectos nuevos** que la línea base no traía (un bloque que usa variables sin
+  asignar, puntas de flecha rellenas, dos notas que regalan la traza, una traza de
+  cuatro reglas donde el texto dice cinco, una frase sin referente). Están en el plan.
+
+**Lo que no se hizo.** No se ejecutó VBA. No se cotejaron las remisiones a los capítulos
+1, 3 y 5 ni al syllabus. No se leyó la resolución con el valor de la UVT de 2026: el
+capítulo conserva su 50 000 redondeado y declarado. No se leyó el Código Penal más allá
+de su artículo 305, que no se propone para Zotero.
+
+**Hueco de las herramientas.** Zotero tenía seleccionada una colección de otro curso
+con el mismo nombre («4 Datos y software», de Teoría del Riesgo): la comprobación previa
+del identificador lo detuvo, pero `connector/import` no deja elegir la colección por
+parámetro y hay que cambiarla a mano en la ventana. Y el lector de línea base dio por
+buena la base de 4 UVT: una lectura crítica sin acceso a la norma no detecta una norma
+que cambió.

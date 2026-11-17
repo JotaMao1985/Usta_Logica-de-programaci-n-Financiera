@@ -1,7 +1,8 @@
 # Plan · Tarea 14 — Mejora de contenido del capítulo 4
 
-**Fecha:** 2026-11-16. **Estado:** propuesto; espera la aprobación del docente y sus
-decisiones A–I (§3). No se ha tocado el capítulo.
+**Fecha:** 2026-11-16. **Estado:** aprobado por el docente el 2026-11-16 con la opción
+recomendada en las nueve decisiones (§3). Tras leer las normas en la fase 1 añadió una
+décima: la base mínima de retención pasa a 2 UVT (§3.1).
 
 **Archivo:** `Material html/04_LPF_Control_Selectivo.html` (6 457 líneas en `main`,
 commit `b3e13e3`; el contenido del capítulo va de la 2 739 al final). Todos los números
@@ -158,6 +159,51 @@ antes del salto) están en la nota del vault y se corrigen en la fase de su secc
 | G | **El caso por defecto de los tramos** (H7) | (1) El bloque se cambia para que el caso por defecto informe «monto inválido» y el último tramo quede explícito; se vuelven a ejecutar los cuatro lenguajes. (2) El código se deja y el texto advierte lo que pasa con negativos y centavos. | (1). La sección enseña que el caso por defecto importa; su propio ejemplo debería hacerlo bien. |
 | H | **Banco Moodle del capítulo 4** | (1) Al final reviso las cinco preguntas y dejo borradores en el vault, sin copiar al banco. (2) No se revisan ahora. | (1). |
 | I | **Prueba en el teléfono y publicación** | (1) Una sola fusión al cerrar el capítulo; antes de subir, dejo el servidor local encendido y usted lo recorre con el dedo en el iPhone. (2) Una sola fusión y solo la sonda. | (1). La ventana reflejada no deja desplazar la página: la prueba automática del capítulo 3 quedó a medias. |
+
+### 3.1 Lo que cambió al leer las normas (fase 1)
+
+- **H11 · La base mínima de retención por servicios ya no es de 4 UVT (alto).** El
+  Decreto 572 de 2025 sustituyó el artículo 1.2.4.4.1 del Decreto 1625 de 2016: no hay
+  retención sobre los pagos por servicios «cuya cuantía individual sea inferior a dos
+  (2) UVT». El capítulo dice 4 UVT en el código de los cuatro lenguajes, en la traza, en
+  el reto y en el cuestionario. **Decisión del docente (2026-11-16): se usan 2 UVT.** Con
+  la UVT de 50 000 del caso, la base baja de 200 000 a 100 000: se rehacen las cuentas,
+  las salidas, la traza y los ejercicios de la sección 6 (fase 7).
+- **A.** El 4 % del declarante (Decreto 1625, art. 1.2.4.4.14) y el 6 % del no declarante
+  (Estatuto Tributario, art. 392) están respaldados. Una persona natural no declarante
+  que supere 3 300 UVT en el año queda con el 4 %: el caso declara que no es ese.
+- **B.** El artículo 868 del Estatuto Tributario respalda que el Director de la DIAN
+  publica el valor antes del 1.º de enero de cada año.
+- **C.** La frase de la mora dice más de lo leído. Queda lo que sí está: un recargo por el
+  simple retardo es interés de mora (Ley 45 de 1990, art. 65), y el interés de mora no
+  pactado tiene tope (Código de Comercio, art. 884). «Se liquida sobre lo vencido» sale.
+- **D.** «Fraccionamiento de pagos» no es de ninguna norma: es doctrina de la DIAN. El
+  Concepto 011217 de 2025 dice que fraccionar artificialmente para no retener no es
+  válido; el 012327 de 2025, que la base mínima se mira pago a pago y no acumulada. La
+  solución del reto, que propone sumar los pagos del mes, se reescribe con los dos.
+- **Tanda 06** importada a Zotero con la aprobación del docente: Ley 45 de 1990, Código
+  de Comercio y los dos conceptos de la DIAN.
+
+### 3.2 Lo que añadió el inventario (fase 1)
+
+224 afirmaciones, 39 figuras, 21 conceptos y 11 hilos en el vault. Cinco defectos que la
+línea base no traía, cada uno a la fase de su sección:
+
+- **N1 (fase 3).** `EJ_GUARDIA_SI` (`:4043-4062`) usa `compras` y `total` sin asignarlas:
+  copiado, falla en Python y en R, y su nota dice que «ninguno imprime nada».
+- **N2 (fase 9).** Las puntas de flecha de los flujogramas van rellenas (`:3303-3309`); en
+  los capítulos 2 y 3 van abiertas.
+- **N3 (fases 3 y 4).** Dos notas de bloque dan la respuesta de la traza que sigue
+  (`:4146`, `:4419`).
+- **N4 (fase 5).** La traza `TZ_CASCADA_MAL` tiene cuatro reglas y el texto contiguo
+  habla de «las mismas cinco» (`:5193`).
+- **N5 (fase 8).** `:6201`: «aunque el requisito sí» no tiene referente.
+
+De las 31 afirmaciones que piden fuente, 6 son de normas (resueltas en §3.1), 2 de
+historia (De Morgan y BASIC: se citan si hay fuente leída; si no, se quitan) y 23 de
+lenguaje. Las de Python y R se resuelven ejecutando; las de VBA (`And` sin cortocircuito,
+el 0 de `Dim`, los errores 6 y 11, `Case … To`), ejecutando en Excel en la fase 10 o
+citando la documentación de Microsoft leída.
 
 ## 4. Fases
 

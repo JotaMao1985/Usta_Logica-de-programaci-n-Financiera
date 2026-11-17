@@ -121,6 +121,37 @@
     "language": "es"
   },
   {
+    "id": "congreso1990ley45",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Congreso de la República de Colombia"
+      }
+    ],
+    "title": "Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones",
+    "publisher": "Diario Oficial 39.607",
+    "issued": {
+      "date-parts": [
+        [
+          "1990",
+          12,
+          18
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "URL": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540",
+    "language": "es"
+  },
+  {
     "id": "congreso1993ley100",
     "type": "report",
     "author": [
@@ -242,6 +273,66 @@
       ]
     },
     "URL": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60402",
+    "language": "es"
+  },
+  {
+    "id": "dian2025concepto011217",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Dirección de Impuestos y Aduanas Nacionales"
+      }
+    ],
+    "title": "Concepto 011217 int 1299 de 2025",
+    "issued": {
+      "date-parts": [
+        [
+          "2025",
+          8,
+          20
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "URL": "https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm",
+    "language": "es"
+  },
+  {
+    "id": "dian2025concepto012327",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Dirección de Impuestos y Aduanas Nacionales"
+      }
+    ],
+    "title": "Concepto 012327 int 1439 de 2025",
+    "issued": {
+      "date-parts": [
+        [
+          "2025",
+          9,
+          11
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "URL": "https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm",
     "language": "es"
   },
   {
@@ -730,6 +821,37 @@
     },
     "edition": "2",
     "ISBN": "978-958-648-308-7",
+    "language": "es"
+  },
+  {
+    "id": "presidencia1971decreto410",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Presidencia de la República de Colombia"
+      }
+    ],
+    "title": "Decreto 410 de 1971, por el cual se expide el Código de Comercio",
+    "publisher": "Diario Oficial 33.339",
+    "issued": {
+      "date-parts": [
+        [
+          "1971",
+          3,
+          27
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "URL": "http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html",
     "language": "es"
   },
   {
