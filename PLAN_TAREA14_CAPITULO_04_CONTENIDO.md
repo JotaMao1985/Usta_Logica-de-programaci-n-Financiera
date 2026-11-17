@@ -208,7 +208,9 @@ cuestionario de H3 y H4; el glosario; «Lo que viene» frente al capítulo 5.
 
 ### Fase 9 — Figuras y LP-CORE
 Las trece figuras y tablas sin fuente. Si alguna corrección pide tocar la librería, va
-aquí: se estampa en los cinco capítulos y se prueba en cada uno.
+aquí: se estampa en los cinco capítulos y se prueba en cada uno. También aquí se amplía
+el vocabulario de la regla 32 del verificador («retención», «UVT», «la norma»), que hoy
+no ve tres de las cinco afirmaciones normativas del capítulo, con su prueba negativa.
 
 ### Fase 10 — Coherencia con los demás capítulos, banco, VBA y teléfono
 Lo que los capítulos 1, 3 y 5 dicen del 4, y lo que el 4 dice de ellos y del syllabus,
