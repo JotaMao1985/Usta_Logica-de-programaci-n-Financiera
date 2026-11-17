@@ -85,7 +85,11 @@ ventana y recorre todas sus lecciones. Tiene seis modos:
   iPhone cuando está ampliada: el 2026-11-15 el sitio publicado tenía el zoom de
   página de Safari cerca del 125 % en un iPhone 15 Pro, y coincidía línea por
   línea con la emulación a 320. A 375 px pasaban cosas que a 320 se cortaban: se
-  corre en los dos anchos;
+  corre en los dos anchos. En estos dos modos la línea de cada lección puede traer
+  «(N en bloques plegados)»: son líneas de código que un bloque plegado recorta
+  hasta que se despliega, y **no son un fallo**. Lo que se sale fuera de un
+  bloque plegado sí lo es, y sale con ✗ (hasta el 2026-11-16 decía «N
+  recortados», y se leyó como defecto durante seis fases del capítulo 3);
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar

@@ -238,7 +238,7 @@ for (const ruta of rutas) {
             const bien = m.sw === m.vw && !m.fuera.length && !tapa.length;
             if (!bien) leccionesMal++;
             const mal = [...m.fuera.slice(0, 2), ...(tapa.length ? [`el botón del menú tapa «${tapa.join('», «')}»`] : [])];
-            lecciones.push(bien ? `${n}${m.recortados ? `(${m.recortados} recortados)` : ''}` : `${n}: ✗ ${mal.join(' | ')}`);
+            lecciones.push(bien ? `${n}${m.recortados ? `(${m.recortados} en bloques plegados)` : ''}` : `${n}: ✗ ${mal.join(' | ')}`);
         } else lecciones.push(String(n));
         if (n === t || !(await evaluar(SIGUIENTE))) break;
     }

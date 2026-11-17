@@ -3620,3 +3620,403 @@ este arreglo; se verá al publicar. Al elegir una lección desde el menú estand
 al final de otra, la vista quedó una vez al final de la nueva en vez de al
 principio: visto una sola vez, sin investigar.
 
+### 2026-11-16 — Capítulo 3: plan de la mejora de contenido
+
+Plan `PLAN_TAREA13_CAPITULO_03_CONTENIDO.md`, rama `claude/cap03-plan`. Propuesto;
+espera la aprobación del docente y diez decisiones (A–J). No se tocó el capítulo.
+
+**Línea base.** Un lector sin contexto leyó el capítulo entero, ejecutó los bloques de
+Python y R y rehízo las cuentas: 4 hallazgos altos, 19 medios y 15 bajos. Las 22 salidas
+declaradas de Python y R coinciden. Los altos se comprobaron después aparte: `2 ^ 3 ^ 2`
+da 3 en Python; lo que se dice del depurador es falso y el cuestionario lo marca como
+correcto; los 590 000 pesos del ejercicio de las dos ofertas dependen de un supuesto que
+no se dice. El cuarto —si el descuento por pronto pago reduce la base del IVA— queda
+**sin verificar**: se resuelve leyendo la norma en la fase 1.
+
+**Medido.** Ninguna cita, ningún caso declarado ilustrativo, siete figuras y tablas sin
+fuente, cuatro trazas que aprueban en blanco, y ninguna norma tributaria o financiera en
+Zotero.
+
+**Huecos de las herramientas.**
+
+- La regla 32 del verificador no ve «la regulación colombiana obliga», ni el IVA, la
+  retención o los aportes: busca nombres de entidades, no cifras legales.
+- Ninguna regla comprueba que una traza cuyo enunciado pide la raya lleve
+  `exigeRespuesta`: las cuatro del capítulo aprueban en blanco y el verificador pasa.
+- La regla 9 ejecuta las salidas de Python y R, pero no mira cómo las imprime R: cuatro
+  ejercicios preguntan «¿qué imprime?» con una forma que `cat()` no produce.
+
+### 2026-11-16 — Capítulo 3, fase 1: línea base y fuentes
+
+El docente aprobó el plan con las diez recomendaciones (A–J). Rama `claude/cap03-fase1`.
+El capítulo no se tocó.
+
+**Inventario (en el vault).** 213 afirmaciones: 27 citadas, 34 ejecutadas, 68 derivadas,
+24 ilustrativas, 33 de criterio y 27 remisiones; 85 no se presentan hoy como lo que son.
+35 figuras, 33 con defectos anotados. 29 conceptos (16 nuevos) y 20 hilos (16 nuevos).
+Quince cuentas derivadas no dan, siete remisiones no coinciden del todo con su destino y
+cinco esperan el cotejo con el syllabus. El inventario sacó dieciséis hallazgos que la
+lectura crítica no había visto (N1–N16, en la nota del capítulo).
+
+**Normas leídas en su página oficial** (Secretaría del Senado, Compilación Jurídica de la
+DIAN y Gestor Normativo de Función Pública), con los pasajes en el vault:
+
+- Estatuto Tributario, arts. 447, 454 y 468. El artículo 454 solo saca de la base del IVA
+  el descuento que consta en la factura y no está sujeto a condición: **el descuento por
+  pronto pago no reduce la base**, y el caso central de la sección 1 enseña lo contrario.
+  Se confirma el hallazgo H4; se aplica la decisión A.
+- Decreto 1625 de 2016, arts. 1.2.4.9.1, 1.2.4.2.5 y 1.2.4.2.83. El 2,5 % y la base sin
+  IVA se confirman con matices. **La retención de un CDT no es hoy del 7 % sino del 4 %**:
+  hallazgo nuevo.
+- Ley 100 de 1993, arts. 18, 20 y 204, y Decreto 4982 de 2007: 4 % de salud literal; 4 %
+  de pensión como cuenta (16 % × 25 %); misma base para las dos.
+- Ley 1480 de 2011, art. 45: la tasa efectiva anual, con esas palabras, solo para quien
+  da crédito sin estar vigilado. Con la Ley 1748, ya en Zotero, alcanza para una frase
+  más precisa que «la regulación obliga».
+
+La tanda 04 de Zotero (cinco normas) quedó preparada y **no se importó**: espera la
+aprobación del docente.
+
+**Lo que no se hizo o no se verificó.** Ningún pasaje pasó por el verificador
+independiente (se hace al citar, en la fase de cada sección). No se comprobó la vigencia
+de la reforma pensional (Ley 2381 de 2024), ni se leyó la Circular Básica Jurídica, ni
+los oficios de la DIAN sobre descuentos condicionados. Las cinco remisiones al syllabus
+están sin cotejar.
+
+**Huecos de las herramientas.**
+
+- El guion de tandas (`generar_tanda.py`, en el vault) no actualiza una nota de fuente
+  que ya existe como candidata: la del Estatuto Tributario hubo que reescribirla aparte.
+- Al terminar el agente del inventario aparecieron 91 copias de notas con un número
+  añadido o cambiado al final del nombre. Se apartaron sin borrar. `registrar_afirmaciones.py`
+  rechaza un `id` repetido, pero solo se ejecuta al registrar las citas de un capítulo: en
+  la línea base nada lo corre, y las copias se vieron al contar los archivos.
+- El buscador no devolvió ninguna página oficial para tres de las cinco normas: hubo que
+  ir a la dirección de la Secretaría del Senado y de la DIAN directamente.
+
+### 2026-11-16 — Capítulo 3, fase 2: sección 1, la secuencia
+
+El docente aprobó la fase 1 y la importación de la tanda 04. Rama `claude/cap03-fase2`.
+
+**Zotero.** Las cinco normas entraron por el conector local a «3 Fuentes primarias» de
+LPF (11 ítems en la colección, todas con clave). La colección seleccionada en Zotero era
+la del mismo nombre en Teoría del Riesgo: se vio en `getSelectedCollection` y se cambió
+antes de enviar. `referencias.json` exportado.
+
+**Sección 1.**
+
+- El caso de la factura ya no enseña la regla al revés: el descuento es «concedido en la
+  misma factura, sin ninguna condición», con las mismas cifras, y la regla se cita
+  (Estatuto Tributario, art. 454); la tarifa del 19 %, también (art. 468). Un párrafo
+  explica por qué un descuento por pronto pago no cabe en la regla. El caso lleva
+  `<Ilustrativo>`.
+- La regla de dependencia dice lo que es: una condición suficiente. Un párrafo nuevo
+  trae el caso de dos restas sobre la misma variable.
+- El flujograma lee `tasaIva`; fuera «compila» y «es donde más dinero se pierde»; la
+  Motivación ya no da la respuesta del primer ejercicio; `input` pide «Tasa de IVA»; la
+  pista del ejercicio de ordenar no afirma nada sobre los lenguajes.
+- Primeras dos citas del capítulo, `<Referencias />` al cierre y `afirmaciones/03.yaml`.
+
+**Verificador independiente.** La cita del artículo 454 salió «parcial» en la primera
+redacción (faltaba «efectivos», y sin esa palabra la frase cubría más descuentos que la
+norma); corregida y vuelta a someter, «respalda». El razonamiento sobre el pronto pago
+decía «la cuenta correcta sería otra», que el artículo no permite afirmar: dice qué sale
+de la base, no qué entra. Quedó «ese artículo ya no bastaría para sacarlo de la base».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco capítulos pasan.
+Sonda en `file`, 375 y 320: siete lecciones, cero errores; los recortes (3, 3, 5 y 22 a
+320 px) son los mismos de la línea base y quedan para las fases 8 y 9.
+
+**Lo que no se hizo.** No se miró la sección en el navegador a ojo ni en el teléfono
+(fase 9). VBA sin ejecutar. No se leyó doctrina de la DIAN sobre descuentos
+condicionados.
+
+**Hueco de las herramientas.** `registrar_afirmaciones.py` rechazó una nota que había
+pasado de `citada` a criterio en el texto pero seguía con `clase: citada` y
+`estado: resuelta`: el aviso («le falta `leido_por`») no dice que el problema puede ser
+la clase. Se corrigió la nota; el mensaje merece una segunda línea.
+
+### 2026-11-16 — Capítulo 3, fase 3: sección 3, expresiones y precedencia
+
+Rama `claude/cap03-fase3`, sobre la fase 2.
+
+- **La potencia (hallazgo alto H1).** El aviso decía que `2 ^ 3 ^ 2` vale 512 «en
+  pseudocódigo, Python y R». Ahora dice qué símbolo usa cada lenguaje, y un bloque nuevo
+  (`EJ_POTENCIAS`) lo muestra: 512 en pseudocódigo, Python (`**`) y R, 64 en VBA. La
+  pestaña de Python trae una segunda línea, ejecutada, con `2 ^ 3 ^ 2`: da 3, sin error.
+  Un recuadro lo explica con cita (referencia de Python, §6.9: `^` es el XOR bit a bit).
+- La tabla de precedencia dice que es un resumen de las del capítulo 1 y ya no cuenta
+  «dos» diferencias entre lenguajes, que eran tres con la del signo en Python.
+- El saldo promedio es un supuesto declarado (decisión G). La línea que el ejercicio
+  pregunta imprime con formato en Python y en R (decisión F): antes R escribía `1.3e+07`
+  y Python `13000000.0`. 62,5 % en vez de 62 %. La división entera se explica con una
+  cuenta a la vista. El recuadro previo ya no da la respuesta del ejercicio.
+
+**Verificador independiente.** La cita de Python: «respalda».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320: siete lecciones, cero errores, mismos recortes que la línea base.
+
+**Lo que no se hizo.** El 64 de VBA de `EJ_POTENCIAS` no se ejecutó en Excel: es la misma
+expresión que el capítulo 1 ejecutó el 2026-11-14, y se vuelve a correr en la fase 9. No
+se miró la sección a ojo.
+
+**Hueco de las herramientas.** La regla 25 (cotejo del pseudocódigo con Python) no tiene
+manera de decir «Python imprime una línea de más a propósito» salvo la lista
+`COTEJO_DISTINTO`, que vive en `verificar.py`: se añadió `EJ_POTENCIAS` allí. Con dos
+excepciones en dos capítulos, la lista empieza a pedir vivir junto al bloque (un
+comentario `cotejo-distinto` en el propio capítulo) y no en el verificador.
+
+### 2026-11-16 — Capítulo 3, fase 4: sección 2, leer, asignar, escribir
+
+Rama `claude/cap03-fase4`, sobre la fase 3. Ninguna cita nueva.
+
+- La sección remite al capítulo 2 donde repetía sin decirlo: las tres instrucciones son
+  su entrada, proceso y salida; `x = x + 1`; la variable temporal es su auxiliar.
+- Fuera tres absolutos: «no hay una cuarta» instrucción, «intercambiar no se puede hacer
+  en dos líneas» y «el patrón más viejo de la programación». Queda lo que el capítulo
+  muestra: con dos asignaciones sueltas el intercambio no funciona.
+- La lectura por teclado (Python, R) y por celda (VBA) se dice como convención del
+  material. La Motivación ya no adelanta la cifra del ejercicio, que además era 340
+  millones donde el descuadre es de 255.
+- La traza del intercambio exige respuesta: la raya ya no se aprueba en blanco. El
+  bloque de VBA del acumulador es un `Sub` completo. La línea de R del ejercicio de
+  detectar el error imprime con formato (salía `8.5e+07`).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320: sin errores, mismos recortes.
+
+**Lo que no se hizo.** `exigeRespuesta` no se probó a mano en el navegador: es la misma
+propiedad que el capítulo 2 usa en tres trazas. VBA sin ejecutar. La línea 6 de la traza
+en R sigue imprimiendo en notación científica; nadie pregunta por esa salida.
+
+**Hueco de las herramientas.** Sigue sin regla que avise de una traza cuyo enunciado pide
+la raya y no lleva `exigeRespuesta`: esta se corrigió porque el lector la contó a mano.
+Quedan tres en el capítulo, para la fase 5.
+
+### 2026-11-16 — Capítulo 3, fase 5: sección 4, la prueba de escritorio
+
+Rama `claude/cap03-fase5`, sobre la fase 4. El docente decidió el CDT al 4 %, citado.
+
+- **El depurador (hallazgo alto H2).** Fuera «es la única herramienta que sirve cuando el
+  programa no falla», y corregida la opción del cuestionario que lo premiaba. Queda lo que
+  el capítulo sostiene: la traza es su método y no necesita más que el algoritmo.
+- La escena de la nómina es un supuesto y ya no contradice la traza de la sección 5
+  («cuatro columnas», «fila siete»). La raya de la tabla se dice como convención del
+  método. Las notas de los trazadores valen en los cuatro lenguajes y dos de ellas
+  escriben la expresión con los valores sustituidos, que la sección recomendaba y no hacía.
+- Un solo `<Ilustrativo>` declara inventados los casos de la sección y dice que el interés
+  simple y el mes de 30 días son simplificaciones.
+- Las dos trazas exigen respuesta. El ejercicio del abono tenía dos líneas defendibles:
+  ahora pide «la instrucción que cambia un dato antes de que el cálculo del mes lo haya
+  usado», y el error se llama igual que en la sección 2. Las notas previas ya no dan las
+  cifras que el ejercicio pregunta.
+- R imprime con formato en la traza de la factura; `EJ_INTERMEDIAS` define `subtotal` y
+  su VBA es un `Sub`; el VBA del crédito usa `Currency`.
+- **Tres citas del Decreto 1625 de 2016**: la retención del 2,5 %, su base sin impuestos y
+  el 4 % del CDT (antes 7 %, en cuatro líneas de código y en el enunciado).
+
+**Verificador independiente.** Tres rondas. El 2,5 % salió «parcial»: la frase lo daba
+por incondicional, y el artículo exige agente retenedor, fija 3,5 % para quien no declara
+renta y define el concepto por una fecha. La del CDT, «parcial» en la segunda ronda,
+porque «sobre todo el interés» no lo dice el artículo. Las dos quedaron con sus supuestos
+a la vista y «respalda».
+
+**Lo que no se hizo.** La decisión D pedía decir que un depurador hace lo mismo sobre la
+máquina: esa frase necesita fuente, y no se escribió. Quedó preparada, **sin importar**, la
+tanda 05 de Zotero con la documentación del depurador de Python. Los literales sin nombre
+de las trazas (0.19, 0.025, 1200000) siguen; VBA sin ejecutar; nada visto a ojo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320.
+
+**Hueco de las herramientas.** El verificador de citas trabaja sobre una oración, y aquí
+la conclusión iba en la oración siguiente, sin cita: hubo que pedirle expresamente que
+dijera si «se sigue». El encargo al verificador debería incluir siempre la oración que
+viene después de la cita.
+
+### 2026-11-16 — Capítulo 3, fase 6: sección 5, casos financieros, y la frase del depurador
+
+Rama `claude/cap03-fase6`, sobre la fase 5. El docente aprobó la tanda 05 de Zotero (la
+documentación del depurador de Python), que entró a «4 Datos y software» de LPF.
+
+- **El depurador (decisión D).** La sección 4 dice ahora que el depurador de Python
+  permite ejecutar línea por línea e inspeccionar el estado donde se detiene, con cita, y
+  que en este curso la traza va primero porque sirve aunque todavía no haya programa.
+- **Los 590 000 pesos (hallazgo alto H3).** El ejercicio dice su supuesto —un solo pago
+  al cabo del año—, ya no dice «casi media cuota» y avisa que con cuotas la diferencia
+  sería menor.
+- **El 1,55 %.** Era una tasa simple en la sección que enseña a componer: ahora da las
+  dos cuentas, 1,55 % repartido y 1,53 % compuesto.
+- **La nómina.** El 4 % de salud se cita (Ley 100, art. 204); el de pensión se muestra
+  como cuenta, 16 % de cotización total (Decreto 4982 de 2007) por la cuarta parte a cargo
+  del trabajador (Ley 100, art. 20); la base común, también (art. 204, par. 1.º). El
+  recuadro «Lo que pasó de verdad el viernes» es «Lo que hacía la rutina del caso», sin
+  EPS ni ingreso base de cotización. La traza exige respuesta.
+- **La tasa efectiva anual.** Fuera «la regulación colombiana obliga a informar»: la
+  frase dice quién está obligado a qué, con la Ley 1480 (art. 45) y la Ley 1748 (art. 1.º).
+- Un `<Ilustrativo>` declara inventados las ofertas, la factura descontada y la nómina.
+
+**Verificador independiente.** Ocho citas en dos rondas. La del depurador salió
+«parcial»: generalizaba a «los lenguajes» desde la documentación de uno, y puesta antes
+de «sirve cuando el programa no falla» sugería un contraste que el propio pasaje
+desmiente. La de la Ley 1480, «parcial»: decía «quien financia una compra… sin estar
+vigilado», y la ley habla del proveedor que financia sus propios bienes y de quien da
+crédito sin que una autoridad vigile esa actividad. Las dos quedaron con la redacción
+que el verificador propuso.
+
+**Decisión tomada sin consultar.** Las definiciones y fórmulas de matemática financiera
+de la sección (descuento comercial; nominal, periódica y efectiva) se dejaron como
+definiciones del curso, sin cita. El inventario las había propuesto como citadas.
+
+**Lo que no se hizo.** No se comprobó el estado de la reforma pensional más allá del
+aviso de la Secretaría del Senado. VBA sin ejecutar. Nada visto a ojo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Sonda en
+`file` y 320.
+
+**Hueco de las herramientas.** La regla de la «clave larga» avisó bien cuando la opción
+correcta creció al corregirla. Pero ninguna regla mira que la pregunta de un ejercicio
+declare el supuesto del que depende su clave: el de los 590 000 lo encontró el lector.
+
+### 2026-11-16 — Capítulo 3, fase 7: portada, evaluación y glosario
+
+Rama `claude/cap03-fase7`, sobre la fase 6. Ninguna cita nueva.
+
+- **Portada.** El caso de la nómina se cuenta como supuesto y con la misma razón de
+  reclamo que la sección 5; antes daban dos distintas. Fuera «once segundos» y «veintiséis
+  personas». «Los algoritmos de este curso se arman con tres estructuras de control», en
+  vez de «todo programa».
+- **Cuestionario.** Cinco preguntas ajustadas a lo que las secciones dicen ahora: sin
+  «57 000 idénticos en cada factura», sin «ningún lenguaje la reporta», la división
+  entera sin nombrar operadores y con valores positivos, y el costo del descuento con sus
+  dos cuentas. La clave del depurador se había corregido en la fase 5.
+- **Glosario.** La regla de dependencia como condición suficiente; el descuento comercial
+  sin «siempre menor». Lleva su `<Fuente>`.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+3 le queda un solo aviso de figura sin fuente, el flujograma, que es de la fase 8. Sonda
+en `file` y 320.
+
+**Lo que no se hizo.** Las cinco remisiones al syllabus no se cotejaron contra el archivo
+`.xlsx`, sino contra la fila anotada en esta sesión y las notas del capítulo 2. La
+pregunta 5 sigue repitiendo el escenario de la Motivación de la sección 3. La portada no
+dice que el pseudocódigo sea el lenguaje normativo; la del capítulo 2 tampoco.
+
+**Hueco de las herramientas.** El cuestionario cita afirmaciones de las secciones en sus
+justificaciones, y nada avisa cuando la sección cambia y la justificación no: las cinco
+de esta fase se encontraron releyendo. El inventario del vault las tenía enlazadas, y por
+ahí se llegó.
+
+### 2026-11-16 — Capítulo 3, fase 8: figuras
+
+Rama `claude/cap03-fase8`, sobre la fase 7. No hizo falta tocar LP-CORE.
+
+- El flujograma de la sección 1 dibuja las puntas de flecha abiertas, como el capítulo 2,
+  y su pie dice que los símbolos van más anchos que en la norma. Mirado en el navegador.
+- Con eso el capítulo 3 pasa `verificar.py` sin ningún aviso: las siete figuras y tablas
+  sin fuente de la línea base quedaron con `<Fuente>` o con su marca razonada en las
+  fases 2 a 8.
+- Las 35 notas de figura del vault tienen estado: 28 corregidas, 1 correcta y 6 con un
+  defecto menor anotado.
+
+**Corrección.** En los informes de las fases 2 a 7 llamé «recortes de texto a 320 px» a
+lo que la sonda informa como «recortados». No lo son: son líneas de código dentro de
+bloques plegados, que la sonda cuenta aparte a propósito. Un recorte fuera de un bloque
+plegado hace fallar la sonda, y el capítulo no tiene ninguno.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, y el
+capítulo 3 sale «OK». Sonda en `file`, 375 y 320.
+
+**Hueco de las herramientas.** La salida de la sonda dice «(22 recortados)» sin decir que
+son de bloques plegados ni que no son un fallo: se leyó mal durante seis fases. La línea
+debería decir «22 en bloques plegados». Además, el navegador integrado muestra una
+instantánea fija cuando se abre un archivo con `file://`: para mirar un cambio hay que
+levantar el servidor local.
+
+
+### 2026-11-16 — Capítulo 3, fase 9: cotejos, VBA en Excel y banco Moodle
+
+Rama `claude/cap03-fase9`, sobre la fase 8; sin fusionar.
+
+- **Remisiones.** Lo que los capítulos 2, 4 y 5 dicen que el 3 estableció coincide con el
+  capítulo 3 revisado.
+- **VBA en Excel.** Los 12 bloques con salida declarada se ejecutaron con
+  `ejecutar_vba.py`: coinciden. Se corrigió una salida, la de `EJ_POTENCIAS`
+  (`Debug.Print` antepone un espacio al número: `'>  64`). Tres difieren solo en la coma
+  decimal regional, como avisa el capítulo.
+- **Banco Moodle.** Las ocho preguntas del capítulo 3 se revisaron contra el capítulo:
+  siete quedaron desfasadas en la redacción y una coincide; las ocho claves siguen
+  siendo correctas. Los siete borradores y la nota están en el vault. **No se copió nada
+  al banco.**
+- **Tres ajustes que salieron de esa revisión.** La regla de dependencia dice «lee ni
+  modifica» (dos asignaciones a la misma variable tampoco se intercambian); el cierre
+  del reto y el glosario dicen «esas dos normas piden informar», no «la ley manda»; la
+  efectiva anual es «una unidad común», no «la unidad», como ya decía el comparador.
+- **Sonda.** El rótulo pasa de «N recortados» a «N en bloques plegados», y el README lo
+  explica.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan y el
+capítulo 3 sale «OK». Sonda a 320: 7 de 7 lecciones, sin errores.
+
+**Lo que no se hizo.** La prueba en el iPhone del docente por red local. «iPhone
+Mirroring» conectó y se abrió una pestaña nueva, pero escribir la dirección exige el
+control de pantalla completa, que nadie aprobó, y la conexión se cortó. No se ejecutaron
+en Excel los bloques VBA sin salida declarada. No se ejecutó `verificar_cloze.R` sobre
+los borradores (compilan con `exams2html` y `exams2moodle`). Siguen abiertos: la traza
+en R que imprime `8.5e+07`, la pregunta 5 y las remisiones al syllabus sin cotejar
+contra el `.xlsx`.
+
+**Hueco de las herramientas.** La escritura en segundo plano no llega a «iPhone
+Mirroring» (teclea «aaaa»): la prueba en el teléfono necesita al docente presente.
+`ejecutar_vba.py` exige pegar el módulo a mano en Excel, y eso también pide el control
+de pantalla.
+
+### 2026-11-16 — Capítulo 3, fase 10: lectura crítica final
+
+Rama `claude/cap03-fase10`, sobre la fase 9; sin fusionar. Dos lectores sin contexto y sin
+permiso de escritura: uno leyó el capítulo entero y rehízo las cuentas; el otro cotejó
+cada `<Cita>` con el pasaje guardado en el vault.
+
+- **Citas: 13; 11 respaldadas y 2 parciales, corregidas.** El caso de la factura no decía
+  que el descuento fuera normal según la costumbre comercial, tercera condición del
+  artículo 454: quedó como supuesto del `<Ilustrativo>`. El 4 % de pensión no tenía el
+  puente entre el 16 % del Decreto 4982 y el reparto del artículo 20 de la Ley 100: la
+  frase cita ahora también el artículo 2.º del decreto, que ya estaba leído.
+- **Lectura del capítulo: ningún hallazgo alto.** Todas las cuentas y las salidas de
+  Python y R que el lector ejecutó cuadran. De los medios se corrigieron: la regla de
+  dependencia (dos salidas a pantalla tampoco se intercambian, y la pregunta del
+  cuestionario habla del valor final de las variables); `^` en Python (con una tasa
+  decimal sí da error de tipo: ejecutado); la Motivación de la sección 3, que
+  contradecía la clave de la pregunta 5; la leyenda de *J* y *m*; qué líneas no ocupan
+  fila en una traza. De los bajos: un distractor cuya razón no daba su cifra, la opción
+  del comparador de las dos mitades, «como enseña el apartado siguiente», «no hay forma
+  de saber», «media tasa», «la regla práctica», el rótulo del orden equivocado, el
+  título de la precedencia, la sigla CDT, la solución del reto y la nota del primer
+  bloque («de Python o el de R»).
+- **Vault.** Doce notas que seguían como `citada` sin fuente o `reescribir` quedaron en
+  `criterio` o `remision`, con su razón.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan y el
+capítulo 3 sale «OK». Sonda en `file`, 375 y 320: 7 de 7 lecciones, sin errores.
+
+**Anotado y sin corregir, con su razón.** El flujograma de la sección 1 lee los datos y
+el bloque los asigna (el flujograma es del algoritmo general; se dejó). El ejercicio de
+emparejar se resuelve en parte por eliminación. La variable temporal: el texto ya dice
+«con dos asignaciones sueltas» y «en este algoritmo»; la asignación múltiple de Python
+no es del curso. El pseudocódigo declara `0.0200` sin instrucción de formato. «Cada una
+exactamente una vez» frente al `Mientras` de la portada. «Acumulador» aparece una vez
+antes de definirse. *d* y *n* sin decir que van en la misma unidad. «Causación», «mora»
+y «XOR» sin glosa. Tildes desiguales en comentarios de código. El comentario interno
+llama «Estructuras secuenciales» a la tarea que la ficha llama «Estructuras de Control
+Secuencial»: va con el cotejo pendiente contra el syllabus `.xlsx`.
+
+**Lo que sigue sin comprobar.** Que los pasajes del vault sean literales (el verificador
+comparó capítulo contra nota, no nota contra fuente). La vigencia del 2,5 % y del 4 %
+después del Decreto 572 de 2025 y la de la Ley 2381 de 2024 en pensiones. La prueba en
+el iPhone.
+
+**Hueco de las herramientas.** Una nota puede quedar en `clase: citada` con
+`estado: sin-fuente` indefinidamente: `registrar_afirmaciones.py` solo mira las
+verificadas y nada avisa de las otras. Las doce de este capítulo las encontró el
+verificador final, no una regla.
