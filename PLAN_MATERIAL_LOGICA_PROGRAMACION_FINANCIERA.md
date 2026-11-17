@@ -4263,3 +4263,31 @@ queda ninguna nota `citada` sin fuente ni `reescribir`.
 tocó: lo llevan también los capítulos 3 y 5, y es decisión del docente. Las remisiones
 al syllabus y lo que el cuestionario dice de VBA (`AndAlso`, errores 6 y 11) esperan a
 la fase 10.
+
+### 2026-11-17 — Capítulo 4, fase 9: figuras y la regla 32
+
+Rama `claude/cap04-fase9`, sobre la fase 8. No hizo falta tocar LP-CORE.
+
+- **Figuras.** Las 13 figuras y tablas sin fuente del capítulo 4 tienen `<Fuente propia>`
+  o su marca razonada. El capítulo pasa `verificar.py` sin ningún aviso.
+- **Flechas.** Los flujogramas dibujan la punta abierta, como en los capítulos 2 y 3.
+  Mirado en el navegador integrado.
+- **Regla 32.** Su léxico incluye ahora «la norma», «la ley» y «la regulación» dichas sin
+  nombre, y la UVT. Ocho pruebas negativas sobre una copia del capítulo 4, anotadas en
+  `verificar.py`. Al correrla sobre los cinco capítulos encontró nueve menciones, en el
+  2, el 3 y el 4: todas eran remisiones a una norma ya citada, y llevan `fuente-ok`. En
+  el capítulo 3 se cambió una frase («de los artículos citados en las secciones 1 y 4»)
+  porque la marca no cabe en medio del texto de un párrafo. El README lo explica.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; los
+capítulos 1 a 4 salen «OK». Sonda a 320 en los capítulos 2, 3 y 4, y de escritorio en
+el 4.
+
+**Lo que no se hizo.** Las 28 notas de figura que son bloques, trazas o ejercicios no se
+miraron una por una en el navegador: se revisaron por su contenido en las fases 2 a 8 y
+las recorre la sonda. El capítulo 5 tiene el mismo marcador de flecha rellena y 23
+figuras sin fuente: es de su propia tarea.
+
+**Hueco de las herramientas.** La marca `fuente-ok` no se puede poner en medio del texto
+de un párrafo JSX sin partirlo; y entre los atributos de un componente se escribe sin
+llaves. No estaba dicho en ningún sitio: ahora está en el README.

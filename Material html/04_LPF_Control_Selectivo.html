@@ -2912,6 +2912,7 @@
                     </div>
 
                     <div className="overflow-x-auto">
+                        {/* fuente-ok: tabla de verdad que calcula el propio componente */}
                         <table className="w-full text-sm border-collapse">
                             <caption className="text-xs text-gray-500 text-left mb-1">
                                 Las ocho combinaciones posibles. La fila resaltada es la que está activa.
@@ -3303,12 +3304,12 @@
         const flechaDefs = (id) => (
             <defs>
                 <marker id={id} markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
-                    <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
+                    <path d="M0.6,0.6 L7,3 L0.6,5.4" fill="none" stroke="#3D008D" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
                 </marker>
             </defs>
         );
 
-        const FlujogramaSelectivaDoble = () => (
+        const FlujogramaSelectivaDoble = () => ( // fuente-ok: flujograma propio del caso inventado de la sección 3, que lleva su <Ilustrativo>
             <figure className="my-6 not-prose">
                 <svg viewBox="0 0 420 472" role="img" className="hidden sm:block" style={{ width: '100%', maxWidth: '440px', height: 'auto', margin: '0 auto' }}
                     aria-label="Flujograma de una selectiva doble. Inicio; se leen esPreferencial y monto; un rombo pregunta si esPreferencial; por la rama Sí se calcula tarifa igual a monto por 0,002, que da 4000; por la rama No se calcula tarifa igual a monto por 0,005, que da 10000; las dos ramas vuelven a juntarse; se escribe tarifa y Fin. Exactamente una de las dos ramas se recorre.">
@@ -3435,7 +3436,7 @@
 
             // ---- ANCHA (≥ 640 px): la rama Sí sale por el costado ----
             const RAIL = 472, CONFLUYE = 556;
-            const ancha = (
+            const ancha = ( // fuente-ok: variante ancha del flujograma de la política inventada de la sección 4
                 <svg viewBox="0 0 486 716" role="img" className="hidden sm:block"
                     style={{ width: '100%', maxWidth: '486px', height: 'auto', margin: '0 auto' }} aria-label={DESCRIPCION}>
                     {flechaDefs('lp-flecha4-FlujogramaCascada-ancho')}
@@ -3478,7 +3479,7 @@
             // así que en una columna de 319 px la letra sale al doble de tamaño.
             const IZQ = 14, EJE = 124, DER = 234, PASO = 164, Y0 = 76;
             const yDefecto = Y0 + 4 * PASO, yJunta = yDefecto + 74;
-            const estrecha = (
+            const estrecha = ( // fuente-ok: variante estrecha del mismo flujograma
                 <svg viewBox={`0 0 248 ${yJunta + 156}`} role="img" className="sm:hidden"
                     style={{ width: '100%', height: 'auto', margin: '0 auto' }} aria-label={DESCRIPCION}>
                     {flechaDefs('lp-flecha4-FlujogramaCascada-estrecho')}
@@ -3523,7 +3524,7 @@
                 </svg>
             );
 
-            return (
+            return ( // fuente-ok: flujograma propio de la política inventada de la sección 4, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     {ancha}
                     {estrecha}
@@ -3556,7 +3557,7 @@
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha4)" />],
             ];
-            return (
+            return ( // fuente-ok: los cinco símbolos son convención del curso, presentada con su fuente en el capítulo 2
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
                         Los símbolos que usan los flujogramas de este curso
@@ -3609,6 +3610,7 @@
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; lo que viene del syllabus se coteja como remisión */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -3815,6 +3817,7 @@ End Sub`,
                     de una condición depende que un desembolso salga o no salga:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice de la sección; remite al capítulo 1, cotejado */}
                     <table>
                         <thead>
                             <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
@@ -3875,6 +3878,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>elaboración propia; el orden de Python y R se comprobó ejecutando, y los aritméticos remiten al capítulo 3</Fuente>
                 <Box type="warn" label="La consecuencia práctica, en una línea">
                     <span className="inline-code">A O B Y C</span> <strong>no</strong> es
                     <span className="inline-code"> (A O B) Y C</span>: es
@@ -3891,6 +3895,7 @@ End Sub`,
                     <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa.">leyes de De Morgan</Termino>—:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: equivalencias lógicas; se comprueban con la tabla de verdad */}
                     <table>
                         <thead>
                             <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error</th></tr>
@@ -3929,6 +3934,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>solicitantes inventados; cada fila es la regla aplicada a sus datos</Fuente>
                 <p>
                     Dos de los tres perfiles que debían rechazarse pasan el filtro, y son justamente
                     los que fallan en <em>una</em> sola cosa.
@@ -5716,6 +5722,7 @@ End If`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>elaboración propia a partir del bloque de abajo, ejecutado en Python y R</Fuente>
 
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
@@ -6043,6 +6050,7 @@ neto = pago - retencion`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio: un pago pequeño"
+                    /* fuente-ok: la UVT de 50 000 es el supuesto declarado en el <Ilustrativo> de la sección */
                     enunciado={<>Un pago de <strong>80 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada condición y cada asignación, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
                     codigo={TRAZA_RETENCION}
                     columnas={[
@@ -6063,6 +6071,7 @@ neto = pago - retencion`,
                         { paso: 6, instruccion: ins('retencion <- pago * 0.06', 'retencion = pago * 0.06', 'retencion <- pago * 0.06', 'retencion = pago * 0.06'), flujo: 'salta', retencion: '0', neto: '—' },
                         { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), flujo: 'ejecuta', retencion: '0', neto: '80000' },
                     ]}
+                    /* fuente-ok: remite al párrafo de la sección, que cita la norma */
                     pista="Calcule la base mínima con la UVT y compárela con el pago antes de mirar nada más: lo que sea el proveedor solo importa si el pago llega al umbral."
                 />
 
@@ -6291,6 +6300,7 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap6',
+                        // fuente-ok: caso de la sección 6, donde la UVT de 50 000 se declara supuesto y la norma se cita
                         pregunta: 'Un pago por servicios de 80 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene, y por qué?',
                         opciones: [
                             { texto: 'Se le retienen 4 800, que es el 6 % del pago.', correcta: false },
@@ -6326,6 +6336,7 @@ neto = pago - retencion`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>definiciones del curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 5 rompe la otra garantía que quedaba: hasta aquí, una instrucción se

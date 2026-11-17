@@ -27,6 +27,8 @@
  * este curso nombra o es fácil que nombre; se amplía ahí cuando haga falta.
  * Quedan fuera a propósito los conceptos (IVA, tasa efectiva, SMMLV) y las
  * personas (Von Neumann, Turing): no son entidades ni normas.
+ * La UVT sí entra desde el 2026-11-17: su valor y las bases que se miden en
+ * ella son de norma y cambian; «la norma» y «la ley» sin nombre, también.
  *
  * Se mira la prosa del capítulo —el texto JSX y las cadenas—, no el código:
  * fuera quedan las plantillas literales, lo que cuelga de `pseudo`, `python`,
@@ -104,6 +106,13 @@ const ENTIDADES_Y_NORMAS = [
     ['norma', /\bNIIF\b|\bNIC\s+\d+|\bIFRS\b|Basilea\s+(?:III|II|I)\b|\bSARLAFT\b|\bSARC\b/],
     ['norma', /\bIEEE(?:[\s ]+\d+)?|\bISO(?:\/IEC)?[\s ]+\d+/],
     ['norma', /tasa de usura|interés bancario corriente/i],
+    // Desde el 2026-11-17 (capítulo 4). «La norma», «la ley» o «la regulación»
+    // dichas sin nombre, que es como el capítulo 4 atribuía a «la norma» un
+    // fraccionamiento que ninguna norma nombra; se excluye «la ley de Moore» y
+    // parecidas. Y la UVT, que es una unidad fijada por norma: lo que se diga de
+    // su valor o de una base «en UVT» envejece cada enero.
+    ['norma', /\b(?:la|una|esa|esta|dicha) (?:norma|ley|regulación)(?: tributaria| colombiana)?\b(?! de (?:De )?[A-ZÁÉÍÓÚ])|\blas normas\b/i],
+    ['norma', /\bUVT\b/],
 ];
 
 function nombreDe(el) {
