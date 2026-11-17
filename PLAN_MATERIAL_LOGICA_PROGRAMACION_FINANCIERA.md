@@ -4072,3 +4072,25 @@ del identificador lo detuvo, pero `connector/import` no deja elegir la colecció
 parámetro y hay que cambiarla a mano en la ventana. Y el lector de línea base dio por
 buena la base de 4 UVT: una lectura crítica sin acceso a la norma no detecta una norma
 que cambió.
+
+### 2026-11-16 — Capítulo 4, fase 2: sección 1, La condición
+
+Rama `claude/cap04-fase2`, sobre la fase 1. Ninguna cita nueva.
+
+- Las remisiones al capítulo 1 (operadores, tablas de verdad, aviso de VBA) y al capítulo
+  3 (quinta fila de la tabla de precedencia) se cotejaron con los capítulos publicados:
+  coinciden.
+- Un `<Ilustrativo>` declara inventados la regla de aprobación, sus umbrales, los
+  solicitantes y los casos de los dos ejercicios.
+- Fuera lo que nadie leyó o es opinión: las fechas de De Morgan, «muy endeudado», «los
+  que un analista habría detenido sin dudar», «es el caso de la portada». «La forma de
+  conseguir el mismo efecto en VBA» pasó a «una forma».
+- Lo que la sección dice de la precedencia en Python y R se ejecutó: coincide.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+4 conserva sus dos avisos de línea base (figuras sin fuente, de la fase 9, y dos normas
+sin cita, de las fases 3 y 7). Sonda a 320: 8 de 8 lecciones.
+
+**Lo que no se hizo.** Lo que la sección afirma de VBA —que `\` y `Mod` van por debajo de
+`*` y `/`, y que la guardia se detiene con el error 6 o el 11— sigue sin ejecutar: va a
+Excel en la fase 10. Las cinco tablas y el evaluador siguen sin `<Fuente>` (fase 9).

@@ -2794,7 +2794,7 @@
         ------------------------------------------------------------ */
         const EvaluadorLogico = () => {
             const VARS = [
-                { clave: 'A', etiqueta: 'ingreso > 3.000.000', corto: 'ingreso alto' },
+                { clave: 'A', etiqueta: 'ingreso > 3 000 000', corto: 'ingreso alto' },
                 { clave: 'B', etiqueta: 'score >= 680', corto: 'score bueno' },
                 { clave: 'C', etiqueta: 'endeudamiento < 40 %', corto: 'poco endeudado' },
             ];
@@ -2947,8 +2947,8 @@
                     <p className="text-xs text-gray-500 mt-2">
                         Las filas marcadas con <span className="font-mono font-bold">≠</span> son aquellas
                         donde las dos expresiones difieren: <strong>{nDifieren} de 8</strong>. Todas ellas
-                        tienen algo en común —el solicitante gana bien y está muy endeudado—, que es
-                        exactamente el perfil que un banco no quiere aprobar por descuido de un paréntesis.
+                        tienen algo en común —el solicitante supera el ingreso y no cumple el tope de
+                        endeudamiento—: es el perfil que la regla quería detener y que un paréntesis de menos deja pasar.
                     </p>
                 </div>
             );
@@ -3825,7 +3825,7 @@ End Sub`,
                     Antes de que exista ningún <span className="inline-code">Si</span>, una condición ya es
                     algo por sí sola: una expresión que <strong>vale verdadero o falso</strong> y que se
                     puede guardar en una variable, igual que se guarda un saldo. Se mira así, sin
-                    decisión de por medio, porque es donde se cometen los errores: cuando el
+                    decisión de por medio, porque es donde se comete el error de esta sección: cuando el
                     <span className="inline-code"> Si</span> aparece en la sección siguiente, la condición ya
                     tiene que estar bien.
                 </p>
@@ -3837,9 +3837,17 @@ End Sub`,
 
                 <EvaluadorLogico />
 
+                <Ilustrativo>
+                    La regla de aprobación de esta sección, con sus umbrales —3 000 000 de ingreso, 680 de
+                    score y 40 % de endeudamiento—, sus solicitantes y los doscientos créditos de la apertura
+                    se inventaron para este capítulo: no son la política de ningún banco. Lo mismo vale
+                    para el aumento de cupo y para la tarjeta de los ejemplos que siguen.
+                </Ilustrativo>
+
+
                 <h3>La precedencia que faltaba</h3>
                 <p>
-                    El capítulo 3 cerró su tabla de precedencia con una fila que decía «relacionales y
+                    El capítulo 3 cerró su tabla de precedencia con una quinta fila que decía «relacionales y
                     lógicos — al final <em>(capítulo 4)</em>». Esta es esa fila, desplegada. Para los
                     relacionales y los lógicos el orden es <strong>el mismo en los cuatro lenguajes</strong>;
                     para los aritméticos, no del todo:
@@ -3872,12 +3880,12 @@ End Sub`,
                     Una regla de rechazo suele nacer como la negación de una de aprobación, y ahí aparece
                     el error: se niegan los operandos y se deja el conector como estaba. No funciona así.
                     Al negar, <strong>el conector también cambia</strong> —son las{' '}
-                    <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa. Deben su nombre a Augustus De Morgan (1806-1871).">leyes de De Morgan</Termino>—:
+                    <Termino def="Al negar una conjunción se obtiene una disyunción de las negaciones, y viceversa.">leyes de De Morgan</Termino>—:
                 </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead>
-                            <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error frecuente</th></tr>
+                            <tr><th>Si niega esto…</th><th>…obtiene esto</th><th>El error</th></tr>
                         </thead>
                         <tbody>
                             <tr>
@@ -3915,7 +3923,7 @@ End Sub`,
                 </div>
                 <p>
                     Dos de los tres perfiles que debían rechazarse pasan el filtro, y son justamente
-                    los que fallan en <em>una</em> cosa: los que un analista habría detenido sin dudar.
+                    los que fallan en <em>una</em> sola cosa.
                 </p>
 
                 <Ejercicio tipo="E2"><MCQ
@@ -3944,19 +3952,18 @@ End Sub`,
                 <Box type="warn" label="El único de los cuatro que no perdona">
                     <span className="inline-code">And</span> y <span className="inline-code">Or</span> de VBA
                     evalúan <strong>siempre los dos lados</strong>. La guardia de arriba no protege nada allí:
-                    la división se ejecuta y el procedimiento se detiene: con el error 6,
-                    «Desbordamiento», porque aquí es 0 entre 0; con un total distinto de cero
-                    sería el 11, «División por cero». La forma de
-                    conseguir el mismo efecto en VBA es <strong>anidar dos <span className="inline-code">Si</span></strong>,
-                    y eso es exactamente lo que hace la sección siguiente.
+                    la división se ejecuta y el procedimiento se detiene. Aquí, que es 0 entre 0, lo hace con el
+                    error 6, «Desbordamiento»; con un total distinto de cero sería el 11, «División por
+                    cero». Una forma de conseguir en VBA el efecto de la guardia es <strong>anidar dos
+                    <span className="inline-code"> Si</span></strong>, y es la que usa la sección siguiente.
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3.000.000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
+                    pregunta="En pseudocódigo, la regla se escribió sin paréntesis: ingreso > 3 000 000 O score >= 680 Y endeudamiento < 40 %. ¿A cuál de estos solicitantes aprueba sin llegar a mirar el score?"
                     opciones={[
-                        { texto: 'Ingreso 2.800.000 · score 700 · endeudamiento 25 %', correcta: false },
-                        { texto: 'Ingreso 1.200.000 · score 750 · endeudamiento 20 %', correcta: false },
-                        { texto: 'Ingreso 6.500.000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6.500.000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Es el caso de la portada —score 480, muy por debajo del mínimo de originación— aprobado sin que nadie mirara el score. Con paréntesis, (ingreso > 3.000.000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
+                        { texto: 'Ingreso 2 800 000 · score 700 · endeudamiento 25 %', correcta: false },
+                        { texto: 'Ingreso 1 200 000 · score 750 · endeudamiento 20 %', correcta: false },
+                        { texto: 'Ingreso 6 500 000 · score 480 · endeudamiento 68 %', correcta: true, justificacion: 'Es el solicitante de 6 500 000. Su ingreso supera los tres millones, con lo que el primer operando del O es verdadero y la expresión entera queda decidida ahí mismo: ni el score ni el endeudamiento llegan a evaluarse. Tiene un score de 480, muy por debajo de los 680 que pide la regla, y queda aprobado sin que la máquina lo mire. Con paréntesis, (ingreso > 3 000 000 O score >= 680) Y endeudamiento < 40 %, ese mismo solicitante se rechaza. Los otros dos solicitantes no llegan al umbral de ingreso, así que en ellos el O no se decide con el primer operando y la máquina sí tiene que seguir evaluando; los dos terminan aprobados igualmente, pero solo después de mirar el score y el endeudamiento, que es justo lo que la pregunta descarta. Y no es cierto que la expresión evalúe siempre las tres: eso solo pasaría en VBA, que no hace cortocircuito.' },
                         { texto: 'A ninguno: la expresión siempre evalúa las tres condiciones antes de decidir.', correcta: false },
                     ]}
                 /></Ejercicio>
