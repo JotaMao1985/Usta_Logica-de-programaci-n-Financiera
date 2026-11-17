@@ -3934,3 +3934,40 @@ debería decir «22 en bloques plegados». Además, el navegador integrado muest
 instantánea fija cuando se abre un archivo con `file://`: para mirar un cambio hay que
 levantar el servidor local.
 
+
+### 2026-11-16 — Capítulo 3, fase 9: cotejos, VBA en Excel y banco Moodle
+
+Rama `claude/cap03-fase9`, sobre la fase 8; sin fusionar.
+
+- **Remisiones.** Lo que los capítulos 2, 4 y 5 dicen que el 3 estableció coincide con el
+  capítulo 3 revisado.
+- **VBA en Excel.** Los 12 bloques con salida declarada se ejecutaron con
+  `ejecutar_vba.py`: coinciden. Se corrigió una salida, la de `EJ_POTENCIAS`
+  (`Debug.Print` antepone un espacio al número: `'>  64`). Tres difieren solo en la coma
+  decimal regional, como avisa el capítulo.
+- **Banco Moodle.** Las ocho preguntas del capítulo 3 se revisaron contra el capítulo:
+  siete quedaron desfasadas en la redacción y una coincide; las ocho claves siguen
+  siendo correctas. Los siete borradores y la nota están en el vault. **No se copió nada
+  al banco.**
+- **Tres ajustes que salieron de esa revisión.** La regla de dependencia dice «lee ni
+  modifica» (dos asignaciones a la misma variable tampoco se intercambian); el cierre
+  del reto y el glosario dicen «esas dos normas piden informar», no «la ley manda»; la
+  efectiva anual es «una unidad común», no «la unidad», como ya decía el comparador.
+- **Sonda.** El rótulo pasa de «N recortados» a «N en bloques plegados», y el README lo
+  explica.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan y el
+capítulo 3 sale «OK». Sonda a 320: 7 de 7 lecciones, sin errores.
+
+**Lo que no se hizo.** La prueba en el iPhone del docente por red local. «iPhone
+Mirroring» conectó y se abrió una pestaña nueva, pero escribir la dirección exige el
+control de pantalla completa, que nadie aprobó, y la conexión se cortó. No se ejecutaron
+en Excel los bloques VBA sin salida declarada. No se ejecutó `verificar_cloze.R` sobre
+los borradores (compilan con `exams2html` y `exams2moodle`). Siguen abiertos: la traza
+en R que imprime `8.5e+07`, la pregunta 5 y las remisiones al syllabus sin cotejar
+contra el `.xlsx`.
+
+**Hueco de las herramientas.** La escritura en segundo plano no llega a «iPhone
+Mirroring» (teclea «aaaa»): la prueba en el teléfono necesita al docente presente.
+`ejecutar_vba.py` exige pegar el módulo a mano en Excel, y eso también pide el control
+de pantalla.

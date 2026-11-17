@@ -3128,7 +3128,7 @@ End Sub`,
                 </p>
                 <Box type="info" label="Regla de dependencia">
                     Dos instrucciones consecutivas <strong>se pueden intercambiar</strong> sin mirar más si
-                    ninguna de las dos usa una variable que la otra modifica. Si una <em>lee</em> lo que
+                    ninguna de las dos lee ni modifica una variable que la otra modifica. Si una <em>lee</em> lo que
                     la otra <em>escribe</em>, el orden deja de ser libre: hay que comprobar qué pasa al
                     cambiarlo, y lo habitual es que cambie el resultado.
                 </Box>
@@ -3574,7 +3574,7 @@ print(2 ^ 3 ^ 2)       # ^ es otra operacion: no da error
 #> 512`,
             vba: `Sub DosPotencias()
     Debug.Print 2 ^ 3 ^ 2
-    '> 64
+    '>  64
 End Sub`,
         };
 
@@ -4810,7 +4810,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                         <div className="rounded-xl border-2 border-secondary/40 bg-secondary/5 p-3 text-center">
                             <div className="text-[0.7rem] uppercase tracking-wider font-bold text-gray-500">Tasa efectiva anual</div>
                             <div className="text-2xl font-bold text-secondary" style={{ fontVariantNumeric: 'tabular-nums' }}>{pct(efectiva, 4)} %</div>
-                            <div className="text-xs text-gray-500">la que se puede comparar</div>
+                            <div className="text-xs text-gray-500">comparable entre ofertas</div>
                         </div>
                     </div>
 
@@ -5043,8 +5043,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             interés en términos de tasa efectiva anual <Cita k="congreso2011ley1480" loc="art. 45" />, y las
                             entidades vigiladas deben informar el Valor Total Unificado, expresado en términos
                             porcentuales efectivos anuales <Cita k="congreso2014ley1748" loc="art. 1.º" />.
-                            Convertir no es una preferencia de estilo del programador: la ley pide
-                            informar en términos efectivos anuales.
+                            Convertir no es una preferencia de estilo del programador: esas dos normas piden informar en términos efectivos anuales.
                         </p>
                     </>}>
                     Un sistema de originación recibe dos ofertas de crédito con tasas escritas en unidades
@@ -5100,7 +5099,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
 
         const GLOSARIO_CAP03 = [
             ['Secuencia', 'Estructura de control en la que las instrucciones se ejecutan una tras otra, cada una exactamente una vez y en el orden en que están escritas. No hay preguntas, saltos ni vueltas atrás.'],
-            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar sin mirar más si ninguna usa una variable que la otra modifica. Si una lee lo que la otra escribe hay que comprobar: lo habitual es que el orden sea obligatorio.'],
+            ['Regla de dependencia', 'Dos instrucciones consecutivas se pueden intercambiar sin mirar más si ninguna lee ni modifica una variable que la otra modifica. Si una lee lo que la otra escribe hay que comprobar: lo habitual es que el orden sea obligatorio.'],
             ['Asignación', 'Operación que evalúa la expresión de la derecha con los valores actuales y guarda el resultado en la variable de la izquierda, borrando lo que hubiera. No es una igualdad matemática.'],
             ['Variable temporal', 'Variable auxiliar que guarda un valor antes de que una asignación lo destruya. En el intercambio de la sección 2 es lo que evita perder uno de los dos valores: tres asignaciones, no dos. El capítulo 2 la llama variable auxiliar.'],
             ['Acumulador', 'Variable que se lee a sí misma para actualizarse —saldo <- saldo + movimiento—. Conserva un solo valor: la historia de los anteriores solo queda en la tabla de traza.'],
@@ -5114,7 +5113,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
             ['Descuento comercial', 'Descuento calculado sobre el valor nominal de un título, no sobre el valor que efectivamente se entrega. Por eso su porcentaje queda por debajo del costo medido sobre lo que se recibe.'],
             ['Tasa nominal', 'Tasa anual de referencia que no incorpora el interés sobre interés. Sin declarar cada cuánto capitaliza no significa nada: el mismo 24 % nominal da 24 %, 26,82 % o 27,11 % efectivo.'],
             ['Tasa periódica', 'Tasa que rige en cada período de capitalización. Se obtiene repartiendo la nominal entre el número de capitalizaciones del año: 24 % nominal con capitalización mensual son 2 % mensual.'],
-            ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es la unidad en la que dos ofertas se pueden comparar, y en la que la ley manda informar el costo de un crédito (sección 5).'],
+            ['Tasa efectiva anual', 'Tasa que incorpora el interés sobre interés y expresa el costo real de un año. Es una unidad común en la que dos ofertas se pueden comparar aunque capitalicen distinto, y en la que las dos normas citadas en la sección 5 piden informar.'],
         ];
 
         const EvaluacionSection = () => (
@@ -5210,7 +5209,7 @@ Debug.Print Round(efectivaA, 6), Round(efectivaB, 6)
                             { texto: 'Las dos son asignaciones, porque asignar nunca depende del orden.', correcta: false },
                             { texto: 'Ninguna de las dos imprime nada.', correcta: false },
                             { texto: 'Nunca: en una secuencia el orden de escritura siempre es obligatorio.', correcta: false },
-                            { texto: 'Ninguna de las dos usa una variable que la otra modifica.', correcta: true },
+                            { texto: 'Ninguna de las dos lee ni modifica una variable que la otra modifica.', correcta: true },
                         ],
                         justificacion: 'Es la regla de dependencia. Las tres líneas que fijan valores iniciales se pueden barajar como se quiera; en cambio iva <- base * tasaIva lee lo que la línea anterior escribió, y ahí el orden no se negocia. La opción que dice «nunca» es el error contrario: creer que todo orden es sagrado impide reconocer cuál sí lo es.',
                     },
