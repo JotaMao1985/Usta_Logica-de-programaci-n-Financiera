@@ -4199,3 +4199,41 @@ que no existe todavía.
 **Hueco de las herramientas.** El pseudocódigo del curso no tiene notación para un tramo
 abierto en un `Segun`; LP-CORE lo resalta, pero ningún documento dice qué se puede
 escribir después de `Caso`. Queda anotado para el README.
+
+### 2026-11-16 — Capítulo 4, fase 7: sección 6, casos financieros
+
+Rama `claude/cap04-fase7`, sobre la fase 6. Entran ocho citas; el capítulo queda con diez.
+
+- **La base mínima a 2 UVT.** Cambió en el código de los cuatro lenguajes, en la traza y
+  en sus filas. Con la UVT de 50 000 la base baja de 200 000 a 100 000, y tres casos
+  dejaban de servir: el pago de la traza y los tres pagos del reto pasaron de 150 000 a
+  80 000, y la pregunta 9 del cuestionario, de 180 000 a 80 000. Las salidas del bloque
+  principal no cambian.
+- **Las tres cifras llevan cita**: 2 UVT y 4 % (Decreto 1625, arts. 1.2.4.4.1 y
+  1.2.4.4.14) y 6 % (Estatuto Tributario, art. 392). El `<Ilustrativo>` declara los
+  supuestos que esas normas exigen, incluida la persona natural no declarante que supera
+  3 300 UVT, con su cita.
+- **La UVT.** Con cita del artículo 868. Salieron «redondeada» y «no es el valor real»:
+  suponían un valor vigente que nadie leyó. Ahora es «un número redondo… no se tomó de la
+  resolución de ningún año».
+- **El reto del fraccionamiento.** Ya no atribuye a «la norma» lo que es doctrina de la
+  DIAN, ni propone sumar los pagos del mes, que contradecía el Concepto 012327 de 2025.
+  Cita los dos conceptos y pregunta qué dato haría falta para revisar un fraccionamiento.
+- **Verificador sin contexto**: de siete citas, cinco respaldadas y dos parciales; se
+  adoptó su redacción. Encontró además una norma afirmada sin cita dentro del
+  `<Ilustrativo>` y el «redondeada» sin respaldo.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan. Al capítulo
+4 solo le queda el aviso de las 13 figuras sin fuente (fase 9). Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar (fase 10). No se leyó la resolución con el valor
+de la UVT de ningún año. El inciso cuarto del artículo 392, al que remite el artículo
+1.2.4.4.14, no se leyó con su numeración: el `<Ilustrativo>` dice «al servicio le aplican
+las tarifas de los dos artículos citados» en vez de afirmar qué servicios tienen tarifa
+propia.
+
+**Hueco de las herramientas.** La regla de cobertura del cuestionario cuenta la cadena
+«pregunta:» dentro de una justificación como si fuera otra pregunta: una frase que
+terminaba en «lo que se pregunta:» hizo fallar el verificador con un mensaje que apunta
+a la primera línea del `Quiz`. Y las notas de fuente que genera `generar_tanda.py`
+conservan «sin importar» después de la importación: nada las actualiza.

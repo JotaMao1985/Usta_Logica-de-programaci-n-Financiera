@@ -5821,18 +5821,17 @@ End If`,
            SECCIÓN 6 — CASOS FINANCIEROS
         ============================================================ */
         /* Retención en la fuente por servicios, simplificada a propósito: la
-           UVT va redondeada a 50 000 y se declara como supuesto del ejercicio,
-           porque su valor real lo publica la DIAN cada año y el material no
-           debe envejecer con él. Salidas ejecutadas el 2026-09-20. */
+           UVT es un valor redondo, 50 000, declarado como supuesto del ejercicio, porque
+           su valor cambia cada año y el material no debe envejecer con él. Salidas ejecutadas el 2026-09-20. */
         const EJ_RETENCION = {
             pseudo: `Inicio
-    // La UVT real se publica cada año. Aquí va redondeada
-    // a 50 000 para que las cuentas se sigan de cabeza.
+    // La UVT cambia cada año. Aquí va un valor redondo,
+    // 50 000, para que las cuentas se sigan de cabeza.
     uvt          <- 50000
     pago         <- 3500000
     esDeclarante <- Falso
 
-    baseMinima <- 4 * uvt
+    baseMinima <- 2 * uvt
 
     Si pago < baseMinima Entonces
         retencion <- 0
@@ -5852,7 +5851,7 @@ Fin`,
 pago          = 3_500_000
 es_declarante = False
 
-base_minima = 4 * uvt
+base_minima = 2 * uvt
 
 if pago < base_minima:
     retencion = 0
@@ -5870,7 +5869,7 @@ print(f"Neto a pagar: {neto:,.0f}")
 pago          <- 3500000
 es_declarante <- FALSE
 
-base_minima <- 4 * uvt
+base_minima <- 2 * uvt
 
 if (pago < base_minima) {
   retencion <- 0
@@ -5895,7 +5894,7 @@ Sub RetencionServicios()
     pago = 3500000
     esDeclarante = False
 
-    baseMinima = 4 * uvt
+    baseMinima = 2 * uvt
 
     If pago < baseMinima Then
         retencion = 0
@@ -5915,9 +5914,9 @@ End Sub`,
 
         const TRAZA_RETENCION = {
             pseudo: `uvt          <- 50000
-pago         <- 150000
+pago         <- 80000
 esDeclarante <- Verdadero
-baseMinima   <- 4 * uvt
+baseMinima   <- 2 * uvt
 Si pago < baseMinima Entonces
     retencion <- 0
 Sino Si esDeclarante Entonces
@@ -5927,9 +5926,9 @@ Sino
 FinSi
 neto <- pago - retencion`,
             python: `uvt           = 50_000
-pago          = 150_000
+pago          = 80_000
 es_declarante = True
-base_minima   = 4 * uvt
+base_minima   = 2 * uvt
 if pago < base_minima:
     retencion = 0
 elif es_declarante:
@@ -5938,9 +5937,9 @@ else:
     retencion = pago * 0.06
 neto = pago - retencion`,
             r: `uvt           <- 50000
-pago          <- 150000
+pago          <- 80000
 es_declarante <- TRUE
-base_minima   <- 4 * uvt
+base_minima   <- 2 * uvt
 if (pago < base_minima) {
   retencion <- 0
 } else if (es_declarante) {
@@ -5950,9 +5949,9 @@ if (pago < base_minima) {
 }
 neto <- pago - retencion`,
             vba: `uvt = 50000
-pago = 150000
+pago = 80000
 esDeclarante = True
-baseMinima = 4 * uvt
+baseMinima = 2 * uvt
 If pago < baseMinima Then
     retencion = 0
 ElseIf esDeclarante Then
@@ -5969,9 +5968,8 @@ neto = pago - retencion`,
                     gancho="«El sistema dijo que no» no es una respuesta. ¿Cuál de las condiciones lo rechazó?">
                     Un cliente lleva ocho años en el banco, no tiene una sola mora y le acaban de negar
                     un crédito de consumo. Llama, y al otro lado alguien tiene que explicarle por qué.
-                    No vale enumerarle las cinco reglas: cuatro de ellas ni se evaluaron. Lo rechazó
-                    una, y decirle cuál es la diferencia entre un cliente que entiende y un cliente que
-                    se va.
+                    No vale enumerarle las cinco reglas: lo rechazó una, y las que venían después ni se
+                    evaluaron. Decirle cuál fue es lo que separa a un cliente que entiende de uno que se va.
                 </Motivacion>
 
                 <h3>La política de originación, por dentro</h3>
@@ -5995,26 +5993,51 @@ neto = pago - retencion`,
 
                 <h3>Retención en la fuente: una cascada con un umbral</h3>
                 <p>
-                    El otro caso clásico de selectiva en un área financiera tiene tres ramas y un
-                    umbral que se calcula antes de preguntar nada: <strong>si el pago no llega a la base
-                    mínima no se retiene</strong>, y solo si la pasa importa la condición del proveedor.
+                    Otro caso de selectiva en un área financiera tiene tres ramas y un umbral que se
+                    calcula antes de preguntar nada: <strong>si el pago no llega a la base mínima no se
+                    retiene</strong>, y solo si llega importa si el proveedor es
+                    <strong> declarante</strong>, es decir, si está obligado a presentar declaración de renta.
                 </p>
+                <p>
+                    Las tres cifras de la cascada salen de dos normas. No se hace retención sobre los pagos
+                    o abonos en cuenta por prestación de servicios cuya cuantía individual sea inferior a
+                    2 UVT <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />. «Inferior» deja fuera
+                    la igualdad: un pago de exactamente 2 UVT no cabe en esa excepción, y por eso el código
+                    compara con <span className="inline-code">&lt;</span>. Cuando el pago por servicios lo
+                    hace un agente retenedor a un contribuyente obligado a declarar renta, la tarifa es
+                    del 4 % <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14" />; y para los pagos
+                    por servicios a contribuyentes no obligados a declarar, del 6 %
+                    <Cita k="presidencia1989decreto624" loc="art. 392" />.
+                </p>
+                <Ilustrativo>
+                    El proveedor, sus pagos y la UVT de 50 000 se inventaron para este capítulo, igual
+                    que el solicitante, el cliente de ocho años y la política de originación de la primera
+                    parte de la sección. El caso de la retención supone que quien paga es agente retenedor;
+                    que el pago es por servicios, no por honorarios, comisiones o arrendamientos; que el
+                    proveedor es contribuyente del impuesto de renta, y que al servicio le aplican las
+                    tarifas de los dos artículos citados. Supone también que el proveedor no declarante no
+                    es una persona natural cuyo contrato deje ver ingresos de más de 3 300 UVT en el año,
+                    ni una a la que los pagos del mismo agente retenedor en el año superen esa cifra: en
+                    esos casos se le retiene el 4 % (en el segundo, desde el pago con el que la suma la
+                    supera) <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14, inc. 2" />.
+                </Ilustrativo>
 
                 <CodeTabs
                     titulo="Retención por servicios"
                     bloques={EJ_RETENCION}
-                    nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas no es negociable —preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral—." />
+                    nota="La base mínima se calcula antes de la cascada, no dentro de ella: es un dato, no una decisión. Y el orden de las ramas importa: preguntar primero por el declarante retendría sobre pagos que están por debajo del umbral." />
 
-                <Box type="warn" label="La UVT de este ejemplo está redondeada a propósito">
-                    50 000 no es el valor real de la UVT: es un número redondo para que las cuentas se
-                    puedan seguir de cabeza. El valor vigente lo publica la DIAN cada año, y en una
-                    rutina de producción <strong>nunca va escrito en el código</strong> —va en un parámetro—,
-                    justamente porque cambia todos los eneros.
+                <Box type="warn" label="La UVT de este ejemplo es un número redondo, a propósito">
+                    50 000 es un número redondo, elegido para que las cuentas se puedan seguir de cabeza; no se
+                    tomó de la resolución de ningún año. El valor se reajusta cada año, y el Director General
+                    de la DIAN lo publica por resolución antes del 1.º de enero de cada año <Cita k="presidencia1989decreto624" loc="art. 868" />.
+                    Por eso en una rutina de producción <strong>conviene no escribirlo en el código</strong>:
+                    va en un parámetro.
                 </Box>
 
                 <TablaTraza
                     titulo="Prueba de escritorio: un pago pequeño"
-                    enunciado={<>Un pago de <strong>150 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada línea, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
+                    enunciado={<>Un pago de <strong>80 000</strong> a un proveedor <strong>declarante</strong>, con la UVT en 50 000. La tabla empieza en el cálculo de la base mínima y tiene una fila por cada condición y cada asignación, se ejecute o no. En <strong>flujo</strong>: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en cada condición que se evalúa, <span className="inline-code">salta</span> en una que no se llega a evaluar, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás líneas. En las variables, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tienen.</>}
                     codigo={TRAZA_RETENCION}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -6026,13 +6049,13 @@ neto = pago - retencion`,
                     ocultas={['flujo', 'retencion', 'neto']}
                     exigeRespuesta
                     filas={[
-                        { paso: 1, instruccion: ins('baseMinima <- 4 * uvt', 'base_minima = 4 * uvt', 'base_minima <- 4 * uvt', 'baseMinima = 4 * uvt'), flujo: 'ejecuta', retencion: '—', neto: '—' },
+                        { paso: 1, instruccion: ins('baseMinima <- 2 * uvt', 'base_minima = 2 * uvt', 'base_minima <- 2 * uvt', 'baseMinima = 2 * uvt'), flujo: 'ejecuta', retencion: '—', neto: '—' },
                         { paso: 2, instruccion: ins('Si pago < baseMinima Entonces', 'if pago < base_minima:', 'if (pago < base_minima) {', 'If pago < baseMinima Then'), flujo: 'verdadero', retencion: '—', neto: '—' },
                         { paso: 3, instruccion: ins('retencion <- 0', 'retencion = 0', 'retencion <- 0', 'retencion = 0'), flujo: 'ejecuta', retencion: '0', neto: '—' },
                         { paso: 4, instruccion: ins('Sino Si esDeclarante Entonces', 'elif es_declarante:', '} else if (es_declarante) {', 'ElseIf esDeclarante Then'), flujo: 'salta', retencion: '0', neto: '—' },
                         { paso: 5, instruccion: ins('retencion <- pago * 0.04', 'retencion = pago * 0.04', 'retencion <- pago * 0.04', 'retencion = pago * 0.04'), flujo: 'salta', retencion: '0', neto: '—' },
                         { paso: 6, instruccion: ins('retencion <- pago * 0.06', 'retencion = pago * 0.06', 'retencion <- pago * 0.06', 'retencion = pago * 0.06'), flujo: 'salta', retencion: '0', neto: '—' },
-                        { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), flujo: 'ejecuta', retencion: '0', neto: '150000' },
+                        { paso: 7, instruccion: ins('neto <- pago - retencion', 'neto = pago - retencion', 'neto <- pago - retencion', 'neto = pago - retencion'), flujo: 'ejecuta', retencion: '0', neto: '80000' },
                     ]}
                     pista="Calcule la base mínima con la UVT y compárela con el pago antes de mirar nada más: lo que sea el proveedor solo importa si el pago llega al umbral."
                 />
@@ -6040,49 +6063,58 @@ neto = pago - retencion`,
                 <Box type="info" label="Lo que la traza deja ver">
                     <span className="inline-code">esDeclarante</span> vale <span className="inline-code">Verdadero</span> y
                     <strong> no se usa</strong>. Es un dato correcto, cargado a tiempo, que en este pago no
-                    interviene en nada. En una auditoría eso confunde: aparece en el expediente y parece
-                    que debió influir. La traza es lo que permite decir que no, y por qué.
+                    interviene en nada. Quien lo vea en el expediente puede pensar que debió influir. La traza es lo que permite decir que no, y por qué.
                 </Box>
 
                 <Ejercicio tipo="E7"><Reto
                     titulo="Explíquele al proveedor"
                     solucion={<>
                         <p>
-                            <strong>Lo que pasó:</strong> los tres pagos de 150 000 quedaron cada uno por debajo
-                            de la base mínima de 200 000, así que a cada uno se le aplicó la primera rama
+                            <strong>Lo que pasó:</strong> los tres pagos de 80 000 quedaron cada uno por debajo
+                            de la base mínima de 100 000, así que a cada uno se le aplicó la primera rama
                             —retención cero—. La base se compara <strong>contra cada pago</strong>, no contra el
-                            acumulado del mes, porque la rutina se ejecuta una vez por factura y no guarda
-                            memoria de las anteriores.
+                            acumulado del mes. No es un descuido de la rutina: la norma habla de la «cuantía
+                            individual» de cada pago <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.1" />, y la
+                            DIAN ha dicho que la transacción se analiza individualmente, no de forma
+                            acumulada <Cita k="dian2025concepto012327" loc="num. 4" />.
                         </p>
                         <p>
-                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago supera los
-                            200 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
-                            tercera y no por la segunda porque este proveedor no es declarante; el de la
-                            prueba de escritorio de arriba sí lo era, y a él le habría correspondido el 4 %.
-                            No es que el sistema lo trate distinto: es que la condición del umbral se evalúa
-                            sobre el valor del pago, y ese lo pasa.
+                            <strong>Por qué al de 450 000 sí se le retuvo:</strong> ese solo pago llega a los
+                            100 000, entra por la tercera rama y se le aplica el 6 % —27 000—. Entra por la
+                            tercera y no por la segunda porque este proveedor no es declarante. No es que el
+                            sistema lo trate distinto: es que la condición del umbral se evalúa sobre el
+                            valor de cada pago, y ese llega.
                         </p>
                         <p>
-                            <strong>Y lo que hay que decirle al proveedor, que es lo difícil:</strong> fraccionar
-                            no es una estrategia; es exactamente lo que la norma llama fraccionamiento de pagos
-                            y lo que la base mínima existe para detectar cuando se acumula. Si el área de pagos
-                            decide agrupar por mes —que es lo razonable—, la rutina tiene que sumar antes de
-                            comparar, y entonces los tres pagos de 150 000 pasan a retener. El defecto no está
-                            en la cascada: está en <em>qué</em> se le da a comparar.
+                            <strong>Y lo que la rutina no puede decir:</strong> si eran cuatro servicios o uno solo
+                            partido en cuatro facturas. Eso no es de la cascada. La DIAN ha dicho que no es
+                            válido fraccionar pagos artificialmente con el único fin de evitar la retención,
+                            y que puede verificar el cumplimiento de las retenciones sobre el total de los
+                            pagos efectuados, independientemente de cómo se hayan fraccionado
+                            <Cita k="dian2025concepto011217" loc="nums. 3 y 5" />.
+                        </p>
+                        <p>
+                            <strong>Lo que haría falta para esa revisión:</strong> el total pagado a cada proveedor
+                            en el período que se revise, que es sobre lo que el concepto
+                            recién citado dice que se puede verificar. La
+                            rutina no lo tiene: se ejecuta una vez por factura y no guarda memoria de las
+                            anteriores. Saber si era un solo servicio exige además mirar qué se contrató, y
+                            eso tampoco está en la rutina. La estructura selectiva no cambia; lo que falta
+                            son datos, y reunir el primero es sumar, no decidir.
                         </p>
                     </>}
                 >
                     <p>
                         Un proveedor <strong>no declarante</strong> recibió cuatro pagos este mes: tres de
-                        <strong> 150 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
+                        <strong> 80 000</strong> y uno de <strong>450 000</strong>. A los tres primeros no se les
                         retuvo nada y al cuarto sí. El proveedor llama convencido de que hubo un error,
-                        porque «en total facturé 900 000 y me retuvieron sobre 450 000».
+                        porque «en total facturé 690 000 y me retuvieron sobre 450 000».
                     </p>
                     <p>
                         <strong>Explíquele qué hizo el sistema y por qué</strong>, con la rutina de arriba a la
-                        vista. Diga además qué habría que cambiar si el área de pagos decidiera aplicar la
-                        base mínima al acumulado del mes en vez de a cada pago, y si ese cambio afecta a la
-                        estructura selectiva o a otra cosa.
+                        vista. Diga además qué dato le haría falta a alguien que quisiera revisar si esas
+                        cuatro facturas eran en realidad un solo servicio partido, y si conseguirlo cambia
+                        la estructura selectiva o cambia otra cosa.
                     </p>
                 </Reto></Ejercicio>
             </div>
@@ -6254,14 +6286,14 @@ neto = pago - retencion`,
                     },
                     {
                         seccion: 'cap6',
-                        pregunta: 'Un pago por servicios de 180 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene?',
+                        pregunta: 'Un pago por servicios de 80 000 a un proveedor no declarante, con la UVT en 50 000. ¿Cuánto se le retiene, y por qué?',
                         opciones: [
-                            { texto: 'Se le retienen 10 800, que es el 6 % del pago.', correcta: false },
-                            { texto: 'Nada: el pago no llega a la base mínima de 200 000.', correcta: true },
-                            { texto: 'Se le retienen 7 200, que es el 4 % del pago.', correcta: false },
-                            { texto: 'Nada, pero porque el proveedor no es declarante.', correcta: false },
+                            { texto: 'Se le retienen 4 800, que es el 6 % del pago.', correcta: false },
+                            { texto: 'Nada: el pago no llega a la base mínima de 100 000.', correcta: true },
+                            { texto: 'Se le retienen 3 200, que es el 4 % del pago.', correcta: false },
+                            { texto: 'Nada, porque el proveedor no es declarante.', correcta: false },
                         ],
-                        justificacion: 'La base mínima se calcula antes de preguntar nada: 4 × 50 000 = 200 000, y 180 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, pero porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
+                        justificacion: 'La base mínima se calcula antes de preguntar nada: 2 × 50 000 = 100 000, y 80 000 no llega. La primera rama de la cascada decide y deja la retención en cero, así que la condición del declarante no se evalúa nunca. Por eso la opción que dice «nada, porque el proveedor no es declarante» acierta la cifra y se equivoca en la causa, que es la otra mitad de lo que se pide: si el proveedor fuera declarante el resultado sería exactamente el mismo. El 4 % y el 6 % solo entran en juego por encima del umbral.',
                     },
                     {
                         seccion: 'cap6',
@@ -6532,11 +6564,15 @@ neto = pago - retencion`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "d33523e3cc7ae09b35e61db11bb2d18fcd4a9ccd7fd7aa940d19d9db1bb5a97e",
-  "sello": "e1429d8438a1f3fb9f916f974fb7e15406e16d111006a12f1b17d46271302b9e",
+  "huella": "882ae490ac31b0c6b2ee9dcfc3eafccec8aec94d61a6472af1da88efc48b5b6b",
+  "sello": "fa1352165b0cc1aa475783d102d5d86afe02e23a70c578733940aea443b33c6d",
   "orden": [
     "congreso1990ley45",
-    "presidencia1971decreto410"
+    "dian2025concepto011217",
+    "dian2025concepto012327",
+    "minhacienda2016decreto1625",
+    "presidencia1971decreto410",
+    "presidencia1989decreto624"
   ],
   "entradas": {
     "congreso1990ley45": {
@@ -6545,11 +6581,35 @@ neto = pago - retencion`,
       "html": "Congreso de la República de Colombia. (1990). \u003cem>Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones\u003c/em>. Diario Oficial 39.607. \u003ca href=\"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\">https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540\u003c/a>",
       "plano": "Congreso de la República de Colombia. (1990). Ley 45 de 1990, por la cual se expiden normas en materia de intermediación financiera, se regula la actividad aseguradora, se conceden unas facultades y se dictan otras disposiciones. Diario Oficial 39.607. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77540"
     },
+    "dian2025concepto011217": {
+      "autor": "Dirección de Impuestos y Aduanas Nacionales",
+      "anio": "2025a",
+      "html": "Dirección de Impuestos y Aduanas Nacionales. (2025a). \u003cem>Concepto 011217 int 1299 de 2025\u003c/em>. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm\u003c/a>",
+      "plano": "Dirección de Impuestos y Aduanas Nacionales. (2025a). Concepto 011217 int 1299 de 2025. https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_11217_2025.htm"
+    },
+    "dian2025concepto012327": {
+      "autor": "Dirección de Impuestos y Aduanas Nacionales",
+      "anio": "2025b",
+      "html": "Dirección de Impuestos y Aduanas Nacionales. (2025b). \u003cem>Concepto 012327 int 1439 de 2025\u003c/em>. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm\u003c/a>",
+      "plano": "Dirección de Impuestos y Aduanas Nacionales. (2025b). Concepto 012327 int 1439 de 2025. https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_12327_2025.htm"
+    },
+    "minhacienda2016decreto1625": {
+      "autor": "Ministerio de Hacienda y Crédito Público",
+      "anio": "2016",
+      "html": "Ministerio de Hacienda y Crédito Público. (2016). \u003cem>Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria\u003c/em>. Diario Oficial 50.023. \u003ca href=\"https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\">https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm\u003c/a>",
+      "plano": "Ministerio de Hacienda y Crédito Público. (2016). Decreto 1625 de 2016, por medio del cual se expide el Decreto Único Reglamentario en materia tributaria. Diario Oficial 50.023. https://normograma.dian.gov.co/dian/compilacion/docs/decreto_1625_2016.htm"
+    },
     "presidencia1971decreto410": {
       "autor": "Presidencia de la República de Colombia",
       "anio": "1971",
       "html": "Presidencia de la República de Colombia. (1971). \u003cem>Decreto 410 de 1971, por el cual se expide el Código de Comercio\u003c/em>. Diario Oficial 33.339. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\">http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html\u003c/a>",
       "plano": "Presidencia de la República de Colombia. (1971). Decreto 410 de 1971, por el cual se expide el Código de Comercio. Diario Oficial 33.339. http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html"
+    },
+    "presidencia1989decreto624": {
+      "autor": "Presidencia de la República de Colombia",
+      "anio": "1989",
+      "html": "Presidencia de la República de Colombia. (1989). \u003cem>Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales\u003c/em>. Diario Oficial 38.756. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\">http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html\u003c/a>",
+      "plano": "Presidencia de la República de Colombia. (1989). Decreto 624 de 1989, por el cual se expide el Estatuto Tributario de los impuestos administrados por la Dirección General de Impuestos Nacionales. Diario Oficial 38.756. http://www.secretariasenado.gov.co/senado/basedoc/estatuto_tributario.html"
     }
   },
   "profundizar": {
