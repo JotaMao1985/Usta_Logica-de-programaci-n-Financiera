@@ -4323,3 +4323,32 @@ se retomó horas después sin memoria de lo hecho: lo que la salvó fue que el v
 scratchpad tenían el trabajo a medias, no ningún registro del estado. Una fase larga
 debería anotar en la nota del capítulo qué partes lleva, a medida que las cierra. Y
 `ejecutar_vba.py` sigue dependiendo de un pegado a mano que quita la pantalla.
+
+### 2026-11-17 — Capítulo 4, fase 10: el VBA, ejecutado en Excel
+
+Misma rama. El docente pidió que el módulo lo pegara la sesión; con Excel al frente se
+pegó de una vez.
+
+- **Bloques.** Los 9 con salida declarada coinciden con Excel. `EJ_GUARDIA` se detiene
+  con el error 6, como dice el capítulo; `EJ_GUARDIA_SI`, corregido en la fase 3, no
+  falla.
+- **Quince pruebas de lenguaje**, escritas para lo que el capítulo afirma de VBA y nadie
+  había ejecutado: `\` y `Mod` van por debajo de `*`; `Dim` deja una variable en 0; 0
+  entre 0 da el error 6 y un divisor cero el 11; `And` evalúa los dos lados;
+  `1 <= m <= 100000` da siempre `True`; `Case … To` y las listas funcionan; sin
+  `Case Else` la variable conserva su valor; `Not` va por debajo de los relacionales y
+  `And` por encima de `Or`. Las quince confirman el texto.
+- **Lo único que no se ejecutó: `AndAlso`.** Un módulo que no compila bloquea el arnés
+  entero. La justificación de la pregunta 7 ya no lo nombra: dice que el material no ha
+  encontrado en VBA un operador lógico que deje de evaluar el segundo.
+
+**Verificación.** `verificar.py`: los cinco pasan; el capítulo 4, «OK». En el vault, de
+229 notas del capítulo quedan dos abiertas a propósito: el lema del curso (decisión del
+docente) y la promesa al capítulo 6.
+
+**Lo que no se hizo.** La prueba en el iPhone, que hace el docente.
+
+**Hueco de las herramientas.** El archivo que escribe una macro queda dentro del
+contenedor de Excel y no se puede leer desde la terminal; se leyó abriéndolo con el
+propio Excel por AppleScript. `ejecutar_vba.py` lo resuelve devolviendo el texto desde
+la macro: una prueba suelta debe hacer lo mismo.

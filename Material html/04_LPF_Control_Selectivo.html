@@ -6285,7 +6285,7 @@ neto = pago - retencion`,
                             { texto: 'Partir la condición en dos If anidados, con la división en el interior.', correcta: true },
                             { texto: 'Declarar compras como Double, para que la división dé infinito.', correcta: false },
                         ],
-                        justificacion: 'VBA no tiene operador de cortocircuito: And y Or evalúan siempre los dos lados, y AndAlso no es un operador de VBA. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
+                        justificacion: 'En VBA, And y Or evalúan siempre los dos lados, y cambiar de operador no lo arregla: este material no ha encontrado en VBA un operador lógico que deje de evaluar el segundo. Invertir los operandos no cambia nada: en VBA la división se evalúa de todos modos. Y declarar compras como Double tampoco sirve: dividir entre cero en VBA detiene el procedimiento —error 11, «División por cero», o 6, «Desbordamiento», si el numerador también es 0—; no da infinito, ni siquiera en Double. Para que la división no llegue a ejecutarse tiene que estar dentro de un If que ya comprobó el divisor, que es como lo escribe la sección 2.',
                     },
                     {
                         seccion: 'cap5',
