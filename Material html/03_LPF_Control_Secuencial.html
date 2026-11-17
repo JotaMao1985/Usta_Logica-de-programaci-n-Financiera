@@ -2869,17 +2869,17 @@
                     <text x="210" y={y + 37} textAnchor="middle" fontSize="11.5" fontFamily="ui-monospace, monospace" fill="#0E7490">{valor}</text>
                 </g>
             );
-            const flecha = (y) => <line key={'f' + y} x1="210" y1={y} x2="210" y2={y + 20} stroke="#3D008D" strokeWidth="1.5" markerEnd="url(#lp-flecha)" />;
-            return (
+            // Punta abierta, como la dibuja la norma y como las del capítulo 2.
+            const flecha = (y) => (
+                <g key={'f' + y} fill="none" stroke="#3D008D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="210" y1={y} x2="210" y2={y + 19} />
+                    <polyline points={`205,${y + 12} 210,${y + 19} 215,${y + 12}`} />
+                </g>
+            );
+            return ( // fuente-ok: flujograma propio del caso inventado de la sección, que lleva su <Ilustrativo> más abajo
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 420 456" role="img" style={{ width: '100%', maxWidth: '440px', height: 'auto', display: 'block', margin: '0 auto' }}
                         aria-label="Flujograma de una secuencia: Inicio, leer los datos de la factura, tres bloques de proceso que calculan base, IVA y total, escribir el total y Fin. No hay bifurcaciones ni ciclos.">
-                        <defs>
-                            <marker id="lp-flecha" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
-                                <path d="M0,0 L0,6 L7,3 z" fill="#3D008D" />
-                            </marker>
-                        </defs>
-
                         <ellipse cx="210" cy="26" rx="58" ry="20" fill="#3D008D" />
                         <text x="210" y="31" textAnchor="middle" fontSize="13" fontWeight="700" fill="#FFFFFF">Inicio</text>
                         {flecha(46)}
@@ -2906,7 +2906,8 @@
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
                         Una secuencia pura: una sola entrada, una sola salida y ninguna flecha que vuelva
-                        hacia atrás o se bifurque. En azul, el estado después de cada instrucción.
+                        hacia atrás o se bifurque. En azul, el estado después de cada instrucción. Los símbolos
+                        son los del capítulo 2, más anchos que en la norma para que quepa el texto.
                     </figcaption>
                 </figure>
             );

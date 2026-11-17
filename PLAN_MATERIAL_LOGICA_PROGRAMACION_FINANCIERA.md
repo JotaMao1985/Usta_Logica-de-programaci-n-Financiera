@@ -3908,3 +3908,29 @@ justificaciones, y nada avisa cuando la sección cambia y la justificación no: 
 de esta fase se encontraron releyendo. El inventario del vault las tenía enlazadas, y por
 ahí se llegó.
 
+### 2026-11-16 — Capítulo 3, fase 8: figuras
+
+Rama `claude/cap03-fase8`, sobre la fase 7. No hizo falta tocar LP-CORE.
+
+- El flujograma de la sección 1 dibuja las puntas de flecha abiertas, como el capítulo 2,
+  y su pie dice que los símbolos van más anchos que en la norma. Mirado en el navegador.
+- Con eso el capítulo 3 pasa `verificar.py` sin ningún aviso: las siete figuras y tablas
+  sin fuente de la línea base quedaron con `<Fuente>` o con su marca razonada en las
+  fases 2 a 8.
+- Las 35 notas de figura del vault tienen estado: 28 corregidas, 1 correcta y 6 con un
+  defecto menor anotado.
+
+**Corrección.** En los informes de las fases 2 a 7 llamé «recortes de texto a 320 px» a
+lo que la sonda informa como «recortados». No lo son: son líneas de código dentro de
+bloques plegados, que la sonda cuenta aparte a propósito. Un recorte fuera de un bloque
+plegado hace fallar la sonda, y el capítulo no tiene ninguno.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, y el
+capítulo 3 sale «OK». Sonda en `file`, 375 y 320.
+
+**Hueco de las herramientas.** La salida de la sonda dice «(22 recortados)» sin decir que
+son de bloques plegados ni que no son un fallo: se leyó mal durante seis fases. La línea
+debería decir «22 en bloques plegados». Además, el navegador integrado muestra una
+instantánea fija cuando se abre un archivo con `file://`: para mirar un cambio hay que
+levantar el servidor local.
+
