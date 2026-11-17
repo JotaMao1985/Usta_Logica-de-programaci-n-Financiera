@@ -3408,7 +3408,8 @@
                     El rombo es el símbolo de la decisión, y de él salen <strong>dos</strong> flechas rotuladas.
                     Las dos vuelven a juntarse antes de seguir: por eso se recorre exactamente una, nunca las
                     dos ni ninguna. Con dos <span className="inline-code">Si</span> sueltos habría dos rombos
-                    seguidos, y esa garantía se perdería.
+                    seguidos, y esa garantía se perdería. El flujograma lee los dos datos; los bloques de
+                    código los traen ya asignados para que se puedan ejecutar tal cual.
                 </figcaption>
             </figure>
         );
@@ -3544,13 +3545,13 @@
         // encoge con el viewBox: en una columna de 319 px caía a 8,5 px.
         const SimbologiaFlujograma = () => {
             const FILAS = [
-                ['Inicio y fin', 'Uno de cada uno, y el recorrido va del primero al segundo.',
+                ['Inicio y fin', 'En este curso, uno de cada uno; el recorrido va del primero al segundo.',
                     <ellipse cx="38" cy="16" rx="34" ry="13" fill="#3D008D" />],
                 ['Entrada y salida', 'Leer un dato o escribir un resultado.',
                     <polygon points="14,3 72,3 62,29 4,29" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.4" />],
                 ['Proceso', 'Calcular o asignar: la variable cambia de valor.',
                     <rect x="6" y="3" width="64" height="26" rx="5" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
-                ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.',
+                ['Decisión', 'Una condición; en este curso, con dos salidas rotuladas: Sí y No.',
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd="url(#lp-flecha4)" />],
@@ -3558,7 +3559,8 @@
             return (
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-                        La simbología de los flujogramas
+                        Los símbolos que usan los flujogramas de este curso
+
                     </figcaption>
                     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{flechaDefs('lp-flecha4')}</svg>
                     <ul className="space-y-2.5" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
@@ -4433,12 +4435,12 @@ Debug.Print tarifa`,
             <div className="prose-lp">
                 <Motivacion icon="fa-code-compare"
                     gancho="Dos Si seguidos no son un Si…Sino. ¿En qué caso se nota, y cuánto cuesta?">
-                    Dos tarifas: una para el cliente preferencial y otra, la plena, que alguien escribió
-                    como «transacciones de más de un millón». Quedaron como dos condiciones
-                    independientes, una debajo de la otra, en vez de como una sola con su alternativa.
-                    Para casi todos los clientes daba igual. Para los que cumplían
-                    las dos, la segunda instrucción sobrescribía a la primera, y el cliente preferencial
-                    terminó pagando la tarifa plena durante un trimestre.
+                    La regla tenía dos tarifas: una para el cliente preferencial y otra, la plena, para
+                    todos los demás. Quien la tradujo le puso a la plena su propia condición
+                    —«transacciones de más de un millón»— en vez de dejarla como la alternativa de la
+                    primera. Quedaron dos condiciones independientes, una debajo de la otra. El cliente
+                    preferencial que movía más de un millón cumplía las dos: la segunda instrucción
+                    sobrescribía a la primera, y terminó pagando la tarifa plena.
                 </Motivacion>
 
                 <h3>Dos caminos, y exactamente uno se recorre</h3>
@@ -4457,16 +4459,24 @@ Debug.Print tarifa`,
                 <CodeTabs
                     titulo="La tarifa, resuelta con Si…Sino"
                     bloques={EJ_TARIFA_SINO}
-                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no existe para este dato. Cambie Verdadero por Falso y la tarifa pasa a 10 000." />
+                    nota="El cliente es preferencial, así que se recorre la primera rama y la segunda no se ejecuta con este dato. La traza de más abajo sigue al cliente que no lo es." />
+
+                <Ilustrativo>
+                    Las dos tarifas —0,2 % para el cliente preferencial y 0,5 % para los demás—, el umbral
+                    del millón, los clientes y las cuatrocientas transacciones de esta sección se inventaron
+                    para este capítulo: no son las tarifas de ningún banco.
+                </Ilustrativo>
 
                 <h3>Por qué no da igual escribirlo con dos Si</h3>
                 <p>
                     La tentación es escribir cada tarifa con su propia condición, una debajo de la otra.
                     Parece lo mismo y se lee casi igual. La diferencia aparece en cuanto un dato cumple
                     <strong> las dos condiciones a la vez</strong>: los dos bloques se ejecutan, y el segundo
-                    pisa lo que escribió el primero. Aquí la segunda condición no es la negación de la
-                    primera, sino otra —<span className="inline-code">monto &gt; 1000000</span>—, y nada impide
-                    que un mismo cliente cumpla las dos.
+                    pisa lo que escribió el primero. La regla
+                    sigue siendo la del bloque anterior —plena para todo el que no sea preferencial—, pero
+                    aquí la segunda condición no es la negación de la primera, sino otra
+                    —<span className="inline-code">monto &gt; 1000000</span>—, y nada impide que un mismo
+                    cliente cumpla las dos, ni que no cumpla ninguna.
                 </p>
 
                 <CodeTabs
@@ -4477,14 +4487,13 @@ Debug.Print tarifa`,
                 <Box type="warn" label="Seis mil pesos por transacción">
                     El cliente preferencial de 2 000 000 paga <strong>10 000 en vez de 4 000</strong>. Sobre
                     un corporativo con cuatrocientas transacciones al mes son 2 400 000 mensuales cobrados
-                    de más, en una cuenta que además es la que el banco menos quiere perder. Y el
-                    programa nunca dejó de funcionar.
+                    de más. Y el programa nunca dejó de funcionar.
                 </Box>
 
                 <Ejercicio tipo="E2"><MCQ
                     pregunta="Con la versión de dos Si, ¿qué tarifa recibe un cliente NO preferencial con un monto de 800 000?"
                     opciones={[
-                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que cuenta la motivación: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
+                        { texto: '0 — ninguna de las dos condiciones se cumple y tarifa conserva el valor por defecto.', correcta: true, justificacion: 'No es preferencial, así que el primer Si no entra; y 800 000 no supera el millón, así que el segundo tampoco. La tarifa se queda en el 0 inicial y la transacción se cobra gratis, cuando la regla le asignaba la plena: 4 000. No recibe la preferencial —ese bloque exige ser preferencial— ni la plena —ese exige pasar del millón—, y tampoco hay error de ejecución: la línea tarifa <- 0 se ejecutó antes que las dos condiciones, y es justamente esa asignación la que evita la falla… y la que hace que el cobro de cero pase inadvertido. Es el defecto simétrico del que abre la sección: con dos Si independientes hay datos que se llevan las dos ramas y datos que no se llevan ninguna. Con Si…Sino, ninguna de las dos cosas puede pasar.' },
                         { texto: '1 600 — como no pasa del millón, le toca el primer bloque, el de la tarifa baja.', correcta: false },
                         { texto: '4 000 — no es preferencial, así que se le cobra la tarifa plena, como a cualquier otro cliente.', correcta: false },
                         { texto: 'Un error de ejecución: ninguno de los dos Si le asigna un valor a tarifa.', correcta: false },
@@ -4501,7 +4510,7 @@ Debug.Print tarifa`,
 
                 <TablaTraza
                     titulo="Prueba de escritorio de un cliente no preferencial"
-                    enunciado={<>Una fila por cada línea del programa, se ejecute o no. En <strong>flujo</strong>, como en la sección anterior: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en la fila del Si, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás. En <strong>tarifa</strong>, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tiene.</>}
+                    enunciado={<>Una fila por cada instrucción del programa, se ejecute o no; <span className="inline-code">Sino</span> y <span className="inline-code">FinSi</span> no ocupan fila. En <strong>flujo</strong>, como en la sección anterior: <span className="inline-code">verdadero</span> o <span className="inline-code">falso</span> en la fila del Si, y <span className="inline-code">ejecuta</span> o <span className="inline-code">salta</span> en las demás. En <strong>tarifa</strong>, su valor después de la fila, o <span className="inline-code">—</span> si todavía no tiene.</>}
                     codigo={TRAZA_SINO}
                     columnas={[
                         { clave: 'paso', titulo: 'Fila' },
@@ -4541,8 +4550,8 @@ Debug.Print tarifa`,
                         <p>
                             <strong>El criterio:</strong> si las alternativas son <em>excluyentes por naturaleza</em>
                             —o es preferencial o no lo es—, la estructura debe decirlo. Dejarlo en manos de dos
-                            condiciones separadas convierte una garantía del lenguaje en una responsabilidad de
-                            quien escribe, y en una que nadie va a volver a revisar dentro de seis meses.
+                            condiciones separadas convierte una garantía de la estructura en una responsabilidad de
+                            quien escribe.
                         </p>
                         <p>
                             Hay un caso donde dos <span className="inline-code">Si</span> sí son lo correcto: cuando

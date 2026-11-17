@@ -4122,3 +4122,25 @@ de «tasa de usura» desapareció con la frase. Sonda a 320: 8 de 8 lecciones.
 **Lo que no se hizo.** Que `Dim` deje en 0 una variable en VBA sigue sin ejecutar (fase
 10). El video del syllabus no se abrió ni se cotejó contra el `.xlsx` (fase 10). La Ley
 510 de 1999, que dio su texto actual al artículo 884, no está en Zotero y no se cita.
+
+### 2026-11-16 — Capítulo 4, fase 4: sección 3, Si…Sino
+
+Rama `claude/cap04-fase4`, sobre la fase 3. Ninguna cita nueva; no se tocó código ni
+salidas.
+
+- **La tarifa plena tiene una sola definición** (decisión F): plena para todo cliente no
+  preferencial, que es lo que el código ya hacía. «Transacciones de más de un millón» es
+  la condición equivocada de la anécdota, no la regla. Salieron «para casi todos los
+  clientes daba igual», que contradecía al cliente de 800 000, y «durante un trimestre».
+- Un `<Ilustrativo>` declara las tarifas, el umbral, los clientes y las cuatrocientas
+  transacciones.
+- La nota del primer bloque ya no da el resultado de la traza. La traza dice qué líneas
+  no ocupan fila. El pie del flujograma dice que él lee los datos y los bloques los
+  traen asignados. Las dos reglas de los símbolos que son convención dicen «en este
+  curso», como en el capítulo 2.
+- Dos opiniones fuera.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos (figuras, fase 9; «DIAN», fase 7). Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** VBA sin ejecutar y el video del syllabus sin cotejar (fase 10).
