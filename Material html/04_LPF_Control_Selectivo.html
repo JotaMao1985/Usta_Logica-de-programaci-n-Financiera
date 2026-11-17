@@ -5407,7 +5407,7 @@ End Sub`,
         ============================================================ */
         /* La selectiva múltiple sobre un valor categórico: es el caso donde
            los cuatro lenguajes se parecen. Salidas ejecutadas el 2026-09-20
-           con Python 3.10.14 —`match` exige 3.10 o superior— y R 4.6.0. */
+           con Python 3.10.14 y R 4.6.0. */
         const EJ_SEGUN_CATEGORIA = {
             pseudo: `Inicio
     tipoCuenta <- "AHORROS"
@@ -5490,7 +5490,9 @@ End Sub`,
         Caso 500001..5000000:
             tarifa <- 12000
         DeOtroModo:
-            tarifa <- 25000
+            // Fuera de la escala: no se inventa una tarifa, se avisa
+            tarifa <- 0
+            Escribir "Monto fuera de la escala: a revision"
     FinSegun
 
     Escribir "Tarifa: ", tarifa
@@ -5512,7 +5514,9 @@ match monto:
     case m if 500_001 <= m <= 5_000_000:
         tarifa = 12000
     case _:
-        tarifa = 25000
+        # Fuera de la escala: no se inventa una tarifa, se avisa
+        tarifa = 0
+        print("Monto fuera de la escala: a revision")
 
 print(f"Tarifa: {tarifa:,.0f}")
 #> Tarifa: 6,000`,
@@ -5533,7 +5537,9 @@ if (monto >= 1 && monto <= 100000) {
 } else if (monto >= 500001 && monto <= 5000000) {
   tarifa <- 12000
 } else {
-  tarifa <- 25000
+  # Fuera de la escala: no se inventa una tarifa, se avisa
+  tarifa <- 0
+  cat("Monto fuera de la escala: a revision\\n")
 }
 
 cat(sprintf("Tarifa: %.0f\\n", tarifa))
@@ -5554,7 +5560,9 @@ Sub TarifaPorMonto()
         Case 500001 To 5000000
             tarifa = 12000
         Case Else
-            tarifa = 25000
+            ' Fuera de la escala: no se inventa una tarifa, se avisa
+            tarifa = 0
+            Debug.Print "Monto fuera de la escala: a revision"
     End Select
 
     Debug.Print "Tarifa: " & tarifa
@@ -5657,15 +5665,15 @@ End If`,
                 <Motivacion icon="fa-list-check"
                     gancho="¿Cuándo doce Si anidados deberían ser un Segun — y cuándo el Segun no puede?">
                     La escala de comisiones tiene doce tramos y vive en un bloque de doce condiciones
-                    anidadas que nadie quiere tocar: para añadir un tramo hay que contar llaves. El
-                    mismo cálculo escrito con la estructura adecuada cabe en doce líneas legibles. Pero
+                    anidadas: para añadir un tramo hay que contar llaves. El mismo cálculo escrito con la
+                    estructura adecuada pone los doce tramos al mismo nivel, uno debajo de otro. Pero
                     no en los cuatro lenguajes por igual: uno de ellos no sabe comparar rangos y obliga
                     a volver a la cascada.
                 </Motivacion>
 
                 <h3>Una sola variable, muchos valores</h3>
                 <p>
-                    La <Termino def="Estructura que evalúa una sola expresión y ejecuta el bloque correspondiente al valor que toma, con un caso por defecto para todo lo demás.">selectiva múltiple</Termino> resuelve
+                    La <Termino def="Estructura que evalúa una sola expresión y ejecuta el bloque correspondiente al valor que toma; el caso por defecto, si se escribe, recoge todo lo demás.">selectiva múltiple</Termino> resuelve
                     un caso concreto: <strong>una sola variable</strong> que puede tomar varios valores
                     conocidos, y una acción distinta para cada uno. Cuando el problema es ese, la
                     cascada funciona pero cuenta la historia mal: repite el nombre de la variable en
@@ -5676,6 +5684,12 @@ End If`,
                     titulo="Cuota de manejo según el tipo de cuenta"
                     bloques={EJ_SEGUN_CATEGORIA}
                     nota="Con un valor categórico los cuatro lenguajes se parecen mucho. Fíjese en R: su selectiva múltiple es una función que devuelve un valor, no un bloque que asigna, y el caso por defecto es el último argumento sin nombre." />
+
+                <Ilustrativo>
+                    Las cuotas de manejo por tipo de cuenta, la escala de tarifas por tramos de monto y la
+                    escala de doce tramos de la apertura se inventaron para este capítulo: no son las
+                    tarifas de ningún banco.
+                </Ilustrativo>
 
                 <h3>Rangos: donde los cuatro dejan de parecerse</h3>
                 <p>
@@ -5690,7 +5704,7 @@ End If`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Segun … Caso</span></td><td>Sí, por convención de notación</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí, de verdad:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Select Case</span></td><td><strong>Sí:</strong> <span className="inline-code">Case 1 To 100000</span></td></tr>
                             <tr><td>Python</td><td><span className="inline-code">match … case</span></td><td>Con <strong>guarda</strong>: <span className="inline-code">case m if 1 &lt;= m &lt;= 100_000</span></td></tr>
                             <tr><td>R</td><td><span className="inline-code">switch</span></td><td><strong>No.</strong> Iguala valores; con tramos hay que volver a la cascada</td></tr>
                         </tbody>
@@ -5700,14 +5714,13 @@ End If`,
                 <CodeTabs
                     titulo="Tarifa por tramos de monto"
                     bloques={EJ_SEGUN_RANGOS}
-                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante, así que un monto con centavos cae entre dos tramos y termina en el caso por defecto." />
+                    nota="Los cuatro dan 6 000 para un monto de 350 000, pero de los tres lenguajes reales solo VBA escribe el rango tal cual. La versión de R no es un Segun disfrazado: es la cascada, porque switch resuelve otro problema. Y los cuatro suponen pesos enteros: los tramos van de 1 a 100 000 y de 100 001 en adelante. Lo que no cabe en la escala —una devolución, un monto por encima del tope o uno con centavos entre dos tramos— termina en el caso por defecto, que no le inventa una tarifa: la deja en 0 y lo avisa." />
 
                 <Box type="info" label="Por qué esto anticipa el capítulo 6">
-                    <span className="inline-code">Select Case</span> con rangos es de las pocas cosas que VBA
-                    hace <strong>mejor</strong> que los otros tres. Lo hereda de la familia BASIC, de la que
-                    viene, y en una hoja de cálculo, donde clasificar por tramos —de monto, de antigüedad,
-                    de saldo— es la operación de todos los días, resulta especialmente cómodo. El
-                    capítulo 6 vuelve sobre esto.
+                    De los tres lenguajes de este curso, VBA es el único que escribe el tramo tal cual, con
+                    <span className="inline-code"> Select Case</span> y <span className="inline-code">To</span>. En una
+                    hoja de cálculo se clasifica por tramos —de monto, de antigüedad, de saldo—, y ahí
+                    esa forma resulta cómoda. El capítulo 6, dedicado a VBA, vuelve sobre esto.
                 </Box>
 
                 <Ejercicio tipo="E4"><Comparador
@@ -5754,7 +5767,7 @@ End If`,
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
+                    enunciado="Reconstruya la rutina que asigna la cuota de manejo según el tipo de cuenta, con su caso por defecto. En esta versión reducida solo hay dos casos: la cuenta de ahorros paga 8 500, la corriente 21 000 y cualquier otra 12 000. Los casos son excluyentes y al programa le da igual su orden, así que enumérelos alfabéticamente —ahorros antes que corriente— y deje el caso por defecto al final."
                     pasos={ORDENA_SEGUN}
                     pista="En R la selectiva múltiple es una única expresión que devuelve un valor: se lee como una llamada a función, con el caso por defecto al final y sin nombre."
                 />
@@ -5779,12 +5792,12 @@ End If`,
                             <strong>Y la restricción práctica:</strong> si los tramos son rangos y el equipo trabaja
                             en R, la decisión ya está tomada por el lenguaje —<span className="inline-code">switch</span> iguala,
                             no compara—. En VBA, en cambio, <span className="inline-code">Select Case … To</span> es la
-                            opción natural. Junto con la guardia de VBA de la sección 2, es de los pocos puntos del
-                            curso donde la estructura que conviene depende de en qué se va a escribir.
+                            opción natural. Junto con la guardia de VBA de la sección 2, es uno de los dos puntos de
+                            este capítulo donde la estructura que conviene depende de en qué se va a escribir.
                         </p>
                         <p>
-                            <strong>En los dos casos, el caso por defecto se escribe siempre</strong>, aunque «no pueda
-                            pasar». Los doce tramos de la escala de comisiones cubrían todos los montos posibles
+                            <strong>En los dos casos, este curso escribe siempre el caso por defecto</strong>, aunque «no pueda
+                            pasar», y lo usa para avisar, no para inventar un resultado. Los doce tramos de la escala de comisiones cubrían todos los montos posibles
                             hasta que apareció la primera devolución.
                         </p>
                     </>}

@@ -4166,3 +4166,36 @@ Rama `claude/cap04-fase5`, sobre la fase 4. Ninguna cita nueva.
 4 le quedan los mismos dos avisos. Sonda a 320: 8 de 8.
 
 **Lo que no se hizo.** VBA sin ejecutar (fase 10).
+
+### 2026-11-16 — Capítulo 4, fase 6: sección 5, Segun
+
+Rama `claude/cap04-fase6`, sobre la fase 5. Ninguna cita nueva; cambia un bloque.
+
+- **El caso por defecto de los tramos** (decisión G). `EJ_SEGUN_RANGOS` cobraba 25 000, la
+  tarifa más alta, a una devolución, a un cero y a un monto con centavos entre dos
+  tramos. Ahora el caso por defecto deja la tarifa en 0 y escribe «Monto fuera de la
+  escala: a revision», en los cuatro lenguajes. Ejecutado en Python y R con seis montos,
+  bordes incluidos.
+- **Desviación de lo aprobado.** G pedía también dejar explícito el último tramo. El
+  pseudocódigo del curso no tiene cómo escribir un tramo abierto («más de 5 000 000»),
+  así que el tramo implícito de 25 000 se quitó: la escala son tres tramos y lo demás va
+  al aviso. El comparador y el panel interactivo conservan la cascada con `Sino` de
+  25 000, que es la versión defectuosa que ese ejercicio discute.
+- Fuera lo que nadie leyó o es opinión: «lo hereda de la familia BASIC», «de las pocas
+  cosas que VBA hace mejor», «`match` exige 3.10». La definición de selectiva múltiple ya
+  no exige caso por defecto. «De los pocos puntos del curso» pasó a «uno de los dos
+  puntos de este capítulo». El ejercicio de ordenar dice que es una versión reducida.
+- Un `<Ilustrativo>` declara las cuotas, la escala y los doce tramos.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; al capítulo
+4 le quedan los mismos dos avisos. Sonda a 320: 8 de 8.
+
+**Lo que no se hizo.** Lo que la sección dice de VBA —`Case 1 To 100000`, que
+`1 <= m <= 100000` da siempre `True`, que la variable conserva su valor— sigue sin
+ejecutar (fase 10). La pregunta `segun_sin_defecto` del banco no se ha mirado contra el
+bloque nuevo (fase 10). «El capítulo 6 vuelve sobre esto» es una promesa a un capítulo
+que no existe todavía.
+
+**Hueco de las herramientas.** El pseudocódigo del curso no tiene notación para un tramo
+abierto en un `Segun`; LP-CORE lo resalta, pero ningún documento dice qué se puede
+escribir después de `Caso`. Queda anotado para el README.
