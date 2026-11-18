@@ -1040,6 +1040,37 @@
     "language": "es"
   },
   {
+    "id": "psf2026match",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "title": "8. Compound statements",
+    "container-title": "Python 3.15.2 documentation",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          17
+        ]
+      ]
+    },
+    "URL": "https://docs.python.org/3/reference/compound_stmts.html",
+    "language": "en"
+  },
+  {
     "id": "psf2026pdb",
     "type": "webpage",
     "author": [
