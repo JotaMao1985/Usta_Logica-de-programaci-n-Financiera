@@ -4201,8 +4201,10 @@ Debug.Print total`,
                     interés de mora, cualquiera sea su denominación <Cita k="congreso1990ley45" loc="art. 65" />.
                     Y, para los negocios mercantiles, la ley dice cuánto vale ese interés cuando nadie lo
                     pactó: si las partes no han estipulado el interés moratorio, equivale a una y media
-                    veces el bancario corriente, y en cuanto el cobro sobrepase ese monto el acreedor
-                    pierde todos los intereses <Cita k="presidencia1971decreto410" loc="art. 884" />.
+                    veces el interés bancario corriente, que según el mismo artículo se prueba con
+                    certificado de la Superintendencia Bancaria; y en cuanto el interés sobrepase ese monto
+                    el acreedor pierde todos los intereses, sin perjuicio de lo que dispone el artículo 72
+                    de la Ley 45 de 1990 <Cita k="presidencia1971decreto410" loc="art. 884" />.
                 </p>
 
                 <p>
@@ -5729,6 +5731,16 @@ End If`,
                 </div>
                 <Fuente propia>elaboración propia a partir del bloque de abajo, ejecutado en Python y R, y el de VBA, en Excel</Fuente>
                 <p>
+                    En el bloque de abajo, los tres primeros <span className="inline-code">case</span> de
+                    Python llevan una condición tras el <span className="inline-code">if</span>: es lo que
+                    la referencia del lenguaje llama <em>guard</em>, aquí <strong>guarda</strong>, y el
+                    caso solo se elige si esa condición resulta verdadera
+                    <Cita k="psf2026match" loc="§8.6.2" />. Con 350 000 el primer caso no se toma, porque
+                    su guarda es falsa. No es la condición
+                    guardia de la sección 1: allá un operando protege al que viene detrás; aquí la
+                    condición acompaña a un caso.
+                </p>
+                <p>
                     La sentencia <span className="inline-code">match</span> se añadió a Python en la
                     versión 3.10 <Cita k="psf2026match" loc="§8.6" />: un intérprete anterior no la tiene, y los bloques de esta sección que la usan no corren en él.
                 </p>
@@ -6031,7 +6043,11 @@ neto = pago - retencion`,
                     hace un agente retenedor a un contribuyente obligado a declarar renta, la tarifa es
                     del 4 % <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14" />; y para los pagos
                     por servicios a contribuyentes no obligados a declarar, del 6 %
-                    <Cita k="presidencia1989decreto624" loc="art. 392" />.
+                    <Cita k="presidencia1989decreto624" loc="art. 392" />. El Estatuto Tributario llama agentes de retención a quienes, por sus
+                    funciones, intervienen en actos u operaciones en los que, por expresa disposición legal,
+                    deben efectuar la retención <Cita k="presidencia1989decreto624" loc="art. 368" />; este
+                    capítulo los llama agentes retenedores, como el Decreto 1625 de 2016
+                    <Cita k="minhacienda2016decreto1625" loc="art. 1.2.4.4.14" />.
                 </p>
                 <Ilustrativo>
                     El proveedor, sus pagos y la UVT de 50 000 se inventaron para este capítulo, igual
