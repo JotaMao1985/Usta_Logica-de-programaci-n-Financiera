@@ -4411,3 +4411,32 @@ mismo día.
 **Lo que no se hizo.** Definir en el texto «agente retenedor» y «bancario corriente»;
 unificar «guarda» y «guardia». Los borradores del banco Moodle se resuelven en el vault
 y no se copian al banco.
+
+### Capítulo 4, cabos sueltos: tres términos · 2026-11-18
+
+Rama `claude/cap04-terminos`, sobre `main` (`7a98d2c`). Cierra lo que la entrada
+anterior dejó sin hacer.
+
+- **«Agente retenedor»:** la sección 6 dice que el Estatuto Tributario llama agentes de
+  retención a quienes, por sus funciones, intervienen en actos u operaciones en los que
+  la ley les ordena retener (art. 368, leído en la Secretaría del Senado), y que el
+  capítulo usa «agentes retenedores», como el Decreto 1625. El Estatuto ya estaba en
+  Zotero.
+- **«Bancario corriente»:** la sección 2 dice «interés bancario corriente» y que, según
+  el mismo artículo 884, se prueba con certificado de la Superintendencia Bancaria. El
+  capítulo no dice cómo se llama hoy esa entidad: el pasaje no lo permite.
+- **«Guarda» y «guardia»:** no se unifican, porque nombran cosas distintas. La sección 5
+  dice que la guarda de `match` es lo que la referencia de Python llama *guard* (§8.6.2,
+  con cita) y que no es la condición guardia de la sección 1.
+- **Verificador independiente:** las tres primeras redacciones salieron parciales y se
+  adoptó la suya; la de la guarda, ya con cita, respalda.
+- **Excel, el mismo día:** `AndAlso` no compila («Compile error: Syntax error»), y la
+  división entre `Currency` da el error 11, o el 6 si es 0 entre 0.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+4, «OK», con 15 citas registradas. Sonda a 320: 8 de 8.
+
+**Hueco de las herramientas.** `verificar_cloze.R` del banco valida cada sorteo con
+bandas de longitud fijas, calibradas sobre la redacción anterior de las opciones: al
+cambiar una opción hay que volver a medirlas (pasó con `segun_sin_defecto` y con
+`variable_o_constante`). Nada lo avisa antes de copiar.
