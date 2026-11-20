@@ -3673,17 +3673,17 @@ FinMientras`;
         const SimbologiaFlujograma = () => {
             const ID = 'lp-flecha5-SimbologiaFlujograma';
             const FILAS = [
-                ['Inicio y fin', 'Uno de cada uno, y el recorrido va del primero al segundo.',
+                ['Inicio y fin', 'En este curso, uno de cada uno; el recorrido va del primero al segundo.',
                     <ellipse cx="38" cy="16" rx="34" ry="13" fill="#3D008D" />],
                 ['Entrada y salida', 'Leer un dato o escribir un resultado.',
                     <polygon points="14,3 72,3 62,29 4,29" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.4" />],
                 ['Proceso', 'Calcular o asignar: la variable cambia de valor.',
                     <rect x="6" y="3" width="64" height="26" rx="5" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
-                ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.',
+                ['Decisión', 'Una condición; en este curso, con dos salidas rotuladas: Sí y No.',
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd={punta(ID)} />],
-                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo.',
+                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo, y la añade el curso: va de otro color para que se distinga.',
                     <g>
                         <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
                     </g>],
@@ -3691,7 +3691,7 @@ FinMientras`;
             return (
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-                        La simbología de los flujogramas
+                        Los símbolos que usan los flujogramas de este curso
                     </figcaption>
                     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{flechaDefs(ID)}</svg>
                     <ul className="space-y-2.5" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
@@ -4655,6 +4655,10 @@ End Sub`,
                     correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
                     cuando solo se debían 350 000. El saldo final quedó en −50 000.
                 </Motivacion>
+                <Ilustrativo>
+                    El área de cobranza, el cliente y el acuerdo son un caso inventado para esta sección.
+                    Los seis meses y el saldo final de −50 000 salen del programa de más abajo, ejecutado.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -4691,8 +4695,8 @@ End Sub`,
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Mientras c Hacer … FinMientras</span></td><td>El cuerpo es lo que queda entre las dos palabras</td></tr>
                             <tr><td>Python</td><td><span className="inline-code">while c:</span></td><td>El cuerpo es lo que está sangrado debajo; no hay palabra de cierre</td></tr>
-                            <tr><td>R</td><td><span className="inline-code">while (c) {'{ … }'}</span></td><td>La condición va entre paréntesis y el cuerpo entre llaves</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Do While c … Loop</span></td><td>Existe también <span className="inline-code">While … Wend</span>, más antigua. Se usa <span className="inline-code">Do</span> porque admite las variantes de la sección 3</td></tr>
+                            <tr><td>R</td><td><span className="inline-code">while (c) {'{ … }'}</span></td><td>La condición va entre paréntesis y el cuerpo, en este curso, siempre entre llaves</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do While c … Loop</span></td><td>Existe también <span className="inline-code">While … Wend</span>, que solo pregunta antes de cada vuelta <Cita k="microsoft2026vbal" loc="§5.4.2.2" />. El curso usa <span className="inline-code">Do</span> porque admite la condición al principio o al final, con <span className="inline-code">While</span> o con <span className="inline-code">Until</span> <Cita k="microsoft2026vbal" loc="§5.4.2.6" />; las que preguntan al final son las de la sección 3</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -4704,9 +4708,9 @@ End Sub`,
                     comprueba que tengan sentido:
                 </p>
                 <ol>
-                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque <span className="inline-code">Dim</span> ya la deja en 0, y el ciclo arranca con un valor que nadie eligió.</li>
+                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque una variable numérica declarada con <span className="inline-code">Dim</span> se inicializa en 0 <Cita k="microsoft2019dim" loc="Comentarios" />, y el ciclo arranca con un valor que nadie eligió.</li>
                     <li><strong>La condición</strong>, que se evalúa antes de cada vuelta.</li>
-                    <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
+                    <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa, que es lo que detiene a un <span className="inline-code">Mientras</span>. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
                 </ol>
                 <p>
                     Si falta la tercera, la condición nunca cambia y, si era verdadera al entrar, el ciclo
@@ -4734,7 +4738,7 @@ End Sub`,
                         { clave: 'cond', titulo: 'saldo > 0', efimera: true },
                     ]}
                     pasos={TZ_ACUERDO_PASOS}
-                    nota="Catorce instrucciones ejecutadas: las cuatro de fuera del ciclo, una vez cada una; las dos del cuerpo, tres veces cada una; y la del Mientras, cuatro." />
+                    nota="Catorce instrucciones ejecutadas: las cuatro de fuera del ciclo, una vez cada una; las dos del cuerpo, tres veces cada una; y la del Mientras, cuatro. La traza no se detiene en la línea de cierre —FinMientras, la llave de R, Loop en VBA—: muestra de una vez el regreso a la condición." />
 
                 <TablaTraza
                     titulo="Una fila por cada vez que se pregunta"
@@ -8196,10 +8200,12 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "2e44418e08f170f4ea7e0d33f9d361ba4106121a59462fa217f300ca0d29594c",
-  "sello": "5d545837eaa4e7d271ba5cf58a30c202bf099156563ca261397a0598108596c7",
+  "huella": "0301d1eeb7fb4d58b2ecb4d4697a89a4436c9124563e4cbe2be7443c2885cf37",
+  "sello": "4b0c4a2092d8ae8199ad8a10dfe2495cd30057344a16eb75ca915e24c6d50ef9",
   "orden": [
-    "congreso2000ley599"
+    "congreso2000ley599",
+    "microsoft2019dim",
+    "microsoft2026vbal"
   ],
   "entradas": {
     "congreso2000ley599": {
@@ -8207,6 +8213,18 @@ End Sub`,
       "anio": "2000",
       "html": "Congreso de Colombia. (2000). \u003cem>Ley 599 de 2000, por la cual se expide el Código Penal\u003c/em>. Diario Oficial 44.097. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\u003c/a>",
       "plano": "Congreso de Colombia. (2000). Ley 599 de 2000, por la cual se expide el Código Penal. Diario Oficial 44.097. http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html"
+    },
+    "microsoft2019dim": {
+      "autor": "Microsoft",
+      "anio": "2019",
+      "html": "Microsoft. (2019, mayo 24). \u003cem>Instrucción Dim\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\u003c/a>",
+      "plano": "Microsoft. (2019, mayo 24). Instrucción Dim. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement"
+    },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026",
+      "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
     }
   },
   "profundizar": {

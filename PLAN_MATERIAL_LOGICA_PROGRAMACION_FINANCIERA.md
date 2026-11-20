@@ -4481,3 +4481,26 @@ Plan: `PLAN_TAREA15_CAPITULO_05_CONTENIDO.md`, doce fases, aprobado por el docen
 - Cuando una corrección cambia el texto de una afirmación que no es `citada`, el ancla de
   su nota del vault se pierde y nada lo avisa: en esta fase se perdieron cinco y se
   repusieron a mano.
+
+### Tarea 15 · Capítulo 5, fase 3: sección 2, Mientras · 2026-11-20
+
+Rama `claude/cap05-fase3`, sobre la de la fase 2.
+
+- El caso del acuerdo de pago lleva su `<Ilustrativo>`.
+- **`While … Wend`:** salió «más antigua», que ninguna fuente leída dice. La fila de VBA
+  dice ahora que `While … Wend` solo pregunta antes de cada vuelta y que `Do` admite la
+  condición al principio o al final, con `While` o con `Until`, con cita a la
+  especificación del lenguaje (§5.4.2.2 y §5.4.2.6), que ya estaba en Zotero.
+- **`Dim`:** «una variable numérica declarada con Dim se inicializa en 0», con cita a la
+  página de la instrucción. Todas las declaraciones del capítulo llevan su tipo: ninguna
+  es una `Variant`, que se inicializaría en `Empty`.
+- **Simbología del flujograma:** dice «en este curso» donde la del capítulo 4, declara
+  el retorno como añadido del curso y cambia de título.
+- Las llaves de R se dicen como forma del curso; la actualización, como lo que detiene a
+  un Mientras; y la nota de la traza avisa de que no se detiene en la línea de cierre.
+- Verificador independiente: las tres citas respaldan; se adoptaron dos ajustes suyos de
+  redacción.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con cuatro citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
