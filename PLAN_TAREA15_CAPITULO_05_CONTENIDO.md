@@ -1,7 +1,7 @@
 # Plan · Tarea 15 — Mejora de contenido del capítulo 5
 
-**Fecha:** 2026-11-19. **Estado:** propuesto; espera la aprobación del docente y sus
-decisiones A–H (§3). No se ha tocado el capítulo.
+**Fecha:** 2026-11-19. **Estado:** aprobado por el docente el 2026-11-19 con la opción
+recomendada en las ocho decisiones (§3).
 
 **Archivo:** `Material html/05_LPF_Control_Repetitivo.html` (8 182 líneas en `main`,
 commit `f674118`; el contenido del capítulo va de la 2 739 a la 7 968). Todos los números
