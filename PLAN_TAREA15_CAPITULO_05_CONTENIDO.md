@@ -145,6 +145,70 @@ en el navegador, cuya aritmética sí se comprobó aparte.
 | G | **Prueba en el teléfono y publicación** | (1) Una sola fusión al cerrar el capítulo; antes de subir, dejo el servidor local encendido y usted lo recorre en el iPhone. (2) Una sola fusión y solo la sonda. | (1). |
 | H | **El orden de las fases** | (1) Sección por sección, de la 1 a la 7, doce fases. (2) Se juntan las secciones cortas (2 con 3, y 5 con 7) y quedan diez fases. | (1). El capítulo es el más largo; fases pequeñas se revisan mejor. |
 
+### 3.1 Lo que cambió al leer las fuentes (fase 1)
+
+- **A · La usura.** El artículo 305 del Código Penal (Ley 599 de 2000) define el delito
+  de usura como recibir o cobrar, por un préstamo de dinero, una utilidad «que exceda en
+  la mitad del interés bancario corriente que para el período correspondiente estén
+  cobrando los bancos, según certificación de la Superintendencia Bancaria»; su inciso
+  tercero dice «Superintendencia Financiera o quien haga sus veces». No habla de «tasa
+  de usura» ni de «tope legal»: lo que la Superintendencia certifica es el interés
+  bancario corriente. El recuadro se reescribe con eso (fase 2).
+- **D · VBA.** Leídas en Microsoft Learn las páginas de `For...Next`, `Dim`, `Integer` y
+  Desbordamiento (error 6). Respaldan cómo avanza el contador, el 0 de `Dim`, el rango
+  hasta 32 767 y el error 6. La de `For...Next` no desaconseja cambiar el contador: trae
+  una sugerencia de que hacerlo «podría hacer el código más difícil de leer y depurar».
+  `Currency` ya estaba leída y en Zotero. La página de `While...Wend` no dice que sea
+  «más antigua»: esa frase (`:4682`) queda sin respaldo y se quita o se dice como
+  criterio.
+- **Tanda 08** preparada en el vault: la Ley 599 de 2000 y las cuatro páginas de
+  Microsoft. **La importación a Zotero espera la aprobación del docente.**
+- **E · La cuota 37 en Excel:** pendiente. El módulo con los once bloques del capítulo
+  está armado; pegarlo en el editor pide un permiso de pantalla que no se concedió en la
+  sesión.
+
+### 3.2 Lo que añadió el inventario (fase 1)
+
+243 afirmaciones, 49 figuras, 63 conceptos y 43 hilos en el vault. Por clase: 63
+derivadas, 50 ejecutadas, 43 remisiones, 42 de criterio, 33 citadas y 12 ilustrativas.
+174 solo necesitan su respaldo o su registro y 69 piden reescribirse: las 33 citadas
+(ninguna tiene fuente leída todavía), las 12 ilustrativas, 10 salidas de VBA sin
+ejecutar, 8 de criterio, 4 remisiones y 2 derivadas.
+
+Treinta defectos que la línea base no traía, cada uno a la fase de su sección; la lista
+completa está en la nota del capítulo en el vault. Los que más pesan:
+
+- **N1 (fases 2 y 9).** El acumulador tiene dos definiciones que se excluyen: «sumándole
+  —o restándole—» (`:4311`, glosario `:7760`) y, en la misma entrada, «en 1 si
+  multiplica»; la capitalización se llama «acumulador de producto» (`:7762`).
+- **N2 (fase 7).** El detector de error de la sección 6 da una sola lista de
+  consecuencias para los cuatro lenguajes: la correcta, «No se detiene» (`:6918`),
+  contradice en la pestaña de VBA su propia explicación, que dice que VBA se detiene con
+  el error 6 (`:6696`).
+- **N3 (fases 7 y 9).** «Un Para termina siempre» (`:6891`, `:7080`, `:7910`) omite que
+  en VBA un `For` con `Step 0` no termina; la página de `For...Next` leída lo confirma.
+- **N4 (fase 7).** El reto dice que con `Currency` el saldo «llega a cero de verdad»
+  (`:6998`), y la sección 4 dice que con `Currency` el plan cierra en −0,0005 (`:5229`).
+- **N5 (fase 3).** La simbología del flujograma (`:3676-3694`) se quedó en la versión
+  anterior: no recibió el «en este curso» que el capítulo 4 añadió a la suya.
+- **N6 (fase 4).** La cuota de 916 799,93 aparece en la motivación de la sección 3
+  (`:4943`) antes de que el capítulo presente el crédito del que sale (sección 4).
+- **N7 (fase 2).** Una pregunta dice «¿qué muestra el programa?» y da «1 500 000»;
+  Python imprime `1500000.0` y R, siete cifras significativas. La clave no cambia.
+- **N8 (fase 9).** La pregunta 3 del cuestionario pone entre comillas un mensaje de R
+  que R no escribe así.
+- **N9 (fase 8).** «Ninguna fórmula despeja la TIR» (`:7597`, `:7775`) se dice sin
+  acotar: con dos períodos la ecuación es cuadrática.
+
+**Hueco de las herramientas.** La regla 30 solo mira `<table>`, `<figure>` y
+`ChartFrame`: no ve el comparador de los tres ciclos ni las tablas que dibujan
+`TablaTraza` y `Trazador`. El inventario cuenta 49 figuras y el verificador avisa de 23.
+Se decide en la fase 10 si la regla se amplía, con su prueba negativa.
+
+**Corrección a las fases.** El recuadro de las tasas con la usura (`:4331-4337`), el
+extracto de 34 053 y la pista de «dos líneas» están en la sección 1, no en la 2: pasan
+de la fase 3 a la fase 2.
+
 ## 4. Fases
 
 Cada fase va en su rama, una sobre otra, y termina en un punto de control: informe,
@@ -163,15 +227,17 @@ posterior; si sale «parcial», se adopta su redacción.
   dicen las normas sobre la usura y su certificación; y qué da Excel con la cuota 37.
 
 ### Fase 2 — Sección 1, Contar y acumular
-La definición de contador frente al acumulador; el caso de la pareja según C; lo que el
-syllabus dice de la sección, ya cotejado.
+La definición de contador frente al acumulador, y las dos del acumulador (N1); el extracto
+de 34 053 según C; el recuadro de tasas completo y la usura según A; la pista de «dos
+líneas»; la pregunta de «qué muestra el programa» (N7).
 
 ### Fase 3 — Sección 2, Mientras
-El extracto de 34 053 según C; el recuadro de tasas completo y la usura según A; la
-pista de «dos líneas»; `Dim` y `While…Wend` según D.
+El caso de cobranza según C; `Dim` y `While…Wend` según D; la simbología del flujograma
+(N5); la definición de actualización, que solo vale para el Mientras.
 
 ### Fase 4 — Sección 3, Repita…Hasta
-El caso de cobranza según C; lo que es de un solo lenguaje.
+Las dos rutinas del mismo banco según C; la cuota que aparece antes que su crédito (N6);
+lo que es de un solo lenguaje.
 
 ### Fase 5 — Sección 4, Para
 El recuadro del banco según B; `range(1, n)` y su salvedad; la remisión rota al capítulo 1
