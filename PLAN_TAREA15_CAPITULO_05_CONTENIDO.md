@@ -163,9 +163,14 @@ en el navegador, cuya aritmética sí se comprobó aparte.
   criterio.
 - **Tanda 08** preparada en el vault: la Ley 599 de 2000 y las cuatro páginas de
   Microsoft. **La importación a Zotero espera la aprobación del docente.**
-- **E · La cuota 37 en Excel:** pendiente. El módulo con los once bloques del capítulo
-  está armado; pegarlo en el editor pide un permiso de pantalla que no se concedió en la
-  sesión.
+- **E · La cuota 37 en Excel: da 37.** Ejecutados el 2026-11-19 en Excel para Mac los
+  once bloques de VBA del capítulo con salida declarada: los once coinciden (siete, salvo
+  la coma decimal que pone la región del equipo). `EJ_CUOTA_37` escribe «Saldo tras la
+  cuota 36: 0,0000000200», «Cuotas cobradas: 37» y «Saldo final: -759676,64»: lo mismo
+  que los otros tres lenguajes, así que la sección 6 no cambia de fondo. Quedan por
+  quitar los comentarios que dicen que no se ejecutó (fases 5, 7 y 8) y por ejecutar lo
+  que no declara salida: `Dim`, el error 6 de `Integer` y el `−0,0005` de `Currency`
+  (fase 11).
 
 ### 3.2 Lo que añadió el inventario (fase 1)
 
