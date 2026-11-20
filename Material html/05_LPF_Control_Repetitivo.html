@@ -4254,6 +4254,11 @@ End Sub`,
                     tres renglones más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
                     a empezar.
                 </Motivacion>
+                <Ilustrativo>
+                    La clienta, su plan de ahorro y el extracto son un caso inventado para esta sección.
+                    Las cifras sí salen del programa de más abajo, ejecutado: trece meses, 217 709 pesos
+                    de intereses y los 34 053 que informa cuando la línea queda dentro del ciclo.
+                </Ilustrativo>
 
                 <h3>Usted ya trazó ciclos</h3>
                 <p>
@@ -4302,21 +4307,23 @@ End Sub`,
                 </p>
                 <ul>
                     <li>
-                        Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada vez, su valor nuevo es el anterior más una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
-                        {' '}<strong>cuántas veces</strong> pasa algo: cada vez, su valor nuevo es el anterior más
-                        una cantidad fija, casi siempre 1.
+                        Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada ocurrencia le suma una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
+                        {' '}<strong>cuántas veces</strong> pasa algo: cada ocurrencia le suma una cantidad
+                        fija, casi siempre 1.
                     </li>
                     <li>
-                        Un <Termino def="Variable que lleva un total calculado a partir del que ya tenía: un saldo, un total de intereses, un recaudo. Puede subir o bajar, en cantidades iguales o distintas. Responde a la pregunta «¿cuánto?».">acumulador</Termino> lleva
+                        Un <Termino def="Variable que lleva un total calculado a partir del que ya tenía: un saldo, un total de intereses, un recaudo, un factor. Puede subir o bajar, sumando, restando o multiplicando, en cantidades iguales o distintas. Responde a la pregunta «¿cuánto?».">acumulador</Termino> lleva
                         un <strong>total</strong>: su valor nuevo se calcula a partir del que ya tenía,
-                        sumándole —o restándole— lo que trae cada vuelta. Responde <em>cuánto</em>.
+                        sumándole, restándole o multiplicándolo por lo que trae cada vuelta. Responde
+                        <em>cuánto</em>.
                     </li>
                 </ul>
                 <p>
                     Lo que los distingue no es si la cantidad cambia de una vuelta a otra, sino la
                     pregunta a la que responden. Un acumulador puede sumar siempre lo mismo —una cuota
-                    fija, por ejemplo— y sigue siendo un acumulador: no cuenta veces, suma pesos. Y puede
-                    bajar, como el saldo de un crédito.
+                    fija, por ejemplo— y sigue siendo un acumulador: no cuenta veces, suma pesos. Puede
+                    bajar, como el saldo de un crédito, y puede crecer multiplicando, como el factor de la
+                    tabla de más abajo.
                 </p>
                 <p>
                     El ejemplo es pariente de la meta de ahorro del capítulo 1, ahora con un aporte cada
@@ -4329,12 +4336,18 @@ End Sub`,
                     nota="La forma del ciclo es la de la sección 2; aquí interesa lo que pasa dentro. meses suma siempre 1; intereses y saldo suman cada vez una cifra distinta, porque el interés de cada mes depende del saldo que dejó el anterior." />
 
                 <Box type="info" label="Las tasas de este capítulo">
-                    El 0,9 % mensual de este ahorro y el 2 % mensual de los créditos de las secciones 4
-                    y 5 son <strong>ilustrativos</strong>: se eligieron para que las cuentas se puedan
-                    seguir, no para describir un producto real. Llevados a un año, son el 11,35 % y el
-                    26,82 % efectivo anual: (1,009)<sup>12</sup> − 1 y (1,02)<sup>12</sup> − 1. En
-                    Colombia, la Superintendencia Financiera certifica la tasa de usura, el tope legal
-                    del interés de un crédito, y una tasa real se compara con la que esté vigente.
+                    Todas las tasas de este capítulo son <strong>ilustrativas</strong>: se eligieron para que
+                    las cuentas se puedan seguir, no para describir un producto real. Son mensuales, y
+                    llevadas a un año —(1 + tasa)<sup>12</sup> − 1— dan esto: el 0,9 % de este ahorro, 11,35 %
+                    efectivo anual; el 1,1 % del crédito de vivienda, 14,03 %; el 1,2 % del cuestionario
+                    final, 15,39 %; el 1,45 % del crédito de vehículo, 18,86 %; el 1,5 % del crédito de
+                    libre inversión de las secciones 3 a 7, 19,56 %; el 1,8 % del crédito de la sección 6,
+                    23,87 %; y el 2 % de los ejemplos de las secciones 4 y 5, 26,82 %. Ninguna se comparó
+                    con un límite legal. En Colombia, recibir o cobrar por un préstamo de dinero una
+                    utilidad o ventaja que exceda en la mitad el interés bancario corriente del período,
+                    según certificación de la Superintendencia, es el delito de usura
+                    <Cita k="congreso2000ley599" loc="art. 305" />: para saber si una tasa real llega a ese
+                    punto, se compara con ese interés aumentado en la mitad, no con estas cifras.
                 </Box>
 
                 <p>
@@ -4384,7 +4397,7 @@ End Sub`,
                         { clave: 'intereses', titulo: 'intereses' },
                     ]}
                     pasos={TZ_AHORRO_MAL_PASOS}
-                    nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar." />
+                    nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar. La pestaña de VBA trae solo estas líneas, sin su Sub ni sus Dim: así como está no corre en el editor." />
 
                 <Box type="warn" label="Un número plausible y falso">
                     El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
@@ -4407,10 +4420,10 @@ End Sub`,
                 <CodeTabs
                     titulo="Cuántos créditos están en mora, y por cuánto"
                     bloques={EJ_CARTERA_MORA}
-                    nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo." />
+                    nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo. El corte de 30 días es una convención de este ejemplo, no una definición legal de mora." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Qué muestra el programa al terminar?"
+                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Cuántos créditos en mora y qué saldo en mora informa el programa al terminar? (Cada lenguaje escribe la cifra a su manera: aquí va con separador de miles.)"
                     opciones={[
                         { texto: '3 créditos en mora por 1 500 000', correcta: false },
                         { texto: '2 créditos en mora por 500 000', correcta: false },
@@ -4431,7 +4444,7 @@ End Sub`,
                     enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Lo que va antes del ciclo —la lectura de la cantidad de pagos y las dos inicializaciones— no depende una cosa de otra: ahí vale cualquier orden. Dentro del ciclo siga una convención que no cambia el resultado: la vuelta se cuenta al final del cuerpo."
                     pasos={ORDENA_RECAUDO}
                     libres={LIBRES_RECAUDO}
-                    pista="Hay dos líneas que no pueden quedar dentro del ciclo: una deja en el total solo el último pago, y la otra impide que el ciclo termine. Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago."
+                    pista="Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago. Cuatro no pueden quedar dentro del ciclo: allí, una dejaría en el total solo el último pago; otra impediría que el ciclo termine en cuanto haya dos pagos; otra volvería a preguntar cuántos pagos llegaron, y otra escribiría un total en cada vuelta."
                 />
             </div>
         );
@@ -7945,6 +7958,8 @@ End Sub`,
                     una variable que nadie inicializó, y por qué el dinero se guarda en <span className="inline-code">Currency</span> y
                     no en <span className="inline-code">Double</span>.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -8177,6 +8192,30 @@ End Sub`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "2e44418e08f170f4ea7e0d33f9d361ba4106121a59462fa217f300ca0d29594c",
+  "sello": "5d545837eaa4e7d271ba5cf58a30c202bf099156563ca261397a0598108596c7",
+  "orden": [
+    "congreso2000ley599"
+  ],
+  "entradas": {
+    "congreso2000ley599": {
+      "autor": "Congreso de Colombia",
+      "anio": "2000",
+      "html": "Congreso de Colombia. (2000). \u003cem>Ley 599 de 2000, por la cual se expide el Código Penal\u003c/em>. Diario Oficial 44.097. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\u003c/a>",
+      "plano": "Congreso de Colombia. (2000). Ley 599 de 2000, por la cual se expide el Código Penal. Diario Oficial 44.097. http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

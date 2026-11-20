@@ -1,0 +1,14 @@
+# Registro público de las afirmaciones citadas del capítulo 05.
+# Lo genera registrar_afirmaciones.py desde las notas del vault: no se edita a mano.
+# No lleva el extracto de la fuente, solo su sha256.
+- id: "c05-s1-a18"
+  seccion: "1. Contar y acumular"
+  ancla: "es el delito de usura"
+  clave: "congreso2000ley599"
+  loc: "art. 305"
+  tema: "norma"
+  leido:
+    fecha: "2026-11-19"
+    medio: "acceso-abierto"
+    por: "Claude (sesión maestra)"
+  extracto_sha256: "05d7108b4ae589f24437dca061da8115132a0dcbd0731ae8ac9e7d6acd20e3b7"

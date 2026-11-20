@@ -4440,3 +4440,44 @@ anterior dejó sin hacer.
 bandas de longitud fijas, calibradas sobre la redacción anterior de las opciones: al
 cambiar una opción hay que volver a medirlas (pasó con `segun_sin_defecto` y con
 `variable_o_constante`). Nada lo avisa antes de copiar.
+
+### Tarea 15 · Capítulo 5, mejora de contenido: fases 1 y 2 · 2026-11-19 y 2026-11-20
+
+Plan: `PLAN_TAREA15_CAPITULO_05_CONTENIDO.md`, doce fases, aprobado por el docente el
+2026-11-19 con la opción recomendada en las ocho decisiones.
+
+**Fase 1, línea base y fuentes** (rama `claude/cap05-fase1`).
+- Lectura crítica independiente: ningún alto, 7 medios y 9 bajos.
+- Inventario en el vault: 243 afirmaciones, 49 figuras, 63 conceptos y 43 hilos; 69
+  afirmaciones piden reescribirse. Treinta defectos que la lectura crítica no traía.
+- Leídos el artículo 305 del Código Penal y cuatro páginas de Microsoft Learn
+  (`For...Next`, `Dim`, `Integer`, el error 6). Tanda 08 importada a Zotero con la
+  aprobación del docente: 53 referencias.
+- Excel: los once bloques de VBA con salida declarada coinciden; la cuota 37 da 37.
+
+**Fase 2, sección 1** (rama `claude/cap05-fase2`).
+- El caso de la clienta lleva su `<Ilustrativo>`.
+- El contador se define por la ocurrencia, y el acumulador incluye el de producto, que la
+  tabla de la misma sección ya traía.
+- El recuadro de tasas declara ilustrativas las siete del capítulo, con sus equivalentes
+  anuales, y la frase de la usura dice lo que dice el artículo 305, con cita. El
+  verificador independiente la dio por parcial («una tasa real se mira contra ese
+  interés» quitaba el umbral de la mitad) y se adoptó su redacción.
+- El corte de 30 días de mora se declara convención del ejemplo; la pregunta ya no dice
+  «qué muestra el programa», porque cada lenguaje escribe la cifra a su manera; la pista
+  del ejercicio de ordenar nombra las cuatro líneas que van fuera del ciclo.
+- El capítulo estrena `<Referencias />` y `afirmaciones/05.yaml`, con una cita.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5 queda con un solo aviso, las 23 figuras sin fuente (fase 10). Sonda a 320: 9 de 9.
+
+**Huecos de las herramientas.**
+- La regla 30 no ve el comparador de los tres ciclos ni las tablas de `TablaTraza` y
+  `Trazador`: el inventario cuenta 49 figuras y el verificador, 23. Se decide en la fase
+  10.
+- Zotero rechaza una segunda importación por el conector con `SESSION_EXISTS` y no
+  importa nada: hay que pasar `?session=` propio. El primer intento falló en silencio
+  hasta que se exportó la colección y faltaban cuatro claves.
+- Cuando una corrección cambia el texto de una afirmación que no es `citada`, el ancla de
+  su nota del vault se pierde y nada lo avisa: en esta fase se perdieron cinco y se
+  repusieron a mano.
