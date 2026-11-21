@@ -6516,9 +6516,8 @@ End Sub`,
            plan). El saldo se escribe solo cuando k vale n, para no imprimir 37
            filas. Salidas de Python y R ejecutadas el 2026-10-20; JavaScript da
            el mismo residuo, porque los tres hacen las mismas operaciones en el
-           mismo orden. La de VBA no se ejecutó (R10): que Excel dé 37 depende
-           de que su potencia redondee el último bit como las otras tres, y eso
-           no está cotejado. */
+           mismo orden. La de VBA se ejecutó en Excel el 2026-11-19 con
+           ejecutar_vba.py: da 37 cuotas y el mismo residuo. */
         const EJ_CUOTA_37 = {
             pseudo: `Inicio
     // 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
@@ -6632,16 +6631,18 @@ End Sub`,
         };
 
         /* E3, la segunda pregunta del capítulo: el plan de pagos de la
-           sección 4, ahora con `saldo <> 0`. En la aritmética del contrato,
-           doce cuotas dejan el saldo en cero; en la de la máquina, en
+           sección 4, ahora con `saldo <> 0`. Con fracciones exactas
+           (fractions.Fraction, 2026-11-21), doce cuotas dejan el saldo en cero,
+           y las 36 del plan de 20 000 000 también; en la máquina, en
            −7,5 × 10⁻⁸. La vuelta 13 lo deja en −916 799,93, la 14 en
            −1 847 351,86, y de ahí solo baja: la condición no vuelve a ser
            falsa (ejecutado el 2026-10-20 en Python y R). Con la cuota
            redondeada al peso tampoco para: tras doce cuotas de 916 800 el
            saldo es −0,93. En VBA, k es Integer, que no pasa de 32 767: al
            empezar la vuelta 32 768, k + 1 no cabe y el programa se detiene
-           con el error 6. Eso sale de la referencia del lenguaje, no de una
-           ejecución (R10). La línea cambia con el lenguaje, y con ella la
+           con el error 6. Eso sale de las páginas de Integer y del error 6 y del
+           código (los Double no se desbordan antes: 1,015^32767 es del orden
+           de 10^212), no de una ejecución (R10). La línea cambia con el lenguaje, y con ella la
            explicación (trampa 4 de la skill). */
         const ERROR_IGUALDAD_LINEAS = {
             pseudo: [
@@ -6723,8 +6724,8 @@ End Sub`,
 
         const explicacionIgualdad = (l, cond, comp, alFinal) => (
             <>
-                La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. En la aritmética del
-                contrato, la cuota está calculada para que doce cuotas dejen el saldo exactamente en cero. En la de
+                La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. Con fracciones
+                exactas, doce cuotas de esa fórmula dejan el saldo exactamente en cero. En la aritmética de
                 la máquina lo dejan en −7,5 × 10⁻⁸, el mismo residuo de la última fila de la sección 4. Ese número no es
                 cero, así que la condición sigue verdadera y el ciclo da la vuelta 13: cobra otra cuota, y el saldo
                 queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
@@ -6733,7 +6734,7 @@ End Sub`,
                 13. Redondear la cuota al peso tampoco lo arregla: con 916 800, el saldo tras doce cuotas es −0,93,
                 que tampoco es cero. Y que el saldo baje en el abono y no en la cuota completa no es un defecto: el
                 interés paga el uso del dinero durante el mes, y lo que reduce la deuda es solo el abono. El capítulo
-                1 lo dejó como regla: nunca comparar dinero con igualdad exacta. El arreglo es no preguntar por el
+                1 lo dejó como regla: nunca comparar con igualdad exacta dinero guardado en flotantes. El arreglo es no preguntar por el
                 saldo: un <span className="inline-code">Para</span> de 1 a n da las doce vueltas del contrato. Preguntar
                 {' '}<span className="inline-code">saldo &gt; 0</span> haría que este plan parara en la cuota 12, pero
                 por suerte, y lo que sigue muestra por qué. {alFinal}
@@ -6747,7 +6748,14 @@ End Sub`,
             r: explicacionIgualdad(9, 'while (saldo != 0) {', 'saldo != 0',
                 'En R, el programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe con Esc o Ctrl+C.'),
             vba: explicacionIgualdad(13, 'Do While saldo <> 0', 'saldo <> 0',
-                'En VBA el programa sí acaba por detenerse, pero no por su condición: k está declarado As Integer, que no pasa de 32 767, y al empezar la vuelta 32 768 VBA se detiene con el error 6, «Desbordamiento». Para entonces ya escribió 32 755 cuotas que no existen.'),
+                <>En VBA el programa sí acabaría por detenerse, pero no por su condición. k está
+                declarado <span className="inline-code">As Integer</span>, que guarda enteros
+                hasta 32 767 <Cita k="microsoft2018integer" loc="párrafo inicial" />, y cuando el resultado de una
+                asignación o de un cálculo no cabe en el rango del tipo de la variable, VBA produce el error 6,
+                «Desbordamiento» <Cita k="microsoft2017desbordamiento" loc="párrafo inicial y primera causa" />. Le
+                tocaría a <span className="inline-code">k = k + 1</span> al empezar la vuelta 32 768, después de
+                32 755 vueltas que no están en el contrato. Es una deducción de esas dos páginas y del código:
+                el programa no se ejecutó hasta ahí.</>),
         };
 
         /* E2: el centinela procesado como un dato. El cierre de caja con
@@ -6890,6 +6898,13 @@ End Sub`,
                     mayor que cero.
                 </Motivacion>
 
+                <Ilustrativo>
+                    El cliente, la factura y el programa de planes de pago son un caso inventado para esta
+                    sección. Las cifras sí salen del programa de más abajo, ejecutado: la cuota de
+                    759 676,64 —sin redondear, como todas las de este capítulo—, el saldo de 0,00000002 tras
+                    la cuota 36 y las 37 vueltas.
+                </Ilustrativo>
+
                 <h3>Lo que el capítulo 2 llamó finitud</h3>
                 <p>
                     En su sección 1, el capítulo 2 puso la <strong>finitud</strong> entre las propiedades de un
@@ -6941,17 +6956,22 @@ End Sub`,
                     Un <span className="inline-code">Para</span> responde por su cuenta las tres preguntas: el
                     contador cambia en cada vuelta, siempre hacia el tope, y el ciclo sale cuando lo pasa, no
                     cuando lo iguala, así que no hay un punto que saltar. El <span className="inline-code">for</span> de
-                    Python y de R ni siquiera compara: recorre una secuencia ya hecha, y termina cuando la secuencia
-                    se acaba. Por eso un <span className="inline-code">Para</span> termina siempre, con las vueltas
-                    que dice su primera línea. Con la salvedad de la sección 4: en VBA, si el cuerpo toca el
-                    contador, la garantía se pierde.
+                    Python y de R recorre una secuencia, como vio la sección 4, y termina cuando la secuencia
+                    se acaba. Por eso los <span className="inline-code">Para</span> de este capítulo, que avanzan
+                    de uno en uno, terminan con las vueltas que dice su primera línea. Con dos salvedades, las
+                    dos de VBA. Una es la de la sección 4: si el cuerpo toca el contador, la garantía se pierde.
+                    La otra es el paso: con un paso positivo o de 0, el <span className="inline-code">For</span> repite
+                    mientras el contador no pase del tope <Cita k="microsoft2018fornext" loc="Comentarios" />, y
+                    con <span className="inline-code">Step 0</span> el contador no avanza: si nada más lo cambia
+                    ni saca del ciclo, no termina.
                 </p>
 
                 <h3>El cero que no llega</h3>
                 <p>
                     En el acuerdo de pago, el saldo se saltaba el cero porque los abonos no lo alcanzaban exacto. En
-                    un plan de pagos, la cuota está calculada para que el saldo llegue a cero justo en la última
-                    cuota: eso es lo que dice la fórmula. ¿Basta con eso para que un ciclo pueda esperar a que el
+                    un plan de pagos de cuota fija pasa lo contrario: con la cuota de la fórmula, y haciendo la
+                    cuenta con fracciones exactas, la última cuota deja el saldo en cero. Se comprobó para este
+                    capítulo con el plan de la sección 4 y con el de la motivación. ¿Basta con eso para que un ciclo pueda esperar a que el
                     saldo llegue a cero?
                 </p>
 
@@ -6969,7 +6989,7 @@ End Sub`,
                     tipoCorrecto={2}
                     consecuencias={[
                         'Cobra una cuota 13 de 916 799,93 y ahí se detiene, con el saldo exacto en cero.',
-                        'No se detiene: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸, y de ahí solo baja.',
+                        'No se detiene en la cuota 12, ni después por su condición: el saldo queda en −7,5 × 10⁻⁸, y de ahí solo baja.',
                         'Se detiene en la cuota 12, pero deja 7,5 × 10⁻⁸ pesos del saldo sin cobrar.',
                         'Se detiene con un error de división por cero cuando el saldo llega a cero.',
                     ]}
@@ -6990,7 +7010,10 @@ End Sub`,
                     bloques={EJ_CUOTA_37}
                     nota="La cuota 36 deja un saldo de 0,0000000200: dos cienmillonésimas de peso, pero positivas. La condición pregunta si el saldo es mayor que cero, y lo es, así que el ciclo da la vuelta 37. Sobre un saldo así el interés es prácticamente cero, toda la cuota se va a abono, y el saldo termina en menos una cuota." />
 
-                <p>El mismo programa, con seis créditos de una cartera, cambiando solo los datos:</p>
+                <p>
+                    El mismo programa con seis créditos, cambiando solo los datos. Las vueltas y los residuos
+                    son los que dieron Python y R; la fila de las 37 vueltas salió igual en Excel:
+                </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead>
@@ -7039,7 +7062,7 @@ End Sub`,
                             créditos dan sus vueltas exactas, y el programa de la motivación funcionó meses antes de
                             facturar la cuota 37. Tampoco es estable: escribir la misma cuenta en otro orden cambia
                             qué créditos fallan. Un programa cuyo número de vueltas depende del último bit de una
-                            cuenta no se puede auditar.
+                            cuenta es muy difícil de auditar.
                         </p>
                         <p>
                             <strong>Cuándo sí por el saldo.</strong> Cuando el número de pagos no se conoce al
@@ -7050,8 +7073,9 @@ End Sub`,
                             para que no se pueda pasar de largo. El último abono se ajusta a lo que se debe —la selectiva
                             de la sección 2—, para no cobrar de más. El abono se valida positivo antes de entrar,
                             porque con un abono de 0 el ciclo no termina. Y los montos van en centavos enteros o en
-                            {' '}<span className="inline-code">Currency</span>, como pidió el capítulo 1, para que un
-                            saldo que llega a cero llegue de verdad.
+                            {' '}<span className="inline-code">Currency</span>, como pidió el capítulo 1, para que
+                            restar un abono no deje residuo: lo que lleva el saldo a cero es el ajuste del último
+                            abono, no el tipo de dato.
                         </p>
                     </>}
                 >
@@ -7113,8 +7137,9 @@ End Sub`,
                     no paraba, y esta vez no hay salida que saltar: <span className="inline-code">monto</span> no se
                     acerca al −1 vuelta a vuelta, sino que en cada una recibe lo que se digita, y un −1 digitado se
                     guarda exacto. La regla
-                    del capítulo 1 —nunca comparar dinero con igualdad exacta— es para cifras que salen de cuentas,
-                    como el saldo del plan de pagos. Lo
+                    del capítulo 1 —nunca comparar con igualdad exacta dinero guardado en flotantes— cuida las
+                    cifras que salen de cuentas, como el saldo del plan de pagos; el −1 no sale de ninguna, y
+                    por eso este capítulo se permite compararlo. Lo
                     que cambia es de quién depende la finitud: el ciclo termina cuando llega el centinela, y si
                     nadie lo digita, no termina. Por eso el centinela tiene que ser un valor que ningún dato real
                     pueda tomar. Ningún pago es negativo; en una lista de ajustes contables, donde sí los hay, un −1
@@ -7131,7 +7156,7 @@ End Sub`,
                             <tr><th>Para cuando…</th><th>Termina si…</th><th>La trampa</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>Siempre, con las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo</td></tr>
+                            <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>El contador avanza: de uno en uno, da las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo o un <span className="inline-code">Step 0</span></td></tr>
                             <tr><td><strong>Un valor calculado cruza un límite.</strong> El acuerdo de pago, con <span className="inline-code">Mientras saldo &gt; 0</span></td><td>Cada vuelta lo acerca, y la condición no se puede saltar</td><td>Comparar con <span className="inline-code">&lt;&gt; 0</span>, que se salta; un residuo, que da una vuelta de más</td></tr>
                             <tr><td><strong>Llega un dato que marca el final.</strong> El cierre de caja, con un centinela</td><td>Los datos traen el centinela</td><td>Procesar el centinela como si fuera un dato</td></tr>
                             <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: con una tolerancia de <span className="whitespace-nowrap">10<sup>−18</sup></span>, el intervalo se queda en {residuo('', '3,5', 18)} y la bisección no termina</td></tr>
@@ -8237,10 +8262,12 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "42a4ffeaf7686482cb1584d6e32ac57e3f87dde3a62acba580602a3760c902dd",
-  "sello": "cafb0332552bada30d478775c0a9aa5573a0bf1273d3bfba318f27cc928a61d6",
+  "huella": "d040115879af08d7cf15f5be21e5e735446c7dac532b35d3d336e97a33c811df",
+  "sello": "434c928a4c21b490c9f79cbc275b7dd9d225bde4271708701ea37db9910cd755",
   "orden": [
     "congreso2000ley599",
+    "microsoft2017desbordamiento",
+    "microsoft2018integer",
     "microsoft2018fornext",
     "microsoft2019dim",
     "microsoft2026vbal",
@@ -8254,11 +8281,23 @@ End Sub`,
       "html": "Congreso de Colombia. (2000). \u003cem>Ley 599 de 2000, por la cual se expide el Código Penal\u003c/em>. Diario Oficial 44.097. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\u003c/a>",
       "plano": "Congreso de Colombia. (2000). Ley 599 de 2000, por la cual se expide el Código Penal. Diario Oficial 44.097. http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html"
     },
+    "microsoft2017desbordamiento": {
+      "autor": "Microsoft",
+      "anio": "2017",
+      "html": "Microsoft. (2017, junio 8). \u003cem>Desbordamiento (error 6)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\u003c/a>",
+      "plano": "Microsoft. (2017, junio 8). Desbordamiento (error 6). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6"
+    },
+    "microsoft2018integer": {
+      "autor": "Microsoft",
+      "anio": "2018a",
+      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Tipo de datos Integer\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 19). Tipo de datos Integer. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type"
+    },
     "microsoft2018fornext": {
       "autor": "Microsoft",
-      "anio": "2018",
-      "html": "Microsoft. (2018, diciembre 3). \u003cem>Instrucción For...Next\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\u003c/a>",
-      "plano": "Microsoft. (2018, diciembre 3). Instrucción For...Next. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement"
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, diciembre 3). \u003cem>Instrucción For...Next\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\u003c/a>",
+      "plano": "Microsoft. (2018b, diciembre 3). Instrucción For...Next. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement"
     },
     "microsoft2019dim": {
       "autor": "Microsoft",

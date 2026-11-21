@@ -4595,3 +4595,34 @@ Rama `claude/cap05-fase6`, sobre la de la fase 5.
 5, con diez citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
 **Pendiente:** las dos pestañas de VBA del simulador y el contador al salir del `For`,
 en Excel (fase 11); la tabla y el flujograma, sin fuente declarada (fase 10).
+
+### Tarea 15 · Capítulo 5, fase 7: sección 6, cuándo para un ciclo · 2026-11-21
+
+Rama `claude/cap05-fase7`, sobre la de la fase 6.
+
+- **Motivación:** lleva su `<Ilustrativo>` y dice que la cuota va sin redondear, como
+  todas las del capítulo; así no choca con el recuadro del redondeo de la sección 4 (M4).
+- **«Un Para termina siempre»:** ya no. Los Para del capítulo, que avanzan de uno en uno,
+  terminan con las vueltas de su primera línea, con dos salvedades de VBA: tocar el
+  contador y el paso de 0, con cita a `For...Next` (Comentarios). Salió «ni siquiera
+  compara: recorre una secuencia ya hecha». La tabla final también lo dice.
+- **El saldo que llega a cero:** sin fuente de matemáticas financieras, la propiedad se
+  ejecutó con fracciones exactas (12 y 36 cuotas dan saldo 0) y el texto lo dice así.
+- **El desbordamiento de VBA:** el rango de `Integer` y el error 6, con cita a sus dos
+  páginas de Microsoft Learn, ya en Zotero. La vuelta 32 768 queda como deducción
+  declarada, sin ejecutar. La consecuencia correcta del ejercicio vale ahora para VBA.
+- **La regla del capítulo 1 (B2):** va con su condición, «dinero guardado en flotantes»,
+  las dos veces.
+- **La tabla de los seis créditos:** dice dónde se midió (Python y R; la fila de 37,
+  también en Excel).
+- **Menores:** «es muy difícil de auditar» (B4); el cuarto cuidado del reto ya no promete
+  que `Currency` lleva el saldo a cero; el comentario interno de la cuota 37 registra la
+  corrida de Excel del 2026-11-19.
+- Verificador independiente: «respalda» a las tres citas; corrigió la localización de
+  dos (esas páginas no tienen sección «Comentarios») y afinó la redacción del error 6.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+**Hueco:** otra cifra nueva con espacio normal (−7,5 × 10⁻⁸); la atrapó la regla de la
+cifra partible. **Pendiente (fase 11, Excel):** `Step 0`, el desbordamiento en la vuelta
+32 768 y las otras cinco filas de la tabla.
