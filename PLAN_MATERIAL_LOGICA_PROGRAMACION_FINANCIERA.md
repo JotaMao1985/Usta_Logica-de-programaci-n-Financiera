@@ -4532,3 +4532,40 @@ Rama `claude/cap05-fase4`, sobre la de la fase 3.
 **Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
 5, con seis citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
 escritorio: 9 de 9.
+
+### Tarea 15 · Capítulo 5, fase 5: sección 4, Para · 2026-11-21
+
+Rama `claude/cap05-fase5`, sobre la de la fase 4.
+
+- **Motivación:** lleva su `<Ilustrativo>` y define el paz y salvo.
+- **El recuadro del banco (decisión B):** ya no dice qué hace «un banco». Se titula «Si la
+  cuota se redondeara» y dice lo que se deduce: redondeada al peso, las doce cuotas no
+  dejan el saldo en cero y habría que ajustar la última.
+- **El for de cada lenguaje, con cita:** `For...Next` de VBA (Microsoft Learn, Sintaxis y
+  Comentarios), el `for` de Python (§8.3) y el de R (§3.2.5). Salieron «no compara ni suma
+  nada» y «ya hecha», que las fuentes no dicen; el contraste va después de la cita.
+- **El contador cambiado en VBA:** salió el enlace crudo y «desaconseja»; va `<Cita>`, y la
+  página «advierte» que «podría» ser más difícil de leer. «Una cuota de cada dos» queda
+  como derivada: no está ejecutada en Excel (fase 11).
+- **`range(1, n)`:** da n − 1 vueltas «si n es al menos 1» (B1).
+- **La remisión rota al capítulo 1 (M1):** la cita entre comillas se cambió por la frase
+  que el capítulo 1 tiene hoy, sin comillas.
+- **Sin fuente, retirado:** «amortización francesa» (prosa, cuatro comentarios del código y
+  la descripción del flujograma) y «off-by-one» (definición y glosario). En Zotero no hay
+  ningún texto de matemáticas financieras ni de terminología que los respalde.
+- **VBA:** el comentario ya no dice que con Currency el saldo cerraría en −0,0005, que
+  nunca se ejecutó; el de Format dice lo ejecutado (Excel escribió coma); y la nota del
+  plan dice que cabe esperar el mismo residuo, no que VBA lo guarda.
+- La leyenda del flujograma y «En pseudocódigo, el contador lo lleva el ciclo» acotan lo
+  que es de pseudocódigo y VBA (M2).
+- Verificador independiente: «respalda» a una cita y «parcial» a tres; se adoptó su
+  redacción en las tres.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con diez citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
+
+**Huecos.** (1) El guion de edición no pone el espacio duro en las cifras nuevas si se
+escriben con espacio normal: la regla de la cifra partible lo atrapó en tres sitios.
+(2) «recorre una secuencia ya hecha» sigue en la sección 6 y en el glosario (fases 7 y
+9), y el comentario de Format, en el simulador de la sección 5 (fase 6).
