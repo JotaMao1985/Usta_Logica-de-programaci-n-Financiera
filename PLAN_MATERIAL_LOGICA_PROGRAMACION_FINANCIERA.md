@@ -4626,3 +4626,38 @@ Rama `claude/cap05-fase7`, sobre la de la fase 6.
 **Hueco:** otra cifra nueva con espacio normal (−7,5 × 10⁻⁸); la atrapó la regla de la
 cifra partible. **Pendiente (fase 11, Excel):** `Step 0`, el desbordamiento en la vuelta
 32 768 y las otras cinco filas de la tabla.
+
+### Tarea 15 · Capítulo 5, fase 8: sección 7, casos financieros · 2026-11-21
+
+Rama `claude/cap05-fase8`, sobre la de la fase 7. Sin citas nuevas: no hay en Zotero
+ningún texto de matemáticas financieras, y lo que pedía uno se derivó, se ejecutó o se
+redactó como definición o supuesto del capítulo.
+
+- **Motivación:** lleva su `<Ilustrativo>` (M5); la resta del cliente va con su
+  aritmética a la vista.
+- **Saldo insoluto:** la definición ya no afirma qué se paga al cancelar un crédito: es
+  un supuesto del caso. El glosario dice lo mismo.
+- **«No es casualidad»:** la igualdad entre el saldo y el valor presente de las cuotas
+  que faltan se deriva a la vista, deshaciendo las cuotas desde el final, y se ejecutó
+  con fracciones exactas (las dos cuentas dan la misma cifra).
+- **La TIR:** la definición dice «en esta sección se toma como el costo del crédito
+  contando la comisión». Salió «No hay una fórmula que la despeje» (N9), del texto, del
+  glosario y del emparejamiento: «este capítulo no la despeja: la busca».
+- **`uniroot`:** salió «un método más rápido»; van las 6 iteraciones contra las 17
+  vueltas y la tolerancia por omisión con su valor, 0,00012 (ejecutado).
+- **Menores:** fuera «el residuo de siempre» y «la cifra que el cliente verá en el
+  extracto final»; 138 498,00 con sus decimales; lo pagado en la vivienda «son 120
+  cuotas», y la remisión al interactivo queda para el saldo y los intereses.
+- **VBA (M7):** el arnés nuevo (7a96ad5822) se pegó en Excel y los once bloques del
+  capítulo coinciden, entre ellos los tres de la sección 7 y el simulador de la sección
+  5. Ese Excel escribe coma decimal; la nota del primer bloque lo avisa.
+- La bisección con tolerancia 10⁻¹⁸ (sección 6) se volvió a ejecutar: se queda en dos
+  flotantes vecinos, 3,5 × 10⁻¹⁸, y no sale (probado hasta 2 000 vueltas).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+Cifras de la sección vueltas a ejecutar en Python y R. Remisiones a los capítulos 2 y 3,
+cotejadas. **Hueco:** `ejecutar_vba.py preparar` deja el módulo en el portapapeles, y si
+el docente copia otra cosa antes de pegar, se pega lo suyo: pasó una vez; se repitió
+`preparar` y se pegó de inmediato. **Pendiente:** el interactivo de la TIR sin abrir en
+navegador; su gráfica sin fuente (fase 10).

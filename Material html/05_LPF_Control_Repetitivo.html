@@ -7177,7 +7177,7 @@ End Sub`,
            SECCIÓN 7 — Casos financieros: el oficio
 
            Las cifras de la prosa están ejecutadas en Python y en R el
-           2026-10-20, antes de escribirlas:
+           2026-10-20, antes de escribirlas, y otra vez el 2026-11-21:
            · 10 000 000 al 1,5 % en 12 cuotas, con cuatro pagadas: saldo
              6 863 095,58 e intereses pagados 530 295,30. La resta del
              cliente da 6 332 800,28. Las ocho cuotas que faltan, traídas a
@@ -7197,7 +7197,13 @@ End Sub`,
            · Efectivas anuales: 19,5618 % y 26,7105 %. Con la TIR redondeada
              a 0,019924, la que usa el bloque, 26,7108 %: con dos decimales,
              26,71 en los dos casos.
-           El VBA no se ejecutó (R10): su arnés existe, pero falta correrlo.
+           Con fracciones exactas (fractions.Fraction, 2026-11-21) el saldo
+           hacia adelante y el valor presente de las ocho cuotas son iguales.
+           Con tolerancia 1e-18 la bisección se queda en dos flotantes vecinos
+           (ancho 3,5 × 10⁻¹⁸) y no sale: probado hasta 2 000 vueltas.
+           El VBA de los tres bloques se ejecutó en Excel el 2026-11-21 con
+           ejecutar_vba.py (arnés 7a96ad5822): coincide, salvo que ese Excel
+           escribe coma decimal.
         ============================================================ */
 
         const EJ_SALDO_INSOLUTO = {
@@ -7617,43 +7623,60 @@ End Sub`,
                     1,5 % al mes.
                 </Motivacion>
 
+                <Ilustrativo>
+                    El cliente, el banco y la comisión son un caso inventado para esta sección, sobre el
+                    crédito de la sección 4. Las cifras sí salen de los programas de más abajo, ejecutados:
+                    el saldo de 6 863 095,58, la TIR y las tasas efectivas. La resta del cliente,
+                    10 000 000 − 4 × 916 799,93, da 6 332 800,28.
+                </Ilustrativo>
+
                 <h3>Cuánto debe hoy</h3>
                 <p>
                     La resta del cliente supone que cada cuota pagada baja la deuda en 916 799,93. No es así: una
                     parte de cada cuota paga el interés del mes, y solo el resto, el abono, baja la deuda. Es lo
-                    que la tabla de la sección 4 escribió fila por fila. La cifra que le dio el banco es el <Termino def="Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas. Es lo que tendría que pagar para cancelar el crédito ese día, sin los intereses de los meses que aún no han corrido.">saldo insoluto</Termino>, y sale del ciclo de esa tabla con otro tope: en lugar de dar <span className="inline-code">n</span> vueltas, da tantas como cuotas se han pagado.
+                    que la tabla de la sección 4 escribió fila por fila. La cifra que le dio el banco es el <Termino def="Lo que el cliente todavía debe de capital justo después de pagar cierto número de cuotas. En el caso de esta sección se supone que con esa cifra cancela el crédito ese día, sin los intereses de los meses que aún no han corrido.">saldo insoluto</Termino>, y sale del ciclo de esa tabla con otro tope: en lugar de dar <span className="inline-code">n</span> vueltas, da tantas como cuotas se han pagado.
                 </p>
 
                 <CodeTabs
                     titulo="El saldo para cancelar, de dos maneras"
                     bloques={EJ_SALDO_INSOLUTO}
-                    nota="Las dos cifras coinciden hasta el centavo; en la máquina difieren en 7 × 10⁻⁸, el residuo de siempre. En R los dos ciclos van con seq_len: con un crédito recién desembolsado pagadas vale 0, y con uno ya pagado n − pagadas también." />
+                    nota="Las dos cifras coinciden hasta el centavo; en la máquina difieren en 7 × 10⁻⁸, en Python y en R: un residuo de flotantes, como los de la sección 6. En VBA, el separador decimal de los tres programas de esta sección puede salir distinto, como en el plan de pagos de la sección 4. En R los dos ciclos van con seq_len: con un crédito recién desembolsado pagadas vale 0, y con uno ya pagado n − pagadas también." />
 
                 <p>
                     El programa calcula el saldo dos veces. La primera camina hacia adelante: repite las cuatro
                     cuotas pagadas y se queda con lo que no alcanzaron a abonar. Mientras tanto, el acumulador
-                    suma los intereses de esos cuatro meses: 150 000 + 138 498 + 126 823,47 + 114 973,83 = 530 295,30.
+                    suma los intereses de esos cuatro meses: 150 000 + 138 498,00 + 126 823,47 + 114 973,83 = 530 295,30.
                     Esa es exactamente la diferencia con la resta del cliente.
                 </p>
                 <p>
                     La segunda camina hacia atrás. Una cuota que se paga dentro de <span className="inline-code">j</span> meses
                     vale hoy menos que la cuota: vale lo que habría que tener hoy para que, creciendo al 1,5 %
                     mensual durante esos meses, llegara a ser la cuota. Es su <Termino def="Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Es lo que habría que tener hoy para que, creciendo a esa tasa, llegara a ser el pago.">valor presente</Termino>, la cuota dividida por <span className="inline-code">(1 + tasa) ^ j</span>. El ciclo suma los valores presentes de las ocho cuotas que faltan, y da el mismo saldo.
-                    No es casualidad: lo que el cliente debe hoy es lo que valen hoy las cuotas que le quedan, a la
-                    tasa del contrato. Ese segundo ciclo vuelve en un momento, con otra tasa, para buscar la TIR.
+                    No es casualidad, y se ve deshaciendo las cuotas desde el final. Cada mes el saldo sube con su
+                    interés y baja con la cuota; al revés, el saldo de antes es el de después más la cuota,
+                    dividido por <span className="inline-code">1 + tasa</span>. Después de la última cuota el saldo es cero, como
+                    comprobó la sección 6 con fracciones exactas. Un mes antes era la cuota dividida
+                    por <span className="inline-code">1 + tasa</span>; dos meses antes, eso más otra cuota, dividido otra vez. Así, lo que
+                    el cliente debe hoy es la suma de las cuotas que le quedan, cada una dividida
+                    por <span className="inline-code">1 + tasa</span> tantas veces como meses le faltan: su valor presente, a la tasa del
+                    contrato. Con fracciones exactas, las dos cuentas de este programa dan la misma cifra.
+                </p>
+                <p>
+                    Ese segundo ciclo vuelve en un momento, con otra tasa, para buscar la TIR.
                 </p>
                 <p>
                     En un crédito largo la diferencia crece mucho. Quien tomó el de vivienda de la sección 4
                     —150 000 000 al 1,1 % en 240 cuotas de 1 778 778,87— y lleva diez años pagando, la mitad del
                     plazo, todavía debe 118 197 017,68: el 78,8 % de lo que le prestaron. De los 213,45 millones
-                    que pagó en esos diez años, 181,65 millones fueron intereses. Lo puede comprobar en la tabla de la sección 4,
-                    con el crédito de vivienda, avanzando hasta la cuota 120.
+                    que pagó en esos diez años, que son 120 cuotas, 181,65 millones fueron intereses. El saldo y
+                    los intereses los puede comprobar en la tabla de la sección 4, con el crédito de vivienda,
+                    avanzando hasta la cuota 120.
                 </p>
 
                 <h3>Lo que suman los intereses</h3>
                 <p>
-                    El acumulador de la sección 4 sumó los intereses del plan completo: 1 001 599,15. Es la cifra
-                    que el cliente verá en el extracto final, y se presta a lecturas equivocadas.
+                    El acumulador de la sección 4 sumó los intereses del plan completo: 1 001 599,15. Es una cifra
+                    que se presta a lecturas equivocadas.
                 </p>
 
                 <Ejercicio tipo="E7"><MCQ
@@ -7670,11 +7693,11 @@ End Sub`,
                 <p>
                     La otra cifra del cliente es la tasa. El 1,5 % es la tasa con la que se calcularon las cuotas
                     sobre 10 000 000. Pero el cliente no recibió 10 000 000: recibió 9 700 000, y paga las mismas
-                    doce cuotas. ¿A qué tasa valen hoy 9 700 000 esas doce cuotas? Esa tasa es la <Termino def="Tasa interna de retorno: la tasa a la que lo que se recibe hoy es igual a lo que se paga después, traído a hoy. En un crédito, es lo que cuesta de verdad, con las comisiones adentro.">TIR</Termino>.
+                    doce cuotas. ¿A qué tasa valen hoy 9 700 000 esas doce cuotas? Esa tasa es la <Termino def="Tasa interna de retorno: la tasa a la que lo que se recibe hoy es igual a lo que se paga después, traído a hoy. En esta sección se toma como el costo del crédito contando la comisión.">TIR</Termino>.
                 </p>
                 <p>
-                    No hay una fórmula que la despeje. Lo que sí se puede hacer es probar una tasa y ver si se
-                    pasa o se queda corta. Con la tasa que se pruebe, el ciclo de atrás del saldo insoluto trae
+                    Con doce cuotas, la tasa aparece en esa cuenta elevada a doce potencias distintas, y este
+                    capítulo no la despeja: la busca. Prueba una tasa y mira si se pasa o se queda corta. Con la tasa que se pruebe, el ciclo de atrás del saldo insoluto trae
                     las doce cuotas a hoy, y a eso se le resta lo recibido: es el <strong>VPN</strong>, el valor
                     presente neto. Si da positivo, la tasa probada es baja, porque a esa tasa las cuotas valen más
                     de lo que se recibió. Si da negativo, es alta. Al 0 % el VPN es 1 301 599,15, las doce cuotas
@@ -7692,7 +7715,7 @@ End Sub`,
                 <CodeTabs
                     titulo="La TIR por bisección"
                     bloques={EJ_TIR}
-                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, porque R recorre la secuencia por usted. Y R trae <span className="inline-code">uniroot</span>, que busca la misma tasa con un método más rápido: con <span className="inline-code">tol = 1e-10</span> da 1,992398 %. Con su tolerancia por omisión, que es más gruesa, da 1,992167 %.</>} />
+                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, que da los mismos VPN: R hace la cuenta con cada elemento de <span className="inline-code">1:n</span>, y <span className="inline-code">sum</span> los suma. Y R trae <span className="inline-code">uniroot</span>, que busca en un intervalo dónde una función vale cero: con <span className="inline-code">tol = 1e-10</span> da 1,992398 % en 6 iteraciones, contra las 17 vueltas de la bisección. Sin indicarle tolerancia da 1,992167 %: la que trae por omisión es más gruesa, 0,00012.</>} />
 
                 <p>
                     El <span className="inline-code">Mientras</span> no cuenta vueltas: sigue mientras el intervalo
@@ -7850,8 +7873,8 @@ End Sub`,
             ['Mientras', 'Ciclo de evaluación previa: repite el cuerpo mientras la condición sea verdadera. Conviene cuando el número de vueltas depende de lo que pasa dentro y puede ser ninguna. En VBA, Do While … Loop.'],
             ['Para', 'Ciclo que lleva su propio contador de un valor inicial a un tope, y conviene cuando el número de vueltas se sabe al entrar. No significa lo mismo en los cuatro lenguajes: range(1, n) da n − 1 vueltas, y en R 1:0 da dos.'],
             ['Repita…Hasta', 'Ciclo de evaluación posterior: ejecuta el cuerpo, después pregunta, y sale cuando la condición es verdadera. Da al menos una vuelta. Python lo construye con while True y break; en VBA es Do … Loop Until.'],
-            ['Saldo insoluto', 'Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas: lo que pagaría por cancelar ese día. Es también el valor presente de las cuotas que le faltan, a la tasa del contrato.'],
-            ['TIR', 'Tasa interna de retorno: la tasa a la que lo que se paga después, traído a hoy, vale lo que se recibió. En un crédito con comisión es su costo real. Ninguna fórmula la despeja: se busca, por ejemplo, por bisección.'],
+            ['Saldo insoluto', 'Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas: en el caso del capítulo se supone que es lo que pagaría por cancelar ese día. Es también el valor presente de las cuotas que le faltan, a la tasa del contrato.'],
+            ['TIR', 'Tasa interna de retorno: la tasa a la que lo que se paga después, traído a hoy, vale lo que se recibió. En el crédito con comisión de la sección 7 se toma como su costo. Este capítulo no la despeja: la busca por bisección.'],
             ['Tolerancia', 'La precisión que se le pide a un ciclo que se acerca a un resultado: para cuando el error posible es menor que ella. Pedir más de lo que la máquina distingue lo vuelve un ciclo infinito.'],
             ['Valor presente', 'Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Sumado sobre las cuotas que faltan, da el saldo insoluto.'],
             ['Variable de control', 'El contador de un Para. En pseudocódigo y en VBA, el ciclo lo inicia, lo compara con el tope y lo aumenta; en Python y en R, el for recorre una secuencia ya hecha y le da cada valor por turno.'],
@@ -7878,7 +7901,7 @@ End Sub`,
                         'La tabla de un CDT a 18 meses, una fila por mes: el plazo está en el título desde el día de la apertura.',
                         'Una deuda de 1 000 000 con abonos de 300 000: el cobro no se detiene después del cuarto abono.',
                         'El informe de recaudo del mes trae solo lo que entró el último día.',
-                        'El costo real de un crédito con gastos descontados al desembolso: una tasa que ninguna fórmula despeja.',
+                        'El costo real de un crédito con gastos descontados al desembolso: una tasa que no se despeja, sino que se busca probando.',
                         'El simulador pregunta en cuántos meses quiere pagar el cliente, y no sigue hasta recibir seis o más.',
                         'Abonos fijos a una tarjeta sin saber cuántos meses harán falta; a quien tiene saldo a favor no se le cobra nada.',
                         'En el informe por oficina, cada una sale con su recaudo más el de todas las anteriores.',
