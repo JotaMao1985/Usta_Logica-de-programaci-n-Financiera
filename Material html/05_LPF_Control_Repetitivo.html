@@ -5978,8 +5978,8 @@ Sub SimuladorDePlazos()
             saldo = saldo - abono
             intereses = intereses + interes
         Next k
-        ' El separador decimal que imprime Format depende de la
-        ' configuración regional de Windows.
+        ' El separador decimal puede salir distinto, como en el plan
+        ' de pagos de la sección 4.
         Debug.Print n & " cuotas de " & Format(cuota, "0.00") & _
                     ": intereses " & Format(intereses, "0.00")
     Next anios
@@ -6095,7 +6095,8 @@ End Sub`,
            cada lenguaje: el `for` en Python y R, el `Para` en pseudocódigo y
            el `Next` en VBA. No hay paso para la última comparación de cada
            ciclo, porque el valor con que sale el contador no es el mismo en
-           los cuatro: Python y R lo dejan en el último valor; VBA, en uno más.
+           los cuatro: Python y R lo dejan en el último valor (ejecutado); VBA,
+           según la referencia, en uno más (sin ejecutar: fase 11).
            Cifras ejecutadas el 2026-10-19. */
         const TZ_CARTERA = {
             pseudo: `Inicio
@@ -6194,7 +6195,7 @@ End Sub`,
             { linea: TZC_RESTA, estado: { saldo: '2000000' },
                 nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
             { linea: TZC_SIGUE_K, estado: { k: '2' },
-                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido. En pseudocódigo, Python y R, quien aumenta k es la cabecera del Para, y por eso la traza vuelve a ella; en VBA lo hace el Next. El flujograma lo dibuja al final del cuerpo, que es cuando ocurre.' },
+                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido. La traza vuelve a la cabecera del ciclo: en pseudocódigo, porque es el Para el que lleva el contador; en Python y en R, porque ahí el for le asigna a k el elemento siguiente de la secuencia. En VBA, el paso se suma al terminar las instrucciones de la vuelta, y la traza lo marca en el Next. El flujograma dibuja k ← k + 1 al final del cuerpo: es la forma del pseudocódigo y de VBA.' },
             { linea: TZC_SUMA, estado: { subtotal: '100000' },
                 nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1000000' },
@@ -6315,9 +6316,9 @@ End Sub`,
 
         /* E5. El cierre de recaudo de la sección 1, ahora por oficina. Tres
            pares de líneas conmutan sin cambiar el resultado, y el enunciado
-           fija dos convenciones que los ordenan: la lectura antes que la
-           inicialización, en cada nivel, y el subtotal escrito antes de
-           sumarse al total. Los dos cierres de ciclo del pseudocódigo y de R
+           los deja libres (LIBRES_OFICINAS): en cada nivel, la lectura y la
+           inicialización; y, al cerrar cada oficina, escribir el subtotal y
+           sumarlo al total. Los dos cierres de ciclo del pseudocódigo y de R
            llevan un comentario porque `OrdenaPasos` califica por posición:
            dos `FinPara` iguales serían indistinguibles. */
         const ORDENA_OFICINAS = {
@@ -6353,6 +6354,12 @@ End Sub`,
                     acumulador nacía en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses
                     de los anteriores. Durante un mes, todo cliente que comparó plazos vio esa cifra.
                 </Motivacion>
+
+                <Ilustrativo>
+                    La oficina, su simulador y el crédito son un caso inventado para esta sección. Las
+                    cifras sí salen de los dos programas de más abajo, ejecutados: 1 001 599 y 3 014 862 del
+                    simulador bien escrito, y 5 998 246 del que tiene el acumulador fuera de los dos ciclos.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -6428,9 +6435,9 @@ End Sub`,
                     Las 72 vueltas del simulador no se pueden seguir una por una. Un reporte más pequeño sí cabe
                     en una traza: para cada crédito de una cartera, los intereses de sus tres próximas cuotas
                     —el <strong>subtotal</strong>—, y al final los de toda la cartera —el <strong>total</strong>—.
-                    Estos créditos abonan a capital la misma cifra cada mes, que es otra forma de amortizar,
-                    distinta de la cuota fija de la sección 4: el interés de cada cuota se cobra sobre un saldo
-                    que baja siempre lo mismo. En flujograma, con los dos <span className="inline-code">Para</span> desarmados
+                    En este reporte se supone que cada crédito abona a capital la misma cifra cada mes, y no la
+                    cuota fija de la sección 4: así, el interés de cada cuota se cobra sobre un saldo que baja
+                    siempre lo mismo y las cuentas se pueden seguir a mano. En flujograma, con los dos <span className="inline-code">Para</span> desarmados
                     como en la sección 4, el reporte se ve así:
                 </p>
 
@@ -6450,7 +6457,7 @@ End Sub`,
                         { clave: 'total', titulo: 'total' },
                     ]}
                     pasos={TZ_CARTERA_PASOS}
-                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final, una vez cada una: 3. Las seis del ciclo de fuera que no están en el de dentro —su Para, las dos lecturas, el subtotal, el total y el Escribir—, dos veces cada una, una por crédito: 12. La del Para de dentro, seis veces, tres por crédito: una al arrancar el ciclo y dos al pasar a la cuota siguiente. Y las dos del cuerpo de dentro, seis veces cada una, dos créditos por tres cuotas: 12. En total, 3 + 12 + 6 + 12 = 33. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro: Python y R lo dejan en el último de la secuencia, y en VBA, Next le suma uno más antes de salir." />
+                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final, una vez cada una: 3. Las seis del ciclo de fuera que no están en el de dentro —su Para, las dos lecturas, el subtotal, el total y el Escribir—, dos veces cada una, una por crédito: 12. La del Para de dentro, seis veces, tres por crédito: una al arrancar el ciclo y dos al pasar a la cuota siguiente. Y las dos del cuerpo de dentro, seis veces cada una, dos créditos por tres cuotas: 12. En total, 3 + 12 + 6 + 12 = 33. En la pestaña de VBA la cuenta es la misma, pero los pasos de cada Para se reparten entre dos líneas: el For, al arrancar el ciclo, y el Next, al pasar a la vuelta siguiente. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro. Python y R lo dejan en el último de la secuencia (ejecutado en los dos: k queda en 3). En VBA, por lo que dice la sección 4 —al terminar la vuelta se le suma el paso y se repite la prueba—, saldría con uno más; eso no se ejecutó para este capítulo." />
 
                 <TablaTraza
                     titulo="Subtotales y total de otra cartera"
@@ -6479,7 +6486,7 @@ End Sub`,
                 <p>
                     La regla de la sección 1 sigue valiendo, con una respuesta más. Ante cada línea, la pregunta
                     es si se ejecuta una vez, una vez por crédito o una vez por cuota. Y cada inicialización va
-                    justo antes del ciclo que acumula su variable: el total, antes del de fuera; el subtotal,
+                    antes del ciclo que acumula su variable: el total, antes del de fuera; el subtotal,
                     dentro del de fuera y antes del de dentro.
                 </p>
 

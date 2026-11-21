@@ -4569,3 +4569,29 @@ escritorio: 9 de 9.
 escriben con espacio normal: la regla de la cifra partible lo atrapó en tres sitios.
 (2) «recorre una secuencia ya hecha» sigue en la sección 6 y en el glosario (fases 7 y
 9), y el comentario de Format, en el simulador de la sección 5 (fase 6).
+
+### Tarea 15 · Capítulo 5, fase 6: sección 5, ciclos anidados · 2026-11-21
+
+Rama `claude/cap05-fase6`, sobre la de la fase 5.
+
+- **Motivación:** lleva su `<Ilustrativo>`; las tres cifras salen de los dos simuladores,
+  vueltos a ejecutar en Python y en R.
+- **Quién mueve el contador (M2):** la nota de la traza ya no dice que la cabecera
+  «aumenta» k en Python y R ni que «lo hace el Next» en VBA, que la página de `For...Next`
+  no dice. En Python y R, el for le asigna el elemento siguiente; en VBA, el paso se suma
+  al terminar la vuelta, y la traza lo marca en el `Next`.
+- **El contador al salir:** Python y R lo dejan en 3 (ejecutado). Para VBA ya no se
+  afirma: se deduce de lo citado en la sección 4 y se dice que no se ejecutó (fase 11).
+- **El abono constante:** ya no es «otra forma de amortizar» (sin fuente en Zotero); es un
+  supuesto declarado del reporte.
+- **Comentario de `Format` del simulador:** sin el mecanismo regional; remite al plan de
+  la sección 4.
+- **Menores:** la cuenta de los 33 pasos aclara cómo se reparten en la pestaña de VBA
+  (B6); «justo antes» pasó a «antes»; el comentario interno de `ORDENA_OFICINAS`, al día.
+- Sin citas nuevas: ninguna afirmación de la sección pidió fuente externa, y no hubo
+  verificador independiente. Las remisiones a la sección 1 y al capítulo 4, cotejadas.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con diez citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+**Pendiente:** las dos pestañas de VBA del simulador y el contador al salir del `For`,
+en Excel (fase 11); la tabla y el flujograma, sin fuente declarada (fase 10).
