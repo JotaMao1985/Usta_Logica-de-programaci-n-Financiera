@@ -3471,19 +3471,22 @@ FinMientras`;
         };
 
         const FlujogramaRepita = () => {
-            const DESCRIPCION = 'Flujograma de un ciclo Repita…Hasta. Inicio; se entra directamente al cuerpo, que lee monto; después un rombo pregunta si monto es mayor que 0. Por la rama No una flecha de retorno sube por la izquierda hasta antes de Leer monto, que se vuelve a ejecutar. Por la rama Sí se sale del ciclo, se escribe monto y Fin. La pregunta va después del cuerpo: el cuerpo se ejecuta al menos una vez, y se sale por el Sí, al revés que en un Mientras.';
+            const DESCRIPCION = 'Flujograma de un ciclo Repita…Hasta. Inicio; se entra directamente al cuerpo, que escribe el mensaje «Monto a pagar» y lee monto; después un rombo pregunta si monto es mayor que 0. Por la rama No una flecha de retorno sube por la izquierda hasta antes del cuerpo, que se vuelve a ejecutar. Por la rama Sí se sale del ciclo, se escribe monto y Fin. La pregunta va después del cuerpo: el cuerpo se ejecuta al menos una vez, y se sale por el Sí, al revés que en un Mientras.';
             const ID = 'lp-flecha5-FlujogramaRepita';
-            const UNION = 64, ROMBO = 152;
+            // El cuerpo trae las dos instrucciones de EJ_VALIDAR_MONTO. Hasta el
+            // 2026-11-21 dibujaba solo «Leer monto». El mensaje va abreviado
+            // porque entero no cabe en la caja.
+            const UNION = 64, ROMBO = 169;
             return (
                 <figure className="my-6 not-prose">
-                    <svg viewBox="0 0 248 350" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
+                    <svg viewBox="0 0 248 367" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
                         {fjTerminal(7, 'Inicio', '#3D008D')}
                         {fjLinea(EJE, 45, EJE, UNION)}
                         {fjFlecha(ID, UNION, 88)}
                         <circle cx={EJE} cy={UNION} r="3.5" fill="#3D008D" />
-                        {fjEntradaSalida(90, 'Leer monto')}
-                        {fjFlecha(ID, 128, ROMBO - 2)}
+                        {fjEntradaSalida(90, ['Escribir "Monto…"', 'Leer monto'])}
+                        {fjFlecha(ID, 145, ROMBO - 2)}
                         {fjDecision(ROMBO, 'monto > 0')}
                         {fjLinea(32, ROMBO + 32, CARRIL_IZQ, ROMBO + 32, RETORNO)}
                         {fjRotulo(18, ROMBO + 24, 'No')}
@@ -3496,8 +3499,8 @@ FinMientras`;
                         {fjTerminal(ROMBO + 152, 'Fin', '#001A4D')}
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
-                        Aquí el rombo va <strong>después</strong> del cuerpo: se lee el monto sin preguntar nada, y
-                        solo entonces se decide si se vuelve a leer. Se sale por el «Sí», al revés que en
+                        Aquí el rombo va <strong>después</strong> del cuerpo: se pide y se lee el monto sin evaluar ninguna
+                        condición, y solo entonces se decide si se vuelve a pedir. Se sale por el «Sí», al revés que en
                         el <span className="inline-code">Mientras</span>: <span className="inline-code">Hasta</span> dice
                         cuándo <em>parar</em>, no cuándo <em>seguir</em>.
                     </figcaption>
@@ -4957,9 +4960,15 @@ Debug.Print cobrado`,
                     Dos rutinas del mismo banco usan la misma estructura. La primera pide el monto de un
                     pago y vuelve a pedirlo si el cliente escribe cero: tiene que leer al menos una vez, y
                     lo hace bien. La segunda, copiada de la primera, cobra cuotas hasta dejar el saldo en
-                    cero. Con los clientes que ya estaban a paz y salvo, cobró una cuota de 916 799,93 que
-                    nadie debía.
+                    cero. Con los clientes que ya estaban a paz y salvo —con el saldo en cero, sin nada
+                    pendiente—, cobró una cuota que nadie debía.
                 </Motivacion>
+
+                <Ilustrativo>
+                    El banco y sus dos rutinas son un caso inventado para esta sección. Lo que sí se
+                    comprueba es el efecto: el ejercicio que cierra la sección compara las dos formas
+                    del cobro, y la que pregunta al final cobra una cuota cuando no hay nada que cobrar.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -4968,7 +4977,9 @@ Debug.Print cobrado`,
                     y eso tiene dos consecuencias. La primera: el cuerpo se ejecuta <strong>al menos una
                     vez</strong>, pase lo que pase. La segunda: la condición dice cuándo <em>parar</em>, no
                     cuándo <em>seguir</em>. El ciclo sale cuando la condición es <strong>verdadera</strong>, al
-                    revés que el <span className="inline-code">Mientras</span>.
+                    revés que el <span className="inline-code">Mientras</span>. Por eso la actualización de
+                    la sección 2 cambia de sentido: aquí, lo que el cuerpo tiene que poder hacer es volver
+                    verdadera la condición.
                 </p>
 
                 <FlujogramaRepita />
@@ -4980,9 +4991,9 @@ Debug.Print cobrado`,
                 </p>
 
                 <CodeTabs
-                    titulo="Pedir un monto hasta que sea válido"
+                    titulo="Pedir un monto hasta que sea positivo"
                     bloques={EJ_VALIDAR_MONTO}
-                    nota="El programa lee datos, así que no hay una salida fija. Lo que hay que mirar es dónde está la pregunta: después de la lectura, en los cuatro lenguajes." />
+                    nota="El programa lee datos, así que no hay una salida fija. Lo que hay que mirar es dónde está la pregunta: después de la lectura, en los cuatro lenguajes. La lectura es también la actualización: es la que puede volver verdadera la condición. Y la validación solo mira el signo; qué pasa si lo digitado no es un número queda fuera de este capítulo." />
 
                 <p>Aquí los cuatro lenguajes sí se separan:</p>
                 <div className="overflow-x-auto">
@@ -4992,31 +5003,37 @@ Debug.Print cobrado`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Repita … Hasta monto &gt; 0</span></td><td>Cuando la condición es <strong>verdadera</strong></td></tr>
-                            <tr><td>Python</td><td><span className="inline-code">while True:</span> … <span className="inline-code">if monto &gt; 0: break</span></td><td>No tiene la estructura: se construye con un ciclo que siempre entra y un <span className="inline-code">break</span></td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">while True:</span> … <span className="inline-code">if monto &gt; 0: break</span></td><td>Python repite con <span className="inline-code">while</span> y con <span className="inline-code">for</span>, y el <span className="inline-code">while</span> prueba la condición antes de cada vuelta <Cita k="psf2026match" loc="§8.2 y §8.3" />: el Repita se construye con un ciclo que siempre entra y un <span className="inline-code">break</span></td></tr>
                             <tr><td>R</td><td><span className="inline-code">repeat {'{'}</span> … <span className="inline-code">if (monto &gt; 0) break {'}'}</span></td><td>Tiene <span className="inline-code">repeat</span>, que siempre entra; la salida también es un <span className="inline-code">break</span></td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Do … Loop Until monto &gt; 0</span></td><td>Existe tal cual</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do … Loop Until monto &gt; 0</span></td><td>Existe tal cual: es una de las combinaciones del recuadro de abajo</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <Box type="info" label="El único uso de break en el capítulo">
-                    Python y R usan <span className="inline-code">break</span> aquí porque no tienen otra forma de
-                    preguntar al final, y es el único uso que le da este capítulo: cada vez que aparezca,
+                    En Python, el <span className="inline-code">while</span> pregunta antes de cada vuelta y
+                    el <span className="inline-code">for</span> recorre una secuencia: ninguno pregunta al final. Y
+                    el <span className="inline-code">repeat</span> de R no lleva condición. En los dos lenguajes, este curso cierra el <span className="inline-code">Repita</span> con
+                    un <span className="inline-code">break</span>, y es el único uso que le da este capítulo: cada vez que aparezca,
                     será para cerrar un <span className="inline-code">Repita</span>. El pseudocódigo de este
                     capítulo no lo usa, aunque la búsqueda del capítulo 2 sí salía a mitad del ciclo con
-                    {' '}<span className="inline-code">Salir</span>. Aquí la salida se escribe en la condición: un
-                    ciclo con salidas en medio del cuerpo esconde justo lo que este capítulo enseña a leer,
-                    que es <em>cuándo para</em>.
+                    {' '}<span className="inline-code">Salir</span>. Aquí la salida se escribe en la condición, y es una
+                    decisión del curso: con salidas en medio del cuerpo, cuesta más leer lo que este
+                    capítulo enseña a leer, que es <em>cuándo para</em>.
                 </Box>
 
                 <Box type="tip" label="VBA tiene las cuatro combinaciones">
-                    En VBA, <span className="inline-code">Do … Loop</span> admite la condición arriba o abajo, y en
+                    En VBA, <span className="inline-code">Do … Loop</span> admite la condición después
+                    de <span className="inline-code">Do</span> o después de <span className="inline-code">Loop</span>, y en
                     cualquiera de los dos sitios con <span className="inline-code">While</span> —seguir mientras— o
-                    con <span className="inline-code">Until</span> —parar cuando—. <span className="inline-code">Do While</span> es el
+                    con <span className="inline-code">Until</span> —parar cuando— <Cita k="microsoft2026vbal" loc="§5.4.2.6" />. <span className="inline-code">Do While</span> es el
                     {' '}<span className="inline-code">Mientras</span> de la sección 2 y <span className="inline-code">Loop Until</span>,
                     el <span className="inline-code">Repita</span> de esta. Las otras dos,
-                    {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, son las mismas
-                    preguntas con la condición negada.
+                    {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, se obtienen
+                    negando la condición: <span className="inline-code">Do Until c</span> equivale
+                    a <span className="inline-code">Do While Not (c)</span>, y <span className="inline-code">Loop Until c</span>,
+                    a <span className="inline-code">Loop While Not (c)</span>. Sin ninguna condición, el ciclo solo para
+                    con un <span className="inline-code">Exit Do</span>, que este capítulo no usa.
                 </Box>
 
                 <h3>Mientras o Repita, para validar</h3>
@@ -5114,10 +5131,10 @@ Debug.Print cobrado`,
                 /></Ejercicio>
 
                 <Box type="tip" label="Lo que sigue">
-                    Las dos formas de esta sección y de la anterior se detienen por una condición sobre un
-                    dato: el saldo, el monto. La sección 4 trata el caso en que se sabe de antemano cuántas
-                    vueltas hacen falta —doce cuotas, 240 cuotas—, y allí vuelve este mismo cobro, escrito
-                    con las tres formas.
+                    En esta sección y en la anterior, cuántas vueltas da el ciclo depende de lo que pase
+                    dentro: un saldo que se agota, un monto que por fin es positivo. La sección 4 trata el
+                    caso en que se sabe de antemano cuántas vueltas hacen falta —doce cuotas, 240 cuotas—, y
+                    allí vuelve el cobro de cuotas, escrito con las tres formas.
                 </Box>
             </div>
         );
@@ -8200,12 +8217,13 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "0301d1eeb7fb4d58b2ecb4d4697a89a4436c9124563e4cbe2be7443c2885cf37",
-  "sello": "4b0c4a2092d8ae8199ad8a10dfe2495cd30057344a16eb75ca915e24c6d50ef9",
+  "huella": "81b0ae30849e2e7214ae7b51358aa7cdc75c444030bb191570a8c0fda9b89916",
+  "sello": "a47f43bec0a135858ae0e0ab5b2d3164016cf61257752e95e5695a128e8e4a63",
   "orden": [
     "congreso2000ley599",
     "microsoft2019dim",
-    "microsoft2026vbal"
+    "microsoft2026vbal",
+    "psf2026match"
   ],
   "entradas": {
     "congreso2000ley599": {
@@ -8225,6 +8243,12 @@ End Sub`,
       "anio": "2026",
       "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
       "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    },
+    "psf2026match": {
+      "autor": "Python Software Foundation",
+      "anio": "2026",
+      "html": "Python Software Foundation. (2026, noviembre 17). \u003cem>8. Compound statements\u003c/em>. Python 3.15.2 Documentation. \u003ca href=\"https://docs.python.org/3/reference/compound_stmts.html\">https://docs.python.org/3/reference/compound_stmts.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026, noviembre 17). 8. Compound statements. Python 3.15.2 Documentation. https://docs.python.org/3/reference/compound_stmts.html"
     }
   },
   "profundizar": {

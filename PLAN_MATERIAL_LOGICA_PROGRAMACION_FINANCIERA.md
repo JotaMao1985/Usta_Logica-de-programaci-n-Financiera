@@ -4504,3 +4504,31 @@ Rama `claude/cap05-fase3`, sobre la de la fase 2.
 **Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
 5, con cuatro citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
 escritorio: 9 de 9.
+
+### Tarea 15 · Capítulo 5, fase 4: sección 3, Repita…Hasta · 2026-11-21
+
+Rama `claude/cap05-fase4`, sobre la de la fase 3.
+
+- **Motivación (N6):** salió la cifra de 916 799,93, que era la cuota de un crédito que
+  el capítulo no presenta hasta la sección 4. «A paz y salvo» se define en el sitio, y un
+  `<Ilustrativo>` declara inventados el banco y sus dos rutinas.
+- **Python:** «No tiene la estructura» pasó a «Python repite con while y con for, y el
+  while prueba la condición antes de cada vuelta», con cita a la referencia del lenguaje
+  (§8.2 y §8.3). La página no afirma que falte un ciclo de evaluación posterior: el
+  recuadro del `break` lo dice como derivada, y ya no dice «no tienen otra forma de
+  preguntar al final». Cerrar el Repita con `break` queda escrito como decisión del curso.
+- **VBA:** el recuadro de las cuatro combinaciones lleva cita a la especificación
+  (§5.4.2.6), escribe la equivalencia como la da la fuente (`Do Until c` = `Do While Not
+  (c)`) y avisa del `Do` sin condición, que solo para con `Exit Do`; el capítulo no lo usa.
+- **Actualización:** en un Repita, el cuerpo tiene que poder volver verdadera la
+  condición; en la validación lo hace la lectura.
+- **Flujograma del Repita:** el cuerpo dibuja las dos instrucciones del código (el
+  mensaje, abreviado, y la lectura). Visto en el navegador: el texto cabe.
+- El bloque se titula «hasta que sea positivo» y su nota dice que solo mira el signo.
+  «Lo que sigue» ya no dice «este mismo cobro».
+- Verificador independiente: «parcial» a la cita de Python (se adoptaron su redacción y
+  su localización) y «respalda» a la de VBA (se adoptaron dos ajustes).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con seis citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
