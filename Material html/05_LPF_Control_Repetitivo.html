@@ -4153,7 +4153,8 @@ Debug.Print intereses`,
 
         /* Contar no es contar vueltas: `enMora` es un contador aunque no
            aumente en todas. Lee los datos de cada crédito, así que no declara
-           salida. */
+           salida. En Excel, el 2026-11-21, con los tres créditos de la
+           pregunta que sigue: «2 créditos en mora por 1500000». */
         const EJ_CARTERA_MORA = {
             pseudo: `Inicio
     Leer n                          // créditos a revisar
@@ -4812,10 +4813,11 @@ End Sub`,
            SECCIÓN 3 — REPITA…HASTA: ENTRAR ANTES DE PREGUNTAR
         ============================================================ */
         /* La validación de un monto: el caso donde la primera vuelta es
-           obligatoria, porque no hay nada que validar antes de leer. Python no
-           tiene la estructura y la construye con `while True` y `break`; R
-           tiene `repeat` y también sale con `break`. Lee datos: no declara
-           salida. */
+           obligatoria, porque no hay nada que validar antes de leer. Python la
+           construye con `while True` y `break`; R tiene `repeat` y también
+           sale con `break`. Lee datos: no declara salida. En Excel, el
+           2026-11-21, con −5, 0 y 250 000: «Pago registrado por 250000», lo
+           mismo que la versión con Mientras. */
         const EJ_VALIDAR_MONTO = {
             pseudo: `Inicio
     Repita
@@ -4825,8 +4827,8 @@ End Sub`,
 
     Escribir "Pago registrado por ", monto
 Fin`,
-            python: `# Python no tiene Repita: se construye con un while que
-# siempre entra y un break que hace de «Hasta»
+            python: `# El Repita se construye aquí con un while que siempre
+# entra y un break que hace de «Hasta»
 while True:
     monto = float(input("Monto a pagar: "))
     if monto > 0:
@@ -6662,9 +6664,9 @@ End Sub`,
            redondeada al peso tampoco para: tras doce cuotas de 916 800 el
            saldo es −0,93. En VBA, k es Integer, que no pasa de 32 767: al
            empezar la vuelta 32 768, k + 1 no cabe y el programa se detiene
-           con el error 6. Eso sale de las páginas de Integer y del error 6 y del
-           código (los Double no se desbordan antes: 1,015^32767 es del orden
-           de 10^212), no de una ejecución (R10). La línea cambia con el lenguaje, y con ella la
+           con el error 6. Ejecutado en Excel el 2026-11-21 con ejecutar_vba.py --incluir:
+           32 767 filas y el error 6; el saldo va por −3,8 × 10^219, sin
+           desbordar el Double. La línea cambia con el lenguaje, y con ella la
            explicación (trampa 4 de la skill). */
         const ERROR_IGUALDAD_LINEAS = {
             pseudo: [
@@ -6775,17 +6777,17 @@ End Sub`,
                 hasta 32 767 <Cita k="microsoft2018integer" loc="párrafo inicial" />, y cuando el resultado de una
                 asignación o de un cálculo no cabe en el rango del tipo de la variable, VBA produce el error 6,
                 «Desbordamiento» <Cita k="microsoft2017desbordamiento" loc="párrafo inicial y primera causa" />. Le
-                tocaría a <span className="inline-code">k = k + 1</span> al empezar la vuelta 32 768, después de
-                32 755 vueltas que no están en el contrato. Es una deducción de esas dos páginas y del código:
-                el programa no se ejecutó hasta ahí. Lo que sí se ejecutó en Excel es el paso que falla: sumarle 1 a
-                un <span className="inline-code">Integer</span> que vale 32 767 produce el error 6.</>),
+                toca a <span className="inline-code">k = k + 1</span> al empezar la vuelta 32 768, después de
+                32 755 vueltas que no están en el contrato. Ejecutado en Excel: el programa escribe
+                32 767 cuotas y se detiene ahí con el error 6.</>),
         };
 
         /* E2: el centinela procesado como un dato. El cierre de caja con
            Repita pregunta al final de la vuelta, después de sumar y contar,
            así que el −1 entra al conteo y al total, al que le quita un peso.
            Con 250 000, 400 000, 150 000 y −1 escribe «4 pagos por 799 999»
-           (ejecutado el 2026-10-20 en Python y R, con esas entradas). El
+           (ejecutado el 2026-10-20 en Python y R, con esas entradas, y el
+           2026-11-21 en Excel, con ejecutar_vba.py --incluir). El
            centinela era un 0 en la primera versión, y así el total no
            cambiaba: escondía justo lo que el E2 tiene que mostrar. R escribe
            con sprintf porque cat(800000) imprime 8e+05. */
@@ -6844,7 +6846,8 @@ End Sub`,
         /* La forma que sirve: lectura adelantada. Con los mismos datos
            escribe «3 pagos por 800 000»; si el primer dato ya es el −1, no da
            ninguna vuelta y escribe «0 pagos por 0» (ejecutado el 2026-10-20
-           en Python y R). */
+           en Python y R). En Excel, el 2026-11-21, con los mismos datos:
+           «3 pagos por 800000»; el caso del −1 de entrada no se corrió ahí. */
         const EJ_CAJA_ADELANTADA = {
             pseudo: `Inicio
     // Cierre de caja, con lectura adelantada: el primer pago se lee antes
@@ -7037,7 +7040,7 @@ End Sub`,
 
                 <p>
                     El mismo programa con seis créditos, cambiando solo los datos. Las vueltas y los residuos
-                    son los que dieron Python y R; la fila de las 37 vueltas salió igual en Excel:
+                    son los que dieron Python y R, y en Excel las seis filas salieron iguales:
                 </p>
                 <div className="overflow-x-auto">
                     <table>
@@ -7054,7 +7057,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
-                <Fuente propia>con el programa de esta sección, ejecutado en Python y R; la fila de las 37 vueltas, también en Excel</Fuente>
+                <Fuente propia>con el programa de esta sección, ejecutado en Python, en R y, con VBA, en Excel</Fuente>
                 <p>
                     El signo del residuo decide. Cuando es negativo, la última cuota deja el saldo un poco por
                     debajo de cero, la condición da falso y el ciclo para a tiempo. Cuando es positivo, el ciclo
