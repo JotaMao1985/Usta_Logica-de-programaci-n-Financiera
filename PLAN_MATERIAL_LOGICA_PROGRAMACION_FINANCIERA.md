@@ -4667,7 +4667,7 @@ navegador; su gráfica sin fuente (fase 10).
 Rama `claude/cap05-fase9`, sobre la de la fase 8. Sin citas nuevas.
 
 - **Portada:** la motivación lleva su `<Ilustrativo>` (M5); el mapa usa los títulos de
-  la barra lateral; las cuatro diferencias entre lenguajes remiten a su sección (3 y 4),
+  la barra lateral (corregido en la fase 10: solo cambian los pasos 5 y 7); las cuatro diferencias entre lenguajes remiten a su sección (3 y 4),
   donde van las citas, y dicen que se ejecutaron, la de VBA en Excel (M6).
 - **Evaluación:** la motivación de la auditoría y las situaciones del emparejamiento,
   declaradas como inventadas. Pregunta 3: el 0 del `Dim` remite a la sección 2, lo de
@@ -4696,3 +4696,35 @@ pruebas, un clic cayó en la ventana del libro y no en el editor; no se pegó na
 hoja (comprobado: A1:B3 vacías) y se repitió. `ejecutar_vba.py` no tiene una forma de
 añadir pruebas sueltas sin pegar a mano. **Pendiente (fase 11):** el programa completo
 hasta la vuelta 32 768 y las otras cinco filas de la tabla de créditos, en Excel.
+
+### Tarea 15 · Capítulo 5, fase 10: figuras y tablas · 2026-11-21
+
+Rama `claude/cap05-fase10`, sobre la de la fase 9. No se tocó LP-CORE.
+
+- **Las 23 figuras y tablas sin fuente:** once con `<Fuente propia>` a la vista (las que
+  traen datos o resumen secciones) y doce con `fuente-ok` y su motivo (flujogramas de
+  casos ya declarados, la simbología, la ficha, dos índices, las negaciones y las tablas
+  que calcula un interactivo). El aviso de la regla 30 desapareció.
+- **Dos interactivos más**, que la regla no ve o ve a medias: `<Fuente propia>` tras la
+  tabla de amortización y tras el comparador de los tres ciclos.
+- **Formato de cifras (B8):** los tres interactivos escriben los miles con espacio, como
+  la prosa, y el eje de la gráfica de la TIR también.
+- **Tabla del Para:** la celda de VBA ya no atribuye la suma al `Next`. **Tabla de las
+  tres formas:** el Para pregunta «si queda alguna por dar», no «contra un tope».
+- **Simbología:** el retorno explica el punto relleno por el que entra al flujo.
+- **Corrección a la fase 9:** el mapa de la portada había tomado cuatro títulos de
+  `CONFIG.temas`, y la barra lateral usa los de la lista de lecciones. Los pasos 1 y 6
+  volvieron a «Contar y acumular» y «Cuándo para»; solo cambian el 5 y el 7. Se vio al
+  abrir el capítulo en el navegador.
+- **Regla 30:** se decidió no ampliarla a `TablaTraza`, `Trazador` ni a los
+  interactivos sin tabla; el motivo y qué hacer con un interactivo nuevo están en el
+  README. Ahí quedó también cómo se redactan los hijos de `<Fuente propia>`.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, y el
+capítulo 5 sin avisos. Sonda a 320 y en escritorio: 9 de 9. En el navegador: las
+secciones 4 y 7 con sus interactivos; la bisección da 17 vueltas y deja la TIR entre
+1,9923401 % y 1,9924164 %. **Hallazgo fuera del capítulo:** en el capítulo 4, dos
+`<Fuente propia>` empiezan por «elaboración propia» y se leen «Fuente: elaboración
+propia elaboración propia; …» (líneas 3880 y 5732); otras dos y cinco del capítulo 2 y
+del 3 quedan sin conector («elaboración propia convención del curso»). Va en la fase 11.
+**Pendiente (fase 11):** el VBA del cierre de caja, que lee datos.

@@ -491,6 +491,18 @@ comentario se escribe sin llaves, `/* fuente-ok: … */`; y dentro de un objeto 
 JavaScript, como una pregunta del `Quiz`, `// fuente-ok: …`. En medio del texto de
 un párrafo no: parte el texto en dos y se come el espacio; ahí se reescribe la frase.
 
+La regla 30 mira `<table>`, `<figure>`, `<svg>` y `ChartFrame`. No ve un interactivo
+propio que pinta sus datos sin ninguno de los cuatro (el comparador de los tres ciclos
+del capítulo 5), ni las tablas que dibujan `TablaTraza` y `Trazador`. Se decidió no
+ampliarla (2026-11-21): una traza muestra el código que tiene encima, que es su fuente,
+y avisar de cada una serían decenas de avisos en los cinco capítulos. El interactivo que
+calcula datos propios lleva un `<Fuente propia>` a continuación del componente, puesto a
+mano; al escribir uno nuevo hay que acordarse.
+
+Los hijos de `<Fuente propia>` completan la frase «Fuente: elaboración propia …»: se
+escriben empezando por «con», «a partir de» o «que resume», no repitiendo «elaboración
+propia».
+
 
 El 2026-11-10, al escribirlas, avisaban de 67 figuras y 8 menciones en los
 cinco capítulos. No se migró ninguna: solo el capítulo 1 cita, y solo en su

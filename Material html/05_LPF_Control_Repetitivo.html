@@ -2794,7 +2794,8 @@
         // centavo se escribe 0,00 y no «-0,00»: el signo de un residuo es
         // información para la sección 6, no para una tabla de pagos.
         const pesosCO = (x) => (Math.abs(x) < 0.005 ? 0 : x)
-            .toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            .toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            .replace(/\./g, '\u00a0');   // el espacio de miles de la prosa, no el punto de es-CO
 
         /* ------------------------------------------------------------
            AmortizacionPasoAPaso — la tabla de amortización ES un ciclo
@@ -2884,7 +2885,7 @@ FinPara`;
                             className="w-full rounded-lg border-2 border-gray-300 bg-white px-2 py-1.5 text-sm text-navy focus:border-primary focus:outline-none">
                             {CREDITOS_AMORTIZACION.map(c => (
                                 <option key={c.id} value={c.id}>
-                                    {c.nombre} — {c.capital.toLocaleString('es-CO')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
+                                    {c.nombre} — {c.capital.toLocaleString('es-CO').replace(/\./g, '\u00a0')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
                                 </option>
                             ))}
                         </select>
@@ -2921,6 +2922,7 @@ FinPara`;
                     </div>
 
                     <div ref={contenedor} className="overflow-auto rounded-xl border border-gray-200" style={{ maxHeight: '18rem' }}>
+                        {/* fuente-ok: tabla que calcula el propio interactivo; su procedencia va en el <Fuente> que sigue al componente */}
                         <table className="w-full text-xs sm:text-sm font-mono whitespace-nowrap" style={{ margin: 0, minWidth: '34rem', borderCollapse: 'separate', borderSpacing: 0 }}>
                             <thead>
                                 <tr>
@@ -3220,7 +3222,7 @@ FinMientras`;
                         type: 'rect', xref: 'x', yref: 'paper', x0: bajo * 100, x1: alto * 100, y0: 0, y1: 1,
                         fillcolor: 'rgba(14,116,144,0.14)', line: { color: '#0E7490', width: 1 },
                     }],
-                    separators: ',.',
+                    separators: ', ',
                     font: { family: 'Inter, system-ui, sans-serif', size: 11 },
                 };
             }, [vueltas.length, acercar]);
@@ -3244,7 +3246,8 @@ FinMientras`;
                     <CodeBlock title="El ciclo de la bisección" code={PSEUDO_BISECCION} lang="pseudo" plegable={false} />
 
                     <ChartFrame id={idGrafica} height="chart-h-320"
-                        caption="La franja es el intervalo [bajo, alto]. El VPN baja al subir la tasa y cruza el cero una sola vez: la TIR está siempre dentro de la franja." />
+                        caption="La franja es el intervalo [bajo, alto]. El VPN baja al subir la tasa y cruza el cero una sola vez: la TIR está siempre dentro de la franja."
+                        fuente={{ propia: true, children: 'con el VPN que calcula el interactivo en su navegador para el crédito inventado de la sección 7' }} />
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" role="status" aria-live="polite">
                         {[
@@ -3281,6 +3284,7 @@ FinMientras`;
 
                     {vueltas.length > 0 && (
                         <div className="overflow-auto rounded-xl border border-gray-200 mb-3" style={{ maxHeight: '15rem' }}>
+                            {/* fuente-ok: vueltas que calcula el propio interactivo; su procedencia va bajo la gráfica */}
                             <table className="w-full text-xs sm:text-sm font-mono whitespace-nowrap" style={{ margin: 0, minWidth: '30rem', borderCollapse: 'separate', borderSpacing: 0 }}>
                                 <thead>
                                     <tr>
@@ -3438,7 +3442,7 @@ FinMientras`;
             // los lee. Hasta el 2026-11-02 el dibujo decía «Leer saldo, abono».
             const ID = 'lp-flecha5-FlujogramaMientras';
             const UNION = 162, ROMBO = 178, CUERPO = 262, SALIDA = 352;
-            return (
+            return ( // fuente-ok: flujograma propio del acuerdo de pago inventado de la sección 2, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 488" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3477,7 +3481,7 @@ FinMientras`;
             // 2026-11-21 dibujaba solo «Leer monto». El mensaje va abreviado
             // porque entero no cabe en la caja.
             const UNION = 64, ROMBO = 169;
-            return (
+            return ( // fuente-ok: flujograma propio de la validación del monto de la sección 3, un caso inventado que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 367" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3517,7 +3521,7 @@ FinMientras`;
             const DESCRIPCION = 'Flujograma del plan de pagos, con su ciclo Para desarmado. Inicio; capital, tasa y n reciben sus valores; se calcula la cuota con la fórmula de la cuota fija y se escribe; saldo empieza en el capital y totalIntereses en 0. Después vienen las tres piezas que el Para hace por su cuenta, dibujadas con borde discontinuo: k se inicia en 1; un rombo pregunta si k es menor o igual que n; y, al final del cuerpo, k aumenta en 1. Por la rama Sí se ejecuta el cuerpo —el interés del mes, el abono, el saldo nuevo y la suma de los intereses—, se escriben k, interes, abono y saldo, k aumenta en uno y una flecha de retorno sube por la izquierda hasta antes del rombo. Por la rama No se sale, se escribe totalIntereses y Fin.';
             const ID = 'lp-flecha5-FlujogramaPara';
             const UNION = 396, ROMBO = 412, CUERPO = 496, SALIDA = 765;
-            return (
+            return ( // fuente-ok: flujograma propio del plan de pagos inventado de la sección 4, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 893" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3614,7 +3618,7 @@ FinMientras`;
                     <circle cx={EJE} cy={yHasta} r="3.5" fill="#3D008D" />
                 </g>
             );
-            return (
+            return ( // fuente-ok: flujograma propio de la cartera inventada de la sección 5, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 761" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3687,12 +3691,12 @@ FinMientras`;
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd={punta(ID)} />],
-                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo, y la añade el curso: va de otro color para que se distinga.',
+                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó, y entra al flujo por un punto relleno. Es la única forma nueva de este capítulo, y la añade el curso: va de otro color para que se distinga.',
                     <g>
                         <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
                     </g>],
             ];
-            return (
+            return ( // fuente-ok: símbolos que son convención del curso, presentada con su fuente en el capítulo 2; el retorno lo añade este capítulo, y lo dice
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
                         Los símbolos que usan los flujogramas de este curso
@@ -3744,6 +3748,7 @@ FinMientras`;
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; lo que viene del syllabus se coteja como remisión */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -3770,12 +3775,12 @@ FinMientras`;
                 </p>
 
                 <Pipeline steps={[
-                    { num: 1, title: 'Contador y acumulador', desc: 'Las dos variables de casi todo ciclo, y dónde nace cada una' },
+                    { num: 1, title: 'Contar y acumular', desc: 'Las dos variables de casi todo ciclo, y dónde nace cada una' },
                     { num: 2, title: 'Mientras', desc: 'Preguntar antes de entrar: puede no dar ninguna vuelta' },
                     { num: 3, title: 'Repita…Hasta', desc: 'Entrar antes de preguntar: da al menos una' },
                     { num: 4, title: 'Para', desc: 'Cuando se sabe cuántas veces, y lo que cada lenguaje entiende por eso' },
                     { num: 5, title: 'Ciclos anidados', desc: 'Un ciclo dentro de otro, que vuelve a empezar en cada vuelta' },
-                    { num: 6, title: 'Terminación', desc: 'El ciclo que no termina y el que da una vuelta de más' },
+                    { num: 6, title: 'Cuándo para', desc: 'El ciclo que no termina y el que da una vuelta de más' },
                     { num: 7, title: 'Casos financieros', desc: 'Saldos, intereses y una TIR que se busca por aproximación' },
                 ]} />
 
@@ -4276,6 +4281,7 @@ End Sub`,
                     lo que esta sección nombra ya estaba en ellos:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice de lo que ya trajeron los capítulos 1 y 2, cotejado como remisión */}
                     <table>
                         <thead>
                             <tr><th>Dónde</th><th>Qué vio ahí</th><th>El ciclo que era</th></tr>
@@ -4295,6 +4301,7 @@ End Sub`,
                     aquellos capítulos no se detuvieron a preguntar es lo que este necesita:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice interno: qué sección responde cada pregunta */}
                     <table>
                         <thead>
                             <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
@@ -4380,6 +4387,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las variables de los programas de este capítulo</Fuente>
 
                 <h3>La línea en el lugar equivocado</h3>
                 <p>
@@ -4710,6 +4718,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje; lo que se afirma de VBA lleva su cita en la celda</Fuente>
 
                 <h3>Las tres piezas de un ciclo</h3>
                 <p>
@@ -5016,6 +5025,7 @@ Debug.Print cobrado`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje y las citas que lleva cada celda</Fuente>
 
                 <Box type="info" label="El único uso de break en el capítulo">
                     En Python, el <span className="inline-code">while</span> pregunta antes de cada vuelta y
@@ -5107,6 +5117,7 @@ Debug.Print cobrado`,
                     sección 1 del capítulo 4: al negar, el conector también cambia.
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: negaciones lógicas; remiten a la sección 1 del capítulo 4 */}
                     <table>
                         <thead>
                             <tr><th>Mientras… (seguir si)</th><th>Hasta… (parar si)</th></tr>
@@ -5706,6 +5717,7 @@ Loop`,
                 </p>
 
                 <AmortizacionPasoAPaso />
+                <Fuente propia>con tres créditos inventados; las filas las calcula el interactivo en su navegador, con el ciclo que muestra</Fuente>
 
                 <p>Ahora, a mano, las primeras vueltas de un crédito que la tabla de arriba no trae:</p>
 
@@ -5755,10 +5767,11 @@ Loop`,
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Para k &lt;- 1 Hasta n</span></td><td>Sí</td><td>0 vueltas</td><td>No se hace, por convención</td></tr>
                             <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: el tope es el n + 1, que queda fuera. Con <span className="inline-code">range(1, n)</span> da n − 1 vueltas, si n es al menos 1</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
                             <tr><td>R</td><td><span className="inline-code">for (k in 1:n)</span></td><td>Sí</td><td><strong>2 vueltas</strong>, con k = 1 y luego k = 0. Con <span className="inline-code">seq_len(n)</span>, 0</td><td>No afecta: la vuelta siguiente toma el valor que sigue en la secuencia</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: <span className="inline-code">Next</span> le suma 1 al valor ya cambiado</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: al terminar la vuelta se le suma 1 al valor ya cambiado</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>a partir de lo que se ejecutó para este capítulo: Python y R desde la terminal, y VBA en Excel. La fila del pseudocódigo es convención del curso</Fuente>
 
                 <Box type="warn" label="Tres diferencias que no dan ningún error">
                     <p>
@@ -5873,10 +5886,11 @@ Loop`,
                         <tbody>
                             <tr><td><span className="inline-code">Mientras</span></td><td>Antes de cada vuelta</td><td>0</td><td>El número de vueltas depende de lo que pase dentro, y puede ser ninguna</td></tr>
                             <tr><td><span className="inline-code">Repita…Hasta</span></td><td>Después de cada vuelta</td><td>1</td><td>La primera vuelta es obligatoria, como al validar un dato</td></tr>
-                            <tr><td><span className="inline-code">Para</span></td><td>Antes de cada vuelta, contra un tope</td><td>0 (en R, solo con <span className="inline-code">seq_len(n)</span>)</td><td>El número de vueltas se sabe al entrar</td></tr>
+                            <tr><td><span className="inline-code">Para</span></td><td>Antes de cada vuelta: si queda alguna por dar</td><td>0 (en R, solo con <span className="inline-code">seq_len(n)</span>)</td><td>El número de vueltas se sabe al entrar</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>que resume las secciones 2, 3 y 4</Fuente>
                 <p>
                     El panel de abajo pone el mismo cobro en las tres formas. Compruebe en él lo que dicen
                     la tabla y el recuadro de arriba: con qué <span className="inline-code">n</span> se separan y
@@ -5887,6 +5901,7 @@ Loop`,
                 </p>
 
                 <TresCiclosComparados />
+                <Fuente propia>con la cuota del crédito inventado de esta sección; las vueltas las calcula el interactivo en su navegador</Fuente>
             </div>
         );
 
@@ -6405,6 +6420,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las cuentas del simulador de esta sección</Fuente>
                 <p>
                     Cuando el de dentro da siempre las mismas vueltas, la última fila es una multiplicación:
                     dos créditos de tres cuotas son seis vueltas. En el simulador es una suma, porque cada plazo
@@ -6950,6 +6966,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con el acuerdo de pago de la sección 2; cada fila es una resta</Fuente>
                 <p>
                     400 000 no cabe un número exacto de veces en 2 350 000, así que el saldo pasa de 350 000 a
                     −50 000 sin tocar el cero. Con <span className="inline-code">&gt;</span>, ahí terminaba el
@@ -7037,6 +7054,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con el programa de esta sección, ejecutado en Python y R; la fila de las 37 vueltas, también en Excel</Fuente>
                 <p>
                     El signo del residuo decide. Cuando es negativo, la última cuota deja el saldo un poco por
                     debajo de cero, la condición da falso y el ciclo para a tiempo. Cuando es positivo, el ciclo
@@ -7171,6 +7189,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>que resume las secciones 2, 4, 6 y 7</Fuente>
 
                 <Box type="tip" label="Lo que sigue">
                     La bisección de la sección 7 no sabe cuántas vueltas va a dar, ni espera un dato que le diga
@@ -7741,6 +7760,7 @@ End Sub`,
                         recibidos y doce cuotas de 916 799,93. El VPN de cada tasa ya está calculado, porque es el
                         ciclo de dentro y aquí no se repite: búsquelo en esta tabla con el valor de <span className="inline-code">medio</span>.
                         Anote las tasas como las guarda el programa (0.05, no 5 %), y Verdadero o Falso en la condición.
+                        {/* fuente-ok: VPN ejecutados en Python y R con el crédito inventado de la sección */}
                         <table className="mt-2 text-sm" style={{ width: 'auto' }}>
                             <thead><tr><th>medio</th><th>vpn</th></tr></thead>
                             <tbody>
@@ -8052,6 +8072,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las definiciones de este curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 6, «Entorno de programación VBA», pone a VBA al frente y deja el pseudocódigo
