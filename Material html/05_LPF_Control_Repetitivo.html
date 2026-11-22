@@ -2763,7 +2763,7 @@
             horas: 8,
             ra: 'RA1',
             contenidoSyllabus: 'CONTROL REPETITIVO: algoritmos, flujograma, pseudocódigo y codificación.',
-            temas: ['Contador y acumulador', 'Mientras', 'Repita…Hasta', 'Para', 'Ciclos anidados', 'Terminación', 'Casos financieros'],
+            temas: ['Contar y acumular', 'Mientras', 'Repita…Hasta', 'Para', 'Ciclos anidados', 'Cuándo para', 'Casos financieros'],
             storageKey: 'lpf_cap05_control_repetitivo',
             docente: 'Javier Mauricio Sierra',
         };
@@ -2794,7 +2794,8 @@
         // centavo se escribe 0,00 y no «-0,00»: el signo de un residuo es
         // información para la sección 6, no para una tabla de pagos.
         const pesosCO = (x) => (Math.abs(x) < 0.005 ? 0 : x)
-            .toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            .toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            .replace(/\./g, '\u00a0');   // el espacio de miles de la prosa, no el punto de es-CO
 
         /* ------------------------------------------------------------
            AmortizacionPasoAPaso — la tabla de amortización ES un ciclo
@@ -2874,8 +2875,8 @@ FinPara`;
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
                         Cada clic es <strong>una vuelta del ciclo</strong> y deja una fila escrita. El ciclo
-                        no pregunta por el saldo: cuenta las cuotas, y para cuando el contador
-                        llega a <span className="inline-code">n</span>.
+                        no pregunta por el saldo: cuenta las cuotas, y para después de la
+                        vuelta <span className="inline-code">n</span>.
                     </p>
 
                     <label className="block mb-3">
@@ -2884,7 +2885,7 @@ FinPara`;
                             className="w-full rounded-lg border-2 border-gray-300 bg-white px-2 py-1.5 text-sm text-navy focus:border-primary focus:outline-none">
                             {CREDITOS_AMORTIZACION.map(c => (
                                 <option key={c.id} value={c.id}>
-                                    {c.nombre} — {c.capital.toLocaleString('es-CO')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
+                                    {c.nombre} — {c.capital.toLocaleString('es-CO').replace(/\./g, '\u00a0')} al {(c.tasa * 100).toLocaleString('es-CO')} % mensual, {c.n} cuotas
                                 </option>
                             ))}
                         </select>
@@ -2921,6 +2922,7 @@ FinPara`;
                     </div>
 
                     <div ref={contenedor} className="overflow-auto rounded-xl border border-gray-200" style={{ maxHeight: '18rem' }}>
+                        {/* fuente-ok: tabla que calcula el propio interactivo; su procedencia va en el <Fuente> que sigue al componente */}
                         <table className="w-full text-xs sm:text-sm font-mono whitespace-nowrap" style={{ margin: 0, minWidth: '34rem', borderCollapse: 'separate', borderSpacing: 0 }}>
                             <thead>
                                 <tr>
@@ -2952,7 +2954,7 @@ FinPara`;
 
                     {termino && (
                         <div className="mt-3 rounded-xl p-3 text-sm bg-[#15803D]/10 border-2 border-[#15803D]">
-                            <strong>{n} vueltas, {n} filas.</strong> El contador llegó a {n} y el ciclo paró sin
+                            <strong>{n} vueltas, {n} filas.</strong> El ciclo dio la vuelta {n} y paró sin
                             mirar el saldo. Por {pesosCO(capital)} se pagan {pesosCO(cuota * n)}, y
                             de eso {pesosCO(ultima.acumulado)} son intereses.
                             <span className="block mt-2 text-gray-600">
@@ -3220,7 +3222,7 @@ FinMientras`;
                         type: 'rect', xref: 'x', yref: 'paper', x0: bajo * 100, x1: alto * 100, y0: 0, y1: 1,
                         fillcolor: 'rgba(14,116,144,0.14)', line: { color: '#0E7490', width: 1 },
                     }],
-                    separators: ',.',
+                    separators: ', ',
                     font: { family: 'Inter, system-ui, sans-serif', size: 11 },
                 };
             }, [vueltas.length, acercar]);
@@ -3244,7 +3246,8 @@ FinMientras`;
                     <CodeBlock title="El ciclo de la bisección" code={PSEUDO_BISECCION} lang="pseudo" plegable={false} />
 
                     <ChartFrame id={idGrafica} height="chart-h-320"
-                        caption="La franja es el intervalo [bajo, alto]. El VPN baja al subir la tasa y cruza el cero una sola vez: la TIR está siempre dentro de la franja." />
+                        caption="La franja es el intervalo [bajo, alto]. El VPN baja al subir la tasa y cruza el cero una sola vez: la TIR está siempre dentro de la franja."
+                        fuente={{ propia: true, children: 'con el VPN que calcula el interactivo en su navegador para el crédito inventado de la sección 7' }} />
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" role="status" aria-live="polite">
                         {[
@@ -3281,6 +3284,7 @@ FinMientras`;
 
                     {vueltas.length > 0 && (
                         <div className="overflow-auto rounded-xl border border-gray-200 mb-3" style={{ maxHeight: '15rem' }}>
+                            {/* fuente-ok: vueltas que calcula el propio interactivo; su procedencia va bajo la gráfica */}
                             <table className="w-full text-xs sm:text-sm font-mono whitespace-nowrap" style={{ margin: 0, minWidth: '30rem', borderCollapse: 'separate', borderSpacing: 0 }}>
                                 <thead>
                                     <tr>
@@ -3438,7 +3442,7 @@ FinMientras`;
             // los lee. Hasta el 2026-11-02 el dibujo decía «Leer saldo, abono».
             const ID = 'lp-flecha5-FlujogramaMientras';
             const UNION = 162, ROMBO = 178, CUERPO = 262, SALIDA = 352;
-            return (
+            return ( // fuente-ok: flujograma propio del acuerdo de pago inventado de la sección 2, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 488" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3471,19 +3475,22 @@ FinMientras`;
         };
 
         const FlujogramaRepita = () => {
-            const DESCRIPCION = 'Flujograma de un ciclo Repita…Hasta. Inicio; se entra directamente al cuerpo, que lee monto; después un rombo pregunta si monto es mayor que 0. Por la rama No una flecha de retorno sube por la izquierda hasta antes de Leer monto, que se vuelve a ejecutar. Por la rama Sí se sale del ciclo, se escribe monto y Fin. La pregunta va después del cuerpo: el cuerpo se ejecuta al menos una vez, y se sale por el Sí, al revés que en un Mientras.';
+            const DESCRIPCION = 'Flujograma de un ciclo Repita…Hasta. Inicio; se entra directamente al cuerpo, que escribe el mensaje «Monto a pagar» y lee monto; después un rombo pregunta si monto es mayor que 0. Por la rama No una flecha de retorno sube por la izquierda hasta antes del cuerpo, que se vuelve a ejecutar. Por la rama Sí se sale del ciclo, se escribe monto y Fin. La pregunta va después del cuerpo: el cuerpo se ejecuta al menos una vez, y se sale por el Sí, al revés que en un Mientras.';
             const ID = 'lp-flecha5-FlujogramaRepita';
-            const UNION = 64, ROMBO = 152;
-            return (
+            // El cuerpo trae las dos instrucciones de EJ_VALIDAR_MONTO. Hasta el
+            // 2026-11-21 dibujaba solo «Leer monto». El mensaje va abreviado
+            // porque entero no cabe en la caja.
+            const UNION = 64, ROMBO = 169;
+            return ( // fuente-ok: flujograma propio de la validación del monto de la sección 3, un caso inventado que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
-                    <svg viewBox="0 0 248 350" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
+                    <svg viewBox="0 0 248 367" role="img" style={ESTILO_FLUJOGRAMA} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
                         {fjTerminal(7, 'Inicio', '#3D008D')}
                         {fjLinea(EJE, 45, EJE, UNION)}
                         {fjFlecha(ID, UNION, 88)}
                         <circle cx={EJE} cy={UNION} r="3.5" fill="#3D008D" />
-                        {fjEntradaSalida(90, 'Leer monto')}
-                        {fjFlecha(ID, 128, ROMBO - 2)}
+                        {fjEntradaSalida(90, ['Escribir "Monto…"', 'Leer monto'])}
+                        {fjFlecha(ID, 145, ROMBO - 2)}
                         {fjDecision(ROMBO, 'monto > 0')}
                         {fjLinea(32, ROMBO + 32, CARRIL_IZQ, ROMBO + 32, RETORNO)}
                         {fjRotulo(18, ROMBO + 24, 'No')}
@@ -3496,8 +3503,8 @@ FinMientras`;
                         {fjTerminal(ROMBO + 152, 'Fin', '#001A4D')}
                     </svg>
                     <figcaption className="text-xs text-gray-500 text-center mt-2 px-2">
-                        Aquí el rombo va <strong>después</strong> del cuerpo: se lee el monto sin preguntar nada, y
-                        solo entonces se decide si se vuelve a leer. Se sale por el «Sí», al revés que en
+                        Aquí el rombo va <strong>después</strong> del cuerpo: se pide y se lee el monto sin evaluar ninguna
+                        condición, y solo entonces se decide si se vuelve a pedir. Se sale por el «Sí», al revés que en
                         el <span className="inline-code">Mientras</span>: <span className="inline-code">Hasta</span> dice
                         cuándo <em>parar</em>, no cuándo <em>seguir</em>.
                     </figcaption>
@@ -3511,10 +3518,10 @@ FinMientras`;
            cuota y la suma de intereses no caben en una línea de 200 unidades,
            y van partidas en dos; la del cuerpo, como en `FlujogramaAnidado`. */
         const FlujogramaPara = () => {
-            const DESCRIPCION = 'Flujograma del plan de pagos, con su ciclo Para desarmado. Inicio; capital, tasa y n reciben sus valores; se calcula la cuota con la fórmula de la amortización francesa y se escribe; saldo empieza en el capital y totalIntereses en 0. Después vienen las tres piezas que el Para hace por su cuenta, dibujadas con borde discontinuo: k se inicia en 1; un rombo pregunta si k es menor o igual que n; y, al final del cuerpo, k aumenta en 1. Por la rama Sí se ejecuta el cuerpo —el interés del mes, el abono, el saldo nuevo y la suma de los intereses—, se escriben k, interes, abono y saldo, k aumenta en uno y una flecha de retorno sube por la izquierda hasta antes del rombo. Por la rama No se sale, se escribe totalIntereses y Fin.';
+            const DESCRIPCION = 'Flujograma del plan de pagos, con su ciclo Para desarmado. Inicio; capital, tasa y n reciben sus valores; se calcula la cuota con la fórmula de la cuota fija y se escribe; saldo empieza en el capital y totalIntereses en 0. Después vienen las tres piezas que el Para hace por su cuenta, dibujadas con borde discontinuo: k se inicia en 1; un rombo pregunta si k es menor o igual que n; y, al final del cuerpo, k aumenta en 1. Por la rama Sí se ejecuta el cuerpo —el interés del mes, el abono, el saldo nuevo y la suma de los intereses—, se escriben k, interes, abono y saldo, k aumenta en uno y una flecha de retorno sube por la izquierda hasta antes del rombo. Por la rama No se sale, se escribe totalIntereses y Fin.';
             const ID = 'lp-flecha5-FlujogramaPara';
             const UNION = 396, ROMBO = 412, CUERPO = 496, SALIDA = 765;
-            return (
+            return ( // fuente-ok: flujograma propio del plan de pagos inventado de la sección 4, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 893" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3553,8 +3560,9 @@ FinMientras`;
                         El plan de pagos de más abajo, con su <span className="inline-code">Para</span> desarmado.
                         Un <span className="inline-code">Para</span> es un <span className="inline-code">Mientras</span> con
                         tres piezas que usted no escribe: <strong>iniciar</strong> el contador, <strong>compararlo</strong> con
-                        el tope y <strong>aumentarlo</strong> al final de cada vuelta. Son las de borde discontinuo. Cada
-                        lenguaje las hace a su manera, y ahí están sus diferencias.
+                        el tope y <strong>aumentarlo</strong> al final de cada vuelta. Son las de borde discontinuo. Así
+                        las hacen el pseudocódigo y VBA; Python y R las cambian por una secuencia, y ahí
+                        están sus diferencias.
                     </figcaption>
                 </figure>
             );
@@ -3610,7 +3618,7 @@ FinMientras`;
                     <circle cx={EJE} cy={yHasta} r="3.5" fill="#3D008D" />
                 </g>
             );
-            return (
+            return ( // fuente-ok: flujograma propio de la cartera inventada de la sección 5, que lleva su <Ilustrativo>
                 <figure className="my-6 not-prose">
                     <svg viewBox="0 0 248 761" role="img" style={{ ...ESTILO_FLUJOGRAMA, maxWidth: '300px' }} aria-label={DESCRIPCION}>
                         {flechaDefs(ID)}
@@ -3662,7 +3670,8 @@ FinMientras`;
                         tres cuotas de un crédito; el de afuera lo devuelve a <span className="inline-code">i &lt;= 2</span> y
                         pasa al crédito siguiente, donde <span className="inline-code">k ← 1</span> vuelve a empezar.
                         {' '}<span className="inline-code">subtotal ← 0</span> queda <strong>dentro</strong> del retorno de
-                        afuera y <strong>fuera</strong> del de adentro: se ejecuta una vez por crédito.
+                        afuera y <strong>fuera</strong> del de adentro: se ejecuta una vez por crédito. Es un
+                        fragmento: no dibuja el Inicio ni el Fin del programa.
                     </figcaption>
                 </figure>
             );
@@ -3673,25 +3682,25 @@ FinMientras`;
         const SimbologiaFlujograma = () => {
             const ID = 'lp-flecha5-SimbologiaFlujograma';
             const FILAS = [
-                ['Inicio y fin', 'Uno de cada uno, y el recorrido va del primero al segundo.',
+                ['Inicio y fin', 'En este curso, uno de cada uno; el recorrido va del primero al segundo.',
                     <ellipse cx="38" cy="16" rx="34" ry="13" fill="#3D008D" />],
                 ['Entrada y salida', 'Leer un dato o escribir un resultado.',
                     <polygon points="14,3 72,3 62,29 4,29" fill="#E0F2F7" stroke="#0E7490" strokeWidth="1.4" />],
                 ['Proceso', 'Calcular o asignar: la variable cambia de valor.',
                     <rect x="6" y="3" width="64" height="26" rx="5" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
-                ['Decisión', 'Una condición, y dos salidas rotuladas: Sí y No.',
+                ['Decisión', 'Una condición; en este curso, con dos salidas rotuladas: Sí y No.',
                     <polygon points="38,2 74,16 38,30 2,16" fill="#F5F0FA" stroke="#3D008D" strokeWidth="1.4" />],
                 ['Flujo', 'El orden en que se recorre. La punta dice hacia dónde.',
                     <line x1="6" y1="16" x2="66" y2="16" stroke="#3D008D" strokeWidth="1.6" markerEnd={punta(ID)} />],
-                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó. Es la única forma nueva de este capítulo.',
+                ['Retorno', 'La flecha que sube: el flujo vuelve a una instrucción que ya se ejecutó, y entra al flujo por un punto relleno. Es la única forma nueva de este capítulo, y la añade el curso: va de otro color para que se distinga.',
                     <g>
                         <polyline points="66,26 10,26 10,8 60,8" fill="none" stroke={RETORNO} strokeWidth="2" markerEnd={puntaRetorno(ID)} />
                     </g>],
             ];
-            return (
+            return ( // fuente-ok: símbolos que son convención del curso, presentada con su fuente en el capítulo 2; el retorno lo añade este capítulo, y lo dice
                 <figure className="my-5 not-prose rounded-2xl border-2 border-primary/20 bg-white p-4">
                     <figcaption className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-                        La simbología de los flujogramas
+                        Los símbolos que usan los flujogramas de este curso
                     </figcaption>
                     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">{flechaDefs(ID)}</svg>
                     <ul className="space-y-2.5" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
@@ -3724,6 +3733,12 @@ FinMientras`;
                     con 1,76 millones sin cobrar; si diera una de más, cobraría una cuota que nadie debe.
                 </Motivacion>
 
+                <Ilustrativo>
+                    La pareja es inventada, y el crédito es el de vivienda de la sección 4. Las cifras sí
+                    salen de su programa, ejecutado: 240 cuotas de 1 778 778,87 y, tras la cuota 239, un
+                    saldo de 1 759 425,20.
+                </Ilustrativo>
+
                 <Box type="tip" label="Cómo estudiar este capítulo">
                     Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
                     <em> Anterior / Siguiente</em>, y el navegador <strong>recuerda la última lección</strong>,
@@ -3734,6 +3749,7 @@ FinMientras`;
 
                 <h3>Identificación</h3>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; lo que viene del syllabus se coteja como remisión */}
                     <table>
                         <tbody>
                             <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
@@ -3764,9 +3780,9 @@ FinMientras`;
                     { num: 2, title: 'Mientras', desc: 'Preguntar antes de entrar: puede no dar ninguna vuelta' },
                     { num: 3, title: 'Repita…Hasta', desc: 'Entrar antes de preguntar: da al menos una' },
                     { num: 4, title: 'Para', desc: 'Cuando se sabe cuántas veces, y lo que cada lenguaje entiende por eso' },
-                    { num: 5, title: 'Anidados', desc: 'Un ciclo dentro de otro, que vuelve a empezar en cada vuelta' },
+                    { num: 5, title: 'Ciclos anidados', desc: 'Un ciclo dentro de otro, que vuelve a empezar en cada vuelta' },
                     { num: 6, title: 'Cuándo para', desc: 'El ciclo que no termina y el que da una vuelta de más' },
-                    { num: 7, title: 'El oficio', desc: 'Saldos, intereses y una TIR que se busca por aproximación' },
+                    { num: 7, title: 'Casos financieros', desc: 'Saldos, intereses y una TIR que se busca por aproximación' },
                 ]} />
 
                 <h3>De dónde viene este capítulo</h3>
@@ -3795,12 +3811,12 @@ FinMientras`;
                 <h3>Los cuatro lenguajes</h3>
                 <p>
                     Todo algoritmo aparece en cuatro versiones, y cada bloque tiene <strong>su propia
-                    pestaña</strong>; el material recuerda la última elección. Como en el capítulo 4, las diferencias entre lenguajes no son de acento: aquí deciden cuántas vueltas da un ciclo. Python no tiene la forma que
-                    pregunta al final, y hay que construirla. <span className="inline-code">range(1, n)</span> da
-                    una vuelta menos de las que parece. El <span className="inline-code">for</span> de R,
-                    con cero cuotas pendientes, da <strong>dos</strong> vueltas. Y en VBA, el cuerpo de un <span className="inline-code">For</span> puede
-                    cambiar su propio contador. Ninguna de las cuatro cosas produce un error: producen
-                    otro número.
+                    pestaña</strong>; el material recuerda la última elección. Como en el capítulo 4, las diferencias entre lenguajes no son de acento: aquí deciden cuántas vueltas da un ciclo. En Python, la forma que
+                    pregunta al final hay que construirla (sección 3). <span className="inline-code">range(1, n)</span> da
+                    una vuelta menos de las que parece, y el <span className="inline-code">for</span> de R,
+                    con cero cuotas pendientes, da <strong>dos</strong> vueltas (sección 4). Y en VBA, el cuerpo de un <span className="inline-code">For</span> puede
+                    cambiar su propio contador (sección 4). Las tres últimas no producen un error: producen
+                    otro número. Las cuatro se ejecutaron para este capítulo, la de VBA en Excel.
                 </p>
 
                 <Box type="tip" label="El video del syllabus">
@@ -4138,7 +4154,8 @@ Debug.Print intereses`,
 
         /* Contar no es contar vueltas: `enMora` es un contador aunque no
            aumente en todas. Lee los datos de cada crédito, así que no declara
-           salida. */
+           salida. En Excel, el 2026-11-21, con los tres créditos de la
+           pregunta que sigue: «2 créditos en mora por 1500000». */
         const EJ_CARTERA_MORA = {
             pseudo: `Inicio
     Leer n                          // créditos a revisar
@@ -4254,6 +4271,11 @@ End Sub`,
                     tres renglones más abajo de donde debía. Dentro del ciclo. En cada vuelta, la suma volvía
                     a empezar.
                 </Motivacion>
+                <Ilustrativo>
+                    La clienta, su plan de ahorro y el extracto son un caso inventado para esta sección.
+                    Las cifras sí salen del programa de más abajo, ejecutado: trece meses, 217 709 pesos
+                    de intereses y los 34 053 que informa cuando la línea queda dentro del ciclo.
+                </Ilustrativo>
 
                 <h3>Usted ya trazó ciclos</h3>
                 <p>
@@ -4261,13 +4283,14 @@ End Sub`,
                     lo que esta sección nombra ya estaba en ellos:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice de lo que ya trajeron los capítulos 1 y 2, cotejado como remisión */}
                     <table>
                         <thead>
                             <tr><th>Dónde</th><th>Qué vio ahí</th><th>El ciclo que era</th></tr>
                         </thead>
                         <tbody>
                             <tr><td>Capítulo 1, sección 1</td><td>El 22 convertido a binario, una fila por división</td><td><span className="inline-code">Mientras numero &gt; 0</span></td></tr>
-                            <tr><td>Capítulo 1, sección 2</td><td>Doce cuotas que leían la tasa de memoria en cada vuelta</td><td><span className="inline-code">Para i &lt;- 1 Hasta 12</span></td></tr>
+                            <tr><td>Capítulo 1, sección 2</td><td>Doce cuotas que leían la tasa de la memoria en cada vuelta</td><td><span className="inline-code">Para i &lt;- 1 Hasta 12</span></td></tr>
                             <tr><td>Capítulo 1, sección 3</td><td>Los meses que tarda un ahorro en llegar a la meta, y la vuelta que no se da cuando la meta se alcanza exacta</td><td><span className="inline-code">Mientras saldo &lt; meta</span></td></tr>
                             <tr><td>Capítulo 1, sección 4</td><td>Tres décimos que no suman 0,3, y cien centavos que no suman un peso</td><td><span className="inline-code">Para i &lt;- 1 Hasta 3</span> y <span className="inline-code">Hasta 100</span></td></tr>
                             <tr><td>Capítulo 2, sección 1</td><td>«Repita hasta obtener un resultado razonable», que falla la finitud</td><td>Uno que puede no terminar</td></tr>
@@ -4280,6 +4303,7 @@ End Sub`,
                     aquellos capítulos no se detuvieron a preguntar es lo que este necesita:
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: índice interno: qué sección responde cada pregunta */}
                     <table>
                         <thead>
                             <tr><th>La pregunta</th><th>Dónde se responde</th></tr>
@@ -4302,21 +4326,23 @@ End Sub`,
                 </p>
                 <ul>
                     <li>
-                        Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada vez, su valor nuevo es el anterior más una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
-                        {' '}<strong>cuántas veces</strong> pasa algo: cada vez, su valor nuevo es el anterior más
-                        una cantidad fija, casi siempre 1.
+                        Un <Termino def="Variable que cuenta cuántas veces ocurre algo: cada ocurrencia le suma una cantidad fija, casi siempre 1. Responde a la pregunta «¿cuántas veces?».">contador</Termino> cuenta
+                        {' '}<strong>cuántas veces</strong> pasa algo: cada ocurrencia le suma una cantidad
+                        fija, casi siempre 1.
                     </li>
                     <li>
-                        Un <Termino def="Variable que lleva un total calculado a partir del que ya tenía: un saldo, un total de intereses, un recaudo. Puede subir o bajar, en cantidades iguales o distintas. Responde a la pregunta «¿cuánto?».">acumulador</Termino> lleva
+                        Un <Termino def="Variable que lleva un total calculado a partir del que ya tenía: un saldo, un total de intereses, un recaudo, un factor. Puede subir o bajar, sumando, restando o multiplicando, en cantidades iguales o distintas. Responde a la pregunta «¿cuánto?».">acumulador</Termino> lleva
                         un <strong>total</strong>: su valor nuevo se calcula a partir del que ya tenía,
-                        sumándole —o restándole— lo que trae cada vuelta. Responde <em>cuánto</em>.
+                        sumándole, restándole o multiplicándolo por lo que trae cada vuelta.
+                        Responde <em>cuánto</em>.
                     </li>
                 </ul>
                 <p>
                     Lo que los distingue no es si la cantidad cambia de una vuelta a otra, sino la
                     pregunta a la que responden. Un acumulador puede sumar siempre lo mismo —una cuota
-                    fija, por ejemplo— y sigue siendo un acumulador: no cuenta veces, suma pesos. Y puede
-                    bajar, como el saldo de un crédito.
+                    fija, por ejemplo— y sigue siendo un acumulador: no cuenta veces, suma pesos. Puede
+                    bajar, como el saldo de un crédito, y puede crecer multiplicando, como el factor de la
+                    tabla de más abajo.
                 </p>
                 <p>
                     El ejemplo es pariente de la meta de ahorro del capítulo 1, ahora con un aporte cada
@@ -4329,12 +4355,18 @@ End Sub`,
                     nota="La forma del ciclo es la de la sección 2; aquí interesa lo que pasa dentro. meses suma siempre 1; intereses y saldo suman cada vez una cifra distinta, porque el interés de cada mes depende del saldo que dejó el anterior." />
 
                 <Box type="info" label="Las tasas de este capítulo">
-                    El 0,9 % mensual de este ahorro y el 2 % mensual de los créditos de las secciones 4
-                    y 5 son <strong>ilustrativos</strong>: se eligieron para que las cuentas se puedan
-                    seguir, no para describir un producto real. Llevados a un año, son el 11,35 % y el
-                    26,82 % efectivo anual: (1,009)<sup>12</sup> − 1 y (1,02)<sup>12</sup> − 1. En
-                    Colombia, la Superintendencia Financiera certifica la tasa de usura, el tope legal
-                    del interés de un crédito, y una tasa real se compara con la que esté vigente.
+                    Todas las tasas de este capítulo son <strong>ilustrativas</strong>: se eligieron para que
+                    las cuentas se puedan seguir, no para describir un producto real. Son mensuales, y
+                    llevadas a un año —(1 + tasa)<sup>12</sup> − 1— dan esto: el 0,9 % de este ahorro, 11,35 %
+                    efectivo anual; el 1,1 % del crédito de vivienda, 14,03 %; el 1,2 % del cuestionario
+                    final, 15,39 %; el 1,45 % del crédito de vehículo, 18,86 %; el 1,5 % del crédito de
+                    libre inversión de las secciones 4 a 7, 19,56 %; el 1,8 % del crédito de la sección 6,
+                    23,87 %; y el 2 % de los ejemplos de las secciones 4 y 5, 26,82 %. Ninguna se comparó
+                    con un límite legal. En Colombia, recibir o cobrar por un préstamo de dinero una
+                    utilidad o ventaja que exceda en la mitad el interés bancario corriente del período,
+                    según certificación de la Superintendencia, es el delito de usura
+                    <Cita k="congreso2000ley599" loc="art. 305" />: para saber si un crédito real cae en
+                    ella, lo que cobra se compara con ese interés aumentado en la mitad, no con estas cifras.
                 </Box>
 
                 <p>
@@ -4357,6 +4389,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las variables de los programas de este capítulo</Fuente>
 
                 <h3>La línea en el lugar equivocado</h3>
                 <p>
@@ -4384,7 +4417,7 @@ End Sub`,
                         { clave: 'intereses', titulo: 'intereses' },
                     ]}
                     pasos={TZ_AHORRO_MAL_PASOS}
-                    nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar." />
+                    nota="Veintidós instrucciones: las dos de antes del ciclo, una vez cada una; la condición, cuatro veces —la última dice que no—; las cinco del cuerpo, tres veces cada una; y la de escribir, una. La línea intereses <- 0 se ejecutó tres veces, una por vuelta, que es justamente lo que no debía pasar. La pestaña de VBA trae solo estas líneas, sin su Sub ni sus Dim: así como está no corre en el editor." />
 
                 <Box type="warn" label="Un número plausible y falso">
                     El programa no da ningún error, el saldo sale bien y 34 053 pesos de intereses es una
@@ -4407,10 +4440,10 @@ End Sub`,
                 <CodeTabs
                     titulo="Cuántos créditos están en mora, y por cuánto"
                     bloques={EJ_CARTERA_MORA}
-                    nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo." />
+                    nota="El programa lee los datos de cada crédito, así que no hay una salida fija que mostrar. Lo que importa es cómo cambia cada variable dentro del ciclo. El corte de 30 días es una convención de este ejemplo, no una definición legal de mora." />
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Qué muestra el programa al terminar?"
+                    pregunta="Se revisan tres créditos, en este orden: uno de 1 000 000 con 45 días de mora, otro de 2 000 000 con 10 días y otro de 500 000 con 31 días. ¿Cuántos créditos en mora y qué saldo en mora informa el programa al terminar? (Cada lenguaje escribe la cifra a su manera: aquí va con separador de miles.)"
                     opciones={[
                         { texto: '3 créditos en mora por 1 500 000', correcta: false },
                         { texto: '2 créditos en mora por 500 000', correcta: false },
@@ -4431,7 +4464,7 @@ End Sub`,
                     enunciado="Reconstruya el cierre de recaudo del día: lee cuántos pagos llegaron, los lee uno por uno y escribe el total. Lo que va antes del ciclo —la lectura de la cantidad de pagos y las dos inicializaciones— no depende una cosa de otra: ahí vale cualquier orden. Dentro del ciclo siga una convención que no cambia el resultado: la vuelta se cuenta al final del cuerpo."
                     pasos={ORDENA_RECAUDO}
                     libres={LIBRES_RECAUDO}
-                    pista="Hay dos líneas que no pueden quedar dentro del ciclo: una deja en el total solo el último pago, y la otra impide que el ciclo termine. Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago."
+                    pista="Pregúntese, para cada línea, si se ejecuta una vez o una vez por pago. Cuatro no pueden quedar dentro del ciclo: allí, una dejaría en el total solo el último pago; otra impediría que el ciclo termine en cuanto haya dos pagos; otra volvería a preguntar cuántos pagos llegaron, y otra escribiría un total en cada vuelta."
                 />
             </div>
         );
@@ -4642,6 +4675,10 @@ End Sub`,
                     correcto. Lo que nadie miró fue el sexto abono: el ciclo lo cobró completo, 400 000,
                     cuando solo se debían 350 000. El saldo final quedó en −50 000.
                 </Motivacion>
+                <Ilustrativo>
+                    El área de cobranza, el cliente y el acuerdo son un caso inventado para esta sección.
+                    Los seis meses y el saldo final de −50 000 salen del programa de más abajo, ejecutado.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -4678,11 +4715,12 @@ End Sub`,
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Mientras c Hacer … FinMientras</span></td><td>El cuerpo es lo que queda entre las dos palabras</td></tr>
                             <tr><td>Python</td><td><span className="inline-code">while c:</span></td><td>El cuerpo es lo que está sangrado debajo; no hay palabra de cierre</td></tr>
-                            <tr><td>R</td><td><span className="inline-code">while (c) {'{ … }'}</span></td><td>La condición va entre paréntesis y el cuerpo entre llaves</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Do While c … Loop</span></td><td>Existe también <span className="inline-code">While … Wend</span>, más antigua. Se usa <span className="inline-code">Do</span> porque admite las variantes de la sección 3</td></tr>
+                            <tr><td>R</td><td><span className="inline-code">while (c) {'{ … }'}</span></td><td>La condición va entre paréntesis y el cuerpo, en este curso, siempre entre llaves</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do While c … Loop</span></td><td>Existe también <span className="inline-code">While … Wend</span>, que solo pregunta antes de cada vuelta <Cita k="microsoft2026vbal" loc="§5.4.2.2" />. El curso usa <span className="inline-code">Do</span> porque admite la condición al principio o al final, con <span className="inline-code">While</span> o con <span className="inline-code">Until</span> <Cita k="microsoft2026vbal" loc="§5.4.2.6" />; las que preguntan al final son las de la sección 3</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje; lo que se afirma de VBA lleva su cita en la celda</Fuente>
 
                 <h3>Las tres piezas de un ciclo</h3>
                 <p>
@@ -4691,9 +4729,9 @@ End Sub`,
                     comprueba que tengan sentido:
                 </p>
                 <ol>
-                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque <span className="inline-code">Dim</span> ya la deja en 0, y el ciclo arranca con un valor que nadie eligió.</li>
+                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque una variable numérica declarada con <span className="inline-code">Dim</span> se inicializa en 0 <Cita k="microsoft2019dim" loc="Observaciones" />, y el ciclo arranca con un valor que nadie eligió.</li>
                     <li><strong>La condición</strong>, que se evalúa antes de cada vuelta.</li>
-                    <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
+                    <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa, que es lo que detiene a un <span className="inline-code">Mientras</span>. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
                 </ol>
                 <p>
                     Si falta la tercera, la condición nunca cambia y, si era verdadera al entrar, el ciclo
@@ -4721,7 +4759,7 @@ End Sub`,
                         { clave: 'cond', titulo: 'saldo > 0', efimera: true },
                     ]}
                     pasos={TZ_ACUERDO_PASOS}
-                    nota="Catorce instrucciones ejecutadas: las cuatro de fuera del ciclo, una vez cada una; las dos del cuerpo, tres veces cada una; y la del Mientras, cuatro." />
+                    nota="Catorce instrucciones ejecutadas: las cuatro de fuera del ciclo, una vez cada una; las dos del cuerpo, tres veces cada una; y la del Mientras, cuatro. La traza no se detiene en la línea de cierre —FinMientras, la llave de R, Loop en VBA—: muestra de una vez el regreso a la condición." />
 
                 <TablaTraza
                     titulo="Una fila por cada vez que se pregunta"
@@ -4776,10 +4814,11 @@ End Sub`,
            SECCIÓN 3 — REPITA…HASTA: ENTRAR ANTES DE PREGUNTAR
         ============================================================ */
         /* La validación de un monto: el caso donde la primera vuelta es
-           obligatoria, porque no hay nada que validar antes de leer. Python no
-           tiene la estructura y la construye con `while True` y `break`; R
-           tiene `repeat` y también sale con `break`. Lee datos: no declara
-           salida. */
+           obligatoria, porque no hay nada que validar antes de leer. Python la
+           construye con `while True` y `break`; R tiene `repeat` y también
+           sale con `break`. Lee datos: no declara salida. En Excel, el
+           2026-11-21, con −5, 0 y 250 000: «Pago registrado por 250000», lo
+           mismo que la versión con Mientras. */
         const EJ_VALIDAR_MONTO = {
             pseudo: `Inicio
     Repita
@@ -4789,8 +4828,8 @@ End Sub`,
 
     Escribir "Pago registrado por ", monto
 Fin`,
-            python: `# Python no tiene Repita: se construye con un while que
-# siempre entra y un break que hace de «Hasta»
+            python: `# El Repita se construye aquí con un while que siempre
+# entra y un break que hace de «Hasta»
 while True:
     monto = float(input("Monto a pagar: "))
     if monto > 0:
@@ -4940,9 +4979,15 @@ Debug.Print cobrado`,
                     Dos rutinas del mismo banco usan la misma estructura. La primera pide el monto de un
                     pago y vuelve a pedirlo si el cliente escribe cero: tiene que leer al menos una vez, y
                     lo hace bien. La segunda, copiada de la primera, cobra cuotas hasta dejar el saldo en
-                    cero. Con los clientes que ya estaban a paz y salvo, cobró una cuota de 916 799,93 que
-                    nadie debía.
+                    cero. Con los clientes que ya estaban a paz y salvo —con el saldo en cero, sin nada
+                    pendiente—, cobró una cuota que nadie debía.
                 </Motivacion>
+
+                <Ilustrativo>
+                    El banco y sus dos rutinas son un caso inventado para esta sección. Lo que sí se
+                    comprueba es el efecto: el ejercicio que cierra la sección compara las dos formas
+                    del cobro, y la que pregunta al final cobra una cuota cuando no hay nada que cobrar.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -4951,7 +4996,9 @@ Debug.Print cobrado`,
                     y eso tiene dos consecuencias. La primera: el cuerpo se ejecuta <strong>al menos una
                     vez</strong>, pase lo que pase. La segunda: la condición dice cuándo <em>parar</em>, no
                     cuándo <em>seguir</em>. El ciclo sale cuando la condición es <strong>verdadera</strong>, al
-                    revés que el <span className="inline-code">Mientras</span>.
+                    revés que el <span className="inline-code">Mientras</span>. Por eso la actualización de
+                    la sección 2 cambia de sentido: aquí, lo que el cuerpo tiene que poder hacer es volver
+                    verdadera la condición.
                 </p>
 
                 <FlujogramaRepita />
@@ -4963,9 +5010,9 @@ Debug.Print cobrado`,
                 </p>
 
                 <CodeTabs
-                    titulo="Pedir un monto hasta que sea válido"
+                    titulo="Pedir un monto hasta que sea positivo"
                     bloques={EJ_VALIDAR_MONTO}
-                    nota="El programa lee datos, así que no hay una salida fija. Lo que hay que mirar es dónde está la pregunta: después de la lectura, en los cuatro lenguajes." />
+                    nota="El programa lee datos, así que no hay una salida fija. Lo que hay que mirar es dónde está la pregunta: después de la lectura, en los cuatro lenguajes. La lectura es también la actualización: es la que puede volver verdadera la condición. Y la validación solo mira el signo; qué pasa si lo digitado no es un número queda fuera de este capítulo." />
 
                 <p>Aquí los cuatro lenguajes sí se separan:</p>
                 <div className="overflow-x-auto">
@@ -4975,31 +5022,38 @@ Debug.Print cobrado`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Repita … Hasta monto &gt; 0</span></td><td>Cuando la condición es <strong>verdadera</strong></td></tr>
-                            <tr><td>Python</td><td><span className="inline-code">while True:</span> … <span className="inline-code">if monto &gt; 0: break</span></td><td>No tiene la estructura: se construye con un ciclo que siempre entra y un <span className="inline-code">break</span></td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">while True:</span> … <span className="inline-code">if monto &gt; 0: break</span></td><td>Python repite con <span className="inline-code">while</span> y con <span className="inline-code">for</span>, y el <span className="inline-code">while</span> prueba la condición antes de cada vuelta <Cita k="psf2026match" loc="§8.2 y §8.3" />: el Repita se construye con un ciclo que siempre entra y un <span className="inline-code">break</span></td></tr>
                             <tr><td>R</td><td><span className="inline-code">repeat {'{'}</span> … <span className="inline-code">if (monto &gt; 0) break {'}'}</span></td><td>Tiene <span className="inline-code">repeat</span>, que siempre entra; la salida también es un <span className="inline-code">break</span></td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">Do … Loop Until monto &gt; 0</span></td><td>Existe tal cual</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">Do … Loop Until monto &gt; 0</span></td><td>Existe tal cual: es una de las combinaciones del recuadro de abajo</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con la notación de cada lenguaje y las citas que lleva cada celda</Fuente>
 
                 <Box type="info" label="El único uso de break en el capítulo">
-                    Python y R usan <span className="inline-code">break</span> aquí porque no tienen otra forma de
-                    preguntar al final, y es el único uso que le da este capítulo: cada vez que aparezca,
+                    En Python, el <span className="inline-code">while</span> pregunta antes de cada vuelta y
+                    el <span className="inline-code">for</span> recorre una secuencia: ninguno pregunta al final. Y
+                    el <span className="inline-code">repeat</span> de R no lleva condición. En los dos lenguajes, este curso cierra el <span className="inline-code">Repita</span> con
+                    un <span className="inline-code">break</span>, y es el único uso que le da este capítulo: cada vez que aparezca,
                     será para cerrar un <span className="inline-code">Repita</span>. El pseudocódigo de este
                     capítulo no lo usa, aunque la búsqueda del capítulo 2 sí salía a mitad del ciclo con
-                    {' '}<span className="inline-code">Salir</span>. Aquí la salida se escribe en la condición: un
-                    ciclo con salidas en medio del cuerpo esconde justo lo que este capítulo enseña a leer,
-                    que es <em>cuándo para</em>.
+                    {' '}<span className="inline-code">Salir</span>. Aquí la salida se escribe en la condición, y es una
+                    decisión del curso: con salidas en medio del cuerpo, cuesta más leer lo que este
+                    capítulo enseña a leer, que es <em>cuándo para</em>.
                 </Box>
 
                 <Box type="tip" label="VBA tiene las cuatro combinaciones">
-                    En VBA, <span className="inline-code">Do … Loop</span> admite la condición arriba o abajo, y en
+                    En VBA, <span className="inline-code">Do … Loop</span> admite la condición después
+                    de <span className="inline-code">Do</span> o después de <span className="inline-code">Loop</span>, y en
                     cualquiera de los dos sitios con <span className="inline-code">While</span> —seguir mientras— o
-                    con <span className="inline-code">Until</span> —parar cuando—. <span className="inline-code">Do While</span> es el
+                    con <span className="inline-code">Until</span> —parar cuando— <Cita k="microsoft2026vbal" loc="§5.4.2.6" />. <span className="inline-code">Do While</span> es el
                     {' '}<span className="inline-code">Mientras</span> de la sección 2 y <span className="inline-code">Loop Until</span>,
                     el <span className="inline-code">Repita</span> de esta. Las otras dos,
-                    {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, son las mismas
-                    preguntas con la condición negada.
+                    {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, se obtienen
+                    negando la condición: <span className="inline-code">Do Until c</span> equivale
+                    a <span className="inline-code">Do While Not (c)</span>, y <span className="inline-code">Loop Until c</span>,
+                    a <span className="inline-code">Loop While Not (c)</span>. Sin ninguna condición, el ciclo para
+                    con una instrucción de salida, como <span className="inline-code">Exit Do</span>, que este capítulo no usa.
                 </Box>
 
                 <h3>Mientras o Repita, para validar</h3>
@@ -5066,6 +5120,7 @@ Debug.Print cobrado`,
                     sección 1 del capítulo 4: al negar, el conector también cambia.
                 </p>
                 <div className="overflow-x-auto">
+                    {/* fuente-ok: negaciones lógicas; remiten a la sección 1 del capítulo 4 */}
                     <table>
                         <thead>
                             <tr><th>Mientras… (seguir si)</th><th>Hasta… (parar si)</th></tr>
@@ -5097,10 +5152,10 @@ Debug.Print cobrado`,
                 /></Ejercicio>
 
                 <Box type="tip" label="Lo que sigue">
-                    Las dos formas de esta sección y de la anterior se detienen por una condición sobre un
-                    dato: el saldo, el monto. La sección 4 trata el caso en que se sabe de antemano cuántas
-                    vueltas hacen falta —doce cuotas, 240 cuotas—, y allí vuelve este mismo cobro, escrito
-                    con las tres formas.
+                    En esta sección y en la anterior, cuántas vueltas da el ciclo depende de lo que pase
+                    dentro: un saldo que se agota, un monto que por fin es positivo. La sección 4 trata el
+                    caso en que se sabe de antemano cuántas vueltas hacen falta —doce cuotas, 240 cuotas—, y
+                    allí vuelve el cobro de cuotas, escrito con las tres formas.
                 </Box>
             </div>
         );
@@ -5123,7 +5178,7 @@ Debug.Print cobrado`,
     tasa    <- 0.015
     n       <- 12
 
-    // La cuota fija de la amortización francesa. Se toma como dada:
+    // La cuota fija, de una fórmula que el capítulo toma como dada:
     // el capítulo 8 la convierte en función. No se redondea.
     cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
     Escribir "Cuota: ", cuota
@@ -5159,7 +5214,7 @@ capital = 10_000_000
 tasa    = 0.015
 n       = 12
 
-# La cuota fija de la amortización francesa. Se toma como dada:
+# La cuota fija, de una fórmula que el capítulo toma como dada:
 # el capítulo 8 la convierte en función. No se redondea.
 cuota = capital * tasa / (1 - (1 + tasa) ** (-n))
 print(f"Cuota: {cuota:,.2f}")
@@ -5193,7 +5248,7 @@ capital <- 10000000
 tasa    <- 0.015
 n       <- 12
 
-# La cuota fija de la amortización francesa. Se toma como dada:
+# La cuota fija, de una fórmula que el capítulo toma como dada:
 # el capítulo 8 la convierte en función. No se redondea.
 cuota <- capital * tasa / (1 - (1 + tasa) ^ (-n))
 cat(sprintf("Cuota: %.2f\\n", cuota))
@@ -5227,8 +5282,7 @@ cat(sprintf("Intereses: %.2f\\n", total_intereses))
 
 Sub PlanDePagos()
     ' Double y no Currency, solo en esta sección: la cuota no se redondea, y
-    ' así el residuo del saldo final es el mismo que en Python y en R. Con
-    ' Currency, que guarda cuatro decimales, el saldo cerraría en -0,0005.
+    ' así el plan se compara fila por fila con el de Python y el de R.
     Dim capital As Double, tasa As Double, cuota As Double
     Dim saldo As Double, interes As Double, abono As Double
     Dim totalIntereses As Double
@@ -5239,11 +5293,11 @@ Sub PlanDePagos()
     tasa = 0.015
     n = 12
 
-    ' La cuota fija de la amortización francesa. Se toma como dada:
+    ' La cuota fija, de una fórmula que el capítulo toma como dada:
     ' el capítulo 8 la convierte en función. No se redondea.
     cuota = capital * tasa / (1 - (1 + tasa) ^ (-n))
-    ' Format fija los decimales; el separador decimal que imprime
-    ' depende de la configuración regional de Windows.
+    ' Format fija los decimales. El separador decimal puede salir distinto:
+    ' al ejecutarlo para este capítulo, Excel escribió coma.
     Debug.Print "Cuota: " & Format(cuota, "0.00")
     '> Cuota: 916799.93
 
@@ -5335,7 +5389,8 @@ Next k`,
         /* El caso n = 0 de H4: un crédito al día. Pseudocódigo, Python y VBA
            no cobran nada; el `for (k in 1:n)` de R cobra la cuota 1 y la
            cuota 0, y `seq_len(n)` vuelve a cobrar cero. Salidas de Python y R
-           ejecutadas el 2026-10-19. Lo que el texto dice del contador en VBA
+           ejecutadas el 2026-10-19; la de VBA, en Excel el 2026-11-19, con
+           ejecutar_vba.py. Lo que el texto dice del contador en VBA
            sale de la referencia del lenguaje, «Instrucción For...Next (VBA)»
            de Microsoft Learn: `Next` suma el paso al contador y vuelve a
            hacer la misma prueba, `contador <= fin`. */
@@ -5587,9 +5642,15 @@ Loop`,
                     que su plan de pagos tiene doce filas desde el día de la firma. Al pasar a Python la macro
                     de Excel que lo calcula, un analista tradujo <span className="inline-code">For k = 1 To 12</span> como
                     {' '}<span className="inline-code">range(1, 12)</span>. El sistema emitió once cuotas, el
-                    cliente las pagó y recibió su paz y salvo, y el banco dejó de recaudar la cuota doce:
-                    916 799,93.
+                    cliente las pagó y recibió su paz y salvo —la constancia de que no debe nada—, y el banco
+                    dejó de recaudar la cuota doce: 916 799,93.
                 </Motivacion>
+
+                <Ilustrativo>
+                    El analista, la macro y el crédito son un caso inventado para esta sección. Las cifras
+                    sí salen de los programas de más abajo, ejecutados: la cuota de 916 799,93 y las once
+                    vueltas que da <span className="inline-code">range(1, 12)</span>.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -5597,10 +5658,10 @@ Loop`,
                     un crédito, los 240 meses de una hipoteca—, la forma indicada es <span className="inline-code">Para</span>.
                     {' '}<span className="inline-code">Para k &lt;- 1 Hasta n Hacer … FinPara</span> ejecuta el
                     cuerpo una vez por cada valor de <span className="inline-code">k</span>, de 1 a <span className="inline-code">n</span>,
-                    y a <span className="inline-code">k</span> se le llama la <Termino def="El contador que lleva un Para. En pseudocódigo y en VBA, el ciclo le da el valor inicial, lo compara con el tope antes de cada vuelta y lo aumenta al final de cada una; en Python y en R, el for recorre una secuencia ya hecha y le da cada valor por turno.">variable de control</Termino> del ciclo.
+                    y a <span className="inline-code">k</span> se le llama la <Termino def="El contador que lleva un Para. En pseudocódigo y en VBA, el ciclo le da el valor inicial, lo compara con el tope antes de cada vuelta y lo aumenta al final de cada una; en Python y en R, el for recorre una secuencia y le da cada valor por turno.">variable de control</Termino> del ciclo.
                 </p>
                 <p>
-                    El contador lo lleva el ciclo. Lo inicia en 1, lo compara con el tope antes de cada vuelta y
+                    En pseudocódigo, el contador lo lleva el ciclo. Lo inicia en 1, lo compara con el tope antes de cada vuelta y
                     lo aumenta al final de cada una: son la inicialización, la condición y la actualización que
                     en la sección 2 escribía usted, y el flujograma las dibuja con borde discontinuo.
                 </p>
@@ -5623,27 +5684,29 @@ Loop`,
 
                 <h3>La tabla de amortización es un Para</h3>
                 <p>
-                    Una tabla de amortización es el caso de manual. Se sabe cuántas filas tiene desde el día de
+                    La tabla de amortización de un crédito de cuota fija, como los de este capítulo, es el
+                    caso de manual. Se sabe cuántas filas tiene desde el día de
                     la firma, y cada fila repite los mismos tres cálculos con el saldo que dejó la anterior: el
                     interés del mes, que se cobra sobre ese saldo; el abono a capital, que es lo que queda de la
                     cuota después de pagar el interés; y el saldo nuevo.
                 </p>
                 <p>
-                    Falta la cuota. La de cuotas iguales —la de la amortización francesa— sale de una fórmula de
-                    las matemáticas financieras que este capítulo <strong>toma como dada</strong>: no se deduce
-                    ni se ejercita, y el capítulo 8 la convierte en una función. Aquí ocupa una línea, con un
-                    comentario que dice de dónde sale, y no se redondea.
+                    Falta la cuota. La cuota fija sale de una fórmula que este capítulo <strong>toma como
+                    dada</strong>: no la deduce ni la ejercita, y el capítulo 8 la convierte en una función. Lo
+                    que sí se ve aquí es que cumple: con esa cuota, el saldo llega a cero en la última fila,
+                    salvo un residuo de punto flotante. Ocupa una línea y no se redondea.
                 </p>
 
                 <CodeTabs
                     titulo="El plan de pagos del crédito de la motivación"
                     bloques={EJ_PLAN_PAGOS}
-                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. En pseudocódigo, Python y R, la última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. VBA guarda el mismo residuo, pero su Format escribe 0.00, sin el signo: que la tabla diga cero no quiere decir que el saldo lo sea. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
+                    nota="Doce vueltas, una por cuota, y el ciclo no mira el saldo en ningún momento. En pseudocódigo, Python y R, la última fila sale con −0.00 y no con 0.00: el saldo que guardó la máquina es −7,5 × 10⁻⁸, un residuo de punto flotante como los del capítulo 1. En VBA, Format escribe 0.00, sin el signo. Las operaciones son las mismas, así que cabe esperar el mismo residuo, pero esa salida no lo muestra: que la tabla diga cero no quiere decir que el saldo lo sea. Aquí no hace daño, porque el ciclo no lo mira; la sección 6 muestra qué pasa cuando sí." />
 
-                <Box type="info" label="Lo que hace un banco de verdad">
-                    Un banco redondea la cuota al peso —aquí serían 916 800— y ajusta la última para que el saldo
-                    cierre en cero. Ese ajuste es una selectiva dentro del ciclo, del capítulo 4, y este capítulo
-                    no la modela: la cuota va sin redondear, para que lo que se vea sea el ciclo y no el ajuste.
+                <Box type="info" label="Si la cuota se redondeara">
+                    En este capítulo la cuota va sin redondear, para que lo que se vea sea el ciclo. Si se
+                    redondeara al peso —aquí serían 916 800—, las doce cuotas ya no dejarían el saldo en cero y
+                    habría que ajustar la última. Ese ajuste es una selectiva dentro del ciclo, del capítulo 4,
+                    y este capítulo no la modela.
                 </Box>
 
                 <h3>Las 240 filas</h3>
@@ -5657,6 +5720,7 @@ Loop`,
                 </p>
 
                 <AmortizacionPasoAPaso />
+                <Fuente propia>con tres créditos inventados; las filas las calcula el interactivo en su navegador, con el ciclo que muestra</Fuente>
 
                 <p>Ahora, a mano, las primeras vueltas de un crédito que la tabla de arriba no trae:</p>
 
@@ -5687,11 +5751,14 @@ Loop`,
                 <p>
                     Hasta aquí, los cuatro lenguajes dieron las doce vueltas. Pero «de 1 hasta n» no se escribe
                     igual en los cuatro, y tampoco significa lo mismo. La razón de fondo es una sola. En
-                    pseudocódigo y en VBA, el <span className="inline-code">Para</span> inicia un contador, lo
-                    compara con el tope y lo aumenta. En Python y en R, el <span className="inline-code">for</span> no
-                    compara ni suma nada: <strong>recorre una secuencia ya hecha</strong>
+                    VBA, el <span className="inline-code">For</span> inicia un contador, lo
+                    compara con el tope y lo aumenta <Cita k="microsoft2018fornext" loc="Sintaxis y Comentarios" />; el <span className="inline-code">Para</span> del
+                    pseudocódigo hace lo mismo, por convención del curso. En Python y en R, el <span className="inline-code">for</span>
+                    {' '}<strong>recorre una secuencia</strong>
                     —<span className="inline-code">range(1, n + 1)</span>, <span className="inline-code">1:n</span>— y le
-                    da a <span className="inline-code">k</span> cada valor por turno. De ahí salen las respuestas
+                    asigna a <span className="inline-code">k</span> el valor de cada elemento, uno por
+                    vuelta <Cita k="psf2026match" loc="§8.3" /> <Cita k="rcoreteam2026lenguaje" loc="§3.2.5" />: no hay
+                    tope con el que comparar <span className="inline-code">k</span> ni paso que sumarle. De ahí salen las respuestas
                     a tres preguntas que conviene hacerle a cada uno: si el tope se incluye, qué pasa cuando
                     {' '}<span className="inline-code">n</span> vale 0, y qué pasa si el cuerpo cambia el contador.
                 </p>
@@ -5702,21 +5769,22 @@ Loop`,
                         </thead>
                         <tbody>
                             <tr><td>Pseudocódigo</td><td><span className="inline-code">Para k &lt;- 1 Hasta n</span></td><td>Sí</td><td>0 vueltas</td><td>No se hace, por convención</td></tr>
-                            <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: el tope es el n + 1, que queda fuera. Con <span className="inline-code">range(1, n)</span> da n − 1 vueltas</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
+                            <tr><td>Python</td><td><span className="inline-code">for k in range(1, n + 1):</span></td><td><strong>No</strong>: el tope es el n + 1, que queda fuera. Con <span className="inline-code">range(1, n)</span> da n − 1 vueltas, si n es al menos 1</td><td>0 vueltas</td><td>No afecta: la vuelta siguiente toma el valor que sigue en el rango</td></tr>
                             <tr><td>R</td><td><span className="inline-code">for (k in 1:n)</span></td><td>Sí</td><td><strong>2 vueltas</strong>, con k = 1 y luego k = 0. Con <span className="inline-code">seq_len(n)</span>, 0</td><td>No afecta: la vuelta siguiente toma el valor que sigue en la secuencia</td></tr>
-                            <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: <span className="inline-code">Next</span> le suma 1 al valor ya cambiado</td></tr>
+                            <tr><td>VBA</td><td><span className="inline-code">For k = 1 To n … Next k</span></td><td>Sí</td><td>0 vueltas</td><td><strong>Sí afecta</strong>: al terminar la vuelta se le suma 1 al valor ya cambiado</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>a partir de lo que se ejecutó para este capítulo: Python y R desde la terminal, y VBA en Excel. La fila del pseudocódigo es convención del curso</Fuente>
 
                 <Box type="warn" label="Tres diferencias que no dan ningún error">
                     <p>
                         <strong>Python no incluye el tope.</strong> <span className="inline-code">range(1, n + 1)</span> da
                         1, 2, …, n: el segundo número es el primero que <em>no</em> se usa. Traducir
                         {' '}<span className="inline-code">Para k &lt;- 1 Hasta n</span> como <span className="inline-code">range(1, n)</span> da
-                        n − 1 vueltas, y es el error de la motivación: <span className="inline-code">range(1, 12)</span> da once.
-                        Con un solo número, el rango arranca en 0: <span className="inline-code">range(n)</span> es
-                        {' '}<span className="inline-code">range(0, n)</span>.
+                        n − 1 vueltas siempre que n sea al menos 1, y es el error de la motivación: <span className="inline-code">range(1, 12)</span> da once.
+                        Con un solo número, el rango arranca en 0: <span className="inline-code">range(3)</span> y
+                        {' '}<span className="inline-code">range(0, 3)</span> dan los dos 0, 1 y 2 (ejecutado).
                     </p>
                     <p>
                         <strong>En R, <span className="inline-code">1:n</span> cuenta hacia atrás si n es menor que 1.</strong>
@@ -5727,13 +5795,14 @@ Loop`,
                         funciona porque n vale 12.
                     </p>
                     <p>
-                        <strong>En VBA, el cuerpo puede cambiar el contador, y el cambio cuenta.</strong> Al final
-                        de cada vuelta, <span className="inline-code">Next</span> le suma el paso (1, salvo que el <span className="inline-code">For</span> diga otro con <span className="inline-code">Step</span>) al valor que tenga
-                        k en ese momento y vuelve a comparar, así que un <span className="inline-code">k = k + 1</span> dentro
-                        del cuerpo hace que el ciclo cobre una cuota de cada dos. Así lo describe la referencia del
-                        lenguaje, que desaconseja hacerlo (<a href="https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement" target="_blank" rel="noopener noreferrer">Instrucción For...Next</a>,
-                        Microsoft Learn). En Python y en R, la vuelta siguiente toma el valor que sigue en la
-                        secuencia, se haya cambiado k o no; en pseudocódigo, la convención es no tocarlo.
+                        <strong>En VBA, el cuerpo puede cambiar el contador, y el cambio cuenta.</strong> Al terminar
+                        las instrucciones de cada vuelta, se le suma a k el paso (1, salvo que el <span className="inline-code">For</span> indique
+                        otro con <span className="inline-code">Step</span>) y se repite la misma
+                        prueba <Cita k="microsoft2018fornext" loc="Sintaxis y Comentarios" />. Como la suma se hace sobre la
+                        variable, un <span className="inline-code">k = k + 1</span> dentro del cuerpo hace que el ciclo
+                        cobre una cuota de cada dos. La misma página advierte que cambiar el contador dentro del ciclo
+                        podría hacer el código más difícil de leer y de depurar. En Python y en R, la vuelta siguiente
+                        toma el valor que sigue en la secuencia, se haya cambiado k o no (ejecutado en los dos); en pseudocódigo, la convención es no tocarlo.
                     </p>
                 </Box>
 
@@ -5755,12 +5824,13 @@ Loop`,
 
                 <h3>Una vuelta de menos</h3>
                 <p>
-                    El <span className="inline-code">Para</span> existe para que nadie tenga que escribir a mano
+                    El <span className="inline-code">Para</span> sirve para que nadie tenga que escribir a mano
                     las tres piezas del contador. Cuando se escriben con un <span className="inline-code">Mientras</span>,
                     cada una puede estar bien por separado y no casar con las otras, y el ciclo da una vuelta de
-                    más o de menos. Es un <Termino def="Una vuelta de más o de menos, porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En inglés se le dice off-by-one.">error de frontera</Termino>.
-                    El capítulo 1 ya advirtió, con la meta de ahorro, que el signo de la condición produce «los
-                    errores de un mes de diferencia en las proyecciones». En un plan de pagos, la misma frontera
+                    más o de menos. Es un <Termino def="Una vuelta de más o de menos, porque el valor inicial del contador, el sitio donde aumenta y la condición  no casan entre sí.">error de frontera</Termino>.
+                    El capítulo 1 ya advirtió que cambiar <span className="inline-code">&lt;</span> por
+                    {' '}<span className="inline-code">&lt;=</span> mueve la cuenta en una vuelta, que en una proyección
+                    es un mes. En un plan de pagos, la misma frontera
                     vale una cuota.
                 </p>
 
@@ -5820,10 +5890,11 @@ Loop`,
                         <tbody>
                             <tr><td><span className="inline-code">Mientras</span></td><td>Antes de cada vuelta</td><td>0</td><td>El número de vueltas depende de lo que pase dentro, y puede ser ninguna</td></tr>
                             <tr><td><span className="inline-code">Repita…Hasta</span></td><td>Después de cada vuelta</td><td>1</td><td>La primera vuelta es obligatoria, como al validar un dato</td></tr>
-                            <tr><td><span className="inline-code">Para</span></td><td>Antes de cada vuelta, contra un tope</td><td>0 (en R, solo con <span className="inline-code">seq_len(n)</span>)</td><td>El número de vueltas se sabe al entrar</td></tr>
+                            <tr><td><span className="inline-code">Para</span></td><td>Antes de cada vuelta: si queda alguna por dar</td><td>0 (en R, solo con <span className="inline-code">seq_len(n)</span>)</td><td>El número de vueltas se sabe al entrar</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>que resume las secciones 2, 3 y 4</Fuente>
                 <p>
                     El panel de abajo pone el mismo cobro en las tres formas. Compruebe en él lo que dicen
                     la tabla y el recuadro de arriba: con qué <span className="inline-code">n</span> se separan y
@@ -5834,6 +5905,7 @@ Loop`,
                 </p>
 
                 <TresCiclosComparados />
+                <Fuente propia>con la cuota del crédito inventado de esta sección; las vueltas las calcula el interactivo en su navegador</Fuente>
             </div>
         );
 
@@ -5844,8 +5916,8 @@ Loop`,
            recorre los plazos: uno, dos y tres años. Sin arreglos (H7, P2):
            cada plazo escribe su línea y se olvida. El de dentro da
            12 + 24 + 36 = 72 vueltas, porque su tope lo calcula el de fuera.
-           Salidas de Python y R ejecutadas el 2026-10-19; la de VBA no se
-           ejecutó (R10 del plan). */
+           Salidas de Python y R ejecutadas el 2026-10-19; la de VBA, en Excel
+           el 2026-11-21, con ejecutar_vba.py. */
         const EJ_SIMULADOR = {
             pseudo: `Inicio
     // Simulador: el mismo crédito a uno, dos y tres años
@@ -5931,8 +6003,8 @@ Sub SimuladorDePlazos()
             saldo = saldo - abono
             intereses = intereses + interes
         Next k
-        ' El separador decimal que imprime Format depende de la
-        ' configuración regional de Windows.
+        ' El separador decimal puede salir distinto, como en el plan
+        ' de pagos de la sección 4.
         Debug.Print n & " cuotas de " & Format(cuota, "0.00") & _
                     ": intereses " & Format(intereses, "0.00")
     Next anios
@@ -6048,7 +6120,8 @@ End Sub`,
            cada lenguaje: el `for` en Python y R, el `Para` en pseudocódigo y
            el `Next` en VBA. No hay paso para la última comparación de cada
            ciclo, porque el valor con que sale el contador no es el mismo en
-           los cuatro: Python y R lo dejan en el último valor; VBA, en uno más.
+           los cuatro: Python y R lo dejan en el último valor (ejecutado); VBA,
+           en uno más (ejecutado en Excel el 2026-11-21: k queda en 4).
            Cifras ejecutadas el 2026-10-19. */
         const TZ_CARTERA = {
             pseudo: `Inicio
@@ -6147,7 +6220,7 @@ End Sub`,
             { linea: TZC_RESTA, estado: { saldo: '2000000' },
                 nota: 'El abono baja el saldo a 2 000 000. La cuota 2 cobrará interés sobre esa cifra.' },
             { linea: TZC_SIGUE_K, estado: { k: '2' },
-                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido. En pseudocódigo, Python y R, quien aumenta k es la cabecera del Para, y por eso la traza vuelve a ella; en VBA lo hace el Next. El flujograma lo dibuja al final del cuerpo, que es cuando ocurre.' },
+                nota: 'k pasa a 2: segunda vuelta del ciclo de dentro. El de fuera sigue en su primera vuelta, e i no se ha movido. La traza vuelve a la cabecera del ciclo: en pseudocódigo, porque es el Para el que lleva el contador; en Python y en R, porque ahí el for le asigna a k el elemento siguiente de la secuencia. En VBA, el paso se suma al terminar las instrucciones de la vuelta, y la traza lo marca en el Next. El flujograma dibuja k ← k + 1 al final del cuerpo: es la forma del pseudocódigo y de VBA.' },
             { linea: TZC_SUMA, estado: { subtotal: '100000' },
                 nota: '2 000 000 × 0,02 = 40 000 de interés: el subtotal llega a 100 000.' },
             { linea: TZC_RESTA, estado: { saldo: '1000000' },
@@ -6268,9 +6341,9 @@ End Sub`,
 
         /* E5. El cierre de recaudo de la sección 1, ahora por oficina. Tres
            pares de líneas conmutan sin cambiar el resultado, y el enunciado
-           fija dos convenciones que los ordenan: la lectura antes que la
-           inicialización, en cada nivel, y el subtotal escrito antes de
-           sumarse al total. Los dos cierres de ciclo del pseudocódigo y de R
+           los deja libres (LIBRES_OFICINAS): en cada nivel, la lectura y la
+           inicialización; y, al cerrar cada oficina, escribir el subtotal y
+           sumarlo al total. Los dos cierres de ciclo del pseudocódigo y de R
            llevan un comentario porque `OrdenaPasos` califica por posición:
            dos `FinPara` iguales serían indistinguibles. */
         const ORDENA_OFICINAS = {
@@ -6306,6 +6379,12 @@ End Sub`,
                     acumulador nacía en cero una sola vez, antes de todo, y cada plazo arrastraba los intereses
                     de los anteriores. Durante un mes, todo cliente que comparó plazos vio esa cifra.
                 </Motivacion>
+
+                <Ilustrativo>
+                    La oficina, su simulador y el crédito son un caso inventado para esta sección. Las
+                    cifras sí salen de los dos programas de más abajo, ejecutados: 1 001 599 y 3 014 862 del
+                    simulador bien escrito, y 5 998 246 del que tiene el acumulador fuera de los dos ciclos.
+                </Ilustrativo>
 
                 <h3>La estructura</h3>
                 <p>
@@ -6345,6 +6424,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las cuentas del simulador de esta sección</Fuente>
                 <p>
                     Cuando el de dentro da siempre las mismas vueltas, la última fila es una multiplicación:
                     dos créditos de tres cuotas son seis vueltas. En el simulador es una suma, porque cada plazo
@@ -6381,9 +6461,9 @@ End Sub`,
                     Las 72 vueltas del simulador no se pueden seguir una por una. Un reporte más pequeño sí cabe
                     en una traza: para cada crédito de una cartera, los intereses de sus tres próximas cuotas
                     —el <strong>subtotal</strong>—, y al final los de toda la cartera —el <strong>total</strong>—.
-                    Estos créditos abonan a capital la misma cifra cada mes, que es otra forma de amortizar,
-                    distinta de la cuota fija de la sección 4: el interés de cada cuota se cobra sobre un saldo
-                    que baja siempre lo mismo. En flujograma, con los dos <span className="inline-code">Para</span> desarmados
+                    En este reporte se supone que cada crédito abona a capital la misma cifra cada mes, y no la
+                    cuota fija de la sección 4: así, el interés de cada cuota se cobra sobre un saldo que baja
+                    siempre lo mismo y las cuentas se pueden seguir a mano. En flujograma, con los dos <span className="inline-code">Para</span> desarmados
                     como en la sección 4, el reporte se ve así:
                 </p>
 
@@ -6403,7 +6483,7 @@ End Sub`,
                         { clave: 'total', titulo: 'total' },
                     ]}
                     pasos={TZ_CARTERA_PASOS}
-                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final, una vez cada una: 3. Las seis del ciclo de fuera que no están en el de dentro —su Para, las dos lecturas, el subtotal, el total y el Escribir—, dos veces cada una, una por crédito: 12. La del Para de dentro, seis veces, tres por crédito: una al arrancar el ciclo y dos al pasar a la cuota siguiente. Y las dos del cuerpo de dentro, seis veces cada una, dos créditos por tres cuotas: 12. En total, 3 + 12 + 6 + 12 = 33. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro: Python y R lo dejan en el último de la secuencia, y en VBA, Next le suma uno más antes de salir." />
+                    nota="Treinta y tres instrucciones. Las dos de antes de los ciclos y la del final, una vez cada una: 3. Las seis del ciclo de fuera que no están en el de dentro —su Para, las dos lecturas, el subtotal, el total y el Escribir—, dos veces cada una, una por crédito: 12. La del Para de dentro, seis veces, tres por crédito: una al arrancar el ciclo y dos al pasar a la cuota siguiente. Y las dos del cuerpo de dentro, seis veces cada una, dos créditos por tres cuotas: 12. En total, 3 + 12 + 6 + 12 = 33. En la pestaña de VBA la cuenta es la misma, pero los pasos de cada Para se reparten entre dos líneas: el For, al arrancar el ciclo, y el Next, al pasar a la vuelta siguiente. La traza no muestra la última comparación de cada ciclo, la que lo hace salir, porque el valor con que queda el contador cambia de un lenguaje a otro. Python y R lo dejan en el último de la secuencia (ejecutado en los dos: k queda en 3). En VBA, por lo que dice la sección 4 —al terminar la vuelta se le suma el paso y se repite la prueba—, sale con uno más (ejecutado en Excel: tras For k = 1 To 3, k queda en 4)." />
 
                 <TablaTraza
                     titulo="Subtotales y total de otra cartera"
@@ -6432,7 +6512,7 @@ End Sub`,
                 <p>
                     La regla de la sección 1 sigue valiendo, con una respuesta más. Ante cada línea, la pregunta
                     es si se ejecuta una vez, una vez por crédito o una vez por cuota. Y cada inicialización va
-                    justo antes del ciclo que acumula su variable: el total, antes del de fuera; el subtotal,
+                    antes del ciclo que acumula su variable: el total, antes del de fuera; el subtotal,
                     dentro del de fuera y antes del de dentro.
                 </p>
 
@@ -6462,9 +6542,8 @@ End Sub`,
            plan). El saldo se escribe solo cuando k vale n, para no imprimir 37
            filas. Salidas de Python y R ejecutadas el 2026-10-20; JavaScript da
            el mismo residuo, porque los tres hacen las mismas operaciones en el
-           mismo orden. La de VBA no se ejecutó (R10): que Excel dé 37 depende
-           de que su potencia redondee el último bit como las otras tres, y eso
-           no está cotejado. */
+           mismo orden. La de VBA se ejecutó en Excel el 2026-11-19 con
+           ejecutar_vba.py: da 37 cuotas y el mismo residuo. */
         const EJ_CUOTA_37 = {
             pseudo: `Inicio
     // 20 000 000 al 1,8 % mensual en 36 cuotas, cobrando mientras quede saldo
@@ -6578,16 +6657,18 @@ End Sub`,
         };
 
         /* E3, la segunda pregunta del capítulo: el plan de pagos de la
-           sección 4, ahora con `saldo <> 0`. En la aritmética del contrato,
-           doce cuotas dejan el saldo en cero; en la de la máquina, en
+           sección 4, ahora con `saldo <> 0`. Con fracciones exactas
+           (fractions.Fraction, 2026-11-21), doce cuotas dejan el saldo en cero,
+           y las 36 del plan de 20 000 000 también; en la máquina, en
            −7,5 × 10⁻⁸. La vuelta 13 lo deja en −916 799,93, la 14 en
            −1 847 351,86, y de ahí solo baja: la condición no vuelve a ser
            falsa (ejecutado el 2026-10-20 en Python y R). Con la cuota
            redondeada al peso tampoco para: tras doce cuotas de 916 800 el
            saldo es −0,93. En VBA, k es Integer, que no pasa de 32 767: al
            empezar la vuelta 32 768, k + 1 no cabe y el programa se detiene
-           con el error 6. Eso sale de la referencia del lenguaje, no de una
-           ejecución (R10). La línea cambia con el lenguaje, y con ella la
+           con el error 6. Ejecutado en Excel el 2026-11-21 con ejecutar_vba.py --incluir:
+           32 767 filas y el error 6; el saldo va por −3,8 × 10^219, sin
+           desbordar el Double. La línea cambia con el lenguaje, y con ella la
            explicación (trampa 4 de la skill). */
         const ERROR_IGUALDAD_LINEAS = {
             pseudo: [
@@ -6669,8 +6750,8 @@ End Sub`,
 
         const explicacionIgualdad = (l, cond, comp, alFinal) => (
             <>
-                La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. En la aritmética del
-                contrato, la cuota está calculada para que doce cuotas dejen el saldo exactamente en cero. En la de
+                La <strong>línea {l}</strong>, <span className="inline-code">{cond}</span>. Con fracciones
+                exactas, doce cuotas de esa fórmula dejan el saldo exactamente en cero. En la aritmética de
                 la máquina lo dejan en −7,5 × 10⁻⁸, el mismo residuo de la última fila de la sección 4. Ese número no es
                 cero, así que la condición sigue verdadera y el ciclo da la vuelta 13: cobra otra cuota, y el saldo
                 queda en −916 799,93. Tampoco es cero, y de ahí en adelante el saldo solo baja, porque sobre un saldo
@@ -6679,7 +6760,7 @@ End Sub`,
                 13. Redondear la cuota al peso tampoco lo arregla: con 916 800, el saldo tras doce cuotas es −0,93,
                 que tampoco es cero. Y que el saldo baje en el abono y no en la cuota completa no es un defecto: el
                 interés paga el uso del dinero durante el mes, y lo que reduce la deuda es solo el abono. El capítulo
-                1 lo dejó como regla: nunca comparar dinero con igualdad exacta. El arreglo es no preguntar por el
+                1 lo dejó como regla: nunca comparar con igualdad exacta dinero guardado en flotantes. El arreglo es no preguntar por el
                 saldo: un <span className="inline-code">Para</span> de 1 a n da las doce vueltas del contrato. Preguntar
                 {' '}<span className="inline-code">saldo &gt; 0</span> haría que este plan parara en la cuota 12, pero
                 por suerte, y lo que sigue muestra por qué. {alFinal}
@@ -6693,14 +6774,22 @@ End Sub`,
             r: explicacionIgualdad(9, 'while (saldo != 0) {', 'saldo != 0',
                 'En R, el programa no termina: escribe la cuota 13, la 14, la 15…, hasta que alguien lo interrumpe con Esc o Ctrl+C.'),
             vba: explicacionIgualdad(13, 'Do While saldo <> 0', 'saldo <> 0',
-                'En VBA el programa sí acaba por detenerse, pero no por su condición: k está declarado As Integer, que no pasa de 32 767, y al empezar la vuelta 32 768 VBA se detiene con el error 6, «Desbordamiento». Para entonces ya escribió 32 755 cuotas que no existen.'),
+                <>En VBA el programa sí acabaría por detenerse, pero no por su condición. k está
+                declarado <span className="inline-code">As Integer</span>, que guarda enteros
+                hasta 32 767 <Cita k="microsoft2018integer" loc="párrafo inicial" />, y cuando el resultado de una
+                asignación o de un cálculo no cabe en el rango del tipo de la variable, VBA produce el error 6,
+                «Desbordamiento» <Cita k="microsoft2017desbordamiento" loc="párrafo inicial y primera causa" />. Le
+                toca a <span className="inline-code">k = k + 1</span> al empezar la vuelta 32 768, después de
+                32 755 vueltas que no están en el contrato. Ejecutado en Excel: el programa escribe
+                32 767 cuotas y se detiene ahí con el error 6.</>),
         };
 
         /* E2: el centinela procesado como un dato. El cierre de caja con
            Repita pregunta al final de la vuelta, después de sumar y contar,
            así que el −1 entra al conteo y al total, al que le quita un peso.
            Con 250 000, 400 000, 150 000 y −1 escribe «4 pagos por 799 999»
-           (ejecutado el 2026-10-20 en Python y R, con esas entradas). El
+           (ejecutado el 2026-10-20 en Python y R, con esas entradas, y el
+           2026-11-21 en Excel, con ejecutar_vba.py --incluir). El
            centinela era un 0 en la primera versión, y así el total no
            cambiaba: escondía justo lo que el E2 tiene que mostrar. R escribe
            con sprintf porque cat(800000) imprime 8e+05. */
@@ -6759,7 +6848,8 @@ End Sub`,
         /* La forma que sirve: lectura adelantada. Con los mismos datos
            escribe «3 pagos por 800 000»; si el primer dato ya es el −1, no da
            ninguna vuelta y escribe «0 pagos por 0» (ejecutado el 2026-10-20
-           en Python y R). */
+           en Python y R). En Excel, el 2026-11-21, con los mismos datos:
+           «3 pagos por 800000»; el caso del −1 de entrada no se corrió ahí. */
         const EJ_CAJA_ADELANTADA = {
             pseudo: `Inicio
     // Cierre de caja, con lectura adelantada: el primer pago se lee antes
@@ -6836,6 +6926,13 @@ End Sub`,
                     mayor que cero.
                 </Motivacion>
 
+                <Ilustrativo>
+                    El cliente, la factura y el programa de planes de pago son un caso inventado para esta
+                    sección. Las cifras sí salen del programa de más abajo, ejecutado: la cuota de
+                    759 676,64 —sin redondear, como todas las de este capítulo—, el saldo de 0,00000002 tras
+                    la cuota 36 y las 37 vueltas.
+                </Ilustrativo>
+
                 <h3>Lo que el capítulo 2 llamó finitud</h3>
                 <p>
                     En su sección 1, el capítulo 2 puso la <strong>finitud</strong> entre las propiedades de un
@@ -6874,6 +6971,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con el acuerdo de pago de la sección 2; cada fila es una resta</Fuente>
                 <p>
                     400 000 no cabe un número exacto de veces en 2 350 000, así que el saldo pasa de 350 000 a
                     −50 000 sin tocar el cero. Con <span className="inline-code">&gt;</span>, ahí terminaba el
@@ -6887,17 +6985,23 @@ End Sub`,
                     Un <span className="inline-code">Para</span> responde por su cuenta las tres preguntas: el
                     contador cambia en cada vuelta, siempre hacia el tope, y el ciclo sale cuando lo pasa, no
                     cuando lo iguala, así que no hay un punto que saltar. El <span className="inline-code">for</span> de
-                    Python y de R ni siquiera compara: recorre una secuencia ya hecha, y termina cuando la secuencia
-                    se acaba. Por eso un <span className="inline-code">Para</span> termina siempre, con las vueltas
-                    que dice su primera línea. Con la salvedad de la sección 4: en VBA, si el cuerpo toca el
-                    contador, la garantía se pierde.
+                    Python y de R recorre una secuencia, como vio la sección 4, y termina cuando la secuencia
+                    se acaba. Por eso los <span className="inline-code">Para</span> de este capítulo, que avanzan
+                    de uno en uno, terminan con las vueltas que dice su primera línea. Con dos salvedades, las
+                    dos de VBA. Una es la de la sección 4: si el cuerpo toca el contador, la garantía se pierde.
+                    La otra es el paso: con un paso positivo o de 0, el <span className="inline-code">For</span> repite
+                    mientras el contador no pase del tope <Cita k="microsoft2018fornext" loc="Comentarios" />, y
+                    con <span className="inline-code">Step 0</span> el contador no avanza: si nada más lo cambia
+                    ni saca del ciclo, no termina. Ejecutado en Excel con una salida de seguridad: tras
+                    1 000 vueltas, el contador seguía en 1.
                 </p>
 
                 <h3>El cero que no llega</h3>
                 <p>
                     En el acuerdo de pago, el saldo se saltaba el cero porque los abonos no lo alcanzaban exacto. En
-                    un plan de pagos, la cuota está calculada para que el saldo llegue a cero justo en la última
-                    cuota: eso es lo que dice la fórmula. ¿Basta con eso para que un ciclo pueda esperar a que el
+                    un plan de pagos de cuota fija pasa lo contrario: con la cuota de la fórmula, y haciendo la
+                    cuenta con fracciones exactas, la última cuota deja el saldo en cero. Se comprobó para este
+                    capítulo con el plan de la sección 4 y con el de la motivación. ¿Basta con eso para que un ciclo pueda esperar a que el
                     saldo llegue a cero?
                 </p>
 
@@ -6915,7 +7019,7 @@ End Sub`,
                     tipoCorrecto={2}
                     consecuencias={[
                         'Cobra una cuota 13 de 916 799,93 y ahí se detiene, con el saldo exacto en cero.',
-                        'No se detiene: tras la cuota 12 el saldo queda en −7,5 × 10⁻⁸, y de ahí solo baja.',
+                        'No se detiene en la cuota 12, ni después por su condición: el saldo queda en −7,5 × 10⁻⁸, y de ahí solo baja.',
                         'Se detiene en la cuota 12, pero deja 7,5 × 10⁻⁸ pesos del saldo sin cobrar.',
                         'Se detiene con un error de división por cero cuando el saldo llega a cero.',
                     ]}
@@ -6936,7 +7040,10 @@ End Sub`,
                     bloques={EJ_CUOTA_37}
                     nota="La cuota 36 deja un saldo de 0,0000000200: dos cienmillonésimas de peso, pero positivas. La condición pregunta si el saldo es mayor que cero, y lo es, así que el ciclo da la vuelta 37. Sobre un saldo así el interés es prácticamente cero, toda la cuota se va a abono, y el saldo termina en menos una cuota." />
 
-                <p>El mismo programa, con seis créditos de una cartera, cambiando solo los datos:</p>
+                <p>
+                    El mismo programa con seis créditos, cambiando solo los datos. Las vueltas y los residuos
+                    son los que dieron Python y R, y en Excel las seis filas salieron iguales:
+                </p>
                 <div className="overflow-x-auto">
                     <table>
                         <thead>
@@ -6952,6 +7059,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con el programa de esta sección, ejecutado en Python, en R y, con VBA, en Excel</Fuente>
                 <p>
                     El signo del residuo decide. Cuando es negativo, la última cuota deja el saldo un poco por
                     debajo de cero, la condición da falso y el ciclo para a tiempo. Cuando es positivo, el ciclo
@@ -6972,8 +7080,8 @@ End Sub`,
                     solucion={<>
                         <p>
                             <strong>Por qué el contador.</strong> El número de cuotas es un dato del contrato: se fija
-                            el día de la firma y no sale de ninguna cuenta. Un ciclo que cuenta las cuotas da
-                            exactamente n vueltas, con cualquier tasa, en cualquier lenguaje y en cualquier máquina.
+                            el día de la firma y no sale de ninguna cuenta. Un ciclo que cuenta las cuotas, bien escrito, da
+                            exactamente n vueltas, con cualquier tasa y en cualquier máquina.
                             El saldo, en cambio, es el resultado de cientos de operaciones de punto flotante, y lo
                             que queda tras la última cuota es un residuo cuyo signo nadie elige: en dos de los seis
                             créditos es positivo, y el ciclo cobra una cuota que no está en el contrato. Con
@@ -6985,19 +7093,20 @@ End Sub`,
                             créditos dan sus vueltas exactas, y el programa de la motivación funcionó meses antes de
                             facturar la cuota 37. Tampoco es estable: escribir la misma cuenta en otro orden cambia
                             qué créditos fallan. Un programa cuyo número de vueltas depende del último bit de una
-                            cuenta no se puede auditar.
+                            cuenta es muy difícil de auditar.
                         </p>
                         <p>
                             <strong>Cuándo sí por el saldo.</strong> Cuando el número de pagos no se conoce al
                             entrar: el acuerdo de pago de la sección 2, con abonos fijos que no dividen la deuda; un
-                            crédito con abonos extraordinarios; una tarjeta de crédito. Ahí no hay un número de cuotas
+                            crédito con abonos extraordinarios; una tarjeta a la que se abona una cifra fija cada mes. Ahí no hay un número de cuotas
                             que contar, y lo que decide es el saldo. Los cuidados son cuatro. La condición es
                             {' '}<span className="inline-code">saldo &gt; 0</span> y nunca <span className="inline-code">saldo &lt;&gt; 0</span>,
                             para que no se pueda pasar de largo. El último abono se ajusta a lo que se debe —la selectiva
                             de la sección 2—, para no cobrar de más. El abono se valida positivo antes de entrar,
                             porque con un abono de 0 el ciclo no termina. Y los montos van en centavos enteros o en
-                            {' '}<span className="inline-code">Currency</span>, como pidió el capítulo 1, para que un
-                            saldo que llega a cero llegue de verdad.
+                            {' '}<span className="inline-code">Currency</span>, como pidió el capítulo 1, para que
+                            restar un abono no deje residuo: lo que lleva el saldo a cero es el ajuste del último
+                            abono, no el tipo de dato.
                         </p>
                     </>}
                 >
@@ -7059,8 +7168,9 @@ End Sub`,
                     no paraba, y esta vez no hay salida que saltar: <span className="inline-code">monto</span> no se
                     acerca al −1 vuelta a vuelta, sino que en cada una recibe lo que se digita, y un −1 digitado se
                     guarda exacto. La regla
-                    del capítulo 1 —nunca comparar dinero con igualdad exacta— es para cifras que salen de cuentas,
-                    como el saldo del plan de pagos. Lo
+                    del capítulo 1 —nunca comparar con igualdad exacta dinero guardado en flotantes— cuida las
+                    cifras que salen de cuentas, como el saldo del plan de pagos; el −1 no sale de ninguna, y
+                    por eso este capítulo se permite compararlo. Lo
                     que cambia es de quién depende la finitud: el ciclo termina cuando llega el centinela, y si
                     nadie lo digita, no termina. Por eso el centinela tiene que ser un valor que ningún dato real
                     pueda tomar. Ningún pago es negativo; en una lista de ajustes contables, donde sí los hay, un −1
@@ -7077,13 +7187,14 @@ End Sub`,
                             <tr><th>Para cuando…</th><th>Termina si…</th><th>La trampa</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>Siempre, con las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo</td></tr>
+                            <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>El contador avanza: de uno en uno, da las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo o un <span className="inline-code">Step 0</span></td></tr>
                             <tr><td><strong>Un valor calculado cruza un límite.</strong> El acuerdo de pago, con <span className="inline-code">Mientras saldo &gt; 0</span></td><td>Cada vuelta lo acerca, y la condición no se puede saltar</td><td>Comparar con <span className="inline-code">&lt;&gt; 0</span>, que se salta; un residuo, que da una vuelta de más</td></tr>
                             <tr><td><strong>Llega un dato que marca el final.</strong> El cierre de caja, con un centinela</td><td>Los datos traen el centinela</td><td>Procesar el centinela como si fuera un dato</td></tr>
-                            <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: con una tolerancia de <span className="whitespace-nowrap">10<sup>−18</sup></span>, el intervalo se queda en {residuo('', '3,5', 18)} y la bisección no termina</td></tr>
+                            <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: el ciclo deja de avanzar y no termina (sección 7)</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>que resume las secciones 2, 4, 6 y 7</Fuente>
 
                 <Box type="tip" label="Lo que sigue">
                     La bisección de la sección 7 no sabe cuántas vueltas va a dar, ni espera un dato que le diga
@@ -7098,7 +7209,7 @@ End Sub`,
            SECCIÓN 7 — Casos financieros: el oficio
 
            Las cifras de la prosa están ejecutadas en Python y en R el
-           2026-10-20, antes de escribirlas:
+           2026-10-20, antes de escribirlas, y otra vez el 2026-11-21:
            · 10 000 000 al 1,5 % en 12 cuotas, con cuatro pagadas: saldo
              6 863 095,58 e intereses pagados 530 295,30. La resta del
              cliente da 6 332 800,28. Las ocho cuotas que faltan, traídas a
@@ -7118,7 +7229,13 @@ End Sub`,
            · Efectivas anuales: 19,5618 % y 26,7105 %. Con la TIR redondeada
              a 0,019924, la que usa el bloque, 26,7108 %: con dos decimales,
              26,71 en los dos casos.
-           El VBA no se ejecutó (R10): su arnés existe, pero falta correrlo.
+           Con fracciones exactas (fractions.Fraction, 2026-11-21) el saldo
+           hacia adelante y el valor presente de las ocho cuotas son iguales.
+           Con tolerancia 1e-18 la bisección se queda en dos flotantes vecinos
+           (ancho 3,5 × 10⁻¹⁸) y no sale: probado hasta 2 000 vueltas.
+           El VBA de los tres bloques se ejecutó en Excel el 2026-11-21 con
+           ejecutar_vba.py (arnés 7a96ad5822): coincide, salvo que ese Excel
+           escribe coma decimal.
         ============================================================ */
 
         const EJ_SALDO_INSOLUTO = {
@@ -7538,43 +7655,60 @@ End Sub`,
                     1,5 % al mes.
                 </Motivacion>
 
+                <Ilustrativo>
+                    El cliente, el banco y la comisión son un caso inventado para esta sección, sobre el
+                    crédito de la sección 4. Las cifras sí salen de los programas de más abajo, ejecutados:
+                    el saldo de 6 863 095,58, la TIR y las tasas efectivas. La resta del cliente,
+                    10 000 000 − 4 × 916 799,93, da 6 332 800,28.
+                </Ilustrativo>
+
                 <h3>Cuánto debe hoy</h3>
                 <p>
                     La resta del cliente supone que cada cuota pagada baja la deuda en 916 799,93. No es así: una
                     parte de cada cuota paga el interés del mes, y solo el resto, el abono, baja la deuda. Es lo
-                    que la tabla de la sección 4 escribió fila por fila. La cifra que le dio el banco es el <Termino def="Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas. Es lo que tendría que pagar para cancelar el crédito ese día, sin los intereses de los meses que aún no han corrido.">saldo insoluto</Termino>, y sale del ciclo de esa tabla con otro tope: en lugar de dar <span className="inline-code">n</span> vueltas, da tantas como cuotas se han pagado.
+                    que la tabla de la sección 4 escribió fila por fila. La cifra que le dio el banco es el <Termino def="Lo que el cliente todavía debe de capital justo después de pagar cierto número de cuotas. En el caso de esta sección se supone que con esa cifra cancela el crédito ese día, sin los intereses de los meses que aún no han corrido.">saldo insoluto</Termino>, y sale del ciclo de esa tabla con otro tope: en lugar de dar <span className="inline-code">n</span> vueltas, da tantas como cuotas se han pagado.
                 </p>
 
                 <CodeTabs
                     titulo="El saldo para cancelar, de dos maneras"
                     bloques={EJ_SALDO_INSOLUTO}
-                    nota="Las dos cifras coinciden hasta el centavo; en la máquina difieren en 7 × 10⁻⁸, el residuo de siempre. En R los dos ciclos van con seq_len: con un crédito recién desembolsado pagadas vale 0, y con uno ya pagado n − pagadas también." />
+                    nota="Las dos cifras coinciden hasta el centavo; en la máquina difieren en 7 × 10⁻⁸, en Python y en R: un residuo de flotantes, como los de la sección 6. En VBA, el separador decimal de los tres programas de esta sección puede salir distinto, como en el plan de pagos de la sección 4. En R los dos ciclos van con seq_len: con un crédito recién desembolsado pagadas vale 0, y con uno ya pagado n − pagadas también." />
 
                 <p>
                     El programa calcula el saldo dos veces. La primera camina hacia adelante: repite las cuatro
                     cuotas pagadas y se queda con lo que no alcanzaron a abonar. Mientras tanto, el acumulador
-                    suma los intereses de esos cuatro meses: 150 000 + 138 498 + 126 823,47 + 114 973,83 = 530 295,30.
+                    suma los intereses de esos cuatro meses: 150 000 + 138 498,00 + 126 823,47 + 114 973,83 = 530 295,30.
                     Esa es exactamente la diferencia con la resta del cliente.
                 </p>
                 <p>
                     La segunda camina hacia atrás. Una cuota que se paga dentro de <span className="inline-code">j</span> meses
                     vale hoy menos que la cuota: vale lo que habría que tener hoy para que, creciendo al 1,5 %
                     mensual durante esos meses, llegara a ser la cuota. Es su <Termino def="Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Es lo que habría que tener hoy para que, creciendo a esa tasa, llegara a ser el pago.">valor presente</Termino>, la cuota dividida por <span className="inline-code">(1 + tasa) ^ j</span>. El ciclo suma los valores presentes de las ocho cuotas que faltan, y da el mismo saldo.
-                    No es casualidad: lo que el cliente debe hoy es lo que valen hoy las cuotas que le quedan, a la
-                    tasa del contrato. Ese segundo ciclo vuelve en un momento, con otra tasa, para buscar la TIR.
+                    No es casualidad, y se ve deshaciendo las cuotas desde el final. Cada mes el saldo sube con su
+                    interés y baja con la cuota; al revés, el saldo de antes es el de después más la cuota,
+                    dividido por <span className="inline-code">1 + tasa</span>. Después de la última cuota el saldo es cero, como
+                    comprobó la sección 6 con fracciones exactas. Un mes antes era la cuota dividida
+                    por <span className="inline-code">1 + tasa</span>; dos meses antes, eso más otra cuota, dividido otra vez. Así, lo que
+                    el cliente debe hoy es la suma de las cuotas que le quedan, cada una dividida
+                    por <span className="inline-code">1 + tasa</span> tantas veces como meses le faltan: su valor presente, a la tasa del
+                    contrato. Con fracciones exactas, las dos cuentas de este programa dan la misma cifra.
+                </p>
+                <p>
+                    Ese segundo ciclo vuelve en un momento, con otra tasa, para buscar la TIR.
                 </p>
                 <p>
                     En un crédito largo la diferencia crece mucho. Quien tomó el de vivienda de la sección 4
                     —150 000 000 al 1,1 % en 240 cuotas de 1 778 778,87— y lleva diez años pagando, la mitad del
                     plazo, todavía debe 118 197 017,68: el 78,8 % de lo que le prestaron. De los 213,45 millones
-                    que pagó en esos diez años, 181,65 millones fueron intereses. Lo puede comprobar en la tabla de la sección 4,
-                    con el crédito de vivienda, avanzando hasta la cuota 120.
+                    que pagó en esos diez años, que son 120 cuotas, 181,65 millones fueron intereses. El saldo y
+                    los intereses los puede comprobar en la tabla de la sección 4, con el crédito de vivienda,
+                    avanzando hasta la cuota 120.
                 </p>
 
                 <h3>Lo que suman los intereses</h3>
                 <p>
-                    El acumulador de la sección 4 sumó los intereses del plan completo: 1 001 599,15. Es la cifra
-                    que el cliente verá en el extracto final, y se presta a lecturas equivocadas.
+                    El acumulador de la sección 4 sumó los intereses del plan completo: 1 001 599,15. Es una cifra
+                    que se presta a lecturas equivocadas.
                 </p>
 
                 <Ejercicio tipo="E7"><MCQ
@@ -7591,11 +7725,11 @@ End Sub`,
                 <p>
                     La otra cifra del cliente es la tasa. El 1,5 % es la tasa con la que se calcularon las cuotas
                     sobre 10 000 000. Pero el cliente no recibió 10 000 000: recibió 9 700 000, y paga las mismas
-                    doce cuotas. ¿A qué tasa valen hoy 9 700 000 esas doce cuotas? Esa tasa es la <Termino def="Tasa interna de retorno: la tasa a la que lo que se recibe hoy es igual a lo que se paga después, traído a hoy. En un crédito, es lo que cuesta de verdad, con las comisiones adentro.">TIR</Termino>.
+                    doce cuotas. ¿A qué tasa valen hoy 9 700 000 esas doce cuotas? Esa tasa es la <Termino def="Tasa interna de retorno: la tasa a la que lo que se recibe hoy es igual a lo que se paga después, traído a hoy. En esta sección se toma como el costo del crédito contando la comisión.">TIR</Termino>.
                 </p>
                 <p>
-                    No hay una fórmula que la despeje. Lo que sí se puede hacer es probar una tasa y ver si se
-                    pasa o se queda corta. Con la tasa que se pruebe, el ciclo de atrás del saldo insoluto trae
+                    Con doce cuotas, la tasa aparece en esa cuenta elevada a doce potencias distintas, y este
+                    capítulo no la despeja: la busca. Prueba una tasa y mira si se pasa o se queda corta. Con la tasa que se pruebe, el ciclo de atrás del saldo insoluto trae
                     las doce cuotas a hoy, y a eso se le resta lo recibido: es el <strong>VPN</strong>, el valor
                     presente neto. Si da positivo, la tasa probada es baja, porque a esa tasa las cuotas valen más
                     de lo que se recibió. Si da negativo, es alta. Al 0 % el VPN es 1 301 599,15, las doce cuotas
@@ -7613,7 +7747,7 @@ End Sub`,
                 <CodeTabs
                     titulo="La TIR por bisección"
                     bloques={EJ_TIR}
-                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, porque R recorre la secuencia por usted. Y R trae <span className="inline-code">uniroot</span>, que busca la misma tasa con un método más rápido: con <span className="inline-code">tol = 1e-10</span> da 1,992398 %. Con su tolerancia por omisión, que es más gruesa, da 1,992167 %.</>} />
+                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, que da los mismos VPN hasta el centavo, y la misma TIR: R hace la cuenta con cada elemento de <span className="inline-code">1:n</span>, y <span className="inline-code">sum</span> los suma. Y R trae <span className="inline-code">uniroot</span>, que busca en un intervalo dónde una función vale cero: con <span className="inline-code">tol = 1e-10</span> da 1,992398 % en 6 iteraciones, contra las 17 vueltas de la bisección. Sin indicarle tolerancia da 1,992167 %: la que trae por omisión es más gruesa, 0,00012.</>} />
 
                 <p>
                     El <span className="inline-code">Mientras</span> no cuenta vueltas: sigue mientras el intervalo
@@ -7631,6 +7765,7 @@ End Sub`,
                         recibidos y doce cuotas de 916 799,93. El VPN de cada tasa ya está calculado, porque es el
                         ciclo de dentro y aquí no se repite: búsquelo en esta tabla con el valor de <span className="inline-code">medio</span>.
                         Anote las tasas como las guarda el programa (0.05, no 5 %), y Verdadero o Falso en la condición.
+                        {/* fuente-ok: VPN ejecutados en Python y R con el crédito inventado de la sección */}
                         <table className="mt-2 text-sm" style={{ width: 'auto' }}>
                             <thead><tr><th>medio</th><th>vpn</th></tr></thead>
                             <tbody>
@@ -7753,30 +7888,31 @@ End Sub`,
         };
 
         /* Los catorce términos que el capítulo define con <Termino>, con
-           definiciones coherentes con las suyas, y seis más que el capítulo
+           definiciones coherentes con las suyas, y siete más que el capítulo
            usa sin ese recuadro: las tres formas de ciclo, la bisección, la
-           tolerancia y el VPN. En orden alfabético. */
+           tolerancia, el VPN y «paz y salvo» (B9). En orden alfabético. */
         const GLOSARIO_CAP05 = [
-            ['Acumulador', 'Variable cuyo valor nuevo se calcula a partir del que ya tenía, sumándole o restándole lo que trae cada vuelta: un saldo, un total de intereses, un recaudo. Responde «¿cuánto?». Nace antes del ciclo: en 0 si suma, en 1 si multiplica, o en su valor de partida, como el capital en un saldo.'],
-            ['Bisección', 'Búsqueda que parte en dos un intervalo donde está la respuesta y se queda con la mitad donde el VPN cambia de signo. Cada vuelta divide el ancho por dos, y el ciclo para cuando es menor que la tolerancia.'],
+            ['Acumulador', 'Variable que lleva un total calculado a partir del que ya tenía, sumándole, restándole o multiplicándolo por lo que trae cada vuelta: un saldo, un total de intereses, un recaudo, un factor. Responde «¿cuánto?». Nace antes del ciclo: en 0 si suma, en 1 si multiplica, o en su valor de partida, como el capital en un saldo.'],
+            ['Bisección', 'Búsqueda que parte en dos un intervalo donde está la respuesta y se queda con la mitad donde sigue estando: en la sección 7, aquella donde el VPN cambia de signo. Cada vuelta divide el ancho por dos, y el ciclo para cuando es menor que la tolerancia.'],
             ['Capitalización', 'Sumar al saldo el interés de un período para que en el siguiente también gane interés. Escrita como ciclo, es un acumulador de producto que arranca en 1 y multiplica por (1 + tasa) en cada vuelta.'],
             ['Centinela', 'Valor que ningún dato real puede tomar, y que se digita después del último dato para marcar que no hay más, como el −1 al cerrar la caja. Se lee, pero no se procesa.'],
             ['Ciclo anidado', 'Ciclo escrito dentro del cuerpo de otro. En cada vuelta del de fuera, el de dentro arranca desde su primera vuelta y las da todas; lo que depende de la vuelta de fuera se inicializa entre los dos.'],
             ['Ciclo infinito', 'Ciclo cuya condición nunca deja salir: la de un Mientras no se vuelve falsa, o la de un Repita no se vuelve verdadera. Hay que detenerlo desde fuera, o se detiene con un error.'],
-            ['Contador', 'Variable que cuenta cuántas veces ocurre algo: su valor nuevo es el anterior más una cantidad fija, casi siempre 1. Responde «¿cuántas veces?», y no tiene que aumentar en todas las vueltas: dentro de una selectiva, cuenta solo las que la cumplen.'],
-            ['Error de frontera', 'Una vuelta de más o de menos, porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En un plan de pagos vale una cuota. En inglés, off-by-one.'],
+            ['Contador', 'Variable que cuenta cuántas veces ocurre algo: cada ocurrencia le suma una cantidad fija, casi siempre 1. Responde «¿cuántas veces?», y no tiene que aumentar en todas las vueltas: dentro de una selectiva, cuenta solo las que la cumplen.'],
+            ['Error de frontera', 'Una vuelta de más o de menos, porque el valor inicial del contador, el sitio donde aumenta y la condición no casan entre sí. En un plan de pagos vale una cuota.'],
             ['Evaluación posterior', 'La condición se pregunta después de cada vuelta, así que el cuerpo se ejecuta al menos una vez. Es la de Repita…Hasta.'],
-            ['Evaluación previa', 'La condición se pregunta antes de cada vuelta, también antes de la primera, así que el cuerpo puede no ejecutarse nunca. Es la de Mientras y la de Para.'],
+            ['Evaluación previa', 'La condición se pregunta antes de cada vuelta, también antes de la primera, así que el cuerpo puede no ejecutarse nunca. Es la de Mientras; el Para del pseudocódigo y el For de VBA también comparan el contador con el tope antes de la primera vuelta.'],
             ['Lectura adelantada', 'Leer el primer dato antes del ciclo y los siguientes al final del cuerpo, para que la condición quede siempre entre una lectura y el proceso del dato leído. Es la forma de usar un centinela sin procesarlo.'],
             ['Mientras', 'Ciclo de evaluación previa: repite el cuerpo mientras la condición sea verdadera. Conviene cuando el número de vueltas depende de lo que pasa dentro y puede ser ninguna. En VBA, Do While … Loop.'],
-            ['Para', 'Ciclo que lleva su propio contador de un valor inicial a un tope, y conviene cuando el número de vueltas se sabe al entrar. No significa lo mismo en los cuatro lenguajes: range(1, n) da n − 1 vueltas, y en R 1:0 da dos.'],
-            ['Repita…Hasta', 'Ciclo de evaluación posterior: ejecuta el cuerpo, después pregunta, y sale cuando la condición es verdadera. Da al menos una vuelta. Python lo construye con while True y break; en VBA es Do … Loop Until.'],
-            ['Saldo insoluto', 'Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas: lo que pagaría por cancelar ese día. Es también el valor presente de las cuotas que le faltan, a la tasa del contrato.'],
-            ['TIR', 'Tasa interna de retorno: la tasa a la que lo que se paga después, traído a hoy, vale lo que se recibió. En un crédito con comisión es su costo real. Ninguna fórmula la despeja: se busca, por ejemplo, por bisección.'],
+            ['Para', 'Ciclo que lleva su propio contador de un valor inicial a un tope, y conviene cuando el número de vueltas se sabe al entrar. No significa lo mismo en los cuatro lenguajes: en Python, range(1, 12) da once vueltas, y en R, 1:0 da dos.'],
+            ['Paz y salvo', 'En este capítulo, la constancia de que un cliente no debe nada: su crédito quedó con el saldo en cero.'],
+            ['Repita…Hasta', 'Ciclo de evaluación posterior: ejecuta el cuerpo, después pregunta, y sale cuando la condición es verdadera. Da al menos una vuelta. Python lo construye con while True y break, y R, con repeat y break; en VBA es Do … Loop Until.'],
+            ['Saldo insoluto', 'Lo que el cliente todavía debe de capital después de pagar cierto número de cuotas: en el caso del capítulo se supone que es lo que pagaría por cancelar ese día. Es también el valor presente de las cuotas que le faltan, a la tasa del contrato.'],
+            ['TIR', 'Tasa interna de retorno: la tasa a la que lo que se paga después, traído a hoy, vale lo que se recibió. En el crédito con comisión de la sección 7 se toma como su costo. Este capítulo no la despeja: la busca por bisección.'],
             ['Tolerancia', 'La precisión que se le pide a un ciclo que se acerca a un resultado: para cuando el error posible es menor que ella. Pedir más de lo que la máquina distingue lo vuelve un ciclo infinito.'],
             ['Valor presente', 'Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Sumado sobre las cuotas que faltan, da el saldo insoluto.'],
-            ['Variable de control', 'El contador de un Para. En pseudocódigo y en VBA, el ciclo lo inicia, lo compara con el tope y lo aumenta; en Python y en R, el for recorre una secuencia ya hecha y le da cada valor por turno.'],
-            ['VPN', 'Valor presente neto: los valores presentes de los pagos futuros, menos lo que se recibió hoy. Da positivo si la tasa probada es menor que la TIR, negativo si es mayor, y cero justo en la TIR.'],
+            ['Variable de control', 'El contador de un Para. En pseudocódigo y en VBA, el ciclo lo inicia, lo compara con el tope y lo aumenta; en Python y en R, el for recorre una secuencia y le da cada valor por turno.'],
+            ['VPN', 'Valor presente neto: los valores presentes de los pagos futuros, menos lo que se recibió hoy. En el crédito de la sección 7, da positivo si la tasa probada es menor que la TIR, negativo si es mayor, y cero justo en la TIR.'],
         ];
 
         const EvaluacionSection = () => (
@@ -7790,6 +7926,12 @@ End Sub`,
                     cuota 37 antes de que llegue a la factura de un cliente.
                 </Motivacion>
 
+                <Ilustrativo>
+                    El equipo de auditoría, el banco y sus cuarenta rutinas son un caso inventado para
+                    esta sección, lo mismo que las situaciones del emparejamiento que sigue. La cuota 37
+                    es la de la sección 6.
+                </Ilustrativo>
+
                 <Ejercicio tipo="E6"><Emparejamiento
                     enunciado="Relacione cada fragmento con la situación financiera en que encaja. Algunos tienen un defecto, y entonces su situación es lo que el defecto produce. Los siete vienen de secciones distintas del capítulo."
                     etiquetaIzq="Fragmento"
@@ -7799,7 +7941,7 @@ End Sub`,
                         'La tabla de un CDT a 18 meses, una fila por mes: el plazo está en el título desde el día de la apertura.',
                         'Una deuda de 1 000 000 con abonos de 300 000: el cobro no se detiene después del cuarto abono.',
                         'El informe de recaudo del mes trae solo lo que entró el último día.',
-                        'El costo real de un crédito con gastos descontados al desembolso: una tasa que ninguna fórmula despeja.',
+                        'El costo de un crédito con gastos descontados al desembolso: una tasa que no se despeja, sino que se busca probando.',
                         'El simulador pregunta en cuántos meses quiere pagar el cliente, y no sigue hasta recibir seis o más.',
                         'Abonos fijos a una tarjeta sin saber cuántos meses harán falta; a quien tiene saldo a favor no se le cobra nada.',
                         'En el informe por oficina, cada una sale con su recaudo más el de todas las anteriores.',
@@ -7828,7 +7970,7 @@ End Sub`,
                             { texto: '13 filas, de la cuota 0 a la 12', correcta: false },
                             { texto: '12 filas, de la cuota 0 a la 11', correcta: true },
                         ],
-                        justificacion: 'range(n) es range(0, n): empieza en 0, y el segundo número, n, es el primero que no se usa. Con n = 12 da 0, 1, …, 11, doce valores: el ciclo da sus doce vueltas y cobra las doce cuotas, pero numeradas desde la 0. Los intereses y los saldos no cambian, porque el cuerpo no usa k para calcular; solo lo imprime. Once filas sería range(1, n), el error de la motivación de la sección 4, donde el primer número sí era 1. Que range(n) empiece en 1 es justo lo que no hace: esa es la diferencia con el Para del pseudocódigo. Y trece no da nunca, porque el tope no se incluye, empiece donde empiece. En R, el equivalente sería 0:(n - 1).',
+                        justificacion: 'range(n) es range(0, n): empieza en 0, y el segundo número, n, es el primero que no se usa. Con n = 12 da 0, 1, …, 11, doce valores: el ciclo da sus doce vueltas y cobra las doce cuotas, pero numeradas desde la 0. Los intereses y los saldos no cambian, porque el cuerpo no usa k para calcular; solo lo imprime. Once filas sería range(1, n), el error de la motivación de la sección 4, donde el primer número sí era 1. Que range(n) empiece en 1 es justo lo que no hace: esa es la diferencia con el Para del pseudocódigo. Y con tope 12 no da trece, arranque en 0 o en 1, porque el tope no se incluye. En R, el equivalente sería 0:(n - 1).',
                     },
                     {
                         seccion: 'cap2',
@@ -7839,7 +7981,7 @@ End Sub`,
                             { texto: 'En VBA el ciclo no termina, porque un saldo sin valor nunca deja de ser mayor que cero.', correcta: false },
                             { texto: 'En los dos escribe Meses: 0, porque toda variable de un programa empieza valiendo cero.', correcta: false },
                         ],
-                        justificacion: 'Dim saldo As Currency le da a saldo un 0 que nadie eligió, y Option Explicit no lo impide: solo exige que la variable esté declarada, y lo está. La primera evaluación de Do While saldo > 0 es 0 > 0, falsa, así que el ciclo no da ninguna vuelta y el programa escribe Meses: 0 y un saldo final de 0, como si el cliente no debiera nada. Falta la inicialización, la primera de las tres piezas de la sección 2, en un ciclo de evaluación previa: con la condición falsa de entrada, cero vueltas no es un error para el lenguaje. Python no declara variables, así que nada le da valor a saldo: se detiene con un NameError en la línea del while, y R, con «object not found». Por eso no es cierto que los dos den error, ni que toda variable empiece en cero. Y el ciclo no queda infinito: con 0, la condición es falsa desde la primera pregunta.',
+                        justificacion: 'Como dijo la sección 2, Dim saldo As Currency le da a saldo un 0 que nadie eligió. Option Explicit no lo impide: la variable está declarada, y eso le basta. Ejecutado en Excel, el programa escribe Meses: 0 sin ningún error. La primera evaluación de Do While saldo > 0 es 0 > 0, falsa, así que el ciclo no da ninguna vuelta y el programa escribe Meses: 0 y un saldo final de 0, como si el cliente no debiera nada. Falta la inicialización, la primera de las tres piezas de la sección 2, en un ciclo de evaluación previa: con la condición falsa de entrada, cero vueltas no es un error para el lenguaje. Python no declara variables, así que nada le da valor a saldo: se detiene con un NameError en la línea del while, y R, con un error que dice que no encuentra el objeto saldo. Por eso no es cierto que los dos den error, ni que toda variable empiece en cero. Y el ciclo no queda infinito: con 0, la condición es falsa desde la primera pregunta.',
                     },
                     {
                         seccion: 'cap3',
@@ -7888,7 +8030,7 @@ End Sub`,
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'El crédito de la traza de la sección 4 —4 000 000 al 2 % mensual en 12 cuotas de 378 238,39— se corre completo, con su acumulador de intereses. Sin trazar las doce vueltas, ¿cuánto suma ese acumulador al final, redondeado al peso?',
+                        pregunta: 'El crédito de la traza de la sección 4 —4 000 000 al 2 % mensual en 12 cuotas de 378 238,39— se corre completo, con un acumulador de intereses añadido, como el del plan de pagos de esa sección. Sin trazar las doce vueltas, ¿cuánto suma ese acumulador al final, redondeado al peso?',
                         opciones: [
                             { texto: '1 072 967', correcta: false },
                             { texto: '538 861', correcta: true },
@@ -7907,7 +8049,7 @@ End Sub`,
                             { texto: 'Mientras saldo > 0, con 20 000 000 al 1,8 % y la cuota de 36 meses de la fórmula', correcta: true },
                             { texto: 'Para k <- 1 Hasta n, con n = 36, el número de cuotas del contrato', correcta: true },
                         ],
-                        justificacion: 'El Para termina siempre que el cuerpo no toque el contador: este cambia en cada vuelta, siempre hacia el tope, y el ciclo sale cuando lo pasa; con n = 36 da 36 vueltas. El cobro de los 20 000 000 también termina, aunque tarde una vuelta: es el crédito de la cuota 37 de la sección 6. Tras la cuota 36 queda un saldo de 0,00000002, el ciclo cobra la 37, el saldo cae a menos una cuota y la condición se vuelve falsa. Una vuelta de más es un defecto grave, pero no es un ciclo infinito. Con <> 0 y abonos de 200 000, el saldo pasa de 100 000 a −100 000 sin tocar el cero, y de ahí solo baja: no termina. Y con el abono que digita el cliente no se puede asegurar nada: si digita 0, el saldo no se mueve, y si digita un negativo, se aleja de la salida. Es la segunda de las tres preguntas de la sección 6: si el cuerpo cambia la variable siempre en la dirección de la salida.',
+                        justificacion: 'Este Para termina: avanza de uno en uno y su cuerpo no toca el contador, así que este cambia en cada vuelta, siempre hacia el tope, y el ciclo sale cuando lo pasa; con n = 36 da 36 vueltas. El cobro de los 20 000 000 también termina, aunque tarde una vuelta: es el crédito de la cuota 37 de la sección 6. Tras la cuota 36 queda un saldo de 0,00000002, el ciclo cobra la 37, el saldo cae a menos una cuota y la condición se vuelve falsa. Una vuelta de más es un defecto grave, pero no es un ciclo infinito. Con <> 0 y abonos de 200 000, el saldo pasa de 100 000 a −100 000 sin tocar el cero, y de ahí solo baja: no termina. Y con el abono que digita el cliente no se puede asegurar nada: si digita 0, el saldo no se mueve, y si digita un negativo, se aleja de la salida. Es la segunda de las tres preguntas de la sección 6: si el cuerpo cambia la variable siempre en la dirección de la salida.',
                     },
                     {
                         seccion: 'cap7',
@@ -7935,6 +8077,7 @@ End Sub`,
                         </tbody>
                     </table>
                 </div>
+                <Fuente propia>con las definiciones de este curso</Fuente>
 
                 <Box type="tip" label="Lo que viene">
                     El capítulo 6, «Entorno de programación VBA», pone a VBA al frente y deja el pseudocódigo
@@ -7942,9 +8085,11 @@ End Sub`,
                     acuerdo de pago o las tres vueltas de la bisección, las hará la máquina, una instrucción
                     por tecla, con F8 y la ventana Locales a la vista. Y dos cosas que este capítulo dijo de
                     paso tendrán allí su sección: por qué un <span className="inline-code">Dim</span> deja en 0
-                    una variable que nadie inicializó, y por qué el dinero se guarda en <span className="inline-code">Currency</span> y
-                    no en <span className="inline-code">Double</span>.
+                    una variable que nadie inicializó, y qué cambia al guardar el dinero en <span className="inline-code">Currency</span> y
+                    no en <span className="inline-code">Double</span>. Es lo que anuncia el plan del curso para ese capítulo, que todavía no está escrito.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -8177,6 +8322,79 @@ End Sub`,
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "d040115879af08d7cf15f5be21e5e735446c7dac532b35d3d336e97a33c811df",
+  "sello": "434c928a4c21b490c9f79cbc275b7dd9d225bde4271708701ea37db9910cd755",
+  "orden": [
+    "congreso2000ley599",
+    "microsoft2017desbordamiento",
+    "microsoft2018integer",
+    "microsoft2018fornext",
+    "microsoft2019dim",
+    "microsoft2026vbal",
+    "psf2026match",
+    "rcoreteam2026lenguaje"
+  ],
+  "entradas": {
+    "congreso2000ley599": {
+      "autor": "Congreso de Colombia",
+      "anio": "2000",
+      "html": "Congreso de Colombia. (2000). \u003cem>Ley 599 de 2000, por la cual se expide el Código Penal\u003c/em>. Diario Oficial 44.097. \u003ca href=\"http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\">http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html\u003c/a>",
+      "plano": "Congreso de Colombia. (2000). Ley 599 de 2000, por la cual se expide el Código Penal. Diario Oficial 44.097. http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html"
+    },
+    "microsoft2017desbordamiento": {
+      "autor": "Microsoft",
+      "anio": "2017",
+      "html": "Microsoft. (2017, junio 8). \u003cem>Desbordamiento (error 6)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\u003c/a>",
+      "plano": "Microsoft. (2017, junio 8). Desbordamiento (error 6). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6"
+    },
+    "microsoft2018integer": {
+      "autor": "Microsoft",
+      "anio": "2018a",
+      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Tipo de datos Integer\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 19). Tipo de datos Integer. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type"
+    },
+    "microsoft2018fornext": {
+      "autor": "Microsoft",
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, diciembre 3). \u003cem>Instrucción For...Next\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement\u003c/a>",
+      "plano": "Microsoft. (2018b, diciembre 3). Instrucción For...Next. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement"
+    },
+    "microsoft2019dim": {
+      "autor": "Microsoft",
+      "anio": "2019",
+      "html": "Microsoft. (2019, mayo 24). \u003cem>Instrucción Dim\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\u003c/a>",
+      "plano": "Microsoft. (2019, mayo 24). Instrucción Dim. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement"
+    },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026",
+      "html": "Microsoft. (2026, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    },
+    "psf2026match": {
+      "autor": "Python Software Foundation",
+      "anio": "2026",
+      "html": "Python Software Foundation. (2026, noviembre 17). \u003cem>8. Compound statements\u003c/em>. Python 3.15.2 Documentation. \u003ca href=\"https://docs.python.org/3/reference/compound_stmts.html\">https://docs.python.org/3/reference/compound_stmts.html\u003c/a>",
+      "plano": "Python Software Foundation. (2026, noviembre 17). 8. Compound statements. Python 3.15.2 Documentation. https://docs.python.org/3/reference/compound_stmts.html"
+    },
+    "rcoreteam2026lenguaje": {
+      "autor": "R Core Team",
+      "anio": "2026",
+      "html": "R Core Team. (2026, octubre 29). \u003cem>The R Language Definition (version 4.6.2)\u003c/em>. \u003ca href=\"https://cran.r-project.org/doc/manuals/r-release/R-lang.html\">https://cran.r-project.org/doc/manuals/r-release/R-lang.html\u003c/a>",
+      "plano": "R Core Team. (2026, octubre 29). The R Language Definition (version 4.6.2). https://cran.r-project.org/doc/manuals/r-release/R-lang.html"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

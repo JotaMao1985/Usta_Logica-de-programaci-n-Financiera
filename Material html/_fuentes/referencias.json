@@ -183,6 +183,37 @@
     "language": "es"
   },
   {
+    "id": "congreso2000ley599",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Congreso de Colombia"
+      }
+    ],
+    "title": "Ley 599 de 2000, por la cual se expide el Código Penal",
+    "publisher": "Diario Oficial 44.097",
+    "issued": {
+      "date-parts": [
+        [
+          "2000",
+          7,
+          24
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          20
+        ]
+      ]
+    },
+    "URL": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0599_2000.html",
+    "language": "es"
+  },
+  {
     "id": "congreso2008ley1266",
     "type": "report",
     "author": [
@@ -550,6 +581,37 @@
     "language": "en"
   },
   {
+    "id": "microsoft2017desbordamiento",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Desbordamiento (error 6)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2017",
+          6,
+          8
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          20
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018and",
     "type": "webpage",
     "author": [
@@ -612,6 +674,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018fornext",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Instrucción For...Next",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          20
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/fornext-statement",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018hex",
     "type": "webpage",
     "author": [
@@ -640,6 +733,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/hex-function",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018integer",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Tipo de datos Integer",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          20
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type",
     "language": "es"
   },
   {
@@ -702,6 +826,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/operator-precedence",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2019dim",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Instrucción Dim",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          5,
+          24
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          20
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement",
     "language": "es"
   },
   {

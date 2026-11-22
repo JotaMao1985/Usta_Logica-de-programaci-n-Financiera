@@ -4440,3 +4440,380 @@ anterior dejó sin hacer.
 bandas de longitud fijas, calibradas sobre la redacción anterior de las opciones: al
 cambiar una opción hay que volver a medirlas (pasó con `segun_sin_defecto` y con
 `variable_o_constante`). Nada lo avisa antes de copiar.
+
+### Tarea 15 · Capítulo 5, mejora de contenido: fases 1 y 2 · 2026-11-19 y 2026-11-20
+
+Plan: `PLAN_TAREA15_CAPITULO_05_CONTENIDO.md`, doce fases, aprobado por el docente el
+2026-11-19 con la opción recomendada en las ocho decisiones.
+
+**Fase 1, línea base y fuentes** (rama `claude/cap05-fase1`).
+- Lectura crítica independiente: ningún alto, 7 medios y 9 bajos.
+- Inventario en el vault: 243 afirmaciones, 49 figuras, 63 conceptos y 43 hilos; 69
+  afirmaciones piden reescribirse. Treinta defectos que la lectura crítica no traía.
+- Leídos el artículo 305 del Código Penal y cuatro páginas de Microsoft Learn
+  (`For...Next`, `Dim`, `Integer`, el error 6). Tanda 08 importada a Zotero con la
+  aprobación del docente: 53 referencias.
+- Excel: los once bloques de VBA con salida declarada coinciden; la cuota 37 da 37.
+
+**Fase 2, sección 1** (rama `claude/cap05-fase2`).
+- El caso de la clienta lleva su `<Ilustrativo>`.
+- El contador se define por la ocurrencia, y el acumulador incluye el de producto, que la
+  tabla de la misma sección ya traía.
+- El recuadro de tasas declara ilustrativas las siete del capítulo, con sus equivalentes
+  anuales, y la frase de la usura dice lo que dice el artículo 305, con cita. El
+  verificador independiente la dio por parcial («una tasa real se mira contra ese
+  interés» quitaba el umbral de la mitad) y se adoptó su redacción.
+- El corte de 30 días de mora se declara convención del ejemplo; la pregunta ya no dice
+  «qué muestra el programa», porque cada lenguaje escribe la cifra a su manera; la pista
+  del ejercicio de ordenar nombra las cuatro líneas que van fuera del ciclo.
+- El capítulo estrena `<Referencias />` y `afirmaciones/05.yaml`, con una cita.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5 queda con un solo aviso, las 23 figuras sin fuente (fase 10). Sonda a 320: 9 de 9.
+
+**Huecos de las herramientas.**
+- La regla 30 no ve el comparador de los tres ciclos ni las tablas de `TablaTraza` y
+  `Trazador`: el inventario cuenta 49 figuras y el verificador, 23. Se decide en la fase
+  10.
+- Zotero rechaza una segunda importación por el conector con `SESSION_EXISTS` y no
+  importa nada: hay que pasar `?session=` propio. El primer intento falló en silencio
+  hasta que se exportó la colección y faltaban cuatro claves.
+- Cuando una corrección cambia el texto de una afirmación que no es `citada`, el ancla de
+  su nota del vault se pierde y nada lo avisa: en esta fase se perdieron cinco y se
+  repusieron a mano.
+
+### Tarea 15 · Capítulo 5, fase 3: sección 2, Mientras · 2026-11-20
+
+Rama `claude/cap05-fase3`, sobre la de la fase 2.
+
+- El caso del acuerdo de pago lleva su `<Ilustrativo>`.
+- **`While … Wend`:** salió «más antigua», que ninguna fuente leída dice. La fila de VBA
+  dice ahora que `While … Wend` solo pregunta antes de cada vuelta y que `Do` admite la
+  condición al principio o al final, con `While` o con `Until`, con cita a la
+  especificación del lenguaje (§5.4.2.2 y §5.4.2.6), que ya estaba en Zotero.
+- **`Dim`:** «una variable numérica declarada con Dim se inicializa en 0», con cita a la
+  página de la instrucción. Todas las declaraciones del capítulo llevan su tipo: ninguna
+  es una `Variant`, que se inicializaría en `Empty`.
+- **Simbología del flujograma:** dice «en este curso» donde la del capítulo 4, declara
+  el retorno como añadido del curso y cambia de título.
+- Las llaves de R se dicen como forma del curso; la actualización, como lo que detiene a
+  un Mientras; y la nota de la traza avisa de que no se detiene en la línea de cierre.
+- Verificador independiente: las tres citas respaldan; se adoptaron dos ajustes suyos de
+  redacción.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con cuatro citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
+
+### Tarea 15 · Capítulo 5, fase 4: sección 3, Repita…Hasta · 2026-11-21
+
+Rama `claude/cap05-fase4`, sobre la de la fase 3.
+
+- **Motivación (N6):** salió la cifra de 916 799,93, que era la cuota de un crédito que
+  el capítulo no presenta hasta la sección 4. «A paz y salvo» se define en el sitio, y un
+  `<Ilustrativo>` declara inventados el banco y sus dos rutinas.
+- **Python:** «No tiene la estructura» pasó a «Python repite con while y con for, y el
+  while prueba la condición antes de cada vuelta», con cita a la referencia del lenguaje
+  (§8.2 y §8.3). La página no afirma que falte un ciclo de evaluación posterior: el
+  recuadro del `break` lo dice como derivada, y ya no dice «no tienen otra forma de
+  preguntar al final». Cerrar el Repita con `break` queda escrito como decisión del curso.
+- **VBA:** el recuadro de las cuatro combinaciones lleva cita a la especificación
+  (§5.4.2.6), escribe la equivalencia como la da la fuente (`Do Until c` = `Do While Not
+  (c)`) y avisa del `Do` sin condición, que solo para con `Exit Do`; el capítulo no lo usa.
+- **Actualización:** en un Repita, el cuerpo tiene que poder volver verdadera la
+  condición; en la validación lo hace la lectura.
+- **Flujograma del Repita:** el cuerpo dibuja las dos instrucciones del código (el
+  mensaje, abreviado, y la lectura). Visto en el navegador: el texto cabe.
+- El bloque se titula «hasta que sea positivo» y su nota dice que solo mira el signo.
+  «Lo que sigue» ya no dice «este mismo cobro».
+- Verificador independiente: «parcial» a la cita de Python (se adoptaron su redacción y
+  su localización) y «respalda» a la de VBA (se adoptaron dos ajustes).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con seis citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
+
+### Tarea 15 · Capítulo 5, fase 5: sección 4, Para · 2026-11-21
+
+Rama `claude/cap05-fase5`, sobre la de la fase 4.
+
+- **Motivación:** lleva su `<Ilustrativo>` y define el paz y salvo.
+- **El recuadro del banco (decisión B):** ya no dice qué hace «un banco». Se titula «Si la
+  cuota se redondeara» y dice lo que se deduce: redondeada al peso, las doce cuotas no
+  dejan el saldo en cero y habría que ajustar la última.
+- **El for de cada lenguaje, con cita:** `For...Next` de VBA (Microsoft Learn, Sintaxis y
+  Comentarios), el `for` de Python (§8.3) y el de R (§3.2.5). Salieron «no compara ni suma
+  nada» y «ya hecha», que las fuentes no dicen; el contraste va después de la cita.
+- **El contador cambiado en VBA:** salió el enlace crudo y «desaconseja»; va `<Cita>`, y la
+  página «advierte» que «podría» ser más difícil de leer. «Una cuota de cada dos» queda
+  como derivada: no está ejecutada en Excel (fase 11).
+- **`range(1, n)`:** da n − 1 vueltas «si n es al menos 1» (B1).
+- **La remisión rota al capítulo 1 (M1):** la cita entre comillas se cambió por la frase
+  que el capítulo 1 tiene hoy, sin comillas.
+- **Sin fuente, retirado:** «amortización francesa» (prosa, cuatro comentarios del código y
+  la descripción del flujograma) y «off-by-one» (definición y glosario). En Zotero no hay
+  ningún texto de matemáticas financieras ni de terminología que los respalde.
+- **VBA:** el comentario ya no dice que con Currency el saldo cerraría en −0,0005, que
+  nunca se ejecutó; el de Format dice lo ejecutado (Excel escribió coma); y la nota del
+  plan dice que cabe esperar el mismo residuo, no que VBA lo guarda.
+- La leyenda del flujograma y «En pseudocódigo, el contador lo lleva el ciclo» acotan lo
+  que es de pseudocódigo y VBA (M2).
+- Verificador independiente: «respalda» a una cita y «parcial» a tres; se adoptó su
+  redacción en las tres.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con diez citas registradas y el aviso de las 23 figuras. Sonda a 320 y en
+escritorio: 9 de 9.
+
+**Huecos.** (1) El guion de edición no pone el espacio duro en las cifras nuevas si se
+escriben con espacio normal: la regla de la cifra partible lo atrapó en tres sitios.
+(2) «recorre una secuencia ya hecha» sigue en la sección 6 y en el glosario (fases 7 y
+9), y el comentario de Format, en el simulador de la sección 5 (fase 6).
+
+### Tarea 15 · Capítulo 5, fase 6: sección 5, ciclos anidados · 2026-11-21
+
+Rama `claude/cap05-fase6`, sobre la de la fase 5.
+
+- **Motivación:** lleva su `<Ilustrativo>`; las tres cifras salen de los dos simuladores,
+  vueltos a ejecutar en Python y en R.
+- **Quién mueve el contador (M2):** la nota de la traza ya no dice que la cabecera
+  «aumenta» k en Python y R ni que «lo hace el Next» en VBA, que la página de `For...Next`
+  no dice. En Python y R, el for le asigna el elemento siguiente; en VBA, el paso se suma
+  al terminar la vuelta, y la traza lo marca en el `Next`.
+- **El contador al salir:** Python y R lo dejan en 3 (ejecutado). Para VBA ya no se
+  afirma: se deduce de lo citado en la sección 4 y se dice que no se ejecutó (fase 11).
+- **El abono constante:** ya no es «otra forma de amortizar» (sin fuente en Zotero); es un
+  supuesto declarado del reporte.
+- **Comentario de `Format` del simulador:** sin el mecanismo regional; remite al plan de
+  la sección 4.
+- **Menores:** la cuenta de los 33 pasos aclara cómo se reparten en la pestaña de VBA
+  (B6); «justo antes» pasó a «antes»; el comentario interno de `ORDENA_OFICINAS`, al día.
+- Sin citas nuevas: ninguna afirmación de la sección pidió fuente externa, y no hubo
+  verificador independiente. Las remisiones a la sección 1 y al capítulo 4, cotejadas.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con diez citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+**Pendiente:** las dos pestañas de VBA del simulador y el contador al salir del `For`,
+en Excel (fase 11); la tabla y el flujograma, sin fuente declarada (fase 10).
+
+### Tarea 15 · Capítulo 5, fase 7: sección 6, cuándo para un ciclo · 2026-11-21
+
+Rama `claude/cap05-fase7`, sobre la de la fase 6.
+
+- **Motivación:** lleva su `<Ilustrativo>` y dice que la cuota va sin redondear, como
+  todas las del capítulo; así no choca con el recuadro del redondeo de la sección 4 (M4).
+- **«Un Para termina siempre»:** ya no. Los Para del capítulo, que avanzan de uno en uno,
+  terminan con las vueltas de su primera línea, con dos salvedades de VBA: tocar el
+  contador y el paso de 0, con cita a `For...Next` (Comentarios). Salió «ni siquiera
+  compara: recorre una secuencia ya hecha». La tabla final también lo dice.
+- **El saldo que llega a cero:** sin fuente de matemáticas financieras, la propiedad se
+  ejecutó con fracciones exactas (12 y 36 cuotas dan saldo 0) y el texto lo dice así.
+- **El desbordamiento de VBA:** el rango de `Integer` y el error 6, con cita a sus dos
+  páginas de Microsoft Learn, ya en Zotero. La vuelta 32 768 queda como deducción
+  declarada, sin ejecutar. La consecuencia correcta del ejercicio vale ahora para VBA.
+- **La regla del capítulo 1 (B2):** va con su condición, «dinero guardado en flotantes»,
+  las dos veces.
+- **La tabla de los seis créditos:** dice dónde se midió (Python y R; la fila de 37,
+  también en Excel).
+- **Menores:** «es muy difícil de auditar» (B4); el cuarto cuidado del reto ya no promete
+  que `Currency` lleva el saldo a cero; el comentario interno de la cuota 37 registra la
+  corrida de Excel del 2026-11-19.
+- Verificador independiente: «respalda» a las tres citas; corrigió la localización de
+  dos (esas páginas no tienen sección «Comentarios») y afinó la redacción del error 6.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+**Hueco:** otra cifra nueva con espacio normal (−7,5 × 10⁻⁸); la atrapó la regla de la
+cifra partible. **Pendiente (fase 11, Excel):** `Step 0`, el desbordamiento en la vuelta
+32 768 y las otras cinco filas de la tabla.
+
+### Tarea 15 · Capítulo 5, fase 8: sección 7, casos financieros · 2026-11-21
+
+Rama `claude/cap05-fase8`, sobre la de la fase 7. Sin citas nuevas: no hay en Zotero
+ningún texto de matemáticas financieras, y lo que pedía uno se derivó, se ejecutó o se
+redactó como definición o supuesto del capítulo.
+
+- **Motivación:** lleva su `<Ilustrativo>` (M5); la resta del cliente va con su
+  aritmética a la vista.
+- **Saldo insoluto:** la definición ya no afirma qué se paga al cancelar un crédito: es
+  un supuesto del caso. El glosario dice lo mismo.
+- **«No es casualidad»:** la igualdad entre el saldo y el valor presente de las cuotas
+  que faltan se deriva a la vista, deshaciendo las cuotas desde el final, y se ejecutó
+  con fracciones exactas (las dos cuentas dan la misma cifra).
+- **La TIR:** la definición dice «en esta sección se toma como el costo del crédito
+  contando la comisión». Salió «No hay una fórmula que la despeje» (N9), del texto, del
+  glosario y del emparejamiento: «este capítulo no la despeja: la busca».
+- **`uniroot`:** salió «un método más rápido»; van las 6 iteraciones contra las 17
+  vueltas y la tolerancia por omisión con su valor, 0,00012 (ejecutado).
+- **Menores:** fuera «el residuo de siempre» y «la cifra que el cliente verá en el
+  extracto final»; 138 498,00 con sus decimales; lo pagado en la vivienda «son 120
+  cuotas», y la remisión al interactivo queda para el saldo y los intereses.
+- **VBA (M7):** el arnés nuevo (7a96ad5822) se pegó en Excel y los once bloques del
+  capítulo coinciden, entre ellos los tres de la sección 7 y el simulador de la sección
+  5. Ese Excel escribe coma decimal; la nota del primer bloque lo avisa.
+- La bisección con tolerancia 10⁻¹⁸ (sección 6) se volvió a ejecutar: se queda en dos
+  flotantes vecinos, 3,5 × 10⁻¹⁸, y no sale (probado hasta 2 000 vueltas).
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9.
+Cifras de la sección vueltas a ejecutar en Python y R. Remisiones a los capítulos 2 y 3,
+cotejadas. **Hueco:** `ejecutar_vba.py preparar` deja el módulo en el portapapeles, y si
+el docente copia otra cosa antes de pegar, se pega lo suyo: pasó una vez; se repitió
+`preparar` y se pegó de inmediato. **Pendiente:** el interactivo de la TIR sin abrir en
+navegador; su gráfica sin fuente (fase 10).
+
+### Tarea 15 · Capítulo 5, fase 9: portada, evaluación, glosario y cierre · 2026-11-21
+
+Rama `claude/cap05-fase9`, sobre la de la fase 8. Sin citas nuevas.
+
+- **Portada:** la motivación lleva su `<Ilustrativo>` (M5); el mapa usa los títulos de
+  la barra lateral (corregido en la fase 10: solo cambian los pasos 5 y 7); las cuatro diferencias entre lenguajes remiten a su sección (3 y 4),
+  donde van las citas, y dicen que se ejecutaron, la de VBA en Excel (M6).
+- **Evaluación:** la motivación de la auditoría y las situaciones del emparejamiento,
+  declaradas como inventadas. Pregunta 3: el 0 del `Dim` remite a la sección 2, lo de
+  `Option Explicit` se ejecutó en Excel y el mensaje de R ya no va como cita literal
+  (N8). Pregunta 9: «Este Para termina», sin generalizar. Ninguna clave cambió.
+- **Glosario:** acumulador y contador dicen lo mismo que sus `<Termino>` (B3); la
+  evaluación previa ya no le atribuye una condición al `for` de Python y R (M2);
+  `range(1, 12)` da once vueltas en vez de «n − 1» (B1); el Repita suma la forma de R; la
+  variable de control pierde «ya hecha»; el VPN y la bisección, acotados a la sección 7;
+  entra «paz y salvo» (B9). Son 21 entradas.
+- **«Lo que viene»:** cotejado con el plan maestro del capítulo 6; dice que es lo que el
+  plan anuncia y que el capítulo no está escrito; «por qué el dinero se guarda en
+  Currency» pasó a «qué cambia al guardar…».
+- **Promesas a los capítulos 6, 7 y 8:** cotejadas con el plan maestro y registradas como
+  hilos abiertos en el vault; se cierran cuando existan esos capítulos.
+- **VBA ejecutado en Excel** (módulo `PruebasFase9`, aparte del arnés): el acuerdo de
+  pago sin inicializar da «Meses: 0» con `Option Explicit`; `k = k + 1` dentro de un
+  `For` no da error (3 vueltas de 5); tras `For k = 1 To 3`, k queda en 4; `For 1 To 0`
+  da cero vueltas; un `Integer` en 32 767 más 1 da el error 6; `Step 0` no avanza (1 000
+  vueltas con salida de seguridad). Las secciones 5 y 6 ya lo dicen como ejecutado.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9. El
+arnés de VBA sigue coincidiendo en sus once bloques. **Hueco:** al pegar el módulo de
+pruebas, un clic cayó en la ventana del libro y no en el editor; no se pegó nada en la
+hoja (comprobado: A1:B3 vacías) y se repitió. `ejecutar_vba.py` no tiene una forma de
+añadir pruebas sueltas sin pegar a mano. **Pendiente (fase 11):** el programa completo
+hasta la vuelta 32 768 y las otras cinco filas de la tabla de créditos, en Excel.
+
+### Tarea 15 · Capítulo 5, fase 10: figuras y tablas · 2026-11-21
+
+Rama `claude/cap05-fase10`, sobre la de la fase 9. No se tocó LP-CORE.
+
+- **Las 23 figuras y tablas sin fuente:** once con `<Fuente propia>` a la vista (las que
+  traen datos o resumen secciones) y doce con `fuente-ok` y su motivo (flujogramas de
+  casos ya declarados, la simbología, la ficha, dos índices, las negaciones y las tablas
+  que calcula un interactivo). El aviso de la regla 30 desapareció.
+- **Dos interactivos más**, que la regla no ve o ve a medias: `<Fuente propia>` tras la
+  tabla de amortización y tras el comparador de los tres ciclos.
+- **Formato de cifras (B8):** los tres interactivos escriben los miles con espacio, como
+  la prosa, y el eje de la gráfica de la TIR también.
+- **Tabla del Para:** la celda de VBA ya no atribuye la suma al `Next`. **Tabla de las
+  tres formas:** el Para pregunta «si queda alguna por dar», no «contra un tope».
+- **Simbología:** el retorno explica el punto relleno por el que entra al flujo.
+- **Corrección a la fase 9:** el mapa de la portada había tomado cuatro títulos de
+  `CONFIG.temas`, y la barra lateral usa los de la lista de lecciones. Los pasos 1 y 6
+  volvieron a «Contar y acumular» y «Cuándo para»; solo cambian el 5 y el 7. Se vio al
+  abrir el capítulo en el navegador.
+- **Regla 30:** se decidió no ampliarla a `TablaTraza`, `Trazador` ni a los
+  interactivos sin tabla; el motivo y qué hacer con un interactivo nuevo están en el
+  README. Ahí quedó también cómo se redactan los hijos de `<Fuente propia>`.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, y el
+capítulo 5 sin avisos. Sonda a 320 y en escritorio: 9 de 9. En el navegador: las
+secciones 4 y 7 con sus interactivos; la bisección da 17 vueltas y deja la TIR entre
+1,9923401 % y 1,9924164 %. **Hallazgo fuera del capítulo:** en el capítulo 4, dos
+`<Fuente propia>` empiezan por «elaboración propia» y se leen «Fuente: elaboración
+propia elaboración propia; …» (líneas 3880 y 5732); otras dos y cinco del capítulo 2 y
+del 3 quedan sin conector («elaboración propia convención del curso»). Va en la fase 11.
+**Pendiente (fase 11):** el VBA del cierre de caja, que lee datos.
+
+### Tarea 15 · Capítulo 5, fase 11: coherencia, banco, VBA y teléfono · 2026-11-21
+
+Rama `claude/cap05-fase11`, sobre la de la fase 10.
+
+- **Remisiones, en los dos sentidos:** lo que los capítulos 2, 3 y 4 dicen del 5 (la TIR
+  que «el capítulo 5 calcula», las tablas de 240 filas, el acumulador dentro de un ciclo,
+  el cierre del capítulo 4) y las cerca de treinta menciones del 5 a los capítulos 1 a
+  4, cotejadas con el texto de hoy: todas se sostienen. La ficha de la portada, otra
+  vez contra las filas 10, 31, 35 y 44 del syllabus. Hilos del vault al día.
+- **VBA, todo ejecutado en Excel** (arnés 2165e82642, con `--incluir`, y un módulo
+  `PruebasFase11`): los once bloques con salida coinciden; los cinco que leen datos dan
+  lo que el capítulo dice (cartera en mora, las dos validaciones, «4 pagos por 799999» y
+  «3 pagos por 800000» en los cierres de caja); el plan con `saldo <> 0` y `k As Integer`
+  escribe 32 767 cuotas y se detiene con el error 6; las seis filas de la tabla de
+  créditos salen iguales a Python y R. La sección 6 ya lo dice como ejecutado. Queda
+  sin correr en Excel solo el cierre de caja cuando el primer dato es el −1.
+- **Banco Moodle (decisión F):** las ocho preguntas, revisadas por un lector sin
+  contexto contra el capítulo corregido, con 3 000 semillas cada una y la clave
+  recalculada por otro camino. Ninguna clave está mal. Ocho borradores en
+  `Vault/Borradores Moodle/cap05/` y la nota «Banco Moodle del capítulo 5 - preguntas
+  desfasadas», con siete dudas para el docente. El banco solo se leyó (misma suma de
+  verificación antes y después); nada se copió ni se tocó en Moodle.
+- **Capítulos 2, 3 y 4:** trece `<Fuente propia>` completan ahora la frase («según la
+  convención del curso», «que resume…») en vez de repetir «elaboración propia».
+- Un comentario de Python de la sección 3 ya no dice «Python no tiene Repita».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, sin
+avisos en el 5. Sonda del 5 a 320, a 375, en escritorio y sin almacenamiento; la de los
+capítulos 2, 3 y 4, a 320. **Teléfono (decisión G):** el servidor de red local responde
+en el Mac, pero el iPhone del docente no llegó a él (ninguna petición en el registro);
+pendiente de saber si es la red, el `https` o el relay privado. **Huecos:** el permiso
+de pantalla caduca si el docente no está, y la ejecución en Excel se queda a medias;
+`--incluir` admite un solo juego de entradas por bloque, así que el caso del −1 de
+entrada pide otra pegada.
+
+**Teléfono, el mismo día.** El capítulo se abrió en el iPhone del docente por iPhone
+Mirroring, en una pestaña nueva de Safari, desde el servidor de red local: carga
+(petición de 192.168.1.7 en el registro), el menú de lecciones abre, y la lección 7 se
+recorrió de arriba abajo: el `<Ilustrativo>`, los bloques de código, la tabla de VPN,
+la traza y los botones Anterior y Siguiente se ven bien y nada se sale del ancho. No se
+recorrieron las otras ocho lecciones en el aparato. Por qué el docente no vio nada
+antes no quedó establecido: al volver, el servidor ya no estaba escuchando y hubo que
+levantarlo otra vez. Ajuste menor a raíz de la prueba: `1 + tasa` ya no se parte entre
+dos renglones. **Visto y sin tocar:** las etiquetas de la tarjeta de la portada salen
+de `CONFIG.temas` («Contador y acumulador», «Terminación») y no coinciden con los
+títulos de las lecciones («Contar y acumular», «Cuándo para»); va a la fase 12.
+
+### Tarea 15 · Capítulo 5, fase 12: lectura crítica final · 2026-11-21
+
+Rama `claude/cap05-fase12`, sobre la de la fase 11. Dos lectores sin contexto, que no
+editan: uno leyó el capítulo entero y ejecutó Python y R; el otro cotejó las 13 citas
+contra el pasaje en la fuente misma.
+
+- **Lectura crítica:** ningún hallazgo alto; 3 medios y 11 bajos, todos corregidos.
+  Las claves de los 19 ejercicios, del emparejamiento y de las 10 preguntas son
+  correctas, con una sola opción defendible; los 22 bloques de Python y R con salida
+  declarada coinciden; las remisiones a los capítulos 1 a 4 y al syllabus cuadran.
+  - Medios: «una tarjeta de crédito. Ahí no hay un número de cuotas que contar» pasó a
+    «una tarjeta a la que se abona una cifra fija cada mes»; la pregunta 8 decía «con su
+    acumulador de intereses» de una traza que no lo tiene; el flujograma anidado no
+    dibuja Inicio ni Fin y la simbología dice «uno de cada uno»: el pie dice ahora que
+    es un fragmento.
+  - Bajos: «secciones 4 a 7» (no 3 a 7); «para con una instrucción de salida, como Exit
+    Do»; la línea de R con `sum` da «los mismos VPN hasta el centavo, y la misma TIR»
+    (difieren en milmillonésimas); la tabla de la sección 6 ya no adelanta la tolerancia
+    ni la bisección; «la tasa de la memoria»; «con tope 12 no da trece»; `range(3)` y
+    `range(0, 3)` ejecutados en vez de una propiedad general sin cita; «un ciclo que
+    cuenta las cuotas, bien escrito»; el interactivo dice «para después de la vuelta n»;
+    la portada separa lo de Python de las tres diferencias que dan «otro número»; dos
+    comentarios internos que decían «VBA sin ejecutar».
+- **Citas:** 11 respaldan limpio. Corregidas las otras dos: la de `For...Next` cubría
+  también el pseudocódigo (ahora «En VBA, el For…; el Para del pseudocódigo hace lo
+  mismo, por convención del curso») y la de `Dim` daba «Comentarios» por «Observaciones».
+  El artículo 305 se leyó ese día en la página oficial. La frase que sigue a la cita de
+  la usura se apegó al artículo. Cuatro notas del vault, renombradas.
+- **Portada:** las etiquetas de la tarjeta (`CONFIG.temas`) llevan los títulos de las
+  lecciones, como en el capítulo 4.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, el 5 sin
+avisos, con trece citas registradas. Sonda del 5 a 320, a 375 y en escritorio: 9 de 9.
+**Sin comprobar:** el inciso inexequible del artículo 305 (la página lo muestra
+colapsado; no afecta lo citado); cinco fuentes se cotejaron solo contra la copia
+guardada; el cierre de caja con el −1 de entrada no se corrió en Excel; en el iPhone se
+recorrió una lección de nueve. **Decisiones que quedan al docente:** copiar al banco
+los ocho borradores (y las siete dudas de su nota); el texto de matemáticas financieras
+y el de terminología que Zotero no tiene. **Estado:** doce fases hechas, ramas apiladas
+de `claude/cap05-plan` a `claude/cap05-fase12`, sin fusionar: la fusión a `main` espera
+la aprobación del docente.
