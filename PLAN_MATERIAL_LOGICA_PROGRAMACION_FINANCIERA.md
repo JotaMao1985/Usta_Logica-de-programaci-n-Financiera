@@ -4728,3 +4728,38 @@ secciones 4 y 7 con sus interactivos; la bisección da 17 vueltas y deja la TIR 
 propia elaboración propia; …» (líneas 3880 y 5732); otras dos y cinco del capítulo 2 y
 del 3 quedan sin conector («elaboración propia convención del curso»). Va en la fase 11.
 **Pendiente (fase 11):** el VBA del cierre de caja, que lee datos.
+
+### Tarea 15 · Capítulo 5, fase 11: coherencia, banco, VBA y teléfono · 2026-11-21
+
+Rama `claude/cap05-fase11`, sobre la de la fase 10.
+
+- **Remisiones, en los dos sentidos:** lo que los capítulos 2, 3 y 4 dicen del 5 (la TIR
+  que «el capítulo 5 calcula», las tablas de 240 filas, el acumulador dentro de un ciclo,
+  el cierre del capítulo 4) y las cerca de treinta menciones del 5 a los capítulos 1 a
+  4, cotejadas con el texto de hoy: todas se sostienen. La ficha de la portada, otra
+  vez contra las filas 10, 31, 35 y 44 del syllabus. Hilos del vault al día.
+- **VBA, todo ejecutado en Excel** (arnés 2165e82642, con `--incluir`, y un módulo
+  `PruebasFase11`): los once bloques con salida coinciden; los cinco que leen datos dan
+  lo que el capítulo dice (cartera en mora, las dos validaciones, «4 pagos por 799999» y
+  «3 pagos por 800000» en los cierres de caja); el plan con `saldo <> 0` y `k As Integer`
+  escribe 32 767 cuotas y se detiene con el error 6; las seis filas de la tabla de
+  créditos salen iguales a Python y R. La sección 6 ya lo dice como ejecutado. Queda
+  sin correr en Excel solo el cierre de caja cuando el primer dato es el −1.
+- **Banco Moodle (decisión F):** las ocho preguntas, revisadas por un lector sin
+  contexto contra el capítulo corregido, con 3 000 semillas cada una y la clave
+  recalculada por otro camino. Ninguna clave está mal. Ocho borradores en
+  `Vault/Borradores Moodle/cap05/` y la nota «Banco Moodle del capítulo 5 - preguntas
+  desfasadas», con siete dudas para el docente. El banco solo se leyó (misma suma de
+  verificación antes y después); nada se copió ni se tocó en Moodle.
+- **Capítulos 2, 3 y 4:** trece `<Fuente propia>` completan ahora la frase («según la
+  convención del curso», «que resume…») en vez de repetir «elaboración propia».
+- Un comentario de Python de la sección 3 ya no dice «Python no tiene Repita».
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, sin
+avisos en el 5. Sonda del 5 a 320, a 375, en escritorio y sin almacenamiento; la de los
+capítulos 2, 3 y 4, a 320. **Teléfono (decisión G):** el servidor de red local responde
+en el Mac, pero el iPhone del docente no llegó a él (ninguna petición en el registro);
+pendiente de saber si es la red, el `https` o el relay privado. **Huecos:** el permiso
+de pantalla caduca si el docente no está, y la ejecución en Excel se queda a medias;
+`--incluir` admite un solo juego de entradas por bloque, así que el caso del −1 de
+entrada pide otra pegada.
