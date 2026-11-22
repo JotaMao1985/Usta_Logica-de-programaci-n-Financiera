@@ -2875,8 +2875,8 @@ FinPara`;
 
                     <p className="text-[0.95rem] text-gray-700 mb-3">
                         Cada clic es <strong>una vuelta del ciclo</strong> y deja una fila escrita. El ciclo
-                        no pregunta por el saldo: cuenta las cuotas, y para cuando el contador
-                        llega a <span className="inline-code">n</span>.
+                        no pregunta por el saldo: cuenta las cuotas, y para después de la
+                        vuelta <span className="inline-code">n</span>.
                     </p>
 
                     <label className="block mb-3">
@@ -2954,7 +2954,7 @@ FinPara`;
 
                     {termino && (
                         <div className="mt-3 rounded-xl p-3 text-sm bg-[#15803D]/10 border-2 border-[#15803D]">
-                            <strong>{n} vueltas, {n} filas.</strong> El contador llegó a {n} y el ciclo paró sin
+                            <strong>{n} vueltas, {n} filas.</strong> El ciclo dio la vuelta {n} y paró sin
                             mirar el saldo. Por {pesosCO(capital)} se pagan {pesosCO(cuota * n)}, y
                             de eso {pesosCO(ultima.acumulado)} son intereses.
                             <span className="block mt-2 text-gray-600">
@@ -3670,7 +3670,8 @@ FinMientras`;
                         tres cuotas de un crédito; el de afuera lo devuelve a <span className="inline-code">i &lt;= 2</span> y
                         pasa al crédito siguiente, donde <span className="inline-code">k ← 1</span> vuelve a empezar.
                         {' '}<span className="inline-code">subtotal ← 0</span> queda <strong>dentro</strong> del retorno de
-                        afuera y <strong>fuera</strong> del de adentro: se ejecuta una vez por crédito.
+                        afuera y <strong>fuera</strong> del de adentro: se ejecuta una vez por crédito. Es un
+                        fragmento: no dibuja el Inicio ni el Fin del programa.
                     </figcaption>
                 </figure>
             );
@@ -3814,7 +3815,7 @@ FinMientras`;
                     pregunta al final hay que construirla (sección 3). <span className="inline-code">range(1, n)</span> da
                     una vuelta menos de las que parece, y el <span className="inline-code">for</span> de R,
                     con cero cuotas pendientes, da <strong>dos</strong> vueltas (sección 4). Y en VBA, el cuerpo de un <span className="inline-code">For</span> puede
-                    cambiar su propio contador (sección 4). Ninguna de las cuatro cosas produce un error: producen
+                    cambiar su propio contador (sección 4). Las tres últimas no producen un error: producen
                     otro número. Las cuatro se ejecutaron para este capítulo, la de VBA en Excel.
                 </p>
 
@@ -4289,7 +4290,7 @@ End Sub`,
                         </thead>
                         <tbody>
                             <tr><td>Capítulo 1, sección 1</td><td>El 22 convertido a binario, una fila por división</td><td><span className="inline-code">Mientras numero &gt; 0</span></td></tr>
-                            <tr><td>Capítulo 1, sección 2</td><td>Doce cuotas que leían la tasa de memoria en cada vuelta</td><td><span className="inline-code">Para i &lt;- 1 Hasta 12</span></td></tr>
+                            <tr><td>Capítulo 1, sección 2</td><td>Doce cuotas que leían la tasa de la memoria en cada vuelta</td><td><span className="inline-code">Para i &lt;- 1 Hasta 12</span></td></tr>
                             <tr><td>Capítulo 1, sección 3</td><td>Los meses que tarda un ahorro en llegar a la meta, y la vuelta que no se da cuando la meta se alcanza exacta</td><td><span className="inline-code">Mientras saldo &lt; meta</span></td></tr>
                             <tr><td>Capítulo 1, sección 4</td><td>Tres décimos que no suman 0,3, y cien centavos que no suman un peso</td><td><span className="inline-code">Para i &lt;- 1 Hasta 3</span> y <span className="inline-code">Hasta 100</span></td></tr>
                             <tr><td>Capítulo 2, sección 1</td><td>«Repita hasta obtener un resultado razonable», que falla la finitud</td><td>Uno que puede no terminar</td></tr>
@@ -4359,7 +4360,7 @@ End Sub`,
                     llevadas a un año —(1 + tasa)<sup>12</sup> − 1— dan esto: el 0,9 % de este ahorro, 11,35 %
                     efectivo anual; el 1,1 % del crédito de vivienda, 14,03 %; el 1,2 % del cuestionario
                     final, 15,39 %; el 1,45 % del crédito de vehículo, 18,86 %; el 1,5 % del crédito de
-                    libre inversión de las secciones 3 a 7, 19,56 %; el 1,8 % del crédito de la sección 6,
+                    libre inversión de las secciones 4 a 7, 19,56 %; el 1,8 % del crédito de la sección 6,
                     23,87 %; y el 2 % de los ejemplos de las secciones 4 y 5, 26,82 %. Ninguna se comparó
                     con un límite legal. En Colombia, recibir o cobrar por un préstamo de dinero una
                     utilidad o ventaja que exceda en la mitad el interés bancario corriente del período,
@@ -5051,8 +5052,8 @@ Debug.Print cobrado`,
                     {' '}<span className="inline-code">Do Until</span> y <span className="inline-code">Loop While</span>, se obtienen
                     negando la condición: <span className="inline-code">Do Until c</span> equivale
                     a <span className="inline-code">Do While Not (c)</span>, y <span className="inline-code">Loop Until c</span>,
-                    a <span className="inline-code">Loop While Not (c)</span>. Sin ninguna condición, el ciclo solo para
-                    con un <span className="inline-code">Exit Do</span>, que este capítulo no usa.
+                    a <span className="inline-code">Loop While Not (c)</span>. Sin ninguna condición, el ciclo para
+                    con una instrucción de salida, como <span className="inline-code">Exit Do</span>, que este capítulo no usa.
                 </Box>
 
                 <h3>Mientras o Repita, para validar</h3>
@@ -5782,8 +5783,8 @@ Loop`,
                         1, 2, …, n: el segundo número es el primero que <em>no</em> se usa. Traducir
                         {' '}<span className="inline-code">Para k &lt;- 1 Hasta n</span> como <span className="inline-code">range(1, n)</span> da
                         n − 1 vueltas siempre que n sea al menos 1, y es el error de la motivación: <span className="inline-code">range(1, 12)</span> da once.
-                        Con un solo número, el rango arranca en 0: <span className="inline-code">range(n)</span> es
-                        {' '}<span className="inline-code">range(0, n)</span>.
+                        Con un solo número, el rango arranca en 0: <span className="inline-code">range(3)</span> y
+                        {' '}<span className="inline-code">range(0, 3)</span> dan los dos 0, 1 y 2 (ejecutado).
                     </p>
                     <p>
                         <strong>En R, <span className="inline-code">1:n</span> cuenta hacia atrás si n es menor que 1.</strong>
@@ -5915,8 +5916,8 @@ Loop`,
            recorre los plazos: uno, dos y tres años. Sin arreglos (H7, P2):
            cada plazo escribe su línea y se olvida. El de dentro da
            12 + 24 + 36 = 72 vueltas, porque su tope lo calcula el de fuera.
-           Salidas de Python y R ejecutadas el 2026-10-19; la de VBA no se
-           ejecutó (R10 del plan). */
+           Salidas de Python y R ejecutadas el 2026-10-19; la de VBA, en Excel
+           el 2026-11-21, con ejecutar_vba.py. */
         const EJ_SIMULADOR = {
             pseudo: `Inicio
     // Simulador: el mismo crédito a uno, dos y tres años
@@ -6120,7 +6121,7 @@ End Sub`,
            el `Next` en VBA. No hay paso para la última comparación de cada
            ciclo, porque el valor con que sale el contador no es el mismo en
            los cuatro: Python y R lo dejan en el último valor (ejecutado); VBA,
-           según la referencia, en uno más (sin ejecutar: fase 11).
+           en uno más (ejecutado en Excel el 2026-11-21: k queda en 4).
            Cifras ejecutadas el 2026-10-19. */
         const TZ_CARTERA = {
             pseudo: `Inicio
@@ -7079,8 +7080,8 @@ End Sub`,
                     solucion={<>
                         <p>
                             <strong>Por qué el contador.</strong> El número de cuotas es un dato del contrato: se fija
-                            el día de la firma y no sale de ninguna cuenta. Un ciclo que cuenta las cuotas da
-                            exactamente n vueltas, con cualquier tasa, en cualquier lenguaje y en cualquier máquina.
+                            el día de la firma y no sale de ninguna cuenta. Un ciclo que cuenta las cuotas, bien escrito, da
+                            exactamente n vueltas, con cualquier tasa y en cualquier máquina.
                             El saldo, en cambio, es el resultado de cientos de operaciones de punto flotante, y lo
                             que queda tras la última cuota es un residuo cuyo signo nadie elige: en dos de los seis
                             créditos es positivo, y el ciclo cobra una cuota que no está en el contrato. Con
@@ -7097,7 +7098,7 @@ End Sub`,
                         <p>
                             <strong>Cuándo sí por el saldo.</strong> Cuando el número de pagos no se conoce al
                             entrar: el acuerdo de pago de la sección 2, con abonos fijos que no dividen la deuda; un
-                            crédito con abonos extraordinarios; una tarjeta de crédito. Ahí no hay un número de cuotas
+                            crédito con abonos extraordinarios; una tarjeta a la que se abona una cifra fija cada mes. Ahí no hay un número de cuotas
                             que contar, y lo que decide es el saldo. Los cuidados son cuatro. La condición es
                             {' '}<span className="inline-code">saldo &gt; 0</span> y nunca <span className="inline-code">saldo &lt;&gt; 0</span>,
                             para que no se pueda pasar de largo. El último abono se ajusta a lo que se debe —la selectiva
@@ -7189,7 +7190,7 @@ End Sub`,
                             <tr><td><strong>El contador llega al tope.</strong> La tabla de amortización, con <span className="inline-code">Para</span></td><td>El contador avanza: de uno en uno, da las vueltas de su primera línea</td><td>En R, <span className="inline-code">1:n</span> con n = 0; en VBA, tocar el contador dentro del cuerpo o un <span className="inline-code">Step 0</span></td></tr>
                             <tr><td><strong>Un valor calculado cruza un límite.</strong> El acuerdo de pago, con <span className="inline-code">Mientras saldo &gt; 0</span></td><td>Cada vuelta lo acerca, y la condición no se puede saltar</td><td>Comparar con <span className="inline-code">&lt;&gt; 0</span>, que se salta; un residuo, que da una vuelta de más</td></tr>
                             <tr><td><strong>Llega un dato que marca el final.</strong> El cierre de caja, con un centinela</td><td>Los datos traen el centinela</td><td>Procesar el centinela como si fuera un dato</td></tr>
-                            <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: con una tolerancia de <span className="whitespace-nowrap">10<sup>−18</sup></span>, el intervalo se queda en {residuo('', '3,5', 18)} y la bisección no termina</td></tr>
+                            <tr><td><strong>El resultado ya es lo bastante preciso.</strong> La TIR por bisección, en la sección 7</td><td>Cada vuelta mejora el resultado, y la precisión pedida se puede alcanzar</td><td>Pedir más precisión de la que la máquina distingue: el ciclo deja de avanzar y no termina (sección 7)</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -7746,7 +7747,7 @@ End Sub`,
                 <CodeTabs
                     titulo="La TIR por bisección"
                     bloques={EJ_TIR}
-                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, que da los mismos VPN: R hace la cuenta con cada elemento de <span className="inline-code">1:n</span>, y <span className="inline-code">sum</span> los suma. Y R trae <span className="inline-code">uniroot</span>, que busca en un intervalo dónde una función vale cero: con <span className="inline-code">tol = 1e-10</span> da 1,992398 % en 6 iteraciones, contra las 17 vueltas de la bisección. Sin indicarle tolerancia da 1,992167 %: la que trae por omisión es más gruesa, 0,00012.</>} />
+                    nota={<>El VPN de cada tasa se calcula con un <span className="inline-code">Para</span> dentro del <span className="inline-code">Mientras</span>: es el anidamiento de la sección 5. En R, el ciclo de dentro cabe en una línea, <span className="inline-code">vpn &lt;- -recibido + sum(cuota / (1 + medio) ^ (1:n))</span>, que da los mismos VPN hasta el centavo, y la misma TIR: R hace la cuenta con cada elemento de <span className="inline-code">1:n</span>, y <span className="inline-code">sum</span> los suma. Y R trae <span className="inline-code">uniroot</span>, que busca en un intervalo dónde una función vale cero: con <span className="inline-code">tol = 1e-10</span> da 1,992398 % en 6 iteraciones, contra las 17 vueltas de la bisección. Sin indicarle tolerancia da 1,992167 %: la que trae por omisión es más gruesa, 0,00012.</>} />
 
                 <p>
                     El <span className="inline-code">Mientras</span> no cuenta vueltas: sigue mientras el intervalo
@@ -7969,7 +7970,7 @@ End Sub`,
                             { texto: '13 filas, de la cuota 0 a la 12', correcta: false },
                             { texto: '12 filas, de la cuota 0 a la 11', correcta: true },
                         ],
-                        justificacion: 'range(n) es range(0, n): empieza en 0, y el segundo número, n, es el primero que no se usa. Con n = 12 da 0, 1, …, 11, doce valores: el ciclo da sus doce vueltas y cobra las doce cuotas, pero numeradas desde la 0. Los intereses y los saldos no cambian, porque el cuerpo no usa k para calcular; solo lo imprime. Once filas sería range(1, n), el error de la motivación de la sección 4, donde el primer número sí era 1. Que range(n) empiece en 1 es justo lo que no hace: esa es la diferencia con el Para del pseudocódigo. Y trece no da nunca, porque el tope no se incluye, empiece donde empiece. En R, el equivalente sería 0:(n - 1).',
+                        justificacion: 'range(n) es range(0, n): empieza en 0, y el segundo número, n, es el primero que no se usa. Con n = 12 da 0, 1, …, 11, doce valores: el ciclo da sus doce vueltas y cobra las doce cuotas, pero numeradas desde la 0. Los intereses y los saldos no cambian, porque el cuerpo no usa k para calcular; solo lo imprime. Once filas sería range(1, n), el error de la motivación de la sección 4, donde el primer número sí era 1. Que range(n) empiece en 1 es justo lo que no hace: esa es la diferencia con el Para del pseudocódigo. Y con tope 12 no da trece, arranque en 0 o en 1, porque el tope no se incluye. En R, el equivalente sería 0:(n - 1).',
                     },
                     {
                         seccion: 'cap2',
@@ -8029,7 +8030,7 @@ End Sub`,
                     },
                     {
                         seccion: 'cap4',
-                        pregunta: 'El crédito de la traza de la sección 4 —4 000 000 al 2 % mensual en 12 cuotas de 378 238,39— se corre completo, con su acumulador de intereses. Sin trazar las doce vueltas, ¿cuánto suma ese acumulador al final, redondeado al peso?',
+                        pregunta: 'El crédito de la traza de la sección 4 —4 000 000 al 2 % mensual en 12 cuotas de 378 238,39— se corre completo, con un acumulador de intereses añadido, como el del plan de pagos de esa sección. Sin trazar las doce vueltas, ¿cuánto suma ese acumulador al final, redondeado al peso?',
                         opciones: [
                             { texto: '1 072 967', correcta: false },
                             { texto: '538 861', correcta: true },

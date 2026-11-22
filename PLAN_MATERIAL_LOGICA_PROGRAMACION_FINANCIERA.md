@@ -4775,3 +4775,45 @@ levantarlo otra vez. Ajuste menor a raíz de la prueba: `1 + tasa` ya no se part
 dos renglones. **Visto y sin tocar:** las etiquetas de la tarjeta de la portada salen
 de `CONFIG.temas` («Contador y acumulador», «Terminación») y no coinciden con los
 títulos de las lecciones («Contar y acumular», «Cuándo para»); va a la fase 12.
+
+### Tarea 15 · Capítulo 5, fase 12: lectura crítica final · 2026-11-21
+
+Rama `claude/cap05-fase12`, sobre la de la fase 11. Dos lectores sin contexto, que no
+editan: uno leyó el capítulo entero y ejecutó Python y R; el otro cotejó las 13 citas
+contra el pasaje en la fuente misma.
+
+- **Lectura crítica:** ningún hallazgo alto; 3 medios y 11 bajos, todos corregidos.
+  Las claves de los 19 ejercicios, del emparejamiento y de las 10 preguntas son
+  correctas, con una sola opción defendible; los 22 bloques de Python y R con salida
+  declarada coinciden; las remisiones a los capítulos 1 a 4 y al syllabus cuadran.
+  - Medios: «una tarjeta de crédito. Ahí no hay un número de cuotas que contar» pasó a
+    «una tarjeta a la que se abona una cifra fija cada mes»; la pregunta 8 decía «con su
+    acumulador de intereses» de una traza que no lo tiene; el flujograma anidado no
+    dibuja Inicio ni Fin y la simbología dice «uno de cada uno»: el pie dice ahora que
+    es un fragmento.
+  - Bajos: «secciones 4 a 7» (no 3 a 7); «para con una instrucción de salida, como Exit
+    Do»; la línea de R con `sum` da «los mismos VPN hasta el centavo, y la misma TIR»
+    (difieren en milmillonésimas); la tabla de la sección 6 ya no adelanta la tolerancia
+    ni la bisección; «la tasa de la memoria»; «con tope 12 no da trece»; `range(3)` y
+    `range(0, 3)` ejecutados en vez de una propiedad general sin cita; «un ciclo que
+    cuenta las cuotas, bien escrito»; el interactivo dice «para después de la vuelta n»;
+    la portada separa lo de Python de las tres diferencias que dan «otro número»; dos
+    comentarios internos que decían «VBA sin ejecutar».
+- **Citas:** 11 respaldan limpio. Corregidas las otras dos: la de `For...Next` cubría
+  también el pseudocódigo (ahora «En VBA, el For…; el Para del pseudocódigo hace lo
+  mismo, por convención del curso») y la de `Dim` daba «Comentarios» por «Observaciones».
+  El artículo 305 se leyó ese día en la página oficial. La frase que sigue a la cita de
+  la usura se apegó al artículo. Cuatro notas del vault, renombradas.
+- **Portada:** las etiquetas de la tarjeta (`CONFIG.temas`) llevan los títulos de las
+  lecciones, como en el capítulo 4.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan, el 5 sin
+avisos, con trece citas registradas. Sonda del 5 a 320, a 375 y en escritorio: 9 de 9.
+**Sin comprobar:** el inciso inexequible del artículo 305 (la página lo muestra
+colapsado; no afecta lo citado); cinco fuentes se cotejaron solo contra la copia
+guardada; el cierre de caja con el −1 de entrada no se corrió en Excel; en el iPhone se
+recorrió una lección de nueve. **Decisiones que quedan al docente:** copiar al banco
+los ocho borradores (y las siete dudas de su nota); el texto de matemáticas financieras
+y el de terminología que Zotero no tiene. **Estado:** doce fases hechas, ramas apiladas
+de `claude/cap05-plan` a `claude/cap05-fase12`, sin fusionar: la fusión a `main` espera
+la aprobación del docente.
