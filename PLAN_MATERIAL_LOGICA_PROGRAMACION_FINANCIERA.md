@@ -4661,3 +4661,38 @@ cotejadas. **Hueco:** `ejecutar_vba.py preparar` deja el módulo en el portapape
 el docente copia otra cosa antes de pegar, se pega lo suyo: pasó una vez; se repitió
 `preparar` y se pegó de inmediato. **Pendiente:** el interactivo de la TIR sin abrir en
 navegador; su gráfica sin fuente (fase 10).
+
+### Tarea 15 · Capítulo 5, fase 9: portada, evaluación, glosario y cierre · 2026-11-21
+
+Rama `claude/cap05-fase9`, sobre la de la fase 8. Sin citas nuevas.
+
+- **Portada:** la motivación lleva su `<Ilustrativo>` (M5); el mapa usa los títulos de
+  la barra lateral; las cuatro diferencias entre lenguajes remiten a su sección (3 y 4),
+  donde van las citas, y dicen que se ejecutaron, la de VBA en Excel (M6).
+- **Evaluación:** la motivación de la auditoría y las situaciones del emparejamiento,
+  declaradas como inventadas. Pregunta 3: el 0 del `Dim` remite a la sección 2, lo de
+  `Option Explicit` se ejecutó en Excel y el mensaje de R ya no va como cita literal
+  (N8). Pregunta 9: «Este Para termina», sin generalizar. Ninguna clave cambió.
+- **Glosario:** acumulador y contador dicen lo mismo que sus `<Termino>` (B3); la
+  evaluación previa ya no le atribuye una condición al `for` de Python y R (M2);
+  `range(1, 12)` da once vueltas en vez de «n − 1» (B1); el Repita suma la forma de R; la
+  variable de control pierde «ya hecha»; el VPN y la bisección, acotados a la sección 7;
+  entra «paz y salvo» (B9). Son 21 entradas.
+- **«Lo que viene»:** cotejado con el plan maestro del capítulo 6; dice que es lo que el
+  plan anuncia y que el capítulo no está escrito; «por qué el dinero se guarda en
+  Currency» pasó a «qué cambia al guardar…».
+- **Promesas a los capítulos 6, 7 y 8:** cotejadas con el plan maestro y registradas como
+  hilos abiertos en el vault; se cierran cuando existan esos capítulos.
+- **VBA ejecutado en Excel** (módulo `PruebasFase9`, aparte del arnés): el acuerdo de
+  pago sin inicializar da «Meses: 0» con `Option Explicit`; `k = k + 1` dentro de un
+  `For` no da error (3 vueltas de 5); tras `For k = 1 To 3`, k queda en 4; `For 1 To 0`
+  da cero vueltas; un `Integer` en 32 767 más 1 da el error 6; `Step 0` no avanza (1 000
+  vueltas con salida de seguridad). Las secciones 5 y 6 ya lo dicen como ejecutado.
+
+**Verificación.** `verificar.py --con-salidas --con-pandoc`: los cinco pasan; el capítulo
+5, con trece citas y el aviso de las 23 figuras. Sonda a 320 y en escritorio: 9 de 9. El
+arnés de VBA sigue coincidiendo en sus once bloques. **Hueco:** al pegar el módulo de
+pruebas, un clic cayó en la ventana del libro y no en el editor; no se pegó nada en la
+hoja (comprobado: A1:B3 vacías) y se repitió. `ejecutar_vba.py` no tiene una forma de
+añadir pruebas sueltas sin pegar a mano. **Pendiente (fase 11):** el programa completo
+hasta la vuelta 32 768 y las otras cinco filas de la tabla de créditos, en Excel.
