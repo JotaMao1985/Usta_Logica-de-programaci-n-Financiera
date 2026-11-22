@@ -4763,3 +4763,15 @@ pendiente de saber si es la red, el `https` o el relay privado. **Huecos:** el p
 de pantalla caduca si el docente no está, y la ejecución en Excel se queda a medias;
 `--incluir` admite un solo juego de entradas por bloque, así que el caso del −1 de
 entrada pide otra pegada.
+
+**Teléfono, el mismo día.** El capítulo se abrió en el iPhone del docente por iPhone
+Mirroring, en una pestaña nueva de Safari, desde el servidor de red local: carga
+(petición de 192.168.1.7 en el registro), el menú de lecciones abre, y la lección 7 se
+recorrió de arriba abajo: el `<Ilustrativo>`, los bloques de código, la tabla de VPN,
+la traza y los botones Anterior y Siguiente se ven bien y nada se sale del ancho. No se
+recorrieron las otras ocho lecciones en el aparato. Por qué el docente no vio nada
+antes no quedó establecido: al volver, el servidor ya no estaba escuchando y hubo que
+levantarlo otra vez. Ajuste menor a raíz de la prueba: `1 + tasa` ya no se parte entre
+dos renglones. **Visto y sin tocar:** las etiquetas de la tarjeta de la portada salen
+de `CONFIG.temas` («Contador y acumulador», «Terminación») y no coinciden con los
+títulos de las lecciones («Contar y acumular», «Cuándo para»); va a la fase 12.

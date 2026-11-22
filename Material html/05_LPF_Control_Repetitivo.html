@@ -7684,11 +7684,11 @@ End Sub`,
                     mensual durante esos meses, llegara a ser la cuota. Es su <Termino def="Lo que vale hoy un pago que se hará dentro de j períodos: el pago dividido por (1 + tasa) elevado a j. Es lo que habría que tener hoy para que, creciendo a esa tasa, llegara a ser el pago.">valor presente</Termino>, la cuota dividida por <span className="inline-code">(1 + tasa) ^ j</span>. El ciclo suma los valores presentes de las ocho cuotas que faltan, y da el mismo saldo.
                     No es casualidad, y se ve deshaciendo las cuotas desde el final. Cada mes el saldo sube con su
                     interés y baja con la cuota; al revés, el saldo de antes es el de después más la cuota,
-                    dividido por <span className="inline-code">1 + tasa</span>. Después de la última cuota el saldo es cero, como
+                    dividido por <span className="inline-code">1 + tasa</span>. Después de la última cuota el saldo es cero, como
                     comprobó la sección 6 con fracciones exactas. Un mes antes era la cuota dividida
-                    por <span className="inline-code">1 + tasa</span>; dos meses antes, eso más otra cuota, dividido otra vez. Así, lo que
+                    por <span className="inline-code">1 + tasa</span>; dos meses antes, eso más otra cuota, dividido otra vez. Así, lo que
                     el cliente debe hoy es la suma de las cuotas que le quedan, cada una dividida
-                    por <span className="inline-code">1 + tasa</span> tantas veces como meses le faltan: su valor presente, a la tasa del
+                    por <span className="inline-code">1 + tasa</span> tantas veces como meses le faltan: su valor presente, a la tasa del
                     contrato. Con fracciones exactas, las dos cuentas de este programa dan la misma cifra.
                 </p>
                 <p>
