@@ -27,7 +27,7 @@
   seccion: "2. Mientras"
   ancla: "</span> se inicializa en 0"
   clave: "microsoft2019dim"
-  loc: "Comentarios"
+  loc: "Observaciones"
   tema: "lenguaje"
   leido:
     fecha: "2026-11-19"
@@ -102,7 +102,7 @@
   extracto_sha256: "00950ca95644a9b9e370d5a9fd6f0a0a31540f8a3fa8058b90af1b3141f0e20e"
 - id: "c05-s4-a38"
   seccion: "4. Para"
-  ancla: "tope con el que comparar"
+  ancla: "recorre una secuencia</strong>"
   clave: "rcoreteam2026lenguaje"
   loc: "§3.2.5"
   tema: "lenguaje"

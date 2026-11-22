@@ -4364,8 +4364,8 @@ End Sub`,
                     con un límite legal. En Colombia, recibir o cobrar por un préstamo de dinero una
                     utilidad o ventaja que exceda en la mitad el interés bancario corriente del período,
                     según certificación de la Superintendencia, es el delito de usura
-                    <Cita k="congreso2000ley599" loc="art. 305" />: para saber si una tasa real llega a ese
-                    punto, se compara con ese interés aumentado en la mitad, no con estas cifras.
+                    <Cita k="congreso2000ley599" loc="art. 305" />: para saber si un crédito real cae en
+                    ella, lo que cobra se compara con ese interés aumentado en la mitad, no con estas cifras.
                 </Box>
 
                 <p>
@@ -4728,7 +4728,7 @@ End Sub`,
                     comprueba que tengan sentido:
                 </p>
                 <ol>
-                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque una variable numérica declarada con <span className="inline-code">Dim</span> se inicializa en 0 <Cita k="microsoft2019dim" loc="Comentarios" />, y el ciclo arranca con un valor que nadie eligió.</li>
+                    <li><strong>La inicialización</strong>, antes del ciclo: la variable de la condición tiene que tener el valor correcto la primera vez que se pregunta. Python y R se detienen con un error si no tiene ninguno; VBA no, porque una variable numérica declarada con <span className="inline-code">Dim</span> se inicializa en 0 <Cita k="microsoft2019dim" loc="Observaciones" />, y el ciclo arranca con un valor que nadie eligió.</li>
                     <li><strong>La condición</strong>, que se evalúa antes de cada vuelta.</li>
                     <li><strong>La actualización</strong>, dentro del cuerpo: alguna instrucción tiene que acercar la condición a ser falsa, que es lo que detiene a un <span className="inline-code">Mientras</span>. Aquí es <span className="inline-code">saldo &lt;- saldo - abono</span>.</li>
                 </ol>
@@ -5750,8 +5750,9 @@ Loop`,
                 <p>
                     Hasta aquí, los cuatro lenguajes dieron las doce vueltas. Pero «de 1 hasta n» no se escribe
                     igual en los cuatro, y tampoco significa lo mismo. La razón de fondo es una sola. En
-                    pseudocódigo y en VBA, el <span className="inline-code">Para</span> inicia un contador, lo
-                    compara con el tope y lo aumenta <Cita k="microsoft2018fornext" loc="Sintaxis y Comentarios" />. En Python y en R, el <span className="inline-code">for</span>
+                    VBA, el <span className="inline-code">For</span> inicia un contador, lo
+                    compara con el tope y lo aumenta <Cita k="microsoft2018fornext" loc="Sintaxis y Comentarios" />; el <span className="inline-code">Para</span> del
+                    pseudocódigo hace lo mismo, por convención del curso. En Python y en R, el <span className="inline-code">for</span>
                     {' '}<strong>recorre una secuencia</strong>
                     —<span className="inline-code">range(1, n + 1)</span>, <span className="inline-code">1:n</span>— y le
                     asigna a <span className="inline-code">k</span> el valor de cada elemento, uno por
