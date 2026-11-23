@@ -4899,3 +4899,32 @@ el mismo día.
   la sección dibuja el bloque resaltado, la tabla y la solución del reto, sin espacios
   comidos. `verificar.py` marca ahora 11 fallos, todos por lo que falta escribir.
 - **Pendiente del docente:** la fila 37 del syllabus anuncia un video sin dirección.
+
+### Tarea 16 · Capítulo 6, fase 4: sección 2, «El editor de VBA» · 2026-11-23
+
+Rama `claude/cap06-fase4`, sobre la fase 3; sin fusionar.
+
+- **Contenido:** la advertencia de macros (aviso corto, como decidió el plan), cómo abrir
+  el editor, sus cinco zonas con un esquema propio, escribir y ejecutar una rutina, la
+  ventana Inmediato, las reglas de `Debug.Print` y el formato `.xlsm`. Solo VBA. Dos E2,
+  probados en el navegador con respuesta buena y mala.
+- **Fuentes:** tanda 09 en Zotero, nueve páginas de Microsoft de la lista aprobada en el
+  punto de control 1. Zotero abrió en la colección de otro curso; se comprobó el id antes
+  de importar. 18 afirmaciones citadas, con su nota y su fila en `afirmaciones/06.yaml`.
+- **Verificador sin contexto:** 12 respaldaban y 6 decían más que su pasaje (una
+  posición en pantalla que la página no da, un «el que» que excluía otros formatos, una
+  excepción omitida). Además cazó un pasaje que esta sesión copió mal: a la oración de la
+  coma de MS-VBAL se le había puesto un operando que está en la oración anterior. Todo
+  corregido; cinco localizadores pasaron de «En este artículo», que es el rótulo del
+  índice de la página, a «párrafo inicial».
+- **Ejecutado:** las seis salidas del bloque de `Debug.Print` coinciden con Excel. La
+  especificación dice que un número lleva un espacio delante y otro detrás; Excel no puso
+  el de delante en `-150000`. Se dice así, como dato ejecutado que la especificación no
+  prevé.
+- **Dicho como no comprobado:** el guardado en `.xlsm` en Mac, y que una variable esté
+  vacía en Inmediato fuera de su rutina.
+- **Huecos:** `comparar` recorta los espacios finales y el archivo de salida del arnés no
+  se puede leer desde fuera de Excel, así que el espacio final de un número solo se ve
+  cuando va seguido de texto. Y el portapapeles lo comparte todo el equipo: un pegado
+  metió en el módulo una ruta ajena; copiar y pegar deben ir en la misma tanda.
+- **Estado del verificador:** 10 fallos, todos por lo que falta escribir.

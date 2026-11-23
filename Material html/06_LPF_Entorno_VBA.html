@@ -3334,13 +3334,309 @@ End Sub`;
             </div>
         );
 
-        // Sección 2 — «El editor de VBA». Por escribir en la fase 4 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // Lo que escribe Debug.Print en la ventana Inmediato, según lo que
+        // separe los datos. Solo VBA: lo ejecuta `ejecutar_vba.py`.
+        const INMEDIATO_PRINT = {
+            vba: `Sub ProbarInmediato()
+    Dim meses As Integer, saldo As Currency
+    meses = 4
+    saldo = -150000
+    Debug.Print meses; saldo
+    '>  4 -150000
+    Debug.Print meses, saldo
+    '>  4            -150000
+    Debug.Print "Meses:"; meses
+    '> Meses: 4
+    Debug.Print "Meses:", meses
+    '> Meses:         4
+    Debug.Print saldo; "pesos"
+    '> -150000 pesos
+    Debug.Print 916799.93
+    '>  916799.93
+End Sub`,
+        };
+
+        /* ------------------------------------------------------------
+           MapaEditor — las ventanas del editor, como se vieron.
+
+           No es una captura: es un esquema de la disposición que tenía el
+           editor de Excel 16.115 para Mac el 2026-11-23, con el libro
+           Book1 y la rutina OtroAcuerdo. Los textos de cada zona son los
+           que mostraba la pantalla. Solo lo usa la sección 2.
+        ------------------------------------------------------------ */
+        const MapaEditor = () => {
+            const Zona = ({ n, titulo, children, className = '' }) => (
+                <div className={`rounded-lg border border-gray-300 overflow-hidden bg-white ${className}`}>
+                    <div className="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 flex items-center gap-2">
+                        <span className="inline-flex items-center justify-center rounded-full bg-primary text-white" style={{ width: '1.25rem', height: '1.25rem', fontSize: '0.7rem' }}>{n}</span>
+                        {titulo}
+                    </div>
+                    <div className="overflow-x-auto">
+                        <pre className="px-2 py-1.5 min-w-max" style={{ margin: 0, background: 'transparent', color: '#0F172A', fontFamily: "'Fira Code', monospace", fontSize: '0.72rem', lineHeight: 1.5 }}>{children}</pre>
+                    </div>
+                </div>
+            );
+            return (
+                <figure className="my-6 not-prose" role="group" aria-label="Esquema del editor de VBA con sus cinco zonas numeradas: explorador de proyectos, propiedades, ventana de código, Inmediato y Locales">
+                    <div className="rounded-2xl border-2 border-primary/20 bg-gray-50 p-3">
+                        <div className="text-xs font-semibold text-gray-700 mb-1">Microsoft Visual Basic - Book1</div>
+                        <div className="text-xs text-gray-600 mb-2 overflow-x-auto"><span className="whitespace-nowrap">File · Edit · View · Insert · Format · Debug · Run · Tools · Window</span></div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                            <div className="flex flex-col gap-2">
+                                <Zona n="1" titulo="Project - VBAProject">{`VBAProject (Book1)
+  Microsoft Excel Objects
+    Sheet1 (Sheet1)
+    ThisWorkbook
+  Modules
+    Module1`}</Zona>
+                                <Zona n="2" titulo="Properties - Module1">{`(Name)  Module1`}</Zona>
+                            </div>
+                            <Zona n="3" titulo="Book1 - Module1 (Code)" className="md:col-span-2">{`(General)            OtroAcuerdo
+------------------------------------
+Option Explicit
+
+Sub OtroAcuerdo()
+    Dim saldo As Currency, abono As Currency, meses As Integer
+    saldo = 1850000
+    ...
+End Sub`}</Zona>
+                            <Zona n="4" titulo="Immediate" className="md:col-span-2">{` 4            -150000`}</Zona>
+                            <Zona n="5" titulo="Locals">{`Expression  Value  Type`}</Zona>
+                        </div>
+                    </div>
+                    <figcaption className="text-sm text-gray-600 mt-2 text-center">
+                        Las cinco zonas del editor, con los rótulos en inglés que tenía la pantalla. Los números son los del texto.
+                    </figcaption>
+                    <Fuente propia>a partir de la disposición que mostraba Excel 16.115 para Mac el 23 de noviembre de 2026; es un esquema, no una captura de pantalla</Fuente>
+                </figure>
+            );
+        };
+
+        // Sección 2 — «El editor de VBA». Fase 4 del plan (PLAN_TAREA16_CAPITULO_06.md).
+        // Solo VBA (decisión 1). Lo que dice de menús, ventanas y de la ventana
+        // Inmediato se vio en Excel 16.115 para Mac el 2026-11-23 (registro en el
+        // vault); lo que dice Microsoft va con su cita; lo de Windows solo se cita.
         const Cap2Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                <Motivacion icon="fa-window-restore"
+                    gancho="Un libro de Excel puede traer un programa que no se ve en ninguna celda. ¿Dónde está, y qué hace falta para verlo correr?">
+                    A una analista que acaba de entrar al área de cartera le reenvían un libro,
+                    {' '}<span className="inline-code">Acuerdos.xlsm</span>, con una nota: «la macro ya calcula
+                    los meses de cada acuerdo, solo córrala». Ella lo abre. Excel le muestra una advertencia
+                    sobre macros, y después una hoja con saldos y abonos. Revisa las celdas: son números, no
+                    fórmulas. Revisa las pestañas del libro: hay una sola hoja. La macro no aparece por
+                    ninguna parte, y sin embargo está dentro de ese archivo.
+                </Motivacion>
+
+                <Ilustrativo>
+                    La analista, el libro y la nota son un caso inventado para esta sección. Lo que se dice
+                    de Excel en el resto de la sección sí se vio en Excel o tiene su cita.
+                </Ilustrativo>
+
+                <h3>Antes de abrir: la advertencia</h3>
+                <p>
+                    La advertencia del caso no es un error. Microsoft 365 para Mac, por omisión, muestra un
+                    mensaje de advertencia cada vez que se intenta abrir un documento que contiene una macro,
+                    tenga o no un virus <Cita k="microsoft2025macrosmac" loc="Habilitar o deshabilitar macros en Microsoft 365 para Mac" />.
+                    Ese comportamiento se elige en el menú de la aplicación, en Preferencias y luego en
+                    Seguridad <Cita k="microsoft2025macrosmac" loc="Habilitar o deshabilitar macros en Microsoft 365 para Mac" />.
+                    Por ahora basta una regla: una macro es un programa, y no se habilita la de un archivo
+                    cuyo origen no se conoce. La sección 7 vuelve sobre esto con calma.
+                </p>
+
+                <h3>Abrir el editor</h3>
+                <p>
+                    El código de un libro no se escribe en la hoja sino en una ventana aparte, el
+                    {' '}<strong>editor de Visual Basic</strong>. En el Excel para Mac con que se preparó este
+                    capítulo se abre desde la barra de menús de Excel:
+                    {' '}<span className="inline-code">Tools › Macro › Visual Basic Editor</span>. En ese mismo
+                    submenú están <span className="inline-code">Macros...</span> y
+                    {' '}<span className="inline-code">Record New Macro...</span>.
+                </p>
+                <p>
+                    También hay un atajo de teclado. En Excel para Mac, Opción+F11 abre Visual
+                    Basic <Cita k="microsoft2026atajos" loc="pestaña macOS, Usar métodos abreviados de tecla de función" />;
+                    en Excel para Windows es Alt+F11 <Cita k="microsoft2026atajos" loc="pestaña Windows, Métodos abreviados de teclado para trabajar con datos, funciones y la barra de fórmulas" />.
+                    Si en un Mac una tecla de función no hace lo esperado, hay que pulsar también la tecla
+                    Fn <Cita k="microsoft2026atajos" loc="pestaña macOS, Usar métodos abreviados de tecla de función" />.
+                    Por eso este capítulo da cada paso por el menú, que no depende del teclado.
+                </p>
+
+                <h3>Las ventanas del editor</h3>
+                <p>
+                    El editor es una ventana con su propia barra de menús y varias zonas. El esquema
+                    muestra las cinco que usa este capítulo, con la rutina <span className="inline-code">OtroAcuerdo</span> ya
+                    escrita:
+                </p>
+
+                <MapaEditor />
+
+                <p>
+                    <strong>1 · El explorador de proyectos.</strong> Muestra una lista jerárquica de los
+                    proyectos y de todos los elementos que los componen <Cita k="microsoft2018proyectos" loc="párrafo inicial" />.
+                    El libro <span className="inline-code">Book1</span> aparecía ahí como el proyecto
+                    {' '}<span className="inline-code">VBAProject (Book1)</span>, con dos carpetas:
+                    {' '}<span className="inline-code">Microsoft Excel Objects</span>, con la hoja
+                    {' '}<span className="inline-code">Sheet1</span> y un elemento llamado
+                    {' '}<span className="inline-code">ThisWorkbook</span>, y <span className="inline-code">Modules</span>,
+                    donde quedó el módulo insertado. Ahí es donde la analista del caso tendría que buscar
+                    su macro: dentro del libro, pero en un módulo y no en una hoja.
+                </p>
+                <p>
+                    <strong>2 · Las propiedades.</strong> Con un módulo seleccionado solo mostraba una:
+                    su nombre, <span className="inline-code">(Name)</span>.
+                </p>
+                <p>
+                    <strong>3 · La ventana de código.</strong> Sirve para escribir, mostrar y editar el
+                    código, y se puede abrir una por cada módulo <Cita k="microsoft2018codigo" loc="párrafo inicial" />.
+                    Arriba tiene dos listas, el cuadro Objeto y el cuadro Procedimiento. En un módulo, el
+                    cuadro Procedimiento enumera sus procedimientos, y al
+                    elegir uno el cursor pasa a la primera línea de código de ese
+                    procedimiento <Cita k="microsoft2018codigo" loc="Elementos de la ventana" />. En el
+                    Excel de este capítulo es la lista de la derecha, la que en el esquema dice
+                    {' '}<span className="inline-code">OtroAcuerdo</span>.
+                </p>
+                <p>
+                    <strong>4 · La ventana Inmediato</strong> y <strong>5 · la ventana Locales.</strong> La
+                    primera es donde escribe <span className="inline-code">Debug.Print</span>; tiene su apartado
+                    más abajo. La segunda muestra las variables mientras la rutina corre, y es de la
+                    sección 6. Si alguna no está a la vista, se abre desde el menú
+                    {' '}<span className="inline-code">View</span> del editor:
+                    {' '}<span className="inline-code">Immediate Window</span>,
+                    {' '}<span className="inline-code">Locals Window</span>,
+                    {' '}<span className="inline-code">Project Explorer</span> y
+                    {' '}<span className="inline-code">Properties Window</span>.
+                </p>
+                <p>
+                    En ese mismo menú está <span className="inline-code">Object Browser</span>, el examinador
+                    de objetos. Muestra las clases, propiedades, métodos, eventos y constantes de las
+                    bibliotecas de objetos, y los procedimientos del proyecto <Cita k="microsoft2018examinador" loc="introducción, segundo párrafo" />.
+                    Es un catálogo de consulta; la sección 5 usa una parte muy pequeña de lo que muestra.
+                </p>
+
+                <h3>Escribir y ejecutar una rutina</h3>
+                <p>
+                    Con el editor abierto, <span className="inline-code">Insert › Module</span> crea un módulo
+                    vacío, <span className="inline-code">Module1</span>, y abre su ventana de código. Ahí se
+                    escribe la rutina. Para ejecutarla se pone el cursor en cualquier línea entre
+                    {' '}<span className="inline-code">Sub</span> y <span className="inline-code">End Sub</span> y se
+                    elige <span className="inline-code">Run › Run Sub/UserForm</span>; el menú muestra F5 al lado
+                    de esa orden. Lo que se ejecuta es el procedimiento donde está el cursor, no el módulo
+                    entero.
+                </p>
+
+                <Box type="warn" label="Si las órdenes salen en gris">
+                    Las órdenes de ejecutar actúan sobre la ventana de código. Al preparar este capítulo,
+                    con el cursor en la ventana Inmediato, <span className="inline-code">Debug › Step Into</span> aparecía
+                    deshabilitada; volvió a estar disponible al abrir el módulo con doble clic en el
+                    explorador de proyectos.
+                </Box>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta={<>La ventana Inmediato está vacía. Con el cursor dentro de <span className="inline-code">OtroAcuerdo</span>, se elige <span className="inline-code">Run › Run Sub/UserForm</span> dos veces seguidas. ¿Qué queda en la ventana Inmediato?</>}
+                    opciones={[
+                        { texto: 'Una línea, con 4 y -150000: la segunda ejecución reemplaza lo que escribió la primera.', correcta: false },
+                        { texto: 'Dos líneas iguales, con 4 y -150000: cada ejecución empieza de nuevo y añade su línea.', correcta: true, justificacion: 'Así quedó al hacerlo en Excel. Son dos cosas distintas. Las variables de la rutina nacen otra vez en cada ejecución, y por eso la segunda vuelve a contar desde 1 850 000 y da lo mismo. La ventana Inmediato, en cambio, no se borra entre ejecuciones: guarda todo lo que se ha escrito en ella.' },
+                        { texto: 'Dos líneas distintas: 4 y -150000, y luego 8 y -300000, porque las variables conservan su valor.', correcta: false },
+                        { texto: 'Una línea y un mensaje de error: una rutina no se puede ejecutar dos veces sin cerrar el editor.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>La ventana Inmediato</h3>
+                <p>
+                    La ventana Inmediato tiene dos usos. El primero lo conoce de los cinco capítulos
+                    anteriores sin haberlo visto: es donde aparece lo que imprime
+                    {' '}<span className="inline-code">Debug.Print</span>. El método
+                    {' '}<span className="inline-code">Print</span> imprime texto en la ventana
+                    Inmediato <Cita k="microsoft2018print" loc="párrafo inicial" />.
+                </p>
+                <p>
+                    El segundo uso es escribir en ella directamente: se escribe o se pega una línea de
+                    código y se pulsa Entrar para ejecutarla <Cita k="microsoft2018inmediato" loc="párrafo inicial" />.
+                    Al escribir <span className="inline-code">Print 1850000 - 500000</span> y pulsar Entrar,
+                    la ventana respondió <span className="inline-code">1350000</span> en la línea siguiente.
+                    Se probó también <span className="inline-code">? saldo</span>, con el signo de
+                    interrogación en lugar de <span className="inline-code">Print</span> y sin ninguna rutina
+                    en ejecución: dejó una línea en blanco. La documentación dice que de un dato vacío
+                    (<span className="inline-code">Empty</span>) no se escribe
+                    nada <Cita k="microsoft2018print" loc="Observaciones" />, y que si no se indica otra
+                    cosa lo siguiente se imprime en la línea
+                    siguiente <Cita k="microsoft2018print" loc="Sintaxis" />. Las dos cosas juntas dan una
+                    línea en blanco, si esa variable está vacía fuera de la rutina; eso último no se
+                    comprobó aparte.
+                </p>
+
+                <h3>Cómo separa los datos Debug.Print</h3>
+                <p>
+                    En los capítulos anteriores la salida de VBA traía espacios que las de Python y R no
+                    tenían. Salen de tres reglas, y las tres se ven en esta rutina:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={INMEDIATO_PRINT.vba} />
+
+                <ul>
+                    <li>
+                        <strong>El punto y coma no añade nada.</strong> Deja el punto de inserción
+                        inmediatamente después del último carácter mostrado <Cita k="microsoft2018print" loc="Sintaxis" />.
+                        El espacio que se ve entre <span className="inline-code">Meses:</span> y el 4 no lo pone
+                        el punto y coma: lo trae el número.
+                    </li>
+                    <li>
+                        <strong>Un número trae sus propios espacios.</strong> La especificación del lenguaje
+                        dice que un valor numérico que no sea una fecha se escribe con un espacio insertado como
+                        primer carácter y otro como último <Cita k="microsoft2026vbal" loc="§5.4.5.8" />. En Excel el del final se ve
+                        en <span className="inline-code">saldo; "pesos"</span>, que deja un espacio antes
+                        de <span className="inline-code">pesos</span>. El del principio apareció con el 4 y
+                        no con el saldo negativo, aunque la especificación no hace esa excepción:
+                        {' '}<span className="inline-code">-150000</span> salió sin espacio delante del signo,
+                        y por eso entre el 4 y el saldo hay un solo espacio y no dos.
+                    </li>
+                    <li>
+                        <strong>La coma salta a la siguiente zona de impresión.</strong> Avanza escribiendo
+                        espacios, igual que <span className="inline-code">Tab</span> sin argumento: hasta que la posición en la línea, dividida entre 14, deje residuo
+                        1 <Cita k="microsoft2026vbal" loc="§5.4.5.8" />. Contando desde 1, eso da zonas que
+                        empiezan en las columnas 1, 15, 29 y así sucesivamente, y es lo que se vio al
+                        ejecutar: <span className="inline-code">meses, saldo</span> puso
+                        el signo del saldo en la columna 15. Es el hueco de la rutina
+                        {' '}<span className="inline-code">OtroAcuerdo</span>.
+                    </li>
+                </ul>
+                <p>
+                    Hay una cuarta regla que no se ve en la salida declarada. Lo que se imprime en la
+                    ventana Inmediato usa el separador decimal de la configuración regional del
+                    sistema <Cita k="microsoft2018print" loc="Observaciones" />. La última línea de la rutina
+                    declara <span className="inline-code">916799.93</span>, con punto, como en todo el
+                    material; el Excel con que se ejecutó, en un Mac con región Colombia, escribió
+                    {' '}<span className="inline-code">916799,93</span>, con coma.
+                </p>
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta={<>Con <span className="inline-code">meses = 4</span>, la rutina ejecuta <span className="inline-code">Debug.Print "Meses:", meses</span>. La palabra <span className="inline-code">Meses:</span> ocupa las columnas 1 a 6. ¿En qué columna queda el 4?</>}
+                    opciones={[
+                        { texto: 'En la 7: la coma solo separa los dos datos, y el 4 va pegado a los dos puntos.', correcta: false },
+                        { texto: 'En la 8: la coma pone un espacio y el número pone otro.', correcta: false },
+                        { texto: 'En la 15: la coma lleva al comienzo de la segunda zona y ahí empieza el 4.', correcta: false },
+                        { texto: 'En la 16: la segunda zona empieza en la 15, y el 4 deja antes un espacio.', correcta: true, justificacion: 'Son dos reglas seguidas. La coma avanza hasta la columna 15, donde empieza la segunda zona de impresión. Ahí se escribe el número, y un número que no es negativo lleva un espacio delante: el espacio queda en la 15 y el 4 en la 16. Con un saldo negativo, el signo habría quedado en la 15.' },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Guardar el libro</h3>
+                <p>
+                    El formato <span className="inline-code">.xlsx</span>, el libro de Excel predeterminado, no puede
+                    almacenar código de macros de VBA; el libro habilitado para
+                    macros, <span className="inline-code">.xlsm</span>, sí lo almacena <Cita k="microsoft2026formatos" loc="Formatos de archivo de Excel" />.
+                    Por eso el libro del caso se llama <span className="inline-code">Acuerdos.xlsm</span>.
+                    Según Microsoft, al guardar un libro con macros Excel pregunta si se guarda como libro
+                    habilitado para macros o como libro sin macros <Cita k="microsoft2025guardarmacro" loc="Guardar una macro con el libro actual" />.
+                    Esa página dice aplicarse a Excel 2013 y no menciona Mac; en el Excel para Mac de este
+                    capítulo el guardado no se probó.
+                </p>
+
+                <Box type="tip" label="Lo que queda de esta sección">
+                    El código vive en un módulo del proyecto del libro y se ve en el editor. Se ejecuta el
+                    procedimiento donde está el cursor. Lo que imprime <span className="inline-code">Debug.Print</span> va
+                    a la ventana Inmediato, que no se borra sola. Y el libro tiene que guardarse como
+                    {' '}<span className="inline-code">.xlsm</span> para conservar el código.
                 </Box>
             </div>
         );
@@ -3417,6 +3713,8 @@ End Sub`;
                 <Box type="info" label="En construcción">
                     La evaluación y el glosario se escriben en la fase 10.
                 </Box>
+
+                <Referencias />
             </div>
         );
 
@@ -3649,6 +3947,93 @@ End Sub`;
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <!-- === LP-REFS INICIO — no editar a mano: se genera con estampar_referencias.py === -->
+    <script type="application/json" id="lp-referencias">
+{
+  "v": 2,
+  "huella": "c5282e79a9aa6528689e3a6d71f01b10efde4ff0bc313eaa89bbf79faecc19d8",
+  "sello": "e77dd43de8df046b15a712072104ef076210c8fe44d3dff47792bdcd9419f73f",
+  "orden": [
+    "microsoft2018codigo",
+    "microsoft2018inmediato",
+    "microsoft2018proyectos",
+    "microsoft2018print",
+    "microsoft2018examinador",
+    "microsoft2025guardarmacro",
+    "microsoft2025macrosmac",
+    "microsoft2026formatos",
+    "microsoft2026atajos",
+    "microsoft2026vbal"
+  ],
+  "entradas": {
+    "microsoft2018codigo": {
+      "autor": "Microsoft",
+      "anio": "2018a",
+      "html": "Microsoft. (2018a, noviembre 21). \u003cem>Ventana de código\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 21). Ventana de código. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window"
+    },
+    "microsoft2018inmediato": {
+      "autor": "Microsoft",
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, noviembre 21). \u003cem>Ventana Inmediato\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\u003c/a>",
+      "plano": "Microsoft. (2018b, noviembre 21). Ventana Inmediato. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window"
+    },
+    "microsoft2018proyectos": {
+      "autor": "Microsoft",
+      "anio": "2018c",
+      "html": "Microsoft. (2018c, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
+      "plano": "Microsoft. (2018c, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
+    },
+    "microsoft2018print": {
+      "autor": "Microsoft",
+      "anio": "2018d",
+      "html": "Microsoft. (2018d, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
+      "plano": "Microsoft. (2018d, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
+    },
+    "microsoft2018examinador": {
+      "autor": "Microsoft",
+      "anio": "2018e",
+      "html": "Microsoft. (2018e, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
+      "plano": "Microsoft. (2018e, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
+    },
+    "microsoft2025guardarmacro": {
+      "autor": "Microsoft",
+      "anio": "2025a",
+      "html": "Microsoft. (2025a, enero 1). \u003cem>Guardar una macro\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/excel/save-a-macro\">https://support.microsoft.com/es-es/excel/save-a-macro\u003c/a>",
+      "plano": "Microsoft. (2025a, enero 1). Guardar una macro. Microsoft Support. https://support.microsoft.com/es-es/excel/save-a-macro"
+    },
+    "microsoft2025macrosmac": {
+      "autor": "Microsoft",
+      "anio": "2025b",
+      "html": "Microsoft. (2025b, diciembre 2). \u003cem>Habilitar o deshabilitar macros en Microsoft 365 para Mac\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\">https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\u003c/a>",
+      "plano": "Microsoft. (2025b, diciembre 2). Habilitar o deshabilitar macros en Microsoft 365 para Mac. Microsoft Support. https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac"
+    },
+    "microsoft2026formatos": {
+      "autor": "Microsoft",
+      "anio": "2026a",
+      "html": "Microsoft. (2026a, abril 22). \u003cem>Formatos de archivo que admite Excel\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/excel/file-formats-that-are-supported-in-excel\">https://support.microsoft.com/es-es/excel/file-formats-that-are-supported-in-excel\u003c/a>",
+      "plano": "Microsoft. (2026a, abril 22). Formatos de archivo que admite Excel. Microsoft Support. https://support.microsoft.com/es-es/excel/file-formats-that-are-supported-in-excel"
+    },
+    "microsoft2026atajos": {
+      "autor": "Microsoft",
+      "anio": "2026b",
+      "html": "Microsoft. (2026b, julio 14). \u003cem>Métodos abreviados de teclado de Excel\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel\">https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel\u003c/a>",
+      "plano": "Microsoft. (2026b, julio 14). Métodos abreviados de teclado de Excel. Microsoft Support. https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel"
+    },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026c",
+      "html": "Microsoft. (2026c, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026c, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    }
+  },
+  "profundizar": {
+    "orden": [],
+    "entradas": {}
+  }
+}
+    </script>
+    <!-- === LP-REFS FIN === -->
 </body>
 
 </html>

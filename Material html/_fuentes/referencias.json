@@ -643,6 +643,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018codigo",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Ventana de código",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          21
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018doble",
     "type": "webpage",
     "author": [
@@ -671,6 +702,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/double-data-type",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018examinador",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Examinador de objetos (Visual Basic para Aplicaciones)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          17
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser",
     "language": "es"
   },
   {
@@ -736,6 +798,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018inmediato",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Ventana Inmediato",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          21
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018integer",
     "type": "webpage",
     "author": [
@@ -798,6 +891,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018print",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Método Print (Visual Basic para Aplicaciones)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          14
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018prioridad",
     "type": "webpage",
     "author": [
@@ -829,6 +953,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018proyectos",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Explorador de proyectos",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          26
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer",
+    "language": "es"
+  },
+  {
     "id": "microsoft2019dim",
     "type": "webpage",
     "author": [
@@ -857,6 +1012,130 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2025guardarmacro",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Guardar una macro",
+    "container-title": "Microsoft Support",
+    "issued": {
+      "date-parts": [
+        [
+          "2025",
+          1,
+          1
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://support.microsoft.com/es-es/excel/save-a-macro",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2025macrosmac",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Habilitar o deshabilitar macros en Microsoft 365 para Mac",
+    "container-title": "Microsoft Support",
+    "issued": {
+      "date-parts": [
+        [
+          "2025",
+          12,
+          2
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2026atajos",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Métodos abreviados de teclado de Excel",
+    "container-title": "Microsoft Support",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          7,
+          14
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2026formatos",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Formatos de archivo que admite Excel",
+    "container-title": "Microsoft Support",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          4,
+          22
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://support.microsoft.com/es-es/excel/file-formats-that-are-supported-in-excel",
     "language": "es"
   },
   {
