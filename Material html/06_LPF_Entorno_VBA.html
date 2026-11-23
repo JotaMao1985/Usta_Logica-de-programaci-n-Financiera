@@ -2776,7 +2776,7 @@
 
         // Segundos con coma decimal, como la prosa. Por debajo de la
         // resolución del reloj de VBA se dice así y no «0,000».
-        const segundosCO = (x, dec = 3) => x.toFixed(dec).replace('.', ',');
+        const segundosCO = (x, dec = 4) => x.toFixed(dec).replace('.', ',');
 
         /* ------------------------------------------------------------
            SimuladorVBE — el paso a paso del editor de VBA, sin Excel.
@@ -2851,6 +2851,7 @@
                             <div className="lg:col-span-2 rounded-lg border border-gray-300 overflow-hidden">
                                 <div className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1.5">Locales</div>
                                 <div className="overflow-x-auto">
+                                    {/* fuente-ok: la ventana Locales del simulador; su <Fuente> llega en `nota`, debajo del componente */}
                                     <table className="w-full text-sm" style={{ margin: 0 }}>
                                         <thead>
                                             <tr className="text-left text-xs text-gray-600 bg-gray-50">
@@ -2955,10 +2956,12 @@
                         <div role="status" aria-live="polite">
                             <p className="text-xs uppercase tracking-wider font-bold text-gray-500 mb-1">Cómo se escribe el camino</p>
                             <div className="overflow-x-auto rounded-lg mb-3" style={{ background: '#1E293B' }}>
+                                {/* contraste-ok: #F8FAFC va sobre el #1E293B del contenedor, 13,98:1 calculado */}
                                 <pre className="px-3 py-2 min-w-max" style={{ margin: 0, background: 'transparent', color: '#F8FAFC', fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>{n.camino}</pre>
                             </div>
                             <p className="text-xs uppercase tracking-wider font-bold text-gray-500 mb-1">Lo que respondió Excel</p>
                             <div className="overflow-x-auto rounded-lg border border-gray-200 mb-3">
+                                {/* fuente-ok: las respuestas de Excel; su <Fuente> llega en `nota`, debajo del componente */}
                                 <table className="w-full text-sm" style={{ margin: 0 }}>
                                     <tbody style={{ fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>
                                         {n.resultado.map(([pregunta, respuesta]) => (
@@ -3050,6 +3053,95 @@
         };
 
         /* ============================================================
+           DATOS EJECUTADOS — fase 2 del plan de la Tarea 16
+
+           Todo lo que sigue salió de Excel 16.115 para Mac el 2026-11-23,
+           con el módulo `fase2.bas` (guardado en el vault, en la ficha del
+           capítulo). Nada se calculó a mano: si cambia la rutina, se vuelve
+           a recorrer y se copian otra vez.
+        ============================================================ */
+
+        // La rutina que el capítulo 5 dejó para recorrer aquí, copiada tal cual.
+        const F8_CODIGO = `Sub OtroAcuerdo()
+    Dim saldo As Currency, abono As Currency, meses As Integer
+    saldo = 1850000
+    abono = 500000
+    meses = 0
+    Do While saldo > 0
+        saldo = saldo - abono
+        meses = meses + 1
+    Loop
+    Debug.Print meses, saldo
+End Sub`;
+
+        const F8_VARIABLES = [
+            { nombre: 'saldo', tipo: 'Currency' },
+            { nombre: 'abono', tipo: 'Currency' },
+            { nombre: 'meses', tipo: 'Integer' },
+        ];
+
+        // Las 23 paradas del editor: [línea de F8_CODIGO, saldo, abono, meses],
+        // con los valores escritos como los mostró la ventana Locales. El
+        // editor no se detuvo nunca en la línea 2, la del Dim.
+        const F8_PARADAS = [
+            [1, '0', '0', '0'],
+            [3, '0', '0', '0'],
+            [4, '1850000', '0', '0'],
+            [5, '1850000', '500000', '0'],
+            [6, '1850000', '500000', '0'],
+            [7, '1850000', '500000', '0'],
+            [8, '1350000', '500000', '0'],
+            [9, '1350000', '500000', '1'],
+            [6, '1350000', '500000', '1'],
+            [7, '1350000', '500000', '1'],
+            [8, '850000', '500000', '1'],
+            [9, '850000', '500000', '2'],
+            [6, '850000', '500000', '2'],
+            [7, '850000', '500000', '2'],
+            [8, '350000', '500000', '2'],
+            [9, '350000', '500000', '3'],
+            [6, '350000', '500000', '3'],
+            [7, '350000', '500000', '3'],
+            [8, '-150000', '500000', '3'],
+            [9, '-150000', '500000', '4'],
+            [6, '-150000', '500000', '4'],
+            [10, '-150000', '500000', '4'],
+            [11, '-150000', '500000', '4'],
+        ];
+        // Lo que quedó en Inmediato al ejecutarse la línea 10: se ve desde la
+        // parada 23. El 4 lleva un espacio delante y el saldo empieza en la
+        // columna 15, la segunda zona de impresión.
+        const F8_INMEDIATO = [' 4            -150000 '];
+        const F8_PASOS = F8_PARADAS.map(([linea, saldo, abono, meses], k) => ({
+            linea, locales: { saldo, abono, meses },
+            ...(k === F8_PARADAS.length - 1 ? { inmediato: F8_INMEDIATO } : {}),
+        }));
+
+        // Lo que respondió Excel a cada pregunta, con un libro nuevo sin guardar.
+        const OBJETOS_NIVELES = [
+            { rotulo: 'La aplicación', nombre: 'Application', camino: 'Application',
+              resultado: [['Application.Name', 'Microsoft Excel'], ['Application.Version', '16.115'], ['TypeName(Application)', 'Application']] },
+            { rotulo: 'El libro', nombre: 'Workbook', camino: 'ActiveWorkbook',
+              resultado: [['TypeName(ActiveWorkbook)', 'Workbook'], ['ActiveWorkbook.Name', 'Book1'], ['TypeName(ActiveWorkbook.Parent)', 'Application'], ['Worksheets.Count', '1']] },
+            { rotulo: 'La hoja', nombre: 'Worksheet', camino: 'ActiveSheet',
+              resultado: [['TypeName(ActiveSheet)', 'Worksheet'], ['ActiveSheet.Name', 'Sheet1'], ['TypeName(ActiveSheet.Parent)', 'Workbook']] },
+            { rotulo: 'La celda', nombre: 'Range', camino: 'Range("B2")',
+              resultado: [['TypeName(Range("B2"))', 'Range'], ['Range("B2").Address', '$B$2'], ['Cells(3, 2).Address', '$B$3'], ['Range("B2").Parent.Name', 'Sheet1'], ['Range("A1:B3").Count', '6'], ['TypeName(Range("B2").Value)', 'Double'], ['TypeName(Range("C9").Value)', 'Empty']] },
+        ];
+
+        // Segundos: la mediana de tres repeticiones por tamaño. El reloj de
+        // VBA (`Timer`) avanzó de a 1/256 de segundo; lo que tarda menos se
+        // repitió 40 veces y se dividió, y por eso lo más corto que se puede
+        // distinguir es 1/256/40, una diezmilésima de segundo.
+        const HOJA_FILAS = [
+            { n: 1000, escribirCelda: 0.039063, escribirBloque: 0.000586, leerCelda: 0.000879, leerBloque: 0.000098 },
+            { n: 5000, escribirCelda: 0.195313, escribirBloque: 0.002539, leerCelda: 0.004297, leerBloque: 0.000488 },
+            { n: 20000, escribirCelda: 0.777344, escribirBloque: 0.011719, leerCelda: 0.017090, leerBloque: 0.001953 },
+            { n: 100000, escribirCelda: 3.902344, escribirBloque: 0.052734, leerCelda: 0.086426, leerBloque: 0.009570 },
+        ];
+        const HOJA_RESOLUCION = 0.0001;
+
+        /* ============================================================
            ESQUELETO — fase 1 del plan de la Tarea 16 (2026-11-23)
            Las siete secciones del plan maestro, vacías. Cada una se escribe
            entera en su fase: motivación, texto con citas, código ejecutado en
@@ -3113,8 +3205,15 @@
         const Cap5Section = () => (
             <div className="prose-lp">
                 <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                    Esta sección todavía no está escrita. Lo que sigue son sus dos artefactos, ya con los
+                    datos que devolvió Excel; el texto que los explica se escribe en la fase 7.
                 </Box>
+
+                <MapaObjetosExcel niveles={OBJETOS_NIVELES}
+                    nota={<Fuente propia>{`con lo que respondió Excel 16.115 para Mac el 23 de noviembre de 2026, en un libro nuevo sin guardar`}</Fuente>} />
+
+                <RendimientoHoja filas={HOJA_FILAS} resolucion={HOJA_RESOLUCION}
+                    medicion="en Excel 16.115 para Mac el 23 de noviembre de 2026: la mediana de tres repeticiones por tamaño" />
             </div>
         );
 
@@ -3124,8 +3223,13 @@
         const Cap6Section = () => (
             <div className="prose-lp">
                 <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                    Esta sección todavía no está escrita. Lo que sigue es su simulador, ya con el recorrido
+                    que hizo Excel; el texto que lo explica se escribe en la fase 8.
                 </Box>
+
+                <SimuladorVBE titulo="OtroAcuerdo, paso a paso" modulo="Module1"
+                    codigo={F8_CODIGO} variables={F8_VARIABLES} pasos={F8_PASOS}
+                    nota={<Fuente propia>{`con el recorrido hecho en Excel 16.115 para Mac el 23 de noviembre de 2026: 23 paradas, ninguna en la línea Dim`}</Fuente>} />
             </div>
         );
 

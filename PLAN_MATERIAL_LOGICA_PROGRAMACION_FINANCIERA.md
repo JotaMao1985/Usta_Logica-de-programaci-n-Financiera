@@ -4853,3 +4853,30 @@ las ocho decisiones. Rama `claude/cap06-fase1`, sobre `main` en `1e1d37e`; sin f
   construcción, el verificador global falla en esta rama por el capítulo 6.
 - **Desvío del plan:** decía «nota de hilo por cada promesa»; quedó un hilo agrupado por
   sección y la tabla completa en una nota del vault.
+
+### Tarea 16 · Capítulo 6, fase 2: los tres artefactos · 2026-11-23
+
+Rama `claude/cap06-fase2`, sobre la fase 1; sin fusionar.
+
+- **Artefactos:** `SimuladorVBE`, `MapaObjetosExcel` y `RendimientoHoja`, locales del
+  capítulo. Están en las secciones 6 y 5, bajo el aviso «En construcción», con datos de
+  Excel 16.115 para Mac; el registro de la ejecución quedó en el vault. Sonda a 320 y a
+  375 px: 9 de 9 lecciones, cero errores. En el navegador, el simulador recorrido entero
+  coincide parada por parada con lo que se copió de Excel.
+- **Recorrido de `OtroAcuerdo`:** 23 paradas. El editor no se detiene en la línea `Dim`.
+  Tres paradas no se leyeron directamente de la pantalla (una captura salió antes del
+  repintado y dos líneas quedaron fuera del área visible); se confirmaron por el conteo,
+  por la salida de Inmediato y por la línea donde quedó el cursor.
+- **Atajos:** en este Excel el menú Debug muestra ⇧⌘I para el paso a paso, y F8 no
+  avanzó. La tecla fue sintética: falta probarla en el teclado físico antes de escribir la
+  sección 6, cuyo título dice «F8».
+- **Tiempos:** `Timer` avanzó de a 1/256 de segundo, y con una sola pasada el bloque daba
+  cero. Se repite 40 veces lo rápido y se divide. Escribir en bloque fue de 66 a 77 veces
+  más rápido; leer, unas 9. Una máquina, una sesión.
+- **Corrección a la fase 1:** el ancho de 14 columnas y los espacios de `Debug.Print` sí
+  tienen fuente, MS-VBAL §5.4.5.8, que ya está en Zotero; el número se escribe con un
+  espacio delante y otro detrás.
+- **Huecos:** el control de Excel en segundo plano no pega ni teclea en el editor de VBA
+  ni pulsa Debug › Step Into; hizo falta la pantalla completa, con el docente presente y
+  el Mac desbloqueado. `ejecutar_vba.py` no captura Locales: el recorrido se lee de la
+  pantalla. `verificar.py` sigue marcando los mismos 12 fallos por vacío.
