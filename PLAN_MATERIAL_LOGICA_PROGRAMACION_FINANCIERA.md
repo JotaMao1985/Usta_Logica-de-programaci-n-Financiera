@@ -4817,3 +4817,39 @@ los ocho borradores (y las siete dudas de su nota); el texto de matemáticas fin
 y el de terminología que Zotero no tiene. **Estado:** doce fases hechas, ramas apiladas
 de `claude/cap05-plan` a `claude/cap05-fase12`, sin fusionar: la fusión a `main` espera
 la aprobación del docente.
+
+**Cierre (2026-11-22).** Con la aprobación del docente, `claude/cap05-fase12` se fusionó
+en `main` (`1e1d37e`, «Fusión: capítulo 5, mejora de contenido (doce fases)») y se subió
+a GitHub; Pages lo publicó. Los ocho borradores del banco siguen sin copiar.
+
+### Tarea 16 · Capítulo 6, fase 1: inventario, fuentes y archivo · 2026-11-23
+
+Plan `PLAN_TAREA16_CAPITULO_06.md`, aprobado el 2026-11-23 con la opción recomendada en
+las ocho decisiones. Rama `claude/cap06-fase1`, sobre `main` en `1e1d37e`; sin fusionar.
+
+- **Inventario de promesas:** 49 filas en los capítulos 1 a 5 (13 expresas en 9
+  pasajes, 27 implícitas, 9 dudosas), por un lector sin contexto que buscó por patrones;
+  no leyó las 17 879 líneas una por una. Sin sección en el plan maestro: `Select Case …
+  To` (irá en la 3), sus listas con comas, y la frase del capítulo 5 «que todavía no
+  está escrito», que se corrige al publicar.
+- **Fuentes:** leídas 99 páginas de Microsoft en español, cotejadas con la inglesa; los
+  pasajes se extrajeron del HTML con código. Quedaron en el vault. Se proponen 48 para
+  Zotero, sin importar todavía. Tres cosas que la documentación **no dice**: el ancho de
+  14 columnas de la zona de impresión y el espacio del signo de `Debug.Print` (lo
+  segundo solo lo dice `Str`); la jerarquía de objetos de Excel en una sola página; y
+  los atajos del editor en Mac. Las páginas en español son traducción automática y en
+  varias la sintaxis o las cifras salen rotas.
+- **Herramientas (H3).** Medido con un archivo de prueba: un bloque de solo VBA escrito
+  como `const X = { vba: … }` ya entra al arnés de `ejecutar_vba.py`, y la regla 4 no lo
+  toca porque solo mira `<CodeTabs>`. Una constante suelta con `'>` no la veía nadie ni
+  se listaba: `ejecutar_salidas.py` la avisa ahora (`sueltas_vba_con_salida`). Prueba
+  negativa: el archivo de prueba da el aviso; los cinco capítulos, ninguno. README al día.
+- **`SimuladorVBE` (H8).** El `Trazador` de LP-CORE admite `codigo` de un solo lenguaje,
+  con línea activa, variables y salida. El simulador será local; LP-CORE no se toca.
+- **Archivo:** `06_LPF_Entorno_VBA.html`, desde `lp-base.html`, con `CONFIG` contra la
+  fila del syllabus y siete secciones vacías; ningún resto de la demostración. Sonda a
+  375 px: 9 de 9 lecciones, cero errores. `verificar.py` le marca 12 fallos, todos por
+  vacío (cuota y motivación): no se pusieron motivaciones de relleno. Mientras dure la
+  construcción, el verificador global falla en esta rama por el capítulo 6.
+- **Desvío del plan:** decía «nota de hilo por cada promesa»; quedó un hilo agrupado por
+  sección y la tabla completa en una nota del vault.
