@@ -2767,6 +2767,289 @@
         };
 
         /* ============================================================
+           ARTEFACTOS INTERACTIVOS DEL CAPÍTULO
+
+           Viven aquí y no en LP-CORE: los usa un solo capítulo, y meterlos
+           en la librería obligaría a reestampar todos por algo que solo
+           necesita este. (Plan de la Tarea 16, H8.)
+        ============================================================ */
+
+        // Segundos con coma decimal, como la prosa. Por debajo de la
+        // resolución del reloj de VBA se dice así y no «0,000».
+        const segundosCO = (x, dec = 3) => x.toFixed(dec).replace('.', ',');
+
+        /* ------------------------------------------------------------
+           SimuladorVBE — el paso a paso del editor de VBA, sin Excel.
+
+           Reproduce lo que se ve al ejecutar un procedimiento con «Paso a
+           paso por instrucciones»: la línea resaltada es la que está POR
+           ejecutarse, no la que se acaba de ejecutar, y la ventana Locales
+           muestra las variables con el valor que tienen en ese momento.
+           Es la diferencia con el `Trazador` de LP-CORE, que resalta lo ya
+           hecho: aquí manda lo que hace el editor.
+
+           Los `pasos` no se escriben a mano: se copian de recorrer la
+           rutina en Excel. Cada uno dice en qué línea se detuvo el editor
+           (`linea`, contada desde 1 sobre `codigo`), qué mostraba Locales
+           (`locales`) y, si ya había salida, qué había en Inmediato
+           (`inmediato`, que se hereda del paso anterior si no se da).
+        ------------------------------------------------------------ */
+        const SimuladorVBE = ({ titulo = 'Paso a paso en el editor', enunciado, modulo = 'Módulo1', codigo, variables, pasos, nota }) => {
+            const total = pasos.length;
+            // 0: sin empezar · 1..total: detenido antes de pasos[i-1] · total+1: terminó
+            const [i, setI] = useState(0);
+            const lineas = codigo.split('\n');
+            const enCurso = i >= 1 && i <= total;
+            const paso = enCurso ? pasos[i - 1] : null;
+            const previo = i >= 2 && i <= total ? pasos[i - 2] : null;
+
+            let inmediato = [];
+            for (let k = 0; k < Math.min(i, total); k++) if (pasos[k].inmediato) inmediato = pasos[k].inmediato;
+
+            const ir = (n) => setI(Math.max(0, Math.min(total + 1, n)));
+            const teclado = (e) => {
+                if (e.key === 'F8' || e.key === 'ArrowRight') { e.preventDefault(); ir(i + 1); }
+                else if (e.key === 'ArrowLeft') { e.preventDefault(); ir(i - 1); }
+                else if (e.key === 'Home') { e.preventDefault(); ir(0); }
+            };
+
+            const estado = i === 0 ? 'Sin ejecutar. El primer paso entra al procedimiento.'
+                : i > total ? 'El procedimiento terminó: ya no hay línea resaltada.'
+                    : `Detenido en la línea ${paso.linea}, que todavía no se ha ejecutado: ${lineas[paso.linea - 1].trim()}`;
+
+            return (
+                <div className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-4 sm:p-5 shadow-sm not-prose">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-bug"></i></span>
+                        <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Simulador</span>
+                    </div>
+                    {enunciado && <div className="text-[0.95rem] text-gray-700 mb-3">{enunciado}</div>}
+
+                    <div tabIndex={0} onKeyDown={teclado} role="group"
+                        aria-label={`${titulo}. Con F8 o la flecha derecha se avanza un paso; con la flecha izquierda se retrocede.`}
+                        className="rounded-xl outline-none focus:ring-2 focus:ring-secondary/60">
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+                            <div className="lg:col-span-3 rounded-lg border border-gray-300 overflow-hidden">
+                                <div className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1.5">{modulo} (Código)</div>
+                                <div className="overflow-x-auto bg-white">
+                                    <div className="min-w-max py-1" style={{ fontFamily: "'Fira Code', monospace", fontSize: '0.8rem', lineHeight: 1.6 }}>
+                                        {lineas.map((l, k) => {
+                                            const activa = enCurso && paso.linea === k + 1;
+                                            return (
+                                                <div key={k} className="flex" style={activa ? { background: '#FFFF00' } : undefined}
+                                                    {...(activa ? { 'aria-current': 'step' } : {})}>
+                                                    <span className="shrink-0 text-center select-none" style={{ width: '1.5rem', color: '#B45309' }} aria-hidden="true">{activa ? '➔' : ''}</span>
+                                                    <span className="whitespace-pre pr-4" style={{ color: '#0F172A' }}>{l || ' '}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-2 rounded-lg border border-gray-300 overflow-hidden">
+                                <div className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1.5">Locales</div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm" style={{ margin: 0 }}>
+                                        <thead>
+                                            <tr className="text-left text-xs text-gray-600 bg-gray-50">
+                                                <th className="px-3 py-1.5 font-semibold">Expresión</th>
+                                                <th className="px-3 py-1.5 font-semibold">Valor</th>
+                                                <th className="px-3 py-1.5 font-semibold">Tipo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style={{ fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>
+                                            {enCurso ? variables.map(v => {
+                                                const valor = paso.locales[v.nombre];
+                                                const cambio = previo && previo.locales[v.nombre] !== valor;
+                                                return (
+                                                    <tr key={v.nombre} className="border-t border-gray-100" style={cambio ? { background: '#CCFBF1' } : undefined}>
+                                                        <td className="px-3 py-1.5">{v.nombre}</td>
+                                                        <td className="px-3 py-1.5 whitespace-nowrap">{valor}{cambio && <span className="sr-only"> (cambió en este paso)</span>}</td>
+                                                        <td className="px-3 py-1.5 text-gray-600">{v.tipo}</td>
+                                                    </tr>
+                                                );
+                                            }) : (
+                                                <tr className="border-t border-gray-100">
+                                                    <td colSpan={3} className="px-3 py-3 text-gray-500" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                                                        {i === 0 ? 'Nada que mostrar: el procedimiento no ha empezado.' : 'Nada que mostrar: el procedimiento terminó.'}
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-3 rounded-lg border border-gray-300 overflow-hidden">
+                            <div className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1.5">Inmediato</div>
+                            <div className="overflow-x-auto bg-white">
+                                <pre className="px-3 py-2 min-w-max" style={{ margin: 0, minHeight: '2.4rem', background: 'transparent', color: '#0F172A', fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>{inmediato.join('\n')}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p className="text-sm text-gray-700 mt-3 mb-2" role="status" aria-live="polite">
+                        <strong>Paso {Math.min(i, total)} de {total}.</strong> {estado}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                        <button type="button" onClick={() => ir(i + 1)} disabled={i > total}
+                            className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold disabled:opacity-40">
+                            <i className="fas fa-shoe-prints mr-2" aria-hidden="true"></i>Paso a paso
+                        </button>
+                        <button type="button" onClick={() => ir(i - 1)} disabled={i === 0}
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-semibold disabled:opacity-40">
+                            Paso anterior
+                        </button>
+                        <button type="button" onClick={() => ir(0)} disabled={i === 0}
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-semibold disabled:opacity-40">
+                            Restablecer
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                        «Paso anterior» es una ayuda de este simulador: el editor de VBA no retrocede.
+                    </p>
+                    {nota && <div className="text-sm text-gray-700 mt-3">{nota}</div>}
+                </div>
+            );
+        };
+
+        /* ------------------------------------------------------------
+           MapaObjetosExcel — de la aplicación a la celda.
+
+           Cuatro cajas, una dentro de otra. Al elegir una se ve cómo se
+           escribe el camino hasta ella y qué respondió Excel al
+           preguntárselo. `resultado` se copia de la ejecución; `children`
+           de cada nivel es la explicación, que lleva sus citas.
+        ------------------------------------------------------------ */
+        const MapaObjetosExcel = ({ titulo = 'De la aplicación a la celda', niveles, nota }) => {
+            const [sel, setSel] = useState(niveles.length - 1);
+            const tonos = ['#001A4D', '#0E7490', '#7C2D12', '#14532D'];
+            const caja = (k) => {
+                const n = niveles[k];
+                const activo = sel === k;
+                return (
+                    <div className="rounded-xl border-2 p-2 sm:p-3" style={{ borderColor: tonos[k % tonos.length], background: activo ? '#F0F9FF' : '#FFFFFF' }}>
+                        <button type="button" onClick={() => setSel(k)} aria-pressed={activo}
+                            className="w-full text-left rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-secondary/60">
+                            <span className="block text-xs uppercase tracking-wider font-bold" style={{ color: tonos[k % tonos.length] }}>{n.rotulo}</span>
+                            <span className="block text-sm font-semibold text-gray-800" style={{ fontFamily: "'Fira Code', monospace" }}>{n.nombre}</span>
+                        </button>
+                        {k + 1 < niveles.length && <div className="mt-2">{caja(k + 1)}</div>}
+                    </div>
+                );
+            };
+            const n = niveles[sel];
+            return (
+                <div className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-4 sm:p-5 shadow-sm not-prose">
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-sitemap"></i></span>
+                        <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>{titulo}</h4>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Interactivo</span>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div>{caja(0)}</div>
+                        <div role="status" aria-live="polite">
+                            <p className="text-xs uppercase tracking-wider font-bold text-gray-500 mb-1">Cómo se escribe el camino</p>
+                            <div className="overflow-x-auto rounded-lg mb-3" style={{ background: '#1E293B' }}>
+                                <pre className="px-3 py-2 min-w-max" style={{ margin: 0, background: 'transparent', color: '#F8FAFC', fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>{n.camino}</pre>
+                            </div>
+                            <p className="text-xs uppercase tracking-wider font-bold text-gray-500 mb-1">Lo que respondió Excel</p>
+                            <div className="overflow-x-auto rounded-lg border border-gray-200 mb-3">
+                                <table className="w-full text-sm" style={{ margin: 0 }}>
+                                    <tbody style={{ fontFamily: "'Fira Code', monospace", fontSize: '0.8rem' }}>
+                                        {n.resultado.map(([pregunta, respuesta]) => (
+                                            <tr key={pregunta} className="border-t border-gray-100 first:border-t-0">
+                                                <td className="px-3 py-1.5 whitespace-nowrap">{pregunta}</td>
+                                                <td className="px-3 py-1.5 whitespace-nowrap text-gray-700">{respuesta}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {n.children && <div className="text-[0.95rem] text-gray-700">{n.children}</div>}
+                        </div>
+                    </div>
+                    {nota && <div className="text-sm text-gray-700 mt-3">{nota}</div>}
+                </div>
+            );
+        };
+
+        /* ------------------------------------------------------------
+           RendimientoHoja — celda por celda frente a en bloque.
+
+           `filas` son tiempos medidos en Excel, en segundos: la mediana de
+           las repeticiones de cada tamaño. La columna «veces» se deriva
+           aquí, a la vista. Por debajo de la resolución del reloj de VBA
+           (`resolucion`) el tiempo no se dibuja como cero: se dice.
+        ------------------------------------------------------------ */
+        const RendimientoHoja = ({ id = 'chart-rendimiento-hoja', filas, resolucion, medicion }) => {
+            const [modo, setModo] = useState('leer');
+            const claves = modo === 'leer' ? ['leerCelda', 'leerBloque'] : ['escribirCelda', 'escribirBloque'];
+            const verbo = modo === 'leer' ? 'Leer' : 'Escribir';
+            const piso = (x) => Math.max(x, resolucion);
+            usePlotly(id, () => [
+                { x: filas.map(f => f.n), y: filas.map(f => piso(f[claves[0]])), name: 'celda por celda', mode: 'lines+markers', line: { color: '#B45309', width: 2.5 }, marker: { size: 8 } },
+                { x: filas.map(f => f.n), y: filas.map(f => piso(f[claves[1]])), name: 'en bloque', mode: 'lines+markers', line: { color: '#0E7490', width: 2.5 }, marker: { size: 8, symbol: 'square' } },
+            ], () => ({
+                margin: { l: 56, r: 12, t: 12, b: 44 },
+                legend: { orientation: 'h', y: 1.12, x: 0 },
+                xaxis: { title: { text: 'celdas', font: { size: 12 } }, tickvals: filas.map(f => f.n), tickformat: ',.0f', automargin: true },
+                yaxis: { title: { text: 'segundos', font: { size: 12 }, standoff: 8 }, type: 'log', automargin: true },
+                separators: ', ',
+                font: { family: 'Inter, system-ui, sans-serif', size: 11 },
+            }), [modo]);
+            const celda = (x) => x < resolucion ? `menos de ${segundosCO(resolucion)}` : segundosCO(x);
+            return (
+                <div className="my-6 rounded-2xl border-2 border-primary/20 bg-white p-4 sm:p-5 shadow-sm not-prose">
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <span className="lp-gradient text-white p-2 rounded-lg"><i className="fas fa-stopwatch"></i></span>
+                        <h4 className="text-base font-bold text-primary" style={{ margin: 0 }}>Celda por celda o en bloque</h4>
+                        <span className="ml-auto text-[0.65rem] uppercase tracking-wider font-bold text-white bg-teal rounded px-2 py-0.5">Interactivo</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-2" role="group" aria-label="Qué operación se mide">
+                        {[['leer', 'Leer de la hoja'], ['escribir', 'Escribir en la hoja']].map(([m, e]) => (
+                            <button key={m} type="button" onClick={() => setModo(m)} aria-pressed={modo === m}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-semibold border ${modo === m ? 'bg-primary text-white border-primary' : 'bg-white text-gray-700 border-gray-300'}`}>{e}</button>
+                        ))}
+                    </div>
+                    <ChartFrame id={id} height="chart-h-320"
+                        caption={`${verbo} n celdas de una columna, de una en una y de una sola vez. El eje vertical es logarítmico: cada marca vale diez veces la anterior.`}
+                        fuente={{ propia: true, children: `con los tiempos medidos ${medicion}` }} />
+                    <div className="overflow-x-auto rounded-lg border border-gray-200 mt-3">
+                        <table className="w-full text-sm" style={{ margin: 0 }}>
+                            <thead>
+                                <tr className="text-left text-xs text-gray-600 bg-gray-50">
+                                    <th className="px-3 py-1.5 font-semibold">Celdas</th>
+                                    <th className="px-3 py-1.5 font-semibold">Celda por celda (s)</th>
+                                    <th className="px-3 py-1.5 font-semibold">En bloque (s)</th>
+                                    <th className="px-3 py-1.5 font-semibold">Veces</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filas.map(f => {
+                                    const a = f[claves[0]], b = f[claves[1]];
+                                    return (
+                                        <tr key={f.n} className="border-t border-gray-100">
+                                            <td className="px-3 py-1.5 whitespace-nowrap">{f.n.toLocaleString('es-CO').replace(/\./g, ' ')}</td>
+                                            <td className="px-3 py-1.5 whitespace-nowrap">{celda(a)}</td>
+                                            <td className="px-3 py-1.5 whitespace-nowrap">{celda(b)}</td>
+                                            <td className="px-3 py-1.5 whitespace-nowrap">{b < resolucion ? `más de ${Math.floor(a / resolucion).toLocaleString('es-CO').replace(/\./g, ' ')}` : Math.round(a / b).toLocaleString('es-CO').replace(/\./g, ' ')}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Fuente propia>{`con los mismos tiempos de la gráfica; «veces» es el primero dividido entre el segundo`}</Fuente>
+                </div>
+            );
+        };
+
+        /* ============================================================
            ESQUELETO — fase 1 del plan de la Tarea 16 (2026-11-23)
            Las siete secciones del plan maestro, vacías. Cada una se escribe
            entera en su fase: motivación, texto con citas, código ejecutado en
