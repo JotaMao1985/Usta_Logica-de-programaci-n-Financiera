@@ -1,7 +1,8 @@
 # Plan · Tarea 16 — Capítulo 6, «Entorno de programación VBA»
 
-**Fecha:** 2026-11-23. **Estado:** borrador para el punto de control 0. Nada de lo que
-sigue está aprobado.
+**Fecha:** 2026-11-23. **Estado:** aprobado por el docente el 2026-11-23 con la opción
+recomendada en las ocho decisiones (§3). Siguen sin respuesta suya dos datos: qué Excel
+usan los estudiantes en la sala (decisión 2) y si tiene alguno de los tres libros (decisión 4).
 
 **Archivo:** `Material html/06_LPF_Entorno_VBA.html`. **No existe.** Es el primer capítulo
 que se escribe con la gestión documental ya montada: los cinco anteriores se escribieron

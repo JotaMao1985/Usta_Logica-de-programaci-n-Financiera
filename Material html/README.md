@@ -551,6 +551,14 @@ suelto de un solo lenguaje no se puede comprobar —`#>` es el prefijo de Python
 de R a la vez, y nada dice cuál es—; el informe los lista como no auditados en
 vez de callarlos. Convertirlo a `CodeTabs` lo vuelve auditable.
 
+**Un bloque de solo VBA** —el código que habla con Excel no tiene equivalente en los
+otros tres lenguajes— se escribe como objeto con una sola clave,
+``const X = { vba: `…` }``, y se pinta con `<CodeBlock lang="vba" code={X.vba} />`. Así
+`ejecutar_vba.py` lo mete en el arnés y compara sus `'>`, y la regla 4 no lo toca,
+porque solo mira lo que va en un `<CodeTabs>`. Escrito como constante suelta
+(``const X = `…` ``) no lo ejecuta nadie; desde el 2026-11-23 el informe lo avisa.
+Medido al planear el capítulo 6 con un archivo de prueba que traía las dos formas.
+
 El resaltado es **Prism.js 1.29** (`r`, `python`, `visual-basic`); el
 pseudocódigo usa una gramática propia registrada en LP-CORE.
 

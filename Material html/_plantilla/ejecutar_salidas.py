@@ -154,6 +154,25 @@ def sueltas_con_salida(texto):
     return fuera
 
 
+def sueltas_vba_con_salida(texto):
+    """Constantes sueltas con una línea que empieza por `'>`: VBA sin auditar.
+
+    `ejecutar_vba.py` arma su arnés con lo que devuelve `bloques_de`, que solo ve
+    plantillas con clave de lenguaje. Una constante suelta de VBA con salida
+    declarada no la ejecutaba nadie y, a diferencia de las de `#>`, tampoco se
+    listaba. Aquí el lenguaje no es dudoso —`'>` es solo de VBA—, así que el
+    arreglo es mecánico: escribirla como `const X = { vba: `…` }`. Salió al
+    planear el capítulo 6, el primero con bloques de solo VBA (H3 de su plan).
+    """
+    fuera = []
+    for m in CONST_SUELTA.finditer(texto):
+        fin = fin_de_literal(texto, m.end())
+        if fin != -1 and any(l.strip().startswith("'>")
+                             for l in texto[m.end():fin].split("\n")):
+            fuera.append(m.group(1))
+    return fuera
+
+
 def separar(codigo, prefijo):
     """Divide el bloque en (código ejecutable, salidas declaradas en orden)."""
     ejecutable, esperado = [], []
@@ -225,6 +244,9 @@ def auditar(ruta):
     for nombre in sueltas_con_salida(texto):
         avisos.append(f"{nombre}: bloque de un solo lenguaje con `#>`; no se puede "
                       f"saber si es Python o R. Conviértalo a CodeTabs y quedará auditado")
+    for nombre in sueltas_vba_con_salida(texto):
+        avisos.append(f"{nombre}: constante suelta de VBA con `'>`; `ejecutar_vba.py` no "
+                      f"la ve. Escríbala como `const {nombre} = {{ vba: `…` }}` y entrará al arnés")
 
     omitidos = " · ".join(f"{l} ({m})" for l, m in OMITIDOS.items())
     resumen = (f"{comparados} bloques ejecutados y comparados · "
