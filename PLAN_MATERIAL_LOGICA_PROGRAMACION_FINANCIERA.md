@@ -4880,3 +4880,22 @@ Rama `claude/cap06-fase2`, sobre la fase 1; sin fusionar.
   ni pulsa Debug › Step Into; hizo falta la pantalla completa, con el docente presente y
   el Mac desbloqueado. `ejecutar_vba.py` no captura Locales: el recorrido se lee de la
   pantalla. `verificar.py` sigue marcando los mismos 12 fallos por vacío.
+
+### Tarea 16 · Capítulo 6, fase 3: sección 1, «Por qué VBA» · 2026-11-23
+
+Rama `claude/cap06-fase3`, sobre la fase 2; sin fusionar. El punto de control 2 se aprobó
+el mismo día.
+
+- **Sin citas, a propósito (H6).** Remisión al syllabus (el RA2 textual y los tres
+  contenidos que nombran VBA), remisión a los capítulos 1 y 5, dos conteos derivados y un
+  recuadro de criterio del docente con las razones para estudiar VBA. La sección dice que
+  ni el syllabus ni el material tienen una fuente que mida el uso de VBA en el sector.
+- **Mapa del capítulo:** la rutina `OtroAcuerdo` del capítulo 5, sin cambios, y una tabla
+  de qué pregunta deja cada parte y qué sección la responde. Remite a secciones que aún
+  no existen: se coteja en la fase 11.
+- **Ejercicio:** un E8 (reto con solución revelable). Regla 21: las cifras copiadas del
+  capítulo 5 necesitaban el espacio duro; el verificador lo cazó.
+- **Comprobado:** sonda a 320 y 375 px, 9 de 9 lecciones y cero errores; en el navegador,
+  la sección dibuja el bloque resaltado, la tabla y la solución del reto, sin espacios
+  comidos. `verificar.py` marca ahora 11 fallos, todos por lo que falta escribir.
+- **Pendiente del docente:** la fila 37 del syllabus anuncia un video sin dirección.

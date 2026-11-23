@@ -3155,14 +3155,182 @@ End Sub`;
             </div>
         );
 
-        // Sección 1 — «Por qué VBA». Por escribir en la fase 3 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // Sección 1 — «Por qué VBA». Fase 3 del plan (PLAN_TAREA16_CAPITULO_06.md).
+        // No lleva ninguna cita: el plan (H6, decisión 6) la dejó como remisión
+        // al syllabus y criterio del docente, porque en Zotero no hay nada que
+        // mida el uso de VBA en el sector. Cada afirmación es de una de estas
+        // clases y está cotejada:
+        //   · remisión al syllabus: RA2 (fila 36, celda combinada con las 37 y
+        //     38) y los contenidos y recursos de las filas 36 a 38;
+        //   · remisión a los capítulos 1 y 5 (convenciones del 1; secciones 2 y
+        //     4 y «Lo que viene» del 5);
+        //   · derivada: los dos conteos, que salen de contar en los capítulos
+        //     1 a 5 fuera de LP-CORE (155 = 23+17+48+25+42; 147 = 25+18+44+18+42);
+        //   · ejecutada: la versión de Excel, de `Application.Version`;
+        //   · criterio del docente, en su recuadro y en la solución del reto.
         const Cap1Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                <Motivacion icon="fa-file-excel"
+                    gancho="Usted lleva cinco capítulos leyendo VBA. ¿Dónde se escribe, quién lo ejecuta y cómo se le mira por dentro mientras corre?">
+                    En la sección 4 del capítulo 5, un analista pasó a Python la macro de Excel que calculaba
+                    un plan de pagos, tradujo <span className="inline-code">For k = 1 To 12</span> como
+                    {' '}<span className="inline-code">range(1, 12)</span> y el sistema emitió once cuotas en
+                    vez de doce. Aquel caso se miró desde Python. La macro, que daba las doce vueltas, quedó
+                    fuera de cuadro: estaba escrita en un editor que este curso todavía no ha abierto, se
+                    ejecutaba con una orden que no se ha nombrado y se podía revisar con herramientas que
+                    no se han visto. Este capítulo abre ese editor.
+                </Motivacion>
+
+                <h3>Lo que pide el syllabus</h3>
+                <p>
+                    El segundo resultado de aprendizaje del curso dice, textualmente: «Interpreta el
+                    lenguaje de programación utilizado por las empresas del sector financiero que son
+                    intensivos en tecnología». El resultado no nombra el lenguaje. Lo nombran los tres
+                    contenidos que el syllabus le asigna: «ARRAYS: uni, bidimensionales, codificación en
+                    VBA», «Entorno de programación VBA» y las funciones, cuyo cuestionario se llama
+                    «Funciones VBA». Este capítulo es el segundo de esos contenidos y tiene doce horas.
+                </p>
+                <p>
+                    El verbo del resultado es <strong>interpreta</strong>. Por eso los ejercicios de este
+                    capítulo, como los de los cinco anteriores, piden leer una rutina, seguirla y
+                    diagnosticarla, y no escribirla desde cero.
+                </p>
+                <p>
+                    El syllabus no dice cuántas entidades usan VBA ni para qué, y este material tampoco lo
+                    dice: no tiene una fuente que lo mida. Lo que sigue es una opinión, y va marcada como
+                    tal.
+                </p>
+
+                <Box type="info" label="Criterio del docente">
+                    A juicio del docente, hay tres razones para estudiar VBA en este curso, y ninguna es
+                    que sea el mejor lenguaje. La primera: el código queda junto a los datos, dentro del
+                    mismo libro de Excel donde están las cifras, como se verá en la sección 2. La segunda:
+                    no hay que instalar nada aparte; el Excel con que se preparó este material ya traía el
+                    editor. La tercera, que es la que pide el resultado de aprendizaje: una macro que
+                    escribió otra persona se puede abrir y seguir instrucción por instrucción, que es el
+                    tema de la sección 6. Python y R siguen en este capítulo, en las secciones 3 y 4, para
+                    que se vea qué es del algoritmo y qué es solo de VBA.
                 </Box>
+
+                <h3>Lo que usted ya leyó</h3>
+                <p>
+                    Usted no llega en blanco. Todo algoritmo de los capítulos 1 a 5 traía una pestaña de
+                    VBA: en esos cinco capítulos la palabra <span className="inline-code">Currency</span> aparece
+                    155 veces y <span className="inline-code">Debug.Print</span>, 147, entre código y texto.
+                    Lo que nunca se dijo es dónde se escribe eso ni por qué va así. El capítulo 1 solo
+                    advirtió que los fragmentos de VBA «van en el editor de Excel, que es donde vivirán a
+                    partir del capítulo 6».
+                </p>
+                <p>
+                    Esta es la rutina que usted trazó a mano en la sección 2 del capítulo 5, la del acuerdo
+                    de pago de 1 850 000 con abonos de 500 000. Se copia sin cambiar una letra:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={F8_CODIGO} />
+
+                <p>
+                    Cada parte de esa rutina deja una pregunta que los capítulos anteriores no
+                    respondieron. Este capítulo es la lista de las respuestas:
+                </p>
+
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Lo que usted ya leyó</th><th>Lo que falta decir</th><th>Sección</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Toda la rutina</td>
+                                <td>En qué ventana de Excel se escribe y cómo se le pide que corra.</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">Debug.Print meses, saldo</span></td>
+                                <td>Dónde aparece lo que imprime, y por qué deja ese hueco entre los dos números.</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">Sub OtroAcuerdo()</span> … <span className="inline-code">End Sub</span></td>
+                                <td>Qué es un procedimiento, y cómo pasa un algoritmo en pseudocódigo a ser uno.</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">Dim saldo As Currency</span></td>
+                                <td>Qué hace declarar una variable, qué vale antes de que se le asigne algo y por qué el dinero va en <span className="inline-code">Currency</span>.</td>
+                                <td>3 y 4</td>
+                            </tr>
+                            <tr>
+                                <td>Los datos escritos dentro del código</td>
+                                <td>Cómo se leen de una celda de la hoja y cómo se escribe en ella el resultado.</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>El ciclo, vuelta por vuelta</td>
+                                <td>Cómo verlo correr una instrucción a la vez, con los valores a la vista.</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>Una rutina que siempre termina bien</td>
+                                <td>Qué pasa cuando falla, y qué hacer con una macro que llega de fuera.</td>
+                                <td>7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente propia>con la rutina de la sección 2 del capítulo 5 y las siete secciones de este capítulo</Fuente>
+
+                <h3>Qué cambia en este capítulo</h3>
+                <p>
+                    El capítulo 5 lo anunció al cerrar: este capítulo «pone a VBA al frente y deja el
+                    pseudocódigo en segundo plano». En la práctica son dos cambios. Las secciones 3 y 4,
+                    donde hay un algoritmo que traducir, conservan las cuatro pestañas. Las secciones 2, 5,
+                    6 y 7 muestran solo VBA, porque lo que enseñan es de Excel: una celda, una ventana del
+                    editor o una parada en mitad de la ejecución no se escriben en pseudocódigo.
+                </p>
+
+                <Box type="warn" label="Con qué Excel se escribió">
+                    Todo el VBA de este capítulo se ejecutó en Excel para Mac, versión 16.115, con los
+                    menús en inglés, y los menús se nombran como aparecen ahí. Donde se sabe que Excel
+                    para Windows hace otra cosa, se avisa en el mismo lugar. Lo que no se pudo ver en
+                    Windows no se afirma de Windows.
+                </Box>
+
+                <Box type="tip" label="Los recursos del syllabus">
+                    La fila de este contenido en el syllabus remite a la charla tutorial «Entorno de
+                    programación VBA» y a un juego en la plataforma Moodle, que es su entregable. También
+                    anuncia un video, «Entorno de programación», pero no trae su dirección; aquí no se
+                    pone una que el syllabus no da.
+                </Box>
+
+                <Ejercicio tipo="E8"><Reto
+                    titulo="¿Para qué cinco capítulos de pseudocódigo?"
+                    solucion={<>
+                        <p>
+                            Lo que sigue es el criterio del docente, no la única respuesta admisible. Una
+                            buena respuesta toma partido y se apoya en algo que usted haya visto en el curso.
+                        </p>
+                        <p>
+                            <strong>En contra de la propuesta.</strong> El caso de las once cuotas es el
+                            mejor argumento. El algoritmo era el mismo en los dos lenguajes: doce cuotas, una
+                            vuelta por cuota. Lo que cambió fue lo que cada lenguaje entiende por «de 1 hasta
+                            12». Quien solo conoce la versión en VBA no tiene con qué comparar la traducción;
+                            quien tiene el algoritmo en pseudocódigo sabe cuántas vueltas debe dar el ciclo
+                            antes de mirar cualquier lenguaje. Además, el capítulo 1 dejó dicho que el
+                            pseudocódigo es lo que se evalúa, y el primer resultado de aprendizaje habla de
+                            construir un algoritmo, no de escribirlo en un lenguaje.
+                        </p>
+                        <p>
+                            <strong>Lo que la propuesta tiene de cierto.</strong> Durante cinco capítulos el
+                            VBA se mostró sin explicarse: usted leyó <span className="inline-code">Dim</span>,
+                            {' '}<span className="inline-code">Currency</span> y <span className="inline-code">Debug.Print</span> sin
+                            saber qué hacían exactamente. Ese es el costo de la decisión, y este capítulo
+                            existe para pagarlo.
+                        </p>
+                    </>}>
+                    Un compañero opina: «Si el resultado de aprendizaje pide interpretar VBA, los capítulos 1
+                    a 5 debieron enseñarse directamente en VBA, sin pseudocódigo». Tome partido en cuatro o
+                    cinco líneas, apoyándose en el caso de las once cuotas de la sección 4 del capítulo 5.
+                </Reto></Ejercicio>
             </div>
         );
 
