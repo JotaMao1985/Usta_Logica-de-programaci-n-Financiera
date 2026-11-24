@@ -4812,21 +4812,357 @@ End Sub`,
             </div>
         );
 
-        // Sección 5 — «La hoja: Range y Cells». Por escribir en la fase 7 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // ── Sección 5 · bloques (solo VBA; trabajan sobre la hoja del libro de prueba) ──
+        const CELDAS_NOMBRAR = {
+            vba: `Sub NombrarCeldas()
+    Debug.Print Range("B2").Address
+    '> $B$2
+    Debug.Print Cells(2, 2).Address; " "; TypeName(Cells(2, 2))
+    '> $B$2 Range
+    Debug.Print Cells(5, 3).Address          ' fila 5, columna 3
+    '> $C$5
+    Debug.Print Cells(3, 5).Address          ' fila 3, columna 5
+    '> $E$3
+    Debug.Print Range("B2:B4").Address; Range("B2:B4").Count
+    '> $B$2:$B$4 3
+End Sub`,
+        };
+
+        const LEER_HOJA = {
+            vba: `Sub InteresDesdeLaHoja()
+    Dim capital As Currency, tasa As Double, meses As Integer
+    Dim interes As Currency
+
+    ' Los datos, puestos en la hoja (lo normal es que ya esten ahi)
+    Range("B2").Value = 2000000
+    Range("B3").Value = 0.015
+    Range("B4").Value = 3
+
+    capital = Range("B2").Value
+    tasa = Range("B3").Value
+    meses = Range("B4").Value
+
+    interes = capital * tasa * meses
+    Range("B5").Value = interes
+
+    Debug.Print "Interes:"; Range("B5").Value
+    '> Interes: 90000
+    Debug.Print TypeName(Range("B2").Value); " "; TypeName(capital)
+    '> Double Currency
+    Debug.Print TypeName(Range("B5").Value); " "; TypeName(Range("C9").Value)
+    '> Currency Empty
+End Sub`,
+        };
+
+        const HOJA_EXPLICITA = {
+            vba: `Sub LaHojaConNombre()
+    Debug.Print ActiveSheet.Name
+    '> Sheet1
+    Debug.Print Worksheets(1).Name; " de"; Worksheets.Count
+    '> Sheet1 de 1
+
+    Worksheets("Sheet1").Range("B7").Value = "Corte de noviembre"
+    Debug.Print Worksheets("Sheet1").Range("B7").Value
+    '> Corte de noviembre
+    Debug.Print TypeName(Range("B7").Value); " "; Range("B7").Parent.Name
+    '> String Sheet1
+End Sub`,
+        };
+
+        // El acuerdo de pago de OtroAcuerdo (sección 1), ahora dejando cada saldo en la hoja.
+        const TABLA_HOJA = {
+            vba: `Sub AbonosEnLaHoja()
+    Dim saldo As Currency, abono As Currency, fila As Long
+
+    saldo = 1850000
+    abono = 500000
+    fila = 2
+    Do While saldo > 0
+        saldo = saldo - abono
+        Cells(fila, 4).Value = saldo        ' columna 4: la D
+        fila = fila + 1
+    Loop
+
+    Debug.Print "Ultima fila escrita:"; fila - 1
+    '> Ultima fila escrita: 5
+    Debug.Print Range("D2").Value; Range("D5").Value
+    '>  1350000 -150000
+End Sub`,
+        };
+
+        const BLOQUE_HOJA = {
+            vba: `Sub CincoViajesOUno()
+    Dim datos(1 To 5, 1 To 1) As Variant, i As Long, iguales As Long
+
+    ' Cinco viajes a la hoja: una celda cada vez
+    For i = 1 To 5
+        Cells(i + 1, 6).Value = i * 100000
+    Next i
+
+    ' Un solo viaje: los cinco valores juntos
+    For i = 1 To 5
+        datos(i, 1) = i * 100000
+    Next i
+    Range("G2:G6").Value = datos
+
+    For i = 2 To 6
+        If Cells(i, 6).Value = Cells(i, 7).Value Then iguales = iguales + 1
+    Next i
+    Debug.Print "Filas iguales:"; iguales; "de 5. La ultima:"; Range("G6").Value
+    '> Filas iguales: 5 de 5. La ultima: 500000
+End Sub`,
+        };
+
+        // E4 · solo VBA: el código va como texto y no como mapa de lenguajes, y el
+        // Comparador recibe lang="vba". El orden (fila, columna). Ejecutadas a mano en Excel: A llenó J2:J4
+        // y B llenó B10:D10 (registro de ejecución del vault, apartado 9).
+        const CMP_CELLS_A = `Sub VersionA()
+    Dim k As Long
+    For k = 2 To 4
+        Cells(k, 10).Value = 500000
+    Next k
+End Sub`;
+        const CMP_CELLS_B = `Sub VersionB()
+    Dim k As Long
+    For k = 2 To 4
+        Cells(10, k).Value = 500000
+    Next k
+End Sub`;
+
+        // Sección 5 — «La hoja: Range y Cells». Solo VBA: aquí no hay algoritmo
+        // que traducir (decisión 3 del plan del capítulo).
         const Cap5Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita. Lo que sigue son sus dos artefactos, ya con los
-                    datos que devolvió Excel; el texto que los explica se escribe en la fase 7.
-                </Box>
+                <Motivacion icon="fa-table-cells"
+                    gancho="La misma tarea y los mismos 100 000 valores. Escrita de una manera tardó 3,9 segundos; de otra, 0,05. ¿Dónde se fue el tiempo?">
+                    Una analista escribe una macro que deja 100 000 valores en una columna de la hoja, uno
+                    por fila. Funciona, pero cada vez que la ejecuta espera casi cuatro segundos. Revisa las
+                    cuentas y no hay nada que acelerar. Lo lento no era calcular. Era escribir: la macro
+                    iba a la hoja 100 000 veces, una por celda. Escrita para ir una sola vez con todos los
+                    valores, la misma tarea tardó cinco centésimas de segundo.
+                </Motivacion>
+
+                <Ilustrativo>
+                    La analista es un caso inventado. Los tiempos se midieron en el Excel de este capítulo
+                    y están en la gráfica de más abajo.
+                </Ilustrativo>
+
+                <h3>De la aplicación a la celda</h3>
+                <p>
+                    Cuando una rutina dice <span className="inline-code">Range("B2")</span>, falta saber de
+                    qué hoja y de qué libro es esa celda. Excel lo resuelve bajando por cuatro
+                    niveles. El objeto <span className="inline-code">Application</span> representa la
+                    aplicación completa <Cita k="microsoft2019application" loc="párrafo inicial" />.
+                    Un <span className="inline-code">Workbook</span> representa un
+                    libro <Cita k="microsoft2019workbook" loc="párrafo inicial" />.
+                    Un <span className="inline-code">Worksheet</span> representa una hoja de
+                    cálculo <Cita k="microsoft2019worksheet" loc="párrafo inicial" />, y la
+                    colección <span className="inline-code">Worksheets</span> contiene todas las de un
+                    libro <Cita k="microsoft2019worksheet" loc="Comentarios" />. Y
+                    un <span className="inline-code">Range</span> representa una celda, una fila, una
+                    columna, una selección de celdas o un rango 3D <Cita k="microsoft2019range" loc="párrafo inicial" />.
+                    Una celda sola también es un <span className="inline-code">Range</span>: en el mapa
+                    que sigue, a <span className="inline-code">TypeName(Range("B2"))</span> Excel
+                    respondió <span className="inline-code">Range</span>.
+                </p>
 
                 <MapaObjetosExcel niveles={OBJETOS_NIVELES}
                     nota={<Fuente propia>{`con lo que respondió Excel 16.115 para Mac el 23 de noviembre de 2026, en un libro nuevo sin guardar`}</Fuente>} />
 
+                <p>
+                    Cada respuesta del mapa es lo que contestó Excel al preguntarle. La
+                    propiedad <span className="inline-code">Parent</span> sube un nivel: el padre de la
+                    celda B2 fue la hoja <span className="inline-code">Sheet1</span>, el de la hoja fue un
+                    {' '}<span className="inline-code">Workbook</span> y el del libro, la aplicación.
+                </p>
+
+                <h3>Nombrar una celda: Range y Cells</h3>
+                <p>
+                    Aquí se usan dos maneras de señalar una celda. La primera lleva la dirección como
+                    texto: <span className="inline-code">Range(arg)</span>, donde el argumento nombra el
+                    rango, devuelve un objeto que representa una sola celda o un rango de
+                    celdas <Cita k="microsoft2019range" loc="Ejemplo" />. La segunda, como se usa aquí,
+                    lleva dos números. En el ejemplo
+                    de Microsoft, <span className="inline-code">Cells(5, 3)</span> es la
+                    celda C5 <Cita k="microsoft2019cells" loc="Ejemplo" />. La misma página dice que
+                    después de <span className="inline-code">Cells</span> se pueden escribir el índice de
+                    fila y el de columna, en lugar de llamar de manera explícita
+                    a <span className="inline-code">Item</span> <Cita k="microsoft2019cells" loc="Observaciones" />,
+                    y en <span className="inline-code">Item</span>, cuando se dan los dos, el primer parámetro
+                    es el número de fila relativo y el segundo, el de columna relativo <Cita k="microsoft2019item" loc="Parameters" />.
+                    Primero la fila, después la columna.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={CELDAS_NOMBRAR.vba} />
+
+                <p>
+                    El orden es el contrario del de la dirección. «C5» nombra primero la
+                    columna; <span className="inline-code">Cells(5, 3)</span> nombra primero la fila. Con
+                    los números al revés, <span className="inline-code">Cells(3, 5)</span>, Excel respondió
+                    con otra celda, la E3, y no avisó de nada. La segunda salida muestra además que lo que
+                    devuelve <span className="inline-code">Cells(2, 2)</span> es
+                    un <span className="inline-code">Range</span>. ¿Para qué una segunda manera, entonces?
+                    Porque sus argumentos son números, y un número puede ser una variable que cambia en
+                    cada vuelta de un ciclo. Se usa más abajo.
+                </p>
+
+                <h3>Leer y escribir: la propiedad Value</h3>
+                <p>
+                    Señalar una celda no es leerla. Lo que hay dentro se alcanza con la
+                    propiedad <span className="inline-code">Value</span>, que devuelve o establece
+                    un <span className="inline-code">Variant</span> que representa el valor del
+                    rango <Cita k="microsoft2019value" loc="párrafo inicial" />. En una asignación, a la
+                    derecha del signo igual lee y a la izquierda escribe. Usted la conoce desde el capítulo 2,
+                    donde <span className="inline-code">capital = Range("B2").Value</span> apareció sin
+                    explicación, y el capítulo 3 dijo que leer de una celda era la convención de los
+                    bloques de VBA de este material. Esta rutina hace las dos cosas:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={LEER_HOJA.vba} />
+
+                <p>
+                    Las dos últimas salidas son la sección 4 aplicada a la hoja. El 2 000 000 de la celda
+                    B2 llegó como <span className="inline-code">Double</span>, y al guardarlo
+                    en <span className="inline-code">capital</span> se convirtió al tipo que
+                    el <span className="inline-code">Dim</span> había fijado. La celda B5, donde la rutina
+                    escribió un <span className="inline-code">Currency</span>, devolvió
+                    un <span className="inline-code">Currency</span>, y en la hoja quedó con formato de
+                    moneda: Excel la mostró como $90.000,00. La celda C9, donde
+                    nadie escribió, devolvió <span className="inline-code">Empty</span>, el mismo valor de
+                    un <span className="inline-code">Variant</span> sin inicializar.
+                </p>
+                <p>
+                    Una advertencia para cuando lea macros ajenas. El miembro predeterminado
+                    de <span className="inline-code">Range</span> reenvía a <span className="inline-code">Value</span> las
+                    llamadas sin parámetros, de modo
+                    que <span className="inline-code">someRange = someOtherRange</span> equivale a escribirlo
+                    con <span className="inline-code">.Value</span> en los dos
+                    lados <Cita k="microsoft2019range" loc="Comentarios" />. Por eso encontrará
+                    {' '}<span className="inline-code">Range("B2") = 5</span> en código de otras personas.
+                    Las rutinas de este curso escriben siempre <span className="inline-code">.Value</span>,
+                    a juicio del docente porque así se ve qué se está pidiendo.
+                </p>
+
+                <h3>La hoja activa y la hoja con nombre</h3>
+                <p>
+                    Ninguna de las rutinas anteriores dijo en qué hoja trabajar. Cuando la
+                    propiedad <span className="inline-code">Range</span> se usa sin un calificador, es
+                    decir, sin un objeto a la izquierda del punto, devuelve un rango de la hoja
+                    activa <Cita k="microsoft2019range" loc="Ejemplo" />, y la hoja activa es la que está
+                    encima en el libro activo <Cita k="microsoft2019activesheet" loc="párrafo inicial" />.
+                    Con <span className="inline-code">Cells</span> pasa lo mismo: sin calificador,
+                    devuelve las celdas de la hoja activa <Cita k="microsoft2019cells" loc="Observaciones" />.
+                    De ahí sale una consecuencia: la misma rutina, sin cambiarle una letra, trabaja sobre
+                    una hoja o sobre otra según cuál esté al frente cuando se ejecuta; y si la hoja que está al
+                    frente no es una hoja de cálculo, <span className="inline-code">Range</span> produce
+                    un error <Cita k="microsoft2019range" loc="Ejemplo" />. Esa consecuencia no se pudo
+                    ver aquí, porque el libro de prueba tiene una sola hoja. Para que no dependa de
+                    eso se pone el calificador, como en el ejemplo de Microsoft, que
+                    antepone <span className="inline-code">Worksheets("Sheet1")</span> a
+                    {' '}<span className="inline-code">.Range("A5")</span> <Cita k="microsoft2019range" loc="Ejemplo" />.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={HOJA_EXPLICITA.vba} />
+
+                <p>
+                    <span className="inline-code">Sheet1</span> es el nombre que tenía la única hoja del
+                    libro en el Excel de este capítulo, que está en inglés. En un Excel en español la hoja
+                    nueva puede tener otro nombre; aquí no se comprobó. Las dos últimas líneas de la rutina
+                    leen otra vez sin calificador y encuentran lo mismo, pero solo
+                    porque <span className="inline-code">Sheet1</span> era también la hoja activa.
+                </p>
+
+                <h3>Un ciclo que recorre filas</h3>
+                <p>
+                    Aquí es donde <span className="inline-code">Cells</span> se aprovecha. Esta rutina
+                    parte de <span className="inline-code">OtroAcuerdo</span>, la de la sección 1, con el
+                    mismo saldo y el mismo abono: en lugar de contar los meses, deja el saldo de cada mes
+                    en la columna D.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={TABLA_HOJA.vba} />
+
+                <p>
+                    <span className="inline-code">Cells(fila, 4)</span> señala una celda distinta en cada
+                    vuelta, porque <span className="inline-code">fila</span> cambia. Con una dirección
+                    escrita como texto fijo no se habría podido. La rutina escribió cuatro celdas, de D2
+                    a D5, y en la última quedó el saldo negativo que ya conocía de la sección 1.
+                    La variable <span className="inline-code">fila</span> es <span className="inline-code">Long</span> por
+                    la razón de la sección 4: es una cuenta que puede crecer.
+                </p>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="Tres abonos en la hoja, de dos maneras"
+                    enunciado={<>Las dos rutinas escriben 500 000 en tres celdas de la hoja activa. Solo cambia el orden de los argumentos de <span className="inline-code">Cells</span>. <strong>Compárelas y responda.</strong></>}
+                    a={{ etiqueta: 'Versión A', codigo: CMP_CELLS_A }}
+                    b={{ etiqueta: 'Versión B', codigo: CMP_CELLS_B }}
+                    lang="vba"
+                    pregunta="¿Dejan las dos el mismo resultado en la hoja?"
+                    opciones={[
+                        { texto: 'Sí: las dos escriben en J2, J3 y J4, porque Cells ordena sus argumentos antes de buscar la celda.', correcta: false },
+                        { texto: 'No: A escribe en la fila 10, de B10 a D10, y B escribe en la columna J, de J2 a J4.', correcta: false },
+                        { texto: 'No: A escribe en la columna J, de J2 a J4, y B escribe en la fila 10, de B10 a D10.', correcta: true, justificacion: 'Así quedó la hoja al ejecutarlas. En Cells el primer argumento es la fila y el segundo la columna. En la versión A lo que cambia es la fila, de la 2 a la 4, y la columna es siempre la 10, la J. En la versión B la fila es siempre la 10 y lo que cambia es la columna, de la 2 a la 4: B, C y D. Excel no avisó en ninguno de los dos casos.' },
+                        { texto: 'No: A escribe de J2 a J4 y B se detiene con un error, porque la celda de la fila 10 no existe todavía.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Lo que cuesta cada viaje a la hoja</h3>
+                <p>
+                    A cada <span className="inline-code">.Value</span> se le llamará aquí un viaje entre el
+                    código y la hoja. Microsoft recomienda reducir el número de veces que se transfieren datos entre
+                    Excel y el código: en lugar de recorrer las celdas de una en una, se pueden obtener o
+                    establecer los valores de todo un rango en una sola línea, con
+                    un <span className="inline-code">Variant</span> que contenga una matriz
+                    bidimensional <Cita k="microsoft2025rendimiento" loc="Leer y escribir grandes bloques de datos en una sola operación" />.
+                    Para leer, la propiedad ya lo hace: en un rango cuya primera área tiene más de una
+                    celda, <span className="inline-code">Value</span> devuelve
+                    un <span className="inline-code">Variant</span> con una matriz bidimensional de los
+                    valores de esas celdas <Cita k="microsoft2019value" loc="Comentarios" />. Esta rutina
+                    escribe cinco valores de las dos maneras; la matriz es un arreglo de cinco filas y una
+                    columna:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={BLOQUE_HOJA.vba} />
+
+                <p>
+                    La variable <span className="inline-code">datos</span> es un arreglo, y los arreglos
+                    son el tema del capítulo 7. Aquí basta con ver la diferencia: en la primera mitad hay
+                    un <span className="inline-code">.Value</span> dentro del ciclo, y se ejecuta cinco
+                    veces; en la segunda, el ciclo solo llena la variable, y
+                    el <span className="inline-code">.Value</span> va después, una vez. Las cinco filas de
+                    las dos columnas quedaron iguales. Con cinco valores no se midió el tiempo. Con mil o
+                    más, sí:
+                </p>
+
                 <RendimientoHoja filas={HOJA_FILAS} resolucion={HOJA_RESOLUCION}
                     medicion="en Excel 16.115 para Mac el 23 de noviembre de 2026: la mediana de tres repeticiones por tamaño" />
+
+                <p>
+                    Con 100 000 valores, escribir celda por celda tardó 3,90 segundos y escribir en un
+                    bloque, 0,053: unas 74 veces menos. Leer fue más rápido de las dos maneras, 0,086
+                    segundos frente a 0,0096, unas 9 veces menos. Con mil valores la diferencia ya estaba:
+                    0,039 segundos frente a 0,0006. Las dos versiones escribían los mismos valores, y en el
+                    tiempo de la versión en bloque está incluido llenar el arreglo. Son tiempos de un
+                    equipo y de un día: en otro computador pueden cambiar. La idea es la misma del capítulo 1, donde un
+                    ejercicio comparó leer una tasa en cada vuelta de un ciclo con leerla una sola vez
+                    antes de empezar.
+                </p>
+
+                <Ejercicio tipo="E7"><MCQ
+                    pregunta={<>Según la medición, dejar 100 000 valores en la hoja tardó 3,90 segundos celda por celda y 0,053 segundos en un bloque. Los valores eran los mismos y se calculaban igual. ¿Qué le dice eso a quien tiene una macro lenta que llena un reporte?</>}
+                    opciones={[
+                        { texto: 'Que el tiempo estaba en los viajes a la hoja y no en las cuentas: lo primero que debe mirar es si hay un .Value dentro de un ciclo.', correcta: true, justificacion: 'Las dos versiones calculan lo mismo, así que la diferencia no puede venir del cálculo. Lo que cambió fue cuántas veces se fue a la hoja: 100 000 o una. Por eso, ante una macro lenta que escribe en la hoja, lo primero que se busca es un .Value repetido en cada vuelta.' },
+                        { texto: 'Que las cuentas eran demasiado pesadas para VBA, y que conviene pasar el cálculo a fórmulas de la hoja.', correcta: false },
+                        { texto: 'Que el reporte tiene demasiadas filas: con mil valores, las dos maneras de escribir tardaron lo mismo.', correcta: false },
+                        { texto: 'Que el computador es lento: 3,90 segundos para 100 000 valores es un problema del equipo y no de la macro.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <Box type="tip" label="Lo que sigue">
+                    Ya sabe dónde se escribe una rutina, cómo se declara lo que usa y cómo llega a la hoja.
+                    Falta lo que pide el resultado de aprendizaje: seguirla instrucción por instrucción
+                    mientras se ejecuta. Eso es la sección 6.
+                </Box>
             </div>
         );
 
@@ -5100,8 +5436,8 @@ End Sub`,
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "702e9f02abdf7b87da6a15be4720e55f9234fdbdec929de4528fb4f09c7c4d5c",
-  "sello": "e74de14d1a9ec9395f859894aa0b554f7b15df03458ffd036e4f0acc17856819",
+  "huella": "e82f83b18e8a88d299b28a45abaffdf6929232d6cbf38fe9230d8b99943f5234",
+  "sello": "b52cd492a3928dbfddab33a1a864ff44b2da598357795409513f11f9660bac90",
   "orden": [
     "microsoft2017desbordamiento",
     "microsoft2018tipos",
@@ -5121,9 +5457,18 @@ End Sub`,
     "microsoft2018examinador",
     "microsoft2018declarar",
     "microsoft2018usoeficaz",
+    "microsoft2019application",
+    "microsoft2019activesheet",
+    "microsoft2019item",
+    "microsoft2019value",
+    "microsoft2019workbook",
+    "microsoft2019worksheet",
     "microsoft2019dim",
+    "microsoft2019cells",
     "microsoft2019msgbox",
+    "microsoft2019range",
     "microsoft2025guardarmacro",
+    "microsoft2025rendimiento",
     "microsoft2025macrosmac",
     "microsoft2026formatos",
     "microsoft2026atajos",
@@ -5238,17 +5583,65 @@ End Sub`,
       "html": "Microsoft. (2018q, diciembre 26). \u003cem>Uso eficaz de tipos de datos (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\u003c/a>",
       "plano": "Microsoft. (2018q, diciembre 26). Uso eficaz de tipos de datos (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently"
     },
-    "microsoft2019dim": {
+    "microsoft2019application": {
       "autor": "Microsoft",
       "anio": "2019a",
-      "html": "Microsoft. (2019a, mayo 24). \u003cem>Instrucción Dim\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\u003c/a>",
-      "plano": "Microsoft. (2019a, mayo 24). Instrucción Dim. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement"
+      "html": "Microsoft. (2019a, marzo 27). \u003cem>Objeto Application (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.application(object)\">https://learn.microsoft.com/es-es/office/vba/api/excel.application(object)\u003c/a>",
+      "plano": "Microsoft. (2019a, marzo 27). Objeto Application (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.application(object)"
+    },
+    "microsoft2019activesheet": {
+      "autor": "Microsoft",
+      "anio": "2019b",
+      "html": "Microsoft. (2019b, abril 4). \u003cem>Propiedad Application.ActiveSheet (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.application.activesheet\">https://learn.microsoft.com/es-es/office/vba/api/excel.application.activesheet\u003c/a>",
+      "plano": "Microsoft. (2019b, abril 4). Propiedad Application.ActiveSheet (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.application.activesheet"
+    },
+    "microsoft2019item": {
+      "autor": "Microsoft",
+      "anio": "2019c",
+      "html": "Microsoft. (2019c, mayo 11). \u003cem>Propiedad Range.Item (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.range.item\">https://learn.microsoft.com/es-es/office/vba/api/excel.range.item\u003c/a>",
+      "plano": "Microsoft. (2019c, mayo 11). Propiedad Range.Item (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.range.item"
+    },
+    "microsoft2019value": {
+      "autor": "Microsoft",
+      "anio": "2019d",
+      "html": "Microsoft. (2019d, mayo 11). \u003cem>Propiedad Range.Value (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.range.value\">https://learn.microsoft.com/es-es/office/vba/api/excel.range.value\u003c/a>",
+      "plano": "Microsoft. (2019d, mayo 11). Propiedad Range.Value (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.range.value"
+    },
+    "microsoft2019workbook": {
+      "autor": "Microsoft",
+      "anio": "2019e",
+      "html": "Microsoft. (2019e, mayo 15). \u003cem>Objeto Workbook (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.workbook\">https://learn.microsoft.com/es-es/office/vba/api/excel.workbook\u003c/a>",
+      "plano": "Microsoft. (2019e, mayo 15). Objeto Workbook (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.workbook"
+    },
+    "microsoft2019worksheet": {
+      "autor": "Microsoft",
+      "anio": "2019f",
+      "html": "Microsoft. (2019f, mayo 15). \u003cem>Objeto Worksheet (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet\">https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet\u003c/a>",
+      "plano": "Microsoft. (2019f, mayo 15). Objeto Worksheet (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet"
+    },
+    "microsoft2019dim": {
+      "autor": "Microsoft",
+      "anio": "2019g",
+      "html": "Microsoft. (2019g, mayo 24). \u003cem>Instrucción Dim\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\u003c/a>",
+      "plano": "Microsoft. (2019g, mayo 24). Instrucción Dim. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement"
+    },
+    "microsoft2019cells": {
+      "autor": "Microsoft",
+      "anio": "2019h",
+      "html": "Microsoft. (2019h, mayo 30). \u003cem>Propiedad Worksheet.Cells (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet.cells\">https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet.cells\u003c/a>",
+      "plano": "Microsoft. (2019h, mayo 30). Propiedad Worksheet.Cells (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.worksheet.cells"
     },
     "microsoft2019msgbox": {
       "autor": "Microsoft",
-      "anio": "2019b",
-      "html": "Microsoft. (2019b, agosto 14). \u003cem>Función MsgBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\u003c/a>",
-      "plano": "Microsoft. (2019b, agosto 14). Función MsgBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function"
+      "anio": "2019i",
+      "html": "Microsoft. (2019i, agosto 14). \u003cem>Función MsgBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\u003c/a>",
+      "plano": "Microsoft. (2019i, agosto 14). Función MsgBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function"
+    },
+    "microsoft2019range": {
+      "autor": "Microsoft",
+      "anio": "2019j",
+      "html": "Microsoft. (2019j, agosto 14). \u003cem>Objeto Range (Excel)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/api/excel.range(object)\">https://learn.microsoft.com/es-es/office/vba/api/excel.range(object)\u003c/a>",
+      "plano": "Microsoft. (2019j, agosto 14). Objeto Range (Excel). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/api/excel.range(object)"
     },
     "microsoft2025guardarmacro": {
       "autor": "Microsoft",
@@ -5256,11 +5649,17 @@ End Sub`,
       "html": "Microsoft. (2025a, enero 1). \u003cem>Guardar una macro\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/excel/save-a-macro\">https://support.microsoft.com/es-es/excel/save-a-macro\u003c/a>",
       "plano": "Microsoft. (2025a, enero 1). Guardar una macro. Microsoft Support. https://support.microsoft.com/es-es/excel/save-a-macro"
     },
-    "microsoft2025macrosmac": {
+    "microsoft2025rendimiento": {
       "autor": "Microsoft",
       "anio": "2025b",
-      "html": "Microsoft. (2025b, diciembre 2). \u003cem>Habilitar o deshabilitar macros en Microsoft 365 para Mac\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\">https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\u003c/a>",
-      "plano": "Microsoft. (2025b, diciembre 2). Habilitar o deshabilitar macros en Microsoft 365 para Mac. Microsoft Support. https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac"
+      "html": "Microsoft. (2025b, noviembre 11). \u003cem>Rendimiento de Excel: Sugerencias para salvar los obstáculos de rendimiento\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions\">https://learn.microsoft.com/es-es/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions\u003c/a>",
+      "plano": "Microsoft. (2025b, noviembre 11). Rendimiento de Excel: Sugerencias para salvar los obstáculos de rendimiento. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions"
+    },
+    "microsoft2025macrosmac": {
+      "autor": "Microsoft",
+      "anio": "2025c",
+      "html": "Microsoft. (2025c, diciembre 2). \u003cem>Habilitar o deshabilitar macros en Microsoft 365 para Mac\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\">https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac\u003c/a>",
+      "plano": "Microsoft. (2025c, diciembre 2). Habilitar o deshabilitar macros en Microsoft 365 para Mac. Microsoft Support. https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-for-mac"
     },
     "microsoft2026formatos": {
       "autor": "Microsoft",

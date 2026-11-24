@@ -4996,3 +4996,35 @@ Rama `claude/cap06-fase6`, sobre la fase 5; sin fusionar.
   hay regla que avise. Y Zotero volvió a amanecer fuera de la colección de LPF.
 - **Estado del verificador:** 7 fallos, todos por lo que falta escribir (E1, un E7 y
   cinco motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 7: sección 5, «La hoja: Range y Cells» · 2026-11-24
+
+Rama `claude/cap06-fase7`, sobre la fase 6; sin fusionar.
+
+- **Contenido:** los cuatro niveles de objetos con el mapa de la fase 2, `Range` y
+  `Cells`, la propiedad `Value`, la hoja activa y la hoja con nombre, un ciclo que
+  recorre filas, y los tiempos de celda por celda frente a bloque con la gráfica de la
+  fase 2. Solo VBA. Un E4 y un E7, probados en el navegador con respuesta buena y mala.
+  Los arreglos solo se asoman: se remite al capítulo 7.
+- **Fuentes:** tanda 12 en Zotero, nueve páginas de la lista aprobada. 18 afirmaciones
+  citadas.
+- **Verificador sin contexto:** 12 de 14 respaldaban y 2 decían más que su pasaje.
+  Señaló 22 frases sin cita. Las de fondo: una razón «74 veces» que con las cifras
+  redondeadas del propio texto daba 78; «la misma macro y el mismo resultado» para dos
+  rutinas cuyo resultado nunca se comparó; el orden fila, columna apoyado en la página de
+  `Item` sin el pasaje que la une con `Cells`; y una consecuencia de la hoja activa que
+  no se pudo observar con un libro de una sola hoja. En la segunda lectura, una de las
+  seis frases cambiadas volvió a salir parcial y se corrigió otra vez.
+- **Ejecutado en Excel:** 17 bloques comparados coinciden, predichos antes de ejecutar.
+  Las dos rutinas del E4 se ejecutaron a mano: una llenó J2:J4 y la otra B10:D10. De
+  paso se vio que una celda que recibe un `Currency` queda con formato de moneda.
+- **Dicho como no comprobado:** el efecto de tener otra hoja activa, y el nombre de la
+  hoja nueva en un Excel en español.
+- **Huecos:** la regla 6 exige cuatro lenguajes a todo `Comparador` y no admite declarar
+  un ejercicio de solo VBA; se pasó el código como texto con `lang="vba"`, que el
+  componente ya soporta. Queda sin regla que distinga «falta un lenguaje» de «es de un
+  solo lenguaje a propósito». La sonda de 320 px cazó un código en línea de 358 px. Y la
+  aprobación del control de pantalla volvió a vencer sin respuesta: la sección se
+  escribió y se verificó con las salidas predichas, y se ejecutó después.
+- **Estado del verificador:** 5 fallos, todos por lo que falta escribir (los E1 y
+  cuatro motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
