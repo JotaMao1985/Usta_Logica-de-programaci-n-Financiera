@@ -4965,3 +4965,34 @@ Rama `claude/cap06-fase5`, sobre la fase 4; sin fusionar.
   esperó al docente.
 - **Estado del verificador:** 9 fallos, todos por lo que falta escribir (E1, E3, E7 y
   seis motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 6: sección 4, «Tipos de datos y Currency» · 2026-11-24
+
+Rama `claude/cap06-fase6`, sobre la fase 5; sin fusionar.
+
+- **Contenido:** quién decide el tipo (los mismos cinco datos en los cuatro lenguajes),
+  la tabla de los siete tipos del curso, `Currency` con la suma de cien centavos del
+  capítulo 1, lo que `Currency` no guarda (una tasa de cinco decimales), el error 6,
+  las conversiones, `Round` y `Format`, y `Variant`. Un E7, un E3 en cuatro lenguajes y
+  el E8 de `Currency` frente a `Double`. El E4 pasa a la sección 5.
+- **Fuentes:** tanda 11 en Zotero, cuatro páginas de la lista aprobada. 15 afirmaciones
+  citadas. `Round` y `Format` no estaban en la lista: la sección dice de ellas solo lo
+  ejecutado, y lo declara.
+- **Verificador sin contexto:** 11 de 14 respaldaban y 3 decían más que su pasaje (una
+  fila de la tabla, el número del error atribuido a un pasaje que no lo traía y una
+  promoción de tipos generalizada). Señaló además 18 frases sin cita: un «todas las
+  variables llevan su As» que la propia sección contradecía, una rutina con la cuota en
+  `Double` sin salvedad, un «no alcanzan para una tasa» falso para la tasa del primer
+  bloque, y un argumento contra `Variant` que no valía para el caso de la sección. Todo
+  aplicado; las tres frases reescritas o añadidas tuvieron segunda lectura. Cinco
+  localizadores «párrafo inicial» se precisaron.
+- **Ejecutado en Excel:** doce bloques comparados coinciden; las salidas se predijeron
+  antes de ejecutar. El error 6 se vio con dos `Integer` cuyo producto cabía en el
+  `Long` de destino.
+- **Hallazgo para la fase 11:** el capítulo 2 dice que VBA redondea «al entero más
+  cercano»; con 2,5 y 3,5 Excel dejó 2 y 4. La sección 4 lo dice como dato ejecutado.
+- **Huecos:** `cat` de R escribe 1e+06 y 9e+05 para un millón y novecientos mil, y eso
+  obligó a cambiar dos veces el capital del E3 hasta que la salida fuera legible; no
+  hay regla que avise. Y Zotero volvió a amanecer fuera de la colección de LPF.
+- **Estado del verificador:** 7 fallos, todos por lo que falta escribir (E1, un E7 y
+  cinco motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.

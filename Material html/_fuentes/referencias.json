@@ -643,6 +643,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018boolean",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Tipo de datos Boolean",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018codigo",
     "type": "webpage",
     "author": [
@@ -1168,6 +1199,99 @@
     },
     "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement",
     "language": "en"
+  },
+  {
+    "id": "microsoft2018tipos",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Data type summary",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary",
+    "language": "en"
+  },
+  {
+    "id": "microsoft2018usoeficaz",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Uso eficaz de tipos de datos (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          26
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018variant",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Tipo de datos Variant",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          19
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type",
+    "language": "es"
   },
   {
     "id": "microsoft2019dim",
