@@ -674,6 +674,68 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018const",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Const statement (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement",
+    "language": "en"
+  },
+  {
+    "id": "microsoft2018declarar",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Declaración de variables (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          21
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018doble",
     "type": "webpage",
     "author": [
@@ -829,6 +891,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018inputbox",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Función InputBox (Visual Basic para Aplicaciones)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          13
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018integer",
     "type": "webpage",
     "author": [
@@ -888,6 +981,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018optionexplicit",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Instrucción Option Explicit (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement",
     "language": "es"
   },
   {
@@ -984,6 +1108,68 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018selectcase",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Select Case statement (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement",
+    "language": "en"
+  },
+  {
+    "id": "microsoft2018sub",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Sub statement (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement",
+    "language": "en"
+  },
+  {
     "id": "microsoft2019dim",
     "type": "webpage",
     "author": [
@@ -1012,6 +1198,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2019msgbox",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Función MsgBox (Visual Basic para Aplicaciones)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          8,
+          14
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function",
     "language": "es"
   },
   {

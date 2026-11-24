@@ -3536,7 +3536,7 @@ End Sub`}</Zona>
                     pregunta={<>La ventana Inmediato está vacía. Con el cursor dentro de <span className="inline-code">OtroAcuerdo</span>, se elige <span className="inline-code">Run › Run Sub/UserForm</span> dos veces seguidas. ¿Qué queda en la ventana Inmediato?</>}
                     opciones={[
                         { texto: 'Una línea, con 4 y -150000: la segunda ejecución reemplaza lo que escribió la primera.', correcta: false },
-                        { texto: 'Dos líneas iguales, con 4 y -150000: cada ejecución empieza de nuevo y añade su línea.', correcta: true, justificacion: 'Así quedó al hacerlo en Excel. Son dos cosas distintas. Las variables de la rutina nacen otra vez en cada ejecución, y por eso la segunda vuelve a contar desde 1 850 000 y da lo mismo. La ventana Inmediato, en cambio, no se borra entre ejecuciones: guarda todo lo que se ha escrito en ella.' },
+                        { texto: 'Dos líneas iguales, con 4 y -150000: cada ejecución empieza de nuevo y añade su línea.', correcta: true, justificacion: 'Así quedó al hacerlo en Excel. Son dos cosas distintas. La rutina empieza otra vez desde su primera línea: vuelve a asignar 1 850 000 al saldo y 0 a los meses, y por eso da lo mismo. La ventana Inmediato, en cambio, no se borra entre ejecuciones: guarda todo lo que se ha escrito en ella.' },
                         { texto: 'Dos líneas distintas: 4 y -150000, y luego 8 y -300000, porque las variables conservan su valor.', correcta: false },
                         { texto: 'Una línea y un mensaje de error: una rutina no se puede ejecutar dos veces sin cerrar el editor.', correcta: false },
                     ]}
@@ -3562,8 +3562,9 @@ End Sub`}</Zona>
                     nada <Cita k="microsoft2018print" loc="Observaciones" />, y que si no se indica otra
                     cosa lo siguiente se imprime en la línea
                     siguiente <Cita k="microsoft2018print" loc="Sintaxis" />. Las dos cosas juntas dan una
-                    línea en blanco, si esa variable está vacía fuera de la rutina; eso último no se
-                    comprobó aparte.
+                    línea en blanco si esa variable está vacía fuera de la rutina, y lo está: a
+                    {' '}<span className="inline-code">? TypeName(saldo)</span> la ventana
+                    respondió <span className="inline-code">Empty</span>.
                 </p>
 
                 <h3>Cómo separa los datos Debug.Print</h3>
@@ -3641,13 +3642,501 @@ End Sub`}</Zona>
             </div>
         );
 
-        // Sección 3 — «Del algoritmo al código». Por escribir en la fase 5 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        /* ============================================================
+           SECCIÓN 3 — DEL ALGORITMO AL CÓDIGO
+           Fase 5 del plan. Cuatro lenguajes en el algoritmo que se
+           traduce y en dos ejercicios; lo que es solo de VBA (valores
+           iniciales, Option Explicit, Select Case) va en bloques de un
+           lenguaje, que ejecuta `ejecutar_vba.py`.
+        ============================================================ */
+        const ALG_INTERES = {
+            pseudo: `Inicio
+    // Interes simple de un credito a tres meses
+    capital <- 2000000
+    tasa    <- 0.015
+    meses   <- 3
+
+    interes <- capital * tasa * meses
+    total   <- capital + interes
+
+    Escribir "Interes: ", interes
+    //> Interes: 90000
+    Escribir "Total: ", total
+    //> Total: 2090000
+Fin`,
+            python: `# Interes simple de un credito a tres meses
+capital = 2_000_000
+tasa    = 0.015
+meses   = 3
+
+interes = capital * tasa * meses
+total   = capital + interes
+
+print("Interes:", round(interes))
+#> Interes: 90000
+print("Total:", round(total))
+#> Total: 2090000`,
+            r: `# Interes simple de un credito a tres meses
+capital <- 2000000
+tasa    <- 0.015
+meses   <- 3
+
+interes <- capital * tasa * meses
+total   <- capital + interes
+
+cat("Interes:", interes, "\\n")
+#> Interes: 90000
+cat("Total:", total, "\\n")
+#> Total: 2090000`,
+            vba: `Option Explicit
+
+Sub InteresSimple()
+    ' Interes simple de un credito a tres meses
+    Dim capital As Currency, tasa As Double, meses As Integer
+    Dim interes As Currency, total As Currency
+
+    capital = 2000000
+    tasa = 0.015
+    meses = 3
+
+    interes = capital * tasa * meses
+    total = capital + interes
+
+    Debug.Print "Interes:"; interes
+    '> Interes: 90000
+    Debug.Print "Total:"; total
+    '> Total: 2090000
+End Sub`,
+        };
+
+        // Lo que vale una variable declarada a la que nadie le ha asignado nada.
+        const VALORES_INICIALES = {
+            vba: `Option Explicit
+
+Sub ValoresIniciales()
+    Dim cuotas As Integer, saldo As Currency, nombre As String
+    Dim tasaA, tasaB As Double
+
+    Debug.Print cuotas; saldo
+    '>  0  0
+    Debug.Print "[" & nombre & "]"
+    '> []
+    Debug.Print TypeName(tasaA)
+    '> Empty
+    Debug.Print TypeName(tasaB)
+    '> Double
+End Sub`,
+        };
+
+        // El caso de la motivación. SIN Option Explicit, a propósito: es lo
+        // que deja pasar el nombre mal escrito de la línea 7.
+        const SIN_EXPLICIT = {
+            vba: `Sub TotalDeIntereses()
+    Dim interes As Currency, totalInteres As Currency
+
+    interes = 1000000 * 0.02
+    totalInteres = totalInteres + interes
+    interes = 2500000 * 0.02
+    totalIntres = totalInteres + interes
+    interes = 800000 * 0.02
+    totalInteres = totalInteres + interes
+
+    Debug.Print "Total de intereses:"; totalInteres
+    '> Total de intereses: 36000
+    Debug.Print "La variable que nadie declaro:"; totalIntres
+    '> La variable que nadie declaro: 70000
+End Sub`,
+        };
+
+        /* E3 · el nombre mal escrito, en los cuatro lenguajes. En ninguno
+           hay error: la línea crea otra variable. Ejecutado: los cuatro
+           informan 2 600 000 (el VBA, con `--incluir ERROR_ABONOS_LINEAS`). */
+        const ERROR_ABONOS_LINEAS = {
+            pseudo: [
+                'Inicio',
+                '    saldo <- 5000000',
+                '    abono <- 1200000',
+                '    saldo <- saldo - abono',
+                '    slado <- saldo - abono',
+                '    saldo <- saldo - abono',
+                '    Escribir "Saldo: ", saldo',
+                'Fin',
+            ],
+            python: [
+                'saldo = 5_000_000',
+                'abono = 1_200_000',
+                'saldo = saldo - abono',
+                'slado = saldo - abono',
+                'saldo = saldo - abono',
+                'print("Saldo:", saldo)',
+            ],
+            r: [
+                'saldo <- 5000000',
+                'abono <- 1200000',
+                'saldo <- saldo - abono',
+                'slado <- saldo - abono',
+                'saldo <- saldo - abono',
+                'cat("Saldo:", saldo, "\\n")',
+            ],
+            vba: [
+                'Sub TresAbonos()',
+                '    Dim saldo As Currency, abono As Currency',
+                '    saldo = 5000000',
+                '    abono = 1200000',
+                '    saldo = saldo - abono',
+                '    slado = saldo - abono',
+                '    saldo = saldo - abono',
+                '    Debug.Print "Saldo:"; saldo',
+                'End Sub',
+            ],
+        };
+        const ERROR_ABONOS_LINEA_OK = { pseudo: 5, python: 4, r: 4, vba: 6 };
+        const explicacionAbonos = (linea, mala, buena, cierre) => (
+            <>
+                La <strong>línea {linea}</strong>, <span className="inline-code">{mala}</span>. A la izquierda dice
+                {' '}<span className="inline-code">slado</span> y no <span className="inline-code">saldo</span>. La resta se
+                hace bien, pero su resultado se guarda en una variable nueva que nadie vuelve a leer, y
+                {' '}<span className="inline-code">saldo</span> se queda como estaba. Las otras dos restas sí llegan: de los
+                tres abonos se registran dos. El arreglo es <span className="inline-code">{buena}</span>. {cierre}
+            </>
+        );
+        const ERROR_ABONOS_EXPLICACION = {
+            pseudo: explicacionAbonos(5, 'slado <- saldo - abono', 'saldo <- saldo - abono', 'El pseudocódigo del curso no declara variables, así que nada en la notación lo impide: lo encuentra quien hace la traza.'),
+            python: explicacionAbonos(4, 'slado = saldo - abono', 'saldo = saldo - abono', 'Python crea la variable al asignarle, sin avisar. Habría protestado si el nombre mal escrito estuviera a la derecha, donde se lee.'),
+            r: explicacionAbonos(4, 'slado <- saldo - abono', 'saldo <- saldo - abono', 'R crea la variable al asignarle, sin avisar. Habría protestado si el nombre mal escrito estuviera a la derecha, donde se lee.'),
+            vba: explicacionAbonos(6, 'slado = saldo - abono', 'saldo = saldo - abono', 'Este módulo no lleva Option Explicit, y por eso VBA crea la variable sin avisar. Con Option Explicit antes de sus procedimientos, la rutina no habría llegado a ejecutarse.'),
+        };
+
+        // E5 · la misma rutina en los cuatro lenguajes; en VBA hay tres líneas
+        // que los otros no tienen, y su orden es lo que se ejercita.
+        const ORDENA_DESCUENTO = {
+            pseudo: ['Inicio', 'precio <- 480000', 'descuento <- precio * 0.1', 'neto <- precio - descuento',
+                'Escribir "Neto: ", neto', 'Fin'],
+            python: ['precio = 480_000', 'descuento = precio * 0.1', 'neto = precio - descuento',
+                'print("Neto:", round(neto))'],
+            r: ['precio <- 480000', 'descuento <- precio * 0.1', 'neto <- precio - descuento',
+                'cat("Neto:", neto, "\\n")'],
+            vba: ['Option Explicit', 'Sub PrecioNeto()', 'Dim precio As Currency, descuento As Currency, neto As Currency',
+                'precio = 480000', 'descuento = precio * 0.1', 'neto = precio - descuento',
+                'Debug.Print "Neto:"; neto', 'End Sub'],
+        };
+
+        const SELECT_MORA = {
+            vba: `Option Explicit
+
+Sub ClasificarMora()
+    Dim dias As Integer, gestion As String
+
+    dias = 45
+    Select Case dias
+        Case 0
+            gestion = "Al dia"
+        Case 1 To 30
+            gestion = "Recordatorio"
+        Case 31 To 90
+            gestion = "Cobro administrativo"
+        Case Is > 90
+            gestion = "Cobro juridico"
+        Case Else
+            gestion = "Dato invalido"
+    End Select
+
+    Debug.Print dias; gestion
+    '>  45 Cobro administrativo
+End Sub`,
+        };
+
+        // Para el E2 del orden de los casos. No declara salida: la respuesta
+        // es el ejercicio. Ejecutado con `--incluir SELECT_ORDEN`.
+        const SELECT_ORDEN = {
+            vba: `Option Explicit
+
+Sub ClasificarMoraB()
+    Dim dias As Integer, gestion As String
+
+    dias = 120
+    Select Case dias
+        Case Is > 30
+            gestion = "Cobro administrativo"
+        Case Is > 90
+            gestion = "Cobro juridico"
+        Case Else
+            gestion = "Recordatorio"
+    End Select
+
+    Debug.Print gestion
+End Sub`,
+        };
+
         const Cap3Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                <Motivacion icon="fa-spell-check"
+                    gancho="¿Qué hace VBA cuando se le nombra una variable que no existe? Depende de una línea que va antes de todo lo demás.">
+                    Un analista escribe una macro que suma los intereses del mes de tres créditos: 20 000,
+                    50 000 y 16 000. La macro corre sin un solo mensaje y deja en la ventana Inmediato un
+                    total de 36 000. Deberían ser 86 000. Revisa las tres cuentas y están bien. Lo que está
+                    mal es una letra: en la segunda suma escribió <span className="inline-code">totalIntres</span> donde
+                    iba <span className="inline-code">totalInteres</span>, y VBA, en lugar de protestar, creó
+                    una variable con ese nombre y guardó ahí la suma. Los 50 000 nunca llegaron al total.
+                </Motivacion>
+
+                <Ilustrativo>
+                    El analista y los tres créditos son un caso inventado. Las cifras salen de la rutina
+                    {' '}<span className="inline-code">TotalDeIntereses</span>, más abajo, ejecutada en Excel.
+                </Ilustrativo>
+
+                <h3>De Inicio y Fin a Sub y End Sub</h3>
+                <p>
+                    Un algoritmo en pseudocódigo empieza en <span className="inline-code">Inicio</span> y
+                    termina en <span className="inline-code">Fin</span>. En VBA esas dos líneas son
+                    {' '}<span className="inline-code">Sub</span> y <span className="inline-code">End Sub</span>. La
+                    instrucción <span className="inline-code">Sub</span> declara el nombre, los argumentos y el
+                    código que forman el cuerpo de un procedimiento <Cita k="microsoft2018sub" loc="párrafo inicial" />.
+                    Y no es opcional: todo el código ejecutable tiene que estar dentro de un
+                    procedimiento <Cita k="microsoft2018sub" loc="Remarks" />. Por eso el capítulo 5 advertía,
+                    de un fragmento de VBA que venía sin su <span className="inline-code">Sub</span>, que «así
+                    como está no corre en el editor».
+                </p>
+
+                <CodeTabs
+                    titulo="El mismo algoritmo, del pseudocódigo a VBA"
+                    bloques={ALG_INTERES}
+                    nota="Las cuentas son las mismas en los cuatro. Lo que VBA añade está antes y alrededor: Option Explicit, Sub y End Sub, y las dos líneas Dim."
+                />
+
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Pseudocódigo</th><th>VBA</th><th>Qué cambia</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span className="inline-code">Inicio</span> … <span className="inline-code">Fin</span></td>
+                                <td><span className="inline-code">Sub Nombre()</span> … <span className="inline-code">End Sub</span></td>
+                                <td>El procedimiento lleva nombre, y con ese nombre se ejecuta.</td>
+                            </tr>
+                            <tr>
+                                <td>(no se declara)</td>
+                                <td><span className="inline-code">Dim capital As Currency</span></td>
+                                <td>En este curso, cada variable se anuncia con su tipo antes de usarla.</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">capital &lt;- 2000000</span></td>
+                                <td><span className="inline-code">capital = 2000000</span></td>
+                                <td>La asignación se escribe con el signo igual.</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">Escribir "Interes: ", interes</span></td>
+                                <td><span className="inline-code">Debug.Print "Interes:"; interes</span></td>
+                                <td>La salida va a la ventana Inmediato, con las reglas de la sección 2.</td>
+                            </tr>
+                            <tr>
+                                <td><span className="inline-code">// comentario</span></td>
+                                <td><span className="inline-code">' comentario</span></td>
+                                <td>El comentario empieza con un apóstrofo.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente propia>comparando las pestañas de pseudocódigo y de VBA del bloque anterior</Fuente>
+
+                <p>
+                    Un <span className="inline-code">Sub</span> ejecuta instrucciones pero no devuelve un
+                    valor: a diferencia de un procedimiento
+                    {' '}<span className="inline-code">Function</span>, que devuelve un valor, un
+                    {' '}<span className="inline-code">Sub</span> no puede usarse en una
+                    expresión <Cita k="microsoft2018sub" loc="Remarks" />. Las funciones son el tema del
+                    capítulo 8.
+                </p>
+
+                <OrdenaPasos
+                    enunciado="Reconstruya la rutina que calcula el precio neto de un producto de 480 000 con el 10 % de descuento. En la pestaña de VBA hay tres líneas que las otras no tienen: su lugar es lo que importa."
+                    pasos={ORDENA_DESCUENTO}
+                    pista="Tres preguntas: qué tiene que conocerse antes de calcular el descuento, qué tiene que existir antes de asignarle un valor a una variable y qué va antes de cualquier procedimiento."
+                />
+
+                <h3>Declarar: lo que hace Dim</h3>
+                <p>
+                    El pseudocódigo del curso usa una variable sin anunciarla. VBA permite anunciarla con
+                    {' '}<span className="inline-code">Dim</span>, que dentro de un procedimiento crea una variable
+                    de ese procedimiento <Cita k="microsoft2018declarar" loc="introducción" />. La variable
+                    nace con un valor: una numérica se inicializa en 0 y una cadena de longitud variable,
+                    en la cadena vacía <Cita k="microsoft2019dim" loc="Observaciones" />. Es lo que los
+                    capítulos 2, 4 y 5 dijeron de paso, que <span className="inline-code">Dim</span> deja
+                    la variable en 0, y aquí se ve ejecutado:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={VALORES_INICIALES.vba} />
+
+                <p>
+                    Las dos últimas líneas muestran una trampa. En <span className="inline-code">Dim tasaA, tasaB As Double</span> parece
+                    que las dos son <span className="inline-code">Double</span>, y no: el tipo acompaña solo al
+                    nombre que lo lleva. Microsoft lo dice con su propio ejemplo: en
+                    {' '}<span className="inline-code">Dim intX, intY, intZ As Integer</span> solo
+                    {' '}<span className="inline-code">intZ</span> es entera <Cita k="microsoft2018declarar" loc="introducción" />,
+                    y a la que no se le da tipo se le asigna
+                    {' '}<span className="inline-code">Variant</span> por omisión <Cita k="microsoft2018declarar" loc="introducción" />,
+                    que nace vacía, en <span className="inline-code">Empty</span> <Cita k="microsoft2019dim" loc="Observaciones" />.
+                    Por eso las rutinas de este curso repiten <span className="inline-code">As</span> en cada
+                    nombre: <span className="inline-code">Dim saldo As Currency, abono As Currency, meses As Integer</span>.
+                    Los tipos son el tema de la sección 4.
+                </p>
+                <p>
+                    Las variables locales de un procedimiento no conservan su valor de una llamada a la
+                    siguiente, salvo que el procedimiento se declare <span className="inline-code">Static</span> <Cita k="microsoft2018sub" loc="Remarks" />.
+                    Una variable suelta declarada con <span className="inline-code">Static</span> en lugar
+                    de <span className="inline-code">Dim</span> sí mantiene su valor entre llamadas <Cita k="microsoft2018declarar" loc="Instrucción Static" />.
+                    Las rutinas de este curso no usan ninguna de las dos cosas: cada ejecución empieza de
+                    cero. Se comprobó con una rutina que declara
+                    {' '}<span className="inline-code">Dim veces As Integer</span>, le suma 1 y la escribe:
+                    llamada dos veces seguidas desde la ventana Inmediato, escribió
+                    {' '}<span className="inline-code">veces = 1</span> las dos veces.
+                </p>
+
+                <h3>Option Explicit: la línea que va antes de todo</h3>
+                <p>
+                    En VBA declarar es voluntario, y ahí está el problema del caso inicial. Una variable se
+                    puede declarar de manera implícita con solo usarla en una asignación, y toda variable
+                    declarada así es de tipo <span className="inline-code">Variant</span> <Cita k="microsoft2018declarar" loc="Instrucción Option Explicit" />.
+                    Esta es la rutina del analista:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={SIN_EXPLICIT.vba} />
+
+                <p>
+                    La línea 7 no es un error para VBA. Es una declaración implícita: crea
+                    {' '}<span className="inline-code">totalIntres</span> y le asigna 70 000, mientras
+                    {' '}<span className="inline-code">totalInteres</span> se queda en 20 000 y termina en
+                    36 000.
+                </p>
+                <p>
+                    La defensa es una línea. Cuando <span className="inline-code">Option Explicit</span> aparece
+                    en un módulo, hay que declarar explícitamente todas las variables, y usar un nombre no
+                    declarado produce un error en tiempo de
+                    compilación <Cita k="microsoft2018optionexplicit" loc="Observaciones" />: la rutina no
+                    llega a ejecutarse. La instrucción tiene que aparecer en el módulo antes de cualquier
+                    procedimiento <Cita k="microsoft2018optionexplicit" loc="Observaciones" />, y por eso es
+                    la primera línea de la mayoría de las rutinas completas de VBA de los capítulos 4 y 5.
+                </p>
+
+                <Box type="info" label="Lo que dijo Excel">
+                    <p>
+                        Se copió la línea del error a un módulo que empieza con
+                        {' '}<span className="inline-code">Option Explicit</span> y se eligió
+                        {' '}<strong>Debug › Compile VBAProject</strong>. Apareció un aviso con el
+                        título <em>Microsoft Visual Basic</em> y el texto «Compile error: Variable not
+                        defined», y en el código quedó seleccionado
+                        {' '}<span className="inline-code">totalIntres =</span>, el nombre que nadie declaró.
+                    </p>
+                    <p className="mb-0">
+                        No hace falta compilar a mano. Al llamar la rutina desde la ventana Inmediato salió
+                        el mismo aviso antes de que se ejecutara ninguna línea, y al cerrarlo el editor
+                        quedó en pausa, con la línea <span className="inline-code">Sub</span> resaltada
+                        en amarillo. En un Excel en español el texto del aviso estará traducido; la
+                        traducción no se vio en este capítulo.
+                    </p>
+                </Box>
+
+                <p>
+                    El entorno de Visual Basic tiene una opción para incluir
+                    {' '}<span className="inline-code">Option Explicit</span> automáticamente en todos los módulos
+                    nuevos, que no cambia el código ya escrito <Cita k="microsoft2018declarar" loc="Instrucción Option Explicit" />.
+                    La página no dice dónde está esa opción, y en el Excel de este capítulo no se buscó:
+                    mientras tanto, se escribe a mano.
+                </p>
+
+                <Ejercicio tipo="E3"><DetectaError
+                    titulo="Tres abonos y un saldo que no cuadra"
+                    enunciado={<>Un cliente debe 5 000 000 y hace tres abonos de 1 200 000. La rutina corre sin ningún mensaje, pero el saldo que informa no es el que debería. El módulo de VBA no lleva <span className="inline-code">Option Explicit</span>. <strong>Ubique la línea, diga qué clase de error es y anticipe qué saldo informa.</strong></>}
+                    lineas={ERROR_ABONOS_LINEAS}
+                    lineaCorrecta={ERROR_ABONOS_LINEA_OK}
+                    tipos={[
+                        'De sintaxis: el lenguaje rechaza la línea y la rutina no arranca.',
+                        'De nombre: la línea crea otra variable y la resta no llega al saldo.',
+                        'De inicialización: el saldo no tenía valor cuando se le restó.',
+                        'De orden: se resta el abono antes de conocer su valor.',
+                    ]}
+                    tipoCorrecto={1}
+                    consecuencias={[
+                        'Se detiene con un error en esa línea y no informa ningún saldo.',
+                        'Informa 2 600 000: registra dos de los tres abonos.',
+                        'Informa 1 400 000: los dos nombres llegan al mismo dato.',
+                        'Informa 3 800 000: desde esa línea no vuelve a restar.',
+                    ]}
+                    consecuenciaCorrecta={1}
+                    explicacion={ERROR_ABONOS_EXPLICACION}
+                    impacto={<>El saldo correcto es <strong>1 400 000</strong> y la rutina informa <strong>2 600 000</strong>: al cliente se le cobra un abono que ya pagó. Ningún lenguaje avisó, porque asignarle a un nombre nuevo es legal en los cuatro. De los tres lenguajes reales, VBA es el único que puede rechazar la rutina antes de ejecutarla, y solo si el módulo lleva <span className="inline-code">Option Explicit</span> antes de sus procedimientos.</>}
+                /></Ejercicio>
+
+                <h3>Select Case, otra vez</h3>
+                <p>
+                    El capítulo 4 mostró <span className="inline-code">Select Case</span> con tramos escritos con
+                    {' '}<span className="inline-code">To</span> y dejó dicho que este capítulo volvería sobre él.
+                    Faltaban dos cosas. La primera es que un caso admite una lista de una o varias de
+                    tres formas: una expresión (un valor, por ejemplo), un intervalo con <span className="inline-code">To</span> o una
+                    comparación con <span className="inline-code">Is</span> <Cita k="microsoft2018selectcase" loc="Syntax" />.
+                    En el ejemplo de Microsoft las formas se separan con comas: <span className="inline-code">Case 1 To 4, 7 To 9, 11, 13, Is &gt; MaxNumber</span> <Cita k="microsoft2018selectcase" loc="Remarks" />.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={SELECT_MORA.vba} />
+
+                <Ilustrativo>
+                    Los tramos de días y los nombres de cada gestión de cobro se eligieron para el ejemplo:
+                    no son los de ninguna entidad ni los de una norma.
+                </Ilustrativo>
+
+                <p>
+                    La segunda es el orden. Si el valor coincide con más de un caso, solo se ejecutan las
+                    instrucciones del primero que coincide <Cita k="microsoft2018selectcase" loc="Remarks" />.
+                    Y si no coincide con ninguno y no hay <span className="inline-code">Case Else</span>, la
+                    ejecución sigue en la instrucción que viene después de
+                    {' '}<span className="inline-code">End Select</span> <Cita k="microsoft2018selectcase" loc="Remarks" />,
+                    sin ningún aviso: es el <span className="inline-code">Segun</span> que no asigna nada, del
+                    capítulo 4.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={SELECT_ORDEN.vba} />
+
+                <Ejercicio tipo="E2"><MCQ
+                    pregunta={<>La rutina <span className="inline-code">ClasificarMoraB</span> corre con <span className="inline-code">dias = 120</span>. ¿Qué escribe en la ventana Inmediato?</>}
+                    opciones={[
+                        { texto: 'Cobro juridico: 120 pasa de 90, y ese es el caso más exigente de los que cumple.', correcta: false },
+                        { texto: 'Cobro juridico: cumple los dos casos, se ejecutan ambos y queda el último.', correcta: false },
+                        { texto: 'Cobro administrativo: 120 pasa de 30, y ese caso está escrito primero.', correcta: true, justificacion: 'Así salió al ejecutarla. Select Case no busca el caso que mejor describe el dato: recorre los casos en el orden en que están escritos y ejecuta solo el primero que coincide. 120 es mayor que 30, y ahí termina. El caso de los 90 días no se alcanza nunca, con ningún dato. El arreglo es escribir primero el caso más exigente, o usar tramos con To que no se solapen.' },
+                        { texto: 'Recordatorio: al cumplirse dos casos a la vez, la selección pasa a Case Else.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Tres palabras que ya había leído</h3>
+                <ul>
+                    <li>
+                        <span className="inline-code">Const</span> declara constantes para usarlas en lugar de
+                        valores literales <Cita k="microsoft2018const" loc="párrafo inicial" />. Es el
+                        {' '}<span className="inline-code">Constante</span> del pseudocódigo del capítulo 2.
+                    </li>
+                    <li>
+                        <span className="inline-code">InputBox</span> muestra una pregunta en un cuadro de
+                        diálogo, espera a que el usuario escriba o pulse un botón y
+                        devuelve una cadena con el contenido del cuadro de texto <Cita k="microsoft2018inputbox" loc="párrafo inicial" />. Es el
+                        {' '}<span className="inline-code">Leer</span> de los capítulos anteriores. Como devuelve
+                        una cadena, esos capítulos la envolvían en
+                        {' '}<span className="inline-code">CCur(…)</span>, <span className="inline-code">CLng(…)</span> u otra conversión;
+                        las conversiones son de la sección 4.
+                    </li>
+                    <li>
+                        <span className="inline-code">MsgBox</span> muestra un mensaje en un cuadro de diálogo
+                        y espera a que el usuario pulse un botón <Cita k="microsoft2019msgbox" loc="párrafo inicial" />.
+                        Sirve para el resultado final; para seguir una rutina mientras corre es mejor
+                        {' '}<span className="inline-code">Debug.Print</span>, que no la detiene.
+                    </li>
+                </ul>
+
+                <Box type="tip" label="Lo que queda de esta sección">
+                    Un algoritmo pasa a VBA dentro de un <span className="inline-code">Sub</span>. Sus
+                    variables se declaran con <span className="inline-code">Dim</span>, cada una con su
+                    {' '}<span className="inline-code">As</span>, y nacen en 0 o vacías. Y el módulo empieza con
+                    {' '}<span className="inline-code">Option Explicit</span>, para que un nombre mal escrito sea un
+                    error antes de ejecutar y no una cifra equivocada después.
                 </Box>
             </div>
         );
@@ -3951,14 +4440,22 @@ End Sub`}</Zona>
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "c5282e79a9aa6528689e3a6d71f01b10efde4ff0bc313eaa89bbf79faecc19d8",
-  "sello": "e77dd43de8df046b15a712072104ef076210c8fe44d3dff47792bdcd9419f73f",
+  "huella": "0f71f17ad688ebfeaba94a045553b08ee2ad64a441082e67d2c1e4961a6d8b01",
+  "sello": "7cec1d02e904087ddea8b69a15e26b1a41f079e1014c6922b88626643d78235b",
   "orden": [
     "microsoft2018codigo",
     "microsoft2018inmediato",
     "microsoft2018proyectos",
+    "microsoft2018const",
+    "microsoft2018optionexplicit",
+    "microsoft2018selectcase",
+    "microsoft2018sub",
+    "microsoft2018inputbox",
     "microsoft2018print",
     "microsoft2018examinador",
+    "microsoft2018declarar",
+    "microsoft2019dim",
+    "microsoft2019msgbox",
     "microsoft2025guardarmacro",
     "microsoft2025macrosmac",
     "microsoft2026formatos",
@@ -3984,17 +4481,65 @@ End Sub`}</Zona>
       "html": "Microsoft. (2018c, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
       "plano": "Microsoft. (2018c, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
     },
-    "microsoft2018print": {
+    "microsoft2018const": {
       "autor": "Microsoft",
       "anio": "2018d",
-      "html": "Microsoft. (2018d, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
-      "plano": "Microsoft. (2018d, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
+      "html": "Microsoft. (2018d, diciembre 3). \u003cem>Const statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\u003c/a>",
+      "plano": "Microsoft. (2018d, diciembre 3). Const statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement"
+    },
+    "microsoft2018optionexplicit": {
+      "autor": "Microsoft",
+      "anio": "2018e",
+      "html": "Microsoft. (2018e, diciembre 3). \u003cem>Instrucción Option Explicit (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\u003c/a>",
+      "plano": "Microsoft. (2018e, diciembre 3). Instrucción Option Explicit (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement"
+    },
+    "microsoft2018selectcase": {
+      "autor": "Microsoft",
+      "anio": "2018f",
+      "html": "Microsoft. (2018f, diciembre 3). \u003cem>Select Case statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\u003c/a>",
+      "plano": "Microsoft. (2018f, diciembre 3). Select Case statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement"
+    },
+    "microsoft2018sub": {
+      "autor": "Microsoft",
+      "anio": "2018g",
+      "html": "Microsoft. (2018g, diciembre 3). \u003cem>Sub statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\u003c/a>",
+      "plano": "Microsoft. (2018g, diciembre 3). Sub statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement"
+    },
+    "microsoft2018inputbox": {
+      "autor": "Microsoft",
+      "anio": "2018h",
+      "html": "Microsoft. (2018h, diciembre 13). \u003cem>Función InputBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\u003c/a>",
+      "plano": "Microsoft. (2018h, diciembre 13). Función InputBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function"
+    },
+    "microsoft2018print": {
+      "autor": "Microsoft",
+      "anio": "2018i",
+      "html": "Microsoft. (2018i, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
+      "plano": "Microsoft. (2018i, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
     },
     "microsoft2018examinador": {
       "autor": "Microsoft",
-      "anio": "2018e",
-      "html": "Microsoft. (2018e, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
-      "plano": "Microsoft. (2018e, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
+      "anio": "2018j",
+      "html": "Microsoft. (2018j, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
+      "plano": "Microsoft. (2018j, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
+    },
+    "microsoft2018declarar": {
+      "autor": "Microsoft",
+      "anio": "2018k",
+      "html": "Microsoft. (2018k, diciembre 21). \u003cem>Declaración de variables (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\u003c/a>",
+      "plano": "Microsoft. (2018k, diciembre 21). Declaración de variables (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables"
+    },
+    "microsoft2019dim": {
+      "autor": "Microsoft",
+      "anio": "2019a",
+      "html": "Microsoft. (2019a, mayo 24). \u003cem>Instrucción Dim\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement\u003c/a>",
+      "plano": "Microsoft. (2019a, mayo 24). Instrucción Dim. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/dim-statement"
+    },
+    "microsoft2019msgbox": {
+      "autor": "Microsoft",
+      "anio": "2019b",
+      "html": "Microsoft. (2019b, agosto 14). \u003cem>Función MsgBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function\u003c/a>",
+      "plano": "Microsoft. (2019b, agosto 14). Función MsgBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/msgbox-function"
     },
     "microsoft2025guardarmacro": {
       "autor": "Microsoft",

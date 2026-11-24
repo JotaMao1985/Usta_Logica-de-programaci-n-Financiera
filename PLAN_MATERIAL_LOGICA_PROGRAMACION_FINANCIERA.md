@@ -4928,3 +4928,40 @@ Rama `claude/cap06-fase4`, sobre la fase 3; sin fusionar.
   cuando va seguido de texto. Y el portapapeles lo comparte todo el equipo: un pegado
   metió en el módulo una ruta ajena; copiar y pegar deben ir en la misma tanda.
 - **Estado del verificador:** 10 fallos, todos por lo que falta escribir.
+
+### Tarea 16 · Capítulo 6, fase 5: sección 3, «Del algoritmo al código» · 2026-11-23
+
+Rama `claude/cap06-fase5`, sobre la fase 4; sin fusionar.
+
+- **Contenido:** de Inicio y Fin a `Sub` y `End Sub` (el mismo algoritmo en los cuatro
+  lenguajes y una tabla de equivalencias), lo que hace `Dim`, `Option Explicit` con el
+  caso de la variable mal escrita, `Select Case` con `To` y el orden de los casos, y
+  `Const`, `InputBox` y `MsgBox`. Un E5, un E3 y un E2, probados en el navegador con
+  respuesta buena y mala. `Select Case … To` no tenía sección en el plan maestro: quedó
+  aquí (decisión 5 del plan del capítulo).
+- **Fuentes:** tanda 10 en Zotero, siete páginas de Microsoft; `Sub`, `Select Case` y
+  `Const` en su versión inglesa, porque la traducción está rota. 21 afirmaciones citadas.
+- **Verificador sin contexto:** de 19 frases, 15 respaldaban y 4 decían más que su
+  pasaje. Leyó además la sección entera y señaló diez frases sin cita; entre ellas un
+  error de la motivación (decía que la variable mal escrita guardó 50 000 y guarda
+  70 000) y una prueba que no probaba nada: ejecutar `OtroAcuerdo` dos veces no muestra
+  que las variables locales no sobreviven, porque la rutina reasigna todo al empezar. El
+  mismo razonamiento estaba en un ejercicio de la sección 2, ya confirmada; se corrigió
+  allí también. Dos citas se partieron en dos; las dos notas nuevas llevan la redacción
+  que propuso el verificador y no tuvieron segunda lectura.
+- **Ejecutado en Excel:** los cinco bloques con salida declarada coinciden y los tres
+  mostrados dan lo que dice el texto. El aviso de `Option Explicit` se copió de la
+  pantalla: «Compile error: Variable not defined», con el nombre no declarado
+  seleccionado; sale igual al compilar que al llamar la rutina. Una rutina con un
+  contador, llamada dos veces, escribió 1 las dos veces: esa sí es la prueba de que las
+  variables locales empiezan de cero. Y `? TypeName(saldo)` en Inmediato respondió
+  `Empty`, lo que cierra el pendiente de la sección 2.
+- **Dicho como no comprobado:** dónde está la opción que escribe `Option Explicit` en
+  los módulos nuevos, y el texto del aviso en un Excel en español.
+- **Huecos:** `preparar` sin `--incluir` genera otro arnés (cinco bloques, otra huella)
+  y pisa el anterior sin avisar; si ya se pegó el de ocho, `comparar` fallaría por la
+  huella. Hay que repetir los `--incluir` cada vez. Y pegar en el editor sigue pidiendo
+  el control de pantalla completa: la primera solicitud venció sin respuesta y la fase
+  esperó al docente.
+- **Estado del verificador:** 9 fallos, todos por lo que falta escribir (E1, E3, E7 y
+  seis motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
