@@ -5028,3 +5028,35 @@ Rama `claude/cap06-fase7`, sobre la fase 6; sin fusionar.
   escribió y se verificó con las salidas predichas, y se ejecutó después.
 - **Estado del verificador:** 5 fallos, todos por lo que falta escribir (los E1 y
   cuatro motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 8: sección 6, «Depurar con F8» · 2026-11-24
+
+Rama `claude/cap06-fase8`, sobre la fase 7; sin fusionar.
+
+- **Contenido:** Step Into, el recorrido de `OtroAcuerdo` con el simulador de la fase 2,
+  lo que el editor hace distinto de la traza a mano (no se detiene en `Dim`, muestra 0
+  donde se escribía raya, tiene más paradas que filas), la ventana Locales, el punto de
+  interrupción y cómo salir de una pausa. Solo VBA. Los tres E1 del capítulo están aquí:
+  con ellos la cuota queda completa salvo el E6, que va en la evaluación.
+- **Fuentes:** tanda 13 en Zotero, cuatro páginas de la lista aprobada; tres en inglés.
+  14 afirmaciones citadas.
+- **Verificador sin contexto:** 7 de 11 respaldaban y 4 decían más que su pasaje; en la
+  segunda lectura, 2 de las 7 frases cambiadas volvieron a salir parciales. Señaló
+  además 18 frases sin cita: «se detiene antes de cada instrucción», que contradecía al
+  propio `Dim`; «el editor puede hacer esa tabla por usted», cuando Locales muestra una
+  parada a la vez; y una frase que atribuía a Run To Cursor lo que es de Step Over.
+- **Ejecutado en Excel:** las tres rutinas de los E1 se recorrieron paso a paso y dieron
+  las secuencias escritas de antemano. Lo que no se sabía y se vio: el paso a paso se
+  detiene en `Select Case`, en cada `Case` que evalúa y en `End Select`; la línea `For`
+  se resalta una sola vez; y Locales escribe las cadenas entre comillas.
+- **Dicho como no comprobado:** F8 en el teclado físico (la sección conserva el título
+  y explica que en este Mac el menú muestra ⇧⌘I), y cómo se interrumpe una rutina que
+  no termina. Esto último era una promesa implícita del capítulo 5 y queda sin cumplir.
+- **Huecos:** mientras Excel ejecuta una rutina, ni las teclas ni los clics enviados por
+  programa llegan al editor, así que una interrupción no se puede probar sin el
+  docente. Otra aplicación pasó al frente a mitad de una tanda y se perdieron tres
+  capturas: la primera detención del segundo E1 se dedujo de las cinco siguientes. Y la
+  aprobación del control de pantalla venció una vez más sin respuesta.
+- **Estado del verificador:** 3 fallos, todos por lo que falta escribir (las
+  motivaciones de la portada, la sección 7 y la evaluación). Sondas de 320 y 375 px: 9
+  de 9 lecciones, cero errores.

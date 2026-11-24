@@ -5166,19 +5166,298 @@ End Sub`;
             </div>
         );
 
-        // Sección 6 — «Depurar con F8». Por escribir en la fase 8 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // ── Sección 6 · rutinas de los tres E1 (solo VBA, como texto) ─────────
+        // Las paradas y los valores de las tres tablas se recorrieron en Excel el
+        // 2026-11-24 (registro de ejecución del vault, apartado 10).
+        const F8_TRES_ABONOS = `Sub TresAbonos()
+    Dim saldo As Currency, abono As Currency, k As Integer
+    saldo = 900000
+    For k = 1 To 3
+        abono = 100000 * k
+        saldo = saldo - abono
+    Next k
+    Debug.Print k; saldo
+End Sub`;
+
+        const F8_ACUERDO_LARGO = `Sub AcuerdoLargo()
+    Dim saldo As Currency, abono As Currency, meses As Integer
+    saldo = 2350000
+    abono = 400000
+    meses = 0
+    Do While saldo > 0
+        saldo = saldo - abono
+        meses = meses + 1
+    Loop
+    Debug.Print meses, saldo
+End Sub`;
+
+        const F8_MORA = `Sub ClasificarMora()
+    Dim dias As Integer, gestion As String
+    dias = 45
+    Select Case dias
+        Case 0
+            gestion = "Al dia"
+        Case 1 To 30
+            gestion = "Recordatorio"
+        Case 31 To 90
+            gestion = "Cobro administrativo"
+        Case Is > 90
+            gestion = "Cobro juridico"
+    End Select
+    Debug.Print dias; gestion
+End Sub`;
+
+        // Sección 6 — «Depurar con F8». Solo VBA (decisión 3 del plan del capítulo).
         const Cap6Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita. Lo que sigue es su simulador, ya con el recorrido
-                    que hizo Excel; el texto que lo explica se escribe en la fase 8.
+                <Motivacion icon="fa-bug"
+                    gancho="La rutina informa 4 meses y un saldo de −150 000. ¿En qué instrucción el saldo se volvió negativo, y por qué el ciclo no lo evitó?">
+                    En el capítulo 5 usted respondió preguntas como esa con una tabla hecha a mano: una
+                    fila por cada vez que la condición se evalúa, y en cada fila el valor de las variables.
+                    Funciona, pero cuesta, y un descuido en la tercera fila puede dañar las siguientes. El
+                    editor de VBA puede mostrarle, parada por parada, lo que iría en cada fila de esa
+                    tabla. Se detiene antes de cada instrucción ejecutable por la que pasa, muestra cuánto
+                    vale cada variable en ese momento y espera. Seguir así una rutina
+                    ajena es lo que pide el resultado de aprendizaje de este capítulo.
+                </Motivacion>
+
+                <h3>Una instrucción cada vez</h3>
+                <p>
+                    La técnica se llama, en el menú del editor, <strong>Step Into</strong>. Recorre cada
+                    línea del código y permite ver el efecto de cada instrucción sobre las
+                    variables <Cita k="microsoft2018seguimiento" loc="párrafo inicial" />. Elegida cuando
+                    ninguna rutina se está ejecutando, empieza la ejecución y
+                    entra en modo de interrupción antes de que se ejecute la primera línea de
+                    código <Cita k="microsoft2018depuracion" loc="tabla de comandos" />. A partir de ahí
+                    ejecuta una instrucción cada vez <Cita k="microsoft2018depuracion" loc="tabla de comandos" />.
+                    En los recorridos de este capítulo se eligió con el cursor dentro de la rutina.
+                </p>
+                <p>
+                    La documentación le asigna la tecla F8 <Cita k="microsoft2018seguimiento" loc="To trace execution from the beginning of the program" />,
+                    y por esa tecla se llama esta sección. La página no da ningún atajo
+                    para Mac. En el Excel para Mac con que se preparó el capítulo, el
+                    menú <strong>Debug</strong> muestra otro atajo junto a Step Into, ⇧⌘I, y con él se
+                    hizo todo el recorrido que sigue. La tecla F8, enviada desde un programa, no hizo
+                    avanzar la rutina; pulsada en el teclado no se probó. Si en su equipo F8 no responde,
+                    use el menú.
+                </p>
+
+                <Box type="warn" label="Si Step Into aparece apagado">
+                    Al preparar este capítulo, el comando salió deshabilitado cuando el cursor estaba en la
+                    ventana Inmediato y no en la de código. Volvió a estar disponible al hacer doble clic
+                    sobre el módulo en el explorador de proyectos.
                 </Box>
+
+                <h3>El recorrido completo de una rutina</h3>
+                <p>
+                    Esta es la rutina <span className="inline-code">OtroAcuerdo</span> de la sección 1,
+                    recorrida de principio a fin. La línea resaltada es la que está <em>por</em> ejecutarse,
+                    no la que acaba de ejecutarse; a la derecha, lo que mostraba la ventana Locales en esa
+                    parada. Avance con el botón y responda la pregunta del comienzo.
+                </p>
 
                 <SimuladorVBE titulo="OtroAcuerdo, paso a paso" modulo="Module1"
                     codigo={F8_CODIGO} variables={F8_VARIABLES} pasos={F8_PASOS}
                     nota={<Fuente propia>{`con el recorrido hecho en Excel 16.115 para Mac el 23 de noviembre de 2026: 23 paradas, ninguna en la línea Dim`}</Fuente>} />
+
+                <p>
+                    El saldo se volvió negativo en la cuarta ejecución
+                    de <span className="inline-code">saldo = saldo - abono</span>: entró con 350 000 y
+                    salió con −150 000. El ciclo no lo evitó porque la condición se pregunta antes de la
+                    resta, no después: con 350 000 era verdadera, y la vuelta se hizo completa.
+                </p>
+
+                <h3>Tres cosas que la traza a mano hacía distinto</h3>
+                <p>
+                    <strong>El editor no se detuvo en el Dim.</strong> De la
+                    línea <span className="inline-code">Sub</span> pasó a la primera asignación. Es
+                    coherente con lo que dice Microsoft de los puntos de interrupción: no se pueden poner
+                    en líneas de código no ejecutable, como los comentarios, las instrucciones de
+                    declaración o las líneas en
+                    blanco <Cita k="microsoft2018depuracion" loc="tabla de comandos" />. Sí se detuvo en
+                    {' '}<span className="inline-code">Sub</span> y en <span className="inline-code">End Sub</span>,
+                    a las que la traza a mano del capítulo 3 no les daba fila.
+                </p>
+                <p>
+                    <strong>Las variables ya valían 0 en la primera parada.</strong> En la traza a mano
+                    se escribía una raya hasta la primera asignación, porque «sin valor» no es cero. Para
+                    una variable numérica declarada, en VBA esa raya no existe: como se vio en la sección 3,
+                    nace en 0, y eso fue lo que mostró Locales antes de que se ejecutara nada.
+                </p>
+                <p>
+                    <strong>Hubo más paradas que filas.</strong> La tabla del capítulo 5 tenía una fila
+                    por evaluación de la condición. El editor se detuvo en cada línea ejecutable por la que
+                    pasó, incluido el <span className="inline-code">Loop</span>: 23 paradas para cuatro
+                    vueltas.
+                </p>
+
+                <h3>La ventana Locales</h3>
+                <p>
+                    La tabla de variables la lleva la ventana Locales, que muestra automáticamente todas
+                    las variables declaradas en el procedimiento actual y sus
+                    valores <Cita k="microsoft2018locales" loc="párrafo inicial" />, y, cuando está
+                    visible, se actualiza cada vez que la ejecución pasa al modo de
+                    interrupción <Cita k="microsoft2018locales" loc="párrafo inicial" />. Tiene tres
+                    columnas: la expresión, que es el nombre de la variable; el valor; y el
+                    tipo <Cita k="microsoft2018locales" loc="Elementos de la ventana" />. En un módulo
+                    estándar, la primera línea de la lista es una entrada especial con el nombre del módulo, que se puede
+                    expandir para ver las variables de nivel de
+                    módulo <Cita k="microsoft2018locales" loc="Elementos de la ventana" />: en el
+                    recorrido decía <span className="inline-code">Module1</span>. Debajo estaban las tres
+                    variables, con el tipo que les dio el <span className="inline-code">Dim</span>. En
+                    ese recorrido los <span className="inline-code">Currency</span>, que eran valores
+                    enteros, se veían sin separadores ni decimales: <span className="inline-code">1850000</span>,
+                    {' '}<span className="inline-code">-150000</span>.
+                </p>
+
+                <TablaTraza
+                    titulo="Lo que mostró Locales en seis paradas"
+                    enunciado={<>La rutina se recorre con Step Into. Para seis de las paradas, escriba <strong>lo que muestra la ventana Locales</strong> cuando la línea indicada está resaltada, es decir, antes de que se ejecute. Recuerde que en VBA una variable numérica declarada ya tiene valor.</>}
+                    codigo={F8_TRES_ABONOS}
+                    lang="vba"
+                    columnas={[
+                        { clave: 'parada', titulo: 'Línea resaltada' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'abono', titulo: 'abono' },
+                        { clave: 'k', titulo: 'k' },
+                    ]}
+                    ocultas={['saldo', 'abono', 'k']}
+                    exigeRespuesta
+                    filas={[
+                        { parada: 'Sub TresAbonos()', saldo: '0', abono: '0', k: '0' },
+                        { parada: 'For k = 1 To 3', saldo: '900000', abono: '0', k: '0' },
+                        { parada: 'Next k, primera vez', saldo: '800000', abono: '100000', k: '1' },
+                        { parada: 'Next k, segunda vez', saldo: '600000', abono: '200000', k: '2' },
+                        { parada: 'Next k, tercera vez', saldo: '300000', abono: '300000', k: '3' },
+                        { parada: 'Debug.Print k; saldo', saldo: '300000', abono: '300000', k: '4' },
+                    ]}
+                    pista="Dos trampas. En la primera parada nada se ha ejecutado, pero las variables ya existen. Y el contador no se queda en 3: el capítulo 5 dijo dónde suma VBA el paso."
+                />
+
+                <h3>Detenerse solo donde interesa</h3>
+                <p>
+                    Veintitrés pulsaciones para cuatro vueltas se soportan. Para un plan de 240 cuotas,
+                    no. Para detenerse solo donde interesa está el punto de interrupción, que se pone para suspender la ejecución en
+                    una instrucción determinada de un procedimiento, por ejemplo donde se sospecha que
+                    puede haber problemas <Cita k="microsoft2018interrupcion" loc="párrafo inicial" />. Se
+                    pone con el comando <strong>Toggle Breakpoint</strong> del menú Debug, que pone o
+                    quita un punto de interrupción en la línea
+                    actual <Cita k="microsoft2018depuracion" loc="tabla de comandos" />, o con un clic
+                    junto a la instrucción en la barra del margen, si está
+                    visible <Cita k="microsoft2018interrupcion" loc="To set a breakpoint" />. Y no viaja con el libro: los puntos de interrupción no se guardan
+                    al guardar el código <Cita k="microsoft2018interrupcion" loc="Note" />.
+                </p>
+
+                <Box type="info" label="Lo que se vio en Excel">
+                    <p>
+                        Con <strong>Debug › Toggle Breakpoint</strong>, la línea donde estaba el cursor
+                        quedó con fondo rojo oscuro y letra blanca, y con un punto del mismo color en el
+                        margen. Un clic sobre ese punto lo quitó, y un clic en el margen, junto a otra
+                        línea, puso uno nuevo allí.
+                    </p>
+                    <p>
+                        Con el punto puesto en la resta de la rutina del ejercicio que sigue, se ejecutó
+                        con el botón <strong>Run</strong> de la barra de herramientas. La rutina se detuvo
+                        en esa línea, resaltada en amarillo y todavía sin ejecutar, y Locales mostró las
+                        variables. Cada nueva pulsación de Run la dejó correr una vuelta completa, hasta
+                        detenerse otra vez en la misma línea.
+                    </p>
+                    <p className="mb-0">
+                        Después de la última detención, Run la llevó hasta el final, y en la ventana
+                        Inmediato quedó <span className="inline-code">6</span> y
+                        {' '}<span className="inline-code">-50000</span>. El punto de interrupción siguió
+                        en su línea al terminar.
+                    </p>
+                </Box>
+
+                <TablaTraza
+                    titulo="Seis veces en la misma línea"
+                    enunciado={<>Un acuerdo de pago de 2 350 000 en abonos de 400 000. Hay un punto de interrupción en la línea <span className="inline-code">saldo = saldo - abono</span> y la rutina se deja correr: se detiene ahí cada vez que va a ejecutarla. <strong>Escriba lo que muestra Locales en cada detención.</strong></>}
+                    codigo={F8_ACUERDO_LARGO}
+                    lang="vba"
+                    columnas={[
+                        { clave: 'vez', titulo: 'Detención' },
+                        { clave: 'saldo', titulo: 'saldo' },
+                        { clave: 'meses', titulo: 'meses' },
+                    ]}
+                    ocultas={['saldo', 'meses']}
+                    exigeRespuesta
+                    filas={[
+                        { vez: '1.ª', saldo: '2350000', meses: '0' },
+                        { vez: '2.ª', saldo: '1950000', meses: '1' },
+                        { vez: '3.ª', saldo: '1550000', meses: '2' },
+                        { vez: '4.ª', saldo: '1150000', meses: '3' },
+                        { vez: '5.ª', saldo: '750000', meses: '4' },
+                        { vez: '6.ª', saldo: '350000', meses: '5' },
+                    ]}
+                    pista="La rutina se detiene antes de ejecutar la línea: en cada detención la resta de esa vuelta todavía no se ha hecho."
+                />
+
+                <h3>Seguir el camino de una decisión</h3>
+                <p>
+                    En un ciclo, el paso a paso muestra cuántas veces. En una decisión muestra por dónde.
+                    A juicio del docente, con una rutina ajena suele decir más saber qué
+                    líneas <em>no</em> se ejecutaron que leer el código entero. Esta es la rutina de la sección 3 que clasifica una mora:
+                </p>
+
+                <TablaTraza
+                    titulo="Por dónde pasó la línea amarilla"
+                    enunciado={<>La rutina se recorre con Step Into, con <span className="inline-code">dias = 45</span>. <strong>Escriba el número de la línea resaltada en cada parada.</strong> La última columna trae lo que mostró Locales para <span className="inline-code">gestion</span>, que escribe las cadenas entre comillas: dos comillas solas son una cadena a la que nadie le ha asignado nada.</>}
+                    codigo={F8_MORA}
+                    lang="vba"
+                    columnas={[
+                        { clave: 'parada', titulo: 'Parada' },
+                        { clave: 'linea', titulo: 'Línea resaltada' },
+                        { clave: 'gestion', titulo: 'gestion' },
+                    ]}
+                    ocultas={['linea']}
+                    exigeRespuesta
+                    filas={[
+                        { parada: '1', linea: '1', gestion: '""' },
+                        { parada: '2', linea: '3', gestion: '""' },
+                        { parada: '3', linea: '4', gestion: '""' },
+                        { parada: '4', linea: '5', gestion: '""' },
+                        { parada: '5', linea: '7', gestion: '""' },
+                        { parada: '6', linea: '9', gestion: '""' },
+                        { parada: '7', linea: '10', gestion: '""' },
+                        { parada: '8', linea: '13', gestion: '"Cobro administrativo"' },
+                        { parada: '9', linea: '14', gestion: '"Cobro administrativo"' },
+                        { parada: '10', linea: '15', gestion: '"Cobro administrativo"' },
+                    ]}
+                    pista="El editor no se detiene en el Dim. Y pregúntese en qué líneas hay algo que evaluar antes de llegar al caso que coincide."
+                />
+
+                <h3>Salir de una pausa, y de un ciclo que no termina</h3>
+                <p>
+                    En los recorridos de este capítulo, mientras una rutina estaba en pausa el título de
+                    la ventana del editor terminaba en <span className="inline-code">[break]</span>. De
+                    esa pausa se salió de dos maneras: dejándola continuar con Run, con lo que corrió
+                    hasta el final o hasta el siguiente punto de interrupción, o abandonándola con el
+                    botón <strong>Reset</strong> de la barra de herramientas, que se usó cada vez que no
+                    interesaba llegar al final.
+                </p>
+                <p>
+                    Queda una pregunta que este capítulo no pudo responder. El capítulo 5 dijo cómo se
+                    interrumpe en Python y en R un ciclo que no termina, y no lo dijo para VBA. Al
+                    preparar esta sección se ejecutó una rutina larga y se intentó detenerla desde un
+                    programa, con la tecla Esc y con el botón de pausa del editor: ninguno de los dos
+                    llegó a Excel mientras la rutina corría, así que la prueba no dice nada. Cómo se
+                    detiene en Excel para Mac una rutina que no termina queda pendiente de probarse en
+                    el teclado.
+                </p>
+                <p>
+                    Entre los comandos del menú Debug que este capítulo no usó están Step Over y Run To
+                    Cursor. Step Over ejecuta cada procedimiento llamado como si fuera una sola
+                    instrucción, y Run To Cursor permite elegir la instrucción donde se quiere que la
+                    ejecución se detenga, lo que sirve para pasar de largo secciones como los ciclos
+                    grandes <Cita k="microsoft2018seguimiento" loc="párrafo inicial" />. El primero se
+                    aprovecha cuando una rutina llama a otras, que es el tema del capítulo 8.
+                </p>
+
+                <Box type="tip" label="Lo que sigue">
+                    El paso a paso sirve cuando la rutina corre y el resultado no convence. La sección 7
+                    trata el otro caso: la rutina se detiene sola, con un mensaje de error.
+                </Box>
             </div>
         );
 
@@ -5436,8 +5715,8 @@ End Sub`;
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "e82f83b18e8a88d299b28a45abaffdf6929232d6cbf38fe9230d8b99943f5234",
-  "sello": "b52cd492a3928dbfddab33a1a864ff44b2da598357795409513f11f9660bac90",
+  "huella": "08a8394b918c1b95415173b47b2be4d17645885d93171a5b9ebe0e200103079f",
+  "sello": "5e118777a41acde4b51507cc262c8ee0e24fff658133c53a6ad93c88fadf0957",
   "orden": [
     "microsoft2017desbordamiento",
     "microsoft2018tipos",
@@ -5447,6 +5726,8 @@ End Sub`;
     "microsoft2018variant",
     "microsoft2018codigo",
     "microsoft2018inmediato",
+    "microsoft2018locales",
+    "microsoft2018depuracion",
     "microsoft2018proyectos",
     "microsoft2018const",
     "microsoft2018optionexplicit",
@@ -5457,6 +5738,8 @@ End Sub`;
     "microsoft2018examinador",
     "microsoft2018declarar",
     "microsoft2018usoeficaz",
+    "microsoft2018interrupcion",
+    "microsoft2018seguimiento",
     "microsoft2019application",
     "microsoft2019activesheet",
     "microsoft2019item",
@@ -5523,65 +5806,89 @@ End Sub`;
       "html": "Microsoft. (2018g, noviembre 21). \u003cem>Ventana Inmediato\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\u003c/a>",
       "plano": "Microsoft. (2018g, noviembre 21). Ventana Inmediato. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window"
     },
-    "microsoft2018proyectos": {
+    "microsoft2018locales": {
       "autor": "Microsoft",
       "anio": "2018h",
-      "html": "Microsoft. (2018h, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
-      "plano": "Microsoft. (2018h, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
+      "html": "Microsoft. (2018h, noviembre 21). \u003cem>Ventana Locales\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\u003c/a>",
+      "plano": "Microsoft. (2018h, noviembre 21). Ventana Locales. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window"
+    },
+    "microsoft2018depuracion": {
+      "autor": "Microsoft",
+      "anio": "2018i",
+      "html": "Microsoft. (2018i, noviembre 24). \u003cem>Debug menu\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\u003c/a>",
+      "plano": "Microsoft. (2018i, noviembre 24). Debug menu. Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu"
+    },
+    "microsoft2018proyectos": {
+      "autor": "Microsoft",
+      "anio": "2018j",
+      "html": "Microsoft. (2018j, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
+      "plano": "Microsoft. (2018j, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
     },
     "microsoft2018const": {
       "autor": "Microsoft",
-      "anio": "2018i",
-      "html": "Microsoft. (2018i, diciembre 3). \u003cem>Const statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\u003c/a>",
-      "plano": "Microsoft. (2018i, diciembre 3). Const statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement"
+      "anio": "2018k",
+      "html": "Microsoft. (2018k, diciembre 3). \u003cem>Const statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\u003c/a>",
+      "plano": "Microsoft. (2018k, diciembre 3). Const statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement"
     },
     "microsoft2018optionexplicit": {
       "autor": "Microsoft",
-      "anio": "2018j",
-      "html": "Microsoft. (2018j, diciembre 3). \u003cem>Instrucción Option Explicit (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\u003c/a>",
-      "plano": "Microsoft. (2018j, diciembre 3). Instrucción Option Explicit (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement"
+      "anio": "2018l",
+      "html": "Microsoft. (2018l, diciembre 3). \u003cem>Instrucción Option Explicit (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\u003c/a>",
+      "plano": "Microsoft. (2018l, diciembre 3). Instrucción Option Explicit (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement"
     },
     "microsoft2018selectcase": {
       "autor": "Microsoft",
-      "anio": "2018k",
-      "html": "Microsoft. (2018k, diciembre 3). \u003cem>Select Case statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\u003c/a>",
-      "plano": "Microsoft. (2018k, diciembre 3). Select Case statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement"
+      "anio": "2018m",
+      "html": "Microsoft. (2018m, diciembre 3). \u003cem>Select Case statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\u003c/a>",
+      "plano": "Microsoft. (2018m, diciembre 3). Select Case statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement"
     },
     "microsoft2018sub": {
       "autor": "Microsoft",
-      "anio": "2018l",
-      "html": "Microsoft. (2018l, diciembre 3). \u003cem>Sub statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\u003c/a>",
-      "plano": "Microsoft. (2018l, diciembre 3). Sub statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement"
+      "anio": "2018n",
+      "html": "Microsoft. (2018n, diciembre 3). \u003cem>Sub statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\u003c/a>",
+      "plano": "Microsoft. (2018n, diciembre 3). Sub statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement"
     },
     "microsoft2018inputbox": {
       "autor": "Microsoft",
-      "anio": "2018m",
-      "html": "Microsoft. (2018m, diciembre 13). \u003cem>Función InputBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\u003c/a>",
-      "plano": "Microsoft. (2018m, diciembre 13). Función InputBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function"
+      "anio": "2018o",
+      "html": "Microsoft. (2018o, diciembre 13). \u003cem>Función InputBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\u003c/a>",
+      "plano": "Microsoft. (2018o, diciembre 13). Función InputBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function"
     },
     "microsoft2018print": {
       "autor": "Microsoft",
-      "anio": "2018n",
-      "html": "Microsoft. (2018n, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
-      "plano": "Microsoft. (2018n, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
+      "anio": "2018p",
+      "html": "Microsoft. (2018p, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
+      "plano": "Microsoft. (2018p, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
     },
     "microsoft2018examinador": {
       "autor": "Microsoft",
-      "anio": "2018o",
-      "html": "Microsoft. (2018o, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
-      "plano": "Microsoft. (2018o, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
+      "anio": "2018q",
+      "html": "Microsoft. (2018q, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
+      "plano": "Microsoft. (2018q, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
     },
     "microsoft2018declarar": {
       "autor": "Microsoft",
-      "anio": "2018p",
-      "html": "Microsoft. (2018p, diciembre 21). \u003cem>Declaración de variables (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\u003c/a>",
-      "plano": "Microsoft. (2018p, diciembre 21). Declaración de variables (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables"
+      "anio": "2018r",
+      "html": "Microsoft. (2018r, diciembre 21). \u003cem>Declaración de variables (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\u003c/a>",
+      "plano": "Microsoft. (2018r, diciembre 21). Declaración de variables (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables"
     },
     "microsoft2018usoeficaz": {
       "autor": "Microsoft",
-      "anio": "2018q",
-      "html": "Microsoft. (2018q, diciembre 26). \u003cem>Uso eficaz de tipos de datos (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\u003c/a>",
-      "plano": "Microsoft. (2018q, diciembre 26). Uso eficaz de tipos de datos (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently"
+      "anio": "2018s",
+      "html": "Microsoft. (2018s, diciembre 26). \u003cem>Uso eficaz de tipos de datos (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\u003c/a>",
+      "plano": "Microsoft. (2018s, diciembre 26). Uso eficaz de tipos de datos (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently"
+    },
+    "microsoft2018interrupcion": {
+      "autor": "Microsoft",
+      "anio": "2018t",
+      "html": "Microsoft. (2018t, diciembre 27). \u003cem>Set and clear a breakpoint (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\">https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\u003c/a>",
+      "plano": "Microsoft. (2018t, diciembre 27). Set and clear a breakpoint (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint"
+    },
+    "microsoft2018seguimiento": {
+      "autor": "Microsoft",
+      "anio": "2018u",
+      "html": "Microsoft. (2018u, diciembre 27). \u003cem>Trace code execution (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\">https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\u003c/a>",
+      "plano": "Microsoft. (2018u, diciembre 27). Trace code execution (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution"
     },
     "microsoft2019application": {
       "autor": "Microsoft",

@@ -767,6 +767,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018depuracion",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Debug menu",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          24
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu",
+    "language": "en"
+  },
+  {
     "id": "microsoft2018doble",
     "type": "webpage",
     "author": [
@@ -984,6 +1015,68 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018interrupcion",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Set and clear a breakpoint (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          27
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint",
+    "language": "en"
+  },
+  {
+    "id": "microsoft2018locales",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Ventana Locales",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          21
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018moneda",
     "type": "webpage",
     "author": [
@@ -1137,6 +1230,37 @@
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer",
     "language": "es"
+  },
+  {
+    "id": "microsoft2018seguimiento",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Trace code execution (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          27
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          24
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution",
+    "language": "en"
   },
   {
     "id": "microsoft2018selectcase",
