@@ -5119,3 +5119,22 @@ Rama `claude/cap06-fase10`, sobre la fase 9; sin fusionar.
   claves y 0 de 10 con respuestas malas; el emparejamiento, 7 de 7.
 - **Pendiente para la fase 12:** las justificaciones del cuestionario repiten hechos que
   las secciones citan, y no tienen nota de afirmación propia.
+
+### Tarea 16 · Capítulo 6, fase 11 (primera parte): coherencia hacia atrás e índice · 2026-11-24
+
+Rama `claude/cap06-fase11`, sobre la fase 10; sin fusionar.
+
+- **Promesas:** las 49 filas del inventario de promesas de los capítulos 1 a 5 tienen
+  cierre. Una sola pedía tocar un capítulo anterior: el «Lo que viene» del capítulo 5
+  decía que el 6 «todavía no está escrito», hablaba en futuro y prometía repetir allí
+  las tres vueltas de la bisección, que el 6 no repite. Corregido. Las demás menciones
+  al capítulo 6 en los capítulos 1 y 4 siguen siendo ciertas.
+- **Recuento:** los «155» y «147» de la sección 1 se volvieron a contar y coinciden.
+- **Índice:** `index.html` enlaza el capítulo 6, con una descripción de lo que trae.
+- **Sin cambio:** la frase del capítulo 2 sobre el redondeo no es falsa; el 6 la afina.
+- **Comprobado:** sondas en los cinco modos (`file`, `375`, `sin-almacen`,
+  `sin-cdnjs`, `sin-tailwind`) y a 320 px, sobre los capítulos 5 y 6; verificador en
+  verde para los seis.
+- **Queda de esta fase, a la espera del docente:** la ejecución que decide la frase del
+  capítulo 4 sobre el error 11 (un `Currency` entre un `Long` en cero), el recorrido en
+  el iPhone, y los borradores del banco, que se propusieron como sesión aparte.
