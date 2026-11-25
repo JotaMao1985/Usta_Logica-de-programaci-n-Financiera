@@ -829,6 +829,37 @@
     "language": "es"
   },
   {
+    "id": "microsoft2018err",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Objeto Err",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          11,
+          12
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          25
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/err-object",
+    "language": "es"
+  },
+  {
     "id": "microsoft2018examinador",
     "type": "webpage",
     "author": [
@@ -1105,6 +1136,37 @@
       ]
     },
     "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2018onerror",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Instrucción On Error (VBA)",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          12,
+          3
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          25
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/on-error-statement",
     "language": "es"
   },
   {
@@ -1880,6 +1942,68 @@
       ]
     },
     "URL": "https://support.microsoft.com/es-es/excel/file-formats-that-are-supported-in-excel",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2026macros365",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Habilitar o deshabilitar macros en archivos de Microsoft 365",
+    "container-title": "Microsoft Support",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          8,
+          20
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          25
+        ]
+      ]
+    },
+    "URL": "https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-files",
+    "language": "es"
+  },
+  {
+    "id": "microsoft2026macrosinternet",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "title": "Las macros de Internet están bloqueadas de forma predeterminada en Office",
+    "container-title": "Microsoft Learn",
+    "issued": {
+      "date-parts": [
+        [
+          "2026",
+          7,
+          17
+        ]
+      ]
+    },
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          25
+        ]
+      ]
+    },
+    "URL": "https://learn.microsoft.com/es-es/microsoft-365-apps/security/internet-macros-blocked",
     "language": "es"
   },
   {

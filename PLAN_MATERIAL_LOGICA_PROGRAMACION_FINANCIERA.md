@@ -5060,3 +5060,34 @@ Rama `claude/cap06-fase8`, sobre la fase 7; sin fusionar.
 - **Estado del verificador:** 3 fallos, todos por lo que falta escribir (las
   motivaciones de la portada, la sección 7 y la evaluación). Sondas de 320 y 375 px: 9
   de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 9: sección 7, «Errores y seguridad» · 2026-11-24
+
+Rama `claude/cap06-fase9`, sobre la fase 8; sin fusionar.
+
+- **Contenido:** los tres momentos en que algo sale mal (compilación, ejecución,
+  lógica), lo que pasa sin controlador, la guardia, `On Error GoTo` con el objeto `Err`,
+  por qué `On Error Resume Next` esconde el error, y la seguridad de macros. Solo VBA.
+  Un E4 que compara la guardia con `Resume Next`.
+- **Fuentes:** tanda 14 en Zotero, cuatro páginas de la lista aprobada. 11 afirmaciones
+  citadas.
+- **La ejecución corrigió al autor.** Los bloques declaraban el error 11 para una
+  división entre cero. Excel dio el 6, «Overflow»: el dividendo era `Currency`. El 11
+  salió con una división de literales en Inmediato. El texto cuenta las dos cosas y
+  dice que no se aisló la causa. **Deja una duda sobre el capítulo 4**, ya publicado,
+  que afirma que su `total / compras` daría el 11 con un total distinto de cero, y su
+  `total` es `Currency`: queda para ejecutar y corregir en la fase 11.
+- **Verificador sin contexto:** 9 de 11 respaldaban y 2 decían más que su pasaje; las
+  tres frases cambiadas pasaron la segunda lectura. Señaló 20 frases sin cita: una
+  causa atribuida a `Currency` sin aislarla, «la que más encontrará en macros ajenas»
+  sin dato, «las rutinas de este curso no la usan» en la sección que la usa para
+  mostrarla, y dos consejos de seguridad que afirmaban hechos (que se puede leer el
+  código sin habilitar las macros, y que `.xlsm` es la extensión de todo libro con
+  macros). Todo aplicado; el consejo ya no promete lo que no se probó.
+- **Huecos:** `ejecutar_vba.py` da por fallido un bloque que termina con `Err` distinto
+  de cero, aunque sus salidas coincidan; el bloque de `Resume Next` necesitó un
+  `On Error GoTo 0` final. Y un pegado cayó en el módulo equivocado porque el árbol del
+  explorador de proyectos se había desplazado: se mira el título de la ventana antes
+  de pegar.
+- **Estado del verificador:** 2 fallos, por las motivaciones de la portada y la
+  evaluación (fase 10). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.

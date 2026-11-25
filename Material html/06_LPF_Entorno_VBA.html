@@ -5461,13 +5461,332 @@ End Sub`;
             </div>
         );
 
-        // Sección 7 — «Errores y seguridad». Por escribir en la fase 9 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // ── Sección 7 · bloques (solo VBA) ───────────────────────────────────
+        // Sin salida declarada: se detiene con el error 6 (un Currency entre un
+        // Integer en cero; no se aisló cuál de las dos cosas lo causa). Se ejecutó a mano; lo
+        // que dijo Excel está en el recuadro que la sigue.
+        const CUOTA_SIN_PLAZO = {
+            vba: `Sub CuotaSinPlazo()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+
+    capital = 12000000
+    plazo = 0
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+End Sub`,
+        };
+
+        const CUOTA_GUARDIA = {
+            vba: `Sub CuotaConGuardia()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+
+    capital = 12000000
+    plazo = 0
+    If plazo <= 0 Then
+        Debug.Print "El plazo debe ser mayor que cero."
+        '> El plazo debe ser mayor que cero.
+        Exit Sub
+    End If
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+End Sub`,
+        };
+
+        const CUOTA_CONTROLADOR = {
+            vba: `Sub CuotaConControlador()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+
+    On Error GoTo Fallo
+    capital = 12000000
+    plazo = 0
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+    Exit Sub
+
+Fallo:
+    Debug.Print "Error"; Err.Number; "- "; Err.Description
+    '> Error 6 - Overflow
+End Sub`,
+        };
+
+        const ENTRADA_INVALIDA = {
+            vba: `Sub MontoDigitado()
+    Dim texto As String, monto As Currency
+
+    On Error GoTo Fallo
+    texto = "dos millones"      ' lo que alguien escribio en un InputBox
+    monto = CCur(texto)
+    Debug.Print "Monto:"; monto
+    Exit Sub
+
+Fallo:
+    Debug.Print "Error"; Err.Number; "- "; Err.Description
+    '> Error 13 - Type mismatch
+End Sub`,
+        };
+
+        const RESUME_NEXT = {
+            vba: `Sub CuotaQueCalla()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+
+    On Error Resume Next
+    capital = 12000000
+    plazo = 0
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+    '> Cuota: 0
+    Debug.Print "Err.Number:"; Err.Number
+    '> Err.Number: 6
+    On Error GoTo 0             ' los errores vuelven a avisar
+End Sub`,
+        };
+
+        // E4 · solo VBA, como texto (ver CMP_CELLS_A). Son CuotaConGuardia y
+        // CuotaQueCalla recortadas: sin las líneas de salida y, en B, sin lo que
+        // va después de escribir la cuota. Lo que escribe cada una está ejecutado
+        // en los bloques CUOTA_GUARDIA y RESUME_NEXT.
+        const CMP_ERROR_GUARDIA = `Sub VersionA()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+    capital = 12000000
+    plazo = 0
+    If plazo <= 0 Then
+        Debug.Print "El plazo debe ser mayor que cero."
+        Exit Sub
+    End If
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+End Sub`;
+        const CMP_ERROR_CALLA = `Sub VersionB()
+    Dim capital As Currency, plazo As Integer, cuota As Currency
+    On Error Resume Next
+    capital = 12000000
+    plazo = 0
+    cuota = capital / plazo
+    Debug.Print "Cuota:"; cuota
+End Sub`;
+
+        // Sección 7 — «Errores y seguridad». Solo VBA (decisión 3 del plan del capítulo).
         const Cap7Section = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Esta sección todavía no está escrita.
+                <Motivacion icon="fa-triangle-exclamation"
+                    gancho="Una macro que usted probó varias veces se detiene la primera vez que la usa otra persona. ¿Qué vio esa persona, y qué debió ver?">
+                    Un analista entrega un libro con una macro que calcula la cuota de un crédito sin
+                    intereses: el capital dividido entre el plazo. La probó con doce meses, con
+                    veinticuatro y con treinta y seis. La gerente la ejecuta con el plazo en cero.
+                    No ve una cuota ni una explicación: ve un aviso en inglés con un número de error y un
+                    botón que, si lo pulsa, le abre el código del analista con una línea en amarillo.
+                </Motivacion>
+
+                <Ilustrativo>
+                    El analista y la gerente son un caso inventado. El aviso es el que mostró Excel al
+                    llamar la rutina <span className="inline-code">CuotaSinPlazo</span>, más abajo, desde
+                    la ventana Inmediato.
+                </Ilustrativo>
+
+                <h3>Tres momentos en que algo sale mal</h3>
+                <p>
+                    Este capítulo ya mostró los tres:
+                </p>
+
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Cuándo avisa</th><th>Qué pasa</th><th>Dónde se vio</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Antes de ejecutar</strong>: error de compilación</td>
+                                <td>El editor rechaza el código: «Compile error». La rutina no arranca.</td>
+                                <td>Sección 3, con el nombre mal escrito y <span className="inline-code">Option Explicit</span>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Durante la ejecución</strong>: error de ejecución</td>
+                                <td>La rutina se detiene en una instrucción: «Run-time error».</td>
+                                <td>Sección 4, con el error 6 del producto de dos enteros.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nunca</strong>: error de lógica</td>
+                                <td>La rutina termina sin avisos y el resultado está mal.</td>
+                                <td>Sección 4, con la tasa de cinco decimales; sección 6, con el saldo negativo.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente propia>con lo visto en las secciones 3, 4 y 6 de este capítulo</Fuente>
+
+                <p>
+                    En el tercero Excel no avisa: se encuentra probando y siguiendo la rutina paso a paso.
+                    La primera parte de esta sección trata el segundo.
+                </p>
+
+                <h3>Lo que pasa cuando nadie previó el error</h3>
+                <p>
+                    Esta es la rutina del analista, con el plazo en cero:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={CUOTA_SIN_PLAZO.vba} />
+
+                <Box type="info" label="Lo que dijo Excel">
+                    Al llamar <span className="inline-code">CuotaSinPlazo</span> desde la ventana Inmediato
+                    apareció el mismo aviso de la sección 4: «Run-time error '6': Overflow», con los
+                    botones Help, Continue (apagado), End y Debug. En la sección 4, Debug fue el botón que
+                    dejó el editor en pausa con la línea del error resaltada en amarillo.
+                </Box>
+
+                <p>
+                    Es la regla general: si no se usa una
+                    instrucción <span className="inline-code">On Error</span>, cualquier error en tiempo
+                    de ejecución es grave, es decir, se muestra un mensaje de error y la ejecución se
+                    detiene <Cita k="microsoft2018onerror" loc="Observaciones" />.
+                </p>
+                <p>
+                    El número no es el que uno esperaría. VBA tiene un error propio para la división
+                    entre cero, el 11: al escribir <span className="inline-code">? 12000000 / 0</span> en
+                    la ventana Inmediato, Excel respondió «Run-time error '11': Division by zero». Pero en
+                    la rutina, donde el dividendo es un <span className="inline-code">Currency</span> y el
+                    divisor una variable <span className="inline-code">Integer</span>, lo que informó fue un
+                    desbordamiento. Cuál de las dos diferencias lo causa no se aisló aquí. El capítulo 4 ya había anotado un caso parecido, el de cero entre
+                    cero. Lo que queda de esto para leer macros ajenas: el número del error orienta, pero
+                    no siempre nombra la causa.
+                </p>
+
+                <h3>Prevenir: la guardia</h3>
+                <p>
+                    La primera defensa no es de VBA. Es la guardia que los capítulos 4 y 5 pusieron antes
+                    de una división o de un ciclo: preguntar por el dato antes de usarlo.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={CUOTA_GUARDIA.vba} />
+
+                <p>
+                    La instrucción nueva es <span className="inline-code">Exit Sub</span>, que termina el
+                    procedimiento en ese punto. Quien la ejecuta desde la ventana Inmediato ya no ve un
+                    número de error sino una frase que le dice qué corregir. A juicio del docente, esta es la defensa que se
+                    prefiere siempre que el error se pueda prever.
+                </p>
+
+                <h3>Atrapar: On Error GoTo</h3>
+                <p>
+                    A juicio del docente, no todo se puede prever con
+                    un <span className="inline-code">If</span>. Para lo
+                    demás, <span className="inline-code">On Error GoTo</span> seguido de una etiqueta
+                    habilita una rutina de control de errores que empieza en esa línea: si se produce un
+                    error en tiempo de ejecución, el control se transfiere
+                    allí <Cita k="microsoft2018onerror" loc="Sintaxis" />. Lo que pasó queda en el
+                    objeto <span className="inline-code">Err</span>, que contiene información sobre los
+                    errores en tiempo de ejecución <Cita k="microsoft2018err" loc="párrafo inicial" />:
+                    cuando se produce uno, sus propiedades se llenan con la información que lo
+                    identifica <Cita k="microsoft2018err" loc="Observaciones" />. Esta rutina usa dos de
+                    ellas, <span className="inline-code">Number</span> y <span className="inline-code">Description</span>,
+                    y para verlo funcionar repite el plazo en cero, aunque ese caso ya lo resolvía la
+                    guardia:
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={CUOTA_CONTROLADOR.vba} />
+
+                <p>
+                    Hay dos líneas que no calculan nada y sostienen la estructura.
+                    {' '}<span className="inline-code">Fallo:</span>, con sus dos puntos, es la etiqueta a la
+                    que salta la ejecución. Y el <span className="inline-code">Exit Sub</span> de antes
+                    de la etiqueta evita que el código de control de errores se ejecute cuando no hubo
+                    ningún error <Cita k="microsoft2018onerror" loc="Observaciones" />: sin él, una rutina
+                    que terminara bien seguiría de largo y ejecutaría también la línea del controlador.
+                </p>
+                <p>
+                    El mismo esquema responde la pregunta que el capítulo 5 dejó abierta al validar un
+                    monto: qué pasa si lo digitado no es un número.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={ENTRADA_INVALIDA.vba} />
+
+                <p>
+                    <span className="inline-code">CCur</span> no pudo convertir el texto y produjo el error
+                    13. Sin el controlador, quien digitó «dos millones» habría visto el aviso de Excel;
+                    con él, la rutina decide qué decir. Los textos
+                    de <span className="inline-code">Err.Description</span> salieron en inglés, el idioma
+                    del Excel con que se ejecutó este capítulo. Aquí se escriben el número y la descripción
+                    para mostrar el objeto <span className="inline-code">Err</span>; a juicio del docente,
+                    en un libro que va a usar otra persona el mensaje se redacta para ella y se pone donde
+                    ella mira.
+                </p>
+
+                <h3>On Error Resume Next: el error que nadie ve</h3>
+                <p>
+                    Hay otra forma de <span className="inline-code">On Error</span>, y a juicio del
+                    docente conviene reconocerla en macros ajenas.
+                    {' '}<span className="inline-code">On Error Resume Next</span> especifica que, cuando se
+                    produce un error en tiempo de ejecución, el control pasa a la instrucción
+                    inmediatamente posterior a la que lo produjo, y la ejecución
+                    sigue <Cita k="microsoft2018onerror" loc="Sintaxis" />. No hay aviso ni salto: la
+                    rutina continúa como si nada.
+                </p>
+
+                <CodeBlock lang="vba" plegable={false} code={RESUME_NEXT.vba} />
+
+                <p>
+                    La última línea, <span className="inline-code">On Error GoTo 0</span>, deshabilita
+                    el controlador de errores del procedimiento <Cita k="microsoft2018onerror" loc="Sintaxis" />.
+                    Lo demás es lo que importa. La división falló, <span className="inline-code">cuota</span> se quedó con el 0 con
+                    que nació y la rutina lo escribió como si fuera un resultado. El error quedó
+                    registrado, pero solo lo ve quien consulta el
+                    objeto <span className="inline-code">Err</span>, y esta rutina lo consultó porque
+                    se escribió para mostrarlo. A juicio del docente, en una rutina de cálculo esta forma
+                    convierte un error de ejecución, que avisa, en uno de lógica, que no avisa; fuera de
+                    esta demostración, las rutinas de este curso no la usan. La documentación la
+                    recomienda, en lugar de <span className="inline-code">On Error GoTo</span>, para otro
+                    caso: el acceso a objetos <Cita k="microsoft2018onerror" loc="Sintaxis" />.
+                </p>
+
+                <Ejercicio tipo="E4"><Comparador
+                    titulo="Dos maneras de no ver el aviso de Excel"
+                    enunciado={<>Las dos rutinas reciben el plazo en cero, y ninguna muestra el aviso de error de Excel. <strong>Compárelas y responda.</strong></>}
+                    a={{ etiqueta: 'Versión A', codigo: CMP_ERROR_GUARDIA }}
+                    b={{ etiqueta: 'Versión B', codigo: CMP_ERROR_CALLA }}
+                    lang="vba"
+                    pregunta="¿Qué queda en la ventana Inmediato con cada una?"
+                    opciones={[
+                        { texto: 'Lo mismo en las dos: ninguna escribe nada, porque las dos abandonan la rutina antes de llegar al Debug.Print.', correcta: false },
+                        { texto: 'A escribe que el plazo debe ser mayor que cero; B escribe «Cuota: 0», como si la cuenta se hubiera hecho.', correcta: true, justificacion: 'Así salió al ejecutar CuotaConGuardia y CuotaQueCalla, de las que salen estas dos versiones. A pregunta por el plazo antes de dividir y, como es cero, escribe el mensaje y sale con Exit Sub. B no pregunta: la división falla, On Error Resume Next pasa a la instrucción siguiente, y esa instrucción escribe la variable cuota, que sigue en 0. Ninguna muestra el aviso de Excel, pero solo A dice la verdad.' },
+                        { texto: 'A escribe «Cuota: 0» y B no escribe nada, porque On Error Resume Next salta hasta el final de la rutina.', correcta: false },
+                        { texto: 'A escribe el mensaje del plazo y B escribe «Error 6», porque Resume Next informa el número del error.', correcta: false },
+                    ]}
+                /></Ejercicio>
+
+                <h3>Seguridad: una macro es un programa</h3>
+                <p>
+                    Todo lo anterior supone que la macro la escribió alguien de buena fe. El capítulo 1
+                    advirtió que conviene desconfiar de un archivo de Excel con macros que llega de fuera,
+                    porque una macro es un programa. Microsoft va más lejos: las macros de VBA
+                    son una vía común para que actores malintencionados consigan
+                    desplegar <em>malware</em> y <em>ransomware</em>, y por eso está cambiando el
+                    comportamiento predeterminado de las aplicaciones de Office para que bloqueen las
+                    macros de los archivos que vienen de Internet, como los adjuntos de un
+                    correo <Cita k="microsoft2026macrosinternet" loc="párrafo inicial" />.
+                </p>
+                <p>
+                    Ese bloqueo solo afecta a Office en equipos con
+                    Windows <Cita k="microsoft2026macrosinternet" loc="Versiones de Office afectadas por este cambio" />.
+                    En un Mac, este capítulo vio el aviso que se describió en la sección 2. La
+                    configuración de macros de Excel tiene una opción que las deshabilita con
+                    notificación, pensada para habilitarlas caso por caso, y otra que las habilita todas,
+                    que Microsoft marca como no recomendada porque puede ejecutarse código
+                    potencialmente peligroso <Cita k="microsoft2026macros365" loc="Opciones de configuración de macros disponibles" />.
+                </p>
+
+                <Box type="warn" label="Criterio del docente">
+                    Tres hábitos. No habilite las macros de un libro que no esperaba recibir, aunque el
+                    remitente sea conocido. Antes de habilitar las de uno que sí esperaba, averigüe qué
+                    hace la macro, y cuando tenga el código a la vista, léalo: después de este capítulo
+                    usted puede seguirlo. Y fíjese en la extensión: la sección 2 dijo que un libro con
+                    macros se guarda como <span className="inline-code">.xlsm</span>, así que un archivo
+                    que dice ser un simple reporte y llega con esa extensión merece una pregunta. Lo
+                    contrario no vale: que un archivo no la tenga no prueba que no traiga macros.
+                </Box>
+
+                <Box type="tip" label="Lo que sigue">
+                    Con esto termina el recorrido por el entorno. La evaluación reúne las siete secciones,
+                    y el capítulo 7 vuelve sobre una idea que la sección 5 solo asomó: guardar muchos
+                    valores en una sola variable.
                 </Box>
             </div>
         );
@@ -5715,10 +6034,11 @@ End Sub`;
     <script type="application/json" id="lp-referencias">
 {
   "v": 2,
-  "huella": "08a8394b918c1b95415173b47b2be4d17645885d93171a5b9ebe0e200103079f",
-  "sello": "5e118777a41acde4b51507cc262c8ee0e24fff658133c53a6ad93c88fadf0957",
+  "huella": "e9a71e2dadce10edafc041a3020d58369de39257ce4ed74839275b94b46d0401",
+  "sello": "409f31c234b479a6bf0f07a2b0cbca0f9c1e570a39ce3394cd35ef151f7b3dd6",
   "orden": [
     "microsoft2017desbordamiento",
+    "microsoft2018err",
     "microsoft2018tipos",
     "microsoft2018boolean",
     "microsoft2018integer",
@@ -5730,6 +6050,7 @@ End Sub`;
     "microsoft2018depuracion",
     "microsoft2018proyectos",
     "microsoft2018const",
+    "microsoft2018onerror",
     "microsoft2018optionexplicit",
     "microsoft2018selectcase",
     "microsoft2018sub",
@@ -5755,7 +6076,9 @@ End Sub`;
     "microsoft2025macrosmac",
     "microsoft2026formatos",
     "microsoft2026atajos",
-    "microsoft2026vbal"
+    "microsoft2026macrosinternet",
+    "microsoft2026vbal",
+    "microsoft2026macros365"
   ],
   "entradas": {
     "microsoft2017desbordamiento": {
@@ -5764,131 +6087,143 @@ End Sub`;
       "html": "Microsoft. (2017, junio 8). \u003cem>Desbordamiento (error 6)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6\u003c/a>",
       "plano": "Microsoft. (2017, junio 8). Desbordamiento (error 6). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/overflow-error-6"
     },
-    "microsoft2018tipos": {
+    "microsoft2018err": {
       "autor": "Microsoft",
       "anio": "2018a",
-      "html": "Microsoft. (2018a, noviembre 19). \u003cem>Data type summary\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary\u003c/a>",
-      "plano": "Microsoft. (2018a, noviembre 19). Data type summary. Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary"
+      "html": "Microsoft. (2018a, noviembre 12). \u003cem>Objeto Err\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/err-object\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/err-object\u003c/a>",
+      "plano": "Microsoft. (2018a, noviembre 12). Objeto Err. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/err-object"
+    },
+    "microsoft2018tipos": {
+      "autor": "Microsoft",
+      "anio": "2018b",
+      "html": "Microsoft. (2018b, noviembre 19). \u003cem>Data type summary\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary\u003c/a>",
+      "plano": "Microsoft. (2018b, noviembre 19). Data type summary. Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/data-type-summary"
     },
     "microsoft2018boolean": {
       "autor": "Microsoft",
-      "anio": "2018b",
-      "html": "Microsoft. (2018b, noviembre 19). \u003cem>Tipo de datos Boolean\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type\u003c/a>",
-      "plano": "Microsoft. (2018b, noviembre 19). Tipo de datos Boolean. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type"
+      "anio": "2018c",
+      "html": "Microsoft. (2018c, noviembre 19). \u003cem>Tipo de datos Boolean\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type\u003c/a>",
+      "plano": "Microsoft. (2018c, noviembre 19). Tipo de datos Boolean. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/boolean-data-type"
     },
     "microsoft2018integer": {
       "autor": "Microsoft",
-      "anio": "2018c",
-      "html": "Microsoft. (2018c, noviembre 19). \u003cem>Tipo de datos Integer\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\u003c/a>",
-      "plano": "Microsoft. (2018c, noviembre 19). Tipo de datos Integer. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type"
+      "anio": "2018d",
+      "html": "Microsoft. (2018d, noviembre 19). \u003cem>Tipo de datos Integer\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type\u003c/a>",
+      "plano": "Microsoft. (2018d, noviembre 19). Tipo de datos Integer. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/integer-data-type"
     },
     "microsoft2018moneda": {
       "autor": "Microsoft",
-      "anio": "2018d",
-      "html": "Microsoft. (2018d, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
-      "plano": "Microsoft. (2018d, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
+      "anio": "2018e",
+      "html": "Microsoft. (2018e, noviembre 19). \u003cem>Tipo de datos Moneda\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type\u003c/a>",
+      "plano": "Microsoft. (2018e, noviembre 19). Tipo de datos Moneda. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/currency-data-type"
     },
     "microsoft2018variant": {
       "autor": "Microsoft",
-      "anio": "2018e",
-      "html": "Microsoft. (2018e, noviembre 19). \u003cem>Tipo de datos Variant\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type\u003c/a>",
-      "plano": "Microsoft. (2018e, noviembre 19). Tipo de datos Variant. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type"
+      "anio": "2018f",
+      "html": "Microsoft. (2018f, noviembre 19). \u003cem>Tipo de datos Variant\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type\u003c/a>",
+      "plano": "Microsoft. (2018f, noviembre 19). Tipo de datos Variant. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/variant-data-type"
     },
     "microsoft2018codigo": {
       "autor": "Microsoft",
-      "anio": "2018f",
-      "html": "Microsoft. (2018f, noviembre 21). \u003cem>Ventana de código\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\u003c/a>",
-      "plano": "Microsoft. (2018f, noviembre 21). Ventana de código. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window"
+      "anio": "2018g",
+      "html": "Microsoft. (2018g, noviembre 21). \u003cem>Ventana de código\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window\u003c/a>",
+      "plano": "Microsoft. (2018g, noviembre 21). Ventana de código. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/code-window"
     },
     "microsoft2018inmediato": {
       "autor": "Microsoft",
-      "anio": "2018g",
-      "html": "Microsoft. (2018g, noviembre 21). \u003cem>Ventana Inmediato\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\u003c/a>",
-      "plano": "Microsoft. (2018g, noviembre 21). Ventana Inmediato. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window"
+      "anio": "2018h",
+      "html": "Microsoft. (2018h, noviembre 21). \u003cem>Ventana Inmediato\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window\u003c/a>",
+      "plano": "Microsoft. (2018h, noviembre 21). Ventana Inmediato. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/immediate-window"
     },
     "microsoft2018locales": {
       "autor": "Microsoft",
-      "anio": "2018h",
-      "html": "Microsoft. (2018h, noviembre 21). \u003cem>Ventana Locales\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\u003c/a>",
-      "plano": "Microsoft. (2018h, noviembre 21). Ventana Locales. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window"
+      "anio": "2018i",
+      "html": "Microsoft. (2018i, noviembre 21). \u003cem>Ventana Locales\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window\u003c/a>",
+      "plano": "Microsoft. (2018i, noviembre 21). Ventana Locales. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/locals-window"
     },
     "microsoft2018depuracion": {
       "autor": "Microsoft",
-      "anio": "2018i",
-      "html": "Microsoft. (2018i, noviembre 24). \u003cem>Debug menu\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\u003c/a>",
-      "plano": "Microsoft. (2018i, noviembre 24). Debug menu. Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu"
+      "anio": "2018j",
+      "html": "Microsoft. (2018j, noviembre 24). \u003cem>Debug menu\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu\u003c/a>",
+      "plano": "Microsoft. (2018j, noviembre 24). Debug menu. Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/debug-menu"
     },
     "microsoft2018proyectos": {
       "autor": "Microsoft",
-      "anio": "2018j",
-      "html": "Microsoft. (2018j, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
-      "plano": "Microsoft. (2018j, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
+      "anio": "2018k",
+      "html": "Microsoft. (2018k, noviembre 26). \u003cem>Explorador de proyectos\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer\u003c/a>",
+      "plano": "Microsoft. (2018k, noviembre 26). Explorador de proyectos. Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/project-explorer"
     },
     "microsoft2018const": {
       "autor": "Microsoft",
-      "anio": "2018k",
-      "html": "Microsoft. (2018k, diciembre 3). \u003cem>Const statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\u003c/a>",
-      "plano": "Microsoft. (2018k, diciembre 3). Const statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement"
+      "anio": "2018l",
+      "html": "Microsoft. (2018l, diciembre 3). \u003cem>Const statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement\u003c/a>",
+      "plano": "Microsoft. (2018l, diciembre 3). Const statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/const-statement"
+    },
+    "microsoft2018onerror": {
+      "autor": "Microsoft",
+      "anio": "2018m",
+      "html": "Microsoft. (2018m, diciembre 3). \u003cem>Instrucción On Error (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/on-error-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/on-error-statement\u003c/a>",
+      "plano": "Microsoft. (2018m, diciembre 3). Instrucción On Error (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/on-error-statement"
     },
     "microsoft2018optionexplicit": {
       "autor": "Microsoft",
-      "anio": "2018l",
-      "html": "Microsoft. (2018l, diciembre 3). \u003cem>Instrucción Option Explicit (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\u003c/a>",
-      "plano": "Microsoft. (2018l, diciembre 3). Instrucción Option Explicit (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement"
+      "anio": "2018n",
+      "html": "Microsoft. (2018n, diciembre 3). \u003cem>Instrucción Option Explicit (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement\u003c/a>",
+      "plano": "Microsoft. (2018n, diciembre 3). Instrucción Option Explicit (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/option-explicit-statement"
     },
     "microsoft2018selectcase": {
       "autor": "Microsoft",
-      "anio": "2018m",
-      "html": "Microsoft. (2018m, diciembre 3). \u003cem>Select Case statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\u003c/a>",
-      "plano": "Microsoft. (2018m, diciembre 3). Select Case statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement"
+      "anio": "2018o",
+      "html": "Microsoft. (2018o, diciembre 3). \u003cem>Select Case statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement\u003c/a>",
+      "plano": "Microsoft. (2018o, diciembre 3). Select Case statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/select-case-statement"
     },
     "microsoft2018sub": {
       "autor": "Microsoft",
-      "anio": "2018n",
-      "html": "Microsoft. (2018n, diciembre 3). \u003cem>Sub statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\u003c/a>",
-      "plano": "Microsoft. (2018n, diciembre 3). Sub statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement"
+      "anio": "2018p",
+      "html": "Microsoft. (2018p, diciembre 3). \u003cem>Sub statement (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\">https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement\u003c/a>",
+      "plano": "Microsoft. (2018p, diciembre 3). Sub statement (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/sub-statement"
     },
     "microsoft2018inputbox": {
       "autor": "Microsoft",
-      "anio": "2018o",
-      "html": "Microsoft. (2018o, diciembre 13). \u003cem>Función InputBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\u003c/a>",
-      "plano": "Microsoft. (2018o, diciembre 13). Función InputBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function"
+      "anio": "2018q",
+      "html": "Microsoft. (2018q, diciembre 13). \u003cem>Función InputBox (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function\u003c/a>",
+      "plano": "Microsoft. (2018q, diciembre 13). Función InputBox (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/inputbox-function"
     },
     "microsoft2018print": {
       "autor": "Microsoft",
-      "anio": "2018p",
-      "html": "Microsoft. (2018p, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
-      "plano": "Microsoft. (2018p, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
+      "anio": "2018r",
+      "html": "Microsoft. (2018r, diciembre 14). \u003cem>Método Print (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method\u003c/a>",
+      "plano": "Microsoft. (2018r, diciembre 14). Método Print (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/print-method"
     },
     "microsoft2018examinador": {
       "autor": "Microsoft",
-      "anio": "2018q",
-      "html": "Microsoft. (2018q, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
-      "plano": "Microsoft. (2018q, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
+      "anio": "2018s",
+      "html": "Microsoft. (2018s, diciembre 17). \u003cem>Examinador de objetos (Visual Basic para Aplicaciones)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\">https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser\u003c/a>",
+      "plano": "Microsoft. (2018s, diciembre 17). Examinador de objetos (Visual Basic para Aplicaciones). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/reference/user-interface-help/object-browser"
     },
     "microsoft2018declarar": {
       "autor": "Microsoft",
-      "anio": "2018r",
-      "html": "Microsoft. (2018r, diciembre 21). \u003cem>Declaración de variables (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\u003c/a>",
-      "plano": "Microsoft. (2018r, diciembre 21). Declaración de variables (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables"
+      "anio": "2018t",
+      "html": "Microsoft. (2018t, diciembre 21). \u003cem>Declaración de variables (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables\u003c/a>",
+      "plano": "Microsoft. (2018t, diciembre 21). Declaración de variables (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/declaring-variables"
     },
     "microsoft2018usoeficaz": {
       "autor": "Microsoft",
-      "anio": "2018s",
-      "html": "Microsoft. (2018s, diciembre 26). \u003cem>Uso eficaz de tipos de datos (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\u003c/a>",
-      "plano": "Microsoft. (2018s, diciembre 26). Uso eficaz de tipos de datos (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently"
+      "anio": "2018u",
+      "html": "Microsoft. (2018u, diciembre 26). \u003cem>Uso eficaz de tipos de datos (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\">https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently\u003c/a>",
+      "plano": "Microsoft. (2018u, diciembre 26). Uso eficaz de tipos de datos (VBA). Microsoft Learn. https://learn.microsoft.com/es-es/office/vba/language/concepts/getting-started/using-data-types-efficiently"
     },
     "microsoft2018interrupcion": {
       "autor": "Microsoft",
-      "anio": "2018t",
-      "html": "Microsoft. (2018t, diciembre 27). \u003cem>Set and clear a breakpoint (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\">https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\u003c/a>",
-      "plano": "Microsoft. (2018t, diciembre 27). Set and clear a breakpoint (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint"
+      "anio": "2018v",
+      "html": "Microsoft. (2018v, diciembre 27). \u003cem>Set and clear a breakpoint (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\">https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint\u003c/a>",
+      "plano": "Microsoft. (2018v, diciembre 27). Set and clear a breakpoint (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/set-and-clear-a-breakpoint"
     },
     "microsoft2018seguimiento": {
       "autor": "Microsoft",
-      "anio": "2018u",
-      "html": "Microsoft. (2018u, diciembre 27). \u003cem>Trace code execution (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\">https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\u003c/a>",
-      "plano": "Microsoft. (2018u, diciembre 27). Trace code execution (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution"
+      "anio": "2018w",
+      "html": "Microsoft. (2018w, diciembre 27). \u003cem>Trace code execution (VBA)\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\">https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution\u003c/a>",
+      "plano": "Microsoft. (2018w, diciembre 27). Trace code execution (VBA). Microsoft Learn. https://learn.microsoft.com/en-us/office/vba/language/how-to/trace-code-execution"
     },
     "microsoft2019application": {
       "autor": "Microsoft",
@@ -5980,11 +6315,23 @@ End Sub`;
       "html": "Microsoft. (2026b, julio 14). \u003cem>Métodos abreviados de teclado de Excel\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel\">https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel\u003c/a>",
       "plano": "Microsoft. (2026b, julio 14). Métodos abreviados de teclado de Excel. Microsoft Support. https://support.microsoft.com/es-es/accessibility/excel/keyboard-shortcuts-in-excel"
     },
-    "microsoft2026vbal": {
+    "microsoft2026macrosinternet": {
       "autor": "Microsoft",
       "anio": "2026c",
-      "html": "Microsoft. (2026c, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
-      "plano": "Microsoft. (2026c, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+      "html": "Microsoft. (2026c, julio 17). \u003cem>Las macros de Internet están bloqueadas de forma predeterminada en Office\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/es-es/microsoft-365-apps/security/internet-macros-blocked\">https://learn.microsoft.com/es-es/microsoft-365-apps/security/internet-macros-blocked\u003c/a>",
+      "plano": "Microsoft. (2026c, julio 17). Las macros de Internet están bloqueadas de forma predeterminada en Office. Microsoft Learn. https://learn.microsoft.com/es-es/microsoft-365-apps/security/internet-macros-blocked"
+    },
+    "microsoft2026vbal": {
+      "autor": "Microsoft",
+      "anio": "2026d",
+      "html": "Microsoft. (2026d, agosto 18). \u003cem>[MS-VBAL]: VBA Language Specification\u003c/em>. Microsoft Learn. \u003ca href=\"https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\">https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74\u003c/a>",
+      "plano": "Microsoft. (2026d, agosto 18). [MS-VBAL]: VBA Language Specification. Microsoft Learn. https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/d5418146-0bd2-45eb-9c7a-fd9502722c74"
+    },
+    "microsoft2026macros365": {
+      "autor": "Microsoft",
+      "anio": "2026e",
+      "html": "Microsoft. (2026e, agosto 20). \u003cem>Habilitar o deshabilitar macros en archivos de Microsoft 365\u003c/em>. Microsoft Support. \u003ca href=\"https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-files\">https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-files\u003c/a>",
+      "plano": "Microsoft. (2026e, agosto 20). Habilitar o deshabilitar macros en archivos de Microsoft 365. Microsoft Support. https://support.microsoft.com/es-es/office/vba/enable-or-disable-macros-in-microsoft-365-files"
     }
   },
   "profundizar": {
