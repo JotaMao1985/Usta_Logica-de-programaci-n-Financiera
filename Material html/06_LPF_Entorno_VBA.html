@@ -5571,8 +5571,9 @@ End Sub`;
         );
 
         // ── Sección 7 · bloques (solo VBA) ───────────────────────────────────
-        // Sin salida declarada: se detiene con el error 6 (un Currency entre un
-        // Integer en cero; no se aisló cuál de las dos cosas lo causa). Se ejecutó a mano; lo
+        // Sin salida declarada: se detiene con el error 6. La división da el 11 si
+        // su resultado se escribe o va a un Double, y el 6 si va a un Currency
+        // (registro de ejecución del vault, apartado 12). Se ejecutó a mano; lo
         // que dijo Excel está en el recuadro que la sigue.
         const CUOTA_SIN_PLAZO = {
             vba: `Sub CuotaSinPlazo()
@@ -5751,12 +5752,18 @@ End Sub`;
                 <p>
                     El número no es el que uno esperaría. VBA tiene un error propio para la división
                     entre cero, el 11: al escribir <span className="inline-code">? 12000000 / 0</span> en
-                    la ventana Inmediato, Excel respondió «Run-time error '11': Division by zero». Pero en
-                    la rutina, donde el dividendo es un <span className="inline-code">Currency</span> y el
-                    divisor una variable <span className="inline-code">Integer</span>, lo que informó fue un
-                    desbordamiento. Cuál de las dos diferencias lo causa no se aisló aquí. El capítulo 4 ya había anotado un caso parecido, el de cero entre
-                    cero. Lo que queda de esto para leer macros ajenas: el número del error orienta, pero
-                    no siempre nombra la causa.
+                    la ventana Inmediato, Excel respondió «Run-time error '11': Division by zero». La
+                    diferencia no está en lo que se divide sino en dónde se guarda el resultado. Se probó
+                    en la ventana Inmediato la misma división, un <span className="inline-code">Currency</span> de
+                    12 000 000 entre un <span className="inline-code">Integer</span> en cero, de tres
+                    maneras. Escrita con <span className="inline-code">?</span>, dio el 11. Asignada a una
+                    variable <span className="inline-code">Double</span>, dio el 11. Asignada a una
+                    variable <span className="inline-code">Currency</span>, como en la rutina, dio el 6.
+                </p>
+                <p>
+                    El capítulo 4 ya había anotado otro caso en que dividir entre cero informa el 6: cero
+                    entre cero. Aquí se repitió y dio lo mismo. Lo que queda de esto para leer macros
+                    ajenas: el número del error orienta, pero no siempre nombra la causa.
                 </p>
 
                 <h3>Prevenir: la guardia</h3>
@@ -5922,7 +5929,7 @@ End Sub`;
             ['Debug.Print', 'Instrucción que escribe una línea en la ventana Inmediato. El punto y coma pega lo que sigue; la coma lo lleva a la zona de impresión siguiente.'],
             ['Declaración implícita', 'Lo que hace VBA cuando se le asigna un valor a un nombre que nadie declaró y el módulo no lleva Option Explicit: crea la variable, de tipo Variant, sin avisar.'],
             ['Dim', 'Instrucción que declara una variable y le da su tipo con As. Una variable numérica declarada nace en 0. El editor no se detiene en ella al recorrer una rutina.'],
-            ['Desbordamiento', 'Error 6 de ejecución: el resultado de una asignación, un cálculo o una conversión no cabe en el rango del tipo. En este capítulo salió con el producto de dos Integer. También apareció al dividir un Currency entre un Integer que valía cero, y ahí la causa no se aisló.'],
+            ['Desbordamiento', 'Error 6 de ejecución: el resultado de una asignación, un cálculo o una conversión no cabe en el rango del tipo. En este capítulo salió con el producto de dos Integer. También apareció al guardar en un Currency el resultado de una división entre cero.'],
             ['Editor de VBA', 'La ventana, aparte de la del libro, donde se ve, se escribe y se ejecuta el código. Entre sus zonas están el explorador de proyectos, la ventana de código, la ventana Inmediato y la ventana Locales.'],
             ['Err', 'Objeto que contiene la información del error de ejecución que acaba de producirse. Aquí se usaron dos de sus propiedades: Number y Description.'],
             ['Error de compilación', 'El que el editor encuentra antes de ejecutar, como un nombre no declarado en un módulo con Option Explicit. Ninguna instrucción llega a ejecutarse.'],

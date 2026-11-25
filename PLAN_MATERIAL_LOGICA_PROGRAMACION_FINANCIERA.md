@@ -5138,3 +5138,19 @@ Rama `claude/cap06-fase11`, sobre la fase 10; sin fusionar.
 - **Queda de esta fase, a la espera del docente:** la ejecución que decide la frase del
   capítulo 4 sobre el error 11 (un `Currency` entre un `Long` en cero), el recorrido en
   el iPhone, y los borradores del banco, que se propusieron como sesión aparte.
+
+### Tarea 16 · Capítulo 6, fase 11 (segunda parte): la división entre cero · 2026-11-24
+
+Rama `claude/cap06-fase11`; sin fusionar.
+
+- **La duda sobre el capítulo 4 se resolvió a su favor.** Seis divisiones en la ventana
+  Inmediato: un `Currency` entre un `Long` o un `Integer` en cero da el error 11 si el
+  resultado se escribe o se guarda en un `Double`, y el 6 si se guarda en un `Currency`;
+  cero entre cero da el 6. El capítulo 4 compara el resultado, no lo guarda, así que su
+  frase («con un total distinto de cero sería el 11») es correcta. No se tocó.
+- **Lo que estaba incompleto era la sección 7 del capítulo 6**, que decía que la causa
+  del 6 no se había aislado. Ahora cuenta las tres pruebas y dice qué decide: el
+  destino del resultado.
+- **Para la próxima vez:** una diferencia entre dos ejecuciones no se atribuye a una
+  causa mientras cambien dos cosas a la vez. La fase 9 lo dejó dicho en el texto en vez
+  de adivinar, y eso permitió corregirlo aquí sin desdecirse.
