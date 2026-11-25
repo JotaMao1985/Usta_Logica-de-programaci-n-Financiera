@@ -5091,3 +5091,31 @@ Rama `claude/cap06-fase9`, sobre la fase 8; sin fusionar.
   de pegar.
 - **Estado del verificador:** 2 fallos, por las motivaciones de la portada y la
   evaluación (fase 10). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 10: portada, evaluación y glosario · 2026-11-24
+
+Rama `claude/cap06-fase10`, sobre la fase 9; sin fusionar.
+
+- **Contenido:** la portada (caso de apertura, ficha del syllabus, cambio de orden frente
+  al syllabus, qué secciones traen cuatro lenguajes, con qué Excel se preparó), el E6 que
+  faltaba, el cuestionario integrador de diez, un glosario de 27 términos y «Lo que
+  viene». Con esto el capítulo no tiene secciones en construcción.
+- **`verificar.py --con-salidas --con-pandoc` en verde para los seis capítulos**, por
+  primera vez con el 6 completo: 16 ejercicios, cuota cumplida.
+- **Lectura crítica independiente**, contra las siete secciones: las diez claves del
+  cuestionario eran correctas. Lo que encontró: dos justificaciones que contradecían el
+  cuerpo; un enunciado falso en el E6; una definición del E6 que entregaba la regla que
+  evaluaba una pregunta posterior; nueve definiciones del glosario que generalizaban
+  (entre ellas la del desbordamiento, que atribuía al `Currency` lo que la sección 7
+  dice que no se aisló); y un recuento equivocado en la portada de qué secciones traen
+  cuatro lenguajes. Se cambiaron tres preguntas que repetían ejercicios del capítulo.
+- **El caso de la portada no se cerraba en ninguna sección.** Preguntaba si las cifras
+  de `OtroAcuerdo` estaban bien, y la sección 6 solo explicaba el mecanismo. Se añadió
+  allí la respuesta: el cuarto abono cobró 150 000 de más.
+- **Reglas que trabajaron:** la 21 (ocho cifras del cuestionario sin espacio duro), la de
+  la clave larga (tres preguntas que se acertaban por el tamaño) y la de pregunta
+  repetida (una opción del cuestionario igual a la de un ejercicio).
+- **Comprobado en el navegador:** el cuestionario respondido entero, 10 de 10 con las
+  claves y 0 de 10 con respuestas malas; el emparejamiento, 7 de 7.
+- **Pendiente para la fase 12:** las justificaciones del cuestionario repiten hechos que
+  las secciones citan, y no tienen nota de afirmación propia.

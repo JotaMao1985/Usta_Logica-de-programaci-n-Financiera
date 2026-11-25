@@ -3149,9 +3149,109 @@ End Sub`;
         ============================================================ */
         const PortadaSection = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    Este capítulo todavía no está escrito. No está enlazado desde el índice del curso.
+                <Motivacion icon="fa-file-code"
+                    gancho="Lleva cinco capítulos leyendo VBA sin haberlo visto correr. ¿Podría decir qué hace una macro que escribió otra persona?">
+                    Una analista hereda un libro de Excel de quien ocupaba su puesto. Trae una rutina de
+                    once líneas que, para un acuerdo de pago de 1 850 000 en abonos de 500 000, informa 4
+                    meses y un saldo de −150 000. Nadie le pide escribir una macro nueva. Le piden decir si
+                    esas cifras están bien, y para eso tiene que encontrar la rutina, ejecutarla y seguirla
+                    instrucción por instrucción.
+                </Motivacion>
+
+                <Ilustrativo>
+                    La analista y el libro heredado son un caso inventado. La rutina es
+                    {' '}<span className="inline-code">OtroAcuerdo</span>, del capítulo 5, y las cifras son las
+                    que dio al ejecutarla en Excel.
+                </Ilustrativo>
+
+                <Box type="tip" label="Cómo estudiar este capítulo">
+                    Este material es <strong>autónomo</strong>: se avanza a ritmo propio con los botones
+                    <em> Anterior / Siguiente</em>, y el navegador <strong>recuerda la última lección</strong>,
+                    así que se puede pausar y retomar. Conviene intentar cada ejercicio <em>antes</em> de
+                    ver la retroalimentación. Y conviene tener Excel abierto: casi todo lo que aquí se
+                    cuenta se puede repetir en el editor.
                 </Box>
+
+                <h3>Identificación</h3>
+                <div className="overflow-x-auto">
+                    {/* fuente-ok: ficha del capítulo; lo que viene del syllabus se coteja como remisión */}
+                    <table>
+                        <tbody>
+                            <tr><th>Asignatura</th><td>{CONFIG.asignatura}</td></tr>
+                            <tr><th>Capítulo</th><td>{CONFIG.numero} — {CONFIG.titulo}</td></tr>
+                            <tr><th>Contenido del syllabus</th><td>{CONFIG.contenidoSyllabus}</td></tr>
+                            <tr><th>Resultado de aprendizaje</th><td>{CONFIG.ra} — «Interpreta el lenguaje de programación utilizado por las empresas del sector financiero que son intensivos en tecnología»</td></tr>
+                            <tr><th>Tiempo estimado</th><td>{CONFIG.horas} horas</td></tr>
+                            <tr><th>Evaluación asociada</th><td>Un juego en la plataforma Moodle</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Qué se lleva de aquí</h3>
+                <p>
+                    Este capítulo no enseña un algoritmo nuevo. Enseña el lugar donde viven los que ya
+                    conoce. Al terminarlo debería poder abrir el editor de VBA y encontrar una rutina;
+                    decir qué declara cada <span className="inline-code">Dim</span> y qué pasa cuando
+                    falta; elegir el tipo de un dato sabiendo qué no va a poder guardar; leer y escribir
+                    una celda desde el código; seguir una rutina paso a paso mirando sus variables; y
+                    reconocer qué clase de error tiene delante cuando algo sale mal.
+                </p>
+
+                <Pipeline steps={[
+                    { num: 1, title: 'Por qué VBA', desc: 'Lo que pide el syllabus y lo que usted ya ha leído sin explicación' },
+                    { num: 2, title: 'El editor de VBA', desc: 'Dónde está el código de un libro y cómo se ejecuta' },
+                    { num: 3, title: 'Del algoritmo al código', desc: 'Sub, Dim, Option Explicit y Select Case' },
+                    { num: 4, title: 'Tipos de datos y Currency', desc: 'Lo que cada tipo guarda y lo que pierde' },
+                    { num: 5, title: 'La hoja: Range y Cells', desc: 'Nombrar una celda, leerla, escribirla, y lo que cuesta' },
+                    { num: 6, title: 'Depurar con F8', desc: 'Una instrucción cada vez, con las variables a la vista' },
+                    { num: 7, title: 'Errores y seguridad', desc: 'El aviso que nadie previó, y la macro que llega de fuera' },
+                ]} />
+
+                <h3>De dónde viene este capítulo</h3>
+                <p>
+                    Los capítulos 1 a 5 presentaron cada algoritmo en cuatro lenguajes, y el cuarto fue
+                    siempre VBA. Usted leyó esas pestañas sin que se le explicara el entorno, y los
+                    capítulos fueron dejando preguntas para este: por qué el dinero va
+                    en <span className="inline-code">Currency</span>, qué hace
+                    un <span className="inline-code">Dim</span> con una variable que nadie inicializó, de
+                    dónde sale el dato cuando una rutina
+                    dice <span className="inline-code">Range("B2").Value</span>, y cómo hace la máquina
+                    las trazas que usted hizo a mano. Las cuatro se responden aquí, en las secciones 4, 3, 5
+                    y 6, y la sección 3 vuelve además sobre el <span className="inline-code">Select Case</span> que
+                    el capítulo 4 dejó anunciado.
+                </p>
+
+                <Box type="info" label="Un cambio de orden frente al syllabus">
+                    El syllabus lista el contenido de arreglos antes que este. El material los invierte:
+                    a juicio del docente, no se puede codificar un arreglo en un entorno que todavía no
+                    se conoce. Las horas de cada contenido no cambian. Los arreglos son el capítulo 7.
+                </Box>
+
+                <h3>Los cuatro lenguajes, en este capítulo</h3>
+                <p>
+                    Hasta el capítulo 5, los algoritmos se mostraron en cuatro pestañas. Aquí no siempre.
+                    Las secciones 3 y 4 conservan las cuatro en el algoritmo que se traduce, en la
+                    comparación de tipos y en tres ejercicios; lo que es solo de VBA va solo en VBA. Las
+                    secciones 1, 2, 5, 6 y 7 traen solo VBA, porque muestran el editor, la hoja y los
+                    avisos de Excel.
+                </p>
+
+                <Box type="warn" label="Con qué Excel se preparó">
+                    Todo lo que este capítulo dice haber visto se vio en Excel 16.115 para Mac, con los
+                    menús en inglés. Donde la documentación de Microsoft describe otra cosa, el texto lo
+                    dice. Y donde algo no se pudo comprobar, también: no se llena el hueco con lo que
+                    debería pasar.
+                </Box>
+
+                <CalloutPro tema="info" titulo="Los ejercicios de este capítulo" subtitulo="Dieciséis ejercicios y un cuestionario integrador" icon="fa-brain">
+                    Ninguno pide <strong>escribir una macro desde cero</strong>. Piden lo que pide el
+                    resultado de aprendizaje: <strong>interpretar</strong>. Aquí se ejercita
+                    {' '}<strong>anticipar</strong> lo que mostrará el editor en cada
+                    parada, <strong>encontrar</strong> la línea que decide un error,
+                    {' '}<strong>comparar</strong> dos rutinas que parecen iguales, <strong>ordenar</strong> y
+                    {' '}<strong>relacionar</strong> piezas de código, <strong>decir</strong> qué significa la
+                    cifra que una rutina informó y <strong>argumentar</strong> una decisión.
+                </CalloutPro>
             </div>
         );
 
@@ -5168,8 +5268,10 @@ End Sub`;
 
         // ── Sección 6 · rutinas de los tres E1 (solo VBA, como texto) ─────────
         // Las paradas y los valores de las tres tablas se recorrieron en Excel el
-        // 2026-11-24 (registro de ejecución del vault, apartado 10).
-        const F8_TRES_ABONOS = `Sub TresAbonos()
+        // 2026-11-24 (registro de ejecución del vault, apartado 10). La primera
+        // rutina se ejecutó con el nombre TresAbonos; aquí se llama
+        // AbonosCrecientes para no repetir el del E3 de la sección 3.
+        const F8_TRES_ABONOS = `Sub AbonosCrecientes()
     Dim saldo As Currency, abono As Currency, k As Integer
     saldo = 900000
     For k = 1 To 3
@@ -5266,6 +5368,12 @@ End Sub`;
                     salió con −150 000. El ciclo no lo evitó porque la condición se pregunta antes de la
                     resta, no después: con 350 000 era verdadera, y la vuelta se hizo completa.
                 </p>
+                <p>
+                    ¿Están bien las cifras, entonces? La rutina hizo lo que dice su código. Cuatro abonos
+                    de 500 000 son 2 000 000, y la deuda era de 1 850 000: el saldo negativo dice que
+                    el cuarto abono cobró 150 000 de más. El editor muestra lo que pasó. Decidir si eso
+                    era lo que debía pasar le toca a quien lee, y ningún aviso lo va a hacer por él.
+                </p>
 
                 <h3>Tres cosas que la traza a mano hacía distinto</h3>
                 <p>
@@ -5324,7 +5432,7 @@ End Sub`;
                     ocultas={['saldo', 'abono', 'k']}
                     exigeRespuesta
                     filas={[
-                        { parada: 'Sub TresAbonos()', saldo: '0', abono: '0', k: '0' },
+                        { parada: 'Sub AbonosCrecientes()', saldo: '0', abono: '0', k: '0' },
                         { parada: 'For k = 1 To 3', saldo: '900000', abono: '0', k: '0' },
                         { parada: 'Next k, primera vez', saldo: '800000', abono: '100000', k: '1' },
                         { parada: 'Next k, segunda vez', saldo: '600000', abono: '200000', k: '2' },
@@ -5397,7 +5505,8 @@ End Sub`;
                 <p>
                     En un ciclo, el paso a paso muestra cuántas veces. En una decisión muestra por dónde.
                     A juicio del docente, con una rutina ajena suele decir más saber qué
-                    líneas <em>no</em> se ejecutaron que leer el código entero. Esta es la rutina de la sección 3 que clasifica una mora:
+                    líneas <em>no</em> se ejecutaron que leer el código entero. Esta es una versión corta de la rutina de la sección 3 que
+                    clasifica una mora:
                 </p>
 
                 <TablaTraza
@@ -5791,10 +5900,217 @@ End Sub`;
             </div>
         );
 
+        // E6 · solo VBA: siete expresiones, de las secciones 2, 3, 4, 5 y 7, y lo que hace o
+        // devuelve cada una. Todas están ejecutadas o citadas en su sección.
+        const EMPAREJA_CAP06 = [
+            'Range("B2").Value',
+            'Cells(5, 3)',
+            'Dim cuota As Currency',
+            'Option Explicit',
+            'On Error GoTo Fallo',
+            'Debug.Print saldo',
+            'ActiveSheet.Name',
+        ];
+
+        /* Los términos del capítulo, con definiciones coherentes con lo que dice
+           cada sección; pasaron por una lectura crítica contra las siete
+           secciones. En orden alfabético. */
+        const GLOSARIO_CAP06 = [
+            ['Cells', 'Manera de señalar una celda con dos números: primero la fila y después la columna. Cells(5, 3) es la celda C5.'],
+            ['Controlador de errores', 'Parte de una rutina escrita para el caso en que algo falla al ejecutar. On Error GoTo, seguido de una etiqueta, hace que la ejecución salte a ella cuando se produce un error.'],
+            ['Currency', 'Tipo de dato de VBA para importes: un entero de 64 bits con escala de 10 000, que da cuatro decimales fijos. Suma centavos sin el error del punto flotante, y no sirve para una tasa con más de cuatro decimales.'],
+            ['Debug.Print', 'Instrucción que escribe una línea en la ventana Inmediato. El punto y coma pega lo que sigue; la coma lo lleva a la zona de impresión siguiente.'],
+            ['Declaración implícita', 'Lo que hace VBA cuando se le asigna un valor a un nombre que nadie declaró y el módulo no lleva Option Explicit: crea la variable, de tipo Variant, sin avisar.'],
+            ['Dim', 'Instrucción que declara una variable y le da su tipo con As. Una variable numérica declarada nace en 0. El editor no se detiene en ella al recorrer una rutina.'],
+            ['Desbordamiento', 'Error 6 de ejecución: el resultado de una asignación, un cálculo o una conversión no cabe en el rango del tipo. En este capítulo salió con el producto de dos Integer. También apareció al dividir un Currency entre un Integer que valía cero, y ahí la causa no se aisló.'],
+            ['Editor de VBA', 'La ventana, aparte de la del libro, donde se ve, se escribe y se ejecuta el código. Entre sus zonas están el explorador de proyectos, la ventana de código, la ventana Inmediato y la ventana Locales.'],
+            ['Err', 'Objeto que contiene la información del error de ejecución que acaba de producirse. Aquí se usaron dos de sus propiedades: Number y Description.'],
+            ['Error de compilación', 'El que el editor encuentra antes de ejecutar, como un nombre no declarado en un módulo con Option Explicit. Ninguna instrucción llega a ejecutarse.'],
+            ['Error de ejecución', 'El que aparece mientras el código corre, con un número: aquí, el 6, el 11 y el 13. Si no hay un On Error, la rutina se detiene con un aviso.'],
+            ['Error de lógica', 'El que no produce ningún aviso: la rutina termina y el resultado está mal. Se encuentra probando y siguiendo la rutina paso a paso.'],
+            ['Guardia', 'Pregunta que se le hace a un dato antes de usarlo, para no llegar al error: por ejemplo, si el plazo es mayor que cero antes de dividir.'],
+            ['Hoja activa', 'La hoja que está al frente en el libro activo. Range y Cells, usadas sin decir de qué hoja, trabajan sobre ella.'],
+            ['Macro', 'Un programa guardado dentro de un libro de Excel. En este capítulo, una rutina de VBA.'],
+            ['Modo de interrupción', 'El estado de una rutina que está en pausa: empezó a ejecutarse, se detuvo antes de una instrucción y espera. El título del editor terminaba en [break].'],
+            ['Módulo', 'El contenedor donde se escribe el código dentro del proyecto de un libro. Option Explicit va en él antes de cualquier procedimiento.'],
+            ['On Error Resume Next', 'Forma de On Error que, tras un error, hace seguir la ejecución en la instrucción siguiente, sin aviso. A juicio del docente, en una rutina de cálculo esconde el error.'],
+            ['Option Explicit', 'Instrucción que, puesta en un módulo antes de sus procedimientos, obliga a declarar todas las variables. Con ella, un nombre no declarado es un error de compilación.'],
+            ['Procedimiento Sub', 'Uno de los procedimientos en que se escribe el código ejecutable: empieza en Sub, con un nombre, y termina en End Sub. Ejecuta instrucciones y no devuelve un valor.'],
+            ['Punto de interrupción', 'Marca puesta en una línea para que la ejecución se detenga allí, antes de ejecutarla. No se guarda con el libro.'],
+            ['Range', 'Objeto que representa una celda, una fila, una columna o un grupo de celdas. Una celda sola también es un Range.'],
+            ['Step Into', 'Comando del menú Debug que ejecuta una instrucción cada vez. La documentación le asigna la tecla F8, que da nombre a la sección 6; en el Excel para Mac de este capítulo el menú mostraba ⇧⌘I.'],
+            ['Value', 'Propiedad de un Range que devuelve o establece lo que hay en la celda. Lo que devuelve es un Variant: un número, un texto, o Empty si la celda está vacía; para un rango de varias celdas, una matriz.'],
+            ['Variant', 'El tipo de una variable a la que no se le declaró otro. Puede contener casi cualquier dato, y lo que contiene puede cambiar de tipo de una asignación a otra.'],
+            ['Ventana Inmediato', 'La ventana del editor donde aparece lo que escribe Debug.Print, y donde se puede escribir una línea de código para ejecutarla.'],
+            ['Ventana Locales', 'La ventana del editor que, con la rutina en pausa, muestra las variables del procedimiento con su valor y su tipo.'],
+        ];
+
         const EvaluacionSection = () => (
             <div className="prose-lp">
-                <Box type="info" label="En construcción">
-                    La evaluación y el glosario se escriben en la fase 10.
+                <Motivacion icon="fa-graduation-cap"
+                    gancho="Una macro ajena no viene con su autor. Viene con su código, y con lo que usted pueda leer en él.">
+                    En el área de cartera de una cooperativa hay doce libros de Excel con macros. Las
+                    escribieron tres personas, y dos ya no trabajan allí. Cuando una cifra de un reporte
+                    no cuadra, alguien tiene que abrir el editor, encontrar la rutina que la produjo y
+                    decir qué hizo. Esa persona no necesita saber escribir las doce. Necesita poder leer
+                    cualquiera.
+                </Motivacion>
+
+                <Ilustrativo>
+                    La cooperativa, sus doce libros y las tres personas son un caso inventado para esta
+                    sección.
+                </Ilustrativo>
+
+                <Ejercicio tipo="E6"><Emparejamiento
+                    enunciado="Relacione cada expresión de VBA con lo que hace o con lo que devuelve. Las siete vienen de cinco secciones del capítulo."
+                    etiquetaIzq="Expresión"
+                    etiquetaDer="Qué hace o qué devuelve"
+                    izquierda={EMPAREJA_CAP06}
+                    lang="vba"
+                    derecha={[
+                        'Hace que, si algo falla al ejecutar, la rutina salte a la parte escrita para ese caso.',
+                        'Señala la celda C5 de la hoja que está al frente.',
+                        'Devuelve el nombre de la hoja que está al frente.',
+                        'Deja una línea en la ventana Inmediato.',
+                        'Devuelve lo que hay en una celda: un número, un texto o Empty.',
+                        'Hace que un nombre mal escrito detenga la compilación en vez de crear una variable.',
+                        'Reserva una variable para un importe, con cuatro decimales fijos.',
+                    ]}
+                    solucion={[4, 1, 6, 5, 0, 3, 2]}
+                /></Ejercicio>
+
+                <Quiz titulo="Evaluación · Capítulo 06 — Entorno de programación VBA" preguntas={[
+                    {
+                        seccion: 'cap1',
+                        pregunta: 'El resultado de aprendizaje de este capítulo pide «interpretar» el lenguaje que usan las empresas del sector. ¿Cuál de estas tareas es la que más se le parece?',
+                        opciones: [
+                            { texto: 'Escribir desde cero una macro que calcule la cuota de un crédito.', correcta: false },
+                            { texto: 'Seguir una rutina que escribió otra persona y decir qué hace.', correcta: true },
+                            { texto: 'Aprender de memoria los atajos de teclado del editor de VBA.', correcta: false },
+                            { texto: 'Pasar a Python una rutina que hoy está escrita en VBA.', correcta: false },
+                        ],
+                        justificacion: 'La sección 1 traduce ese verbo en leer una rutina, seguirla y diagnosticarla, no en escribirla desde cero. Por eso ningún ejercicio del capítulo pide escribir una macro. La sección 6 lo repite al presentar el paso a paso: seguir una rutina ajena es lo que pide el resultado de aprendizaje.',
+                    },
+                    {
+                        seccion: 'cap2',
+                        pregunta: 'Un libro de Excel trae una macro, pero en sus hojas solo hay números. ¿Dónde está el código?',
+                        opciones: [
+                            { texto: 'En una hoja oculta del libro, escrita como fórmulas.', correcta: false },
+                            { texto: 'En un archivo aparte, que viaja junto al libro.', correcta: false },
+                            { texto: 'En un módulo del proyecto del libro, que se ve en el editor.', correcta: true },
+                            { texto: 'En la ventana Inmediato del editor, que guarda lo que se ejecutó.', correcta: false },
+                        ],
+                        justificacion: 'El código vive en un módulo del proyecto del libro y se ve en el editor, no en las celdas. La ventana Inmediato muestra lo que escribe Debug.Print y ejecuta una línea suelta, pero no guarda la macro del libro.',
+                    },
+                    {
+                        seccion: 'cap3',
+                        pregunta: 'Una rutina como la de la sección 3 suma los intereses de tres créditos, 30 000, 45 000 y 12 000, e informa un total de 42 000. No dio ningún aviso, y el módulo no lleva Option Explicit. ¿Qué pasó?',
+                        opciones: [
+                            { texto: 'El nombre del total estaba mal escrito en la segunda suma, y VBA creó otra variable.', correcta: true },
+                            { texto: 'El total se declaró As Integer, y los 45 000 de la segunda suma no cupieron en ese tipo.', correcta: false },
+                            { texto: 'El total se declaró As Currency, que recortó los decimales de la segunda suma.', correcta: false },
+                            { texto: 'La rutina se detuvo en la segunda suma y escribió el total que llevaba hasta ahí.', correcta: false },
+                        ],
+                        justificacion: 'Es el caso de la sección 3, con otras cifras. Sin Option Explicit, asignarle a un nombre que no existe crea una variable. El resultado de la segunda suma quedó en esa variable, que el cálculo no volvió a usar, y al total solo llegaron el primer interés y el tercero: 30 000 más 12 000 son 42 000. Un Integer que no alcanza habría detenido la rutina con el error 6, y aquí no hubo aviso.',
+                    },
+                    {
+                        seccion: 'cap3',
+                        pregunta: 'Una rutina declara Dim capital, cuota As Currency. ¿De qué tipo queda cada variable?',
+                        opciones: [
+                            { texto: 'Las dos quedan de tipo Currency.', correcta: false },
+                            { texto: 'capital queda Variant y cuota queda Currency.', correcta: true },
+                            { texto: 'capital queda Currency y cuota queda Variant.', correcta: false },
+                            { texto: 'Ninguna: la línea es un error de compilación.', correcta: false },
+                        ],
+                        justificacion: 'El As vale solo para el nombre que lo lleva. La documentación lo muestra con Dim intX, intY, intZ As Integer, donde solo intZ es entera. Una variable a la que no se le da tipo queda Variant. Por eso las rutinas del curso repiten el As en cada nombre.',
+                    },
+                    {
+                        seccion: 'cap4',
+                        pregunta: 'Una rutina declara tasa As Currency y ejecuta tasa = 0.01256, que es el 1,256 % mensual. ¿Qué escribió Debug.Print tasa?',
+                        opciones: [
+                            { texto: '0.01256: un Currency guarda los decimales que reciba.', correcta: false },
+                            { texto: '0.0125: un Currency corta lo que pase del cuarto decimal.', correcta: false },
+                            { texto: '0.0126: un Currency guarda cuatro decimales, y redondeó.', correcta: true },
+                            { texto: 'Nada: la asignación se detiene con el error 6, Overflow.', correcta: false },
+                        ],
+                        justificacion: 'Así salió en la sección 4. Currency es punto fijo con cuatro decimales: el quinto no cabe, y el valor se redondeó a 0,0126. Desde ahí todas las cuentas se hicieron con el 1,26 %, y el interés de un saldo de 10 000 000 pasó de 125 600 a 126 000. Por eso las rutinas del curso guardan los importes en Currency y las tasas en Double.',
+                    },
+                    {
+                        seccion: 'cap4',
+                        pregunta: 'creditos y dias son Integer y valen 1200 y 30. total es Long. ¿Qué pasa al ejecutar total = creditos * dias?',
+                        opciones: [
+                            { texto: 'total queda en 36000, porque un Long tiene espacio de sobra.', correcta: false },
+                            { texto: 'La rutina se detiene con el error 6, Overflow.', correcta: true },
+                            { texto: 'total queda en 32767, el mayor valor de un Integer.', correcta: false },
+                            { texto: 'La rutina se detiene con el error 13, Type mismatch.', correcta: false },
+                        ],
+                        justificacion: 'Así salió en la sección 4. El destino es amplio, pero el producto de dos Integer se desborda antes de llegar a él. El remedio que da la documentación es convertir uno de los operandos con CLng; con eso la rutina escribió 36000.',
+                    },
+                    {
+                        seccion: 'cap5',
+                        pregunta: 'En la hoja activa, ¿qué celda señala Cells(3, 5)?',
+                        opciones: [
+                            { texto: 'C5', correcta: false },
+                            { texto: 'E5', correcta: false },
+                            { texto: 'E3', correcta: true },
+                            { texto: 'C3', correcta: false },
+                        ],
+                        justificacion: 'En Cells va primero la fila y después la columna: fila 3, columna 5, que es la E. Excel respondió $E$3. Es el orden contrario al de la dirección escrita, que nombra primero la columna, y Excel no avisa cuando los números van al revés: señala otra celda.',
+                    },
+                    {
+                        seccion: 'cap6',
+                        pregunta: 'En el recorrido paso a paso de OtroAcuerdo, ¿en cuál de estas líneas no se detuvo el editor?',
+                        opciones: [
+                            { texto: 'En la línea Sub OtroAcuerdo(), la primera.', correcta: false },
+                            { texto: 'En la línea Loop, al final de cada vuelta.', correcta: false },
+                            { texto: 'En la línea End Sub, la última.', correcta: false },
+                            { texto: 'En la línea Dim, la de las declaraciones.', correcta: true },
+                        ],
+                        justificacion: 'El editor pasó de la línea Sub a la primera asignación, sin detenerse en el Dim. Sí se detuvo en Sub, en cada Loop y en End Sub: fueron 23 paradas. Es coherente con que una declaración no es código ejecutable. La diferencia con la traza a mano está en las otras dos: allí Sub y End Sub no tenían fila.',
+                    },
+                    {
+                        seccion: 'cap7',
+                        pregunta: 'Le llega por correo un libro de Excel con macros que no esperaba, de un remitente conocido. Según el criterio que da la sección 7, ¿qué hace?',
+                        opciones: [
+                            { texto: 'Habilita las macros: el remitente es conocido, y eso basta.', correcta: false },
+                            { texto: 'No las habilita, y antes averigua qué hace la macro.', correcta: true },
+                            { texto: 'Las habilita solo si el archivo termina en .xlsm.', correcta: false },
+                            { texto: 'Las habilita, porque en un Mac no hay ningún riesgo.', correcta: false },
+                        ],
+                        justificacion: 'Es el primero de los tres hábitos de la sección 7, que es criterio del docente: no habilitar las macros de un libro que no se esperaba, aunque el remitente sea conocido. La razón está citada allí: las macros de VBA son una vía común para desplegar malware. La extensión .xlsm solo dice que el libro puede traer macros, no que sean de fiar, y el bloqueo automático de Office es de Windows, lo que no vuelve seguro al Mac.',
+                    },
+                    {
+                        seccion: 'cap7',
+                        pregunta: 'Una rutina tiene On Error GoTo Fallo al comienzo y más abajo ejecuta monto = CCur("dos millones"). ¿Qué pasa al llegar a esa línea?',
+                        opciones: [
+                            { texto: 'Excel muestra su aviso de error y la rutina se detiene.', correcta: false },
+                            { texto: 'monto queda en 0 y la rutina sigue en la línea siguiente.', correcta: false },
+                            { texto: 'La ejecución salta a la etiqueta Fallo, con el error 13.', correcta: true },
+                            { texto: 'Nada: el editor la rechazó antes, al compilar la rutina.', correcta: false },
+                        ],
+                        justificacion: 'Así salió en la sección 7. CCur no pudo convertir el texto y se produjo un error de ejecución, el 13. Como había un On Error GoTo, el control pasó a la etiqueta, y allí la rutina escribió el número y la descripción que le dio el objeto Err. Sin el controlador habría salido el aviso de Excel. Seguir en la línea siguiente es lo que hace On Error Resume Next. Y no es un error de compilación: el texto que se convierte solo se conoce al ejecutar.',
+                    },
+                ]} />
+
+                <h3>Glosario del capítulo</h3>
+                <div className="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr><th>Término</th><th>Definición</th></tr>
+                        </thead>
+                        <tbody>
+                            {GLOSARIO_CAP06.map(([t, d], i) => (
+                                <tr key={i}><th style={{ whiteSpace: 'nowrap' }}>{t}</th><td>{d}</td></tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <Fuente propia>con las definiciones de este capítulo</Fuente>
+
+                <Box type="tip" label="Lo que viene">
+                    El capítulo 7 trata los arreglos, que la sección 5 solo asomó: guardar muchos valores
+                    en una sola variable. Según el plan del curso, allí volverá la diferencia de tiempos
+                    entre ir a la hoja celda por celda y llevar un rango entero de una vez.
                 </Box>
 
                 <Referencias />
