@@ -5154,3 +5154,28 @@ Rama `claude/cap06-fase11`; sin fusionar.
 - **Para la próxima vez:** una diferencia entre dos ejecuciones no se atribuye a una
   causa mientras cambien dos cosas a la vez. La fase 9 lo dejó dicho en el texto en vez
   de adivinar, y eso permitió corregirlo aquí sin desdecirse.
+
+### Tarea 16 · Capítulo 6, fase 11 (tercera parte): recorrido en el iPhone · 2026-11-25
+
+Rama `claude/cap06-fase11`; sin fusionar. **Recorrido parcial**: portada y lección 5.
+
+- **Defecto que solo se ve en el aparato:** la gráfica de tiempos de la sección 5 salía
+  aplastada, de unos píxeles de ancho, al llegar a la lección desde el menú de
+  lecciones. `usePlotly` (LP-CORE) dibuja con `responsive: true`, que solo atiende al
+  cambio de tamaño de la ventana; en un teléfono la barra lateral comprime el contenido
+  mientras está abierta, la gráfica se dibuja con ese ancho y no se vuelve a medir al
+  cerrarse la barra.
+- **Arreglo, local al capítulo 6:** `RendimientoHoja` observa el tamaño de su contenedor
+  y vuelve a medir la gráfica. De paso, eje x logarítmico (los rótulos de 1 000, 5 000 y
+  20 000 se montaban) y marcas del eje y escritas a mano (Plotly rotulaba 0,0001 como
+  «100µ»). Visto corregido en el iPhone.
+- **Huecos, sin cerrar:** (1) el defecto de fondo está en LP-CORE y alcanza a las
+  gráficas de los capítulos 1 y 5, que no se miraron en el aparato; corregirlo allí
+  obliga a reestampar, y es decisión del docente. (2) La sonda avanza con «Siguiente» y
+  nunca entra a una lección por la barra lateral: por eso pasaba en verde a 320 y 375 px
+  con la gráfica rota. Falta un modo que entre por la barra y mida el ancho de las
+  gráficas, con su prueba negativa.
+- **Sin ver en el aparato:** las lecciones 1 a 4 y 6 a 9. El recorrido se detuvo porque
+  otra aplicación pasó al frente dos veces mientras se manejaba el teléfono.
+- **Tropiezos del entorno:** iPhone Mirroring no conecta si el Mac usa Sidecar, ni sin
+  wifi; y la ventana quedó fuera de la pantalla hasta moverla con el menú Window.
