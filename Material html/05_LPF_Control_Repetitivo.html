@@ -878,13 +878,33 @@
             );
         };
 
+        // `responsive: true` solo atiende al cambio de tamaño de la VENTANA. En un
+        // teléfono, la barra lateral comprime el contenido mientras está abierta:
+        // al llegar a una lección desde ella, la gráfica se dibujaba con ese ancho
+        // de unos píxeles y así se quedaba al cerrarse la barra (visto en un
+        // iPhone el 2026-11-25). Por eso se observa el contenedor y se vuelve a
+        // medir cuando cambia de ancho. Solo de ancho: el alto lo fija el CSS, y
+        // reaccionar a él haría que cada redibujo llamara al siguiente.
         const usePlotly = (id, dataFn, layoutFn, deps = []) => {
             useEffect(() => {
                 const el = document.getElementById(id);
                 if (el && window.Plotly) {
                     window.Plotly.newPlot(id, dataFn(), layoutFn(), { responsive: true, displayModeBar: false });
                 }
-                return () => { if (window.Plotly) { try { window.Plotly.purge(id); } catch (e) { } } };
+                let observador = null;
+                if (el && window.Plotly && window.ResizeObserver) {
+                    let ancho = el.clientWidth;
+                    observador = new ResizeObserver(() => {
+                        if (el.clientWidth === ancho) return;
+                        ancho = el.clientWidth;
+                        try { window.Plotly.Plots.resize(el); } catch (e) { }
+                    });
+                    observador.observe(el);
+                }
+                return () => {
+                    if (observador) observador.disconnect();
+                    if (window.Plotly) { try { window.Plotly.purge(id); } catch (e) { } }
+                };
             }, deps);
         };
 

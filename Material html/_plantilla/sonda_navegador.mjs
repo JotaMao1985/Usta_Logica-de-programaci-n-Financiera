@@ -26,6 +26,15 @@
  *                 (hasta el 2026-11-15 flotaba sobre el texto y tapaba las
  *                 primeras letras de la línea que pasaba debajo); su prueba
  *                 negativa: sin la barra, tiene que tocar el contenido.
+ *                 Y las gráficas: a cada lección que tenga una se entra otra
+ *                 vez DESDE LA BARRA LATERAL, que es como se llega en un
+ *                 teléfono, y la gráfica tiene que ocupar su contenedor. La
+ *                 barra comprime el contenido mientras está abierta; una
+ *                 gráfica dibujada con ese ancho y que no se vuelva a medir
+ *                 queda de unos píxeles (visto en un iPhone el 2026-11-25:
+ *                 entrando con «Siguiente», que era lo único que hacía la
+ *                 sonda, no pasa). Prueba negativa: con `ResizeObserver`
+ *                 anulado, la primera gráfica tiene que salir aplastada.
  *   sin-almacen   `localStorage` lanza `SecurityError`, como en una ventana
  *                 privada o con el almacenamiento bloqueado (H16 del capítulo 5).
  *   sin-cdnjs     cdnjs no resuelve: el capítulo carga sin color en el código.
@@ -197,6 +206,16 @@ const SUELTAS = `(() => [...document.querySelectorAll('[data-tipo-ejercicio]')].
     const d = Math.round(e.getBoundingClientRect().top - t.getBoundingClientRect().top);
     return Math.abs(d) > 40 ? '«' + e.textContent.trim() + '» a ' + d + ' px de su tarjeta' : null;
 }).filter(Boolean))()`;
+// Las gráficas de Plotly de la lección que no tienen el ancho de su contenedor.
+// Por los dos lados: dibujada con el contenido comprimido, en Safari de iPhone
+// la gráfica queda de unos píxeles, y en Chrome Plotly cae a su ancho por
+// omisión, 700 px, y se sale del contenedor (medido el 2026-11-25).
+const GRAFICAS = `(() => [...document.querySelectorAll('.js-plotly-plot')].map(el => {
+    const svg = el.querySelector('.main-svg');
+    const w = svg ? svg.getBoundingClientRect().width : 0, c = el.getBoundingClientRect().width;
+    return (c > 120 && w >= 0.9 * c && w <= 1.1 * c) ? null : '#' + el.id + ': gráfica de ' + Math.round(w) + ' px en un contenedor de ' + Math.round(c) + ' px';
+}).filter(Boolean))()`;
+const ABRIR_MENU = `(() => { const b = document.querySelector('button[aria-label$="menú"]'); if (b) b.click(); return !!b; })()`;
 const IR_A = k => `(() => { const b = document.querySelectorAll('aside nav button')[${k}]; if (b) b.click(); return !!b; })()`;
 const MONTADO = `!!document.querySelector('#root') && document.querySelector('#root').innerText.length > 200`;
 const LECCION = `(() => { const m = document.body.innerText.match(/lección (\\d+) de (\\d+)/i); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; })()`;
@@ -204,7 +223,7 @@ const SIGUIENTE = `(() => { const b = [...document.querySelectorAll('button')].f
 // Tailwind aplicado: `max-w-4xl` solo tiene ancho máximo si Tailwind generó su regla.
 const ESTILOS = `(() => { const e = document.querySelector('.max-w-4xl'); return !!window.tailwind && !!e && getComputedStyle(e).maxWidth !== 'none'; })()`;
 
-let fallos = 0;
+let fallos = 0, negativaGraficas = false;
 for (const ruta of rutas) {
     eventos.length = 0;
     const nombre = ruta.split('/').pop();
@@ -223,13 +242,14 @@ for (const ruta of rutas) {
             const t = ${TAPA}; b.style.display = ''; return t.length; })()`);
         if (!t) { console.log('✗ la prueba negativa no vio el botón del menú sobre el contenido al quitar la barra: la medida no sirve'); await cerrar(); process.exit(1); }
     }
-    const lecciones = [], pegadas = [], sueltas = [], conEtiquetas = [];
+    const lecciones = [], pegadas = [], sueltas = [], conEtiquetas = [], conGraficas = [], aplastadas = [];
     let total = 0, leccionesMal = 0;
     for (let k = 0; k < 20; k++) {
         await espera(900);
         const [n, t] = await evaluar(LECCION);
         total = t;
         if (await evaluar(`document.querySelectorAll('[data-tipo-ejercicio]').length`)) conEtiquetas.push(n);
+        if (ancho && await evaluar(`document.querySelectorAll('.js-plotly-plot').length`)) conGraficas.push(n);
         for (const x of await evaluar(SUELTAS)) sueltas.push(`lección ${n}: ${x}`);
         for (const x of await evaluar(PEGADAS)) pegadas.push(`lección ${n}: «${x.t}»${x.sinAire ? '' : ' (código en línea)'}`);
         if (ancho) {
@@ -253,6 +273,23 @@ for (const ruta of rutas) {
         if (donde !== n) { sueltas.push(`lección ${n}: al recargar no volvió a ella (quedó en la ${donde})`); continue; }
         for (const x of await evaluar(SUELTAS)) sueltas.push(`lección ${n}, recién cargada: ${x}`);
     }
+    // Las gráficas, entrando a su lección desde la barra lateral.
+    const porLaBarra = async (n) => {
+        const otra = n === 1 ? 2 : 1;
+        await evaluar(IR_A(otra - 1)); await espera(700);
+        await evaluar(ABRIR_MENU); await espera(700);
+        await evaluar(IR_A(n - 1));
+        await espera(1800);
+        return evaluar(GRAFICAS);
+    };
+    if (ancho && conGraficas.length && !negativaGraficas) {
+        negativaGraficas = true;
+        await evaluar(`(() => { window.__RO = window.ResizeObserver; window.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} }; })()`);
+        const sinObservador = await porLaBarra(conGraficas[0]);
+        await evaluar(`(() => { window.ResizeObserver = window.__RO; })()`);
+        if (!sinObservador.length) { console.log('✗ la prueba negativa no vio una gráfica aplastada con ResizeObserver anulado: la medida no sirve'); await cerrar(); process.exit(1); }
+    }
+    if (ancho) for (const n of conGraficas) for (const x of await porLaBarra(n)) aplastadas.push(`lección ${n}, entrando por la barra lateral: ${x}`);
     const errores = eventos.filter(e => e.method === 'Runtime.exceptionThrown' ||
         (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error') ||
         (e.method === 'Log.entryAdded' && e.params.entry.level === 'error' && !(SIN_HOST[modo] && (e.params.entry.url || '').includes(SIN_HOST[modo]))));
@@ -262,10 +299,13 @@ for (const ruta of rutas) {
     const conEstilos = await evaluar(ESTILOS);
     // Una lección que falla a 375 px marca también la línea del capítulo:
     // antes del 2026-11-03 la sonda salía con 1 y la línea decía ✓.
-    const mal = errores.length || !recorrio || !conEstilos || leccionesMal || pegadas.length || sueltas.length;
+    const mal = errores.length || !recorrio || !conEstilos || leccionesMal || pegadas.length || sueltas.length || aplastadas.length;
     if (mal) fallos++;
     console.log(`${mal ? '✗' : '✓'} ${nombre}: ${lecciones.length} de ${total} lecciones · ${guardado} · ${conEstilos ? 'con Tailwind' : 'SIN Tailwind'} · errores de JS: ${errores.length}`);
     if (ancho) console.log(`    ${lecciones.join(' · ')}`);
+    if (ancho && conGraficas.length && !aplastadas.length) console.log(`    gráficas, entrando por la barra lateral: lecciones ${conGraficas.join(', ')}`);
+    if (aplastadas.length) console.log(`    ✗ ${aplastadas.length} gráficas sin el ancho de su contenedor:`);
+    for (const x of aplastadas.slice(0, 6)) console.log(`      ${x}`);
     if (sueltas.length) console.log(`    ✗ ${sueltas.length} etiquetas de ejercicio fuera de su tarjeta:`);
     for (const x of sueltas.slice(0, 6)) console.log(`      ${x}`);
     if (pegadas.length) console.log(`    ✗ ${pegadas.length} palabras pegadas (falta un espacio entre el texto y la etiqueta):`);

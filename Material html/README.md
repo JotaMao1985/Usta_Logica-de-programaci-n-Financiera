@@ -90,6 +90,16 @@ ventana y recorre todas sus lecciones. Tiene seis modos:
   hasta que se despliega, y **no son un fallo**. Lo que se sale fuera de un
   bloque plegado sí lo es, y sale con ✗ (hasta el 2026-11-16 decía «N
   recortados», y se leyó como defecto durante seis fases del capítulo 3);
+  En `375` y `320` mira también **las gráficas entrando por la barra lateral**. La
+  sonda avanza con «Siguiente», y así nunca veía lo que pasa en un teléfono: la
+  barra comprime el contenido mientras está abierta, y una gráfica dibujada con
+  ese ancho que no se vuelva a medir queda de unos píxeles en Safari, o con los
+  700 px por omisión de Plotly, fuera de su caja, en Chrome (visto en un iPhone
+  el 2026-11-25, en la gráfica del capítulo 6; la del 5 estaba igual). Ahora, a
+  cada lección con gráfica se entra otra vez desde la barra, y la gráfica tiene
+  que medir lo que su contenedor. La prueba negativa anula `ResizeObserver` y
+  exige que la gráfica salga mal. El arreglo está en `usePlotly`, que observa
+  el ancho de su contenedor;
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar

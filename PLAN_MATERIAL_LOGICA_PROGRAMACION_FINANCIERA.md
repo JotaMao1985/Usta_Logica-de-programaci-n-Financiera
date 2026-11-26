@@ -5179,3 +5179,29 @@ Rama `claude/cap06-fase11`; sin fusionar. **Recorrido parcial**: portada y lecci
   otra aplicación pasó al frente dos veces mientras se manejaba el teléfono.
 - **Tropiezos del entorno:** iPhone Mirroring no conecta si el Mac usa Sidecar, ni sin
   wifi; y la ventana quedó fuera de la pantalla hasta moverla con el menú Window.
+
+### Librería: las gráficas se vuelven a medir al cambiar de ancho su contenedor · 2026-11-25
+
+Rama `claude/cap06-fase11`; sin fusionar. Aprobado por el docente tras el recorrido en
+el iPhone.
+
+- **Qué cambió:** `usePlotly` (bloque LP-CORE del capítulo 1, su fuente) observa el
+  ancho del contenedor y llama a `Plotly.Plots.resize` cuando cambia. `lp-base.html`
+  regenerado y los seis capítulos reestampados con `migrar.py`. El arreglo local que
+  llevaba la gráfica del capítulo 6 se quitó.
+- **A quién alcanzaba:** a toda gráfica de Plotly a la que se llegara desde la barra
+  lateral en un teléfono. Hay dos en el capítulo 1 y una en el 5, además de la del 6. El
+  capítulo 5 publicado en `main` tiene el defecto.
+- **Hueco cerrado, con prueba negativa:** `sonda_navegador.mjs`, en los modos `375` y
+  `320`, entra a cada lección con gráfica desde la barra lateral y exige que la gráfica
+  mida lo que su contenedor. Con `ResizeObserver` anulado tiene que fallar, y falla.
+  Contra el capítulo 5 de `main` informa «gráfica de 700 px en un contenedor de 265 px».
+  README actualizado.
+- **Lo que enseñó la prueba negativa:** el síntoma no es el mismo en los dos motores. En
+  Safari de iPhone la gráfica quedó de unos píxeles; en Chrome, Plotly cae a su ancho
+  por omisión, 700 px, y se sale de la caja. La primera versión de la medida solo miraba
+  si la gráfica era más angosta, y por eso la prueba negativa no la dejó pasar.
+- **Comprobado:** sondas `file`, `320` y `375` sobre los seis capítulos, de a uno;
+  `verificar.py --con-salidas --con-pandoc` en verde.
+- **Sin comprobar:** el arreglo de la librería no se volvió a mirar en el iPhone. Se vio
+  allí el arreglo local del capítulo 6, que hace lo mismo.
