@@ -4817,3 +4817,429 @@ los ocho borradores (y las siete dudas de su nota); el texto de matemáticas fin
 y el de terminología que Zotero no tiene. **Estado:** doce fases hechas, ramas apiladas
 de `claude/cap05-plan` a `claude/cap05-fase12`, sin fusionar: la fusión a `main` espera
 la aprobación del docente.
+
+**Cierre (2026-11-22).** Con la aprobación del docente, `claude/cap05-fase12` se fusionó
+en `main` (`1e1d37e`, «Fusión: capítulo 5, mejora de contenido (doce fases)») y se subió
+a GitHub; Pages lo publicó. Los ocho borradores del banco siguen sin copiar.
+
+### Tarea 16 · Capítulo 6, fase 1: inventario, fuentes y archivo · 2026-11-23
+
+Plan `PLAN_TAREA16_CAPITULO_06.md`, aprobado el 2026-11-23 con la opción recomendada en
+las ocho decisiones. Rama `claude/cap06-fase1`, sobre `main` en `1e1d37e`; sin fusionar.
+
+- **Inventario de promesas:** 49 filas en los capítulos 1 a 5 (13 expresas en 9
+  pasajes, 27 implícitas, 9 dudosas), por un lector sin contexto que buscó por patrones;
+  no leyó las 17 879 líneas una por una. Sin sección en el plan maestro: `Select Case …
+  To` (irá en la 3), sus listas con comas, y la frase del capítulo 5 «que todavía no
+  está escrito», que se corrige al publicar.
+- **Fuentes:** leídas 99 páginas de Microsoft en español, cotejadas con la inglesa; los
+  pasajes se extrajeron del HTML con código. Quedaron en el vault. Se proponen 48 para
+  Zotero, sin importar todavía. Tres cosas que la documentación **no dice**: el ancho de
+  14 columnas de la zona de impresión y el espacio del signo de `Debug.Print` (lo
+  segundo solo lo dice `Str`); la jerarquía de objetos de Excel en una sola página; y
+  los atajos del editor en Mac. Las páginas en español son traducción automática y en
+  varias la sintaxis o las cifras salen rotas.
+- **Herramientas (H3).** Medido con un archivo de prueba: un bloque de solo VBA escrito
+  como `const X = { vba: … }` ya entra al arnés de `ejecutar_vba.py`, y la regla 4 no lo
+  toca porque solo mira `<CodeTabs>`. Una constante suelta con `'>` no la veía nadie ni
+  se listaba: `ejecutar_salidas.py` la avisa ahora (`sueltas_vba_con_salida`). Prueba
+  negativa: el archivo de prueba da el aviso; los cinco capítulos, ninguno. README al día.
+- **`SimuladorVBE` (H8).** El `Trazador` de LP-CORE admite `codigo` de un solo lenguaje,
+  con línea activa, variables y salida. El simulador será local; LP-CORE no se toca.
+- **Archivo:** `06_LPF_Entorno_VBA.html`, desde `lp-base.html`, con `CONFIG` contra la
+  fila del syllabus y siete secciones vacías; ningún resto de la demostración. Sonda a
+  375 px: 9 de 9 lecciones, cero errores. `verificar.py` le marca 12 fallos, todos por
+  vacío (cuota y motivación): no se pusieron motivaciones de relleno. Mientras dure la
+  construcción, el verificador global falla en esta rama por el capítulo 6.
+- **Desvío del plan:** decía «nota de hilo por cada promesa»; quedó un hilo agrupado por
+  sección y la tabla completa en una nota del vault.
+
+### Tarea 16 · Capítulo 6, fase 2: los tres artefactos · 2026-11-23
+
+Rama `claude/cap06-fase2`, sobre la fase 1; sin fusionar.
+
+- **Artefactos:** `SimuladorVBE`, `MapaObjetosExcel` y `RendimientoHoja`, locales del
+  capítulo. Están en las secciones 6 y 5, bajo el aviso «En construcción», con datos de
+  Excel 16.115 para Mac; el registro de la ejecución quedó en el vault. Sonda a 320 y a
+  375 px: 9 de 9 lecciones, cero errores. En el navegador, el simulador recorrido entero
+  coincide parada por parada con lo que se copió de Excel.
+- **Recorrido de `OtroAcuerdo`:** 23 paradas. El editor no se detiene en la línea `Dim`.
+  Tres paradas no se leyeron directamente de la pantalla (una captura salió antes del
+  repintado y dos líneas quedaron fuera del área visible); se confirmaron por el conteo,
+  por la salida de Inmediato y por la línea donde quedó el cursor.
+- **Atajos:** en este Excel el menú Debug muestra ⇧⌘I para el paso a paso, y F8 no
+  avanzó. La tecla fue sintética: falta probarla en el teclado físico antes de escribir la
+  sección 6, cuyo título dice «F8».
+- **Tiempos:** `Timer` avanzó de a 1/256 de segundo, y con una sola pasada el bloque daba
+  cero. Se repite 40 veces lo rápido y se divide. Escribir en bloque fue de 66 a 77 veces
+  más rápido; leer, unas 9. Una máquina, una sesión.
+- **Corrección a la fase 1:** el ancho de 14 columnas y los espacios de `Debug.Print` sí
+  tienen fuente, MS-VBAL §5.4.5.8, que ya está en Zotero; el número se escribe con un
+  espacio delante y otro detrás.
+- **Huecos:** el control de Excel en segundo plano no pega ni teclea en el editor de VBA
+  ni pulsa Debug › Step Into; hizo falta la pantalla completa, con el docente presente y
+  el Mac desbloqueado. `ejecutar_vba.py` no captura Locales: el recorrido se lee de la
+  pantalla. `verificar.py` sigue marcando los mismos 12 fallos por vacío.
+
+### Tarea 16 · Capítulo 6, fase 3: sección 1, «Por qué VBA» · 2026-11-23
+
+Rama `claude/cap06-fase3`, sobre la fase 2; sin fusionar. El punto de control 2 se aprobó
+el mismo día.
+
+- **Sin citas, a propósito (H6).** Remisión al syllabus (el RA2 textual y los tres
+  contenidos que nombran VBA), remisión a los capítulos 1 y 5, dos conteos derivados y un
+  recuadro de criterio del docente con las razones para estudiar VBA. La sección dice que
+  ni el syllabus ni el material tienen una fuente que mida el uso de VBA en el sector.
+- **Mapa del capítulo:** la rutina `OtroAcuerdo` del capítulo 5, sin cambios, y una tabla
+  de qué pregunta deja cada parte y qué sección la responde. Remite a secciones que aún
+  no existen: se coteja en la fase 11.
+- **Ejercicio:** un E8 (reto con solución revelable). Regla 21: las cifras copiadas del
+  capítulo 5 necesitaban el espacio duro; el verificador lo cazó.
+- **Comprobado:** sonda a 320 y 375 px, 9 de 9 lecciones y cero errores; en el navegador,
+  la sección dibuja el bloque resaltado, la tabla y la solución del reto, sin espacios
+  comidos. `verificar.py` marca ahora 11 fallos, todos por lo que falta escribir.
+- **Pendiente del docente:** la fila 37 del syllabus anuncia un video sin dirección.
+
+### Tarea 16 · Capítulo 6, fase 4: sección 2, «El editor de VBA» · 2026-11-23
+
+Rama `claude/cap06-fase4`, sobre la fase 3; sin fusionar.
+
+- **Contenido:** la advertencia de macros (aviso corto, como decidió el plan), cómo abrir
+  el editor, sus cinco zonas con un esquema propio, escribir y ejecutar una rutina, la
+  ventana Inmediato, las reglas de `Debug.Print` y el formato `.xlsm`. Solo VBA. Dos E2,
+  probados en el navegador con respuesta buena y mala.
+- **Fuentes:** tanda 09 en Zotero, nueve páginas de Microsoft de la lista aprobada en el
+  punto de control 1. Zotero abrió en la colección de otro curso; se comprobó el id antes
+  de importar. 18 afirmaciones citadas, con su nota y su fila en `afirmaciones/06.yaml`.
+- **Verificador sin contexto:** 12 respaldaban y 6 decían más que su pasaje (una
+  posición en pantalla que la página no da, un «el que» que excluía otros formatos, una
+  excepción omitida). Además cazó un pasaje que esta sesión copió mal: a la oración de la
+  coma de MS-VBAL se le había puesto un operando que está en la oración anterior. Todo
+  corregido; cinco localizadores pasaron de «En este artículo», que es el rótulo del
+  índice de la página, a «párrafo inicial».
+- **Ejecutado:** las seis salidas del bloque de `Debug.Print` coinciden con Excel. La
+  especificación dice que un número lleva un espacio delante y otro detrás; Excel no puso
+  el de delante en `-150000`. Se dice así, como dato ejecutado que la especificación no
+  prevé.
+- **Dicho como no comprobado:** el guardado en `.xlsm` en Mac, y que una variable esté
+  vacía en Inmediato fuera de su rutina.
+- **Huecos:** `comparar` recorta los espacios finales y el archivo de salida del arnés no
+  se puede leer desde fuera de Excel, así que el espacio final de un número solo se ve
+  cuando va seguido de texto. Y el portapapeles lo comparte todo el equipo: un pegado
+  metió en el módulo una ruta ajena; copiar y pegar deben ir en la misma tanda.
+- **Estado del verificador:** 10 fallos, todos por lo que falta escribir.
+
+### Tarea 16 · Capítulo 6, fase 5: sección 3, «Del algoritmo al código» · 2026-11-23
+
+Rama `claude/cap06-fase5`, sobre la fase 4; sin fusionar.
+
+- **Contenido:** de Inicio y Fin a `Sub` y `End Sub` (el mismo algoritmo en los cuatro
+  lenguajes y una tabla de equivalencias), lo que hace `Dim`, `Option Explicit` con el
+  caso de la variable mal escrita, `Select Case` con `To` y el orden de los casos, y
+  `Const`, `InputBox` y `MsgBox`. Un E5, un E3 y un E2, probados en el navegador con
+  respuesta buena y mala. `Select Case … To` no tenía sección en el plan maestro: quedó
+  aquí (decisión 5 del plan del capítulo).
+- **Fuentes:** tanda 10 en Zotero, siete páginas de Microsoft; `Sub`, `Select Case` y
+  `Const` en su versión inglesa, porque la traducción está rota. 21 afirmaciones citadas.
+- **Verificador sin contexto:** de 19 frases, 15 respaldaban y 4 decían más que su
+  pasaje. Leyó además la sección entera y señaló diez frases sin cita; entre ellas un
+  error de la motivación (decía que la variable mal escrita guardó 50 000 y guarda
+  70 000) y una prueba que no probaba nada: ejecutar `OtroAcuerdo` dos veces no muestra
+  que las variables locales no sobreviven, porque la rutina reasigna todo al empezar. El
+  mismo razonamiento estaba en un ejercicio de la sección 2, ya confirmada; se corrigió
+  allí también. Dos citas se partieron en dos; las dos notas nuevas llevan la redacción
+  que propuso el verificador y no tuvieron segunda lectura.
+- **Ejecutado en Excel:** los cinco bloques con salida declarada coinciden y los tres
+  mostrados dan lo que dice el texto. El aviso de `Option Explicit` se copió de la
+  pantalla: «Compile error: Variable not defined», con el nombre no declarado
+  seleccionado; sale igual al compilar que al llamar la rutina. Una rutina con un
+  contador, llamada dos veces, escribió 1 las dos veces: esa sí es la prueba de que las
+  variables locales empiezan de cero. Y `? TypeName(saldo)` en Inmediato respondió
+  `Empty`, lo que cierra el pendiente de la sección 2.
+- **Dicho como no comprobado:** dónde está la opción que escribe `Option Explicit` en
+  los módulos nuevos, y el texto del aviso en un Excel en español.
+- **Huecos:** `preparar` sin `--incluir` genera otro arnés (cinco bloques, otra huella)
+  y pisa el anterior sin avisar; si ya se pegó el de ocho, `comparar` fallaría por la
+  huella. Hay que repetir los `--incluir` cada vez. Y pegar en el editor sigue pidiendo
+  el control de pantalla completa: la primera solicitud venció sin respuesta y la fase
+  esperó al docente.
+- **Estado del verificador:** 9 fallos, todos por lo que falta escribir (E1, E3, E7 y
+  seis motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 6: sección 4, «Tipos de datos y Currency» · 2026-11-24
+
+Rama `claude/cap06-fase6`, sobre la fase 5; sin fusionar.
+
+- **Contenido:** quién decide el tipo (los mismos cinco datos en los cuatro lenguajes),
+  la tabla de los siete tipos del curso, `Currency` con la suma de cien centavos del
+  capítulo 1, lo que `Currency` no guarda (una tasa de cinco decimales), el error 6,
+  las conversiones, `Round` y `Format`, y `Variant`. Un E7, un E3 en cuatro lenguajes y
+  el E8 de `Currency` frente a `Double`. El E4 pasa a la sección 5.
+- **Fuentes:** tanda 11 en Zotero, cuatro páginas de la lista aprobada. 15 afirmaciones
+  citadas. `Round` y `Format` no estaban en la lista: la sección dice de ellas solo lo
+  ejecutado, y lo declara.
+- **Verificador sin contexto:** 11 de 14 respaldaban y 3 decían más que su pasaje (una
+  fila de la tabla, el número del error atribuido a un pasaje que no lo traía y una
+  promoción de tipos generalizada). Señaló además 18 frases sin cita: un «todas las
+  variables llevan su As» que la propia sección contradecía, una rutina con la cuota en
+  `Double` sin salvedad, un «no alcanzan para una tasa» falso para la tasa del primer
+  bloque, y un argumento contra `Variant` que no valía para el caso de la sección. Todo
+  aplicado; las tres frases reescritas o añadidas tuvieron segunda lectura. Cinco
+  localizadores «párrafo inicial» se precisaron.
+- **Ejecutado en Excel:** doce bloques comparados coinciden; las salidas se predijeron
+  antes de ejecutar. El error 6 se vio con dos `Integer` cuyo producto cabía en el
+  `Long` de destino.
+- **Hallazgo para la fase 11:** el capítulo 2 dice que VBA redondea «al entero más
+  cercano»; con 2,5 y 3,5 Excel dejó 2 y 4. La sección 4 lo dice como dato ejecutado.
+- **Huecos:** `cat` de R escribe 1e+06 y 9e+05 para un millón y novecientos mil, y eso
+  obligó a cambiar dos veces el capital del E3 hasta que la salida fuera legible; no
+  hay regla que avise. Y Zotero volvió a amanecer fuera de la colección de LPF.
+- **Estado del verificador:** 7 fallos, todos por lo que falta escribir (E1, un E7 y
+  cinco motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 7: sección 5, «La hoja: Range y Cells» · 2026-11-24
+
+Rama `claude/cap06-fase7`, sobre la fase 6; sin fusionar.
+
+- **Contenido:** los cuatro niveles de objetos con el mapa de la fase 2, `Range` y
+  `Cells`, la propiedad `Value`, la hoja activa y la hoja con nombre, un ciclo que
+  recorre filas, y los tiempos de celda por celda frente a bloque con la gráfica de la
+  fase 2. Solo VBA. Un E4 y un E7, probados en el navegador con respuesta buena y mala.
+  Los arreglos solo se asoman: se remite al capítulo 7.
+- **Fuentes:** tanda 12 en Zotero, nueve páginas de la lista aprobada. 18 afirmaciones
+  citadas.
+- **Verificador sin contexto:** 12 de 14 respaldaban y 2 decían más que su pasaje.
+  Señaló 22 frases sin cita. Las de fondo: una razón «74 veces» que con las cifras
+  redondeadas del propio texto daba 78; «la misma macro y el mismo resultado» para dos
+  rutinas cuyo resultado nunca se comparó; el orden fila, columna apoyado en la página de
+  `Item` sin el pasaje que la une con `Cells`; y una consecuencia de la hoja activa que
+  no se pudo observar con un libro de una sola hoja. En la segunda lectura, una de las
+  seis frases cambiadas volvió a salir parcial y se corrigió otra vez.
+- **Ejecutado en Excel:** 17 bloques comparados coinciden, predichos antes de ejecutar.
+  Las dos rutinas del E4 se ejecutaron a mano: una llenó J2:J4 y la otra B10:D10. De
+  paso se vio que una celda que recibe un `Currency` queda con formato de moneda.
+- **Dicho como no comprobado:** el efecto de tener otra hoja activa, y el nombre de la
+  hoja nueva en un Excel en español.
+- **Huecos:** la regla 6 exige cuatro lenguajes a todo `Comparador` y no admite declarar
+  un ejercicio de solo VBA; se pasó el código como texto con `lang="vba"`, que el
+  componente ya soporta. Queda sin regla que distinga «falta un lenguaje» de «es de un
+  solo lenguaje a propósito». La sonda de 320 px cazó un código en línea de 358 px. Y la
+  aprobación del control de pantalla volvió a vencer sin respuesta: la sección se
+  escribió y se verificó con las salidas predichas, y se ejecutó después.
+- **Estado del verificador:** 5 fallos, todos por lo que falta escribir (los E1 y
+  cuatro motivaciones). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 8: sección 6, «Depurar con F8» · 2026-11-24
+
+Rama `claude/cap06-fase8`, sobre la fase 7; sin fusionar.
+
+- **Contenido:** Step Into, el recorrido de `OtroAcuerdo` con el simulador de la fase 2,
+  lo que el editor hace distinto de la traza a mano (no se detiene en `Dim`, muestra 0
+  donde se escribía raya, tiene más paradas que filas), la ventana Locales, el punto de
+  interrupción y cómo salir de una pausa. Solo VBA. Los tres E1 del capítulo están aquí:
+  con ellos la cuota queda completa salvo el E6, que va en la evaluación.
+- **Fuentes:** tanda 13 en Zotero, cuatro páginas de la lista aprobada; tres en inglés.
+  14 afirmaciones citadas.
+- **Verificador sin contexto:** 7 de 11 respaldaban y 4 decían más que su pasaje; en la
+  segunda lectura, 2 de las 7 frases cambiadas volvieron a salir parciales. Señaló
+  además 18 frases sin cita: «se detiene antes de cada instrucción», que contradecía al
+  propio `Dim`; «el editor puede hacer esa tabla por usted», cuando Locales muestra una
+  parada a la vez; y una frase que atribuía a Run To Cursor lo que es de Step Over.
+- **Ejecutado en Excel:** las tres rutinas de los E1 se recorrieron paso a paso y dieron
+  las secuencias escritas de antemano. Lo que no se sabía y se vio: el paso a paso se
+  detiene en `Select Case`, en cada `Case` que evalúa y en `End Select`; la línea `For`
+  se resalta una sola vez; y Locales escribe las cadenas entre comillas.
+- **Dicho como no comprobado:** F8 en el teclado físico (la sección conserva el título
+  y explica que en este Mac el menú muestra ⇧⌘I), y cómo se interrumpe una rutina que
+  no termina. Esto último era una promesa implícita del capítulo 5 y queda sin cumplir.
+- **Huecos:** mientras Excel ejecuta una rutina, ni las teclas ni los clics enviados por
+  programa llegan al editor, así que una interrupción no se puede probar sin el
+  docente. Otra aplicación pasó al frente a mitad de una tanda y se perdieron tres
+  capturas: la primera detención del segundo E1 se dedujo de las cinco siguientes. Y la
+  aprobación del control de pantalla venció una vez más sin respuesta.
+- **Estado del verificador:** 3 fallos, todos por lo que falta escribir (las
+  motivaciones de la portada, la sección 7 y la evaluación). Sondas de 320 y 375 px: 9
+  de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 9: sección 7, «Errores y seguridad» · 2026-11-24
+
+Rama `claude/cap06-fase9`, sobre la fase 8; sin fusionar.
+
+- **Contenido:** los tres momentos en que algo sale mal (compilación, ejecución,
+  lógica), lo que pasa sin controlador, la guardia, `On Error GoTo` con el objeto `Err`,
+  por qué `On Error Resume Next` esconde el error, y la seguridad de macros. Solo VBA.
+  Un E4 que compara la guardia con `Resume Next`.
+- **Fuentes:** tanda 14 en Zotero, cuatro páginas de la lista aprobada. 11 afirmaciones
+  citadas.
+- **La ejecución corrigió al autor.** Los bloques declaraban el error 11 para una
+  división entre cero. Excel dio el 6, «Overflow»: el dividendo era `Currency`. El 11
+  salió con una división de literales en Inmediato. El texto cuenta las dos cosas y
+  dice que no se aisló la causa. **Deja una duda sobre el capítulo 4**, ya publicado,
+  que afirma que su `total / compras` daría el 11 con un total distinto de cero, y su
+  `total` es `Currency`: queda para ejecutar y corregir en la fase 11.
+- **Verificador sin contexto:** 9 de 11 respaldaban y 2 decían más que su pasaje; las
+  tres frases cambiadas pasaron la segunda lectura. Señaló 20 frases sin cita: una
+  causa atribuida a `Currency` sin aislarla, «la que más encontrará en macros ajenas»
+  sin dato, «las rutinas de este curso no la usan» en la sección que la usa para
+  mostrarla, y dos consejos de seguridad que afirmaban hechos (que se puede leer el
+  código sin habilitar las macros, y que `.xlsm` es la extensión de todo libro con
+  macros). Todo aplicado; el consejo ya no promete lo que no se probó.
+- **Huecos:** `ejecutar_vba.py` da por fallido un bloque que termina con `Err` distinto
+  de cero, aunque sus salidas coincidan; el bloque de `Resume Next` necesitó un
+  `On Error GoTo 0` final. Y un pegado cayó en el módulo equivocado porque el árbol del
+  explorador de proyectos se había desplazado: se mira el título de la ventana antes
+  de pegar.
+- **Estado del verificador:** 2 fallos, por las motivaciones de la portada y la
+  evaluación (fase 10). Sondas de 320 y 375 px: 9 de 9 lecciones, cero errores.
+
+### Tarea 16 · Capítulo 6, fase 10: portada, evaluación y glosario · 2026-11-24
+
+Rama `claude/cap06-fase10`, sobre la fase 9; sin fusionar.
+
+- **Contenido:** la portada (caso de apertura, ficha del syllabus, cambio de orden frente
+  al syllabus, qué secciones traen cuatro lenguajes, con qué Excel se preparó), el E6 que
+  faltaba, el cuestionario integrador de diez, un glosario de 27 términos y «Lo que
+  viene». Con esto el capítulo no tiene secciones en construcción.
+- **`verificar.py --con-salidas --con-pandoc` en verde para los seis capítulos**, por
+  primera vez con el 6 completo: 16 ejercicios, cuota cumplida.
+- **Lectura crítica independiente**, contra las siete secciones: las diez claves del
+  cuestionario eran correctas. Lo que encontró: dos justificaciones que contradecían el
+  cuerpo; un enunciado falso en el E6; una definición del E6 que entregaba la regla que
+  evaluaba una pregunta posterior; nueve definiciones del glosario que generalizaban
+  (entre ellas la del desbordamiento, que atribuía al `Currency` lo que la sección 7
+  dice que no se aisló); y un recuento equivocado en la portada de qué secciones traen
+  cuatro lenguajes. Se cambiaron tres preguntas que repetían ejercicios del capítulo.
+- **El caso de la portada no se cerraba en ninguna sección.** Preguntaba si las cifras
+  de `OtroAcuerdo` estaban bien, y la sección 6 solo explicaba el mecanismo. Se añadió
+  allí la respuesta: el cuarto abono cobró 150 000 de más.
+- **Reglas que trabajaron:** la 21 (ocho cifras del cuestionario sin espacio duro), la de
+  la clave larga (tres preguntas que se acertaban por el tamaño) y la de pregunta
+  repetida (una opción del cuestionario igual a la de un ejercicio).
+- **Comprobado en el navegador:** el cuestionario respondido entero, 10 de 10 con las
+  claves y 0 de 10 con respuestas malas; el emparejamiento, 7 de 7.
+- **Pendiente para la fase 12:** las justificaciones del cuestionario repiten hechos que
+  las secciones citan, y no tienen nota de afirmación propia.
+
+### Tarea 16 · Capítulo 6, fase 11 (primera parte): coherencia hacia atrás e índice · 2026-11-24
+
+Rama `claude/cap06-fase11`, sobre la fase 10; sin fusionar.
+
+- **Promesas:** las 49 filas del inventario de promesas de los capítulos 1 a 5 tienen
+  cierre. Una sola pedía tocar un capítulo anterior: el «Lo que viene» del capítulo 5
+  decía que el 6 «todavía no está escrito», hablaba en futuro y prometía repetir allí
+  las tres vueltas de la bisección, que el 6 no repite. Corregido. Las demás menciones
+  al capítulo 6 en los capítulos 1 y 4 siguen siendo ciertas.
+- **Recuento:** los «155» y «147» de la sección 1 se volvieron a contar y coinciden.
+- **Índice:** `index.html` enlaza el capítulo 6, con una descripción de lo que trae.
+- **Sin cambio:** la frase del capítulo 2 sobre el redondeo no es falsa; el 6 la afina.
+- **Comprobado:** sondas en los cinco modos (`file`, `375`, `sin-almacen`,
+  `sin-cdnjs`, `sin-tailwind`) y a 320 px, sobre los capítulos 5 y 6; verificador en
+  verde para los seis.
+- **Queda de esta fase, a la espera del docente:** la ejecución que decide la frase del
+  capítulo 4 sobre el error 11 (un `Currency` entre un `Long` en cero), el recorrido en
+  el iPhone, y los borradores del banco, que se propusieron como sesión aparte.
+
+### Tarea 16 · Capítulo 6, fase 11 (segunda parte): la división entre cero · 2026-11-24
+
+Rama `claude/cap06-fase11`; sin fusionar.
+
+- **La duda sobre el capítulo 4 se resolvió a su favor.** Seis divisiones en la ventana
+  Inmediato: un `Currency` entre un `Long` o un `Integer` en cero da el error 11 si el
+  resultado se escribe o se guarda en un `Double`, y el 6 si se guarda en un `Currency`;
+  cero entre cero da el 6. El capítulo 4 compara el resultado, no lo guarda, así que su
+  frase («con un total distinto de cero sería el 11») es correcta. No se tocó.
+- **Lo que estaba incompleto era la sección 7 del capítulo 6**, que decía que la causa
+  del 6 no se había aislado. Ahora cuenta las tres pruebas y dice qué decide: el
+  destino del resultado.
+- **Para la próxima vez:** una diferencia entre dos ejecuciones no se atribuye a una
+  causa mientras cambien dos cosas a la vez. La fase 9 lo dejó dicho en el texto en vez
+  de adivinar, y eso permitió corregirlo aquí sin desdecirse.
+
+### Tarea 16 · Capítulo 6, fase 11 (tercera parte): recorrido en el iPhone · 2026-11-25
+
+Rama `claude/cap06-fase11`; sin fusionar. **Recorrido parcial**: portada y lección 5.
+
+- **Defecto que solo se ve en el aparato:** la gráfica de tiempos de la sección 5 salía
+  aplastada, de unos píxeles de ancho, al llegar a la lección desde el menú de
+  lecciones. `usePlotly` (LP-CORE) dibuja con `responsive: true`, que solo atiende al
+  cambio de tamaño de la ventana; en un teléfono la barra lateral comprime el contenido
+  mientras está abierta, la gráfica se dibuja con ese ancho y no se vuelve a medir al
+  cerrarse la barra.
+- **Arreglo, local al capítulo 6:** `RendimientoHoja` observa el tamaño de su contenedor
+  y vuelve a medir la gráfica. De paso, eje x logarítmico (los rótulos de 1 000, 5 000 y
+  20 000 se montaban) y marcas del eje y escritas a mano (Plotly rotulaba 0,0001 como
+  «100µ»). Visto corregido en el iPhone.
+- **Huecos, sin cerrar:** (1) el defecto de fondo está en LP-CORE y alcanza a las
+  gráficas de los capítulos 1 y 5, que no se miraron en el aparato; corregirlo allí
+  obliga a reestampar, y es decisión del docente. (2) La sonda avanza con «Siguiente» y
+  nunca entra a una lección por la barra lateral: por eso pasaba en verde a 320 y 375 px
+  con la gráfica rota. Falta un modo que entre por la barra y mida el ancho de las
+  gráficas, con su prueba negativa.
+- **Sin ver en el aparato:** las lecciones 1 a 4 y 6 a 9. El recorrido se detuvo porque
+  otra aplicación pasó al frente dos veces mientras se manejaba el teléfono.
+- **Tropiezos del entorno:** iPhone Mirroring no conecta si el Mac usa Sidecar, ni sin
+  wifi; y la ventana quedó fuera de la pantalla hasta moverla con el menú Window.
+
+### Librería: las gráficas se vuelven a medir al cambiar de ancho su contenedor · 2026-11-25
+
+Rama `claude/cap06-fase11`; sin fusionar. Aprobado por el docente tras el recorrido en
+el iPhone.
+
+- **Qué cambió:** `usePlotly` (bloque LP-CORE del capítulo 1, su fuente) observa el
+  ancho del contenedor y llama a `Plotly.Plots.resize` cuando cambia. `lp-base.html`
+  regenerado y los seis capítulos reestampados con `migrar.py`. El arreglo local que
+  llevaba la gráfica del capítulo 6 se quitó.
+- **A quién alcanzaba:** a toda gráfica de Plotly a la que se llegara desde la barra
+  lateral en un teléfono. Hay dos en el capítulo 1 y una en el 5, además de la del 6. El
+  capítulo 5 publicado en `main` tiene el defecto.
+- **Hueco cerrado, con prueba negativa:** `sonda_navegador.mjs`, en los modos `375` y
+  `320`, entra a cada lección con gráfica desde la barra lateral y exige que la gráfica
+  mida lo que su contenedor. Con `ResizeObserver` anulado tiene que fallar, y falla.
+  Contra el capítulo 5 de `main` informa «gráfica de 700 px en un contenedor de 265 px».
+  README actualizado.
+- **Lo que enseñó la prueba negativa:** el síntoma no es el mismo en los dos motores. En
+  Safari de iPhone la gráfica quedó de unos píxeles; en Chrome, Plotly cae a su ancho
+  por omisión, 700 px, y se sale de la caja. La primera versión de la medida solo miraba
+  si la gráfica era más angosta, y por eso la prueba negativa no la dejó pasar.
+- **Comprobado:** sondas `file`, `320` y `375` sobre los seis capítulos, de a uno;
+  `verificar.py --con-salidas --con-pandoc` en verde.
+- **Sin comprobar:** el arreglo de la librería no se volvió a mirar en el iPhone. Se vio
+  allí el arreglo local del capítulo 6, que hace lo mismo.
+
+### Capítulo 6, fase 12: lectura crítica final · 2026-11-25
+
+- **Qué se hizo:** ocho lecturas independientes, sin contexto, del capítulo terminado.
+  Tres de lectura crítica (portada y secciones 1–3; 4–5; 6–7 con la evaluación), dos que
+  rehicieron las cifras que no están en una línea de salida (unas 1 660) y tres que
+  cotejaron las 97 notas de afirmación contra la página viva de Microsoft.
+- **Resultado:** ningún error de hecho, ninguna clave mal calificada, ninguna salida que
+  contradiga lo ejecutado. Los 97 extractos están en sus páginas. 74 correcciones.
+- **Citas:** 85 de 97 respaldaban la frase entera. En 11 la frase decía algo más que el
+  pasaje (una palabra o una deducción metida en la oración citada: «predeterminado»,
+  «nace», «no devuelve un valor», «cuando ninguna rutina se está ejecutando») y en una
+  el localizador era otro párrafo. Se cambió la frase, no el pasaje; la deducción del
+  material quedó en su propia oración, sin cita. La proporción bajó de una de cada tres
+  (capítulo 1) a una de cada ocho.
+- **Lo que se afirmaba haber visto y el registro no tenía:** «este capítulo vio el aviso»
+  de macros en el Mac (el libro nunca se guardó ni se reabrió), «región Colombia», el
+  aviso que «estará traducido», `Module1` recién creado, «el editor de VBA no retrocede».
+  Se redactaron como lo que consta. El comentario de `F8_PARADAS` dice ahora que las
+  paradas 8, 22 y 23 se dedujeron.
+- **Ejercicios:** el E3 del CDT tenía tres distractores que contradecían su propio
+  enunciado (se acertaba sin interpretar); se cambiaron por tres cifras compatibles con
+  «sin mensaje y menor». El de ordenar decía «tres líneas» y son cuatro, y admitía otro
+  orden válido (`Dim` a nivel de módulo): el enunciado lo fija. La traza de la mora pedía
+  una parada en `End Select` que el texto no enseña: el enunciado la anuncia. El reto E8
+  pedía clasificar «el factor de la cuota fija», que ningún capítulo nombra.
+- **Términos:** `TypeName`, «objeto», «propiedad», `Address` y `Count` se usaban sin decir
+  qué son. Las promesas a los capítulos 7 y 8 pasaron a futuro.
+- **Lo que no se cambió y queda a criterio del docente:** los menús del editor van solo
+  en inglés, como se vieron; mover el ejercicio de las dos ejecuciones después del
+  apartado de la ventana Inmediato; `CInt(True)` y la prueba de `veces = 1` se cuentan en
+  prosa, no en un bloque con salida; tres preguntas del cuestionario repiten el resultado
+  de un bloque del cuerpo.
+- **Límite:** las redacciones nuevas de las frases citadas siguen la propuesta del
+  verificador y no pasaron por una segunda lectura independiente. Los bloques de código
+  no cambiaron, así que no se volvió a Excel.
+- **Comprobado:** `verificar.py --con-salidas --con-pandoc` en verde para los seis
+  capítulos; sondas `file`, `375` y `320` del capítulo 6.

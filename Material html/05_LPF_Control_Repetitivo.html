@@ -878,13 +878,33 @@
             );
         };
 
+        // `responsive: true` solo atiende al cambio de tamaño de la VENTANA. En un
+        // teléfono, la barra lateral comprime el contenido mientras está abierta:
+        // al llegar a una lección desde ella, la gráfica se dibujaba con ese ancho
+        // de unos píxeles y así se quedaba al cerrarse la barra (visto en un
+        // iPhone el 2026-11-25). Por eso se observa el contenedor y se vuelve a
+        // medir cuando cambia de ancho. Solo de ancho: el alto lo fija el CSS, y
+        // reaccionar a él haría que cada redibujo llamara al siguiente.
         const usePlotly = (id, dataFn, layoutFn, deps = []) => {
             useEffect(() => {
                 const el = document.getElementById(id);
                 if (el && window.Plotly) {
                     window.Plotly.newPlot(id, dataFn(), layoutFn(), { responsive: true, displayModeBar: false });
                 }
-                return () => { if (window.Plotly) { try { window.Plotly.purge(id); } catch (e) { } } };
+                let observador = null;
+                if (el && window.Plotly && window.ResizeObserver) {
+                    let ancho = el.clientWidth;
+                    observador = new ResizeObserver(() => {
+                        if (el.clientWidth === ancho) return;
+                        ancho = el.clientWidth;
+                        try { window.Plotly.Plots.resize(el); } catch (e) { }
+                    });
+                    observador.observe(el);
+                }
+                return () => {
+                    if (observador) observador.disconnect();
+                    if (window.Plotly) { try { window.Plotly.purge(id); } catch (e) { } }
+                };
             }, deps);
         };
 
@@ -8082,11 +8102,11 @@ End Sub`,
                 <Box type="tip" label="Lo que viene">
                     El capítulo 6, «Entorno de programación VBA», pone a VBA al frente y deja el pseudocódigo
                     en segundo plano. Las trazas que aquí se hicieron a mano, como las cinco evaluaciones de un
-                    acuerdo de pago o las tres vueltas de la bisección, las hará la máquina, una instrucción
-                    por tecla, con F8 y la ventana Locales a la vista. Y dos cosas que este capítulo dijo de
-                    paso tendrán allí su sección: por qué un <span className="inline-code">Dim</span> deja en 0
+                    acuerdo de pago, las hace allí la máquina, una instrucción cada vez, con el paso a paso
+                    del editor y la ventana Locales a la vista. Y dos cosas que este capítulo dijo de
+                    paso tienen allí su sección: por qué un <span className="inline-code">Dim</span> deja en 0
                     una variable que nadie inicializó, y qué cambia al guardar el dinero en <span className="inline-code">Currency</span> y
-                    no en <span className="inline-code">Double</span>. Es lo que anuncia el plan del curso para ese capítulo, que todavía no está escrito.
+                    no en <span className="inline-code">Double</span>.
                 </Box>
 
                 <Referencias />

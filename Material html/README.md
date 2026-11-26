@@ -90,6 +90,16 @@ ventana y recorre todas sus lecciones. Tiene seis modos:
   hasta que se despliega, y **no son un fallo**. Lo que se sale fuera de un
   bloque plegado sí lo es, y sale con ✗ (hasta el 2026-11-16 decía «N
   recortados», y se leyó como defecto durante seis fases del capítulo 3);
+  En `375` y `320` mira también **las gráficas entrando por la barra lateral**. La
+  sonda avanza con «Siguiente», y así nunca veía lo que pasa en un teléfono: la
+  barra comprime el contenido mientras está abierta, y una gráfica dibujada con
+  ese ancho que no se vuelva a medir queda de unos píxeles en Safari, o con los
+  700 px por omisión de Plotly, fuera de su caja, en Chrome (visto en un iPhone
+  el 2026-11-25, en la gráfica del capítulo 6; la del 5 estaba igual). Ahora, a
+  cada lección con gráfica se entra otra vez desde la barra, y la gráfica tiene
+  que medir lo que su contenedor. La prueba negativa anula `ResizeObserver` y
+  exige que la gráfica salga mal. El arreglo está en `usePlotly`, que observa
+  el ancho de su contenedor;
 - `sin-almacen`: con `localStorage` lanzando, como en una ventana privada;
 - `sin-cdnjs`;
 - `sin-tailwind`: `cdn.tailwindcss.com` no resuelve, y Tailwind tiene que llegar
@@ -550,6 +560,14 @@ Solo se auditan los bloques que están dentro de un objeto por lenguaje. Un bloq
 suelto de un solo lenguaje no se puede comprobar —`#>` es el prefijo de Python y
 de R a la vez, y nada dice cuál es—; el informe los lista como no auditados en
 vez de callarlos. Convertirlo a `CodeTabs` lo vuelve auditable.
+
+**Un bloque de solo VBA** —el código que habla con Excel no tiene equivalente en los
+otros tres lenguajes— se escribe como objeto con una sola clave,
+``const X = { vba: `…` }``, y se pinta con `<CodeBlock lang="vba" code={X.vba} />`. Así
+`ejecutar_vba.py` lo mete en el arnés y compara sus `'>`, y la regla 4 no lo toca,
+porque solo mira lo que va en un `<CodeTabs>`. Escrito como constante suelta
+(``const X = `…` ``) no lo ejecuta nadie; desde el 2026-11-23 el informe lo avisa.
+Medido al planear el capítulo 6 con un archivo de prueba que traía las dos formas.
 
 El resaltado es **Prism.js 1.29** (`r`, `python`, `visual-basic`); el
 pseudocódigo usa una gramática propia registrada en LP-CORE.
