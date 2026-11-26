@@ -5205,3 +5205,41 @@ el iPhone.
   `verificar.py --con-salidas --con-pandoc` en verde.
 - **Sin comprobar:** el arreglo de la librería no se volvió a mirar en el iPhone. Se vio
   allí el arreglo local del capítulo 6, que hace lo mismo.
+
+### Capítulo 6, fase 12: lectura crítica final · 2026-11-25
+
+- **Qué se hizo:** ocho lecturas independientes, sin contexto, del capítulo terminado.
+  Tres de lectura crítica (portada y secciones 1–3; 4–5; 6–7 con la evaluación), dos que
+  rehicieron las cifras que no están en una línea de salida (unas 1 660) y tres que
+  cotejaron las 97 notas de afirmación contra la página viva de Microsoft.
+- **Resultado:** ningún error de hecho, ninguna clave mal calificada, ninguna salida que
+  contradiga lo ejecutado. Los 97 extractos están en sus páginas. 74 correcciones.
+- **Citas:** 85 de 97 respaldaban la frase entera. En 11 la frase decía algo más que el
+  pasaje (una palabra o una deducción metida en la oración citada: «predeterminado»,
+  «nace», «no devuelve un valor», «cuando ninguna rutina se está ejecutando») y en una
+  el localizador era otro párrafo. Se cambió la frase, no el pasaje; la deducción del
+  material quedó en su propia oración, sin cita. La proporción bajó de una de cada tres
+  (capítulo 1) a una de cada ocho.
+- **Lo que se afirmaba haber visto y el registro no tenía:** «este capítulo vio el aviso»
+  de macros en el Mac (el libro nunca se guardó ni se reabrió), «región Colombia», el
+  aviso que «estará traducido», `Module1` recién creado, «el editor de VBA no retrocede».
+  Se redactaron como lo que consta. El comentario de `F8_PARADAS` dice ahora que las
+  paradas 8, 22 y 23 se dedujeron.
+- **Ejercicios:** el E3 del CDT tenía tres distractores que contradecían su propio
+  enunciado (se acertaba sin interpretar); se cambiaron por tres cifras compatibles con
+  «sin mensaje y menor». El de ordenar decía «tres líneas» y son cuatro, y admitía otro
+  orden válido (`Dim` a nivel de módulo): el enunciado lo fija. La traza de la mora pedía
+  una parada en `End Select` que el texto no enseña: el enunciado la anuncia. El reto E8
+  pedía clasificar «el factor de la cuota fija», que ningún capítulo nombra.
+- **Términos:** `TypeName`, «objeto», «propiedad», `Address` y `Count` se usaban sin decir
+  qué son. Las promesas a los capítulos 7 y 8 pasaron a futuro.
+- **Lo que no se cambió y queda a criterio del docente:** los menús del editor van solo
+  en inglés, como se vieron; mover el ejercicio de las dos ejecuciones después del
+  apartado de la ventana Inmediato; `CInt(True)` y la prueba de `veces = 1` se cuentan en
+  prosa, no en un bloque con salida; tres preguntas del cuestionario repiten el resultado
+  de un bloque del cuerpo.
+- **Límite:** las redacciones nuevas de las frases citadas siguen la propuesta del
+  verificador y no pasaron por una segunda lectura independiente. Los bloques de código
+  no cambiaron, así que no se volvió a Excel.
+- **Comprobado:** `verificar.py --con-salidas --con-pandoc` en verde para los seis
+  capítulos; sondas `file`, `375` y `320` del capítulo 6.

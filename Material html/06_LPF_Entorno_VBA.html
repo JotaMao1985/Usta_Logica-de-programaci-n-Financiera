@@ -2931,7 +2931,7 @@
                         </button>
                     </div>
                     <p className="text-xs text-gray-500 mt-2">
-                        «Paso anterior» es una ayuda de este simulador: el editor de VBA no retrocede.
+                        «Paso anterior» es una ayuda de este simulador: en el recorrido hecho en Excel solo se avanzó.
                     </p>
                     {nota && <div className="text-sm text-gray-700 mt-3">{nota}</div>}
                 </div>
@@ -3081,7 +3081,9 @@
 
            Todo lo que sigue salió de Excel 16.115 para Mac el 2026-11-23,
            con el módulo `fase2.bas` (guardado en el vault, en la ficha del
-           capítulo). Nada se calculó a mano: si cambia la rutina, se vuelve
+           capítulo). Las paradas 8, 22 y 23 no se leyeron en pantalla: se
+           dedujeron del conteo de pulsaciones y de la salida en Inmediato
+           (está en el registro). Lo demás se copió de la pantalla: si cambia la rutina, se vuelve
            a recorrer y se copian otra vez.
         ============================================================ */
 
@@ -3105,7 +3107,8 @@ End Sub`;
         ];
 
         // Las 23 paradas del editor: [línea de F8_CODIGO, saldo, abono, meses],
-        // con los valores escritos como los mostró la ventana Locales. El
+        // con los valores escritos como los mostró la ventana Locales (las
+        // paradas 8, 22 y 23 se dedujeron; ver el comentario de arriba). El
         // editor no se detuvo nunca en la línea 2, la del Dim.
         const F8_PARADAS = [
             [1, '0', '0', '0'],
@@ -3315,7 +3318,7 @@ End Sub`;
                     «Funciones VBA». Este capítulo es el segundo de esos contenidos y tiene doce horas.
                 </p>
                 <p>
-                    El verbo del resultado es <strong>interpreta</strong>. Por eso los ejercicios de este
+                    El verbo del resultado es <strong>interpreta</strong>. Los ejercicios de este
                     capítulo, como los de los cinco anteriores, piden leer una rutina, seguirla y
                     diagnosticarla, y no escribirla desde cero.
                 </p>
@@ -3394,7 +3397,7 @@ End Sub`;
                                 <td>6</td>
                             </tr>
                             <tr>
-                                <td>Una rutina que siempre termina bien</td>
+                                <td>Rutinas que terminan sin error</td>
                                 <td>Qué pasa cuando falla, y qué hacer con una macro que llega de fuera.</td>
                                 <td>7</td>
                             </tr>
@@ -3407,7 +3410,7 @@ End Sub`;
                 <p>
                     El capítulo 5 lo anunció al cerrar: este capítulo «pone a VBA al frente y deja el
                     pseudocódigo en segundo plano». En la práctica son dos cambios. Las secciones 3 y 4,
-                    donde hay un algoritmo que traducir, conservan las cuatro pestañas. Las secciones 2, 5,
+                    donde hay un algoritmo que traducir, conservan las cuatro pestañas. Las secciones 1, 2, 5,
                     6 y 7 muestran solo VBA, porque lo que enseñan es de Excel: una celda, una ventana del
                     editor o una parada en mitad de la ejecución no se escriben en pseudocódigo.
                 </p>
@@ -3564,7 +3567,7 @@ End Sub`}</Zona>
                     tenga o no un virus <Cita k="microsoft2025macrosmac" loc="Habilitar o deshabilitar macros en Microsoft 365 para Mac" />.
                     Ese comportamiento se elige en el menú de la aplicación, en Preferencias y luego en
                     Seguridad <Cita k="microsoft2025macrosmac" loc="Habilitar o deshabilitar macros en Microsoft 365 para Mac" />.
-                    Por ahora basta una regla: una macro es un programa, y no se habilita la de un archivo
+                    Por ahora basta una regla de este curso: una macro es un programa, y no se habilita la de un archivo
                     cuyo origen no se conoce. La sección 7 vuelve sobre esto con calma.
                 </p>
 
@@ -3604,7 +3607,7 @@ End Sub`}</Zona>
                     {' '}<span className="inline-code">Sheet1</span> y un elemento llamado
                     {' '}<span className="inline-code">ThisWorkbook</span>, y <span className="inline-code">Modules</span>,
                     donde quedó el módulo insertado. Ahí es donde la analista del caso tendría que buscar
-                    su macro: dentro del libro, pero en un módulo y no en una hoja.
+                    su macro: dentro del libro, en el proyecto, y no en las celdas de una hoja.
                 </p>
                 <p>
                     <strong>2 · Las propiedades.</strong> Con un módulo seleccionado solo mostraba una:
@@ -3641,7 +3644,7 @@ End Sub`}</Zona>
                 <h3>Escribir y ejecutar una rutina</h3>
                 <p>
                     Con el editor abierto, <span className="inline-code">Insert › Module</span> crea un módulo
-                    vacío, <span className="inline-code">Module1</span>, y abre su ventana de código. Ahí se
+                    vacío y abre su ventana de código. Ahí se
                     escribe la rutina. Para ejecutarla se pone el cursor en cualquier línea entre
                     {' '}<span className="inline-code">Sub</span> y <span className="inline-code">End Sub</span> y se
                     elige <span className="inline-code">Run › Run Sub/UserForm</span>; el menú muestra F5 al lado
@@ -3650,7 +3653,7 @@ End Sub`}</Zona>
                 </p>
 
                 <Box type="warn" label="Si las órdenes salen en gris">
-                    Las órdenes de ejecutar actúan sobre la ventana de código. Al preparar este capítulo,
+                    Al preparar este capítulo,
                     con el cursor en la ventana Inmediato, <span className="inline-code">Debug › Step Into</span> aparecía
                     deshabilitada; volvió a estar disponible al abrir el módulo con doble clic en el
                     explorador de proyectos.
@@ -3660,7 +3663,7 @@ End Sub`}</Zona>
                     pregunta={<>La ventana Inmediato está vacía. Con el cursor dentro de <span className="inline-code">OtroAcuerdo</span>, se elige <span className="inline-code">Run › Run Sub/UserForm</span> dos veces seguidas. ¿Qué queda en la ventana Inmediato?</>}
                     opciones={[
                         { texto: 'Una línea, con 4 y -150000: la segunda ejecución reemplaza lo que escribió la primera.', correcta: false },
-                        { texto: 'Dos líneas iguales, con 4 y -150000: cada ejecución empieza de nuevo y añade su línea.', correcta: true, justificacion: 'Así quedó al hacerlo en Excel. Son dos cosas distintas. La rutina empieza otra vez desde su primera línea: vuelve a asignar 1 850 000 al saldo y 0 a los meses, y por eso da lo mismo. La ventana Inmediato, en cambio, no se borra entre ejecuciones: guarda todo lo que se ha escrito en ella.' },
+                        { texto: 'Dos líneas iguales, con 4 y -150000: cada ejecución empieza de nuevo y añade su línea.', correcta: true, justificacion: 'Así quedó en Excel tras dos ejecuciones seguidas de la rutina. Son dos cosas distintas. La rutina empieza otra vez desde su primera línea: vuelve a asignar 1 850 000 al saldo y 0 a los meses, y por eso da lo mismo. La ventana Inmediato, en cambio, no se borró entre una ejecución y la otra: conservó lo que ya tenía escrito.' },
                         { texto: 'Dos líneas distintas: 4 y -150000, y luego 8 y -300000, porque las variables conservan su valor.', correcta: false },
                         { texto: 'Una línea y un mensaje de error: una rutina no se puede ejecutar dos veces sin cerrar el editor.', correcta: false },
                     ]}
@@ -3686,9 +3689,12 @@ End Sub`}</Zona>
                     nada <Cita k="microsoft2018print" loc="Observaciones" />, y que si no se indica otra
                     cosa lo siguiente se imprime en la línea
                     siguiente <Cita k="microsoft2018print" loc="Sintaxis" />. Las dos cosas juntas dan una
-                    línea en blanco si esa variable está vacía fuera de la rutina, y lo está: a
+                    línea en blanco si, fuera de la rutina, el nombre <span className="inline-code">saldo</span> no
+                    guarda ningún valor, y así es: a
                     {' '}<span className="inline-code">? TypeName(saldo)</span> la ventana
                     respondió <span className="inline-code">Empty</span>.
+                    {' '}<span className="inline-code">TypeName</span> responde con el nombre del tipo del dato que
+                    recibe; este capítulo la usa varias veces para preguntarle a Excel qué tiene guardado.
                 </p>
 
                 <h3>Cómo separa los datos Debug.Print</h3>
@@ -3731,15 +3737,15 @@ End Sub`}</Zona>
                     ventana Inmediato usa el separador decimal de la configuración regional del
                     sistema <Cita k="microsoft2018print" loc="Observaciones" />. La última línea de la rutina
                     declara <span className="inline-code">916799.93</span>, con punto, como en todo el
-                    material; el Excel con que se ejecutó, en un Mac con región Colombia, escribió
+                    material; el Excel con que se ejecutó, en un Mac cuya configuración regional usa la coma decimal, escribió
                     {' '}<span className="inline-code">916799,93</span>, con coma.
                 </p>
 
                 <Ejercicio tipo="E2"><MCQ
-                    pregunta={<>Con <span className="inline-code">meses = 4</span>, la rutina ejecuta <span className="inline-code">Debug.Print "Meses:", meses</span>. La palabra <span className="inline-code">Meses:</span> ocupa las columnas 1 a 6. ¿En qué columna queda el 4?</>}
+                    pregunta={<>Con <span className="inline-code">meses = 4</span>, la rutina ejecuta <span className="inline-code">Debug.Print "Meses:", meses</span>. La palabra <span className="inline-code">Meses:</span> ocupa las columnas 1 a 6. ¿En qué columna queda el dígito 4?</>}
                     opciones={[
                         { texto: 'En la 7: la coma solo separa los dos datos, y el 4 va pegado a los dos puntos.', correcta: false },
-                        { texto: 'En la 8: la coma pone un espacio y el número pone otro.', correcta: false },
+                        { texto: 'En la 9: la coma pone un espacio y el número pone otro.', correcta: false },
                         { texto: 'En la 15: la coma lleva al comienzo de la segunda zona y ahí empieza el 4.', correcta: false },
                         { texto: 'En la 16: la segunda zona empieza en la 15, y el 4 deja antes un espacio.', correcta: true, justificacion: 'Son dos reglas seguidas. La coma avanza hasta la columna 15, donde empieza la segunda zona de impresión. Ahí se escribe el número, y un número que no es negativo lleva un espacio delante: el espacio queda en la 15 y el 4 en la 16. Con un saldo negativo, el signo habría quedado en la 15.' },
                     ]}
@@ -3747,7 +3753,7 @@ End Sub`}</Zona>
 
                 <h3>Guardar el libro</h3>
                 <p>
-                    El formato <span className="inline-code">.xlsx</span>, el libro de Excel predeterminado, no puede
+                    El formato <span className="inline-code">.xlsx</span>, el libro de Excel, no puede
                     almacenar código de macros de VBA; el libro habilitado para
                     macros, <span className="inline-code">.xlsm</span>, sí lo almacena <Cita k="microsoft2026formatos" loc="Formatos de archivo de Excel" />.
                     Por eso el libro del caso se llama <span className="inline-code">Acuerdos.xlsm</span>.
@@ -3760,7 +3766,7 @@ End Sub`}</Zona>
                 <Box type="tip" label="Lo que queda de esta sección">
                     El código vive en un módulo del proyecto del libro y se ve en el editor. Se ejecuta el
                     procedimiento donde está el cursor. Lo que imprime <span className="inline-code">Debug.Print</span> va
-                    a la ventana Inmediato, que no se borra sola. Y el libro tiene que guardarse como
+                    a la ventana Inmediato, que no se borró entre una ejecución y otra. Y el libro tiene que guardarse como
                     {' '}<span className="inline-code">.xlsm</span> para conservar el código.
                 </Box>
             </div>
@@ -4042,7 +4048,7 @@ End Sub`,
                             <tr>
                                 <td>(no se declara)</td>
                                 <td><span className="inline-code">Dim capital As Currency</span></td>
-                                <td>En este curso, cada variable se anuncia con su tipo antes de usarla.</td>
+                                <td>En el VBA de este curso, cada variable se anuncia con su tipo antes de usarla.</td>
                             </tr>
                             <tr>
                                 <td><span className="inline-code">capital &lt;- 2000000</span></td>
@@ -4065,16 +4071,16 @@ End Sub`,
                 <Fuente propia>comparando las pestañas de pseudocódigo y de VBA del bloque anterior</Fuente>
 
                 <p>
-                    Un <span className="inline-code">Sub</span> ejecuta instrucciones pero no devuelve un
-                    valor: a diferencia de un procedimiento
+                    Un <span className="inline-code">Sub</span> ejecuta una serie de instrucciones pero,
+                    a diferencia de un procedimiento
                     {' '}<span className="inline-code">Function</span>, que devuelve un valor, un
                     {' '}<span className="inline-code">Sub</span> no puede usarse en una
-                    expresión <Cita k="microsoft2018sub" loc="Remarks" />. Las funciones son el tema del
+                    expresión <Cita k="microsoft2018sub" loc="Remarks" />. Las funciones, según el plan del curso, serán el tema del
                     capítulo 8.
                 </p>
 
                 <OrdenaPasos
-                    enunciado="Reconstruya la rutina que calcula el precio neto de un producto de 480 000 con el 10 % de descuento. En la pestaña de VBA hay tres líneas que las otras no tienen: su lugar es lo que importa."
+                    enunciado="Reconstruya la rutina que calcula el precio neto de un producto de 480 000 con el 10 % de descuento. En la pestaña de VBA hay líneas que las otras no tienen, y las variables se declaran dentro del procedimiento: el lugar de esas líneas es lo que importa."
                     pasos={ORDENA_DESCUENTO}
                     pista="Tres preguntas: qué tiene que conocerse antes de calcular el descuento, qué tiene que existir antes de asignarle un valor a una variable y qué va antes de cualquier procedimiento."
                 />
@@ -4083,8 +4089,8 @@ End Sub`,
                 <p>
                     El pseudocódigo del curso usa una variable sin anunciarla. VBA permite anunciarla con
                     {' '}<span className="inline-code">Dim</span>, que dentro de un procedimiento crea una variable
-                    de ese procedimiento <Cita k="microsoft2018declarar" loc="introducción" />. La variable
-                    nace con un valor: una numérica se inicializa en 0 y una cadena de longitud variable,
+                    de ese procedimiento <Cita k="microsoft2018declarar" loc="introducción" />. Al
+                    inicializarse, una variable numérica queda en 0 y una cadena de longitud variable,
                     en la cadena vacía <Cita k="microsoft2019dim" loc="Observaciones" />. Es lo que los
                     capítulos 2, 4 y 5 dijeron de paso, que <span className="inline-code">Dim</span> deja
                     la variable en 0, y aquí se ve ejecutado:
@@ -4093,25 +4099,25 @@ End Sub`,
                 <CodeBlock lang="vba" plegable={false} code={VALORES_INICIALES.vba} />
 
                 <p>
-                    Las dos últimas líneas muestran una trampa. En <span className="inline-code">Dim tasaA, tasaB As Double</span> parece
+                    Las dos últimas salidas muestran una trampa. En <span className="inline-code">Dim tasaA, tasaB As Double</span> parece
                     que las dos son <span className="inline-code">Double</span>, y no: el tipo acompaña solo al
                     nombre que lo lleva. Microsoft lo dice con su propio ejemplo: en
                     {' '}<span className="inline-code">Dim intX, intY, intZ As Integer</span> solo
                     {' '}<span className="inline-code">intZ</span> es entera <Cita k="microsoft2018declarar" loc="introducción" />,
                     y a la que no se le da tipo se le asigna
                     {' '}<span className="inline-code">Variant</span> por omisión <Cita k="microsoft2018declarar" loc="introducción" />,
-                    que nace vacía, en <span className="inline-code">Empty</span> <Cita k="microsoft2019dim" loc="Observaciones" />.
+                    que se inicializa en <span className="inline-code">Empty</span> <Cita k="microsoft2019dim" loc="Observaciones" />.
                     Por eso las rutinas de este curso repiten <span className="inline-code">As</span> en cada
                     nombre: <span className="inline-code">Dim saldo As Currency, abono As Currency, meses As Integer</span>.
                     Los tipos son el tema de la sección 4.
                 </p>
                 <p>
-                    Las variables locales de un procedimiento no conservan su valor de una llamada a la
-                    siguiente, salvo que el procedimiento se declare <span className="inline-code">Static</span> <Cita k="microsoft2018sub" loc="Remarks" />.
-                    Una variable suelta declarada con <span className="inline-code">Static</span> en lugar
+                    Si no se usa <span className="inline-code">Static</span>, las variables locales de un
+                    {' '}<span className="inline-code">Sub</span> no conservan su valor de una llamada a la siguiente <Cita k="microsoft2018sub" loc="Remarks" />.
+                    Una variable declarada con <span className="inline-code">Static</span> en lugar
                     de <span className="inline-code">Dim</span> sí mantiene su valor entre llamadas <Cita k="microsoft2018declarar" loc="Instrucción Static" />.
                     Las rutinas de este curso no usan ninguna de las dos cosas: cada ejecución empieza de
-                    cero. Se comprobó con una rutina que declara
+                    cero. Se comprobó en Excel con una rutina aparte, que no se reproduce aquí: declara
                     {' '}<span className="inline-code">Dim veces As Integer</span>, le suma 1 y la escribe:
                     llamada dos veces seguidas desde la ventana Inmediato, escribió
                     {' '}<span className="inline-code">veces = 1</span> las dos veces.
@@ -4139,7 +4145,7 @@ End Sub`,
                     declarado produce un error en tiempo de
                     compilación <Cita k="microsoft2018optionexplicit" loc="Observaciones" />: la rutina no
                     llega a ejecutarse. La instrucción tiene que aparecer en el módulo antes de cualquier
-                    procedimiento <Cita k="microsoft2018optionexplicit" loc="Observaciones" />, y por eso es
+                    procedimiento <Cita k="microsoft2018optionexplicit" loc="Observaciones" />. Es
                     la primera línea de la mayoría de las rutinas completas de VBA de los capítulos 4 y 5.
                 </p>
 
@@ -4156,8 +4162,8 @@ End Sub`,
                         No hace falta compilar a mano. Al llamar la rutina desde la ventana Inmediato salió
                         el mismo aviso antes de que se ejecutara ninguna línea, y al cerrarlo el editor
                         quedó en pausa, con la línea <span className="inline-code">Sub</span> resaltada
-                        en amarillo. En un Excel en español el texto del aviso estará traducido; la
-                        traducción no se vio en este capítulo.
+                        en amarillo. En un Excel en español el texto del aviso puede estar traducido; no se comprobó en este
+                        capítulo.
                     </p>
                 </Box>
 
@@ -4189,14 +4195,14 @@ End Sub`,
                     ]}
                     consecuenciaCorrecta={1}
                     explicacion={ERROR_ABONOS_EXPLICACION}
-                    impacto={<>El saldo correcto es <strong>1 400 000</strong> y la rutina informa <strong>2 600 000</strong>: al cliente se le cobra un abono que ya pagó. Ningún lenguaje avisó, porque asignarle a un nombre nuevo es legal en los cuatro. De los tres lenguajes reales, VBA es el único que puede rechazar la rutina antes de ejecutarla, y solo si el módulo lleva <span className="inline-code">Option Explicit</span> antes de sus procedimientos.</>}
+                    impacto={<>El saldo correcto es <strong>1 400 000</strong> y la rutina informa <strong>2 600 000</strong>: al cliente se le cobra un abono que ya pagó. Ningún lenguaje avisó, porque asignarle a un nombre nuevo es legal en los cuatro. VBA puede rechazar la rutina antes de ejecutarla, pero solo si el módulo lleva <span className="inline-code">Option Explicit</span> antes de sus procedimientos.</>}
                 /></Ejercicio>
 
                 <h3>Select Case, otra vez</h3>
                 <p>
                     El capítulo 4 mostró <span className="inline-code">Select Case</span> con tramos escritos con
                     {' '}<span className="inline-code">To</span> y dejó dicho que este capítulo volvería sobre él.
-                    Faltaban dos cosas. La primera es que un caso admite una lista de una o varias de
+                    Aquí se añaden dos cosas. La primera es que un caso admite una lista de una o varias de
                     tres formas: una expresión (un valor, por ejemplo), un intervalo con <span className="inline-code">To</span> o una
                     comparación con <span className="inline-code">Is</span> <Cita k="microsoft2018selectcase" loc="Syntax" />.
                     En el ejemplo de Microsoft las formas se separan con comas: <span className="inline-code">Case 1 To 4, 7 To 9, 11, 13, Is &gt; MaxNumber</span> <Cita k="microsoft2018selectcase" loc="Remarks" />.
@@ -4250,7 +4256,7 @@ End Sub`,
                     <li>
                         <span className="inline-code">MsgBox</span> muestra un mensaje en un cuadro de diálogo
                         y espera a que el usuario pulse un botón <Cita k="microsoft2019msgbox" loc="párrafo inicial" />.
-                        Sirve para el resultado final; para seguir una rutina mientras corre es mejor
+                        Sirve para el resultado final; para seguir una rutina mientras corre, este curso prefiere
                         {' '}<span className="inline-code">Debug.Print</span>, que no la detiene.
                     </li>
                 </ul>
@@ -4265,9 +4271,7 @@ End Sub`,
             </div>
         );
 
-        // Sección 4 — «Tipos de datos y Currency». Por escribir en la fase 6 del plan
-        // (PLAN_TAREA16_CAPITULO_06.md). Sin motivación todavía: una
-        // motivación de relleno pasaría la regla 5 sin decir nada.
+        // Sección 4 — «Tipos de datos y Currency».
         // ── Sección 4 · bloques ──────────────────────────────────────────────
         // Los mismos cinco datos en los cuatro lenguajes: quién decide el tipo.
         const TIPOS_VALORES = {
@@ -4584,7 +4588,8 @@ End Sub`,
                 <h3>Los siete tipos que usa este curso</h3>
                 <p>
                     VBA tiene más tipos de los que caben en un curso. Estos siete son los que aparecen en
-                    las rutinas de los capítulos 1 a 5 y de este. La última columna es criterio del docente:
+                    las rutinas de los capítulos 1 a 5 y de este (el <span className="inline-code">Variant</span>, solo en
+                    este). La última columna es criterio del docente:
                 </p>
 
                 <div className="overflow-x-auto">
@@ -4618,8 +4623,8 @@ End Sub`,
                                 <td>Importes: saldo, cuota, abono, interés.</td>
                             </tr>
                             <tr>
-                                <td><span className="inline-code">String</span></td>
-                                <td>10 bytes más la longitud del texto, si es de longitud variable</td>
+                                <td><span className="inline-code">String</span> (de longitud variable)</td>
+                                <td>10 bytes más la longitud del texto</td>
                                 <td>De 0 a unos 2 000 millones</td>
                                 <td>Nombres, códigos, mensajes.</td>
                             </tr>
@@ -4650,7 +4655,7 @@ End Sub`,
                     con 15 dígitos a la izquierda del separador decimal y 4 a la
                     derecha <Cita k="microsoft2018moneda" loc="párrafo inicial" />. La misma página lo
                     describe como útil para los cálculos
-                    monetarios <Cita k="microsoft2018moneda" loc="párrafo inicial" />.
+                    monetarios <Cita k="microsoft2018moneda" loc="último párrafo" />.
                 </p>
                 <p>
                     El capítulo 1 sumó cien movimientos de un centavo y no le dio un peso. Aquí está la
@@ -4670,7 +4675,9 @@ End Sub`,
                     capítulo 1: el decimal exacto y los centavos enteros.
                     Una salvedad sobre el capítulo 5: en el plan de pagos de su sección 4 la cuota se
                     declaró <span className="inline-code">As Double</span>, y allí se dijo que era solo en
-                    esa sección, para comparar la tabla fila por fila con la de Python y la de R. La regla
+                    esa sección, para comparar la tabla fila por fila con la de Python y la de R; los
+                    programas de las secciones 5, 6 y 7 de ese capítulo repitieron la declaración, por la
+                    misma razón. La regla
                     del curso es la otra: los importes van en <span className="inline-code">Currency</span>.
                 </p>
 
@@ -4709,8 +4716,8 @@ End Sub`,
 
                 <h3>Cuando el número no cabe: el error 6</h3>
                 <p>
-                    Cada tipo tiene un rango, y el de <span className="inline-code">Integer</span> es
-                    corto: sus variables se almacenan como números de 16 bits, entre −32 768 y
+                    Cada tipo de la tabla tiene su rango, y el de <span className="inline-code">Integer</span> es
+                    el más corto de los numéricos. Sus variables se almacenan como números de 16 bits, entre −32 768 y
                     32 767 <Cita k="microsoft2018integer" loc="párrafo inicial" />. Cuando el resultado de
                     una asignación, de un cálculo o de una conversión es demasiado grande para el rango del
                     tipo, se produce un desbordamiento, el error
@@ -4872,16 +4879,16 @@ End Sub`,
                     lineas={ERROR_PLAZO_LINEAS}
                     lineaCorrecta={ERROR_PLAZO_LINEA_OK}
                     tipos={[
-                        'De sintaxis: el lenguaje rechaza la línea y la rutina no arranca.',
+                        'De fórmula: el interés simple está mal escrito en la rutina.',
                         'De precisión: la diferencia es el residuo de guardar 2,4 en binario.',
                         'De tipo: el plazo se guarda en un entero y pierde su fracción.',
                         'De orden: el interés se calcula antes de conocer el plazo.',
                     ]}
                     tipoCorrecto={2}
                     consecuencias={[
-                        'Se detiene con un error, porque 2,4 no cabe en un entero.',
-                        'Informa 1 380 000: el plazo sube a tres años completos.',
-                        'Informa 1 104 000: el plazo solo se recorta al escribirlo.',
+                        'Informa 184 000: del plazo solo quedan los 0,4 años.',
+                        'Informa 460 000: el plazo se guarda como un solo año.',
+                        'Informa 1 012 000: el plazo se recorta a 2,2 años.',
                         'Informa 920 000: liquida dos años y los 0,4 no rinden.',
                     ]}
                     consecuenciaCorrecta={3}
@@ -4904,7 +4911,7 @@ End Sub`,
                         <p>
                             <strong>Tasa y factor, en Double.</strong> La tasa del 1,256 % se convirtió en
                             1,26 % al guardarla en <span className="inline-code">Currency</span>, y eso
-                            cambió el interés en 400 pesos. Un factor como el de la cuota fija es, como la
+                            cambió el interés en 400 pesos. Un factor como (1 + tasa) es, como la
                             tasa, un número con el que se calcula y no un importe: a juicio del docente
                             va con ella.
                         </p>
@@ -4925,12 +4932,12 @@ End Sub`,
                     no hay errores de punto flotante». La otra: «todo en Double, y se redondea al mostrar; así
                     no se pierde ningún decimal». Con lo que se ejecutó en esta sección, escriba en cinco o
                     seis líneas la regla que usted aplicaría a cinco datos de un crédito: el saldo, la cuota,
-                    la tasa mensual, el número de cuotas y el factor de la cuota fija.
+                    la tasa mensual, el número de cuotas y el factor (1 + tasa) con que se capitaliza un saldo.
                 </Reto></Ejercicio>
 
                 <Box type="tip" label="Lo que sigue">
-                    Hasta aquí todos los datos se escribieron dentro de la rutina. En una macro de verdad
-                    vienen de la hoja de cálculo y vuelven a ella. La sección 5 trata cómo se nombra una
+                    Hasta aquí todos los datos se escribieron dentro de la rutina. En las rutinas de la
+                    sección que sigue vienen de la hoja de cálculo y vuelven a ella. La sección 5 trata cómo se nombra una
                     celda desde el código y qué tipo tiene lo que se lee de ella.
                 </Box>
             </div>
@@ -5075,7 +5082,10 @@ End Sub`;
                 <p>
                     Cuando una rutina dice <span className="inline-code">Range("B2")</span>, falta saber de
                     qué hoja y de qué libro es esa celda. Excel lo resuelve bajando por cuatro
-                    niveles. El objeto <span className="inline-code">Application</span> representa la
+                    niveles. En este capítulo se llama objeto a cada pieza de Excel que el código
+                    puede nombrar (la aplicación, un libro, una hoja, una celda) y propiedad a un dato que
+                    se le pide a un objeto con un punto: su nombre, su dirección, su valor.
+                    El objeto <span className="inline-code">Application</span> representa la
                     aplicación completa <Cita k="microsoft2019application" loc="párrafo inicial" />.
                     Un <span className="inline-code">Workbook</span> representa un
                     libro <Cita k="microsoft2019workbook" loc="párrafo inicial" />.
@@ -5091,7 +5101,7 @@ End Sub`;
                 </p>
 
                 <MapaObjetosExcel niveles={OBJETOS_NIVELES}
-                    nota={<Fuente propia>{`con lo que respondió Excel 16.115 para Mac el 23 de noviembre de 2026, en un libro nuevo sin guardar`}</Fuente>} />
+                    nota={<Fuente propia>{`con lo que respondió Excel 16.115 para Mac el 23 de noviembre de 2026, en un libro nuevo sin guardar, con 916799.93 escrito en B2`}</Fuente>} />
 
                 <p>
                     Cada respuesta del mapa es lo que contestó Excel al preguntarle. La
@@ -5120,7 +5130,10 @@ End Sub`;
                 <CodeBlock lang="vba" plegable={false} code={CELDAS_NOMBRAR.vba} />
 
                 <p>
-                    El orden es el contrario del de la dirección. «C5» nombra primero la
+                    <span className="inline-code">Address</span> responde con la dirección de la celda, escrita como texto,
+                    y <span className="inline-code">Count</span>, con cuántas celdas tiene el rango: tres en B2:B4.
+                    El orden es el contrario del de la dirección. Las columnas se cuentan desde la A: la C
+                    es la 3 y la E, la 5. «C5» nombra primero la
                     columna; <span className="inline-code">Cells(5, 3)</span> nombra primero la fila. Con
                     los números al revés, <span className="inline-code">Cells(3, 5)</span>, Excel respondió
                     con otra celda, la E3, y no avisó de nada. La segunda salida muestra además que lo que
@@ -5132,7 +5145,7 @@ End Sub`;
 
                 <h3>Leer y escribir: la propiedad Value</h3>
                 <p>
-                    Señalar una celda no es leerla. Lo que hay dentro se alcanza con la
+                    Señalar una celda no es leerla. El valor de una celda se alcanza con la
                     propiedad <span className="inline-code">Value</span>, que devuelve o establece
                     un <span className="inline-code">Variant</span> que representa el valor del
                     rango <Cita k="microsoft2019value" loc="párrafo inicial" />. En una asignación, a la
@@ -5161,8 +5174,8 @@ End Sub`;
                     llamadas sin parámetros, de modo
                     que <span className="inline-code">someRange = someOtherRange</span> equivale a escribirlo
                     con <span className="inline-code">.Value</span> en los dos
-                    lados <Cita k="microsoft2019range" loc="Comentarios" />. Por eso encontrará
-                    {' '}<span className="inline-code">Range("B2") = 5</span> en código de otras personas.
+                    lados <Cita k="microsoft2019range" loc="Comentarios" />. Por eso es válido escribir
+                    {' '}<span className="inline-code">Range("B2") = 5</span>, y puede encontrarlo en código de otras personas.
                     Las rutinas de este curso escriben siempre <span className="inline-code">.Value</span>,
                     a juicio del docente porque así se ve qué se está pidiendo.
                 </p>
@@ -5177,11 +5190,11 @@ End Sub`;
                     Con <span className="inline-code">Cells</span> pasa lo mismo: sin calificador,
                     devuelve las celdas de la hoja activa <Cita k="microsoft2019cells" loc="Observaciones" />.
                     De ahí sale una consecuencia: la misma rutina, sin cambiarle una letra, trabaja sobre
-                    una hoja o sobre otra según cuál esté al frente cuando se ejecuta; y si la hoja que está al
-                    frente no es una hoja de cálculo, <span className="inline-code">Range</span> produce
+                    una hoja o sobre otra según cuál esté al frente cuando se ejecuta. Y si la hoja activa
+                    no es una hoja de cálculo, <span className="inline-code">Range</span> produce
                     un error <Cita k="microsoft2019range" loc="Ejemplo" />. Esa consecuencia no se pudo
-                    ver aquí, porque el libro de prueba tiene una sola hoja. Para que no dependa de
-                    eso se pone el calificador, como en el ejemplo de Microsoft, que
+                    ver aquí, porque el libro de prueba tiene una sola hoja. Para que la rutina no dependa de
+                    cuál hoja esté al frente se le pone el calificador. El ejemplo de Microsoft lo lleva:
                     antepone <span className="inline-code">Worksheets("Sheet1")</span> a
                     {' '}<span className="inline-code">.Range("A5")</span> <Cita k="microsoft2019range" loc="Ejemplo" />.
                 </p>
@@ -5191,8 +5204,8 @@ End Sub`;
                 <p>
                     <span className="inline-code">Sheet1</span> es el nombre que tenía la única hoja del
                     libro en el Excel de este capítulo, que está en inglés. En un Excel en español la hoja
-                    nueva puede tener otro nombre; aquí no se comprobó. Las dos últimas líneas de la rutina
-                    leen otra vez sin calificador y encuentran lo mismo, pero solo
+                    nueva puede tener otro nombre; aquí no se comprobó. La última línea de la rutina
+                    lee otra vez sin calificador, dos veces, y encuentra lo mismo, pero solo
                     porque <span className="inline-code">Sheet1</span> era también la hoja activa.
                 </p>
 
@@ -5210,7 +5223,7 @@ End Sub`;
                     <span className="inline-code">Cells(fila, 4)</span> señala una celda distinta en cada
                     vuelta, porque <span className="inline-code">fila</span> cambia. Con una dirección
                     escrita como texto fijo no se habría podido. La rutina escribió cuatro celdas, de D2
-                    a D5, y en la última quedó el saldo negativo que ya conocía de la sección 1.
+                    a D5, y en la última quedó el saldo negativo que ya conocía de la sección 2.
                     La variable <span className="inline-code">fila</span> es <span className="inline-code">Long</span> por
                     la razón de la sección 4: es una cuenta que puede crecer.
                 </p>
@@ -5259,15 +5272,17 @@ End Sub`;
                 </p>
 
                 <RendimientoHoja filas={HOJA_FILAS} resolucion={HOJA_RESOLUCION}
-                    medicion="en Excel 16.115 para Mac el 23 de noviembre de 2026: la mediana de tres repeticiones por tamaño" />
+                    medicion="en Excel 16.115 para Mac el 23 de noviembre de 2026: la mediana de tres repeticiones por tamaño; lo que tarda menos se repitió 40 veces en cada una y se dividió" />
 
                 <p>
                     Con 100 000 valores, escribir celda por celda tardó 3,90 segundos y escribir en un
                     bloque, 0,053: unas 74 veces menos. Leer fue más rápido de las dos maneras, 0,086
-                    segundos frente a 0,0096, unas 9 veces menos. Con mil valores la diferencia ya estaba:
+                    segundos frente a 0,0096, unas 9 veces menos. Con mil valores, al escribir, la diferencia ya estaba:
                     0,039 segundos frente a 0,0006. Las dos versiones escribían los mismos valores, y en el
                     tiempo de la versión en bloque está incluido llenar el arreglo. Son tiempos de un
-                    equipo y de un día: en otro computador pueden cambiar. La idea es la misma del capítulo 1, donde un
+                    equipo y de un día, con la actualización de pantalla de Excel encendida
+                    (<span className="inline-code">Application.ScreenUpdating</span> respondió <span className="inline-code">True</span>): en otro
+                    computador o con otra configuración pueden cambiar. La idea es la misma del capítulo 1, donde un
                     ejercicio comparó leer una tasa en cada vuelta de un ciclo con leerla una sola vez
                     antes de empezar.
                 </p>
@@ -5275,7 +5290,7 @@ End Sub`;
                 <Ejercicio tipo="E7"><MCQ
                     pregunta={<>Según la medición, dejar 100 000 valores en la hoja tardó 3,90 segundos celda por celda y 0,053 segundos en un bloque. Los valores eran los mismos y se calculaban igual. ¿Qué le dice eso a quien tiene una macro lenta que llena un reporte?</>}
                     opciones={[
-                        { texto: 'Que el tiempo estaba en los viajes a la hoja y no en las cuentas: lo primero que debe mirar es si hay un .Value dentro de un ciclo.', correcta: true, justificacion: 'Las dos versiones calculan lo mismo, así que la diferencia no puede venir del cálculo. Lo que cambió fue cuántas veces se fue a la hoja: 100 000 o una. Por eso, ante una macro lenta que escribe en la hoja, lo primero que se busca es un .Value repetido en cada vuelta.' },
+                        { texto: 'Que el tiempo estaba en los viajes a la hoja y no en las cuentas: conviene mirar primero si hay un .Value dentro de un ciclo.', correcta: true, justificacion: 'Las dos versiones calculan lo mismo, así que la diferencia no puede venir del cálculo. Lo que cambió fue cuántas veces se fue a la hoja: 100 000 o una. Por eso, ante una macro lenta que escribe en la hoja, a juicio del docente, lo primero que conviene buscar es un .Value repetido en cada vuelta.' },
                         { texto: 'Que las cuentas eran demasiado pesadas para VBA, y que conviene pasar el cálculo a fórmulas de la hoja.', correcta: false },
                         { texto: 'Que el reporte tiene demasiadas filas: con mil valores, las dos maneras de escribir tardaron lo mismo.', correcta: false },
                         { texto: 'Que el computador es lento: 3,90 segundos para 100 000 valores es un problema del equipo y no de la macro.', correcta: false },
@@ -5351,12 +5366,14 @@ End Sub`;
                 <p>
                     La técnica se llama, en el menú del editor, <strong>Step Into</strong>. Recorre cada
                     línea del código y permite ver el efecto de cada instrucción sobre las
-                    variables <Cita k="microsoft2018seguimiento" loc="párrafo inicial" />. Elegida cuando
-                    ninguna rutina se está ejecutando, empieza la ejecución y
+                    variables <Cita k="microsoft2018seguimiento" loc="párrafo inicial" />. Elegida en
+                    tiempo de diseño, empieza la ejecución y
                     entra en modo de interrupción antes de que se ejecute la primera línea de
                     código <Cita k="microsoft2018depuracion" loc="tabla de comandos" />. A partir de ahí
                     ejecuta una instrucción cada vez <Cita k="microsoft2018depuracion" loc="tabla de comandos" />.
-                    En los recorridos de este capítulo se eligió con el cursor dentro de la rutina.
+                    «Tiempo de diseño» se lee aquí como el momento en que se escribe el código y ninguna
+                    rutina corre. En los recorridos de este capítulo la orden se eligió con el cursor dentro
+                    de la rutina.
                 </p>
                 <p>
                     La documentación le asigna la tecla F8 <Cita k="microsoft2018seguimiento" loc="To trace execution from the beginning of the program" />,
@@ -5401,7 +5418,7 @@ End Sub`;
 
                 <h3>Tres cosas que la traza a mano hacía distinto</h3>
                 <p>
-                    <strong>El editor no se detuvo en el Dim.</strong> De la
+                    <strong>El editor se detuvo en Sub y en End Sub, y no en el Dim.</strong> De la
                     línea <span className="inline-code">Sub</span> pasó a la primera asignación. Es
                     coherente con lo que dice Microsoft de los puntos de interrupción: no se pueden poner
                     en líneas de código no ejecutable, como los comentarios, las instrucciones de
@@ -5535,7 +5552,7 @@ End Sub`;
 
                 <TablaTraza
                     titulo="Por dónde pasó la línea amarilla"
-                    enunciado={<>La rutina se recorre con Step Into, con <span className="inline-code">dias = 45</span>. <strong>Escriba el número de la línea resaltada en cada parada.</strong> La última columna trae lo que mostró Locales para <span className="inline-code">gestion</span>, que escribe las cadenas entre comillas: dos comillas solas son una cadena a la que nadie le ha asignado nada.</>}
+                    enunciado={<>La rutina se recorre con Step Into, con <span className="inline-code">dias = 45</span>. <strong>Escriba el número de la línea resaltada en cada parada.</strong> La última columna trae lo que mostró Locales para <span className="inline-code">gestion</span>, que escribe las cadenas entre comillas: dos comillas solas son una cadena a la que nadie le ha asignado nada. Cuente con que el editor se detuvo también en <span className="inline-code">End Select</span>.</>}
                     codigo={F8_MORA}
                     lang="vba"
                     columnas={[
@@ -5560,7 +5577,7 @@ End Sub`;
                     pista="El editor no se detiene en el Dim. Y pregúntese en qué líneas hay algo que evaluar antes de llegar al caso que coincide."
                 />
 
-                <h3>Salir de una pausa, y de un ciclo que no termina</h3>
+                <h3>Salir de una pausa, y una pregunta pendiente</h3>
                 <p>
                     En los recorridos de este capítulo, mientras una rutina estaba en pausa el título de
                     la ventana del editor terminaba en <span className="inline-code">[break]</span>. De
@@ -5584,7 +5601,8 @@ End Sub`;
                     instrucción, y Run To Cursor permite elegir la instrucción donde se quiere que la
                     ejecución se detenga, lo que sirve para pasar de largo secciones como los ciclos
                     grandes <Cita k="microsoft2018seguimiento" loc="párrafo inicial" />. El primero se
-                    aprovecha cuando una rutina llama a otras, que es el tema del capítulo 8.
+                    aprovecha cuando una rutina llama a otras, que según el plan del curso será el
+                    tema del capítulo 8.
                 </p>
 
                 <Box type="tip" label="Lo que sigue">
@@ -5776,8 +5794,8 @@ End Sub`;
                 <p>
                     El número no es el que uno esperaría. VBA tiene un error propio para la división
                     entre cero, el 11: al escribir <span className="inline-code">? 12000000 / 0</span> en
-                    la ventana Inmediato, Excel respondió «Run-time error '11': Division by zero». La
-                    diferencia no está en lo que se divide sino en dónde se guarda el resultado. Se probó
+                    la ventana Inmediato, Excel respondió «Run-time error '11': Division by zero». Con el
+                    mismo dividendo, la diferencia está en dónde se guarda el resultado. Se probó
                     en la ventana Inmediato la misma división, un <span className="inline-code">Currency</span> de
                     12 000 000 entre un <span className="inline-code">Integer</span> en cero, de tres
                     maneras. Escrita con <span className="inline-code">?</span>, dio el 11. Asignada a una
@@ -5786,7 +5804,8 @@ End Sub`;
                 </p>
                 <p>
                     El capítulo 4 ya había anotado otro caso en que dividir entre cero informa el 6: cero
-                    entre cero. Aquí se repitió y dio lo mismo. Lo que queda de esto para leer macros
+                    entre cero. Aquí se repitió en la ventana Inmediato, con
+                    {' '}<span className="inline-code">? CCur(0) / CLng(0)</span>, y dio lo mismo. Lo que queda de esto para leer macros
                     ajenas: el número del error orienta, pero no siempre nombra la causa.
                 </p>
 
@@ -5871,8 +5890,8 @@ End Sub`;
                     registrado, pero solo lo ve quien consulta el
                     objeto <span className="inline-code">Err</span>, y esta rutina lo consultó porque
                     se escribió para mostrarlo. A juicio del docente, en una rutina de cálculo esta forma
-                    convierte un error de ejecución, que avisa, en uno de lógica, que no avisa; fuera de
-                    esta demostración, las rutinas de este curso no la usan. La documentación la
+                    convierte un error de ejecución, que avisa, en uno de lógica, que no avisa; hasta aquí,
+                    fuera de esta demostración, las rutinas de este curso no la usan. La documentación la
                     recomienda, en lugar de <span className="inline-code">On Error GoTo</span>, para otro
                     caso: el acceso a objetos <Cita k="microsoft2018onerror" loc="Sintaxis" />.
                 </p>
@@ -5906,26 +5925,27 @@ End Sub`;
                 <p>
                     Ese bloqueo solo afecta a Office en equipos con
                     Windows <Cita k="microsoft2026macrosinternet" loc="Versiones de Office afectadas por este cambio" />.
-                    En un Mac, este capítulo vio el aviso que se describió en la sección 2. La
+                    En un Mac queda el aviso que la sección 2 describió con su cita; en este capítulo no
+                    se llegó a ver, porque el libro de prueba no se guardó ni se volvió a abrir. La
                     configuración de macros de Excel tiene una opción que las deshabilita con
                     notificación, pensada para habilitarlas caso por caso, y otra que las habilita todas,
-                    que Microsoft marca como no recomendada porque puede ejecutarse código
+                    que Microsoft marca como no recomendada, y de la que advierte que se puede ejecutar código
                     potencialmente peligroso <Cita k="microsoft2026macros365" loc="Opciones de configuración de macros disponibles" />.
                 </p>
 
                 <Box type="warn" label="Criterio del docente">
                     Tres hábitos. No habilite las macros de un libro que no esperaba recibir, aunque el
                     remitente sea conocido. Antes de habilitar las de uno que sí esperaba, averigüe qué
-                    hace la macro, y cuando tenga el código a la vista, léalo: después de este capítulo
-                    usted puede seguirlo. Y fíjese en la extensión: la sección 2 dijo que un libro con
+                    hace la macro, y cuando tenga el código a la vista, léalo: este capítulo
+                    le da con qué empezar a seguirlo. Y fíjese en la extensión: la sección 2 dijo que un libro con
                     macros se guarda como <span className="inline-code">.xlsm</span>, así que un archivo
-                    que dice ser un simple reporte y llega con esa extensión merece una pregunta. Lo
-                    contrario no vale: que un archivo no la tenga no prueba que no traiga macros.
+                    que dice ser un simple reporte y llega con esa extensión merece una pregunta. La
+                    extensión no dice más que eso: que el libro puede traer macros, no qué hacen.
                 </Box>
 
                 <Box type="tip" label="Lo que sigue">
                     Con esto termina el recorrido por el entorno. La evaluación reúne las siete secciones,
-                    y el capítulo 7 vuelve sobre una idea que la sección 5 solo asomó: guardar muchos
+                    y el capítulo 7, según el plan del curso, volverá sobre una idea que la sección 5 solo asomó: guardar muchos
                     valores en una sola variable.
                 </Box>
             </div>
@@ -5952,8 +5972,8 @@ End Sub`;
             ['Currency', 'Tipo de dato de VBA para importes: un entero de 64 bits con escala de 10 000, que da cuatro decimales fijos. Suma centavos sin el error del punto flotante, y no sirve para una tasa con más de cuatro decimales.'],
             ['Debug.Print', 'Instrucción que escribe una línea en la ventana Inmediato. El punto y coma pega lo que sigue; la coma lo lleva a la zona de impresión siguiente.'],
             ['Declaración implícita', 'Lo que hace VBA cuando se le asigna un valor a un nombre que nadie declaró y el módulo no lleva Option Explicit: crea la variable, de tipo Variant, sin avisar.'],
-            ['Dim', 'Instrucción que declara una variable y le da su tipo con As. Una variable numérica declarada nace en 0. El editor no se detiene en ella al recorrer una rutina.'],
             ['Desbordamiento', 'Error 6 de ejecución: el resultado de una asignación, un cálculo o una conversión no cabe en el rango del tipo. En este capítulo salió con el producto de dos Integer. También apareció al guardar en un Currency el resultado de una división entre cero.'],
+            ['Dim', 'Instrucción que declara una variable y le da su tipo con As. Una variable numérica declarada nace en 0. El editor no se detiene en ella al recorrer una rutina.'],
             ['Editor de VBA', 'La ventana, aparte de la del libro, donde se ve, se escribe y se ejecuta el código. Entre sus zonas están el explorador de proyectos, la ventana de código, la ventana Inmediato y la ventana Locales.'],
             ['Err', 'Objeto que contiene la información del error de ejecución que acaba de producirse. Aquí se usaron dos de sus propiedades: Number y Description.'],
             ['Error de compilación', 'El que el editor encuentra antes de ejecutar, como un nombre no declarado en un módulo con Option Explicit. Ninguna instrucción llega a ejecutarse.'],
@@ -6024,7 +6044,7 @@ End Sub`;
                     },
                     {
                         seccion: 'cap2',
-                        pregunta: 'Un libro de Excel trae una macro, pero en sus hojas solo hay números. ¿Dónde está el código?',
+                        pregunta: 'Un libro de Excel trae una macro de VBA, pero en sus hojas solo hay números. ¿Dónde está el código?',
                         opciones: [
                             { texto: 'En una hoja oculta del libro, escrita como fórmulas.', correcta: false },
                             { texto: 'En un archivo aparte, que viaja junto al libro.', correcta: false },
@@ -6053,7 +6073,7 @@ End Sub`;
                             { texto: 'capital queda Currency y cuota queda Variant.', correcta: false },
                             { texto: 'Ninguna: la línea es un error de compilación.', correcta: false },
                         ],
-                        justificacion: 'El As vale solo para el nombre que lo lleva. La documentación lo muestra con Dim intX, intY, intZ As Integer, donde solo intZ es entera. Una variable a la que no se le da tipo queda Variant. Por eso las rutinas del curso repiten el As en cada nombre.',
+                        justificacion: 'El As vale solo para el nombre que lo lleva. La documentación lo muestra con Dim intX, intY, intZ As Integer, donde solo intZ es entera. Una variable a la que no se le da tipo queda Variant. Por eso la regla del curso es repetir el As en cada nombre.',
                     },
                     {
                         seccion: 'cap4',
@@ -6064,7 +6084,7 @@ End Sub`;
                             { texto: '0.0126: un Currency guarda cuatro decimales, y redondeó.', correcta: true },
                             { texto: 'Nada: la asignación se detiene con el error 6, Overflow.', correcta: false },
                         ],
-                        justificacion: 'Así salió en la sección 4. Currency es punto fijo con cuatro decimales: el quinto no cabe, y el valor se redondeó a 0,0126. Desde ahí todas las cuentas se hicieron con el 1,26 %, y el interés de un saldo de 10 000 000 pasó de 125 600 a 126 000. Por eso las rutinas del curso guardan los importes en Currency y las tasas en Double.',
+                        justificacion: 'Así salió en la sección 4. Currency es punto fijo con cuatro decimales: el quinto no cabe, y el valor se redondeó a 0,0126. Desde ahí todas las cuentas se hicieron con el 1,26 %, y el interés de un saldo de 10 000 000 pasó de 125 600 a 126 000. Por eso la regla del curso es guardar los importes en Currency y las tasas en Double.',
                     },
                     {
                         seccion: 'cap4',
@@ -6097,18 +6117,18 @@ End Sub`;
                             { texto: 'En la línea End Sub, la última.', correcta: false },
                             { texto: 'En la línea Dim, la de las declaraciones.', correcta: true },
                         ],
-                        justificacion: 'El editor pasó de la línea Sub a la primera asignación, sin detenerse en el Dim. Sí se detuvo en Sub, en cada Loop y en End Sub: fueron 23 paradas. Es coherente con que una declaración no es código ejecutable. La diferencia con la traza a mano está en las otras dos: allí Sub y End Sub no tenían fila.',
+                        justificacion: 'El editor pasó de la línea Sub a la primera asignación, sin detenerse en el Dim. Sí se detuvo en Sub, en cada Loop y en End Sub: fueron 23 paradas. Es coherente con que una declaración no es código ejecutable. La diferencia con la traza a mano está en Sub y End Sub, que allí no tenían fila, y en que aquí hubo una parada en cada Loop.',
                     },
                     {
                         seccion: 'cap7',
                         pregunta: 'Le llega por correo un libro de Excel con macros que no esperaba, de un remitente conocido. Según el criterio que da la sección 7, ¿qué hace?',
                         opciones: [
                             { texto: 'Habilita las macros: el remitente es conocido, y eso basta.', correcta: false },
-                            { texto: 'No las habilita, y antes averigua qué hace la macro.', correcta: true },
+                            { texto: 'No las habilita: que el remitente sea conocido no basta.', correcta: true },
                             { texto: 'Las habilita solo si el archivo termina en .xlsm.', correcta: false },
                             { texto: 'Las habilita, porque en un Mac no hay ningún riesgo.', correcta: false },
                         ],
-                        justificacion: 'Es el primero de los tres hábitos de la sección 7, que es criterio del docente: no habilitar las macros de un libro que no se esperaba, aunque el remitente sea conocido. La razón está citada allí: las macros de VBA son una vía común para desplegar malware. La extensión .xlsm solo dice que el libro puede traer macros, no que sean de fiar, y el bloqueo automático de Office es de Windows, lo que no vuelve seguro al Mac.',
+                        justificacion: 'Es el primero de los tres hábitos de la sección 7, que es criterio del docente: no habilitar las macros de un libro que no se esperaba, aunque el remitente sea conocido. La razón está citada allí: las macros de VBA son una vía común para desplegar malware. La extensión .xlsm solo dice que el libro puede traer macros, no que sean de fiar, y el bloqueo automático de Office, según esa sección, solo afecta a los equipos con Windows.',
                     },
                     {
                         seccion: 'cap7',
@@ -6139,8 +6159,8 @@ End Sub`;
                 <Fuente propia>con las definiciones de este capítulo</Fuente>
 
                 <Box type="tip" label="Lo que viene">
-                    El capítulo 7 trata los arreglos, que la sección 5 solo asomó: guardar muchos valores
-                    en una sola variable. Según el plan del curso, allí volverá la diferencia de tiempos
+                    El capítulo 7, según el plan del curso, tratará los arreglos, que la sección 5 solo
+                    asomó: guardar muchos valores en una sola variable. Allí volverá la diferencia de tiempos
                     entre ir a la hoja celda por celda y llevar un rango entero de una vez.
                 </Box>
 
